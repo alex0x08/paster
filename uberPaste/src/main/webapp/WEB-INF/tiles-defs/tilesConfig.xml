@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN"
+       "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+
+<tiles-definitions>
+
+	<!-- Default Main Template -->
+    <definition name=".mainTemplate" template="/WEB-INF/pages/template/main.jsp" preparer="uber.paste.tiles2.ELViewPreparer">
+         <put-attribute name="pageTitle"  expression="${title}" />
+		 <put-attribute name="menu" value="/WEB-INF/pages/template/menu.jsp" />
+		<put-attribute name="content" value="" />
+                
+    </definition>
+
+    <definition name="paste/list" extends=".mainTemplate">
+        <put-attribute name="content" value="/WEB-INF/pages/paste/list.jsp" />
+    </definition>
+
+    <definition name="paste/edit"  extends=".mainTemplate">
+        <put-attribute name="content" value="/WEB-INF/pages/paste/edit.jsp" />
+    </definition>
+
+    <definition name="paste/view"  extends=".mainTemplate">
+        <put-attribute name="content" value="/WEB-INF/pages/paste/view.jsp" />
+    </definition>
+
+
+    <definition name="user/list"  extends=".mainTemplate">
+        <put-attribute name="content" value="/WEB-INF/pages/user/list.jsp" />
+    </definition>
+
+    <definition name="user/edit"  extends=".mainTemplate">
+        <put-attribute name="content" value="/WEB-INF/pages/user/edit.jsp" />
+    </definition>
+
+
+</tiles-definitions>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+    xmlns:beans="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+                        http://www.springframework.org/schema/beans/spring-beans.xsd
+                        http://www.springframework.org/schema/security 
+                        http://www.springframework.org/schema/security/spring-security.xsd"
+                      >
+
+
+
+    <beans:bean id="userService"
+                class="uber.paste.manager.UserManagerImpl">
+    </beans:bean>
+
+    <global-method-security secured-annotations="enabled" jsr250-annotations="enabled" />
+
+
+
+    <http pattern="/images/*" security="none"/>
+    <http pattern="/css/*" security="none"/>
+    <http pattern="/js/*" security="none"/>
+    <http pattern="/errors/*" security="none"/>
+    <http pattern="/libs/*" security="none"/>
+
+
+    <http realm="Paster Realm" auto-config="true" use-expressions="true">
+
+        <anonymous/>
+        <intercept-url pattern="/main/user*"  access="hasRole('ROLE_ADMIN')"/>
+        <intercept-url pattern="/main/user/**" access="hasRole('ROLE_ADMIN')"/>
+
+        <intercept-url pattern="/**" access="permitAll()"/>
+
+        <form-login login-page="/main/login" authentication-failure-url="/main/login?error=1"
+        default-target-url="/" login-processing-url="/act/login"/>
+
+
+        <session-management>
+            <concurrency-control max-sessions="1"    />
+        </session-management>
+
+        
+        <logout logout-url="/act/logout" logout-success-url="/main/paste/list"  invalidate-session="true"  />
+
+     <!--   <remember-me /> -->
+
+    </http>
+
+    <authentication-manager alias="embedded-auth-manager">
+   
+        <authentication-provider user-service-ref="userService">
+            <password-encoder hash="plaintext"/>
+
+        </authentication-provider>
+
+    </authentication-manager>
+
+   
+
+    <!-- Automatically receives AuthenticationEvent messages -->
+    <beans:bean id="loggerListener" class="org.springframework.security.authentication.event.LoggerListener"/>
+
+
+</beans:beans>
+
+
+

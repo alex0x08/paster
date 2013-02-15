@@ -1,0 +1,67 @@
+/*
+ * Copyright 2011 WorldWide Conferencing, LLC.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package uber.paste.dao
+
+import org.springframework.stereotype.Repository
+import org.springframework.transaction.annotation.Transactional
+import uber.paste.model.User
+
+
+trait UserDao extends StructDao[User]{
+
+  def getUser(username:String):User
+
+  def getUserByOpenID(openid:String):User
+
+  }
+
+
+
+@Repository("userDao")
+@Transactional(readOnly = true)
+class UserDaoImpl extends StructDaoImpl[User](classOf[User]) with UserDao {
+
+  def getUser(username:String):User = {
+
+    val hquery = em.createQuery("select u from User u where u.username = :username")
+    hquery.setParameter("username", username)
+    val result = hquery.getResultList()
+
+    if (logger.isDebugEnabled)
+      logger.debug("_getUser for name="+username+",results="+result.size());
+
+    return if (result==null || result.isEmpty()) null else result.get(0).asInstanceOf[User]
+  }
+
+  def getUserByOpenID(openid:String):User = {
+
+    val hquery = em.createQuery("select u from User u where u.openID = :openid")
+    hquery.setParameter("openid", openid)
+    val result = hquery.getResultList()
+
+    if (logger.isDebugEnabled)
+      logger.debug("_getUser for openid="+openid+",results="+result.size());
+
+    return if (result==null || result.isEmpty()) null else result.get(0).asInstanceOf[User]
+  }
+
+
+}
+
+class UserExistsException extends Exception with java.io.Serializable{
+
+}

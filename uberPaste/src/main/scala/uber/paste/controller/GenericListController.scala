@@ -1,0 +1,157 @@
+/*
+ * Copyright 2011 Ubersoft, LLC.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package uber.paste.controller
+
+import uber.paste.model.Struct
+import javax.servlet.http.HttpServletRequest
+import org.springframework.beans.support.PagedListHolder
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation._;
+import java.util.Locale
+
+object GenericListController {
+  final val LIST_ACTION = "/list"
+  final val NEXT_PARAM = "next"
+
+}
+
+abstract class GenericListController[T <: Struct ] extends StructController[T] {
+
+  protected val defaultListCallback:SourceCallback[T]  = new SourceCallback[T]() {
+
+    override def invokeCreate():PagedListHolder[T] = {
+      return new PagedListHolder[T](manager.getList())
+    }
+  }
+
+ // protected def fillListModel(obj:T,model:Model,locale:Locale)
+
+
+  protected def processPageListHolder(request:HttpServletRequest,
+                                      locale:Locale,
+                                      model:Model,
+                                      page:java.lang.Integer,
+                                      NPpage:String,
+                                      pageSize:java.lang.Integer,
+                                      callback:SourceCallback[T]):java.util.List[T] = {
+
+      var pagedListHolder:PagedListHolder[T] = request.getSession()
+            .getAttribute(GenericController.NODE_LIST_MODEL_PAGE)
+            .asInstanceOf[PagedListHolder[T]]
+
+    if (pagedListHolder == null || (page == null && NPpage == null)) {
+      pagedListHolder = callback.invokeCreate()
+      logger.debug("pagedListHolder created ")
+    } else {
+
+      if (NPpage != null) {
+        if (NPpage.equals(GenericListController.NEXT_PARAM)) {
+          pagedListHolder.nextPage()
+        } else {
+          pagedListHolder.previousPage()
+        }
+
+      } else {
+
+        var npage = page
+        
+        if (npage < 1) {
+          npage = 1
+        }
+        if (npage > pagedListHolder.getPageCount()) {
+          npage = pagedListHolder.getPageCount()
+        }
+
+        pagedListHolder.setPage(npage-1)
+      }
+
+    }
+
+    if (pageSize != null) {
+      pagedListHolder.setPageSize(pageSize);
+    }
+
+    request.getSession().setAttribute(GenericController.NODE_LIST_MODEL_PAGE, pagedListHolder)
+
+    model.addAttribute(GenericController.NODE_LIST_MODEL_PAGE, pagedListHolder)
+
+    return pagedListHolder.getPageList()
+  }
+
+
+  @RequestMapping(value = Array(GenericListController.LIST_ACTION + "/{page}"), method = Array(RequestMethod.GET))
+  @ModelAttribute(GenericController.NODE_LIST_MODEL)
+  def listByPath(@PathVariable("page") page:java.lang.Integer,
+  request:HttpServletRequest,
+  model:Model,
+  locale:Locale) =  list(request,locale, model, page, null, null)
+
+
+  @RequestMapping(value = Array(GenericListController.LIST_ACTION + "/limit/{pageSize}"), method = Array(RequestMethod.GET))
+  @ModelAttribute(GenericController.NODE_LIST_MODEL)
+  def listByPathSize(@PathVariable("pageSize") pageSize:java.lang.Integer,
+  request:HttpServletRequest,
+  model:Model,
+  locale:Locale)= list(request,locale, model, null, null, pageSize)
+
+
+  @RequestMapping(value = Array(GenericListController.LIST_ACTION + "/next"), method = Array(RequestMethod.GET))
+  @ModelAttribute(GenericController.NODE_LIST_MODEL)
+  def listByPathNext(
+    request:HttpServletRequest,
+    model:Model,
+    locale:Locale) = list(request,locale, model, null, GenericListController.NEXT_PARAM, null)
+
+
+  @RequestMapping(value = Array(GenericListController.LIST_ACTION + "/prev"), method = Array(RequestMethod.GET))
+  @ModelAttribute(GenericController.NODE_LIST_MODEL)
+  def listByPathPrev(
+    request:HttpServletRequest,
+    model:Model,
+    locale:Locale) = list(request,locale, model, null, "prev", null)
+
+
+
+
+  @RequestMapping(value = Array(GenericListController.LIST_ACTION),method = Array(RequestMethod.GET))
+  @ModelAttribute(GenericController.NODE_LIST_MODEL)
+  def list( request:HttpServletRequest, locale:Locale,  model:Model,
+           @RequestParam(required = false)  page:java.lang.Integer,
+           @RequestParam(required = false)  NPpage:String,
+           @RequestParam(required = false)  pageSize:java.lang.Integer):java.util.List[T] = {
+
+    // putListModel(model);
+
+    logger.debug("_user="+getCurrentUser())
+
+    return processPageListHolder(request,locale,model,page,NPpage,pageSize,defaultListCallback)
+    // return manager.getAll();
+  }
+  
+  
+  @RequestMapping(value = Array("/list/body"))
+  @ModelAttribute("items")
+  @ResponseBody
+  def listBody():java.util.List[T] = {
+    return manager.getList()
+  }
+
+  protected trait SourceCallback[T ] {
+    def invokeCreate():PagedListHolder[T];
+  }
+
+}

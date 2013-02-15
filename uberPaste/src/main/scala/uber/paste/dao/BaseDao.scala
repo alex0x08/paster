@@ -1,0 +1,95 @@
+/**
+ * Copyright (C) 2010 alex <me@alex.0x08.org>
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package uber.paste.dao
+
+import org.springframework.transaction.annotation.Transactional
+import uber.paste.base.Loggered
+import javax.persistence.{Query, EntityManager, PersistenceContext}
+
+
+abstract trait BaseDao[T <: java.io.Serializable,PK] {
+
+  def save(obj:T):T
+
+  def persist(obj:T)
+
+  def remove(id:PK):Unit
+
+  def get(id:PK):T
+
+  def getFull(id:PK):T
+  
+  def getList():java.util.List[T]
+  
+  def exists(id:PK):Boolean 
+}
+
+
+@Transactional(readOnly = true)
+abstract class BaseDaoImpl[T <: java.io.Serializable,PK ](model:Class[T]) extends Loggered with BaseDao[T,PK]{
+
+
+  protected class CriteriaSet {
+    val cb = em.getCriteriaBuilder
+    val cr = cb.createQuery(model)
+    val r = cr.from(model)
+  }
+
+  @PersistenceContext
+  protected val em:EntityManager = null
+
+
+
+  @Transactional(readOnly = false)
+  def save(obj:T):T = {
+    logger.debug("saving obj "+obj)
+    val out:T = em.merge(obj)
+    //em.flush()
+    return out
+  }
+
+  @Transactional(readOnly = false)
+  def persist(obj:T):Unit = {
+    em.persist(obj)
+  }
+
+  def exists(id:PK):Boolean = {
+    return em.find(model, id)!=null
+  }
+
+  @Transactional
+  def remove(id:PK):Unit = {
+    val obj:T = get(id)
+
+    if (obj!=null) {
+      em.remove(obj)
+      em.flush()
+    }
+  }
+
+  def get(id:PK):T = {
+    return em.find(model,id)
+  }
+
+  def getList():java.util.List[T] = {
+
+    val cr = new CriteriaSet
+
+    val query:Query = em.createQuery(cr.cr.orderBy(cr.cb.desc(cr.r.get("id"))))
+    return query.getResultList().asInstanceOf[java.util.List[T]]
+  }
+}

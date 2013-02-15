@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (C) 2010 alex <me@alex.0x08.org>
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+            http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<web-app id="WebApp_ID" version="2.5" 
+xmlns="http://java.sun.com/xml/ns/javaee" 
+xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+    <display-name>UberPaste</display-name>
+    <distributable/>
+    
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>classpath:/spring/app-main.xml</param-value>
+    </context-param>
+   
+    <!-- Servlets -->
+    <!-- Creates the Spring Container shared by all Servlets and Filters -->
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+    <listener>
+        <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
+    </listener>
+    <listener>
+        <listener-class>org.springframework.security.web.session.HttpSessionEventPublisher</listener-class>
+    </listener>
+    <listener>
+        <listener-class>uber.paste.base.UserSessionListener</listener-class>
+    </listener>
+    <listener>
+        <listener-class>uber.paste.startup.StartupListener</listener-class>
+    </listener>
+    <filter>
+        <filter-name>securityFilter</filter-name>
+        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+        <init-param>
+            <param-name>targetBeanName</param-name>
+            <param-value>springSecurityFilterChain</param-value>
+        </init-param>
+    </filter>
+    
+  <!-- Declaration -->
+ <filter>
+        <filter-name>responseCacheFilter</filter-name>
+        <filter-class>com.googlecode.webutilities.filters.ResponseCacheFilter</filter-class>
+ </filter>
+ 
+ <!-- Declaration -->
+  <filter>
+        <filter-name>compressionFilter</filter-name>
+        <filter-class>com.googlecode.webutilities.filters.CompressionFilter</filter-class>
+        <init-param>
+                <param-name>compressionThreshold</param-name>
+                <param-value>512</param-value> <!--  anything above 512bytes  -->
+        </init-param>
+        <init-param>
+                <param-name>ignoreURLPattern</param-name>
+                <param-value>.*\.(png|gif|jpg|tiff|bmp|mpg|jpeg|atom)</param-value>
+        </init-param>   
+ </filter>
+ 
+  <filter>
+        <filter-name>yuiMinFilter</filter-name>
+        <filter-class>com.googlecode.webutilities.filters.YUIMinFilter</filter-class>
+ </filter>
+ 
+ <!-- Mapping -->
+ <filter-mapping>
+   <filter-name>responseCacheFilter</filter-name>
+   <url-pattern>*.js</url-pattern>
+   <!--url-pattern>*.json</url-pattern-->
+   <url-pattern>*.css</url-pattern>
+ </filter-mapping>
+ 
+ <filter-mapping>
+   <filter-name>compressionFilter</filter-name>
+   <url-pattern>/*</url-pattern>
+ </filter-mapping>
+ 
+  <!--filter-mapping>
+  <filter-name>yuiMinFilter</filter-name>
+  <url-pattern>*.js</url-pattern>
+  <url-pattern>*.json</url-pattern>
+  <url-pattern>*.css</url-pattern>
+
+ </filter-mapping-->
+ 
+    <filter-mapping>
+        <filter-name>securityFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    
+   <!-- Declaration -->
+ <servlet>
+        <servlet-name>JSCSSMergeServet</servlet-name>
+        <servlet-class>com.googlecode.webutilities.servlets.JSCSSMergeServlet</servlet-class>
+        <init-param>
+                <param-name>expiresMinutes</param-name>
+                <param-value>43200</param-value> <!-- 30 days -->
+        </init-param>
+ </servlet>
+    
+    <servlet>
+        <servlet-name>dispatcher</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>        
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value></param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+       
+    </servlet>
+
+    <servlet>
+        <servlet-name>CXFServlet</servlet-name>
+        <servlet-class>org.apache.cxf.transport.servlet.CXFServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet>
+        <servlet-name>OpenIDServlet</servlet-name>
+        <servlet-class>uber.paste.openid.OpenIDAuthServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+
+    <servlet-mapping>
+        <servlet-name>OpenIDServlet</servlet-name>
+        <url-pattern>/act/openid-login</url-pattern>
+    </servlet-mapping>
+
+
+    <servlet-mapping>
+        <servlet-name>dispatcher</servlet-name>
+        <url-pattern>/main/*</url-pattern>
+    </servlet-mapping>
+ 
+ <!-- Mapping -->
+ <servlet-mapping>
+  <servlet-name>JSCSSMergeServet</servlet-name>
+   <url-pattern>*.js</url-pattern>
+   <!--url-pattern>*.json</url-pattern-->
+   <url-pattern>*.css</url-pattern>
+   <url-pattern>*.png</url-pattern>
+   <url-pattern>*.jpg</url-pattern>
+   <url-pattern>*.gif</url-pattern>
+ </servlet-mapping>
+ 
+ 
+    <session-config>
+        <session-timeout>20</session-timeout>
+    </session-config>
+    
+    <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+    </welcome-file-list>
+    
+    <error-page>
+        <error-code>404</error-code>
+        <location>/WEB-INF/pages/404.jsp</location>
+    </error-page>
+ 
+    <error-page>
+        <error-code>403</error-code>
+        <location>/WEB-INF/pages/403.jsp</location>
+    </error-page>
+ 
+    <!--error-page>
+        <exception-type>java.lang.Throwable</exception-type>
+        <location>/WEB-INF/pages/500.jsp</location>
+    </error-page-->
+    
+     <jsp-config>
+        <jsp-property-group>
+            <url-pattern>*.jsp</url-pattern>
+            <page-encoding>UTF-8</page-encoding>
+            <trim-directive-whitespaces>true</trim-directive-whitespaces>
+        </jsp-property-group>
+    </jsp-config>    
+    
+</web-app>

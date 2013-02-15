@@ -1,0 +1,132 @@
+/*
+ * Copyright 2011 Ubersoft, LLC.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package uber.paste.controller
+
+import uber.paste.model.{Paste, Struct}
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation._
+;
+import javax.validation.Valid;
+import java.util.Locale
+import scala.Array
+
+
+abstract class GenericEditController[T <: Struct ] extends StructController[T] {    
+  
+  
+    protected def getNewModelInstance():T
+
+    protected def fillEditModel(obj:T,model:Model,locale:Locale) {
+      model.addAttribute(GenericController.MODEL_KEY, obj)
+    }
+
+
+    def loadModel(@RequestParam(required = false) id:java.lang.Long):T = {
+      logger.debug("_new request id="+id)
+
+        return if (id != null)
+          manager.getFull(id)
+        else
+          null.asInstanceOf[T]
+    }
+
+  @RequestMapping(value = Array("/new"), method = Array(RequestMethod.GET))
+  def createNew(model:Model,locale:Locale):String= {
+
+    fillEditModel(getNewModelInstance(),model,locale)
+
+    return editPage
+  }
+
+
+  @RequestMapping(value = Array("/edit/{id}"), method = Array(RequestMethod.GET))
+    def editWithId(model:Model,@PathVariable("id") id:Long,locale:Locale):String= {
+
+      fillEditModel(loadModel(id),model,locale)
+
+    return editPage
+  }
+
+
+    @RequestMapping(value = Array("/save"), method = Array(RequestMethod.POST))
+    def save(@RequestParam(required = false) cancel:String,
+            @Valid b:T,
+            result:BindingResult, model:Model,locale:Locale):String = {
+
+        if (cancel != null) {
+            model.addAttribute("statusMessageKey", "action.cancelled");
+            return listPage;
+        }
+
+        if (result.hasErrors()) {
+              logger.debug("form has errors " + result.getErrorCount());
+              
+              fillEditModel(b,model,locale)
+           /* for ( f:FieldError : result.getFieldErrors()) {
+                getLogger().debug("field=" + f.getField() + ",rejected value=" + f.getRejectedValue()+",message="+f.getDefaultMessage());
+            }*/
+            return editPage
+        }
+
+
+
+
+        val r:T = manager.save(b)
+
+        // set id from create
+        if (b.isBlank) {
+            b.setId(r.getId())
+        }
+    
+        model.addAttribute("statusMessageKey", "action.success");
+        return listPage;
+    }
+
+   
+
+    @RequestMapping(value = Array("/delete"), method = Array(RequestMethod.GET,RequestMethod.POST))
+    def delete(@RequestParam(required = false) id:Long,
+            model:Model):String = {
+        manager.remove(id);
+        return listPage;
+    }
+
+
+
+  @RequestMapping(value = Array("/{id}"), method = Array(RequestMethod.GET))
+  def getByPath(@PathVariable("id") id:java.lang.Long,model:Model,locale:Locale):String = {
+
+    val m = loadModel(id)
+
+    if (m==null)
+      return page404
+
+    model.addAttribute(GenericController.MODEL_KEY, m)
+
+    return viewPage
+  }
+
+
+  @RequestMapping(value = Array("/xml/{id}"), method = Array(RequestMethod.GET))
+  @ResponseBody
+  def getBody(@PathVariable("id") id:java.lang.Long,model:Model,locale:Locale):T = {
+    return loadModel(id);
+}
+
+
+}
