@@ -37,6 +37,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import scala.collection.JavaConversions._
 import uber.paste.base.Loggered
 import uber.paste.openid.MD5Util
+import org.apache.commons.lang.StringUtils
 
 @Entity
 @Searchable
@@ -177,6 +178,7 @@ class User extends Struct with UserDetails with java.io.Serializable{
     this.passwordRepeat = password;
   }
 
+  def isPasswordEmpty():Boolean = StringUtils.isBlank(password)
     
   def isAdmin():Boolean = return roles.contains(Role.ROLE_ADMIN.getCode)
   

@@ -21,12 +21,6 @@
 <div class="section">
 
 
-    <c:forEach var="server" items="${availableServers}">
-        <a href="<c:url value='/act/openid-login?openid_identifier=${server.code}'/>">
-
-            <img src="<c:url value='/images/openid/${server.icon}'/>" alt="${server.name}" title="${server.name}" border="0" style=" vertical-align: middle; " />
-        </a>
-    </c:forEach>
 
 
     <form name="f" action="<c:url value="/act/login" />" method="POST">

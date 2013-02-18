@@ -82,7 +82,7 @@ class UserManagerImpl extends StructManagerImpl[User] with UserManager with User
   def loadUserByUsername(username:String): UserDetails = {
     val out:User=getUserByUsername(username)
 
-    if (out==null)
+    if (out==null || out.getPassword()==null)
       throw new UsernameNotFoundException("User not found")
     return out
   }

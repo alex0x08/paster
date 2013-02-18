@@ -8,7 +8,7 @@
            <span style="background-color: darksalmon;" ><c:out value="${user.id}"/></span>
                  
            <span>
-           <a href="<c:url value="/main/user/edit"><c:param name="id" value="${user.id}" /></c:url>"><c:out value="${user.name}"/></a> 
+           <a href="<c:url value="/main/user/edit/${user.id}"/>"><c:out value="${user.name}"/></a>
      
            </span>
            

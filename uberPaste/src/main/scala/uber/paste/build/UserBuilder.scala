@@ -48,7 +48,7 @@ class UserBuilder(model:User) extends StructBuilder[User](model) {
 
   def fillFromOpenIdUser(user:OpenIdUser):UserBuilder= {
 
-    get.setOpenID(user.getIdentifier())
+    get.setOpenID(user.getIdentity())
 
     val axschema = user.getAttribute("info").asInstanceOf[java.util.Map[String, String]]
 
@@ -74,13 +74,15 @@ class UserBuilder(model:User) extends StructBuilder[User](model) {
 
     if (axschema.containsKey("email")) {
 
-      val mail = axschema.get("email");
+      val mail = axschema.get("email")
       get.setUsername(mail)
 
       if (get.getName()==null) {
         get.setName(mail)
       }
     }
+
+    get().setUsername(get.getUsername())
 
     if (logger.isDebugEnabled()) {
       logger.debug("user login="+get.getUsername()+", name={"+get.getName()+"}")
