@@ -25,12 +25,81 @@ import uber.paste.dao.UserExistsException
 import org.springframework.dao.DataAccessException
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
+import org.springframework.security.web.authentication.rememberme.{RememberMeAuthenticationException, AbstractRememberMeServices}
+import uber.paste.base.Loggered
+import javax.servlet.http.{Cookie, HttpServletResponse, HttpServletRequest}
+import org.springframework.security.core.Authentication
+import java.lang.String
+import scala.Predef.String
+
+class UserRememberMeService extends AbstractRememberMeServices(token:String,userDetailsService:UserManager) with Loggered {
+
+  /**
+   * Attempt to authenticate a user using a UMS single sign-on cookie.
+   */
+  @throws(classOf[RememberMeAuthenticationException])
+  @throws(classOf[UsernameNotFoundException])
+  override protected def processAutoLoginCookie( cookieTokens:Array[String], request:HttpServletRequest,
+     response:HttpServletResponse):UserDetails =
+  {
+    logger.debug("UmsRememberMeServices.processAutoLoginCookie");
+
+    UserDetails user = null;
+    String cookieValue = getCookieValue(request, getCookieName());
+    if (cookieValue != null)
+   //   user = userDetailsService.loadUserByCookie(cookieValue);
+    if (user != null)
+    {
+      request.getSession().setAttribute(getCookieName(), cookieValue);
+    //  request.getSession().setAttribute("user", userDetailsService.getCurrentUser());
+      return user;
+    }
+    else
+      throw new UsernameNotFoundException("Couldn't load user details via cookie: " + getCookieName());
+  }
+
+  /**
+   * On logout, clear the single sign-on cookie (always attached to "/").
+   */
+  def logout(request:HttpServletRequest, response:HttpServletResponse, authentication:Authentication)
+  {
+    logger.debug("UmsRememberMeServices.logout");
+    val cookieName = getCookieName()
+    val sessionSso = request.getSession().getAttribute(cookieName)
+    if (sessionSso != null)
+    {
+      getUserDetailsService().asInstanceOf[UserManager].removeSSOSession(sessionSso);
+    }
+  }
+
+  protected def getCookieValue(request:HttpServletRequest, cookieName:String):String =
+  {
+    logger.debug("UmsRememberMeServices.getCookieValue - cookieName: " + cookieName);
+
+    val cookies = request.getCookies()
+    if (cookies != null)
+      for (cookie <- cookies)
+        if (cookie.getName().equals(cookieName))
+          {
+              return cookie.getValue()
+          }
+    return null
+  }
+
+ override protected def onLoginSuccess(request:HttpServletRequest, response:HttpServletResponse,
+                                       successfulAuthentication:Authentication )
+  {
+    logger.debug("UmsRememberMeServices.onLoginSuccess");
+  }
+}
 
 trait UserManager extends StructManager[User] {
 
     def getUserByUsername(username:String): User
 
     def getUserByOpenID(openid:String): User
+
+    def getUserBySavedSession(sessionId:String): User
 
   }
 
@@ -57,6 +126,10 @@ class UserManagerImpl extends StructManagerImpl[User] with UserManager with User
 
   def getUserByOpenID(openid:String): User = {
     return userDao.getUserByOpenID(openid)
+  }
+
+  def getUserBySavedSession(sessionId:String): User = {
+    return userDao.getUserBySession(openid)
   }
 
   @Override

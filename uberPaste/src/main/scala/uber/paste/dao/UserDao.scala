@@ -23,6 +23,8 @@ import uber.paste.model.User
 
 trait UserDao extends StructDao[User]{
 
+  def getUserBySession(sessionId:String):User
+
   def getUser(username:String):User
 
   def getUserByOpenID(openid:String):User
@@ -30,16 +32,28 @@ trait UserDao extends StructDao[User]{
   }
 
 
-
 @Repository("userDao")
 @Transactional(readOnly = true)
 class UserDaoImpl extends StructDaoImpl[User](classOf[User]) with UserDao {
 
+  def getUserBySession(sessionId:String):User = {
+
+    val result =  em.createQuery("select u from User u where u.savedSession.key = :sessionId")
+      .setParameter("sessionId", sessionId)
+      .getResultList()
+
+    if (logger.isDebugEnabled)
+      logger.debug("_getUser for session="+sessionId+",results="+result.size());
+
+    return if (result==null || result.isEmpty()) null else result.get(0).asInstanceOf[User]
+  }
+
+
   def getUser(username:String):User = {
 
-    val hquery = em.createQuery("select u from User u where u.username = :username")
-    hquery.setParameter("username", username)
-    val result = hquery.getResultList()
+    val result =  em.createQuery("select u from User u where u.username = :username")
+      .setParameter("username", username)
+      .getResultList()
 
     if (logger.isDebugEnabled)
       logger.debug("_getUser for name="+username+",results="+result.size());
@@ -49,16 +63,15 @@ class UserDaoImpl extends StructDaoImpl[User](classOf[User]) with UserDao {
 
   def getUserByOpenID(openid:String):User = {
 
-    val hquery = em.createQuery("select u from User u where u.openID = :openid")
-    hquery.setParameter("openid", openid)
-    val result = hquery.getResultList()
+    val result = em.createQuery("select u from User u where u.openID = :openid")
+            .setParameter("openid", openid)
+            .getResultList()
 
     if (logger.isDebugEnabled)
       logger.debug("_getUser for openid="+openid+",results="+result.size());
 
     return if (result==null || result.isEmpty()) null else result.get(0).asInstanceOf[User]
   }
-
 
 }
 

@@ -17,15 +17,11 @@
 package uber.paste.model
 
 
-import javax.persistence.Transient
+import javax.persistence._
 import java.util.HashSet
 import java.util.ArrayList
 import java.util.Collection
 import java.util.Set
-import javax.persistence.Entity
-import javax.persistence.FetchType
-import javax.persistence.Column
-import javax.persistence.ElementCollection
 import javax.validation.constraints.NotNull
 import org.codehaus.jackson.annotate.JsonIgnore
 import org.compass.annotations.Searchable
@@ -38,6 +34,8 @@ import scala.collection.JavaConversions._
 import uber.paste.base.Loggered
 import uber.paste.openid.MD5Util
 import org.apache.commons.lang.StringUtils
+import java.util
+import org.hibernate.annotations.IndexColumn
 
 @Entity
 @Searchable
@@ -61,6 +59,10 @@ class User extends Struct with UserDetails with java.io.Serializable{
   private var roles:Set[String] = new HashSet[String]()
 
   private var openID:String  =null
+
+  @OneToMany(fetch = Array(FetchType.EAGER),cascade=Array(CascadeType.MERGE,CascadeType.PERSIST))
+  @IndexColumn(name="index_sess")
+  private var savedSessions:Set[SavedSession] = new util.HashSet[SavedSession]()
 
   /**
    * пароль
@@ -159,13 +161,13 @@ class User extends Struct with UserDetails with java.io.Serializable{
   }
 
   @JsonIgnore
-  def getOpenID():String = {
-    return openID;
-  }
+  def getSavedSessions():Set[SavedSession] = savedSessions
 
-  def setOpenID(openid:String)  {
-    this.openID = openid;
-  }
+  @JsonIgnore
+  def getOpenID():String = openID
+
+
+  def setOpenID(openid:String) { this.openID = openid  }
 
 
   @Override
