@@ -23,7 +23,7 @@
 
 
 
-    <form name="f" action="<c:url value="/act/login" />" method="POST">
+    <form name="f" action="<c:url value="/j_spring_security_check" />" method="POST">
         <fieldset>
             <div class="field">
                 <div class="label"><label for="j_username"><fmt:message key="login.username"/>:</label></div>

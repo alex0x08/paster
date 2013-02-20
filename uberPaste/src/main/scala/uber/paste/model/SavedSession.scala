@@ -1,6 +1,6 @@
 package uber.paste.model
 
-import javax.persistence.Entity
+import javax.persistence.{JoinColumn, ManyToOne, Entity}
 
 /**
  * Created with IntelliJ IDEA.
@@ -12,9 +12,16 @@ import javax.persistence.Entity
 @Entity
 class SavedSession extends Key with java.io.Serializable{
 
+  @ManyToOne
+  @JoinColumn(name = "user_id")
+  private var user:User = null
+
   def this(code:String) = {
     this()
     setCode(code)
   }
 
+  def getUser():User = user
+
+  def setUser(u:User) {user = u}
 }

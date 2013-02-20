@@ -47,6 +47,7 @@ class UserDaoImpl extends StructDaoImpl[User](classOf[User]) with UserDao {
       var user:User  = get(userId);
      val session = new SavedSession
     session.setCode(UUID.randomUUID().toString)
+    session.setName("--")
 
     user.getSavedSessions().add(session)
     user  = save(user)
@@ -54,7 +55,7 @@ class UserDaoImpl extends StructDaoImpl[User](classOf[User]) with UserDao {
   }
 
   def getSession(sessionId:String):SavedSession = {
-  val result = em.createQuery("select s from SavedSession s where s.key = :sessionId")
+  val result = em.createQuery("select s from SavedSession s where s.code = :sessionId")
       .setParameter("sessionId", sessionId)
       .getResultList()
 
@@ -68,7 +69,7 @@ class UserDaoImpl extends StructDaoImpl[User](classOf[User]) with UserDao {
 
   def getUserBySession(sessionId:String):User = {
 
-    val result =  em.createQuery("select u from User u where u.savedSession.key = :sessionId")
+    val result =  em.createQuery("select u from User u join u.savedSessions as s where s.code = :sessionId")
       .setParameter("sessionId", sessionId)
       .getResultList()
 

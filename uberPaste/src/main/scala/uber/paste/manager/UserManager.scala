@@ -34,6 +34,7 @@ import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import java.io.IOException
 import javax.servlet.ServletException
+import org.springframework.security.crypto.codec.Base64
 
 class UserAuthenticationProcessingFilter extends UsernamePasswordAuthenticationFilter {
 
@@ -48,7 +49,7 @@ class UserAuthenticationProcessingFilter extends UsernamePasswordAuthenticationF
   override protected def successfulAuthentication(request:HttpServletRequest, response:HttpServletResponse,
   authResult:Authentication)  {
 
-    val user:User = UserManager.getCurrentUser()
+    val user:User = authResult.getPrincipal.asInstanceOf[User]
 
     val currentCookie:String = UserManager.getCookieValue(request,cookieName)
 
@@ -69,9 +70,12 @@ class UserAuthenticationProcessingFilter extends UsernamePasswordAuthenticationF
       userManager.createSession(user.getId())
     }
 
-    val c=new Cookie(cookieName,s.getCode())
+    logger.debug("createCookie savedSession "+s)
+
+    val c=new Cookie(cookieName,new String(Base64.encode(s.getCode().getBytes())))
     c.setMaxAge(10 * 60)
     c.setPath("/")
+    //c.setVersion(1)
     return c
   }
 
@@ -157,16 +161,17 @@ object UserManager extends Loggered{
 
   def getCookieValue(request:HttpServletRequest, cookieName:String):String =
   {
-    logger.debug("UmsRememberMeServices.getCookieValue - cookieName: " + cookieName);
-
+   var value:String =null
     val cookies = request.getCookies()
     if (cookies != null)
       for (cookie <- cookies)
         if (cookie.getName().equals(cookieName))
         {
-          return cookie.getValue()
+          value= new String(Base64.decode(cookie.getValue().getBytes()))
         }
-    return null
+    logger.debug("UmsRememberMeServices.getCookieValue - cookieName: " + cookieName+" value="+value);
+
+    return value
   }
 
 }
