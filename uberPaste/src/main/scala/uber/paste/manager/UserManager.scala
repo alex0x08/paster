@@ -37,7 +37,7 @@ import javax.servlet.ServletException
 
 class UserAuthenticationProcessingFilter extends UsernamePasswordAuthenticationFilter {
 
-  val logger:Logger = Loggered.getLogger(this)
+//  val logger:Logger = Loggered.getLogger(this)
 
   var userManager:UserManager =null
 
@@ -84,7 +84,7 @@ class UserAuthenticationProcessingFilter extends UsernamePasswordAuthenticationF
 
 class UserRememberMeService extends AbstractRememberMeServices  {
 
-  val logger:Logger = Loggered.getLogger(this)
+  //val logger:Logger = Loggered.getLogger(this)
 
   /**
    * Attempt to authenticate a user using a UMS single sign-on cookie.

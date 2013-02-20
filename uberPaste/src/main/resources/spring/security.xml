@@ -24,7 +24,8 @@
     <http pattern="/libs/*" security="none"/>
 
 
-    <http realm="Paster Realm" auto-config="true" use-expressions="true">
+    <http realm="Paster Realm" auto-config="false" use-expressions="true" entry-point-ref="authenticationEntryPoint"
+          disable-url-rewriting="true">
         <custom-filter position="REMEMBER_ME_FILTER"
                            ref="rememberMeFilter" />
         <custom-filter position="FORM_LOGIN_FILTER"
@@ -35,8 +36,8 @@
 
         <intercept-url pattern="/**" access="permitAll()"/>
 
-        <form-login login-page="/main/login" authentication-failure-url="/main/login?error=1"
-        default-target-url="/" login-processing-url="/act/login"/>
+        <!--form-login login-page="/main/login" authentication-failure-url="/main/login?error=1"
+        default-target-url="/" login-processing-url="/act/login"/-->
 
 
         <session-management>

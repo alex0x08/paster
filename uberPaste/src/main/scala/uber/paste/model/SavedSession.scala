@@ -12,6 +12,9 @@ import javax.persistence.Entity
 @Entity
 class SavedSession extends Key with java.io.Serializable{
 
-
+  def this(code:String) = {
+    this()
+    setCode(code)
+  }
 
 }

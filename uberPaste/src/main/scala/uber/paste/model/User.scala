@@ -60,7 +60,7 @@ class User extends Struct with UserDetails with java.io.Serializable{
 
   private var openID:String  =null
 
-  @OneToMany(fetch = Array(FetchType.EAGER),cascade=Array(CascadeType.MERGE,CascadeType.PERSIST))
+  @OneToMany(fetch = FetchType.EAGER,cascade=Array(CascadeType.MERGE,CascadeType.PERSIST))
   @IndexColumn(name="index_sess")
   private var savedSessions:Set[SavedSession] = new util.HashSet[SavedSession]()
 

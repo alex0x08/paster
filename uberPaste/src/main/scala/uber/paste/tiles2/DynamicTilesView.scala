@@ -51,7 +51,7 @@ import org.apache.tiles.servlet.context.ServletUtil
 import org.springframework.web.servlet.view.AbstractUrlBasedView
 import uber.paste.base.Loggered
 
-class DynamicTilesView extends AbstractUrlBasedView with Loggered  {
+class DynamicTilesView extends AbstractUrlBasedView   {
   
 private final val dynamicTilesViewProcessor = new DynamicTilesViewProcessor
 	
