@@ -17,7 +17,7 @@
 
 package uber.paste.base
 
-import org.slf4j.LoggerFactory
+import org.slf4j.{Logger, LoggerFactory}
 import org.apache.commons.lang.builder.{StandardToStringStyle, ToStringBuilder}
 import javax.jws.WebMethod
 
@@ -30,6 +30,8 @@ object Loggered {
   }
 
   def getNewProtocolBuilder(clazz:AnyRef):ToStringBuilder = new ToStringBuilder(clazz.getClass.getName, Loggered.style)
+
+  def getLogger(clazz:AnyRef):Logger = LoggerFactory.getLogger(clazz.getClass)
 }
 
 trait Loggered {

@@ -26,6 +26,7 @@ import org.springframework.context.MessageSource
 import javax.annotation.Resource
 import java.util.Locale
 import scala.collection.JavaConversions._
+import uber.paste.manager.UserManager
 
 abstract class AbstractController extends Loggered{
 
@@ -66,33 +67,14 @@ abstract class AbstractController extends Loggered{
 
 
   def isCurrentUserLoggedIn():Boolean = {
-    return getCurrentUser() != null
+    return UserManager.getCurrentUser != null
   }
 
   def isCurrentUserAdmin():Boolean = {
-    val u:User = getCurrentUser()
+    val u:User = UserManager.getCurrentUser
     return u != null && u.isAdmin()
   }
 
-  def  getCurrentUser():User = {
-
-    return SecurityContextHolder.getContext().getAuthentication().getPrincipal() match {
-      case u:User => { 
-          SessionStore.instance.getUserForLogin(
-            (SecurityContextHolder.getContext().getAuthentication().getPrincipal()).asInstanceOf[User].getUsername())
-        }
-      case _ => {
-          /**
-           * this almost all time means that we got anonymous user
-           */
-          logger.debug("getCurrentUser ,unknown principal type: " + SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString)
-          return null;
-        }
-    }
-    
-    
-       
-  }
 
 
 

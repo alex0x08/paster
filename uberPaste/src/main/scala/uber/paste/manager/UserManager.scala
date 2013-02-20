@@ -18,7 +18,7 @@ package uber.paste.manager
 
 import org.springframework.stereotype.Service
 import uber.paste.dao.UserDao
-import uber.paste.model.User
+import uber.paste.model.{SavedSession, User}
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 import uber.paste.dao.UserExistsException
@@ -26,49 +26,57 @@ import org.springframework.dao.DataAccessException
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.web.authentication.rememberme.{RememberMeAuthenticationException, AbstractRememberMeServices}
-import uber.paste.base.Loggered
+import uber.paste.base.{SessionStore, Loggered}
 import javax.servlet.http.{Cookie, HttpServletResponse, HttpServletRequest}
 import org.springframework.security.core.Authentication
 import java.lang.String
 import scala.Predef.String
+import org.slf4j.Logger
+import org.springframework.security.core.context.SecurityContextHolder
 
-class UserRememberMeService extends AbstractRememberMeServices(token:String,userDetailsService:UserManager) with Loggered {
+class UserRememberMeService extends AbstractRememberMeServices  {
+
+  val logger:Logger = Loggered.getLogger(this)
+
+
 
   /**
    * Attempt to authenticate a user using a UMS single sign-on cookie.
    */
   @throws(classOf[RememberMeAuthenticationException])
   @throws(classOf[UsernameNotFoundException])
-  override protected def processAutoLoginCookie( cookieTokens:Array[String], request:HttpServletRequest,
+  override protected def processAutoLoginCookie( cookieTokens:Array[String],
+                                                 request:HttpServletRequest,
      response:HttpServletResponse):UserDetails =
   {
-    logger.debug("UmsRememberMeServices.processAutoLoginCookie");
 
-    UserDetails user = null;
-    String cookieValue = getCookieValue(request, getCookieName());
+    logger.debug("UmsRememberMeServices.processAutoLoginCookie")
+
+    var user:User = null;
+    val cookieValue:String = getCookieValue(request, getCookieName())
     if (cookieValue != null)
-   //   user = userDetailsService.loadUserByCookie(cookieValue);
+      user = getUserDetailsService().asInstanceOf[UserManager].getUserBySavedSession(cookieValue)
     if (user != null)
     {
-      request.getSession().setAttribute(getCookieName(), cookieValue);
-    //  request.getSession().setAttribute("user", userDetailsService.getCurrentUser());
-      return user;
+      request.getSession().setAttribute(getCookieName(), cookieValue)
+      request.getSession().setAttribute("user", UserManager.getCurrentUser())
+      return user
     }
     else
-      throw new UsernameNotFoundException("Couldn't load user details via cookie: " + getCookieName());
+      throw new UsernameNotFoundException("Couldn't load user details via cookie: " + getCookieName())
   }
 
   /**
    * On logout, clear the single sign-on cookie (always attached to "/").
    */
-  def logout(request:HttpServletRequest, response:HttpServletResponse, authentication:Authentication)
+  override def logout(request:HttpServletRequest, response:HttpServletResponse, authentication:Authentication)
   {
     logger.debug("UmsRememberMeServices.logout");
     val cookieName = getCookieName()
-    val sessionSso = request.getSession().getAttribute(cookieName)
+    val sessionSso:String = request.getSession().getAttribute(cookieName).asInstanceOf[String]
     if (sessionSso != null)
     {
-      getUserDetailsService().asInstanceOf[UserManager].removeSSOSession(sessionSso);
+      getUserDetailsService().asInstanceOf[UserManager].removeSession(sessionSso);
     }
   }
 
@@ -93,6 +101,29 @@ class UserRememberMeService extends AbstractRememberMeServices(token:String,user
   }
 }
 
+object UserManager extends Loggered{
+
+  def  getCurrentUser():User = {
+
+    return SecurityContextHolder.getContext().getAuthentication().getPrincipal() match {
+      case u:User => {
+        SessionStore.instance.getUserForLogin(
+          (SecurityContextHolder.getContext().getAuthentication().getPrincipal()).asInstanceOf[User].getUsername())
+      }
+      case _ => {
+        /**
+         * this almost all time means that we got anonymous user
+         */
+        logger.debug("getCurrentUser ,unknown principal type: " + SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString)
+        return null;
+      }
+    }
+
+  }
+
+
+}
+
 trait UserManager extends StructManager[User] {
 
     def getUserByUsername(username:String): User
@@ -100,6 +131,8 @@ trait UserManager extends StructManager[User] {
     def getUserByOpenID(openid:String): User
 
     def getUserBySavedSession(sessionId:String): User
+
+    def removeSession(sessionId:String)
 
   }
 
@@ -129,7 +162,15 @@ class UserManagerImpl extends StructManagerImpl[User] with UserManager with User
   }
 
   def getUserBySavedSession(sessionId:String): User = {
-    return userDao.getUserBySession(openid)
+    return userDao.getUserBySession(sessionId)
+  }
+
+  def createSession(userId:java.lang.Long):SavedSession = {
+
+  }
+
+  def removeSession(sessionId:String) = {
+    userDao.removeSession(sessionId)
   }
 
   @Override

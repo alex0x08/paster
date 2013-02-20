@@ -18,12 +18,15 @@ package uber.paste.dao
 
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
-import uber.paste.model.User
+import uber.paste.model.{SavedSession, User}
+import java.util.UUID
 
 
 trait UserDao extends StructDao[User]{
 
   def getUserBySession(sessionId:String):User
+
+  def removeSession(sessionId:String)
 
   def getUser(username:String):User
 
@@ -35,6 +38,29 @@ trait UserDao extends StructDao[User]{
 @Repository("userDao")
 @Transactional(readOnly = true)
 class UserDaoImpl extends StructDaoImpl[User](classOf[User]) with UserDao {
+
+  def createSession(userId:java.lang.Long):SavedSession = {
+      var user:User  = get(userId);
+     val session = new SavedSession
+    session.setCode(UUID.randomUUID().toString)
+
+    user.getSavedSessions().add(session)
+    user  = save(user)
+    return getSession(session.getCode())
+  }
+
+  def getSession(sessionId:String):SavedSession = {
+  val result = em.createQuery("select s from SavedSession s where s.key = :sessionId")
+      .setParameter("sessionId", sessionId)
+      .getResultList()
+
+    return if (result==null || result.isEmpty()) null else result.get(0).asInstanceOf[SavedSession]
+
+  }
+
+  def removeSession(sessionId:String) {
+    em.remove(getSession(sessionId))
+ }
 
   def getUserBySession(sessionId:String):User = {
 
