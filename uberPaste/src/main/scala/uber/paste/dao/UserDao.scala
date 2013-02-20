@@ -28,6 +28,10 @@ trait UserDao extends StructDao[User]{
 
   def removeSession(sessionId:String)
 
+  def createSession(userId:java.lang.Long):SavedSession
+
+  def getSession(sessionId:String):SavedSession
+
   def getUser(username:String):User
 
   def getUserByOpenID(openid:String):User

@@ -65,6 +65,7 @@ abstract class AbstractController extends Loggered{
     return page500;
   }
 
+  def getCurrentUser():User = UserManager.getCurrentUser()
 
   def isCurrentUserLoggedIn():Boolean = {
     return UserManager.getCurrentUser != null

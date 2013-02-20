@@ -164,6 +164,19 @@ class User extends Struct with UserDetails with java.io.Serializable{
   def getSavedSessions():Set[SavedSession] = savedSessions
 
   @JsonIgnore
+  def containsSavedSession(key:String):Boolean = savedSessions.contains(new SavedSession(key))
+
+  @JsonIgnore
+  def getSavedSession(key:String):SavedSession = {
+    for (s<-savedSessions) {
+      if (s.getCode().equals(key)) {
+        return s
+      }
+    }
+    return null
+  }
+
+  @JsonIgnore
   def getOpenID():String = openID
 
 

@@ -29,16 +29,62 @@ import org.springframework.security.web.authentication.rememberme.{RememberMeAut
 import uber.paste.base.{SessionStore, Loggered}
 import javax.servlet.http.{Cookie, HttpServletResponse, HttpServletRequest}
 import org.springframework.security.core.Authentication
-import java.lang.String
-import scala.Predef.String
 import org.slf4j.Logger
 import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
+import java.io.IOException
+import javax.servlet.ServletException
+
+class UserAuthenticationProcessingFilter extends UsernamePasswordAuthenticationFilter {
+
+  val logger:Logger = Loggered.getLogger(this)
+
+  var userManager:UserManager =null
+
+  var cookieName:String = null
+
+  @throws(classOf[ServletException])
+  @throws(classOf[IOException])
+  override protected def successfulAuthentication(request:HttpServletRequest, response:HttpServletResponse,
+  authResult:Authentication)  {
+
+    val user:User = UserManager.getCurrentUser()
+
+    val currentCookie:String = UserManager.getCookieValue(request,cookieName)
+
+    val sso:Cookie = createCookie(user,currentCookie)
+
+    response.addCookie(sso);
+    //request.getSession().setAttribute("user", user);
+    request.getSession().setAttribute(cookieName, currentCookie)
+
+    super.successfulAuthentication(request, response, authResult);
+  }
+
+  def createCookie(user:User,cookie:String):Cookie = {
+
+    val s:SavedSession = if (user.containsSavedSession(cookie)) {
+      user.getSavedSession(cookie)
+    } else {
+      userManager.createSession(user.getId())
+    }
+
+    val c=new Cookie(cookieName,s.getCode())
+    c.setMaxAge(10 * 60)
+    c.setPath("/")
+    return c
+  }
+
+  def getCookieName() = cookieName;
+  def setCookieName(c:String) = {this.cookieName = c}
+
+  def getUserManager():UserManager = userManager
+  def setUserManager(u:UserManager) {this.userManager =u}
+}
 
 class UserRememberMeService extends AbstractRememberMeServices  {
 
   val logger:Logger = Loggered.getLogger(this)
-
-
 
   /**
    * Attempt to authenticate a user using a UMS single sign-on cookie.
@@ -53,13 +99,13 @@ class UserRememberMeService extends AbstractRememberMeServices  {
     logger.debug("UmsRememberMeServices.processAutoLoginCookie")
 
     var user:User = null;
-    val cookieValue:String = getCookieValue(request, getCookieName())
+    val cookieValue:String = UserManager.getCookieValue(request, getCookieName())
     if (cookieValue != null)
       user = getUserDetailsService().asInstanceOf[UserManager].getUserBySavedSession(cookieValue)
     if (user != null)
     {
       request.getSession().setAttribute(getCookieName(), cookieValue)
-      request.getSession().setAttribute("user", UserManager.getCurrentUser())
+     // request.getSession().setAttribute("user", UserManager.getCurrentUser())
       return user
     }
     else
@@ -80,19 +126,7 @@ class UserRememberMeService extends AbstractRememberMeServices  {
     }
   }
 
-  protected def getCookieValue(request:HttpServletRequest, cookieName:String):String =
-  {
-    logger.debug("UmsRememberMeServices.getCookieValue - cookieName: " + cookieName);
 
-    val cookies = request.getCookies()
-    if (cookies != null)
-      for (cookie <- cookies)
-        if (cookie.getName().equals(cookieName))
-          {
-              return cookie.getValue()
-          }
-    return null
-  }
 
  override protected def onLoginSuccess(request:HttpServletRequest, response:HttpServletResponse,
                                        successfulAuthentication:Authentication )
@@ -121,6 +155,19 @@ object UserManager extends Loggered{
 
   }
 
+  def getCookieValue(request:HttpServletRequest, cookieName:String):String =
+  {
+    logger.debug("UmsRememberMeServices.getCookieValue - cookieName: " + cookieName);
+
+    val cookies = request.getCookies()
+    if (cookies != null)
+      for (cookie <- cookies)
+        if (cookie.getName().equals(cookieName))
+        {
+          return cookie.getValue()
+        }
+    return null
+  }
 
 }
 
@@ -133,6 +180,10 @@ trait UserManager extends StructManager[User] {
     def getUserBySavedSession(sessionId:String): User
 
     def removeSession(sessionId:String)
+
+    def createSession(userId:java.lang.Long):SavedSession
+
+    def getSession(sessionId:String):SavedSession
 
   }
 
@@ -166,7 +217,11 @@ class UserManagerImpl extends StructManagerImpl[User] with UserManager with User
   }
 
   def createSession(userId:java.lang.Long):SavedSession = {
+    return userDao.createSession(userId)
+  }
 
+  def getSession(sessionId:String):SavedSession = {
+    return userDao.getSession(sessionId)
   }
 
   def removeSession(sessionId:String) = {
