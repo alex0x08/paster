@@ -17,11 +17,11 @@
 
 
 
-    <http pattern="/images/*" security="none"/>
-    <http pattern="/css/*" security="none"/>
-    <http pattern="/js/*" security="none"/>
+    <http pattern="/images/**" security="none"/>
+    <http pattern="/css/**" security="none"/>
+    <http pattern="/js/**" security="none"/>
     <http pattern="/errors/*" security="none"/>
-    <http pattern="/libs/*" security="none"/>
+    <http pattern="/libs/**" security="none"/>
 
 
     <http realm="Paster Realm" auto-config="false" use-expressions="true" entry-point-ref="authenticationEntryPoint"
@@ -30,7 +30,10 @@
                            ref="rememberMeFilter" />
         <custom-filter position="FORM_LOGIN_FILTER"
                            ref="umsAuthenticationProcessingFilter" />
-        <anonymous/>
+
+        <!--custom-filter position="LOGOUT_FILTER" ref="umsLogoutFilter" /-->
+
+        <!--anonymous/-->
         <intercept-url pattern="/main/user*"  access="hasRole('ROLE_ADMIN')"/>
         <intercept-url pattern="/main/user/**" access="hasRole('ROLE_ADMIN')"/>
 
@@ -45,7 +48,7 @@
         </session-management>
 
         
-        <logout logout-url="/act/logout" logout-success-url="/main/paste/list"  invalidate-session="true"  />
+        <logout logout-url="/act/logout"  invalidate-session="true" success-handler-ref="umsLogoutHandler"  />
 
      <!--   <remember-me /> -->
 
@@ -84,6 +87,31 @@
                         class="org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler"
                         p:defaultFailureUrl="/main/login?authfailed=true" />
         </beans:property>
+    </beans:bean>
+
+    <beans:bean id="umsLogoutHandler"
+                class="uber.paste.manager.UserLogoutSuccessHandler">
+        <beans:property name="userManager" ref="userService" />
+        <beans:property name="cookieName" value="${Ums.SSO.Cookie.Name}" />
+
+    </beans:bean>
+
+
+
+    <beans:bean id="umsLogoutFilter"
+                class="uber.paste.manager.UserLogoutFilter">
+        <beans:constructor-arg value="/main/login?logdout=true" />
+        <beans:constructor-arg>
+            <beans:list>
+                <beans:ref bean="umsRememberMeServices" />
+                <beans:bean id="logoutHandler"
+                            class="org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler">
+                </beans:bean>
+            </beans:list>
+        </beans:constructor-arg>
+        <beans:property name="userManager" ref="userService" />
+        <beans:property name="cookieName" value="${Ums.SSO.Cookie.Name}" />
+        <beans:property name="filterProcessesUrl" value="/j_spring_security_logout" />
     </beans:bean>
 
 

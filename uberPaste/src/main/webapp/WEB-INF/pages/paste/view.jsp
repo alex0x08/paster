@@ -6,7 +6,8 @@
 <c:set var="priorTitle"><fmt:message key="${model.priority.name}"/></c:set>
 
 
-        <h4 class="f-h4"><span class="i ${model.priority.cssClass}" style="font-size:2em;" title="${priorTitle}" >/</span>${model.name}
+        <h4 class="f-h4"><span class="i ${model.priority.cssClass}" style="font-size:2em;" title="${priorTitle}" >/</span>
+            <c:out value="${model.name}" escapeXml="true"/>
            <span style="font-weight: normal; font-size: 10px;">
                  ( <c:forEach var="tag" items="${model.tags}" varStatus="loopStatus">
                <a href="<c:url value='/main/paste/list/search?query=tags:${tag}'/>"><c:out value=" ${tag}"/></a>
@@ -37,12 +38,16 @@
         <a href="<c:url value="/main/paste/${model.id}.json"/>">json</a> |
         <a href="<c:url value="/main/paste/plain/${model.id}"/>">plain</a> |
 
+        <a id="ctrlc_link" data-clipboard-target="pasteTextPlain" href="javascript:void(0);" >Ctrl-C</a> |
+
         <a href="<c:url value="/main/paste/${model.id+1}"/>">&#8594;</a>
 
 
 
             <div>
-                <div class="brush: ${model.codeType.code};toolbar: false; auto-links:false;" ><c:out value="${model.text}" /></div>
+
+                <pre id="pasteText" class="brush: ${model.codeType.code};toolbar: false; auto-links:false;" ><c:out value="${model.text}" /></pre>
+                <code id="pasteTextPlain" style="display:none;"><c:out value="${model.text}" /></code>
             </div>
 
 
@@ -85,26 +90,30 @@
 </form:form>
 
 
+<script type="text/javascript" src="<c:url value='/libs/zeroclipboard/ZeroClipboard.js'/>"></script>
 
                        <script type="text/javascript">
-            
-            function path()
-            {
-                var args = arguments,
-                result = [];
-                
-       
-                for(var i = 0; i < args.length; i++)
-                    result.push(args[i].replace('@', '<c:url value="/libs/syntax-highlight/scripts/"/>'));
-       
-       
-                //alert(result);
-                return result
-            };
 
+window.addEvent('domready', function() {
 
-            SyntaxHighlighter.config.tagName = "div";
-            SyntaxHighlighter.autoloader.apply(null, path(
+    ZeroClipboard.setDefaults( { moviePath: "<c:url value='/libs/zeroclipboard/ZeroClipboard.swf'/>" } );
+
+    var clip = new ZeroClipboard(document.id("ctrlc_link"));
+        //alert('Done! '+clip.ready());
+
+    clip.on( 'load', function(client) {
+    //     alert( "movie is loaded" );
+    } );
+
+    clip.on( 'complete', function(client, args) {
+        growl.notify(args.text.length+' symbols copied to clipboard.');
+        //alert(args.text.length+' symbols copied to clipboard.');
+        //new MooDialog.Alert(args.text.length+' symbols copied to clipboard.');
+
+    } );
+
+    SyntaxHighlighter.config.tagName = "pre";
+    SyntaxHighlighter.autoloader.apply(null, path(
             'applescript            @shBrushAppleScript.js',
             'actionscript3 as3      @shBrushAS3.js',
             'bash shell             @shBrushBash.js',
@@ -129,9 +138,31 @@
             'sql                    @shBrushSql.js',
             'vb vbnet               @shBrushVb.js',
             'xml xhtml xslt html    @shBrushXml.js'
-        ));
+    ));
 
-            SyntaxHighlighter.all();
+    SyntaxHighlighter.all();
+
+    });
+
+
+
+
+            function path()
+            {
+                var args = arguments,
+                result = [];
+                
+       
+                for(var i = 0; i < args.length; i++)
+                    result.push(args[i].replace('@', '<c:url value="/libs/syntax-highlight/scripts/"/>'));
+       
+       
+                //alert(result);
+                return result
+            };
+
+
+
         </script>
         
 

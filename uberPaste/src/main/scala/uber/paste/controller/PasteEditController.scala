@@ -155,7 +155,7 @@ class PasteController extends GenericEditController[Paste]   {
 
 
 
-    model.addAttribute("title",getResource("paste.view.title",Array(p.getId,p.getTitle),locale))
+    model.addAttribute("title",getResource("paste.view.title",Array(p.getId),locale))
     
     return viewPage
   }

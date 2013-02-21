@@ -60,8 +60,9 @@ class User extends Struct with UserDetails with java.io.Serializable{
 
   private var openID:String  =null
 
-  @OneToMany(fetch = FetchType.EAGER,cascade=Array(CascadeType.ALL),orphanRemoval = true, mappedBy = "user")
-  private var savedSessions:Set[SavedSession] = new util.HashSet[SavedSession]()
+
+  @OneToMany(fetch = FetchType.EAGER,cascade = Array(CascadeType.PERSIST,CascadeType.MERGE,CascadeType.REMOVE))
+  private var savedSessions:java.util.List[SavedSession] = new ArrayList[SavedSession]()
 
   /**
    * пароль
@@ -160,7 +161,7 @@ class User extends Struct with UserDetails with java.io.Serializable{
   }
 
   @JsonIgnore
-  def getSavedSessions():Set[SavedSession] = savedSessions
+  def getSavedSessions():java.util.List[SavedSession] = savedSessions
 
   @JsonIgnore
   def containsSavedSession(key:String):Boolean = savedSessions.contains(new SavedSession(key))

@@ -29,12 +29,87 @@ import org.springframework.security.web.authentication.rememberme.{RememberMeAut
 import uber.paste.base.{SessionStore, Loggered}
 import javax.servlet.http.{Cookie, HttpServletResponse, HttpServletRequest}
 import org.springframework.security.core.Authentication
-import org.slf4j.Logger
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import java.io.IOException
 import javax.servlet.ServletException
 import org.springframework.security.crypto.codec.Base64
+import org.springframework.security.web.authentication.logout.{SimpleUrlLogoutSuccessHandler, LogoutFilter, LogoutHandler}
+import scala.collection.JavaConversions._
+import org.apache.commons.lang.StringUtils
+
+class UserLogoutSuccessHandler extends SimpleUrlLogoutSuccessHandler {
+
+  var cookieName:String = null
+
+  var userManager:UserManager =null
+
+  @throws(classOf[IOException])
+  @throws(classOf[ServletException])
+  override def onLogoutSuccess(request:HttpServletRequest, response:HttpServletResponse,
+     authentication:Authentication)  {
+
+    if (authentication != null) {
+      // call sproc
+
+      logger.debug("UmsLogoutFilter.requiresLogout url="+request.getRequestURI);
+
+      val sessionSso = request.getSession().getAttribute(getCookieName()).asInstanceOf[String]
+
+      if (sessionSso != null){
+        userManager.removeSession(UserManager.getCurrentUser().getId(),sessionSso)
+      }
+
+      UserManager.invalidateSSOCookie(cookieName,response)
+
+    }
+
+    setDefaultTargetUrl("/main/login");
+    //below does the 'standard' spring logout handling
+    super.onLogoutSuccess(request, response, authentication);
+  }
+
+  def getCookieName() = cookieName;
+  def setCookieName(c:String) = {this.cookieName = c}
+
+  def getUserManager():UserManager = userManager
+  def setUserManager(u:UserManager) {this.userManager =u}
+}
+
+class UserLogoutFilter(logoutSuccessUrl:String, handlers:Array[LogoutHandler]) extends LogoutFilter(logoutSuccessUrl,handlers: _*) {
+
+  var cookieName:String = null
+
+  var userManager:UserManager =null
+
+
+  override protected def requiresLogout(request:HttpServletRequest, response:HttpServletResponse):Boolean =
+   {
+     // Normal logout processing (i.e. detect logout URL)
+     if (super.requiresLogout(request, response))
+       return true
+
+
+     logger.debug("UmsLogoutFilter.requiresLogout url="+request.getRequestURI);
+
+      val sessionSso = request.getSession().getAttribute(getCookieName()).asInstanceOf[String]
+
+     if (sessionSso != null){
+      userManager.removeSession(UserManager.getCurrentUser().getId(),sessionSso)
+     }
+
+     UserManager.invalidateSSOCookie(cookieName,response)
+
+     return false
+   }
+
+   def getCookieName() = cookieName;
+   def setCookieName(c:String) = {this.cookieName = c}
+
+  def getUserManager():UserManager = userManager
+  def setUserManager(u:UserManager) {this.userManager =u}
+
+}
 
 class UserAuthenticationProcessingFilter extends UsernamePasswordAuthenticationFilter {
 
@@ -53,7 +128,7 @@ class UserAuthenticationProcessingFilter extends UsernamePasswordAuthenticationF
 
     val currentCookie:String = UserManager.getCookieValue(request,cookieName)
 
-    val sso:Cookie = createCookie(user,currentCookie)
+    val sso:Cookie = createCookie(user,cookieName)
 
     response.addCookie(sso);
     //request.getSession().setAttribute("user", user);
@@ -70,13 +145,9 @@ class UserAuthenticationProcessingFilter extends UsernamePasswordAuthenticationF
       userManager.createSession(user.getId())
     }
 
-    logger.debug("createCookie savedSession "+s)
+    logger.debug("savedSession "+s)
 
-    val c=new Cookie(cookieName,new String(Base64.encode(s.getCode().getBytes())))
-    c.setMaxAge(10 * 60)
-    c.setPath("/")
-    //c.setVersion(1)
-    return c
+    return UserManager.createNewSSOCookie(cookie,s)
   }
 
   def getCookieName() = cookieName;
@@ -126,10 +197,14 @@ class UserRememberMeService extends AbstractRememberMeServices  {
     val sessionSso:String = request.getSession().getAttribute(cookieName).asInstanceOf[String]
     if (sessionSso != null)
     {
-      getUserDetailsService().asInstanceOf[UserManager].removeSession(sessionSso);
+      getUserDetailsService().asInstanceOf[UserManager].removeSession(UserManager.getCurrentUser().getId(),sessionSso);
     }
+
+    UserManager.invalidateSSOCookie(cookieName,response)
+
   }
 
+  def getSSOCookieName() = getCookieName()
 
 
  override protected def onLoginSuccess(request:HttpServletRequest, response:HttpServletResponse,
@@ -140,6 +215,28 @@ class UserRememberMeService extends AbstractRememberMeServices  {
 }
 
 object UserManager extends Loggered{
+
+
+  def createNewSSOCookie(cookieName:String,s:SavedSession):Cookie = {
+
+    System.out.println("__cookie name "+cookieName+" value="+new String(Base64.encode(s.getCode().getBytes())))
+
+    val c=new Cookie(cookieName,new String(Base64.encode(s.getCode().getBytes())))
+    c.setMaxAge(60 * 60 *60 *60)
+    c.setPath("/")
+    //c.setVersion(1)
+
+    logger.debug("createCookie savedSession "+s)
+
+    return c
+  }
+
+  def invalidateSSOCookie(cookieName:String,response:HttpServletResponse) {
+    val c=new Cookie(cookieName,null)
+    c.setMaxAge(-1)
+    c.setPath("/")
+    response.addCookie(c)
+  }
 
   def  getCurrentUser():User = {
 
@@ -161,17 +258,19 @@ object UserManager extends Loggered{
 
   def getCookieValue(request:HttpServletRequest, cookieName:String):String =
   {
-   var value:String =null
+
     val cookies = request.getCookies()
     if (cookies != null)
-      for (cookie <- cookies)
-        if (cookie.getName().equals(cookieName))
+      for (cookie <- cookies)     {
+        if (cookie.getName().equals(cookieName) && !StringUtils.isBlank(cookie.getValue()))
         {
-          value= new String(Base64.decode(cookie.getValue().getBytes()))
-        }
-    logger.debug("UmsRememberMeServices.getCookieValue - cookieName: " + cookieName+" value="+value);
+          val value= new String(Base64.decode(cookie.getValue().getBytes()))
+          logger.debug("UmsRememberMeServices.getCookieValue - cookieName: " + cookieName+" value="+value);
 
-    return value
+          return value
+        }
+      }
+    return null
   }
 
 }
@@ -184,7 +283,7 @@ trait UserManager extends StructManager[User] {
 
     def getUserBySavedSession(sessionId:String): User
 
-    def removeSession(sessionId:String)
+    def removeSession(userId:java.lang.Long,sessionId:String)
 
     def createSession(userId:java.lang.Long):SavedSession
 
@@ -229,8 +328,8 @@ class UserManagerImpl extends StructManagerImpl[User] with UserManager with User
     return userDao.getSession(sessionId)
   }
 
-  def removeSession(sessionId:String) = {
-    userDao.removeSession(sessionId)
+  def removeSession(userId:java.lang.Long,sessionId:String) = {
+    userDao.removeSession(userId,sessionId)
   }
 
   @Override

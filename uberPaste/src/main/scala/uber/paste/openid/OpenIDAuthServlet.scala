@@ -8,16 +8,17 @@ import com.dyuproject.util.http.UrlEncodedParameterMap
 import java.lang.String
 import scala.collection.JavaConversions._
 import uber.paste.build.UserBuilder
-import uber.paste.model.User
+import uber.paste.model.{SavedSession, User}
 import org.springframework.security.core.AuthenticationException
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
 import java.io.{FileNotFoundException, IOException}
 import javax.servlet.ServletException
-import uber.paste.manager.UserManager
+import uber.paste.manager.{UserRememberMeService, UserManager}
 import org.springframework.web.context.support.WebApplicationContextUtils
 import java.net.UnknownHostException
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository
+import scala.Predef._
 
 
 /**
@@ -31,6 +32,8 @@ class OpenIDAuthServlet extends HttpServlet with Loggered{
 
 
     private var userManager:UserManager = null
+
+    private var rememberMe:UserRememberMeService = null
 
     private val _relyingParty = RelyingParty.getInstance() .addListener(new SRegExtension()
                     .addExchange("email")
@@ -113,7 +116,11 @@ class OpenIDAuthServlet extends HttpServlet with Loggered{
   override def init()  {
     super.init();
 
-    userManager = WebApplicationContextUtils.getWebApplicationContext(getServletContext()).getBean("userManager").asInstanceOf[UserManager]
+    val appContext =  WebApplicationContextUtils.getWebApplicationContext(getServletContext())
+
+    userManager = appContext.getBean("userManager").asInstanceOf[UserManager]
+
+    rememberMe =  appContext.getBean("umsRememberMeServices").asInstanceOf[UserRememberMeService]
 
   }
 
@@ -168,6 +175,16 @@ class OpenIDAuthServlet extends HttpServlet with Loggered{
         // verify authentication
         if(_relyingParty.verifyAuth(user, request, response))
         {
+
+          if (user.getIdentity()!=null && UserManager.getCookieValue(request, rememberMe.getSSOCookieName())==null)  {
+
+            val suser:User = userManager.getUserByOpenID(user.getIdentity())
+
+            response.addCookie(UserManager.createNewSSOCookie(rememberMe.getSSOCookieName,
+              userManager.createSession(suser.getId())))
+            logger.debug("sso cookie was added for user .."+suser)
+          }
+
           // authenticated
           // redirect to home to remove the query params instead of doing:
           // request.getRequestDispatcher("/home.jsp").forward(request, response);
@@ -201,27 +218,16 @@ class OpenIDAuthServlet extends HttpServlet with Loggered{
       if(_relyingParty.associateAndAuthenticate(user, request, response, trustRoot, realm,
         returnTo))
       {
+
         // successful association
         return;
       }
     }
     catch
     {
-      case e:UnknownHostException => {
-
+      case e @ (_ : UnknownHostException | _ : FileNotFoundException | _ :Exception) => {
         logger.error(e.getLocalizedMessage(),e)
-        errorMsg = OpenIdServletFilter.ID_NOT_FOUND_MSG
-
-      }
-      case e:FileNotFoundException => {
-
-        logger.error(e.getLocalizedMessage(),e);
-        errorMsg = OpenIdServletFilter.DEFAULT_ERROR_MSG;
-
-      }
-      case e:Exception => {
-        logger.error(e.getLocalizedMessage(),e);
-        errorMsg = OpenIdServletFilter.DEFAULT_ERROR_MSG;
+        errorMsg = OpenIdServletFilter.DEFAULT_ERROR_MSG
       }
 
     }
@@ -243,6 +249,7 @@ class OpenIDAuthServlet extends HttpServlet with Loggered{
       user.getAuthorities())
     auth.setDetails(user)
     SecurityContextHolder.getContext().setAuthentication(auth)
+
 
     SessionStore.instance.add(s.getId(), user)
 

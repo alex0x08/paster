@@ -16,6 +16,7 @@
 
 package uber.paste.dao
 
+import scala.collection.JavaConversions._
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
 import uber.paste.model.{SavedSession, User}
@@ -26,7 +27,7 @@ trait UserDao extends StructDao[User]{
 
   def getUserBySession(sessionId:String):User
 
-  def removeSession(sessionId:String)
+  def removeSession(userId:java.lang.Long,sessionId:String)
 
   def createSession(userId:java.lang.Long):SavedSession
 
@@ -44,14 +45,21 @@ trait UserDao extends StructDao[User]{
 class UserDaoImpl extends StructDaoImpl[User](classOf[User]) with UserDao {
 
   def createSession(userId:java.lang.Long):SavedSession = {
-      var user:User  = get(userId);
+      var user:User  = get(userId)
+
      val session = new SavedSession
-    session.setCode(UUID.randomUUID().toString)
-    session.setName("--")
+      session.setCode(UUID.randomUUID().toString)
+      session.setName("--")
 
     user.getSavedSessions().add(session)
     user  = save(user)
-    return getSession(session.getCode())
+
+    logger.debug("user session saved. user sessions:")
+    for (s<-user.getSavedSessions()) {
+      logger.debug("session:"+s)
+    }
+
+    return user.getSavedSession(session.getCode())
   }
 
   def getSession(sessionId:String):SavedSession = {
@@ -63,8 +71,15 @@ class UserDaoImpl extends StructDaoImpl[User](classOf[User]) with UserDao {
 
   }
 
-  def removeSession(sessionId:String) {
-    em.remove(getSession(sessionId))
+  def removeSession(userId:java.lang.Long,sessionId:String) {
+
+    val user:User = get(userId)
+
+    user.getSavedSessions().remove(new SavedSession(sessionId))
+
+    save(user)
+
+
  }
 
   def getUserBySession(sessionId:String):User = {

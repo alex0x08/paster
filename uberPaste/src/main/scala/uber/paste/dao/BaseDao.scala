@@ -58,7 +58,7 @@ abstract class BaseDaoImpl[T <: java.io.Serializable,PK ](model:Class[T]) extend
   def save(obj:T):T = {
     logger.debug("saving obj "+obj)
     val out:T = em.merge(obj)
-    //em.flush()
+    em.flush()
     return out
   }
 

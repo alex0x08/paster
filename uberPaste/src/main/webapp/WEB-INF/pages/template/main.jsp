@@ -20,6 +20,8 @@
 
         <link href="<c:url value="/css/app.less"/>" media="all" rel="stylesheet/less" />
 
+        <link href="<c:url value="/libs/moodialog/css/MooDialog.css"/>" rel="stylesheet" type="text/css">
+        <link href="<c:url value="/libs/growler/growler.css"/>" rel="stylesheet" type="text/css">
 
 
         <!-- 
@@ -29,6 +31,30 @@
         <script src="<c:url value="/js/less-1.1.3.min.js"/>"></script>
         <script src="<c:url value="/js/mootools-core-1.4.5-full-compat.js"/>"></script>
         <script src="<c:url value="/js/mootools-more-1.4.0.1.js"/>"></script>
+        <script src="<c:url value="/libs/moodialog/js/Overlay.js"/>"></script>
+        <script src="<c:url value="/libs/moodialog/js/MooDialog.js"/>"></script>
+
+        <script src="<c:url value="/libs/moodialog/js/MooDialog.Fx.js"/>"></script>
+        <script src="<c:url value="/libs/moodialog/js/MooDialog.Alert.js"/>"></script>
+        <script src="<c:url value="/libs/moodialog/js/MooDialog.Confirm.js"/>"></script>
+        <script src="<c:url value="/libs/moodialog/js/MooDialog.Error.js"/>"></script>
+        <script src="<c:url value="/libs/moodialog/js/MooDialog.Prompt.js"/>"></script>
+        <script src="<c:url value="/libs/moodialog/js/MooDialog.IFrame.js"/>"></script>
+        <script src="<c:url value="/libs/moodialog/js/MooDialog.Request.js"/>"></script>
+
+        <script src="<c:url value="/libs/growler/growler.js"/>"></script>
+
+        <script type="text/javascript">
+
+            var growl= null;
+
+            window.addEvent('domready',function() {
+               growl = new Growler.init();
+
+
+            });
+        </script>
+
 
         <!-- 
           Under development, this section allows you to preview your changes

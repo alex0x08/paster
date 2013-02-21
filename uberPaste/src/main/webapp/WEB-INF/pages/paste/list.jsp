@@ -5,7 +5,9 @@
 <jsp:include page="/WEB-INF/pages/template/search.jsp"/>
 
  <div style="float:right; background-color: gold; " >
-          <a href="<c:url value="/main/paste/list/limit/5"/>">5</a> |
+
+
+     <a href="<c:url value="/main/paste/list/limit/5"/>">5</a> |
           <a href="<c:url value="/main/paste/list/limit/10"/>">10</a> |
           <a href="<c:url value="/main/paste/list/limit/50"/>">50</a> |
           <a href="<c:url value="/main/paste/list/limit/100"/>">100</a>
@@ -91,6 +93,5 @@
     <center>
         No pastas
     </center>
-</c:if>    
-    
-    
+</c:if>
+
