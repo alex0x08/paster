@@ -121,7 +121,7 @@ class PasteController extends GenericEditController[Paste]   {
 
     @RequestMapping(value = Array("/save"), method = Array(RequestMethod.POST))
    override def save(@RequestParam(required = false) cancel:String,
-           @Valid b:Paste,
+           @Valid @ModelAttribute(GenericController.MODEL_KEY) b:Paste,
            result:BindingResult, model:Model,locale:Locale):String = {
 
      val tags =  b.tagsAsString

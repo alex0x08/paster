@@ -17,7 +17,7 @@
 package uber.paste.model
 
 import javax.persistence._
-import javax.validation.constraints.NotNull
+import javax.validation.constraints.{Size, NotNull}
 import org.compass.core.CompassHighlighter
 import org.compass.annotations._
 import org.codehaus.jackson.annotate.JsonIgnore
@@ -84,10 +84,12 @@ class Paste extends Struct with java.io.Serializable{
   @Lob
   @NotNull
   @SearchableProperty
+  @Size(min=3, message = "{struct.name.validator}")
   private var text: String = null
 
   //@NotNull
   @Column(length=256)
+  @Size(min=3,max=256, message = "{struct.name.validator}")
   private var title: String = null
 
   @ManyToOne(fetch = FetchType.EAGER)

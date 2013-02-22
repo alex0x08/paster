@@ -19,8 +19,7 @@ package uber.paste.model
 import java.util.Calendar
 import javax.persistence._
 import org.hibernate.validator._
-import javax.validation.constraints.NotNull
-import javax.validation.constraints.Pattern
+import javax.validation.constraints.{Size, NotNull, Pattern}
 import org.hibernate.validator.constraints.Length
 import org.compass.annotations._
 import org.codehaus.jackson.annotate.JsonIgnore
@@ -46,7 +45,9 @@ abstract class Struct extends DBObject with SearchObject with  java.io.Serializa
 
   @NotNull
   @SearchableProperty
-  @Pattern(regexp = "(.+)", message = "{struct.name.validator}")    
+  @Column(length=256)
+  //@Pattern(regexp = "(.+)", message = "{struct.name.validator}")
+  @Size(min=3, message = "{struct.name.validator}")
   private var name: String = null
 
   @Column(name = "last_modified", columnDefinition = "timestamp")

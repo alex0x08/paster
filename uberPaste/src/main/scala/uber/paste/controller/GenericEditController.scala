@@ -20,7 +20,6 @@ import uber.paste.model.{Paste, Struct}
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation._
-;
 import javax.validation.Valid;
 import java.util.Locale
 import scala.Array
@@ -65,7 +64,7 @@ abstract class GenericEditController[T <: Struct ] extends StructController[T] {
 
     @RequestMapping(value = Array("/save"), method = Array(RequestMethod.POST))
     def save(@RequestParam(required = false) cancel:String,
-            @Valid b:T,
+            @Valid @ModelAttribute(GenericController.MODEL_KEY) b:T,
             result:BindingResult, model:Model,locale:Locale):String = {
 
         if (cancel != null) {
@@ -76,7 +75,7 @@ abstract class GenericEditController[T <: Struct ] extends StructController[T] {
         if (result.hasErrors()) {
               logger.debug("form has errors " + result.getErrorCount());
               
-              fillEditModel(b,model,locale)
+             fillEditModel(b,model,locale)
            /* for ( f:FieldError : result.getFieldErrors()) {
                 getLogger().debug("field=" + f.getField() + ",rejected value=" + f.getRejectedValue()+",message="+f.getDefaultMessage());
             }*/
