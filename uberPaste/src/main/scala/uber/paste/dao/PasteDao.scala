@@ -35,7 +35,7 @@ class PasteDaoImpl extends SearchableDaoImpl[Paste](classOf[Paste]) with PasteDa
 
     val cr = new CriteriaSet
 
-    val query:Query = em.createQuery(cr.cr.where(Array(cr.cb.equal(cr.r.get("owner"), owner)):_*).select(cr.r))
+    val query:Query = em.createQuery(cr.cr.where(Array(cr.cb.equal(cr.r.get("owner"), owner)):_*).select(cr.r)).setMaxResults(10000)
     return query.getResultList().asInstanceOf[java.util.List[Paste]]
   }
 

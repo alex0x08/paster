@@ -71,8 +71,8 @@ abstract class SearchableDaoImpl[T <: Struct](model:Class[T])
           .setTypes(model).hits
 
         var maxlength = hits.length-1
-        if (maxlength>50) {
-          maxlength =50
+        if (maxlength>500) {
+          maxlength =500
         }
 
         val mterms = model.newInstance.terms
@@ -83,20 +83,21 @@ abstract class SearchableDaoImpl[T <: Struct](model:Class[T])
 
           try {
 
-            if (logger.isDebugEnabled()) {
+            /*if (logger.isDebugEnabled()) {
               for (term <- mterms) {
                 val f = hits.highlighter(i).fragment(term)
                 logger.debug("fragment "+f)
               }
-            }
+            }*/
 
-            data.fillFromHits(hits.highlighter(i))
+             data.fillFromHits(hits.highlighter(i))
+             out.add(data)
+
           } catch {
             case e:org.compass.core.engine.SearchEngineException => {
-              logger.error(e.getLocalizedMessage,e)
+             // logger.error(e.getLocalizedMessage,e)
             }
           }
-          out.add(data)
 
         }
 

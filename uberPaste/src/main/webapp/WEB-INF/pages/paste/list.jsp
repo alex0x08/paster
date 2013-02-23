@@ -79,7 +79,7 @@
            </small>
 
 
-            <div style="padding: 1em;">
+            <div class="pasteTitle" style="padding: 1em;">
             <c:out value="${paste.title}"  escapeXml="true"/>
         </div>
 
@@ -95,3 +95,22 @@
     </center>
 </c:if>
 
+
+<script type="text/javascript">
+
+    window.addEvent('domready', function() {
+
+        document.body.getElements('.pasteTitle').each(function(el, i)
+        {
+           // alert(el);
+            el.set(
+                    'html', el.get('html').replace(/\[result[^\]]*\]([\s\S]*?)\[\/result\]/gi,"<span style='background-color: #e3e658; '>$1</span>")
+            );
+
+
+           // el.set("html", 'FUCK');
+          //  alert(el.text);
+            // do something
+        });
+    });
+</script>

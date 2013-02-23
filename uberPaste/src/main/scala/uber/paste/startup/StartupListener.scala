@@ -34,6 +34,10 @@ import uber.paste.dao.UserExistsException
 import uber.paste.base.Loggered
 import uber.paste.build._
 import uber.paste.mail.EmbeddedSMTPServer
+import java.nio.file._
+import java.nio.file.attribute.BasicFileAttributes
+import uber.paste.manager.PasteManager
+
 //import org.hibernate.event.{PostLoadEvent, PostLoadEventListener, LoadEvent, LoadEventListener}
 //import org.hibernate.event.LoadEventListener.LoadType
 //import org.hibernate.impl.SessionFactoryImpl
@@ -87,19 +91,43 @@ class StartupListener extends ServletContextListener with Loggered{
 
     sf.asInstanceOf[SessionFactoryImpl].getEventListeners.setPostLoadEventListeners(listeners)
     */
+
+
+
+
     val configDao:ConfigDao = ctx.getBean("configDao").asInstanceOf[ConfigDao]
+    val pasteDao:PasteDao = ctx.getBean("pasteDao").asInstanceOf[PasteDao]
+
 
     if (configDao.isPropertySet(ConfigProperty.IS_INSTALLED.getCode, "1")) {
       logger.info("Database already created. skipping db generation stage..")
-      reindex(ctx)
-      startSmtpServer(ctx)
+     // reindex(ctx)
+
+
+
+     /* new Thread(new Runnable() {
+        def run() {
+          Files.walkFileTree(Paths.get("c:/Users/achernyshev/Dropbox/"), new WalkFileTree(pasteDao))
+
+
+        }
+      }).start()
+
+
+      new Thread(new Runnable() {
+        def run() {
+          Files.walkFileTree(Paths.get("c:/work/"), new WalkFileTree(pasteDao))
+
+        }
+      }).start()
+       */
+      //startSmtpServer(ctx)
       return;
     }
 
 
     val userDao:UserDao = ctx.getBean("userDao").asInstanceOf[UserDao]
-    val pasteDao:PasteDao = ctx.getBean("pasteDao").asInstanceOf[PasteDao]
-   
+
 
     try {
       
@@ -137,7 +165,6 @@ class StartupListener extends ServletContextListener with Loggered{
       pasteDao.save(p1)
       pasteDao.save(p2)
 
-
       configDao.persist(ConfigProperty.IS_INSTALLED)
       configDao.persist(ConfigProperty.UPLOADS_DIR)
 
@@ -146,6 +173,11 @@ class StartupListener extends ServletContextListener with Loggered{
       logger.info("db generation completed successfully.")
 
       startSmtpServer(ctx)
+
+
+
+
+
 
     } catch {
       case e:UserExistsException => {
@@ -163,6 +195,9 @@ class StartupListener extends ServletContextListener with Loggered{
     
   }
 
+
+
+
   def startSmtpServer(ctx:ApplicationContext) {
 
     EmbeddedSMTPServer.createInstance(ctx)
@@ -176,6 +211,52 @@ class StartupListener extends ServletContextListener with Loggered{
     val compassGps:CompassGps = ctx.getBean("compassGps").asInstanceOf[CompassGps]
 
     compassGps.index()
+
+  }
+
+
+  class WalkFileTree(pasteDao:PasteDao) extends SimpleFileVisitor[Path] with Loggered {
+
+    override def preVisitDirectory(dir:Path, attr:BasicFileAttributes):FileVisitResult= {
+    //  System.out.printf("Begin Directory: %s%n", dir)
+      return FileVisitResult.CONTINUE
+    }
+
+    // Print information about each file/symlink visited.
+    override def visitFile(file:Path, attr:BasicFileAttributes):FileVisitResult = {
+
+      //logger.debug("visiting file: "+file.getFileName()+" is java "+file.getFileName().endsWith(".java"))
+
+
+      if (file.getFileName.toString.endsWith(".java")) {
+
+          logger.debug("pasting file: "+file)
+
+         val p:Paste = new Paste
+         p.setCodeType(CodeType.Java)
+         p.setName(file.getFileName.toString)
+         p.setText(FileUtils.readFileToString(file.toFile))
+
+        try {
+
+          pasteDao.save(p)
+
+        }  catch {
+          case e:Exception => {
+            logger.error(e.getLocalizedMessage,e)
+          }
+        }
+
+       }
+      return FileVisitResult.CONTINUE
+    }
+
+    // If there is an error accessing the file, print a message and continue.
+    override def visitFileFailed(file:Path, ex:IOException):FileVisitResult= {
+      logger.error(ex.getLocalizedMessage,ex)
+      return FileVisitResult.CONTINUE;  // or TERMINATE
+    }
+
 
   }
 

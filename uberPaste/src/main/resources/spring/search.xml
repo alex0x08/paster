@@ -34,7 +34,12 @@
         <property name="settings">
             <map>
                 <entry key="compass.engine.connection" value="${app.home}/index" />
+                <entry key="compass.engine.highlighter.default.formatter.simple.pre" value="[result]" />
+                <entry key="compass.engine.highlighter.default.formatter.simple.post" value="[/result]" />
+                <entry key="compass.transaction.factory" value="org.compass.spring.transaction.SpringSyncTransactionFactory" />
+
             </map>
+
         </property>
     </bean>
 

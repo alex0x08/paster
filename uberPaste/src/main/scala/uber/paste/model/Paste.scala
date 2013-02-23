@@ -195,8 +195,8 @@ class Paste extends Struct with java.io.Serializable{
 
   override def toString():String = {
     return Loggered.getNewProtocolBuilder(this)
-      .append("title", title)
-      .append("text", text)
+    //  .append("title", title)
+    //  .append("text", text)
       .append("tags", tags)
 
       .append("super",super.toString())

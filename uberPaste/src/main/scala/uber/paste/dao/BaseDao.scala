@@ -89,7 +89,7 @@ abstract class BaseDaoImpl[T <: java.io.Serializable,PK ](model:Class[T]) extend
 
     val cr = new CriteriaSet
 
-    val query:Query = em.createQuery(cr.cr.orderBy(cr.cb.desc(cr.r.get("id"))))
+    val query:Query = em.createQuery(cr.cr.orderBy(cr.cb.desc(cr.r.get("id")))).setMaxResults(2000)
     return query.getResultList().asInstanceOf[java.util.List[T]]
   }
 }

@@ -48,11 +48,11 @@
         <property name="user" value="${database.username}" />
         <property name="password" value="${database.password}" />
         <property name="minPoolSize" value="5" />
-        <property name="maxPoolSize" value="5" />
+        <property name="maxPoolSize" value="50" />
         <property name="maxStatements" value="500" />
         <property name="loginTimeout" value="300" />
         <property name="initialPoolSize" value="5"></property>
-        <property name="checkoutTimeout" value="1000"/>
+        <property name="checkoutTimeout" value="10000"/>
         <property name="automaticTestTable" value="C3P0_TEST_TABLE"></property>
         <property name="testConnectionOnCheckin" value="true"></property>
         <property name="idleConnectionTestPeriod" value="60"></property>
