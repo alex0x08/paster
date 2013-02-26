@@ -24,8 +24,10 @@ import org.springframework.transaction.annotation.Transactional
 trait PasteDao extends SearchableDao[Paste]{
 
   def getByOwner(owner:User) : java.util.List[Paste]
-  
-}
+
+  def countAll():java.lang.Long
+
+  }
 
 @Repository("pasteDao")
 @Transactional(readOnly = true)
@@ -39,11 +41,18 @@ class PasteDaoImpl extends SearchableDaoImpl[Paste](classOf[Paste]) with PasteDa
     return query.getResultList().asInstanceOf[java.util.List[Paste]]
   }
 
+  def countAll():java.lang.Long = {
+   return em.createQuery("select count(*) from Paste p")
+      .getSingleResult().asInstanceOf[java.lang.Long]
 
-  @Transactional(readOnly = false)
-  override def save(obj:Paste):Paste = {
+  }
 
-    return super.save(obj)
+  override def getList():java.util.List[Paste] = {
+
+    val cr = new CriteriaSet
+
+    val query:Query = em.createQuery(cr.cr.orderBy(cr.cb.desc(cr.r.get("sticked")),cr.cb.desc(cr.r.get("lastModified")))).setMaxResults(2000)
+    return query.getResultList().asInstanceOf[java.util.List[Paste]]
   }
 
 }

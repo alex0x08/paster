@@ -7,6 +7,9 @@
 
 
         <h4 class="f-h4"><span class="i ${model.priority.cssClass}" style="font-size:2em;" title="${priorTitle}" >/</span>
+            <c:if test="${model.sticked}">
+                <span class="i">]</span>
+            </c:if>
             <c:out value="${model.name}" escapeXml="true"/>
            <span style="font-weight: normal; font-size: 10px;">
                  ( <c:forEach var="tag" items="${model.tags}" varStatus="loopStatus">

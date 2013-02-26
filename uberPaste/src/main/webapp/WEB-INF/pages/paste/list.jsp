@@ -1,16 +1,26 @@
 <%@ include file="/WEB-INF/pages/common/taglibs.jsp"%>
 
-<h1><span class="i">/</span> Pastaman</h1>
+<h1><span class="i">/</span> Paster</h1>
 
 <jsp:include page="/WEB-INF/pages/template/search.jsp"/>
 
- <div style="float:right; background-color: gold; " >
+ <div class="paging" style="margin: auto; text-align: center;float:right;  " >
 
+<c:forEach var="page" items="${pageSet}" varStatus="loopStatus">
 
-     <a href="<c:url value="/main/paste/list/limit/5"/>">5</a> |
-          <a href="<c:url value="/main/paste/list/limit/10"/>">10</a> |
-          <a href="<c:url value="/main/paste/list/limit/50"/>">50</a> |
-          <a href="<c:url value="/main/paste/list/limit/100"/>">100</a>
+    <c:choose>
+        <c:when test="${pageItems.pageSize eq page}">
+           <span style=" "><c:out value="${page}"/> </span>
+        </c:when>
+        <c:otherwise>
+            <a href="<c:url value="/main/paste/list/limit/${page}"/>">${page}</a>
+
+        </c:otherwise>
+    </c:choose>
+
+    <c:if test="${!loopStatus.last}"> | </c:if>
+</c:forEach>
+
   </div>
     
    <div class="paging" style="margin: auto; text-align: center;" >
@@ -22,7 +32,7 @@
         <c:forEach begin="1" end="${pageItems.pageCount}" step="1" var="pnumber">
              <c:choose>
                  <c:when test="${pnumber==pageItems.page+1}">
-                     ${pnumber}
+                     <c:out value="${pnumber}"/>
                  </c:when>
                  <c:otherwise>
                      <small>
@@ -47,17 +57,24 @@
         <c:set var="priorTitle"><fmt:message key="${paste.priority.name}"/></c:set>
 
         <div>
+            <c:if test="${paste.sticked}">
+                <span class="i">]</span>
+            </c:if>
+
                 <a class="i ${paste.priority.cssClass}" style="font-size:2em;"
                    title="<c:out value="${paste.id}"/>: ${priorTitle}"
                    href="<c:url value='/main/paste/list/search?query=priority:${paste.priority.code}'/>">/</a>
 
 
             <a href="<c:url value="/main/paste/${paste.id}"></c:url>"><c:out value="${paste.name}" escapeXml="true"  /></a>
+            <c:if test="${not empty paste.tags}">
 
-            ( <c:forEach var="tag" items="${paste.tags}" varStatus="loopStatus">
-            <a href="<c:url value='/main/paste/list/search?query=tags:${tag}'/>"><c:out value=" ${tag}"/></a>
-            <c:if test="${!loopStatus.last}"> , </c:if>
-        </c:forEach> )
+                ( <c:forEach var="tag" items="${paste.tags}" varStatus="loopStatus">
+                <a href="<c:url value='/main/paste/list/search?query=tags:${tag}'/>"><c:out value=" ${tag}"/></a>
+                <c:if test="${!loopStatus.last}"> , </c:if>
+            </c:forEach> )
+
+            </c:if>
 
            <small>
 

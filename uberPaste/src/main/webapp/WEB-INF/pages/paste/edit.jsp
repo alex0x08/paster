@@ -9,7 +9,14 @@
            modelAttribute="model"
            method="POST" >
 
-    <form:errors  cssClass="errorblock" element="div" />
+    <div class="row">
+        <div class="column grid-16">
+            <form:errors  cssClass="errorblock" element="div" />
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="column grid-12">
 
     <c:choose>
         <c:when test="${model.blank}">
@@ -19,17 +26,32 @@
         </c:otherwise>
     </c:choose>
             <form:label path="name"><fmt:message key="paste.title"/>:</form:label>
-                <form:input path="name" name="title" id="pname" size="100em;"  />
+                <form:input path="name" name="title" id="pname" size="106" maxlength="255"  />
                 <form:errors path="name" cssClass="error" />
+    </div>
 
+    <div class="column grid-2" >
+        <div style="padding-top: 1em;vertical-align: middle;">
+            <span class="i" >]</span>
+            <form:checkbox path="sticked" style="display:inline;"/>
 
-    <form:label path="tagsAsString"><fmt:message key="paste.tags"/>:</form:label>
-    <form:input path="tagsAsString"  />
+        </div>
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="column grid-6">
+
+        <form:label path="tagsAsString"><fmt:message key="paste.tags"/>:</form:label>
+    <form:input path="tagsAsString" maxlength="255" size="48"  />
     <form:errors path="tagsAsString" cssClass="error" />
 
+        </div>
+        <div class="column grid-3">
 
 
-    <form:label path="codeType"><fmt:message key="paste.types"/>:</form:label>
+        <form:label path="codeType"><fmt:message key="paste.types"/>:</form:label>
     <form:select path="codeType" multiple="false" id="ptype">
                     
                     <c:forEach items="${availableCodeTypes}" var="codeType">
@@ -40,19 +62,31 @@
                 </form:select> 
                 <form:errors path="codeType" cssClass="error" />
 
-    <form:label path="text"><fmt:message key="paste.text"/>:</form:label>
+        </div>
+
+        <div class="column grid-2">
+
+            <form:label path="priority"><fmt:message key="paste.priority"/>:</form:label>
+            <form:select path="priority" multiple="false" id="pprior">
+                <c:forEach items="${availablePriorities}" var="prior">
+                    <form:option value="${prior.code}" >
+                        <fmt:message key="${prior.name}"/>
+                    </form:option>
+                </c:forEach>
+            </form:select>
+            <form:errors path="priority" cssClass="error" />
+
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="column grid-16">
+
+        <form:label path="text"><fmt:message key="paste.text"/>:</form:label>
     <form:textarea path="text" name="text" id="ptext"  cols="120" rows="10" />
     <form:errors path="text" cssClass="error" />
 
-    <form:label path="priority"><fmt:message key="paste.priority"/>:</form:label>
-    <form:select path="priority" multiple="false" id="pprior">
-        <c:forEach items="${availablePriorities}" var="prior">
-            <form:option value="${prior.code}" >
-                <fmt:message key="${prior.name}"/>
-            </form:option>
-        </c:forEach>
-    </form:select>
-    <form:errors path="priority" cssClass="error" />
 
     <div class="form-buttons">
             <div class="button">
@@ -72,6 +106,9 @@
 
             </div>
         </div>
+
+        </div>
+    </div>
 
 </form:form>
      </fieldset>

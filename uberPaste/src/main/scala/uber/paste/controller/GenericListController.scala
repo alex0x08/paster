@@ -26,6 +26,8 @@ import java.util.Locale
 object GenericListController {
   final val LIST_ACTION = "/list"
   final val NEXT_PARAM = "next"
+  final val PAGE_SET = "pageSet"
+  final val pageSet:Array[Int] = Array(5,10,50,100,500)
 
 }
 
@@ -88,6 +90,7 @@ abstract class GenericListController[T <: Struct ] extends StructController[T] {
     request.getSession().setAttribute(GenericController.NODE_LIST_MODEL_PAGE, pagedListHolder)
 
     model.addAttribute(GenericController.NODE_LIST_MODEL_PAGE, pagedListHolder)
+    model.addAttribute(GenericListController.PAGE_SET, GenericListController.pageSet)
 
     return pagedListHolder.getPageList()
   }
@@ -153,5 +156,6 @@ abstract class GenericListController[T <: Struct ] extends StructController[T] {
   protected trait SourceCallback[T ] {
     def invokeCreate():PagedListHolder[T];
   }
+
 
 }

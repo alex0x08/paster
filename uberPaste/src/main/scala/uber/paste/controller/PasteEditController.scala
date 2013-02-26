@@ -43,6 +43,7 @@ import java.util.Locale
 import scala.collection.JavaConversions._
 import org.codehaus.jackson.annotate.JsonIgnore
 import javax.xml.bind.annotation.XmlTransient
+import org.apache.commons.lang.StringUtils
 
 @Controller
 @RequestMapping(Array("/paste"))
@@ -112,7 +113,7 @@ class PasteController extends GenericEditController[Paste]   {
 
         logger.debug("adding comment "+b)
 
-        p.getComments().add(b)
+        p.addComment(b)
 
         manager.save(p)
 
@@ -129,7 +130,7 @@ class PasteController extends GenericEditController[Paste]   {
      if (tags!=null) {
        b.getTags().clear()
        for (s<-tags.split(" ")) {
-         if (s!=null) {
+         if (!StringUtils.isBlank(s)) {
            b.getTags().add(s)
          }
        }

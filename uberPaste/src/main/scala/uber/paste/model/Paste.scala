@@ -55,6 +55,8 @@ class PasteListener extends Loggered{
     } else {
       obj.getText
     })
+    //obj.commentsCount = obj.getComments().size()
+
   }
 
   /*@PostConstruct
@@ -116,6 +118,10 @@ class Paste extends Struct with java.io.Serializable{
   @SearchableProperty
   private var priority:String = Priority.NORMAL.getCode()
 
+  private var sticked:Boolean = false
+
+  protected var commentsCount:Int = 0
+
   override def terms():List[String] = Paste.terms
   
   /**
@@ -139,12 +145,15 @@ class Paste extends Struct with java.io.Serializable{
 
   def getTags(): Set[String] = tags
 
+
   def getPriority() : Priority = Priority.valueOf(priority)
 
   def setPriority(prior:Priority)  = {
       priority = prior.getCode()
   }
 
+  def isSticked() = sticked
+  def setSticked(b:Boolean) {this.sticked=b}
 
   def getPasteSource() : PasteSource = PasteSource.valueOf(pasteSource)
 
@@ -183,8 +192,14 @@ class Paste extends Struct with java.io.Serializable{
     this.text = f
   }
 
-  def getComments():java.util.List[Comment] = comments
+  def getComments():java.util.List[Comment] = java.util.Collections.unmodifiableList(comments)
 
+  def addComment(c:Comment) {
+    comments.add(c)
+    commentsCount = comments.size()
+  }
+
+  def getCommentCount():Int = commentsCount
 
   override def loadFull() {
       getText

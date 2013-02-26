@@ -23,6 +23,17 @@ import uber.paste.model.User
 import uber.paste.dao.PasteDao
 import org.springframework.stereotype.Service
 import org.springframework.beans.factory.annotation.Autowired
+import actors.threadpool.AtomicInteger
+
+object PasteManager {
+    object Stats {
+      var totalPastas = new AtomicInteger
+      var totalToday = new AtomicInteger
+
+      def getTotal():Int = totalPastas.get()
+    }
+
+}
 
 trait PasteManager extends GenericSearchManager[Paste]{
 
@@ -40,4 +51,11 @@ class PasteManagerImpl extends GenericSearchManagerImpl[Paste] with PasteManager
   def getByOwner(owner:User) : java.util.List[Paste]= {
     return pasteDao.getByOwner(owner)
   }
-}
+
+  override def save(obj:Paste):Paste = {
+    val out = super.save(obj)
+
+    PasteManager.Stats.totalPastas.addAndGet(1)
+    return out
+    }
+  }

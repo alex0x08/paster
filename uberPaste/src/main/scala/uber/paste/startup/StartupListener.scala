@@ -122,6 +122,9 @@ class StartupListener extends ServletContextListener with Loggered{
       }).start()
        */
       //startSmtpServer(ctx)
+
+      PasteManager.Stats.totalPastas.addAndGet(pasteDao.countAll().toInt)
+
       return;
     }
 
@@ -173,11 +176,6 @@ class StartupListener extends ServletContextListener with Loggered{
       logger.info("db generation completed successfully.")
 
       startSmtpServer(ctx)
-
-
-
-
-
 
     } catch {
       case e:UserExistsException => {
