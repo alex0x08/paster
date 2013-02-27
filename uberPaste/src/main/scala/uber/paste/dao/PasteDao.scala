@@ -25,7 +25,6 @@ trait PasteDao extends SearchableDao[Paste]{
 
   def getByOwner(owner:User) : java.util.List[Paste]
 
-  def countAll():java.lang.Long
 
   }
 
@@ -41,11 +40,7 @@ class PasteDaoImpl extends SearchableDaoImpl[Paste](classOf[Paste]) with PasteDa
     return query.getResultList().asInstanceOf[java.util.List[Paste]]
   }
 
-  def countAll():java.lang.Long = {
-   return em.createQuery("select count(*) from Paste p")
-      .getSingleResult().asInstanceOf[java.lang.Long]
 
-  }
 
   override def getList():java.util.List[Paste] = {
 

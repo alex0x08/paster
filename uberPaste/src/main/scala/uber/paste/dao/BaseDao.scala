@@ -19,6 +19,7 @@ package uber.paste.dao
 import org.springframework.transaction.annotation.Transactional
 import uber.paste.base.Loggered
 import javax.persistence.{Query, EntityManager, PersistenceContext}
+import javax.persistence.criteria.CriteriaQuery
 
 
 abstract trait BaseDao[T <: java.io.Serializable,PK] {
@@ -34,8 +35,10 @@ abstract trait BaseDao[T <: java.io.Serializable,PK] {
   def getFull(id:PK):T
   
   def getList():java.util.List[T]
-  
-  def exists(id:PK):Boolean 
+
+  def countAll():java.lang.Long
+
+  def exists(id:PK):Boolean
 }
 
 
@@ -83,6 +86,18 @@ abstract class BaseDaoImpl[T <: java.io.Serializable,PK ](model:Class[T]) extend
 
   def get(id:PK):T = {
     return em.find(model,id)
+  }
+
+  def countAll():java.lang.Long = {
+
+    val cr = new CriteriaSet
+
+    val cq:CriteriaQuery[java.lang.Long] = cr.cb.createQuery(classOf[java.lang.Long])
+    cq.select(cr.cb.count(cq.from(model)))
+
+    return em.createQuery(cq)
+      .getSingleResult().asInstanceOf[java.lang.Long]
+
   }
 
   def getList():java.util.List[T] = {

@@ -111,9 +111,12 @@ class PasteController extends GenericEditController[Paste]   {
           return page404
         }
 
+        p.setTitle(null) // magic to invoke event listeners
+
+        b.setName("---") //.. to bypass field validation
         logger.debug("adding comment "+b)
 
-        p.addComment(b)
+        p.getComments().add(b)
 
         manager.save(p)
 

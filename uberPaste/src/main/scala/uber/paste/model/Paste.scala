@@ -55,7 +55,10 @@ class PasteListener extends Loggered{
     } else {
       obj.getText
     })
-    //obj.commentsCount = obj.getComments().size()
+
+    obj.commentsCount = obj.getComments().size()
+
+    logger.debug("_comments count= "+obj.commentsCount)
 
   }
 
@@ -112,7 +115,7 @@ class Paste extends Struct with java.io.Serializable{
   @Transient
   var tagsAsString:String = null
 
-  @OneToMany(fetch = FetchType.LAZY,cascade = Array(CascadeType.PERSIST,CascadeType.MERGE,CascadeType.REMOVE))
+  @OneToMany(fetch = FetchType.LAZY,cascade = Array(CascadeType.PERSIST,CascadeType.MERGE,CascadeType.REMOVE,CascadeType.REFRESH))
   private var comments:java.util.List[Comment] = new ArrayList[Comment]()
 
   @SearchableProperty
@@ -120,7 +123,7 @@ class Paste extends Struct with java.io.Serializable{
 
   private var sticked:Boolean = false
 
-  protected var commentsCount:Int = 0
+  private[model] var commentsCount:java.lang.Integer = null
 
   override def terms():List[String] = Paste.terms
   
@@ -192,14 +195,9 @@ class Paste extends Struct with java.io.Serializable{
     this.text = f
   }
 
-  def getComments():java.util.List[Comment] = java.util.Collections.unmodifiableList(comments)
+  def getComments():java.util.List[Comment] = comments
 
-  def addComment(c:Comment) {
-    comments.add(c)
-    commentsCount = comments.size()
-  }
-
-  def getCommentCount():Int = commentsCount
+  def getCommentCount():java.lang.Integer = commentsCount
 
   override def loadFull() {
       getText

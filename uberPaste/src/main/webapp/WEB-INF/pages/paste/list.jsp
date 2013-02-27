@@ -75,8 +75,10 @@
             </c:forEach> )
 
             </c:if>
-
-           <small>
+            <c:if test="${not empty paste.commentCount}">
+                <span style="vertical-align: middle;" class="i">C</span><span style="font-size: 10px;"> x <c:out value="${paste.commentCount}"/></span>
+            </c:if>
+            <small>
 
                <c:if test="${paste.owner ne null}">
                    ,  by
