@@ -1477,11 +1477,13 @@ sh.Highlighter.prototype = {
 		if (lineNumber == 0)
 			classes.push('break');
 
-        var out = '<div id="cl_'+lineNumber+'" class="' + classes.join(' ') + '">';
+        var out = '';
          if (mode == 1) {
+             out+='<div id="ln_'+lineNumber+'" class="' + classes.join(' ') + '">';
 
              out+='<a id="line_'+lineNumber+'" name="line_'+lineNumber+'" href="#line_'+lineNumber+'" >'+code+'</a>';
          } else {
+             out+='<div id="cl_'+lineNumber+'" class="' + classes.join(' ') + '">';
 
              out+='<a  href="javascript:void(0);" onclick="SyntaxHighlighter.insertEditForm('+lineNumber+');">' + code + '</a>';
 

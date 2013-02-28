@@ -55,8 +55,8 @@
 
 
  <c:forEach var="comment" items="${model.comments}" varStatus="loopStatus">
-    <div id="comment_l${comment.lineNumber}" style="">
-        <div style="min-width:15em;border-top: solid 1px #696969;padding-top:1em; padding-bottom: 1em;">
+    <div id="comment_l${comment.lineNumber}" style="border-top: solid 1px #696969;border-bottom: solid 1px #696969;">
+        <div style="min-width:15em;padding-top:1em; padding-bottom: 1em;">
             <c:out value=" ${comment.text}"/>
          </div>
 
@@ -81,16 +81,22 @@
 
 <c:url var="url" value='/main/paste/saveComment' />
 
-<form:form action="${url}" id="commentForm" cssStyle="display:none;padding-right: 3em;padding-top:1em;"
-           modelAttribute="comment"
-           method="POST" >
-    <form:errors path="*" cssClass="errorblock" element="div"/>
-    <input type="hidden" name="pasteId" value="${model.id}"/>
-    <form:hidden path="lineNumber" id="lineNumber"/>
-    <form:textarea path="text" id="commentText" cols="40" rows="6"/>
-    <input name="submit" type="submit" value="Add comment"  />
+ <div id="commentForm"
+    ">
+     <form:form action="${url}"
+                modelAttribute="comment"
+                method="POST" >
+         <form:errors path="*" cssClass="errorblock" element="div"/>
+         <input type="hidden" name="pasteId" value="${model.id}"/>
+         <form:hidden path="lineNumber" id="lineNumber"/>
+         <form:textarea path="text" id="commentText"   />
+         <input  name="submit" type="submit" value="Add comment"  />
 
-</form:form>
+     </form:form>
+
+
+ </div>
+
 
 
 <script type="text/javascript" src="<c:url value='/libs/zeroclipboard/ZeroClipboard.js'/>"></script>

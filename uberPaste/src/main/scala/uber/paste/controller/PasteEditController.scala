@@ -18,11 +18,7 @@ package uber.paste.controller
 
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.WebDataBinder
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestMethod
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.ResponseBody
+import org.springframework.web.bind.annotation._
 import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.servlet.ModelAndView
 import uber.paste.model._
@@ -34,8 +30,7 @@ import uber.paste.dao.ConfigDao
 import uber.paste.manager.PasteManager
 import org.springframework.ui.Model
 import uber.paste.base.Loggered
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute
+
 import org.springframework.validation.BindingResult;
 import javax.validation.Valid;
 import java.util.HashMap
@@ -47,6 +42,7 @@ import org.apache.commons.lang.StringUtils
 
 @Controller
 @RequestMapping(Array("/paste"))
+@SessionAttributes(Array(GenericController.MODEL_KEY))
 class PasteController extends GenericEditController[Paste]   {
 
   @Autowired
@@ -65,6 +61,7 @@ class PasteController extends GenericEditController[Paste]   {
   def initBinder(binder:WebDataBinder):Unit = {
     binder.initDirectFieldAccess()
     binder.registerCustomEditor(classOf[CodeType], new CodeTypeEditor())
+    binder.setDisallowedFields("id","lastModified")
   }
   
   override def fillEditModel(obj:Paste,model:Model,locale:Locale)  {
@@ -139,9 +136,15 @@ class PasteController extends GenericEditController[Paste]   {
        }
      }
 
-      if (isCurrentUserLoggedIn()) {
-        b.setOwner(getCurrentUser())
+      if (b.isBlank()) {
+
+        if (isCurrentUserLoggedIn()) {
+          b.setOwner(getCurrentUser())
+        }
+
       }
+
+        logger.debug("__found comments "+b.getComments().size())
 
        return super.save(cancel,b,result,model,locale)
    }

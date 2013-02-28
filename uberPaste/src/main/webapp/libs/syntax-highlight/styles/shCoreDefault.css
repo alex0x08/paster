@@ -326,9 +326,28 @@
 .syntaxhighlighter .keyword {
   font-weight: bold !important;
 }
+.editForm textarea{
+
+}
 .editForm {
+    position: relative;
     border-top: solid black 1px;
-    width: 100%;
+    max-width: 55em;
+    max-height: 8em;
+    width: 55em;
+    height: 8em;
+    margin-left: 1em;
+    margin-top: 1em;
+
+}
+.editForm textarea {
+    max-width: 50em;
+    max-height: 5em;
+    padding-top: 5em;
+
+}
+.editForm input {
+    margin-top: 6em;
 }
 
 .priority_blocker {
