@@ -62,29 +62,42 @@
 
      <div id="comment_l${comment.lineNumber}" class="commentBlock" >
 
-         <div style="min-width:15em; margin-top: 0; vertical-align: text-top; border: 1px solid black; ">
+         <div style="min-width:15em; margin-top: 0; vertical-align: text-top;  background-color: #ff7f50;">
             <c:out value=" ${comment.text}"/>
          </div>
 
-        <c:if test="${not empty comment.owner}">
+         <c:choose>
+             <c:when test="${not empty comment.owner}">
 
-            <div style="font-size: small;border: 1px solid red; max-height: 5em;">
+                 <div style="font-size: small;padding-top: 0.5em; ">
 
-                <a href="http://ru.gravatar.com/site/check/${comment.owner.username}" title="GAvatar">
-                    <img style="vertical-align: top;padding-bottom: 2px;" src="<c:out value='http://www.gravatar.com/avatar/${comment.owner.avatarHash}?s=32'/>"/>
-                </a>
-
-                <div style="display: inline;  ">
-                    <a title="Contact ${comment.owner.name}"   href="mailto:${comment.owner.username}?subject=${model.name}"><c:out value="${comment.owner.name}" /></a>
-                    , <kc:prettyTime date="${comment.lastModified}" locale="${pageContext.response.locale}"/>
-                </div>
-
-            </div>
+                     <a href="http://ru.gravatar.com/site/check/${comment.owner.username}" title="GAvatar">
+                         <img style="vertical-align: top;padding-bottom: 2px;" src="<c:out value='http://www.gravatar.com/avatar/${comment.owner.avatarHash}?s=32'/>"/>
+                     </a>
 
 
-        </c:if>
+                     <div style="display: inline;font-size: small;  ">
+                        <a title="Contact ${comment.owner.name}"   href="mailto:${comment.owner.username}?subject=${model.name}"><c:out value="${comment.owner.name}" /></a>
+                        , <kc:prettyTime date="${comment.lastModified}" locale="${pageContext.response.locale}"/>
+                     </div>
 
-    </div>
+                 </div>
+
+
+             </c:when>
+             <c:otherwise>
+
+
+                 <div style="display: inline;font-size: small;  ">
+                     <a title="Contact ${comment.owner.name}"   href="mailto:${comment.owner.username}?subject=${model.name}"><c:out value="${comment.owner.name}" /></a>
+                     <kc:prettyTime date="${comment.lastModified}" locale="${pageContext.response.locale}"/>
+                 </div>
+
+
+             </c:otherwise>
+         </c:choose>
+
+     </div>
 </c:forEach>
 
 

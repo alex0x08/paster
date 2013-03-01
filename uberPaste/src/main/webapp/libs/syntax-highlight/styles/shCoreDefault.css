@@ -333,23 +333,23 @@
 .listSpace {
     position: relative;
     max-width: 1em;
-    max-height: 8em;
+    max-height: 4em;
     width: 1em;
-    height: 8em;
+    height: 4em;
     margin-top: 1em;
 
 }
 
 .commentBlock {
+    white-space: normal;
     position: relative;
     max-width: 55em;
-    max-height: 8em;
+    max-height: 4em;
     width: 55em;
-    height: 8em;
-    margin-left: 1em;
-    margin-top: 1em;
-    border-top: solid 1px #696969;
-    border-bottom: solid 1px #696969;
+    height: 4em;
+    margin-left: 0.5em;
+    margin-top: 0.5em;
+
 }
 
 .editForm {

@@ -403,6 +403,7 @@ var sh = {
        // alert(lineNumber);
 
         $('pageNum').set("text",lineNumber);
+        $('lineNumber').set("value",lineNumber);
 
         $('cl_'+lineNumber).adopt($("commentForm"));
         $('ln_'+lineNumber).adopt($("numSpace"));
