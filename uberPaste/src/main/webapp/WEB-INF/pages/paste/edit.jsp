@@ -26,7 +26,7 @@
         </c:otherwise>
     </c:choose>
             <form:label path="name"><fmt:message key="paste.title"/>:</form:label>
-                <form:input path="name" name="title" id="pname" size="106" maxlength="255"  />
+                <form:input cssClass="notice" path="name" name="title" id="pname" size="100" maxlength="100"  />
                 <form:errors path="name" cssClass="error" />
     </div>
 
@@ -84,7 +84,7 @@
         <div class="column grid-16">
 
         <form:label path="text"><fmt:message key="paste.text"/>:</form:label>
-    <form:textarea path="text" name="text" id="ptext"  cols="120" rows="10" />
+    <form:textarea path="text" cssClass="notice" name="text" id="ptext"  cols="120" rows="10" />
     <form:errors path="text" cssClass="error" />
 
 

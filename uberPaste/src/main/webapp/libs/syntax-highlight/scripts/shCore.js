@@ -385,54 +385,52 @@ var sh = {
 		);
     },  insertComment: function(lineNumber) {
 
+
+
+
         var cl = document.getElementById('comment_l'+lineNumber);
 
         if (cl  != undefined) {
-           // alert(cl);
-            var l = document.getElementById('cl_'+lineNumber);
-            var ch  = document.createElement("div");
 
-            l.style.borderBottom='';
+            $('cl_'+lineNumber).adopt($("comment_l"+lineNumber));
+            $('ln_'+lineNumber).adopt($("numSpace_l"+lineNumber));
 
-            ch.appendChild(cl);
-
-            l.parentNode.insertBefore(ch, l.nextSibling);
-
-            cl.style.display='';
 
         }
 
 
     },  insertEditForm: function(lineNumber) {
        // alert(lineNumber);
-        var l = document.getElementById('cl_'+lineNumber);
 
-        var ch  = document.createElement("div");
+        $('pageNum').set("text",lineNumber);
 
-        var cf = document.getElementById("commentForm");
+        $('cl_'+lineNumber).adopt($("commentForm"));
+        $('ln_'+lineNumber).adopt($("numSpace"));
 
+        /*
+                var l = document.getElementById('cl_'+lineNumber);
 
+                var ch  = document.createElement("div");
 
-        ch.appendChild(cf);
-
-            //.innerHTML='FUCK 22222222222222222222222222222222222222222222222!';
-        //l.appendChild(ch);
-
-        l.parentNode.insertBefore(ch, l.nextSibling);
-
-        ch.className += ' editForm';
-
-        var ln = document.getElementById('lineNumber');
-
-        //var ln =$$('#cl_'+lineNumber+' #lineNumber');
+                var cf = document.getElementById("commentForm");
 
 
-        ln.value=lineNumber;
 
-       // alert(ln.value);
+                ch.appendChild(cf);
 
 
-        cf.style.display='';
+                l.parentNode.insertBefore(ch, l.nextSibling);
+
+                ch.className += ' editForm';
+
+                var ln = document.getElementById('lineNumber');
+
+
+                ln.value=lineNumber;
+
+
+
+                cf.style.display=''; */
         setTimeout(function() { document.getElementById("commentText").focus(); }, 1);
 
     }

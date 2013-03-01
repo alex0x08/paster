@@ -55,25 +55,34 @@
 
 
  <c:forEach var="comment" items="${model.comments}" varStatus="loopStatus">
-    <div id="comment_l${comment.lineNumber}" style="border-top: solid 1px #696969;border-bottom: solid 1px #696969;">
-        <div style="min-width:15em;padding-top:1em; padding-bottom: 1em;">
+
+     <div id="numSpace_l${comment.lineNumber}" class="listSpace" >
+     </div>
+
+
+     <div id="comment_l${comment.lineNumber}" class="commentBlock" >
+
+         <div style="min-width:15em; margin-top: 0; vertical-align: text-top; border: 1px solid black; ">
             <c:out value=" ${comment.text}"/>
          </div>
 
-        <small>
+        <c:if test="${not empty comment.owner}">
 
-            <a href="http://ru.gravatar.com/site/check/${comment.owner.username}" title="GAvatar">
-                <img style="vertical-align: top;padding-bottom: 2px;" src="<c:out value='http://www.gravatar.com/avatar/${comment.owner.avatarHash}?s=32'/>"/>
-            </a>
+            <div style="font-size: small;border: 1px solid red; max-height: 5em;">
+
+                <a href="http://ru.gravatar.com/site/check/${comment.owner.username}" title="GAvatar">
+                    <img style="vertical-align: top;padding-bottom: 2px;" src="<c:out value='http://www.gravatar.com/avatar/${comment.owner.avatarHash}?s=32'/>"/>
+                </a>
 
                 <div style="display: inline;  ">
-                        <a title="Contact ${comment.owner.name}"   href="mailto:${comment.owner.username}?subject=${model.name}"><c:out value="${comment.owner.name}" /></a>
-                   , <kc:prettyTime date="${comment.lastModified}" locale="${pageContext.response.locale}"/>
-
-
+                    <a title="Contact ${comment.owner.name}"   href="mailto:${comment.owner.username}?subject=${model.name}"><c:out value="${comment.owner.name}" /></a>
+                    , <kc:prettyTime date="${comment.lastModified}" locale="${pageContext.response.locale}"/>
                 </div>
 
-        </small>
+            </div>
+
+
+        </c:if>
 
     </div>
 </c:forEach>
@@ -81,8 +90,11 @@
 
 <c:url var="url" value='/main/paste/saveComment' />
 
- <div id="commentForm"
-    ">
+
+<div id="numSpace" class="listSpace" >
+</div>
+
+ <div id="commentForm" class="editForm" ">
      <form:form action="${url}"
                 modelAttribute="comment"
                 method="POST" >
@@ -91,6 +103,7 @@
          <form:hidden path="lineNumber" id="lineNumber"/>
          <form:textarea path="text" id="commentText"   />
          <input  name="submit" type="submit" value="Add comment"  />
+         <div style="display:inline;">to page <span id="pageNum"></span></div>
 
      </form:form>
 

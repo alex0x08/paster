@@ -329,16 +329,37 @@
 .editForm textarea{
 
 }
-.editForm {
+
+.listSpace {
     position: relative;
-    border-top: solid black 1px;
+    max-width: 1em;
+    max-height: 8em;
+    width: 1em;
+    height: 8em;
+    margin-top: 1em;
+
+}
+
+.commentBlock {
+    position: relative;
     max-width: 55em;
     max-height: 8em;
     width: 55em;
     height: 8em;
     margin-left: 1em;
     margin-top: 1em;
+    border-top: solid 1px #696969;
+    border-bottom: solid 1px #696969;
+}
 
+.editForm {
+    position: relative;
+    max-width: 55em;
+    max-height: 8em;
+    width: 55em;
+    height: 8em;
+    margin-left: 1em;
+    margin-top: 1em;
 }
 .editForm textarea {
     max-width: 50em;
@@ -347,7 +368,8 @@
 
 }
 .editForm input {
-    margin-top: 6em;
+    margin-top: 1em;
+    float: left;
 }
 
 .priority_blocker {

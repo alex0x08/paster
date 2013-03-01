@@ -42,7 +42,7 @@ import org.apache.commons.lang.StringUtils
 
 @Controller
 @RequestMapping(Array("/paste"))
-@SessionAttributes(Array(GenericController.MODEL_KEY))
+//@SessionAttributes(Array(GenericController.MODEL_KEY))
 class PasteController extends GenericEditController[Paste]   {
 
   @Autowired
@@ -61,7 +61,7 @@ class PasteController extends GenericEditController[Paste]   {
   def initBinder(binder:WebDataBinder):Unit = {
     binder.initDirectFieldAccess()
     binder.registerCustomEditor(classOf[CodeType], new CodeTypeEditor())
-    binder.setDisallowedFields("id","lastModified")
+  //  binder.setDisallowedFields("id","lastModified")
   }
   
   override def fillEditModel(obj:Paste,model:Model,locale:Locale)  {
@@ -124,6 +124,14 @@ class PasteController extends GenericEditController[Paste]   {
    override def save(@RequestParam(required = false) cancel:String,
            @Valid @ModelAttribute(GenericController.MODEL_KEY) b:Paste,
            result:BindingResult, model:Model,locale:Locale):String = {
+
+      /**
+       * copy fields not filled in form
+       */
+      if (!b.isBlank()) {
+        val current = manager.getFull(b.getId());
+        b.getComments().addAll(current.getComments())
+      }
 
      val tags =  b.tagsAsString
 
