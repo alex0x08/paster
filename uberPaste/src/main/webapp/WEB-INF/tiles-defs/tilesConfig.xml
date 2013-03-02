@@ -35,4 +35,19 @@
     </definition>
 
 
+    <definition name="common/tags" template="/WEB-INF/pages/common/tags.jsp" >
+        <put-attribute name="model" value="" />
+        <put-attribute name="modelName" value="" />
+    </definition>
+
+    <definition name="common/owner" template="/WEB-INF/pages/common/owner.jsp" >
+        <put-attribute name="model" value="" />
+        <put-attribute name="modelName" value="" />
+    </definition>
+
+
+    <definition name="common/commentCount" template="/WEB-INF/pages/common/commentCount.jsp" >
+        <put-attribute name="model" value="" />
+        <put-attribute name="modelName" value="" />
+    </definition>
 </tiles-definitions>

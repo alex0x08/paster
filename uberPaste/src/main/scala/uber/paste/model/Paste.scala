@@ -133,7 +133,10 @@ class Paste extends Struct with java.io.Serializable{
    */
   override def fillFromHits(ch:CompassHighlighter)  {
       super.fillFromHits(ch)
-      setTitle(ch.fragment("text"))
+    val t = ch.fragment("text")
+      if (t!=null) {
+        setTitle(t)
+      }
   }
   
   /**
