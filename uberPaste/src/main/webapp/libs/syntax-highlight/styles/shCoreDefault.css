@@ -337,6 +337,26 @@
 
 }
 
+.listEditSpace {
+    position: relative;
+    max-width: 1em;
+    max-height: 7em;
+    width: 1em;
+    height: 7em;
+    margin-top: 1em;
+
+}
+
+.mainLinkLine  {
+    text-decoration: none;
+    color: #777777;
+}
+.mainLinkLine:hover  {
+    text-decoration: none;
+    font-size: larger;
+}
+
+
 .listLinkLine  {
     text-decoration: none;
     color: #777777;
@@ -362,31 +382,43 @@
     height: 4em;
     margin-left: 0.5em;
     margin-top: 0.5em;
-
+    background-color: #ffe862;
 }
 
 .editForm {
 
-    border: 1px solid #8a2be2;
     position: relative !important;
+    white-space: normal !important;
+    left: 0 !important;
+    top: 0 !important;
+    padding: 0 0 0 0 !important;
+
     max-width: 55em;
-    max-height: 8em;
+    max-height: 7em;
     width: 55em;
-    height: 8em;
+    height: 7em;
     margin-left: 1em;
-    margin-top: 1em !important;
+    margin-top: 1em;
+    background-color: #ffe862;
 }
 .editForm textarea {
-    background-color: red !important;
+    position: relative !important;
+    background: yellow !important;
     max-width: 50em;
     max-height: 4em;
     height: 4em;
     width: 50em;
 
 }
-.editForm input {
-   margin-top: -2em;
+.editForm .commentOuter{
+    position: relative !important;
+    left: 0 !important;
+    top: 4em !important;
+    height: 3em;
+    max-height: 3em;
+
 }
+
 
 .priority_blocker {
     color: #ff0000;

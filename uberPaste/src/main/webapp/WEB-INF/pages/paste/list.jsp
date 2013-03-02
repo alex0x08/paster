@@ -1,105 +1,116 @@
 <%@ include file="/WEB-INF/pages/common/taglibs.jsp"%>
 
-<h1><span class="i">/</span> Paster</h1>
 
-<jsp:include page="/WEB-INF/pages/template/search.jsp"/>
+<div class="row">
+    <div class="column grid-1" style="text-align:right;padding-right: 0;margin-top: -1em;" >
+        <a class="mainLinkLine" href="<c:url value="/main/paste/new"></c:url>" title="<fmt:message key='paste.create.new'/>"><span class="i" style="font-size: 4em;">/</span></a>
+    </div>
+    <div class="column grid-12" style="padding-left: 0;margin-left: -1em;" >
+         <jsp:include page="/WEB-INF/pages/template/search.jsp"/>
+     </div>
+</div>
 
- <div class="paging" style="margin: auto; text-align: center;float:right;  " >
+<div class="row">
+    <div class="column grid-12">
 
-<c:forEach var="page" items="${pageSet}" varStatus="loopStatus">
+        <div class="paging" style="margin: auto; text-align: center;" >
 
-    <c:choose>
-        <c:when test="${pageItems.pageSize eq page}">
-           <span style=" "><c:out value="${page}"/> </span>
-        </c:when>
-        <c:otherwise>
-            <a href="<c:url value="/main/paste/list/limit/${page}"/>">${page}</a>
+            <c:if test="${!pageItems.firstPage}">
+                <a href="<c:url value="/main/paste/list/prev"/>">&#8592;</a>
+            </c:if>
+            <c:if test="${pageItems.pageCount > 1}">
+                <c:forEach begin="1" end="${pageItems.pageCount}" step="1" var="pnumber">
+                    <c:choose>
+                        <c:when test="${pnumber==pageItems.page+1}">
+                            <c:out value="${pnumber}"/>
+                        </c:when>
+                        <c:otherwise>
+                            <small>
+                                <a href="<c:url value='/main/paste/list/${pnumber}'/>">${pnumber}</a>
+                            </small>
+                        </c:otherwise>
+                    </c:choose>
+                    &nbsp;
+                </c:forEach>
 
-        </c:otherwise>
-    </c:choose>
+            </c:if>
 
-    <c:if test="${!loopStatus.last}"> | </c:if>
-</c:forEach>
+            <c:if test="${!pageItems.lastPage}">
+                <a href="<c:url value='/main/paste/list/next'/>">&#8594;</a>
+            </c:if>
 
-  </div>
-    
-   <div class="paging" style="margin: auto; text-align: center;" >
+        </div>
 
-    <c:if test="${!pageItems.firstPage}">
-      <a href="<c:url value="/main/paste/list/prev"/>">&#8592;</a>
-    </c:if>
-    <c:if test="${pageItems.pageCount > 1}">
-        <c:forEach begin="1" end="${pageItems.pageCount}" step="1" var="pnumber">
-             <c:choose>
-                 <c:when test="${pnumber==pageItems.page+1}">
-                     <c:out value="${pnumber}"/>
-                 </c:when>
-                 <c:otherwise>
-                     <small>
-                         <a href="<c:url value='/main/paste/list/${pnumber}'/>">${pnumber}</a>
-                     </small>
-                 </c:otherwise>
-             </c:choose>
-             &nbsp;
-         </c:forEach>
-        
-    </c:if>
-        
-    <c:if test="${!pageItems.lastPage}">
-        <a href="<c:url value='/main/paste/list/next'/>">&#8594;</a>
-    </c:if>
 
+        <div class="paging" style="margin: auto; text-align: center;float:right;  " >
+
+            <c:forEach var="page" items="${pageSet}" varStatus="loopStatus">
+
+                <c:choose>
+                    <c:when test="${pageItems.pageSize eq page}">
+                        <span style="font-size: larger; "><c:out value="${page}"/> </span>
+                    </c:when>
+                    <c:otherwise>
+                        <a href="<c:url value="/main/paste/list/limit/${page}"/>">${page}</a>
+
+                    </c:otherwise>
+                </c:choose>
+
+                <c:if test="${!loopStatus.last}"> | </c:if>
+            </c:forEach>
+
+        </div>
+
+
+
+    </div>
 </div>
 
 
-<div id="pastas">
+<div class="row">
+    <div class="column grid-14">
+
+
+    <div id="pastas">
     <c:forEach var="paste" items="${pageItems.pageList}" varStatus="status">
         <c:set var="priorTitle"><fmt:message key="${paste.priority.name}"/></c:set>
 
         <div>
             <c:if test="${paste.sticked}">
-                <span class="i">]</span>
+                <span class="i" title="Paste sticked">]</span>
             </c:if>
 
                 <a class="i ${paste.priority.cssClass}" style="font-size:2em;"
-                   title="<c:out value="${paste.id}"/>: ${priorTitle}"
+                   title="<c:out value="${paste.id}"/>: ${priorTitle}. Click to search with same priority."
                    href="<c:url value='/main/paste/list/search?query=priority:${paste.priority.code}'/>">/</a>
 
 
-            <a href="<c:url value="/main/paste/${paste.id}"></c:url>"><c:out value="${paste.name}" escapeXml="true"  /></a>
-            <c:if test="${not empty paste.tags}">
+            <a href="<c:url value="/main/paste/${paste.id}"></c:url>" title="Click to view paste vol. ${paste.id}"><c:out value="${paste.name}" escapeXml="true"  /></a>
 
-                ( <c:forEach var="tag" items="${paste.tags}" varStatus="loopStatus">
-                <a href="<c:url value='/main/paste/list/search?query=tags:${tag}'/>"><c:out value=" ${tag}"/></a>
-                <c:if test="${!loopStatus.last}"> , </c:if>
-            </c:forEach> )
+            <tiles:insertDefinition name="common/tags" >
+                <tiles:putAttribute name="model" value="${paste}"/>
+                <tiles:putAttribute name="modelName" value="paste"/>
+            </tiles:insertDefinition>
 
-            </c:if>
-            <c:if test="${not empty paste.commentCount and paste.commentCount>0}">
-                <span style="vertical-align: middle;" class="i">C</span><span style="font-size: 10px;"> x <c:out value="${paste.commentCount}"/></span>
-            </c:if>
+            <tiles:insertDefinition name="common/commentCount" >
+                <tiles:putAttribute name="model" value="${paste}"/>
+                <tiles:putAttribute name="modelName" value="paste"/>
+            </tiles:insertDefinition>
+
+
             <small>
+               <tiles:insertDefinition name="common/owner" >
+                    <tiles:putAttribute name="model" value="${paste}"/>
+                    <tiles:putAttribute name="modelName" value="paste"/>
+                </tiles:insertDefinition>
 
-               <c:if test="${paste.owner ne null}">
-                   ,  by
-                       <a href="http://ru.gravatar.com/site/check/${paste.owner.username}" title="GAvatar">
-                           <img style="vertical-align: middle; " src="<c:out value='http://www.gravatar.com/avatar/${paste.owner.avatarHash}?s=32'/>"/>
-                       </a>
-
-                <span style="display: inline;  ">
-                        <a title="Contact ${paste.owner.name}"  href="mailto:${paste.owner.username}?subject=${paste.name}">
-                            <c:out value="${paste.owner.name}" /></a>
-                </span>
-
-
-               </c:if>
 
                ,<kc:prettyTime date="${paste.lastModified}" locale="${pageContext.response.locale}"/>
            </small>
 
 
             <div class="pasteTitle" style="padding: 1em;">
-                <a class="listLinkLine" href="<c:url value="/main/paste/${paste.id}"></c:url>"><c:out value="${paste.title}"  escapeXml="true"/></a>
+                <a class="listLinkLine" href="<c:url value="/main/paste/${paste.id}"></c:url>" title="Click to view paste vol. ${paste.id}"><c:out value="${paste.title}"  escapeXml="true"/></a>
         </div>
 
     </div>
@@ -113,6 +124,9 @@
         No pastas
     </center>
 </c:if>
+
+    </div>
+</div>
 
 
 <script type="text/javascript">

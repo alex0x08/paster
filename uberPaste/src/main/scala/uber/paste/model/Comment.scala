@@ -22,7 +22,7 @@ class Comment extends Struct  with java.io.Serializable{
   @Lob
   @NotNull
   @SearchableProperty
-  @Size(min=3,max=256, message = "{struct.name.validator}")
+  @Size(min=3, message = "{struct.name.validator}")
   private var text: String = null
 
   @ManyToOne(fetch = FetchType.EAGER)
@@ -30,6 +30,9 @@ class Comment extends Struct  with java.io.Serializable{
   private var owner:User = null
 
   private var lineNumber:java.lang.Long = null;
+
+  private var parentId:java.lang.Long = null;
+
 
   {
       setName("---")
@@ -46,6 +49,10 @@ class Comment extends Struct  with java.io.Serializable{
     this.text = f
   }
 
+
+  def getParentId():java.lang.Long = parentId
+  def setParentId(n:java.lang.Long) { parentId=n}
+
   def getLineNumber():java.lang.Long = lineNumber
   def setLineNumber(n:java.lang.Long) { lineNumber=n}
 
@@ -56,6 +63,8 @@ class Comment extends Struct  with java.io.Serializable{
   override def toString():String = {
     return Loggered.getNewProtocolBuilder(this)
       .append("lineNumber", lineNumber)
+      .append("parentId", parentId)
+
       .append("text", text)
       .append("owner", owner)
 

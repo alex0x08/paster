@@ -358,13 +358,30 @@ var sh = {
 			
 			target.parentNode.replaceChild(element, target);
 
-            for (var i = 1; i < sh.vars.lineNumbers.length; i++)
-            {
-                sh.insertComment(sh.vars.lineNumbers[i]);
-            }
+
+            $$('div.commentBlock').each(function(el){
+
+                sh.insertComment(el,0);
+
+            });
+
+            $$('div.commentBlock').each(function(el){
+
+                sh.insertComment(el,1);
+
+            });
+
 
             var ln = document.getElementById('lineNumber').value;
             if (!ln || 0 === ln.length ) {
+
+                var loc = window.location.hash.replace("#","");
+                if (loc != "") {
+                    new Fx.Scroll(window).toElement(loc);
+
+                }
+
+
             } else {
               //  alert(ln);
                 sh.insertEditForm(ln);
@@ -372,11 +389,6 @@ var sh = {
             }
 
 
-            var loc = window.location.hash.replace("#","");
-            if (loc != "") {
-                new Fx.Scroll(window).toElement(loc);
-
-            }
 
 		}
 	},
@@ -401,20 +413,28 @@ var sh = {
             el.setStyle('display', check == 0 ? 'none' : '');
         });
 
-    },  insertComment: function(lineNumber) {
+    },  insertComment: function(cl,mode) {
 
-        var cl = document.getElementById('comment_l'+lineNumber);
+      //  var cl = document.getElementById('comment_l'+lineNumber);
 
-        if (cl  != undefined) {
+        var lineNumber =  cl.getAttribute('lineNumber');
+        var clParent =  cl.getAttribute('parentCommentId');
 
-            $('cl_'+lineNumber).adopt($("comment_l"+lineNumber));
-            $('ln_'+lineNumber).adopt($("numSpace_l"+lineNumber));
 
+        if (clParent == '' ) {
+                $('cl_'+lineNumber).adopt(cl);
+
+            } else {
+            $('comment_l'+clParent).adopt(cl);
 
         }
 
+            $('ln_'+lineNumber).adopt($("numSpace_l"+lineNumber));
 
-    },  insertEditForm: function(lineNumber) {
+
+
+
+    },  insertEditForm: function(lineNumber,parentId) {
        // alert(lineNumber);
 
         $('pageNum').set("text",lineNumber);
@@ -422,34 +442,19 @@ var sh = {
 
         $('commentForm').setStyle("display","");
 
+        if (parentId>0) {
 
-        $('cl_'+lineNumber).adopt($("commentForm"));
+            $('commentParentId').set("value",parentId);
+
+            $('comment_l'+parentId).adopt($("commentForm"));
+
+        } else {
+            $('cl_'+lineNumber).adopt($("commentForm"));
+
+        }
+
         $('ln_'+lineNumber).adopt($("numSpace"));
 
-        /*
-                var l = document.getElementById('cl_'+lineNumber);
-
-                var ch  = document.createElement("div");
-
-                var cf = document.getElementById("commentForm");
-
-
-
-                ch.appendChild(cf);
-
-
-                l.parentNode.insertBefore(ch, l.nextSibling);
-
-                ch.className += ' editForm';
-
-                var ln = document.getElementById('lineNumber');
-
-
-                ln.value=lineNumber;
-
-
-
-                cf.style.display=''; */
         setTimeout(function() { document.getElementById("commentText").focus(); }, 1);
 
     }
@@ -1502,7 +1507,7 @@ sh.Highlighter.prototype = {
          } else {
              out+='<div id="cl_'+lineNumber+'" class="' + classes.join(' ') + '">';
 
-             out+='<a  href="javascript:void(0);"  class="linkLine" title="Comment this line" onclick="SyntaxHighlighter.insertEditForm('+lineNumber+');">' + code + '</a>';
+             out+='<a  href="javascript:void(0);"  class="linkLine" title="Comment this line" onclick="SyntaxHighlighter.insertEditForm('+lineNumber+',0);">' + code + '</a>';
 
          }
         return out+='</div>';

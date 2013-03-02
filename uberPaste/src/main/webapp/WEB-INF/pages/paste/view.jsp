@@ -6,30 +6,32 @@
 <c:set var="priorTitle"><fmt:message key="${model.priority.name}"/></c:set>
 
 
-        <h4 class="f-h4"><span class="i ${model.priority.cssClass}" style="font-size:2em;" title="${priorTitle}" >/</span>
+        <h4 class="f-h4" style="padding-top: 0;margin-top:0;"><span class="i ${model.priority.cssClass}" style="font-size:2em;" title="${priorTitle}" >/</span>
             <c:if test="${model.sticked}">
                 <span class="i">]</span>
             </c:if>
             <c:out value="${model.name}" escapeXml="true"/>
            <span style="font-weight: normal; font-size: 12px;">
-                 ( <c:forEach var="tag" items="${model.tags}" varStatus="loopStatus">
-               <a href="<c:url value='/main/paste/list/search?query=tags:${tag}'/>"><c:out value=" ${tag}"/></a>
-               <c:if test="${!loopStatus.last}"> , </c:if>
-                  </c:forEach> )
-               <c:if test="${model.owner ne null}">
-                ,  by
-                   <a href="http://ru.gravatar.com/site/check/${model.owner.username}" title="GAvatar">
-                       <img style="vertical-align: middle;padding-bottom: 2px;" src="<c:out value='http://www.gravatar.com/avatar/${model.owner.avatarHash}?s=32'/>"/>
-                   </a>
-                <span style="display: inline;  ">
-                        <a title="Contact ${model.owner.name}"  href="mailto:${model.owner.username}?subject=${model.name}"><c:out value="${model.owner.name}" /></a>
-                </span>
-                </c:if>
 
-                   <c:if test="${not empty model.commentCount and model.commentCount>0}">
-                       , <span style="vertical-align: middle;" class="i">C</span>
-                       <span style="font-weight: normal;font-size: 8px;"> x <c:out value="${model.commentCount}"/></span>
-                   </c:if>
+                  <tiles:insertDefinition name="common/tags" >
+                      <tiles:putAttribute name="model" value="${model}"/>
+                      <tiles:putAttribute name="modelName" value="paste"/>
+                  </tiles:insertDefinition>
+
+
+
+                <tiles:insertDefinition name="common/owner" >
+                    <tiles:putAttribute name="model" value="${model}"/>
+                    <tiles:putAttribute name="modelName" value="paste"/>
+                </tiles:insertDefinition>
+
+
+               <tiles:insertDefinition name="common/commentCount" >
+                   <tiles:putAttribute name="model" value="${model}"/>
+                   <tiles:putAttribute name="modelName" value="paste"/>
+               </tiles:insertDefinition>
+
+
                 <span style="font-size: 9px;">
                 ,<kc:prettyTime date="${model.lastModified}" locale="${pageContext.response.locale}"/>
 
@@ -40,23 +42,25 @@
 
 
 
-<a href="<c:url value="/main/paste/${model.id-1}"/>">&#8592;</a>
-        <a href="<c:url value="/main/paste/list"/>">list</a> |
-        <a href="<c:url value="/main/paste/edit/${model.id}"/>">edit</a> |
-        <a href="<c:url value="/main/paste/xml/${model.id}"/>">xml</a> |
-        <a href="<c:url value="/main/paste/${model.id}.json"/>">json</a> |
-        <a href="<c:url value="/main/paste/plain/${model.id}"/>">plain</a> |
+<a href="<c:url value="/main/paste/${model.id-1}"/>" title="Previous paste">&#8592;</a>
+        <a href="<c:url value="/main/paste/list"/>" title="Go back to list">list</a> |
+        <a href="<c:url value="/main/paste/edit/${model.id}"/>" title="Edit paste">edit</a> |
+        <a href="<c:url value="/main/paste/xml/${model.id}"/>" title="View as XML">xml</a> |
+        <a href="<c:url value="/main/paste/${model.id}.json"/>" title="View as JSON">json</a> |
+        <a href="<c:url value="/main/paste/plain/${model.id}"/>" title="View as plain text">plain</a> |
 
-        <a id="ctrlc_link" data-clipboard-target="pasteTextPlain" href="javascript:void(0);" >Ctrl-C</a> |
+        <a id="ctrlc_link" data-clipboard-target="pasteTextPlain" href="javascript:void(0);" title="Copy to clipboard" >Ctrl-C</a> |
 
-        <a href="<c:url value="/main/paste/${model.id+1}"/>">&#8594;</a>
+        <a href="<c:url value="/main/paste/${model.id+1}"/>" title="Next paste">&#8594;</a>
 
         <br/>
 
+  <div style="padding-left: 2em;">
+      <span style="vertical-align: top;font-size: larger;" class="i" title="Comments">C</span>
+      <a href="javascript:void(0);" onclick="SyntaxHighlighter.toggleComments(0);" title="hide comments">hide</a>|
+      <a href="javascript:void(0);" onclick="SyntaxHighlighter.toggleComments(1);" title="show comments">show</a>
 
-<a href="javascript:void(0);" onclick="SyntaxHighlighter.toggleComments(1);">hide comments</a>
-
-<a href="javascript:void(0);" onclick="SyntaxHighlighter.toggleComments(0);">show comments</a>
+  </div>
 
             <div>
 
@@ -72,11 +76,21 @@
             </div>
 
 
-            <div id="comment_l${comment.lineNumber}" class="commentBlock" >
+            <div id="comment_l${comment.id}" lineNumber="${comment.lineNumber}"  parentCommentId="${comment.parentId}" class="commentBlock" >
+                <c:choose>
+                    <c:when test="${comment.parentId!=null}">
+                        <div style="min-width:15em; margin-top: 0;padding-left: 2em; vertical-align: text-top;  background-color: #f7e741;  ">
+                            <c:out value=" ${comment.text}"/>
+                        </div>
 
-                <div style="min-width:15em; margin-top: 0; vertical-align: text-top;  background-color: #ff7f50;">
-                    <c:out value=" ${comment.text}"/>
-                </div>
+                    </c:when>
+                    <c:otherwise>
+                        <div style="min-width:15em; margin-top: 0; vertical-align: text-top;  background-color: #ff7f50;">
+                            <c:out value=" ${comment.text}"/>
+                        </div>
+
+                    </c:otherwise>
+                </c:choose>
 
                 <c:choose>
                     <c:when test="${not empty comment.owner}">
@@ -87,27 +101,25 @@
                                 <img style="vertical-align: top;padding-bottom: 2px;" src="<c:out value='http://www.gravatar.com/avatar/${comment.owner.avatarHash}?s=32'/>"/>
                             </a>
 
-
                             <div style="display: inline;font-size: small;  ">
                                 <a title="Contact ${comment.owner.name}"   href="mailto:${comment.owner.username}?subject=${model.name}"><c:out value="${comment.owner.name}" /></a>
                                 , <kc:prettyTime date="${comment.lastModified}" locale="${pageContext.response.locale}"/>
+                                ,   <a  href="javascript:void(0);"  class="linkLine" title="Comment this" onclick="SyntaxHighlighter.insertEditForm(${comment.lineNumber},${comment.id});">Reply</a>
+
                             </div>
-
                         </div>
-
 
                     </c:when>
                     <c:otherwise>
-
-
                         <div style="display: inline;font-size: small;  ">
-                            <a title="Contact ${comment.owner.name}"   href="mailto:${comment.owner.username}?subject=${model.name}"><c:out value="${comment.owner.name}" /></a>
                             <kc:prettyTime date="${comment.lastModified}" locale="${pageContext.response.locale}"/>
+                            ,   <a  href="javascript:void(0);"  class="linkLine" title="Comment this" onclick="SyntaxHighlighter.insertEditForm(${comment.lineNumber},${comment.id});">Reply</a>
+
                         </div>
-
-
                     </c:otherwise>
                 </c:choose>
+
+
 
             </div>
         </c:forEach>
@@ -119,10 +131,10 @@
 <c:url var="url" value='/main/paste/saveComment' />
 
 
-<div id="numSpace" class="listSpace" >
+<div id="numSpace" class="listEditSpace" >
 </div>
 
- <div id="commentForm" class="editForm"  style="" >
+ <div id="commentForm" class="editForm"  style="display:none;" >
 
      <form:form action="${url}"
            modelAttribute="comment"
@@ -130,12 +142,14 @@
 
     <input type="hidden" name="pasteId" value="${model.id}"/>
     <form:hidden path="lineNumber" id="lineNumber"/>
+    <form:hidden path="parentId" id="commentParentId"/>
 
-    <form:errors path="text" cssClass="error"  />
     <form:textarea path="text" id="commentText" cssErrorClass="error"  />
-
-    <div style="">to line <span id="pageNum"></span></div>
+    <div class="commentOuter">
+        <form:errors path="text" cssClass="error"   />
     <input  name="submit" type="submit" value="Add comment"  />
+        to line <span id="pageNum"></span>
+    </div>
 
 
 

@@ -10,13 +10,13 @@
            method="POST" >
 
     <div class="row">
-        <div class="column grid-16">
+        <div class="column grid-14">
             <form:errors  cssClass="errorblock" element="div" />
         </div>
     </div>
 
     <div class="row">
-        <div class="column grid-12">
+        <div class="column grid-9">
 
     <c:choose>
         <c:when test="${model.blank}">
@@ -26,15 +26,14 @@
         </c:otherwise>
     </c:choose>
             <form:label path="name"><fmt:message key="paste.title"/>:</form:label>
-                <form:input cssClass="notice" cssErrorClass="error" path="name" name="title" id="pname" size="100" maxlength="100"  />
+                <form:input cssClass="notice" cssErrorClass="error" path="name" name="title" id="pname" size="95" maxlength="95" title="Paste title"  />
                 <form:errors path="name" cssClass="error" />
     </div>
 
-    <div class="column grid-2" >
+    <div class="column grid-1" >
         <div style="padding-top: 1em;vertical-align: middle;">
             <span class="i" >]</span>
-            <form:checkbox path="sticked" style="display:inline;"/>
-
+            <form:checkbox path="sticked" style="display:inline;" title="Stick paste"/>
         </div>
 
         </div>
@@ -44,14 +43,14 @@
         <div class="column grid-6">
 
         <form:label path="tagsAsString"><fmt:message key="paste.tags"/>:</form:label>
-    <form:input path="tagsAsString" maxlength="255" size="48"  />
+    <form:input path="tagsAsString" maxlength="255" size="48" autocomplete="true" placeholder="enter space-separated tags here"  />
     <form:errors path="tagsAsString" cssClass="error" />
 
         </div>
         <div class="column grid-3">
 
 
-        <form:label path="codeType"><fmt:message key="paste.types"/>:</form:label>
+        <form:label path="codeType">Hightlight like:</form:label>
     <form:select path="codeType" multiple="false" id="ptype">
                     
                     <c:forEach items="${availableCodeTypes}" var="codeType">
