@@ -124,7 +124,7 @@
 
  <div id="commentForm" class="editForm"  style="" >
 
-<form:form action="${url}"
+     <form:form action="${url}"
            modelAttribute="comment"
            method="POST" >
 

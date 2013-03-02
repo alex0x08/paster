@@ -368,16 +368,16 @@
 .editForm {
 
     border: 1px solid #8a2be2;
-    position: relative;
+    position: relative !important;
     max-width: 55em;
     max-height: 8em;
     width: 55em;
     height: 8em;
     margin-left: 1em;
-    margin-top: 1em;
+    margin-top: 1em !important;
 }
 .editForm textarea {
-    background-color: red;
+    background-color: red !important;
     max-width: 50em;
     max-height: 4em;
     height: 4em;
