@@ -11,23 +11,29 @@
                 <span class="i">]</span>
             </c:if>
             <c:out value="${model.name}" escapeXml="true"/>
-           <span style="font-weight: normal; font-size: 10px;">
+           <span style="font-weight: normal; font-size: 12px;">
                  ( <c:forEach var="tag" items="${model.tags}" varStatus="loopStatus">
                <a href="<c:url value='/main/paste/list/search?query=tags:${tag}'/>"><c:out value=" ${tag}"/></a>
                <c:if test="${!loopStatus.last}"> , </c:if>
                   </c:forEach> )
                <c:if test="${model.owner ne null}">
                 ,  by
-
                    <a href="http://ru.gravatar.com/site/check/${model.owner.username}" title="GAvatar">
                        <img style="vertical-align: middle;padding-bottom: 2px;" src="<c:out value='http://www.gravatar.com/avatar/${model.owner.avatarHash}?s=32'/>"/>
                    </a>
-
                 <span style="display: inline;  ">
                         <a title="Contact ${model.owner.name}"  href="mailto:${model.owner.username}?subject=${model.name}"><c:out value="${model.owner.name}" /></a>
                 </span>
                 </c:if>
+
+                   <c:if test="${not empty model.commentCount and model.commentCount>0}">
+                       , <span style="vertical-align: middle;" class="i">C</span>
+                       <span style="font-weight: normal;font-size: 8px;"> x <c:out value="${model.commentCount}"/></span>
+                   </c:if>
+                <span style="font-size: 9px;">
                 ,<kc:prettyTime date="${model.lastModified}" locale="${pageContext.response.locale}"/>
+
+                </span>
 
            </span>
         </h4>
@@ -45,6 +51,13 @@
 
         <a href="<c:url value="/main/paste/${model.id+1}"/>">&#8594;</a>
 
+        <br/>
+
+<a href="javascript:void(0);" onclick="SyntaxHighlighter.toggleComments(1);">hide comments</a>
+<a href="javascript:void(0);" onclick="SyntaxHighlighter.toggleComments(0);">show comments</a>
+
+
+
 
 
             <div>
@@ -53,52 +66,56 @@
                 <code id="pasteTextPlain" style="display:none;"><c:out value="${model.text}" /></code>
             </div>
 
+    <div id="commentsList">
 
- <c:forEach var="comment" items="${model.comments}" varStatus="loopStatus">
+        <c:forEach var="comment" items="${model.comments}" varStatus="loopStatus">
 
-     <div id="numSpace_l${comment.lineNumber}" class="listSpace" >
-     </div>
-
-
-     <div id="comment_l${comment.lineNumber}" class="commentBlock" >
-
-         <div style="min-width:15em; margin-top: 0; vertical-align: text-top;  background-color: #ff7f50;">
-            <c:out value=" ${comment.text}"/>
-         </div>
-
-         <c:choose>
-             <c:when test="${not empty comment.owner}">
-
-                 <div style="font-size: small;padding-top: 0.5em; ">
-
-                     <a href="http://ru.gravatar.com/site/check/${comment.owner.username}" title="GAvatar">
-                         <img style="vertical-align: top;padding-bottom: 2px;" src="<c:out value='http://www.gravatar.com/avatar/${comment.owner.avatarHash}?s=32'/>"/>
-                     </a>
+            <div id="numSpace_l${comment.lineNumber}" class="listSpace" >
+            </div>
 
 
-                     <div style="display: inline;font-size: small;  ">
-                        <a title="Contact ${comment.owner.name}"   href="mailto:${comment.owner.username}?subject=${model.name}"><c:out value="${comment.owner.name}" /></a>
-                        , <kc:prettyTime date="${comment.lastModified}" locale="${pageContext.response.locale}"/>
-                     </div>
+            <div id="comment_l${comment.lineNumber}" class="commentBlock" >
 
-                 </div>
+                <div style="min-width:15em; margin-top: 0; vertical-align: text-top;  background-color: #ff7f50;">
+                    <c:out value=" ${comment.text}"/>
+                </div>
 
+                <c:choose>
+                    <c:when test="${not empty comment.owner}">
 
-             </c:when>
-             <c:otherwise>
+                        <div style="font-size: small;padding-top: 0.5em; ">
 
-
-                 <div style="display: inline;font-size: small;  ">
-                     <a title="Contact ${comment.owner.name}"   href="mailto:${comment.owner.username}?subject=${model.name}"><c:out value="${comment.owner.name}" /></a>
-                     <kc:prettyTime date="${comment.lastModified}" locale="${pageContext.response.locale}"/>
-                 </div>
+                            <a href="http://ru.gravatar.com/site/check/${comment.owner.username}" title="GAvatar">
+                                <img style="vertical-align: top;padding-bottom: 2px;" src="<c:out value='http://www.gravatar.com/avatar/${comment.owner.avatarHash}?s=32'/>"/>
+                            </a>
 
 
-             </c:otherwise>
-         </c:choose>
+                            <div style="display: inline;font-size: small;  ">
+                                <a title="Contact ${comment.owner.name}"   href="mailto:${comment.owner.username}?subject=${model.name}"><c:out value="${comment.owner.name}" /></a>
+                                , <kc:prettyTime date="${comment.lastModified}" locale="${pageContext.response.locale}"/>
+                            </div>
 
-     </div>
-</c:forEach>
+                        </div>
+
+
+                    </c:when>
+                    <c:otherwise>
+
+
+                        <div style="display: inline;font-size: small;  ">
+                            <a title="Contact ${comment.owner.name}"   href="mailto:${comment.owner.username}?subject=${model.name}"><c:out value="${comment.owner.name}" /></a>
+                            <kc:prettyTime date="${comment.lastModified}" locale="${pageContext.response.locale}"/>
+                        </div>
+
+
+                    </c:otherwise>
+                </c:choose>
+
+            </div>
+        </c:forEach>
+
+    </div>
+
 
 
 <c:url var="url" value='/main/paste/saveComment' />

@@ -383,10 +383,16 @@ var sh = {
 			'load',
 			function() { sh.highlight(params); }
 		);
+    },  toggleComments: function(check) {
+
+        $$('div.commentBlock').each(function(el){
+            el.setStyle('display', check == 0 ? 'none' : '');
+        });
+        $$('div.listSpace').each(function(el){
+            el.setStyle('display', check == 0 ? 'none' : '');
+        });
+
     },  insertComment: function(lineNumber) {
-
-
-
 
         var cl = document.getElementById('comment_l'+lineNumber);
 
@@ -441,7 +447,7 @@ sh['all']			= sh.all;
 sh['highlight']		= sh.highlight;
 sh['insertEditForm']			= sh.insertEditForm;
 sh['insertComment']			= sh.insertComment;
-
+sh['toggleComments'] = sh.toggleComments;
 
 /**
  * Checks if target DOM elements has specified CSS class.
