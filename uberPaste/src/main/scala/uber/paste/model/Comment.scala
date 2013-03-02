@@ -3,7 +3,7 @@ package uber.paste.model
 import org.compass.annotations.{SearchableProperty, Searchable}
 import javax.xml.bind.annotation.{XmlTransient, XmlRootElement}
 import javax.persistence.{Entity,JoinColumn, FetchType, ManyToOne, Lob}
-import javax.validation.constraints.NotNull
+import javax.validation.constraints.{Size, NotNull}
 import org.codehaus.jackson.annotate.JsonIgnore
 import uber.paste.base.Loggered
 
@@ -22,6 +22,7 @@ class Comment extends Struct  with java.io.Serializable{
   @Lob
   @NotNull
   @SearchableProperty
+  @Size(min=3,max=256, message = "{struct.name.validator}")
   private var text: String = null
 
   @ManyToOne(fetch = FetchType.EAGER)
@@ -31,7 +32,7 @@ class Comment extends Struct  with java.io.Serializable{
   private var lineNumber:java.lang.Long = null;
 
   {
-      setName(" ")
+      setName("---")
   }
 
   @XmlTransient

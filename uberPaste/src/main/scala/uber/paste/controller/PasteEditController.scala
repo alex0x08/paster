@@ -110,10 +110,17 @@ class PasteController extends GenericEditController[Paste]   {
 
         p.setTitle(null) // magic to invoke event listeners
 
-        b.setName("---") //.. to bypass field validation
         logger.debug("adding comment "+b)
 
-        p.getComments().add(b)
+    if (result.hasErrors()) {
+      logger.debug("form has errors " + result.getErrorCount());
+      model.addAttribute("comment", b)
+      fillEditModel(p,model,locale)
+
+      return viewPage
+    }
+
+      p.getComments().add(b)
 
         manager.save(p)
 

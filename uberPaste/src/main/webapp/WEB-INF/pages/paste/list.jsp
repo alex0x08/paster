@@ -99,7 +99,7 @@
 
 
             <div class="pasteTitle" style="padding: 1em;">
-            <c:out value="${paste.title}"  escapeXml="true"/>
+                <a class="listLinkLine" href="<c:url value="/main/paste/${paste.id}"></c:url>"><c:out value="${paste.title}"  escapeXml="true"/></a>
         </div>
 
     </div>

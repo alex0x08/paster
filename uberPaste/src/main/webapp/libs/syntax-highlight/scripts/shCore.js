@@ -363,6 +363,15 @@ var sh = {
                 sh.insertComment(sh.vars.lineNumbers[i]);
             }
 
+            var ln = document.getElementById('lineNumber').value;
+            if (!ln || 0 === ln.length ) {
+            } else {
+              //  alert(ln);
+                sh.insertEditForm(ln);
+
+            }
+
+
             var loc = window.location.hash.replace("#","");
             if (loc != "") {
                 new Fx.Scroll(window).toElement(loc);
@@ -410,6 +419,9 @@ var sh = {
 
         $('pageNum').set("text",lineNumber);
         $('lineNumber').set("value",lineNumber);
+
+        $('commentForm').setStyle("display","");
+
 
         $('cl_'+lineNumber).adopt($("commentForm"));
         $('ln_'+lineNumber).adopt($("numSpace"));
@@ -1490,7 +1502,7 @@ sh.Highlighter.prototype = {
          } else {
              out+='<div id="cl_'+lineNumber+'" class="' + classes.join(' ') + '">';
 
-             out+='<a  href="javascript:void(0);" onclick="SyntaxHighlighter.insertEditForm('+lineNumber+');">' + code + '</a>';
+             out+='<a  href="javascript:void(0);"  class="linkLine" title="Comment this line" onclick="SyntaxHighlighter.insertEditForm('+lineNumber+');">' + code + '</a>';
 
          }
         return out+='</div>';

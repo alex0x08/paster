@@ -26,7 +26,7 @@
         </c:otherwise>
     </c:choose>
             <form:label path="name"><fmt:message key="paste.title"/>:</form:label>
-                <form:input cssClass="notice" path="name" name="title" id="pname" size="100" maxlength="100"  />
+                <form:input cssClass="notice" cssErrorClass="error" path="name" name="title" id="pname" size="100" maxlength="100"  />
                 <form:errors path="name" cssClass="error" />
     </div>
 
@@ -84,16 +84,18 @@
         <div class="column grid-16">
 
         <form:label path="text"><fmt:message key="paste.text"/>:</form:label>
-    <form:textarea path="text" cssClass="notice" name="text" id="ptext"  cols="120" rows="10" />
+    <form:textarea path="text" cssErrorClass="error" cssClass="notice" name="text" id="ptext"  cols="120" rows="10" />
     <form:errors path="text" cssClass="error" />
 
 
     <div class="form-buttons">
             <div class="button">
-                <input name="cancel" type="submit" value="<fmt:message key="button.cancel"/>" />
+                <c:if test="${!model.blank}">
+                    <input name="cancel" type="submit" value="<fmt:message key="button.cancel"/>" />
+                </c:if>
                 <fmt:message var="submit_button_text" key="button.save"/>
 
-                <form:button name="submit" id="submitBtn"  >
+                <form:button name="submit" id="submitBtn"   >
                     <c:out value="${submit_button_text}"/>
                 </form:button>
 
@@ -114,4 +116,4 @@
      </fieldset>
 
 
-<a href="<c:url value="/main/paste/list"/>"><fmt:message key="paste.list.title"/></a>
+<a href="<c:url value="/main/paste/list"/>">&#8592;<fmt:message key="paste.list.title"/></a>

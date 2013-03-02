@@ -89,10 +89,10 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
    <url-pattern>*.css</url-pattern>
  </filter-mapping>
  
- <filter-mapping>
+ <!--filter-mapping>
    <filter-name>compressionFilter</filter-name>
    <url-pattern>/*</url-pattern>
- </filter-mapping>
+ </filter-mapping-->
  
   <!--filter-mapping>
   <filter-name>yuiMinFilter</filter-name>

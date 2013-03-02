@@ -123,7 +123,7 @@ class StartupListener extends ServletContextListener with Loggered{
        */
       //startSmtpServer(ctx)
 
-      PasteManager.Stats.totalPastas.addAndGet(pasteDao.countAll().toInt)
+   //   PasteManager.Stats.totalPastas.addAndGet(pasteDao.countAll().toInt)
 
       return;
     }

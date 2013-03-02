@@ -53,17 +53,15 @@
 
         <br/>
 
+
 <a href="javascript:void(0);" onclick="SyntaxHighlighter.toggleComments(1);">hide comments</a>
+
 <a href="javascript:void(0);" onclick="SyntaxHighlighter.toggleComments(0);">show comments</a>
-
-
-
-
 
             <div>
 
-                <pre id="pasteText" class="brush: ${model.codeType.code};toolbar: false; auto-links:false;" ><c:out value="${model.text}" /></pre>
-                <code id="pasteTextPlain" style="display:none;"><c:out value="${model.text}" /></code>
+                <pre id="pasteText" class="brush: ${model.codeType.code};toolbar: false; auto-links:false;" ><c:out value="${model.text}" escapeXml="true" /></pre>
+                <code id="pasteTextPlain" style="display:none;"><c:out value="${model.text}" escapeXml="true" /></code>
             </div>
 
     <div id="commentsList">
@@ -124,18 +122,24 @@
 <div id="numSpace" class="listSpace" >
 </div>
 
- <div id="commentForm" class="editForm" ">
-     <form:form action="${url}"
-                modelAttribute="comment"
-                method="POST" >
-         <form:errors path="*" cssClass="errorblock" element="div"/>
-         <input type="hidden" name="pasteId" value="${model.id}"/>
-         <form:hidden path="lineNumber" id="lineNumber"/>
-         <form:textarea path="text" id="commentText"   />
-         <input  name="submit" type="submit" value="Add comment"  />
-         <div style="display:inline;">to page <span id="pageNum"></span></div>
+ <div id="commentForm" class="editForm"  style="" >
 
-     </form:form>
+<form:form action="${url}"
+           modelAttribute="comment"
+           method="POST" >
+
+    <input type="hidden" name="pasteId" value="${model.id}"/>
+    <form:hidden path="lineNumber" id="lineNumber"/>
+
+    <form:errors path="text" cssClass="error"  />
+    <form:textarea path="text" id="commentText" cssErrorClass="error"  />
+
+    <div style="">to line <span id="pageNum"></span></div>
+    <input  name="submit" type="submit" value="Add comment"  />
+
+
+
+</form:form>
 
 
  </div>

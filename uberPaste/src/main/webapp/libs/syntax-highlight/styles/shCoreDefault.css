@@ -326,9 +326,6 @@
 .syntaxhighlighter .keyword {
   font-weight: bold !important;
 }
-.editForm textarea{
-
-}
 
 .listSpace {
     position: relative;
@@ -338,6 +335,22 @@
     height: 4em;
     margin-top: 1em;
 
+}
+
+.listLinkLine  {
+    text-decoration: none;
+    color: #777777;
+}
+
+.listLinkLine:hover  {
+    text-decoration: underline;
+    text-decoration-style: double;
+    color: #777777;
+}
+
+
+.linkLine:hover {
+   text-decoration: underline;
 }
 
 .commentBlock {
@@ -353,6 +366,8 @@
 }
 
 .editForm {
+
+    border: 1px solid #8a2be2;
     position: relative;
     max-width: 55em;
     max-height: 8em;
@@ -362,14 +377,15 @@
     margin-top: 1em;
 }
 .editForm textarea {
+    background-color: red;
     max-width: 50em;
-    max-height: 5em;
-    padding-top: 5em;
+    max-height: 4em;
+    height: 4em;
+    width: 50em;
 
 }
 .editForm input {
-    margin-top: 1em;
-    float: left;
+   margin-top: -2em;
 }
 
 .priority_blocker {

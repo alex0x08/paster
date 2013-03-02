@@ -22,10 +22,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import org.compass.annotations.{SearchableProperty, SearchableId}
-;
+
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle
 import uber.paste.base.Loggered
+import org.hibernate.annotations.Index
+
 
 @MappedSuperclass
 abstract class DBObject extends java.io.Serializable {
@@ -33,6 +35,7 @@ abstract class DBObject extends java.io.Serializable {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @SearchableId(name="id")
+  //@Index(name="ddesc_index",columnNames = Array("id desc"))
   private var id:java.lang.Long = null
     
   private var disabled:Boolean = _
