@@ -55,6 +55,11 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
     return out
   }
 
+  protected override def fillListModel(model:Model,locale:Locale) {
+    model.addAttribute("title","Pastas")
+
+  }
+
 
   @RequestMapping(value = Array(GenericListController.LIST_ACTION),method = Array(RequestMethod.GET))
   @ModelAttribute(GenericController.NODE_LIST_MODEL)
@@ -63,8 +68,7 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
            @RequestParam(required = false)  NPpage:String,
            @RequestParam(required = false)  pageSize:java.lang.Integer):java.util.List[Paste] = {
 
-      model.addAttribute("title","Pastas")
- 
+
     return super.list(request, locale,model, page, NPpage, pageSize)
   }
   

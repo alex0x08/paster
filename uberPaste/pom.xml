@@ -35,7 +35,7 @@
         <commons.beanutils.version>1.8.0</commons.beanutils.version>
         <commons.collections.version>3.1</commons.collections.version>
 
-        <jstl.version>1.1.2</jstl.version>
+        <jstl.version>1.2</jstl.version>
 
         <tiles.version>2.2.2</tiles.version>
         <hibernate.version>3.6.10.Final</hibernate.version>
@@ -58,7 +58,6 @@
 
         <sonar.host.url>http://jack:8081/sonar</sonar.host.url>
 
-        <app.home>${user.home}/paste</app.home>
 
         <jdbc.groupId>com.h2database</jdbc.groupId>
         <jdbc.artifactId>h2</jdbc.artifactId>
@@ -279,11 +278,11 @@
             <artifactId>hibernate-core</artifactId>
             <version>${hibernate.version}</version>
         </dependency>
-        <dependency>
+        <!--dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-annotations</artifactId>
             <version>3.5.6-Final</version>
-        </dependency>
+        </dependency-->
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-entitymanager</artifactId>
@@ -307,20 +306,32 @@
             <groupId>com.googlecode.webutilities</groupId>
             <artifactId>webutilities</artifactId>
             <version>0.0.5</version>
+	
+		 <exclusions>
+                <exclusion>
+                    <groupId>javax.servlet</groupId>
+                    <artifactId>jsp-api</artifactId>
+                </exclusion>
+
+            </exclusions>
+
+
         </dependency>
-            
+
+
+
 
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
-            <version>2.4</version>
+            <version>2.5</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
-            <groupId>javax.servlet</groupId>
+            <groupId>javax.servlet.jsp</groupId>
             <artifactId>jsp-api</artifactId>
-            <version>2.0</version>
+            <version>2.1</version>
             <scope>provided</scope>
         </dependency>
 
@@ -331,13 +342,7 @@
         </dependency>
 
 
-        <dependency>
-            <groupId>taglibs</groupId>
-            <artifactId>standard</artifactId>
-            <version>${jstl.version}</version>
-        </dependency>
-
-
+    
 		<!-- jdbc pooling -->
         <dependency>
             <groupId>c3p0</groupId>
@@ -386,7 +391,11 @@
             <version>1.1.7</version>
         </dependency>
 
-
+        <dependency>
+            <groupId>com.jcabi</groupId>
+            <artifactId>jcabi-manifests</artifactId>
+            <version>0.7.6</version>
+        </dependency>
     </dependencies>
 
     <repositories>
@@ -423,6 +432,31 @@
     </repositories>
 
     <profiles>
+
+	 <profile>
+            <id>tomcat7</id>
+
+            <dependencies>
+
+                <dependency>
+                    <groupId>javax.servlet</groupId>
+                    <artifactId>servlet-api</artifactId>
+                    <version>2.5</version>
+                    <scope>provided</scope>
+					
+                </dependency>
+                <dependency>
+                    <groupId>javax.servlet.jsp</groupId>
+                    <artifactId>jsp-api</artifactId>
+                    <version>2.1</version>
+                    <scope>provided</scope>
+                </dependency>
+		
+
+            </dependencies>
+        </profile>
+
+
         <profile>
             <id>jetty6</id>
             <activation>
@@ -434,11 +468,18 @@
                     <artifactId>jasper-el</artifactId>
                     <version>6.0.33</version>
                 </dependency>
+		<!--dependency>
+            		<groupId>taglibs</groupId>
+            		<artifactId>standard</artifactId>
+            		<version>${jstl.version}</version>
+        	</dependency-->
+
+
             </dependencies>
         </profile>
 
         <profile>
-            <id>mysql-db</id>
+            <id>mysql</id>
 
 
             <properties>
@@ -461,7 +502,7 @@
         </profile>
 
         <profile>
-            <id>h2-db</id>
+            <id>h2</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
@@ -471,7 +512,7 @@
 
                 <hibernate.dialect>org.hibernate.dialect.H2Dialect</hibernate.dialect>
                 <jdbc.driverClassName>org.h2.Driver</jdbc.driverClassName>
-                <jdbc.url>jdbc:h2:file:~/paste/pastedb;DB_CLOSE_ON_EXIT=TRUE;LOCK_TIMEOUT=10000</jdbc.url>
+                <jdbc.url>jdbc:h2:file:${app.home}/pastedb;DB_CLOSE_ON_EXIT=TRUE;LOCK_TIMEOUT=10000</jdbc.url>
                 <jdbc.username>bo</jdbc.username>
                 <jdbc.password>bo</jdbc.password>
                 <jdbc.show-sql>false</jdbc.show-sql>
@@ -580,7 +621,9 @@
     <archive>
         <manifestEntries>
             <Implementation-Build>${project.version}</Implementation-Build>
+            <AppName>${project.artifactId}</AppName>
         </manifestEntries>
+
     </archive>
 </configuration>
 </plugin>
@@ -599,6 +642,10 @@
     <scanIntervalSeconds>10</scanIntervalSeconds>
     <systemProperties>
         <systemProperty>
+            <name>app.home</name>
+            <value>${user.home}/.${project.artifactId}</value>
+        </systemProperty>
+        <systemProperty>
             <name>org.mortbay.jetty.Request.maxFormContentSize</name>
             <value>20000000</value>
         </systemProperty>
@@ -606,6 +653,53 @@
 </configuration>
 
 </plugin>
+
+
+ <plugin>
+
+                    <groupId>org.apache.tomcat.maven</groupId>
+                    <artifactId>tomcat7-maven-plugin</artifactId>
+                    <version>2.0</version>
+                    <configuration>
+
+
+                        <path>/${project.artifactId}</path>
+                        <!--contextFile>${tomcatConf}</contextFile-->
+                        <!--tomcatLoggingFile>src/main/tomcat/conf/logging.properties</tomcatLoggingFile -->
+                        <addContextWarDependencies>true</addContextWarDependencies>
+                        <charset>UTF-8</charset>
+                        <!--update>true</update -->
+                        <uriEncoding>UTF-8</uriEncoding>
+                        <systemProperties>
+                            <!--com.sun.management.jmxremote>true</com.sun.management.jmxremote>
+                                <com.sun.management.jmxremote.port>8050</com.sun.management.jmxremote.port>
+                                <com.sun.management.jmxremote.ssl>false</com.sun.management.jmxremote.ssl>
+                                <com.sun.management.jmxremote.authenticate>false</com.sun.management.jmxremote.authenticate>
+                                <logback.ContextSelector>JNDI</logback.ContextSelector -->
+                            <app.home>${user.home}/.${project.artifactId}</app.home>
+                            <JAVA_OPTS>-Xms256m -Xmx1024m -XX:MaxPermSize=512m -XX:NewRatio=6
+                                -XX:+CMSClassUnloadingEnabled -XX:+CMSPermGenSweepingEnabled
+                                -verbose:gc"
+                            </JAVA_OPTS>
+                        </systemProperties>
+
+                    </configuration>
+
+
+                    <dependencies>
+
+                        <dependency>
+                            <groupId>org.apache.tomcat</groupId>
+                            <artifactId>tomcat-juli</artifactId>
+                            <version>7.0.33</version>
+                        </dependency>
+
+
+
+                    </dependencies>
+
+                </plugin>
+
 
 </plugins>
 

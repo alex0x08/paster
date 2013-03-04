@@ -40,7 +40,7 @@ abstract class GenericListController[T <: Struct ] extends StructController[T] {
     }
   }
 
- // protected def fillListModel(obj:T,model:Model,locale:Locale)
+  protected def fillListModel(model:Model,locale:Locale) {}
 
 
   protected def processPageListHolder(request:HttpServletRequest,
@@ -137,6 +137,7 @@ abstract class GenericListController[T <: Struct ] extends StructController[T] {
            @RequestParam(required = false)  NPpage:String,
            @RequestParam(required = false)  pageSize:java.lang.Integer):java.util.List[T] = {
 
+      fillListModel(model,locale)
     // putListModel(model);
 
     logger.debug("_user="+getCurrentUser())
