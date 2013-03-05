@@ -113,7 +113,7 @@ class MailHandler(appContext:ApplicationContext, ctx:MessageContext) extends Log
 
     try {
       val message = new MimeMessage(Session.getDefaultInstance(new Properties()), data);
-
+                                 //message.getEncoding
 
 
       if (message.getContent.isInstanceOf[Multipart]==false ) {
@@ -122,6 +122,7 @@ class MailHandler(appContext:ApplicationContext, ctx:MessageContext) extends Log
       }
 
       val multipart = message.getContent().asInstanceOf[Multipart]
+
     //System.out.println(multipart.getCount());
       for (i <- 0 to multipart.getCount()-1) {
 
