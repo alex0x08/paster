@@ -49,7 +49,7 @@ class UserDaoImpl extends StructDaoImpl[User](classOf[User]) with UserDao {
 
      val session = new SavedSession
       session.setCode(UUID.randomUUID().toString)
-      session.setName("--")
+      session.setName("----")
 
     user.getSavedSessions().add(session)
     user  = save(user)

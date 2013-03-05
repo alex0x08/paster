@@ -28,7 +28,7 @@ class ELViewPreparer extends Loggered with ViewPreparer {
 
   def execute(trc:TilesRequestContext, ac:AttributeContext) {
 
-    logger.debug("_call preparer")
+   // logger.debug("_call preparer")
 
     val sc:Map[String, Object] = trc.getRequestScope()
 	        
@@ -37,8 +37,8 @@ class ELViewPreparer extends Loggered with ViewPreparer {
       sc.put("title", "FIXME: Blank page");
 	
     }
-             
-      
+
+
   }
   
 }

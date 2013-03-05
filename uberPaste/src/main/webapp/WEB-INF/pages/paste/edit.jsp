@@ -26,7 +26,7 @@
         </c:otherwise>
     </c:choose>
             <form:label path="name"><fmt:message key="paste.title"/>:</form:label>
-                <form:input cssClass="notice" cssErrorClass="error" path="name" name="title" id="pname" size="95" maxlength="95" title="Paste title"  />
+                <form:input cssClass="notice" cssErrorClass="error" path="name" name="title" id="pname" cssStyle="width:97%;" maxlength="255" title="Paste title"  />
                 <form:errors path="name" cssClass="error" />
     </div>
 
@@ -43,7 +43,7 @@
         <div class="column grid-6">
 
         <form:label path="tagsAsString"><fmt:message key="paste.tags"/>:</form:label>
-    <form:input path="tagsAsString" maxlength="255" size="48" autocomplete="true" placeholder="enter space-separated tags here"  />
+    <form:input path="tagsAsString" maxlength="255" cssStyle="width:97%;" autocomplete="true" placeholder="enter space-separated tags here"  />
     <form:errors path="tagsAsString" cssClass="error" />
 
         </div>
@@ -83,7 +83,7 @@
         <div class="column grid-16">
 
         <form:label path="text"><fmt:message key="paste.text"/>:</form:label>
-    <form:textarea path="text" cssErrorClass="error" cssClass="notice" name="text" id="ptext"  cols="120" rows="10" />
+    <form:textarea path="text" cssErrorClass="error" cssClass="notice" cssStyle="width:97%;" name="text" id="ptext"  cols="120" rows="10" />
     <form:errors path="text" cssClass="error" />
 
 
