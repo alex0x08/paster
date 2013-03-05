@@ -29,7 +29,12 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
         <param-name>contextConfigLocation</param-name>
         <param-value>classpath:/spring/app-main.xml</param-value>
     </context-param>
-   
+
+    <listener>
+        <listener-class>uber.paste.startup.SystemPropertiesListener</listener-class>
+    </listener>
+
+
     <!-- Servlets -->
     <!-- Creates the Spring Container shared by all Servlets and Filters -->
     <listener>

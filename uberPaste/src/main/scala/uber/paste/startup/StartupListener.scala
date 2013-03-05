@@ -175,7 +175,7 @@ class StartupListener extends ServletContextListener with Loggered{
 
       logger.info("db generation completed successfully.")
 
-      startSmtpServer(ctx)
+    //  startSmtpServer(ctx)
 
     } catch {
       case e:UserExistsException => {
