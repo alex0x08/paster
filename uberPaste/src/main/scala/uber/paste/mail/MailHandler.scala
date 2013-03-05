@@ -58,6 +58,24 @@ class MailHandler(appContext:ApplicationContext, ctx:MessageContext) extends Log
   }
 
   @throws(classOf[MessagingException])
+  private def saveText(body:String,subj:String)  {
+    logger.debug("saving mail text..");
+
+
+    var p1:Paste = new Paste
+    p1.setName("Mail: "+subj)
+    p1.setPasteSource(PasteSource.MAIL)
+
+    p1.setOwner(null)
+
+    p1.setText(body)
+    p1 = pasteManager.save(p1)
+
+    logger.debug("saved file id=" + p1.getId() );
+
+  }
+
+    @throws(classOf[MessagingException])
   private def saveAttachment(bodyPart:BodyPart,subj:String)  {
 
     logger.debug("uploadSave currentUser=" + currentUser+",fileName="+bodyPart.getFileName()+",mime="+bodyPart.getContentType());
@@ -114,10 +132,11 @@ class MailHandler(appContext:ApplicationContext, ctx:MessageContext) extends Log
     try {
       val message = new MimeMessage(Session.getDefaultInstance(new Properties()), data);
 
-
+          logger.debug("message encoding "+message.getEncoding)
 
       if (message.getContent.isInstanceOf[Multipart]==false ) {
-        logger.debug("non multipart message, skip for now, class="+message.getContent.getClass.getName);
+        logger.debug("non multipart message,class="+message.getContent.getClass.getName);
+        saveText(message.getContent().asInstanceOf[String],message.getSubject)
         return;
       }
 

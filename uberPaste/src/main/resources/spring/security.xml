@@ -98,23 +98,6 @@
 
 
 
-    <beans:bean id="umsLogoutFilter"
-                class="uber.paste.manager.UserLogoutFilter">
-        <beans:constructor-arg value="/main/login?logdout=true" />
-        <beans:constructor-arg>
-            <beans:list>
-                <beans:ref bean="umsRememberMeServices" />
-                <beans:bean id="logoutHandler"
-                            class="org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler">
-                </beans:bean>
-            </beans:list>
-        </beans:constructor-arg>
-        <beans:property name="userManager" ref="userService" />
-        <beans:property name="cookieName" value="${Ums.SSO.Cookie.Name}" />
-        <beans:property name="filterProcessesUrl" value="/j_spring_security_logout" />
-    </beans:bean>
-
-
     <authentication-manager alias="embedded-auth-manager">
    
         <authentication-provider user-service-ref="userService">
