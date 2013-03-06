@@ -59,22 +59,24 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
   }
 
 
-  @RequestMapping(value = Array(GenericListController.LIST_ACTION + "/{source}/{page}"), method = Array(RequestMethod.GET))
+  @RequestMapping(value = Array(GenericListController.LIST_ACTION + "/{source}/{page:[0-9]}"), method = Array(RequestMethod.GET))
   @ModelAttribute(GenericController.NODE_LIST_MODEL)
   def listByPathSource(@PathVariable("page") page:java.lang.Integer,
                        @PathVariable("source") source:String,
                  request:HttpServletRequest,
                  model:Model,
-                 locale:Locale) =  listImpl(request,locale, model, page, null, null,source)
+                 locale:Locale) =  listImpl(request,locale, model, page, null, null,source,true)
 
 
-  @RequestMapping(value = Array(GenericListController.LIST_ACTION + "/{source}/limit/{pageSize}"), method = Array(RequestMethod.GET))
+
+
+  @RequestMapping(value = Array(GenericListController.LIST_ACTION + "/{source}/limit/{pageSize:[0-9]}"), method = Array(RequestMethod.GET))
   @ModelAttribute(GenericController.NODE_LIST_MODEL)
   def listByPathSizeSource(@PathVariable("pageSize") pageSize:java.lang.Integer,
                            @PathVariable("source") source:String,
                            request:HttpServletRequest,
                      model:Model,
-                     locale:Locale)= listImpl(request,locale, model, null, null, pageSize,source)
+                     locale:Locale)= listImpl(request,locale, model, null, null, pageSize,source,true)
 
 
   @RequestMapping(value = Array(GenericListController.LIST_ACTION + "/{source}/next"), method = Array(RequestMethod.GET))
@@ -83,7 +85,7 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
                       request:HttpServletRequest,
                       @PathVariable("source") source:String,
                       model:Model,
-                      locale:Locale) = listImpl(request,locale, model, null, GenericListController.NEXT_PARAM, null,source)
+                      locale:Locale) = listImpl(request,locale, model, null, GenericListController.NEXT_PARAM, null,source,true)
 
 
   @RequestMapping(value = Array(GenericListController.LIST_ACTION + "/{source}/prev"), method = Array(RequestMethod.GET))
@@ -92,9 +94,9 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
                       request:HttpServletRequest,
                       @PathVariable("source") source:String,
                       model:Model,
-                      locale:Locale) = listImpl(request,locale, model, null, "prev", null,source)
+                      locale:Locale) = listImpl(request,locale, model, null, "prev", null,source,true)
 
-  @RequestMapping(value = Array(GenericListController.LIST_ACTION+"/{source}"),method = Array(RequestMethod.GET))
+  @RequestMapping(value = Array(GenericListController.LIST_ACTION+"/{source}",GenericListController.LIST_ACTION+"/{source}/earlier"),method = Array(RequestMethod.GET))
   @ModelAttribute(GenericController.NODE_LIST_MODEL)
   def listSource( request:HttpServletRequest,
                            @PathVariable("source") source:String,
@@ -104,7 +106,21 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
                      @RequestParam(required = false)  NPpage:String,
                      @RequestParam(required = false)  pageSize:java.lang.Integer):java.util.List[Paste] = {
 
-    return listImpl(request,locale,model,page,NPpage,pageSize,source)
+    return listImpl(request,locale,model,page,NPpage,pageSize,source,true)
+  }
+
+
+  @RequestMapping(value = Array(GenericListController.LIST_ACTION+"/{source}/older"),method = Array(RequestMethod.GET))
+  @ModelAttribute(GenericController.NODE_LIST_MODEL)
+  def listSourceOlder( request:HttpServletRequest,
+                  @PathVariable("source") source:String,
+                  locale:Locale,
+                  model:Model,
+                  @RequestParam(required = false)  page:java.lang.Integer,
+                  @RequestParam(required = false)  NPpage:String,
+                  @RequestParam(required = false)  pageSize:java.lang.Integer):java.util.List[Paste] = {
+
+    return listImpl(request,locale,model,page,NPpage,pageSize,source,false)
   }
 
 
@@ -116,7 +132,7 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
            @RequestParam(required = false)  NPpage:String,
            @RequestParam(required = false)  pageSize:java.lang.Integer):java.util.List[Paste] = {
 
-    return listImpl(request,locale,model,page,NPpage,pageSize,PasteSource.FORM.getCode())
+    return listImpl(request,locale,model,page,NPpage,pageSize,PasteSource.FORM.getCode(),true)
   }
 
 
@@ -124,17 +140,21 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
                      page:java.lang.Integer,
                      NPpage:String,
                      pageSize:java.lang.Integer,
-                     sourceType:String):java.util.List[Paste] = {
+                     sourceType:String,desc:java.lang.Boolean):java.util.List[Paste] = {
 
 
     fillListModel(model,locale)
 
     val ps = if (sourceType!=null) {
       model.addAttribute("sourceType",sourceType.toLowerCase)
+      model.addAttribute("sortDesc",desc)
+
       PasteSource.valueOf(sourceType.toUpperCase)
     } else {null}
 
-    return processPageListHolder(request,locale,model,page,NPpage,pageSize,if (ps==null) {pasterListCallback} else {new PasteListCallback(ps)})
+    val order = if (desc == null) {java.lang.Boolean.TRUE} else {desc};
+
+    return processPageListHolder(request,locale,model,page,NPpage,pageSize,if (ps==null) {pasterListCallback} else {new PasteListCallback(ps,order)})
 
   }
 
@@ -152,11 +172,11 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
     return manager.getByOwner(getCurrentUser)
   }
 
-  protected val pasterListCallback:PasteListCallback  = new PasteListCallback(PasteSource.FORM)
+  protected val pasterListCallback:PasteListCallback  = new PasteListCallback(PasteSource.FORM,true)
 
-  class PasteListCallback(sourceType:PasteSource) extends SourceCallback[Paste] {
+  class PasteListCallback(sourceType:PasteSource,desc:Boolean) extends SourceCallback[Paste] {
     override def invokeCreate():PagedListHolder[Paste] = {
-      return new PagedListHolder[Paste](manager.getBySourceType(sourceType))
+      return new PagedListHolder[Paste](manager.getBySourceType(sourceType,desc))
     }
   }
 

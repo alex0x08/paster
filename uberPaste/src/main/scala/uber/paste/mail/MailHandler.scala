@@ -16,6 +16,11 @@ import uber.paste.base.Loggered
 import org.apache.commons.io.IOUtils
 import uber.paste.dao.UserExistsException
 import org.apache.commons.codec.binary.StringUtils
+import org.apache.tika.parser.html.HtmlParser
+import org.apache.tika.sax.{BodyContentHandler, XHTMLContentHandler}
+import org.xml.sax.ContentHandler
+import org.apache.tika.metadata.Metadata
+import org.apache.tika.parser.ParseContext
 
 /**
  * Created with IntelliJ IDEA.
@@ -24,6 +29,7 @@ import org.apache.commons.codec.binary.StringUtils
  * Time: 11:13
  * To change this template use File | Settings | File Templates.
  */
+
 class MailHandler(appContext:ApplicationContext, ctx:MessageContext) extends Loggered with MessageHandler {
 
   private val userManager:UserManager = appContext.getBean("userManager").asInstanceOf[UserManager]
@@ -101,11 +107,14 @@ class MailHandler(appContext:ApplicationContext, ctx:MessageContext) extends Log
 
       IOUtils.copy(bodyPart.getInputStream(),data)
 
-      val text = if (charset!=null ) {
+
+      var text = if (charset!=null ) {
         data.toString(charset)
       } else {
         new java.lang.String(data.toByteArray())
      }
+
+      text = extractText(new ByteArrayInputStream(text.getBytes()))
 
       if (text.length()<=0) {
         logger.debug("zero length data.cannot save.")
@@ -120,11 +129,8 @@ class MailHandler(appContext:ApplicationContext, ctx:MessageContext) extends Log
     } catch {
       case e:IOException => {
       logger.debug(e.getLocalizedMessage(), e)
+      }
     }
-
-
-
-  }
   }
   @throws(classOf[IOException])
   override def data(data:InputStream) {
@@ -150,18 +156,19 @@ class MailHandler(appContext:ApplicationContext, ctx:MessageContext) extends Log
       for (i <- 0 to multipart.getCount()-1) {
 
        val bodyPart:BodyPart = multipart.getBodyPart(i);
-
         logger.debug("multipart "+i+" type "+bodyPart.getContentType)
-        if (bodyPart.getContentType.startsWith("text/html") || bodyPart.getContentType.startsWith("text/plain")) {
-                                if (bodyPart.getInputStream.available()>0)   {
 
-                                  val cType = new ContentType(bodyPart.getContentType).getParameter("charset")
+        if (bodyPart.getInputStream.available()>0)   {
 
-                                  saveAttachment(bodyPart,message.getSubject,cType);
-
-                                }
+          if (bodyPart.isMimeType("multipart/alternative")) {
+            saveAttachment(bodyPart,message.getSubject,"UTF-8");  //only for lotus
+          } else if (bodyPart.isMimeType("text/*")) {
+            val cType = new ContentType(bodyPart.getContentType).getParameter("charset")
+            saveAttachment(bodyPart,message.getSubject,cType);
+          }
 
         }
+
     }
 
     } catch {
@@ -179,5 +186,11 @@ class MailHandler(appContext:ApplicationContext, ctx:MessageContext) extends Log
     //System.out.println("Finished");
   }
 
+  def extractText(in:InputStream):String = {
+    val handler:ContentHandler = new BodyContentHandler()
+    val metadata = new Metadata()
+    new HtmlParser().parse(in, handler, metadata, new ParseContext())
+    return handler.toString()
+  }
 
 }

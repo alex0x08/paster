@@ -12,8 +12,19 @@
 
 <div class="row">
     <div class="column grid-12">
-    <c:forEach var="source" items="${availableSourceTypes}" >
-        <a href="<c:url value="/main/paste/list/${source.codeLowerCase}"/>"><fmt:message key="${source.name}"/></a>
+       from
+    <c:forEach var="source" items="${availableSourceTypes}" varStatus="loopStatus">
+
+        <c:choose>
+            <c:when test="${source.codeLowerCase eq sourceType}">
+                <span style="font-size: 14px; "><c:out value="${source.code}"/> </span>
+            </c:when>
+            <c:otherwise>
+                <a href="<c:url value="/main/paste/list/${source.codeLowerCase}"/>"><fmt:message key="${source.name}"/></a>
+            </c:otherwise>
+        </c:choose>
+
+        <c:if test="${!loopStatus.last}"> | </c:if>
     </c:forEach>
    </div>
  </div>
@@ -60,14 +71,29 @@
                     </c:when>
                     <c:otherwise>
                         <a href="<c:url value="/main/paste/list/${sourceType}/limit/${page}"/>">${page}</a>
-
                     </c:otherwise>
                 </c:choose>
 
                 <c:if test="${!loopStatus.last}"> | </c:if>
             </c:forEach>
 
+                    <span style="padding-left: 3em;">
+            <c:choose>
+                <c:when test="${sortDesc}">
+                    <span style="font-size: larger; "> &#x2191; </span>
+                    <a href="<c:url value="/main/paste/list/${sourceType}/older"/>"> &#8595;</a>
+                </c:when>
+                <c:otherwise>
+                    <span style="font-size: larger; "> &#8595; </span>
+                    <a href="<c:url value="/main/paste/list/${sourceType}/earlier"/>">&#x2191; </a>
+                </c:otherwise>
+            </c:choose>
+        </span>
+
         </div>
+
+
+
     </div>
 </div>
 
@@ -90,7 +116,9 @@
                    href="<c:url value='/main/paste/list/search?query=priority:${paste.priority.code}'/>">/</a>
 
 
-            <a href="<c:url value="/main/paste/${paste.id}"></c:url>" title="Click to view paste vol. ${paste.id}"><c:out value="${paste.name}" escapeXml="true"  /></a>
+            <a href="<c:url value="/main/paste/${paste.id}"></c:url>" title="Click to view paste vol. ${paste.id}">
+             <span  class="pasteTitle"><c:out value="${paste.name}" escapeXml="true"  /></span>
+            </a>
 
             <tiles:insertDefinition name="common/tags" >
                 <tiles:putAttribute name="model" value="${paste}"/>

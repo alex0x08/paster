@@ -36,7 +36,7 @@ trait PasteManager extends GenericSearchManager[Paste]{
 
   def getByOwner(owner:User) : java.util.List[Paste]
 
-  def getBySourceType(sourceType:PasteSource) : java.util.List[Paste]
+  def getBySourceType(sourceType:PasteSource,desc:Boolean) : java.util.List[Paste]
 
   }
 
@@ -51,14 +51,23 @@ class PasteManagerImpl extends GenericSearchManagerImpl[Paste] with PasteManager
   def getByOwner(owner:User) : java.util.List[Paste]= {
     return pasteDao.getByOwner(owner)
   }
-  def getBySourceType(sourceType:PasteSource) : java.util.List[Paste] = {
-    return pasteDao.getBySourceType(sourceType)
+  def getBySourceType(sourceType:PasteSource,desc:Boolean) : java.util.List[Paste] = {
+    return pasteDao.getBySourceType(sourceType,desc)
   }
 
     override def save(obj:Paste):Paste = {
-    val out = super.save(obj)
 
-    PasteManager.Stats.totalPastas.addAndGet(1)
-    return out
+      val wasNew = obj.isBlank()
+
+      try {
+
+      return super.save(obj)
+
+      } finally {
+        if (wasNew) {
+          PasteManager.Stats.totalPastas.addAndGet(1)
+        }
+      }
+
     }
   }

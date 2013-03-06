@@ -50,8 +50,10 @@ abstract class SearchController[T <: Struct,QV <: Query ] extends GenericListCon
            @RequestParam(required = false)  page:java.lang.Integer,
            @RequestParam(required = false)  NPpage:String,
            @RequestParam(required = false)  pageSize:java.lang.Integer):java.util.List[T] = {
-      model.addAttribute("title","Found pastas")
- 
+
+
+    fillListModel(model,locale)
+
     try {
        return processPageListHolder(request,locale,model,page,NPpage,pageSize,new SourceCallback[T]() {
 

@@ -197,7 +197,8 @@ class Paste extends Struct with java.io.Serializable{
   def setText(f:String) : Unit = {
     this.text = f
   }
-
+  @XmlTransient
+  @JsonIgnore
   def getComments():java.util.List[Comment] = comments
 
   def getCommentCount():java.lang.Integer = commentsCount

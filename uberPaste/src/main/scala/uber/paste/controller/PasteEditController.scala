@@ -138,6 +138,7 @@ class PasteController extends GenericEditController[Paste]   {
       if (!b.isBlank()) {
         val current = manager.getFull(b.getId());
         b.getComments().addAll(current.getComments())
+        b.setPasteSource(b.getPasteSource())
       }
 
      val tags =  b.tagsAsString
@@ -176,14 +177,13 @@ class PasteController extends GenericEditController[Paste]   {
     val p = model.asMap().get(GenericController.MODEL_KEY).asInstanceOf[Paste];
 
 
-
     model.addAttribute("title",getResource("paste.view.title",Array(p.getId),locale))
     
     return viewPage
   }
 
 
-  @RequestMapping(value = Array("/plain/{id}"), method = Array(RequestMethod.GET))
+  @RequestMapping(value = Array("/plain/{id}"), method = Array(RequestMethod.GET), produces = Array("text/plain;charset=UTF-8"))
   @ResponseBody
   def getBodyPlain(@PathVariable("id") id:java.lang.Long,model:Model,locale:Locale):String = {
     return loadModel(id).getText();

@@ -117,7 +117,7 @@ class UserAuthenticationProcessingFilter extends UsernamePasswordAuthenticationF
 
   var userManager:UserManager =null
 
-  var cookieName:String = null
+  //var cookieName:String = null
 
   @throws(classOf[ServletException])
   @throws(classOf[IOException])
@@ -126,13 +126,13 @@ class UserAuthenticationProcessingFilter extends UsernamePasswordAuthenticationF
 
     val user:User = authResult.getPrincipal.asInstanceOf[User]
 
-    val currentCookie:String = UserManager.getCookieValue(request,cookieName)
+    val currentCookie:String = UserManager.getCookieValue(request,UserManager.SSO_COOKIE_NAME)
 
-    val sso:Cookie = createCookie(user,cookieName)
+    val sso:Cookie = createCookie(user,UserManager.SSO_COOKIE_NAME)
 
     response.addCookie(sso);
     //request.getSession().setAttribute("user", user);
-    request.getSession().setAttribute(cookieName, currentCookie)
+    request.getSession().setAttribute(UserManager.SSO_COOKIE_NAME, currentCookie)
 
     super.successfulAuthentication(request, response, authResult);
   }
@@ -150,9 +150,9 @@ class UserAuthenticationProcessingFilter extends UsernamePasswordAuthenticationF
     return UserManager.createNewSSOCookie(cookie,s)
   }
 
-  def getCookieName() = cookieName;
+  /*def getCookieName() = cookieName;
   def setCookieName(c:String) = {this.cookieName = c}
-
+    */
   def getUserManager():UserManager = userManager
   def setUserManager(u:UserManager) {this.userManager =u}
 }
@@ -160,6 +160,8 @@ class UserAuthenticationProcessingFilter extends UsernamePasswordAuthenticationF
 class UserRememberMeService extends AbstractRememberMeServices  {
 
   //val logger:Logger = Loggered.getLogger(this)
+
+  override def getCookieName()= UserManager.SSO_COOKIE_NAME
 
   /**
    * Attempt to authenticate a user using a UMS single sign-on cookie.
@@ -216,6 +218,7 @@ class UserRememberMeService extends AbstractRememberMeServices  {
 
 object UserManager extends Loggered{
 
+  val SSO_COOKIE_NAME = "PASTER_SSO_COOKIE"
 
   def createNewSSOCookie(cookieName:String,s:SavedSession):Cookie = {
 

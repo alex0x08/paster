@@ -73,7 +73,6 @@
 
     <beans:bean id="umsAuthenticationProcessingFilter"
                 class="uber.paste.manager.UserAuthenticationProcessingFilter">
-        <beans:property name="cookieName" value="${Ums.SSO.Cookie.Name}" />
         <beans:property name="authenticationManager" ref="embedded-auth-manager" />
         <beans:property name="userManager" ref="userService" />
 
@@ -92,7 +91,6 @@
     <beans:bean id="umsLogoutHandler"
                 class="uber.paste.manager.UserLogoutSuccessHandler">
         <beans:property name="userManager" ref="userService" />
-        <beans:property name="cookieName" value="${Ums.SSO.Cookie.Name}" />
 
     </beans:bean>
 
@@ -121,7 +119,6 @@
     <beans:bean id="umsRememberMeServices"
                 class="uber.paste.manager.UserRememberMeService">
         <beans:property name="userDetailsService" ref="userService" />
-        <beans:property name="cookieName" value="${Ums.SSO.Cookie.Name}" />
         <beans:property name="key" value="${Ums.SSO.Cookie.Key}" />
     </beans:bean>
 

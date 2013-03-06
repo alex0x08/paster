@@ -101,7 +101,8 @@ class StartupListener extends ServletContextListener with Loggered{
 
     if (configDao.isPropertySet(ConfigProperty.IS_INSTALLED.getCode, "1")) {
       logger.info("Database already created. skipping db generation stage..")
-     // reindex(ctx)
+
+      reindex(ctx)
 
 
 
@@ -175,7 +176,7 @@ class StartupListener extends ServletContextListener with Loggered{
 
       logger.info("db generation completed successfully.")
 
-    //  startSmtpServer(ctx)
+      startSmtpServer(ctx)
 
     } catch {
       case e:UserExistsException => {
@@ -196,15 +197,21 @@ class StartupListener extends ServletContextListener with Loggered{
 
   def startSmtpServer(ctx:ApplicationContext) {
 
-    EmbeddedSMTPServer.createInstance(ctx).start()
-
+    if (System.getProperties().getProperty("smtpd","1").equals("1")) {
+      EmbeddedSMTPServer.createInstance(ctx).start()
+    } else {
+      logger.info("smtpd was disabled. skipping it.")
+    }
   }
 
   def reindex( ctx:ApplicationContext):Unit = {
-
-    val compassGps:CompassGps = ctx.getBean("compassGps").asInstanceOf[CompassGps]
-
-    compassGps.index()
+    if (System.getProperties().getProperty("reindex","1").equals("1")) {
+      val compassGps:CompassGps = ctx.getBean("compassGps").asInstanceOf[CompassGps]
+      compassGps.index()
+      logger.info("reindex completed.")
+    } else {
+      logger.info("reindex was disabled. skipping it.")
+    }
 
   }
 

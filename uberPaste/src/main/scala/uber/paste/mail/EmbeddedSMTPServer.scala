@@ -21,13 +21,13 @@ object EmbeddedSMTPServer {
 
         def createInstance(ctx:ApplicationContext):EmbeddedSMTPServer = {
           if (instance == null) {
-            instance = new EmbeddedSMTPServer();
-            instance.init(ctx);
+            instance = new EmbeddedSMTPServer()
+            instance.init(ctx)
           }
-          return instance;
+          return instance
         }
 
-        def getInstance():EmbeddedSMTPServer = instance;
+        def getInstance():EmbeddedSMTPServer = instance
  }
 
 class EmbeddedSMTPServer extends Loggered{
@@ -36,15 +36,13 @@ class EmbeddedSMTPServer extends Loggered{
   private var smtpServer:SMTPServer=null
 
   def start() {
-    smtpServer.start();
-
+    smtpServer.start()
     logger.info("SMTP daemon started")
 
   }
 
   def stop() {
-    smtpServer.stop();
-
+    smtpServer.stop()
     logger.info("SMTP daemon stopped")
 
   }

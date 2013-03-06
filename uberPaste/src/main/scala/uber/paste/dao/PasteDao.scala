@@ -25,7 +25,7 @@ trait PasteDao extends SearchableDao[Paste]{
 
   def getByOwner(owner:User) : java.util.List[Paste]
 
-  def getBySourceType(sourceType:PasteSource) : java.util.List[Paste]
+  def getBySourceType(sourceType:PasteSource,desc:Boolean) : java.util.List[Paste]
 
   }
 
@@ -44,11 +44,17 @@ class PasteDaoImpl extends SearchableDaoImpl[Paste](classOf[Paste]) with PasteDa
   }
 
 
-  def getBySourceType(sourceType:PasteSource) : java.util.List[Paste] = {
+  def getBySourceType(sourceType:PasteSource,desc:Boolean) : java.util.List[Paste] = {
 
     val cr = new CriteriaSet
 
-    val query:Query = em.createQuery(cr.cr.where(Array(cr.cb.equal(cr.r.get("pasteSource"), sourceType.getCode())):_*)
+    val query:Query = em.createQuery(
+      cr.cr.where(
+        Array(
+          cr.cb.equal(cr.r.get("pasteSource"), sourceType.getCode())
+        ):_*)
+        .orderBy(cr.cb.desc(cr.r.get("sticked"))
+      ,if (desc) {cr.cb.desc(cr.r.get("lastModified"))} else {cr.cb.asc(cr.r.get("lastModified"))})
       .select(cr.r))
       .setMaxResults(BaseDaoImpl.MAX_RESULTS)
     return query.getResultList().asInstanceOf[java.util.List[Paste]]
@@ -58,7 +64,8 @@ class PasteDaoImpl extends SearchableDaoImpl[Paste](classOf[Paste]) with PasteDa
 
     val cr = new CriteriaSet
 
-    val query:Query = em.createQuery(cr.cr.orderBy(cr.cb.desc(cr.r.get("sticked")),cr.cb.desc(cr.r.get("lastModified"))))
+    val query:Query = em.createQuery(cr.cr.orderBy(cr.cb.desc(cr.r.get("sticked"))
+      ,cr.cb.desc(cr.r.get("lastModified"))))
       .setMaxResults(BaseDaoImpl.MAX_RESULTS)
     return query.getResultList().asInstanceOf[java.util.List[Paste]]
   }
