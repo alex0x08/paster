@@ -11,10 +11,11 @@ import java.io._
 import java.util.Properties
 
 import javax.mail.{BodyPart, MessagingException, Session, Multipart}
-import javax.mail.internet.MimeMessage
+import javax.mail.internet.{ContentType, MimeMessage}
 import uber.paste.base.Loggered
 import org.apache.commons.io.IOUtils
 import uber.paste.dao.UserExistsException
+import org.apache.commons.codec.binary.StringUtils
 
 /**
  * Created with IntelliJ IDEA.
@@ -76,9 +77,9 @@ class MailHandler(appContext:ApplicationContext, ctx:MessageContext) extends Log
   }
 
     @throws(classOf[MessagingException])
-  private def saveAttachment(bodyPart:BodyPart,subj:String)  {
+  private def saveAttachment(bodyPart:BodyPart,subj:String,charset:String)  {
 
-    logger.debug("uploadSave currentUser=" + currentUser+",fileName="+bodyPart.getFileName()+",mime="+bodyPart.getContentType());
+    logger.debug("uploadSave currentUser=" + currentUser+",fileName="+bodyPart.getFileName()+",mime="+bodyPart.getContentType()+",charset="+charset);
 
    /* if (bodyPart.getFileName() == null || bodyPart.getFileName().trim().length() == 0) {
       logger.debug("no file name in attachment, skip for now.");
@@ -100,7 +101,11 @@ class MailHandler(appContext:ApplicationContext, ctx:MessageContext) extends Log
 
       IOUtils.copy(bodyPart.getInputStream(),data)
 
-      val text = new java.lang.String(data.toByteArray())
+      val text = if (charset!=null ) {
+        data.toString(charset)
+      } else {
+        new java.lang.String(data.toByteArray())
+     }
 
       if (text.length()<=0) {
         logger.debug("zero length data.cannot save.")
@@ -148,8 +153,13 @@ class MailHandler(appContext:ApplicationContext, ctx:MessageContext) extends Log
 
         logger.debug("multipart "+i+" type "+bodyPart.getContentType)
         if (bodyPart.getContentType.startsWith("text/html") || bodyPart.getContentType.startsWith("text/plain")) {
-                                if (bodyPart.getInputStream.available()>0)
-          saveAttachment(bodyPart,message.getSubject);
+                                if (bodyPart.getInputStream.available()>0)   {
+
+                                  val cType = new ContentType(bodyPart.getContentType).getParameter("charset")
+
+                                  saveAttachment(bodyPart,message.getSubject,cType);
+
+                                }
 
         }
     }

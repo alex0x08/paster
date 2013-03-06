@@ -41,6 +41,9 @@ abstract trait BaseDao[T <: java.io.Serializable,PK] {
   def exists(id:PK):Boolean
 }
 
+object BaseDaoImpl {
+   val MAX_RESULTS  = 2000
+}
 
 @Transactional(readOnly = true)
 abstract class BaseDaoImpl[T <: java.io.Serializable,PK ](model:Class[T]) extends Loggered with BaseDao[T,PK]{

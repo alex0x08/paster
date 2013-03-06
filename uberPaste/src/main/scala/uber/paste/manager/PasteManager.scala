@@ -16,10 +16,7 @@
 
 package uber.paste.manager
 
-import uber.paste.model.Paste
-import uber.paste.model.User
-import uber.paste.model.Paste
-import uber.paste.model.User
+import uber.paste.model._
 import uber.paste.dao.PasteDao
 import org.springframework.stereotype.Service
 import org.springframework.beans.factory.annotation.Autowired
@@ -38,7 +35,10 @@ object PasteManager {
 trait PasteManager extends GenericSearchManager[Paste]{
 
   def getByOwner(owner:User) : java.util.List[Paste]
-}
+
+  def getBySourceType(sourceType:PasteSource) : java.util.List[Paste]
+
+  }
 
 @Service("pasteManager")
 class PasteManagerImpl extends GenericSearchManagerImpl[Paste] with PasteManager {
@@ -51,8 +51,11 @@ class PasteManagerImpl extends GenericSearchManagerImpl[Paste] with PasteManager
   def getByOwner(owner:User) : java.util.List[Paste]= {
     return pasteDao.getByOwner(owner)
   }
+  def getBySourceType(sourceType:PasteSource) : java.util.List[Paste] = {
+    return pasteDao.getBySourceType(sourceType)
+  }
 
-  override def save(obj:Paste):Paste = {
+    override def save(obj:Paste):Paste = {
     val out = super.save(obj)
 
     PasteManager.Stats.totalPastas.addAndGet(1)

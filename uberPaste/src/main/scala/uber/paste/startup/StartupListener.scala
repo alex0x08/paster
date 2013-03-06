@@ -194,13 +194,9 @@ class StartupListener extends ServletContextListener with Loggered{
   }
 
 
-
-
   def startSmtpServer(ctx:ApplicationContext) {
 
-    EmbeddedSMTPServer.createInstance(ctx)
-
-    EmbeddedSMTPServer.getInstance().start()
+    EmbeddedSMTPServer.createInstance(ctx).start()
 
   }
 

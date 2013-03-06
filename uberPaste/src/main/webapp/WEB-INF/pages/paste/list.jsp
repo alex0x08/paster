@@ -12,11 +12,19 @@
 
 <div class="row">
     <div class="column grid-12">
+    <c:forEach var="source" items="${availableSourceTypes}" >
+        <a href="<c:url value="/main/paste/list/${source.codeLowerCase}"/>"><fmt:message key="${source.name}"/></a>
+    </c:forEach>
+   </div>
+ </div>
+
+<div class="row">
+    <div class="column grid-12">
 
         <div class="paging" style="margin: auto; text-align: center;" >
 
             <c:if test="${!pageItems.firstPage}">
-                <a href="<c:url value="/main/paste/list/prev"/>">&#8592;</a>
+                <a href="<c:url value="/main/paste/list/${sourceType}/prev"/>">&#8592;</a>
             </c:if>
             <c:if test="${pageItems.pageCount > 1}">
                 <c:forEach begin="1" end="${pageItems.pageCount}" step="1" var="pnumber">
@@ -26,7 +34,7 @@
                         </c:when>
                         <c:otherwise>
                             <small>
-                                <a href="<c:url value='/main/paste/list/${pnumber}'/>">${pnumber}</a>
+                                <a href="<c:url value='/main/paste/list/${sourceType}/${pnumber}'/>">${pnumber}</a>
                             </small>
                         </c:otherwise>
                     </c:choose>
@@ -36,7 +44,7 @@
             </c:if>
 
             <c:if test="${!pageItems.lastPage}">
-                <a href="<c:url value='/main/paste/list/next'/>">&#8594;</a>
+                <a href="<c:url value='/main/paste/list/${sourceType}/next'/>">&#8594;</a>
             </c:if>
 
         </div>
@@ -51,7 +59,7 @@
                         <span style="font-size: larger; "><c:out value="${page}"/> </span>
                     </c:when>
                     <c:otherwise>
-                        <a href="<c:url value="/main/paste/list/limit/${page}"/>">${page}</a>
+                        <a href="<c:url value="/main/paste/list/${sourceType}/limit/${page}"/>">${page}</a>
 
                     </c:otherwise>
                 </c:choose>
@@ -60,9 +68,6 @@
             </c:forEach>
 
         </div>
-
-
-
     </div>
 </div>
 

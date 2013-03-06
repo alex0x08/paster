@@ -25,4 +25,6 @@ class PasteSource extends KeyValue{
     setCode(code)
     setName(desc)
   }
+
+   def getCodeLowerCase() = super.getCode().toLowerCase
 }
