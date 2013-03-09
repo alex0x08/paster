@@ -44,7 +44,9 @@ abstract class GenericListController[T <: Struct ] extends StructController[T] {
 
 
   protected def fillListModel(model:Model,locale:Locale) {
-    model.addAttribute(GenericListController.LIST_MODE,"list")
+    if (!model.containsAttribute(GenericListController.LIST_MODE)) {
+      model.addAttribute(GenericListController.LIST_MODE,"list")
+    }
   }
 
 
@@ -106,7 +108,7 @@ abstract class GenericListController[T <: Struct ] extends StructController[T] {
   }
 
 
-  @RequestMapping(value = Array(GenericListController.LIST_ACTION + "/{page:[0-9]}"), method = Array(RequestMethod.GET))
+  @RequestMapping(value = Array(GenericListController.LIST_ACTION + "/{page:[0-9]+}"), method = Array(RequestMethod.GET))
   @ModelAttribute(GenericController.NODE_LIST_MODEL)
   def listByPath(@PathVariable("page") page:java.lang.Integer,
   request:HttpServletRequest,
@@ -114,7 +116,7 @@ abstract class GenericListController[T <: Struct ] extends StructController[T] {
   locale:Locale) =  list(request,locale, model, page, null, null)
 
 
-  @RequestMapping(value = Array(GenericListController.LIST_ACTION + "/limit/{pageSize:[0-9]}"), method = Array(RequestMethod.GET))
+  @RequestMapping(value = Array(GenericListController.LIST_ACTION + "/limit/{pageSize:[0-9]+}"), method = Array(RequestMethod.GET))
   @ModelAttribute(GenericController.NODE_LIST_MODEL)
   def listByPathSize(@PathVariable("pageSize") pageSize:java.lang.Integer,
   request:HttpServletRequest,
@@ -156,8 +158,6 @@ abstract class GenericListController[T <: Struct ] extends StructController[T] {
     // putListModel(model);
 
 
-
-    logger.debug("_listImpl user="+getCurrentUser()+", pageSize "+pageSize)
 
     return processPageListHolder(request,locale,model,page,NPpage,pageSize,defaultListCallback,
       result)

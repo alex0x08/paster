@@ -70,13 +70,13 @@ abstract class SearchController[T <: Struct,QV <: Query ] extends GenericListCon
 
   override protected def fillListModel(model:Model,locale:Locale) {
            super.fillListModel(model,locale)
-
-    model.addAttribute(GenericListController.LIST_MODE,"search")
-
-    model.addAttribute("availableResults",getAvailableResults())
-
+          model.addAttribute("availableResults",getAvailableResults())
   }
 
+
+  protected def fillSearchModel(model:Model,locale:Locale) {
+    model.addAttribute(GenericListController.LIST_MODE,"search")
+  }
 
   @RequestMapping(value = Array(SearchController.SEARCH_ACTION),
                   method = Array(RequestMethod.POST,RequestMethod.GET))
@@ -89,11 +89,12 @@ abstract class SearchController[T <: Struct,QV <: Query ] extends GenericListCon
 
 
     fillListModel(model,locale)
+    fillSearchModel(model,locale)
 
     var out:java.util.List[T]=null
     try {
 
-      var totalFound:Int =0
+   //   var totalFound:Int =0
 
       for (r<-getAvailableResults()) {
 
@@ -112,7 +113,7 @@ abstract class SearchController[T <: Struct,QV <: Query ] extends GenericListCon
        },r.getItemsModel(),false
        );
 
-        totalFound+=rout.size()
+      //  totalFound+=rout.size()
 
         if (out==null && !rout.isEmpty) {
           out= rout
@@ -122,7 +123,7 @@ abstract class SearchController[T <: Struct,QV <: Query ] extends GenericListCon
          }
       }
 
-      model.addAttribute(SearchController.TOTAL_FOUND,totalFound)
+     // model.addAttribute(SearchController.TOTAL_FOUND,totalFound)
 
       return if (out==null) {
        model.addAttribute(GenericController.NODE_LIST_MODEL_PAGE,new PagedListHolder[T]( java.util.Collections.emptyList[T]()))
@@ -130,11 +131,7 @@ abstract class SearchController[T <: Struct,QV <: Query ] extends GenericListCon
 
        java.util.Collections.emptyList[T]()
 
-     } else {
-
-
-       out
-     }
+     } else { out }
 
     } catch {
       case e:org.compass.core.engine.SearchEngineQueryParseException =>
@@ -153,18 +150,29 @@ abstract class SearchController[T <: Struct,QV <: Query ] extends GenericListCon
       getManagerBySearchResult(result).search(query)
   }
 
+  override def listImpl( request:HttpServletRequest, locale:Locale,  model:Model,
+                page:java.lang.Integer,
+                NPpage:String,
+                pageSize:java.lang.Integer,result:String):java.util.List[T] = {
+    fillSearchModel(model,locale)
+    model.addAttribute("result",result.toLowerCase())
+
+    logger.debug("_listImpl(search) pageSize "+pageSize+", result "+model.asMap().get("result"))
+
+    return super.listImpl(request,locale,model,page,NPpage,pageSize,getSearchResultByCode(result).getItemsModel())
+  }
 
 
-  @RequestMapping(value = Array(SearchController.SEARCH_ACTION + "/{result:[a-z]}/{page:[0-9]}"), method = Array(RequestMethod.GET))
+  @RequestMapping(value = Array(SearchController.SEARCH_ACTION + "/{result:[a-z]+}/{page:[0-9]+}"), method = Array(RequestMethod.GET))
   @ModelAttribute(GenericController.NODE_LIST_MODEL)
   def searchByPath(@PathVariable("page") page:java.lang.Integer,
                    @PathVariable("result") result:String,
                  request:HttpServletRequest,
                  model:Model,
-                 locale:Locale) =  listImpl(request,locale, model, page, null, null, getSearchResultByCode(result).getItemsModel())
+                 locale:Locale) =  listImpl(request,locale, model, page, null, null, result)
 
 
-  @RequestMapping(value = Array(SearchController.SEARCH_ACTION + "/{result:[a-z]}/limit/{pageSize:[0-9]}"),
+  @RequestMapping(value = Array(SearchController.SEARCH_ACTION + "/{result:[a-z]+}/limit/{pageSize:[0-9]+}"),
     method = Array(RequestMethod.GET))
   @ModelAttribute(GenericController.NODE_LIST_MODEL)
   def searchByPathSize(
@@ -173,26 +181,26 @@ abstract class SearchController[T <: Struct,QV <: Query ] extends GenericListCon
                         request:HttpServletRequest,
                         model:Model,
                         locale:Locale)= listImpl(request,locale, model, null, null, pageSize,
-    getSearchResultByCode(result).getItemsModel())
+                        result)
 
 
-  @RequestMapping(value = Array(SearchController.SEARCH_ACTION + "/{result:[a-z]}/next"), method = Array(RequestMethod.GET))
+  @RequestMapping(value = Array(SearchController.SEARCH_ACTION + "/{result:[a-z]+}/next"), method = Array(RequestMethod.GET))
   @ModelAttribute(GenericController.NODE_LIST_MODEL)
   def searchByPathNext(
                       request:HttpServletRequest,
                       @PathVariable("result") result:String,
                       model:Model,
                       locale:Locale) = listImpl(request,locale, model, null, GenericListController.NEXT_PARAM, null,
-                        getSearchResultByCode(result).getItemsModel())
+                      result)
 
 
-  @RequestMapping(value = Array(SearchController.SEARCH_ACTION + "/{result:[a-z]}/prev"), method = Array(RequestMethod.GET))
+  @RequestMapping(value = Array(SearchController.SEARCH_ACTION + "/{result:[a-z]+}/prev"), method = Array(RequestMethod.GET))
   @ModelAttribute(GenericController.NODE_LIST_MODEL)
   def searchByPathPrev(
                       request:HttpServletRequest,
                       @PathVariable("result") result:String,
                       model:Model,
-                      locale:Locale) = listImpl(request,locale, model, null, "prev", null,getSearchResultByCode(result).getItemsModel())
+                      locale:Locale) = listImpl(request,locale, model, null, "prev", null,result)
 
 
   /*@RequestMapping(value = Array("/body/list"), method = Array(RequestMethod.GET,RequestMethod.POST))

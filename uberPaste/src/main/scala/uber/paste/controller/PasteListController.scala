@@ -88,7 +88,7 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
   }
 
 
-  @RequestMapping(value = Array(GenericListController.LIST_ACTION + "/{source}/{page:[0-9]}"), method = Array(RequestMethod.GET))
+  @RequestMapping(value = Array(GenericListController.LIST_ACTION + "/{source}/{page:[0-9]+}"), method = Array(RequestMethod.GET))
   @ModelAttribute(GenericController.NODE_LIST_MODEL)
   def listByPathSource(@PathVariable("page") page:java.lang.Integer,
                        @PathVariable("source") source:String,
@@ -99,7 +99,7 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
 
 
 
-  @RequestMapping(value = Array(GenericListController.LIST_ACTION + "/{source}/limit/{pageSize:[0-9]}"), method = Array(RequestMethod.GET))
+  @RequestMapping(value = Array(GenericListController.LIST_ACTION + "/{source}/limit/{pageSize:[0-9]+}"), method = Array(RequestMethod.GET))
   @ModelAttribute(GenericController.NODE_LIST_MODEL)
   def listByPathSizeSource(@PathVariable("pageSize") pageSize:java.lang.Integer,
                            @PathVariable("source") source:String,
@@ -171,6 +171,7 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
                      pageSize:java.lang.Integer,
                      sourceType:String,desc:java.lang.Boolean):java.util.List[Paste] = {
 
+    logger.debug("_paste listImpl, pageSize "+pageSize)
 
     fillListModel(model,locale)
 

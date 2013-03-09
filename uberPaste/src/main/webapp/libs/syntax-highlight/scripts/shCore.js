@@ -358,18 +358,18 @@ var sh = {
 			
 			target.parentNode.replaceChild(element, target);
 
-
+            var roots = []
             $$('div.commentBlock').each(function(el){
 
                 sh.insertComment(el,0);
-
+                roots.push(el);
             });
 
-            $$('div.commentBlock').each(function(el){
-
+            Array.each(roots, function(el, index){
                 sh.insertComment(el,1);
-
             });
+
+
 
 
             var ln = document.getElementById('lineNumber').value;
@@ -411,6 +411,12 @@ var sh = {
         });
         $$('div.listSpace').each(function(el){
             el.setStyle('display', check == 0 ? 'none' : '');
+        });
+    },  recurseCommentReply: function(roots) {
+        var sroots = []
+        Array.each(roots, function(el, index){
+            sh.insertComment(el,1);
+            sroots.push(el);
         });
 
     },  insertComment: function(cl,mode) {
@@ -1507,7 +1513,7 @@ sh.Highlighter.prototype = {
          } else {
              out+='<div id="cl_'+lineNumber+'" class="' + classes.join(' ') + '">';
 
-             out+='<a  href="javascript:void(0);"  class="linkLine" title="Comment this line" onclick="SyntaxHighlighter.insertEditForm('+lineNumber+',0);">' + code + '</a>';
+             out+='<a  href="javascript:void(0);"  class="linkLine" title="Comment line '+lineNumber+'" onclick="SyntaxHighlighter.insertEditForm('+lineNumber+',0);">' + code + '</a>';
 
          }
         return out+='</div>';

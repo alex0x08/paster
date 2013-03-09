@@ -35,10 +35,16 @@
       <c:if test="${listMode eq 'search' }">
 
           <div class="paging" style="margin: auto; text-align: center;float: left;" >
-              Found <c:out value="${totalFound}"  />
-
+              Found
               <c:forEach var="resultType" items="${availableResults}" varStatus="loopStatus">
-                  <a href="<c:url value='/main/paste/list/search/${resultType.codeLowerCase}/1'/>"><fmt:message key="${resultType.name}"/></a>
+                  <c:choose>
+                      <c:when test="${result eq resultType.codeLowerCase}">
+                          <span style="font-size: larger; "><fmt:message key="${resultType.name}"/> </span>
+                      </c:when>
+                      <c:otherwise>
+                          <a href="<c:url value='/main/paste/list/search/${resultType.codeLowerCase}/1'/>"><fmt:message key="${resultType.name}"/></a>
+                      </c:otherwise>
+                  </c:choose>
                   <c:if test="${!loopStatus.last}"> | </c:if>
               </c:forEach>
 
@@ -237,6 +243,9 @@
                 <a href="<c:url value="/main/paste/${paste.id}"></c:url>" title="Click to view paste vol. ${paste.id}">
                     <span  class="pasteTitle"><c:out value="${paste.text}" escapeXml="true"  /></span>
                 </a>
+
+                <span  class="pasteTitle"><c:out value="${paste.text}" escapeXml="true"  /></span>
+
                 <small>
                     <tiles:insertDefinition name="common/owner" >
                         <tiles:putAttribute name="model" value="${paste}"/>

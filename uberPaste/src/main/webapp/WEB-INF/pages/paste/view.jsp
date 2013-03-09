@@ -79,14 +79,14 @@
             <div id="comment_l${comment.id}" lineNumber="${comment.lineNumber}"  parentCommentId="${comment.parentId}" class="commentBlock" >
                 <c:choose>
                     <c:when test="${comment.parentId!=null}">
-                        <div style="min-width:15em; margin-top: 0;padding-left: 2em; vertical-align: text-top;  background-color: #f7e741;  ">
-                            <c:out value=" ${comment.text}"/>
+                        <div style="min-width:15em; margin-top: 0;padding-left: 2em;  vertical-align: text-top;   ">
+                            <c:out value=" ${comment.text}" escapeXml="true"/>
                         </div>
 
                     </c:when>
                     <c:otherwise>
-                        <div style="min-width:15em; margin-top: 0; vertical-align: text-top;  background-color: #ff7f50;">
-                            <c:out value=" ${comment.text}"/>
+                        <div style="min-width:15em; margin-top: 0; padding-left: 2em;  vertical-align: text-top; ">
+                            <c:out value=" ${comment.text}" escapeXml="true"/>
                         </div>
 
                     </c:otherwise>
@@ -102,11 +102,13 @@
                             </a>
 
                             <div style="display: inline;font-size: small;  ">
-                                <a title="Contact ${comment.owner.name}"   href="mailto:${comment.owner.username}?subject=${model.name}"><c:out value="${comment.owner.name}" /></a>
+                                <a title="Contact ${comment.owner.name}"  href="mailto:${comment.owner.username}?subject=${model.name}"><c:out value="${comment.owner.name}" /></a>
                                 , <kc:prettyTime date="${comment.lastModified}" locale="${pageContext.response.locale}"/>
-                                ,   <a  href="javascript:void(0);"  class="linkLine" title="Comment this" onclick="SyntaxHighlighter.insertEditForm(${comment.lineNumber},${comment.id});">Reply</a>
-
+                             </div>
+                            <div style="display:block;font-size: small;float:right;padding-right: 1em;vertical-align: bottom;  ">
+                                <a  href="javascript:void(0);"  class="linkLine" title="Comment this" onclick="SyntaxHighlighter.insertEditForm(${comment.lineNumber},${comment.id});">Reply</a>
                             </div>
+
                         </div>
 
                     </c:when>
