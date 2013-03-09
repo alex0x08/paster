@@ -32,36 +32,108 @@
 <div class="row">
     <div class="column grid-12">
 
+      <c:if test="${listMode eq 'search' }">
+
+          <div class="paging" style="margin: auto; text-align: center;float: left;" >
+              Found <c:out value="${totalFound}"  />
+
+              <c:forEach var="resultType" items="${availableResults}" varStatus="loopStatus">
+                  <a href="<c:url value='/main/paste/list/search/${resultType.codeLowerCase}/1'/>"><fmt:message key="${resultType.name}"/></a>
+                  <c:if test="${!loopStatus.last}"> | </c:if>
+              </c:forEach>
+
+          </div>
+
+      </c:if>
+
+        <%-- processing page list --%>
         <div class="paging" style="margin: auto; text-align: center;" >
 
-            <c:if test="${!pageItems.firstPage}">
-                <a href="<c:url value="/main/paste/list/${sourceType}/prev"/>">&#8592;</a>
-            </c:if>
-            <c:if test="${pageItems.pageCount > 1}">
-                <c:forEach begin="1" end="${pageItems.pageCount}" step="1" var="pnumber">
-                    <c:choose>
-                        <c:when test="${pnumber==pageItems.page+1}">
-                            <c:out value="${pnumber}"/>
-                        </c:when>
-                        <c:otherwise>
-                            <small>
-                                <a href="<c:url value='/main/paste/list/${sourceType}/${pnumber}'/>">${pnumber}</a>
-                            </small>
-                        </c:otherwise>
-                    </c:choose>
-                    &nbsp;
-                </c:forEach>
+            <c:choose>
+                <%-- for search results --%>
+                <c:when test="${listMode eq 'search' }">
 
-            </c:if>
+                    <c:if test="${!pageItems.firstPage}">
+                        <a href="<c:url value="/main/paste/list/search/${result}/prev"/>">&#8592;</a>
+                    </c:if>
+                    <c:if test="${pageItems.pageCount > 1}">
+                        <c:forEach begin="1" end="${pageItems.pageCount}" step="1" var="pnumber">
+                            <c:choose>
+                                <c:when test="${pnumber==pageItems.page+1}">
+                                    <c:out value="${pnumber}"/>
+                                </c:when>
+                                <c:otherwise>
+                                    <small>
+                                        <a href="<c:url value='/main/paste/list/search/${result}/${pnumber}'/>">${pnumber}</a>
+                                    </small>
+                                </c:otherwise>
+                            </c:choose>
+                            &nbsp;
+                        </c:forEach>
+                    </c:if>
 
-            <c:if test="${!pageItems.lastPage}">
-                <a href="<c:url value='/main/paste/list/${sourceType}/next'/>">&#8594;</a>
-            </c:if>
+                    <c:if test="${!pageItems.lastPage}">
+                        <a href="<c:url value='/main/paste/list/search/${result}/next'/>">&#8594;</a>
+                    </c:if>
+
+                </c:when>
+                <c:when test="${listMode eq 'list'}">
+                    <%-- for list --%>
+
+                    <c:if test="${!pageItems.firstPage}">
+                        <a href="<c:url value="/main/paste/list/${sourceType}/prev"/>">&#8592;</a>
+                    </c:if>
+                    <c:if test="${pageItems.pageCount > 1}">
+                        <c:forEach begin="1" end="${pageItems.pageCount}" step="1" var="pnumber">
+                            <c:choose>
+                                <c:when test="${pnumber==pageItems.page+1}">
+                                    <c:out value="${pnumber}"/>
+                                </c:when>
+                                <c:otherwise>
+                                    <small>
+                                        <a href="<c:url value='/main/paste/list/${sourceType}/${pnumber}'/>">${pnumber}</a>
+                                    </small>
+                                </c:otherwise>
+                            </c:choose>
+                            &nbsp;
+                        </c:forEach>
+
+                    </c:if>
+
+                    <c:if test="${!pageItems.lastPage}">
+                        <a href="<c:url value='/main/paste/list/${sourceType}/next'/>">&#8594;</a>
+                    </c:if>
+
+                </c:when>
+            </c:choose>
+
+
 
         </div>
 
+        <%-- processing elements per page and sort setup --%>
 
         <div class="paging" style="margin: auto; text-align: center;float:right;  " >
+    <c:choose>
+        <c:when test="${listMode eq 'search' }">
+
+            <c:forEach var="page" items="${pageSet}" varStatus="loopStatus">
+
+                <c:choose>
+                    <c:when test="${pageItems.pageSize eq page}">
+                        <span style="font-size: larger; "><c:out value="${page}"/> </span>
+                    </c:when>
+                    <c:otherwise>
+                        <a href="<c:url value="/main/paste/list/search/${result}/limit/${page}"/>">${page}</a>
+                    </c:otherwise>
+                </c:choose>
+
+                <c:if test="${!loopStatus.last}"> | </c:if>
+            </c:forEach>
+
+
+        </c:when>
+        <c:when test="${listMode eq 'list' }">
 
             <c:forEach var="page" items="${pageSet}" varStatus="loopStatus">
 
@@ -90,6 +162,12 @@
             </c:choose>
         </span>
 
+
+        </c:when>
+
+    </c:choose>
+
+
         </div>
 
 
@@ -104,49 +182,77 @@
 
     <div id="pastas">
     <c:forEach var="paste" items="${pageItems.pageList}" varStatus="status">
-        <c:set var="priorTitle"><fmt:message key="${paste.priority.name}"/></c:set>
-
-        <div>
-            <c:if test="${paste.sticked}">
-                <span class="i" title="Paste sticked">]</span>
-            </c:if>
-
-                <a class="i ${paste.priority.cssClass}" style="font-size:2em;"
-                   title="<c:out value="${paste.id}"/>: ${priorTitle}. Click to search with same priority."
-                   href="<c:url value='/main/paste/list/search?query=priority:${paste.priority.code}'/>">/</a>
 
 
-            <a href="<c:url value="/main/paste/${paste.id}"></c:url>" title="Click to view paste vol. ${paste.id}">
-             <span  class="pasteTitle"><c:out value="${paste.name}" escapeXml="true"  /></span>
-            </a>
+        <c:choose>
+            <c:when test="${paste['class'].name eq 'uber.paste.model.Paste'}">
 
-            <tiles:insertDefinition name="common/tags" >
-                <tiles:putAttribute name="model" value="${paste}"/>
-                <tiles:putAttribute name="modelName" value="paste"/>
-            </tiles:insertDefinition>
+                <c:set var="priorTitle"><fmt:message key="${paste.priority.name}"/></c:set>
 
-            <tiles:insertDefinition name="common/commentCount" >
-                <tiles:putAttribute name="model" value="${paste}"/>
-                <tiles:putAttribute name="modelName" value="paste"/>
-            </tiles:insertDefinition>
+                <div>
+                    <c:if test="${paste.sticked}">
+                        <span class="i" title="Paste sticked">]</span>
+                    </c:if>
 
-
-            <small>
-               <tiles:insertDefinition name="common/owner" >
-                    <tiles:putAttribute name="model" value="${paste}"/>
-                    <tiles:putAttribute name="modelName" value="paste"/>
-                </tiles:insertDefinition>
+                    <a class="i ${paste.priority.cssClass}" style="font-size:2em;"
+                       title="<c:out value="${paste.id}"/>: ${priorTitle}. Click to search with same priority."
+                       href="<c:url value='/main/paste/list/search?query=priority:${paste.priority.code}'/>">/</a>
 
 
-               ,<kc:prettyTime date="${paste.lastModified}" locale="${pageContext.response.locale}"/>
-           </small>
+                    <a href="<c:url value="/main/paste/${paste.id}"></c:url>" title="Click to view paste vol. ${paste.id}">
+                        <span  class="pasteTitle"><c:out value="${paste.name}" escapeXml="true"  /></span>
+                    </a>
+
+                    <tiles:insertDefinition name="common/tags" >
+                        <tiles:putAttribute name="model" value="${paste}"/>
+                        <tiles:putAttribute name="modelName" value="paste"/>
+                    </tiles:insertDefinition>
+
+                    <tiles:insertDefinition name="common/commentCount" >
+                        <tiles:putAttribute name="model" value="${paste}"/>
+                        <tiles:putAttribute name="modelName" value="paste"/>
+                    </tiles:insertDefinition>
 
 
-            <div class="pasteTitle" style="padding: 1em;">
-                <a class="listLinkLine" href="<c:url value="/main/paste/${paste.id}"></c:url>" title="Click to view paste vol. ${paste.id}"><c:out value="${paste.title}"  escapeXml="true"/></a>
-        </div>
+                    <small>
+                        <tiles:insertDefinition name="common/owner" >
+                            <tiles:putAttribute name="model" value="${paste}"/>
+                            <tiles:putAttribute name="modelName" value="paste"/>
+                        </tiles:insertDefinition>
 
-    </div>
+
+                        ,<kc:prettyTime date="${paste.lastModified}" locale="${pageContext.response.locale}"/>
+                    </small>
+
+
+                    <div class="pasteTitle" style="padding: 1em;">
+                        <a class="listLinkLine" href="<c:url value="/main/paste/${paste.id}"></c:url>" title="Click to view paste vol. ${paste.id}"><c:out value="${paste.title}"  escapeXml="true"/></a>
+                    </div>
+
+                </div>
+
+            </c:when>
+            <c:when test="${paste['class'].name eq 'uber.paste.model.Comment'}">
+
+                <a href="<c:url value="/main/paste/${paste.id}"></c:url>" title="Click to view paste vol. ${paste.id}">
+                    <span  class="pasteTitle"><c:out value="${paste.text}" escapeXml="true"  /></span>
+                </a>
+                <small>
+                    <tiles:insertDefinition name="common/owner" >
+                        <tiles:putAttribute name="model" value="${paste}"/>
+                        <tiles:putAttribute name="modelName" value="paste"/>
+                    </tiles:insertDefinition>
+
+
+                    ,<kc:prettyTime date="${paste.lastModified}" locale="${pageContext.response.locale}"/>
+                </small>
+
+            </c:when>
+        </c:choose>
+
+
+
+
         
     </c:forEach>
 

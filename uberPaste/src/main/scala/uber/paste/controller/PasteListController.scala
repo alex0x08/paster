@@ -27,8 +27,8 @@ import java.util.Locale
 import org.springframework.beans.support.PagedListHolder
 
 object PasteSearchResult extends KeyValueObj[SearchResult] {
-  val PASTE = new SearchResult("FORM","paste.source.form","pasteItems")
-  val COMMENT = new SearchResult("MAIL","paste.source.mail","commentItems")
+  val PASTE = new SearchResult("paste","result.paste.name","pasteItems")
+  val COMMENT = new SearchResult("comment","result.comment.name","commentItems")
 
   add(PASTE)
   add(COMMENT)
@@ -59,7 +59,7 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
   def getAvailableResults():java.util.Collection[SearchResult] = PasteSearchResult.list
 
   def getSearchResultByCode(code:String):SearchResult = {
-    val out = PasteSearchResult.valueOf(code)
+    val out = PasteSearchResult.valueOf(code.toLowerCase)
     return if (out==null) {PasteSearchResult.PASTE} else {out}
   }
 
@@ -82,6 +82,7 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
   }
 
   protected override def fillListModel(model:Model,locale:Locale) {
+    super.fillListModel(model,locale)
     model.addAttribute("title","Pastas")
     model.addAttribute("availableSourceTypes",PasteSource.list)
   }

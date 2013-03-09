@@ -28,7 +28,7 @@ object GenericListController {
   final val NEXT_PARAM = "next"
   final val PAGE_SET = "pageSet"
   final val pageSet:Array[Int] = Array(5,10,50,100,500)
-
+  final val LIST_MODE = "listMode"
 }
 
 abstract class GenericListController[T <: Struct ] extends StructController[T] {
@@ -43,7 +43,9 @@ abstract class GenericListController[T <: Struct ] extends StructController[T] {
 
 
 
-  protected def fillListModel(model:Model,locale:Locale) {}
+  protected def fillListModel(model:Model,locale:Locale) {
+    model.addAttribute(GenericListController.LIST_MODE,"list")
+  }
 
 
   protected def processPageListHolder(request:HttpServletRequest,
@@ -53,15 +55,15 @@ abstract class GenericListController[T <: Struct ] extends StructController[T] {
                                       NPpage:String,
                                       pageSize:java.lang.Integer,
                                       callback:SourceCallback[T],
-                                      pageHolderName:String):java.util.List[T] = {
+                                      pageHolderName:String,createDefaultItemModel:Boolean = true):java.util.List[T] = {
 
       var pagedListHolder:PagedListHolder[T] = request.getSession()
             .getAttribute(pageHolderName)
             .asInstanceOf[PagedListHolder[T]]
 
-    if (pagedListHolder == null || (page == null && NPpage == null)) {
+    if (pagedListHolder == null || (page == null && NPpage == null && pageSize==null)) {
       pagedListHolder = callback.invokeCreate()
-      logger.debug("pagedListHolder created ")
+      logger.debug("pagedListHolder created pageSize="+pageSize)
     } else {
 
       if (NPpage != null) {
@@ -71,7 +73,7 @@ abstract class GenericListController[T <: Struct ] extends StructController[T] {
           pagedListHolder.previousPage()
         }
 
-      } else {
+      } else if (page!=null){
 
         var npage = page
         
@@ -92,8 +94,12 @@ abstract class GenericListController[T <: Struct ] extends StructController[T] {
     }
 
     request.getSession().setAttribute(pageHolderName, pagedListHolder)
-
     model.addAttribute(pageHolderName, pagedListHolder)
+
+    if (createDefaultItemModel && !pageHolderName.equals(GenericController.NODE_LIST_MODEL_PAGE)) {
+      model.addAttribute(GenericController.NODE_LIST_MODEL_PAGE, pagedListHolder)
+    }
+
     model.addAttribute(GenericListController.PAGE_SET, GenericListController.pageSet)
 
     return pagedListHolder.getPageList()
@@ -151,7 +157,7 @@ abstract class GenericListController[T <: Struct ] extends StructController[T] {
 
 
 
-    logger.debug("_user="+getCurrentUser())
+    logger.debug("_listImpl user="+getCurrentUser()+", pageSize "+pageSize)
 
     return processPageListHolder(request,locale,model,page,NPpage,pageSize,defaultListCallback,
       result)

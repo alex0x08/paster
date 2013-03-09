@@ -39,6 +39,8 @@ class MailHandler(appContext:ApplicationContext, ctx:MessageContext) extends Log
   private var allowed:Boolean =true
   private var currentUser:User=null
 
+  private var mailFrom:String=null
+  private var mailTo:String=null
 
 
   @throws(classOf[RejectException])
@@ -56,12 +58,13 @@ class MailHandler(appContext:ApplicationContext, ctx:MessageContext) extends Log
       getLogger().debug("user not found. skip processing.");
       throw new RejectException(553, "<" + from + "> user unknown");
     }*/
+    this.mailFrom=from
   }
 
   @throws(classOf[RejectException])
   override def recipient(recipient:String)  {
     logger.debug("RECIPIENT:" + recipient);
-
+       this.mailTo=recipient
   }
 
   @throws(classOf[MessagingException])
@@ -70,7 +73,7 @@ class MailHandler(appContext:ApplicationContext, ctx:MessageContext) extends Log
 
 
     var p1:Paste = new Paste
-    p1.setName("Mail: "+subj)
+    p1.setName(mailFrom+" : " + ( if (subj==null) {""} else {subj}) )
     p1.setPasteSource(PasteSource.MAIL)
 
     p1.setOwner(null)
@@ -95,7 +98,7 @@ class MailHandler(appContext:ApplicationContext, ctx:MessageContext) extends Log
 
     var p1:Paste = new Paste
     //p1.setOwner(admin)
-    p1.setName("Mail "+subj)
+    p1.setName(mailFrom +" : " + ( if (subj==null) {""} else {subj}))
     p1.setPasteSource(PasteSource.MAIL)
 
     p1.setOwner(null)
@@ -114,7 +117,12 @@ class MailHandler(appContext:ApplicationContext, ctx:MessageContext) extends Log
         new java.lang.String(data.toByteArray())
      }
 
+      logger.debug("before extract text "+text)
+
       text = extractText(new ByteArrayInputStream(text.getBytes()))
+
+      logger.debug("after extract text "+text)
+
 
       if (text.length()<=0) {
         logger.debug("zero length data.cannot save.")
