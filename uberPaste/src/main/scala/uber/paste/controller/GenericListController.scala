@@ -52,10 +52,11 @@ abstract class GenericListController[T <: Struct ] extends StructController[T] {
                                       page:java.lang.Integer,
                                       NPpage:String,
                                       pageSize:java.lang.Integer,
-                                      callback:SourceCallback[T]):java.util.List[T] = {
+                                      callback:SourceCallback[T],
+                                      pageHolderName:String):java.util.List[T] = {
 
       var pagedListHolder:PagedListHolder[T] = request.getSession()
-            .getAttribute(GenericController.NODE_LIST_MODEL_PAGE)
+            .getAttribute(pageHolderName)
             .asInstanceOf[PagedListHolder[T]]
 
     if (pagedListHolder == null || (page == null && NPpage == null)) {
@@ -90,9 +91,9 @@ abstract class GenericListController[T <: Struct ] extends StructController[T] {
       pagedListHolder.setPageSize(pageSize);
     }
 
-    request.getSession().setAttribute(GenericController.NODE_LIST_MODEL_PAGE, pagedListHolder)
+    request.getSession().setAttribute(pageHolderName, pagedListHolder)
 
-    model.addAttribute(GenericController.NODE_LIST_MODEL_PAGE, pagedListHolder)
+    model.addAttribute(pageHolderName, pagedListHolder)
     model.addAttribute(GenericListController.PAGE_SET, GenericListController.pageSet)
 
     return pagedListHolder.getPageList()
@@ -136,17 +137,28 @@ abstract class GenericListController[T <: Struct ] extends StructController[T] {
            @RequestParam(required = false)  page:java.lang.Integer,
            @RequestParam(required = false)  NPpage:String,
            @RequestParam(required = false)  pageSize:java.lang.Integer):java.util.List[T] = {
+  return listImpl(request,locale,model,page,NPpage,pageSize,GenericController.NODE_LIST_MODEL_PAGE)
+  }
 
-      fillListModel(model,locale)
+
+  def listImpl( request:HttpServletRequest, locale:Locale,  model:Model,
+             page:java.lang.Integer,
+              NPpage:String,
+              pageSize:java.lang.Integer,result:String):java.util.List[T] = {
+
+    fillListModel(model,locale)
     // putListModel(model);
+
+
 
     logger.debug("_user="+getCurrentUser())
 
-    return processPageListHolder(request,locale,model,page,NPpage,pageSize,defaultListCallback)
+    return processPageListHolder(request,locale,model,page,NPpage,pageSize,defaultListCallback,
+      result)
     // return manager.getAll();
   }
-  
-  
+
+
   @RequestMapping(value = Array("/list/body"))
   @ModelAttribute("items")
   @ResponseBody

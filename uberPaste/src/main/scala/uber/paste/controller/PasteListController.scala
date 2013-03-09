@@ -18,13 +18,22 @@ package uber.paste.controller
 
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation._
-import uber.paste.model.{PasteSource, Paste, OwnerQuery}
-import uber.paste.manager.PasteManager
+import uber.paste.model._
+import uber.paste.manager.{CommentManager, GenericSearchManager, PasteManager}
 import javax.servlet.http.HttpServletRequest
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.ui.Model
 import java.util.Locale
 import org.springframework.beans.support.PagedListHolder
+
+object PasteSearchResult extends KeyValueObj[SearchResult] {
+  val PASTE = new SearchResult("FORM","paste.source.form","pasteItems")
+  val COMMENT = new SearchResult("MAIL","paste.source.mail","commentItems")
+
+  add(PASTE)
+  add(COMMENT)
+
+}
 
 
 @Controller
@@ -35,16 +44,35 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
 
   @Autowired
   val pasteManager:PasteManager = null
-  
-  
+
+  @Autowired
+  val commentManager:CommentManager = null
+
+
   def listPage()="redirect:/main/paste/list"
   def editPage()="/paste/edit"
   def viewPage()="/paste/view"
 
 
-  def manager():PasteManager = return pasteManager
- 
-   @ModelAttribute("query")
+  def manager():PasteManager = pasteManager
+
+  def getAvailableResults():java.util.Collection[SearchResult] = PasteSearchResult.list
+
+  def getSearchResultByCode(code:String):SearchResult = {
+    val out = PasteSearchResult.valueOf(code)
+    return if (out==null) {PasteSearchResult.PASTE} else {out}
+  }
+
+  def getManagerBySearchResult(result:SearchResult):GenericSearchManager[_] = {
+    return result match {
+      case PasteSearchResult.PASTE => {manager()}
+      case PasteSearchResult.COMMENT => {commentManager}
+
+    }
+  }
+
+
+  @ModelAttribute("query")
    def newQuery():OwnerQuery = {
      val out =new OwnerQuery
    //  if (!isCurrentUserAdmin) {
@@ -154,7 +182,8 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
 
     val order = if (desc == null) {java.lang.Boolean.TRUE} else {desc};
 
-    return processPageListHolder(request,locale,model,page,NPpage,pageSize,if (ps==null) {pasterListCallback} else {new PasteListCallback(ps,order)})
+    return processPageListHolder(request,locale,model,page,NPpage,pageSize,
+      if (ps==null) {pasterListCallback} else {new PasteListCallback(ps,order)},GenericController.NODE_LIST_MODEL_PAGE)
 
   }
 
