@@ -14,6 +14,13 @@ import uber.paste.base.Loggered
  * Time: 4:20
  * To change this template use File | Settings | File Templates.
  */
+
+object Comment extends Struct {
+
+  override val terms = super.terms ::: List[String]("text")
+}
+
+
 @Entity
 @Searchable
 @XmlRootElement(name="comment")
@@ -55,6 +62,9 @@ class Comment extends Struct  with java.io.Serializable{
 
   def getLineNumber():java.lang.Long = lineNumber
   def setLineNumber(n:java.lang.Long) { lineNumber=n}
+
+  override def terms():List[String] = Comment.terms
+
 
   override def loadFull() {
     getText
