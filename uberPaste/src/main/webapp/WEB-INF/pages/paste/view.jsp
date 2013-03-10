@@ -1,6 +1,15 @@
 <%@ include file="/WEB-INF/pages/common/taglibs.jsp"%>
 
-<jsp:include page="/WEB-INF/pages/template/search.jsp"/>
+
+
+<div class="row">
+    <div class="column grid-1" style="text-align:right;padding-right: 0;margin-top: -1em;" >
+        <a class="mainLinkLine" href="<c:url value="/main/paste/new"></c:url>" title="<fmt:message key='paste.create.new'/>"><span class="i" style="font-size: 4em;">/</span></a>
+    </div>
+    <div class="column grid-12" style="padding-left: 0;margin-left: -1em;" >
+        <jsp:include page="/WEB-INF/pages/template/search.jsp"/>
+    </div>
+</div>
 
 
 <c:set var="priorTitle"><fmt:message key="${model.priority.name}"/></c:set>
@@ -76,54 +85,62 @@
             </div>
 
 
+
             <div id="comment_l${comment.id}" lineNumber="${comment.lineNumber}"  parentCommentId="${comment.parentId}" class="commentBlock" >
-                <c:choose>
-                    <c:when test="${comment.parentId!=null}">
-                        <div style="min-width:15em; margin-top: 0;padding-left: 2em;  vertical-align: text-top;   ">
+                <div class="commentInner">
+
+                <div class="row">
+                    <div class="column grid-1" style="padding-top: 0.2em;">
+
+                        <c:choose>
+                            <c:when test="${not empty comment.owner}">
+                                <a href="http://ru.gravatar.com/site/check/${comment.owner.username}" title="GAvatar">
+                                    <img style="vertical-align: top;padding-bottom: 2px;" src="<c:out value='http://www.gravatar.com/avatar/${comment.owner.avatarHash}?s=32'/>"/>
+                                </a>
+                            </c:when>
+                            <c:otherwise>
+                                <span style="font-size: 2em;" class="i" title="Anonymous">x</span>
+                            </c:otherwise>
+                        </c:choose>
+
+                    </div>
+                    <div class="column grid-14" style="font-size: small;padding-left: 0.1em; margin: 0;  ">
+                        <c:choose>
+                            <c:when test="${not empty comment.owner}">
+                                    <a title="Contact ${comment.owner.name}"  href="mailto:${comment.owner.username}?subject=${model.name}"><c:out value="${comment.owner.name}" /></a>
+                            </c:when>
+                            <c:otherwise>
+                                Anonymous
+                            </c:otherwise>
+
+                        </c:choose>
+                        , <kc:prettyTime date="${comment.lastModified}" locale="${pageContext.response.locale}"/>
+
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <div class="column grid-1">
+                        #
+                    </div>
+                    <div class="column grid-14">
                             <c:out value=" ${comment.text}" escapeXml="true"/>
+                    </div>
+
+                    <c:if test="${comment.parentId==null}">
+                        <div class="column grid-1 right" style="font-size: 1em;text-align: right;">
+                            <a  href="javascript:void(0);"  class="linkLine" title="Comment this"
+                                onclick="SyntaxHighlighter.insertEditForm(${comment.lineNumber},${comment.id});"><span class="i">C</span></a>
                         </div>
+                    </c:if>
 
-                    </c:when>
-                    <c:otherwise>
-                        <div style="min-width:15em; margin-top: 0; padding-left: 2em;  vertical-align: text-top; ">
-                            <c:out value=" ${comment.text}" escapeXml="true"/>
-                        </div>
+                </div>
 
-                    </c:otherwise>
-                </c:choose>
-
-                <c:choose>
-                    <c:when test="${not empty comment.owner}">
-
-                        <div style="font-size: small;padding-top: 0.5em; ">
-
-                            <a href="http://ru.gravatar.com/site/check/${comment.owner.username}" title="GAvatar">
-                                <img style="vertical-align: top;padding-bottom: 2px;" src="<c:out value='http://www.gravatar.com/avatar/${comment.owner.avatarHash}?s=32'/>"/>
-                            </a>
-
-                            <div style="display: inline;font-size: small;  ">
-                                <a title="Contact ${comment.owner.name}"  href="mailto:${comment.owner.username}?subject=${model.name}"><c:out value="${comment.owner.name}" /></a>
-                                , <kc:prettyTime date="${comment.lastModified}" locale="${pageContext.response.locale}"/>
-                             </div>
-                            <div style="display:block;font-size: small;float:right;padding-right: 1em;vertical-align: bottom;  ">
-                                <a  href="javascript:void(0);"  class="linkLine" title="Comment this" onclick="SyntaxHighlighter.insertEditForm(${comment.lineNumber},${comment.id});">Reply</a>
-                            </div>
-
-                        </div>
-
-                    </c:when>
-                    <c:otherwise>
-                        <div style="display: inline;font-size: small;  ">
-                            <kc:prettyTime date="${comment.lastModified}" locale="${pageContext.response.locale}"/>
-                            ,   <a  href="javascript:void(0);"  class="linkLine" title="Comment this" onclick="SyntaxHighlighter.insertEditForm(${comment.lineNumber},${comment.id});">Reply</a>
-
-                        </div>
-                    </c:otherwise>
-                </c:choose>
-
-
-
+               </div>
             </div>
+
+
         </c:forEach>
 
     </div>
@@ -146,11 +163,26 @@
     <form:hidden path="lineNumber" id="lineNumber"/>
     <form:hidden path="parentId" id="commentParentId"/>
 
-    <form:textarea path="text" id="commentText" cssErrorClass="error"  />
-    <div class="commentOuter">
+    <form:textarea path="text" id="commentText" cssErrorClass="error"    />
+    <div class="commentOuter" style="">
         <form:errors path="text" cssClass="error"   />
     <input  name="submit" type="submit" value="Add comment"  />
         to line <span id="pageNum"></span>
+
+        <sec:authorize ifAnyGranted="ROLE_USER,ROLE_ADMIN">
+          <span class="right"  style="padding-top: 0.5em;" >
+              <span  style="padding-top: 1em;">
+               <c:out escapeXml="true" value="${currentUser.name}" />
+
+              </span>
+            <a href="http://ru.gravatar.com/site/check/${currentUser.username}" title="GAvatar">
+                <img style="vertical-align: top;padding-bottom: 2px;" src="<c:out value='http://www.gravatar.com/avatar/${currentUser.avatarHash}?s=32'/>"/>
+            </a>
+
+  </span>
+
+        </sec:authorize>
+
     </div>
 
 

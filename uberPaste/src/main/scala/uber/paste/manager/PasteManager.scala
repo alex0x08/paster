@@ -21,14 +21,25 @@ import uber.paste.dao.PasteDao
 import org.springframework.stereotype.Service
 import org.springframework.beans.factory.annotation.Autowired
 import actors.threadpool.AtomicInteger
+import java.util.Collections
 
 object PasteManager {
     object Stats {
       var totalPastas = new AtomicInteger
-      var totalToday = new AtomicInteger
 
       def getTotal():Int = totalPastas.get()
+     // def getPriorStats():java.util.Collection[PriorStat] = Collections.unmodifiableCollection(totalByType)
+
     }
+
+}
+
+class PriorStat extends Key{
+
+     private var counter = new AtomicInteger
+
+     def getCounter():Int = counter.get()
+     def increment() = {counter.incrementAndGet()}
 
 }
 

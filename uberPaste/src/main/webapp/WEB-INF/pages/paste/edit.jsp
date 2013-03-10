@@ -2,10 +2,10 @@
 
 <c:url var="url" value='/main/paste/save' />
 
-<fieldset>
+<fieldset class="perk">
     <legend><span class="i" style="font-size:2em;">/</span><c:out value="${requestScope.title}" escapeXml="true"/></legend>
 
-<form:form action="${url}" 
+<form:form action="${url}" cssClass="perk"
            modelAttribute="model"
            method="POST" >
 
@@ -26,7 +26,8 @@
         </c:otherwise>
     </c:choose>
             <form:label path="name"><fmt:message key="paste.title"/>:</form:label>
-                <form:input cssClass="notice" cssErrorClass="error" path="name" name="title" id="pname" cssStyle="width:97%;" maxlength="255" title="Paste title"  />
+                <form:input cssClass="notice" cssErrorClass="error" path="name" name="title"
+                            id="pname" cssStyle="width:97%;" maxlength="255" title="Paste title" placeholder="enter paste title"  />
                 <form:errors path="name" cssClass="error" />
     </div>
 
@@ -40,14 +41,14 @@
     </div>
 
     <div class="row">
-        <div class="column grid-6">
+        <div class="column grid-8">
 
         <form:label path="tagsAsString"><fmt:message key="paste.tags"/>:</form:label>
-    <form:input path="tagsAsString" maxlength="255" cssStyle="width:97%;" autocomplete="true" placeholder="enter space-separated tags here"  />
+    <form:input path="tagsAsString" maxlength="155" cssStyle="width:97%;" autocomplete="true" placeholder="enter space-separated tags here"  />
     <form:errors path="tagsAsString" cssClass="error" />
 
         </div>
-        <div class="column grid-3">
+        <div class="column grid-4">
 
 
         <form:label path="codeType">Hightlight like:</form:label>
@@ -63,7 +64,7 @@
 
         </div>
 
-        <div class="column grid-2">
+        <div class="column grid-2" style="float:right;">
 
             <form:label path="priority"><fmt:message key="paste.priority"/>:</form:label>
             <form:select path="priority" multiple="false" id="pprior">
@@ -83,20 +84,23 @@
         <div class="column grid-16">
 
         <form:label path="text"><fmt:message key="paste.text"/>:</form:label>
-    <form:textarea path="text" cssErrorClass="error" cssClass="notice" cssStyle="width:97%;" name="text" id="ptext"  cols="120" rows="10" />
+    <form:textarea path="text" cssErrorClass="error" cssClass="notice" cssStyle="width:97%;"
+                   name="text" id="ptext" placeHolder="paste text"
+                   cols="120" rows="10" />
     <form:errors path="text" cssClass="error" />
 
 
     <div class="form-buttons">
             <div class="button">
-                <c:if test="${!model.blank}">
-                    <input name="cancel" type="submit" value="<fmt:message key="button.cancel"/>" />
-                </c:if>
+
                 <fmt:message var="submit_button_text" key="button.save"/>
 
                 <form:button name="submit" id="submitBtn"   >
                     <c:out value="${submit_button_text}"/>
                 </form:button>
+
+                <a href="<c:url value="/main/paste/list"/>"><fmt:message key='button.cancel'/></a>
+
 
                 <c:if test="${!model.blank}">
                     <div style="float:right;margin-top: 2em;">
@@ -115,4 +119,3 @@
      </fieldset>
 
 
-<a href="<c:url value="/main/paste/list"/>">&#8592;<fmt:message key="paste.list.title"/></a>

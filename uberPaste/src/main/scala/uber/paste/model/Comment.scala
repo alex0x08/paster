@@ -6,6 +6,7 @@ import javax.persistence.{Entity,JoinColumn, FetchType, ManyToOne, Lob}
 import javax.validation.constraints.{Size, NotNull}
 import org.codehaus.jackson.annotate.JsonIgnore
 import uber.paste.base.Loggered
+import org.compass.core.CompassHighlighter
 
 /**
  * Created with IntelliJ IDEA.
@@ -65,6 +66,17 @@ class Comment extends Struct  with java.io.Serializable{
 
   override def terms():List[String] = Comment.terms
 
+  /**
+   * this function will fill object fields from highlighter.
+   * This needed to proper display highlighted text in result
+   */
+  override def fillFromHits(ch:CompassHighlighter)  {
+    super.fillFromHits(ch)
+    val t = ch.fragment("text")
+    if (t!=null) {
+      setText(t)
+    }
+  }
 
   override def loadFull() {
     getText

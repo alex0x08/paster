@@ -39,6 +39,7 @@ import scala.collection.JavaConversions._
 import org.codehaus.jackson.annotate.JsonIgnore
 import javax.xml.bind.annotation.XmlTransient
 import org.apache.commons.lang.StringUtils
+import scala.Array
 
 @Controller
 @RequestMapping(Array("/paste"))
@@ -71,7 +72,7 @@ class PasteController extends GenericEditController[Paste]   {
     if (obj.isBlank) {
       model.addAttribute("title",getResource("paste.new",locale))
     } else {
-      model.addAttribute("title","Edit #"+obj.getId())
+      model.addAttribute("title",getResource("paste.edit.title",Array(obj.getId,obj.getName()),locale))
     }
     model.addAttribute("availableCodeTypes", CodeType.list)
     model.addAttribute("availablePriorities", Priority.list)
@@ -177,7 +178,7 @@ class PasteController extends GenericEditController[Paste]   {
     val p = model.asMap().get(GenericController.MODEL_KEY).asInstanceOf[Paste];
 
 
-    model.addAttribute("title",getResource("paste.view.title",Array(p.getId),locale))
+    model.addAttribute("title",getResource("paste.view.title",Array(p.getId,p.getName()),locale))
     
     return viewPage
   }
