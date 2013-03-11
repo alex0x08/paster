@@ -10,7 +10,7 @@ import uber.paste.model._
 import java.io._
 import java.util.Properties
 
-import javax.mail.{BodyPart, MessagingException, Session, Multipart}
+import javax.mail.{BodyPart, MessagingException, Session}
 import javax.mail.internet.{ContentType, MimeMessage}
 import uber.paste.base.Loggered
 import org.apache.commons.io.IOUtils
@@ -18,9 +18,15 @@ import uber.paste.dao.UserExistsException
 import org.apache.commons.codec.binary.StringUtils
 import org.apache.tika.parser.html.HtmlParser
 import org.apache.tika.sax.{BodyContentHandler, XHTMLContentHandler}
-import org.xml.sax.ContentHandler
+
 import org.apache.tika.metadata.Metadata
 import org.apache.tika.parser.ParseContext
+import org.apache.james.mime4j.dom._
+import org.apache.james.mime4j.parser.ContentHandler
+import org.apache.james.mime4j.parser.MimeStreamParser
+import org.apache.james.mime4j.storage.MemoryStorageProvider
+import org.apache.james.mime4j.message.DefaultMessageBuilder
+import scala.collection.JavaConversions._
 
 /**
  * Created with IntelliJ IDEA.
@@ -29,6 +35,11 @@ import org.apache.tika.parser.ParseContext
  * Time: 11:13
  * To change this template use File | Settings | File Templates.
  */
+
+object MailHandler {
+  val builder: DefaultMessageBuilder = new DefaultMessageBuilder
+
+}
 
 class MailHandler(appContext:ApplicationContext, ctx:MessageContext) extends Loggered with MessageHandler {
 
@@ -68,7 +79,7 @@ class MailHandler(appContext:ApplicationContext, ctx:MessageContext) extends Log
   }
 
   @throws(classOf[MessagingException])
-  private def saveText(body:String,subj:String)  {
+  private def saveText(body:Body,subj:String)  {
     logger.debug("saving mail text..");
 
 
@@ -78,7 +89,18 @@ class MailHandler(appContext:ApplicationContext, ctx:MessageContext) extends Log
 
     p1.setOwner(null)
 
-    p1.setText(body)
+    val text = extractText(body.asInstanceOf[TextBody].getInputStream)
+
+    logger.debug("after extract text "+text)
+
+
+    if (text.length()<=0) {
+      logger.debug("zero length data.cannot save.")
+      return
+    }
+
+
+    p1.setText(text)
     p1 = pasteManager.save(p1)
 
     logger.debug("saved file id=" + p1.getId() );
@@ -86,9 +108,9 @@ class MailHandler(appContext:ApplicationContext, ctx:MessageContext) extends Log
   }
 
     @throws(classOf[MessagingException])
-  private def saveAttachment(bodyPart:BodyPart,subj:String,charset:String)  {
+  private def saveAttachment(bodyPart:Entity,subj:String)  {
 
-    logger.debug("uploadSave currentUser=" + currentUser+",fileName="+bodyPart.getFileName()+",mime="+bodyPart.getContentType()+",charset="+charset);
+    logger.debug("uploadSave currentUser=" + currentUser+",fileName="+bodyPart.getFilename()+",mime="+bodyPart.getMimeType()+",charset="+bodyPart.getCharset);
 
    /* if (bodyPart.getFileName() == null || bodyPart.getFileName().trim().length() == 0) {
       logger.debug("no file name in attachment, skip for now.");
@@ -106,20 +128,7 @@ class MailHandler(appContext:ApplicationContext, ctx:MessageContext) extends Log
 
     try {
 
-      val data = new ByteArrayOutputStream()
-
-      IOUtils.copy(bodyPart.getInputStream(),data)
-
-
-      var text = if (charset!=null ) {
-        data.toString(charset)
-      } else {
-        new java.lang.String(data.toByteArray())
-     }
-
-      logger.debug("before extract text "+text)
-
-      text = extractText(new ByteArrayInputStream(text.getBytes()))
+      val text = extractText(bodyPart.getBody.asInstanceOf[TextBody].getInputStream)
 
       logger.debug("after extract text "+text)
 
@@ -149,35 +158,34 @@ class MailHandler(appContext:ApplicationContext, ctx:MessageContext) extends Log
     }
 
     try {
-      val message = new MimeMessage(Session.getDefaultInstance(new Properties()), data);
 
-          logger.debug("message encoding "+message.getEncoding)
 
-      if (message.getContent.isInstanceOf[Multipart]==false ) {
-        logger.debug("non multipart message,class="+message.getContent.getClass.getName);
-        saveText(message.getContent().asInstanceOf[String],message.getSubject)
+
+      val message: Message = MailHandler.builder.parseMessage(data)
+
+     // val message = new MimeMessage(Session.getDefaultInstance(new Properties()), data);
+
+          logger.debug("message encoding "+message.getCharset)
+
+      if (!message.isMultipart ) {
+        logger.debug("non multipart message,class="+message.getBody.getClass.getName);
+        saveText(message.getBody,message.getSubject)
         return;
       }
 
-      val multipart = message.getContent().asInstanceOf[Multipart]
-    //System.out.println(multipart.getCount());
-      for (i <- 0 to multipart.getCount()-1) {
 
-       val bodyPart:BodyPart = multipart.getBodyPart(i);
-        logger.debug("multipart "+i+" type "+bodyPart.getContentType)
+      val part: Multipart = message.getBody.asInstanceOf[Multipart]
 
-        if (bodyPart.getInputStream.available()>0)   {
+      for (e:Entity<-part.getBodyParts()) {
+                    if (!e.getMimeType().startsWith("text")) {
+                      logger.debug("skip unsupported mime "+e.getMimeType)
 
-          if (bodyPart.isMimeType("multipart/alternative")) {
-            saveAttachment(bodyPart,message.getSubject,"UTF-8");  //only for lotus
-          } else if (bodyPart.isMimeType("text/*")) {
-            val cType = new ContentType(bodyPart.getContentType).getParameter("charset")
-            saveAttachment(bodyPart,message.getSubject,cType);
-          }
+                    } else {
+                      saveAttachment(e,message.getSubject);
+                    }
+      }
 
-        }
 
-    }
 
     } catch {
       case e:MessagingException => {
@@ -195,7 +203,7 @@ class MailHandler(appContext:ApplicationContext, ctx:MessageContext) extends Log
   }
 
   def extractText(in:InputStream):String = {
-    val handler:ContentHandler = new BodyContentHandler()
+    val handler:org.xml.sax.ContentHandler = new BodyContentHandler()
     val metadata = new Metadata()
     new HtmlParser().parse(in, handler, metadata, new ParseContext())
     return handler.toString()

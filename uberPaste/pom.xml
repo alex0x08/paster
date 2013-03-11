@@ -410,10 +410,33 @@
             <version>0.7</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.apache.james</groupId>
+            <artifactId>apache-mime4j-core</artifactId>
+            <version>0.7.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.james</groupId>
+            <artifactId>apache-mime4j-dom</artifactId>
+            <version>0.7.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.james</groupId>
+            <artifactId>apache-mime4j-storage</artifactId>
+            <version>0.7.2</version>
+        </dependency>
+
+
     </dependencies>
 
     <repositories>
-            
+
+        <repository>
+            <id>codehaus</id>
+            <name>Codehaus</name>
+            <url>http://repository.codehaus.org</url>
+        </repository>
+
         <repository>
             <id>scala</id>
             <name>Scala tools</name>
@@ -426,11 +449,6 @@
             <url>http://maven.springframework.org/release</url>
         </repository>
             
-        <repository>
-            <id>codehaus</id>
-            <name>Codehaus</name>
-            <url>http://repository.codehaus.org</url>
-        </repository>
 
         <repository>
             <id>dyuproject-repo</id>
