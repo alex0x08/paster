@@ -89,7 +89,12 @@ class MailHandler(appContext:ApplicationContext, ctx:MessageContext) extends Log
 
     p1.setOwner(null)
 
-    val text = extractText(body.asInstanceOf[TextBody].getInputStream)
+
+    val text = extractText(new ByteArrayInputStream(
+      IOUtils.toByteArray(body.asInstanceOf[TextBody].getReader,body.asInstanceOf[TextBody].getMimeCharset)))
+
+
+    //val text = extractText(body.asInstanceOf[TextBody].getInputStream)
 
     logger.debug("after extract text "+text)
 
@@ -128,7 +133,13 @@ class MailHandler(appContext:ApplicationContext, ctx:MessageContext) extends Log
 
     try {
 
-      val text = extractText(bodyPart.getBody.asInstanceOf[TextBody].getInputStream)
+     // val buf = IOUtils.toByteArray(bodyPart.getBody.asInstanceOf[TextBody].getInputStream,bodyPart.getBody.asInstanceOf[TextBody].getMimeCharset)
+
+      var buf = new ByteArrayOutputStream()
+      IOUtils.copy(bodyPart.getBody.asInstanceOf[TextBody].getReader,buf,bodyPart.getCharset)
+
+
+      val text = extractText(new ByteArrayInputStream(buf.toString("UTF-8").getBytes))
 
       logger.debug("after extract text "+text)
 
@@ -176,12 +187,25 @@ class MailHandler(appContext:ApplicationContext, ctx:MessageContext) extends Log
 
       val part: Multipart = message.getBody.asInstanceOf[Multipart]
 
+      var wasContent=false
       for (e:Entity<-part.getBodyParts()) {
-                    if (!e.getMimeType().startsWith("text")) {
-                      logger.debug("skip unsupported mime "+e.getMimeType)
+        if (wasContent) {
+          return
+        }
+
+                    if (e.getMimeType().startsWith("text") ) {
+                      saveAttachment(e,message.getSubject);
+                      wasContent=true
+                    } else if (e.getMimeType.equals("multipart/alternative")) {
+                      logger.debug("begin multipart/alternative mime "+e.getMimeType)
+
+                      for (ee:Entity<-e.getBody.asInstanceOf[Multipart].getBodyParts()) {
+                        saveAttachment(ee,message.getSubject);
+                        wasContent=true
+                      }
 
                     } else {
-                      saveAttachment(e,message.getSubject);
+                      logger.debug("skip unsupported type "+e.getMimeType)
                     }
       }
 
