@@ -493,6 +493,30 @@
         </profile>
 
         <profile>
+            <id>mysql-openshift</id>
+
+
+            <properties>
+
+                <jdbc.groupId>mysql</jdbc.groupId>
+                <jdbc.artifactId>mysql-connector-java</jdbc.artifactId>
+                <jdbc.version>5.1.13</jdbc.version>
+
+                <hibernate.dialect>org.hibernate.dialect.MySQL5InnoDBDialect</hibernate.dialect>
+                <jdbc.driverClassName>com.mysql.jdbc.Driver</jdbc.driverClassName>
+
+                <jdbc.url>jdbc:mysql://${appHost}:${appPort}/paster?characterEncoding=utf8</jdbc.url>
+                <jdbc.username>adminSFs5fPy</jdbc.username>
+                <jdbc.password>yqMu5nN8JL-v</jdbc.password>
+                <jdbc.show-sql>true</jdbc.show-sql>
+
+                <db.name>appdb</db.name>
+
+            </properties>
+        </profile>
+
+
+        <profile>
             <id>mysql</id>
 
 

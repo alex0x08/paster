@@ -200,6 +200,13 @@
 
 window.addEvent('domready', function() {
 
+    document.addEvent('keydown', function(event){
+        // the passed event parameter is already an instance of the Event type.
+        alert(event.key);   // returns the lowercase letter pressed.
+        alert(event.shift); // returns true if the key pressed is shift.
+        if (event.key == 's' && event.control) alert('Document saved.'); //executes if the user presses Ctr+S.
+    });
+
     ZeroClipboard.setDefaults( { moviePath: "<c:url value='/libs/zeroclipboard/ZeroClipboard.swf'/>" } );
 
     var clip = new ZeroClipboard(document.id("ctrlc_link"));
