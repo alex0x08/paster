@@ -113,13 +113,16 @@
     <beans:bean id="rememberMeAuthenticationProvider"
                 class="org.springframework.security.authentication.RememberMeAuthenticationProvider">
         <!-- This ensures that remember-me is added as an authentication provider -->
-        <beans:property name="key" value="${Ums.SSO.Cookie.Key}" />
+        <beans:property name="key" value="1q2w3e4r5t6y7u8i" />
+
     </beans:bean>
 
     <beans:bean id="umsRememberMeServices"
                 class="uber.paste.manager.UserRememberMeService">
         <beans:property name="userDetailsService" ref="userService" />
-        <beans:property name="key" value="${Ums.SSO.Cookie.Key}" />
+        <beans:property name="cookieName" value="#{userManager.SSOCookieName}" />
+        <beans:property name="key" value="1q2w3e4r5t6y7u8i" />
+
     </beans:bean>
 
 </beans:beans>
