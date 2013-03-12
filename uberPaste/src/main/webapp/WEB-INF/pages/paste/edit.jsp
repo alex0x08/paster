@@ -103,6 +103,10 @@
 
 
                 <c:if test="${!model.blank}">
+                    <sec:authorize ifAnyGranted="ROLE_ADMIN">
+                     |  <a href="<c:url value='/main/paste/delete'><c:param name="id" value="${model.id}"/> </c:url>"><fmt:message key='button.delete'/></a>
+                    </sec:authorize>
+
                     <div style="float:right;margin-top: 2em;">
                         <kc:prettyTime date="${model.lastModified}" locale="${pageContext.response.locale}"/>
                     </div>

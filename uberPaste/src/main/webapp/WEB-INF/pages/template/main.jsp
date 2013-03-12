@@ -98,6 +98,9 @@
 
         <sec:authorize access="!isAuthenticated()" >
 
+
+           <a href="<c:url value='/main/login'/>"><span style="font-size: 1em;vertical-align: middle;" class="i" title="Login here">x</span></a>
+
             <c:forEach var="server" items="${availableServers}">
                 <a href="<c:url value='/act/openid-login?openid_identifier=${server.code}'/>">
 

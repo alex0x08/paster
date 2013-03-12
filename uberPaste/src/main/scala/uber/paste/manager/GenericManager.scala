@@ -101,6 +101,7 @@ abstract class GenericManagerImpl[T <: java.io.Serializable, PK ] extends Logger
   /**
    * {@inheritDoc}
    */
+
   def remove(id:PK) {
     getDao.remove(id)
   }
