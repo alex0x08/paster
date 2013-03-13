@@ -46,6 +46,11 @@
 
                 </span>
 
+               <sec:authorize ifAnyGranted="ROLE_ADMIN">
+                 |  <a href="<c:url value='/main/paste/delete'><c:param name="id" value="${model.id}"/> </c:url>"><fmt:message key='button.delete'/></a>
+               </sec:authorize>
+
+
            </span>
         </h4>
 
@@ -100,7 +105,7 @@
                             </c:when>
                             <c:otherwise>
                                 <span style="font-size: 2em;" class="i" title="Anonymous">x</span>
-                            </c:otherwise>
+                        </c:otherwise>
                         </c:choose>
 
                     </div>

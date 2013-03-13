@@ -230,6 +230,9 @@
                         ,<kc:prettyTime date="${paste.lastModified}" locale="${pageContext.response.locale}"/>
                     </small>
 
+                    <sec:authorize ifAnyGranted="ROLE_ADMIN">
+                        |  <a href="<c:url value='/main/paste/delete'><c:param name="id" value="${paste.id}"/> </c:url>"><fmt:message key='button.delete'/></a>
+                    </sec:authorize>
 
                     <div class="pasteTitle" style="padding: 1em;">
                         <a class="listLinkLine" href="<c:url value="/main/paste/${paste.id}"></c:url>" title="Click to view paste vol. ${paste.id}"><c:out value="${paste.title}"  escapeXml="true"/></a>

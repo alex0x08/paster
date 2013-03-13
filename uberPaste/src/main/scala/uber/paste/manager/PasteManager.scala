@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service
 import org.springframework.beans.factory.annotation.Autowired
 import actors.threadpool.AtomicInteger
 import java.util.Collections
+import org.springframework.security.access.annotation.Secured
 
 object PasteManager {
     object Stats {
@@ -65,6 +66,10 @@ class PasteManagerImpl extends GenericSearchManagerImpl[Paste] with PasteManager
   def getBySourceType(sourceType:PasteSource,desc:Boolean) : java.util.List[Paste] = {
     return pasteDao.getBySourceType(sourceType,desc)
   }
+
+  @Secured(Array("ROLE_ADMIN"))
+  override def remove(id:Long) = super.remove(id)
+
 
     override def save(obj:Paste):Paste = {
 
