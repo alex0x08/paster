@@ -89,9 +89,19 @@ class MailHandler(appContext:ApplicationContext, ctx:MessageContext) extends Log
 
     p1.setOwner(null)
 
+   // body.asInstanceOf[TextBody].
 
-    val text = extractText(new ByteArrayInputStream(
-      IOUtils.toByteArray(body.asInstanceOf[TextBody].getReader,body.asInstanceOf[TextBody].getMimeCharset)))
+   // logger.debug("_mail "+new String(IOUtils.toByteArray(body.asInstanceOf[TextBody].getReader)))
+
+    var buf = new ByteArrayOutputStream()
+    IOUtils.copy(body.asInstanceOf[TextBody].getInputStream,buf)
+
+    val text = if ("text/html".equals(body.getParent.getMimeType())) {
+      extractText(new ByteArrayInputStream(buf.toByteArray))
+    } else {
+      buf.toString(body.asInstanceOf[TextBody].getMimeCharset)
+      //new String(buf.toByteArray)
+    }
 
 
     //val text = extractText(body.asInstanceOf[TextBody].getInputStream)
@@ -136,10 +146,15 @@ class MailHandler(appContext:ApplicationContext, ctx:MessageContext) extends Log
      // val buf = IOUtils.toByteArray(bodyPart.getBody.asInstanceOf[TextBody].getInputStream,bodyPart.getBody.asInstanceOf[TextBody].getMimeCharset)
 
       var buf = new ByteArrayOutputStream()
-      IOUtils.copy(bodyPart.getBody.asInstanceOf[TextBody].getReader,buf,bodyPart.getCharset)
+      IOUtils.copy(bodyPart.getBody.asInstanceOf[TextBody].getInputStream,buf)
 
 
-      val text = extractText(new ByteArrayInputStream(buf.toString("UTF-8").getBytes))
+      val text = if ("text/html".equals(bodyPart.getMimeType())) {
+        extractText(new ByteArrayInputStream(buf.toByteArray))
+      } else {
+        buf.toString(bodyPart.getCharset)
+        //new String(buf.toByteArray)
+      }
 
       logger.debug("after extract text "+text)
 
@@ -155,7 +170,7 @@ class MailHandler(appContext:ApplicationContext, ctx:MessageContext) extends Log
       logger.debug("saved file id=" + p1.getId() );
 
     } catch {
-      case e:IOException => {
+      case e:Exception => {
       logger.debug(e.getLocalizedMessage(), e)
       }
     }
@@ -189,20 +204,36 @@ class MailHandler(appContext:ApplicationContext, ctx:MessageContext) extends Log
 
       var wasContent=false
       for (e:Entity<-part.getBodyParts()) {
+
         if (wasContent) {
           return
         }
 
                     if (e.getMimeType().startsWith("text") ) {
-                      saveAttachment(e,message.getSubject);
+                      saveAttachment(e,message.getSubject)
                       wasContent=true
+
                     } else if (e.getMimeType.equals("multipart/alternative")) {
                       logger.debug("begin multipart/alternative mime "+e.getMimeType)
 
                       for (ee:Entity<-e.getBody.asInstanceOf[Multipart].getBodyParts()) {
-                        saveAttachment(ee,message.getSubject);
-                        wasContent=true
-                      }
+
+                        logger.debug("processing "+ee.getMimeType)
+
+
+                        if (wasContent) {
+                          return
+                        }
+
+                        /*if (e.getMimeType().startsWith("text") ) {
+                          */
+                          saveAttachment(ee,message.getSubject)
+                          wasContent=true
+
+                        //}
+
+
+                        }
 
                     } else {
                       logger.debug("skip unsupported type "+e.getMimeType)

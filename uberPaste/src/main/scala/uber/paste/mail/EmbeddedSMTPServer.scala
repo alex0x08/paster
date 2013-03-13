@@ -53,6 +53,8 @@ class EmbeddedSMTPServer extends Loggered{
 
     smtpServer = new SMTPServer(mailFactory)
     smtpServer.setPort(2525)
+    smtpServer.setMaxMessageSize(1024 * 1024 * 1024)
+
 
   }
 
