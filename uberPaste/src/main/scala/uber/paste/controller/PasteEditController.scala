@@ -27,7 +27,7 @@ import java.io.IOException
 import java.io.File
 import javax.servlet.http.HttpServletResponse
 import uber.paste.dao.ConfigDao
-import uber.paste.manager.PasteManager
+import uber.paste.manager.{CommentManager, PasteManager}
 import org.springframework.ui.Model
 import uber.paste.base.Loggered
 
@@ -48,7 +48,9 @@ class PasteController extends GenericEditController[Paste]   {
 
   @Autowired
   val pasteManager:PasteManager = null
-  
+
+  @Autowired
+  val commentManager:CommentManager = null
  
   def listPage()="redirect:/main/paste/list"
   def editPage()="paste/edit"
@@ -98,6 +100,33 @@ class PasteController extends GenericEditController[Paste]   {
     return p
   }
 
+
+  @RequestMapping(value = Array("/removeComment"), method = Array(RequestMethod.POST,RequestMethod.GET))
+  def removeComment(@RequestParam(required = true) pasteId:java.lang.Long,
+                    @RequestParam(required = true) commentId:java.lang.Long,
+                    @RequestParam(required = true) lineNumber:java.lang.Long,
+                    model:Model,locale:Locale):String = {
+
+    logger.debug("_removeComment pasteId="+pasteId+" commentId="+commentId+" lineNumber="+lineNumber)
+
+    val p = manager.getFull(pasteId)
+
+    if (p==null) {
+      return page404
+    }
+
+
+    val c = new Comment
+    c.setId(commentId)
+
+    p.getComments().remove(c)
+
+    manager.save(p)
+
+    return "redirect:/main/paste/" + pasteId + "#line_" + lineNumber
+  }
+
+
   @RequestMapping(value = Array("/saveComment"), method = Array(RequestMethod.POST))
   def saveComment(@RequestParam(required = true) pasteId:java.lang.Long,
                     @Valid b:Comment,
@@ -123,7 +152,7 @@ class PasteController extends GenericEditController[Paste]   {
 
       p.getComments().add(b)
 
-        manager.save(p)
+      manager.save(p)
 
     return "redirect:/main/paste/" + pasteId + "#line_" + b.getLineNumber
   }
@@ -168,7 +197,7 @@ class PasteController extends GenericEditController[Paste]   {
 
 
 
-    @RequestMapping(value = Array("/{id}"), method = Array(RequestMethod.GET))
+    @RequestMapping(value = Array("/{id:[0-9]+}"), method = Array(RequestMethod.GET))
   override def getByPath(@PathVariable("id") id:java.lang.Long,model:Model,locale:Locale):String = {
 
     val r = super.getByPath(id,model,locale)
@@ -184,7 +213,7 @@ class PasteController extends GenericEditController[Paste]   {
   }
 
 
-  @RequestMapping(value = Array("/plain/{id}"), method = Array(RequestMethod.GET), produces = Array("text/plain;charset=UTF-8"))
+  @RequestMapping(value = Array("/plain/{id:[0-9]+}"), method = Array(RequestMethod.GET), produces = Array("text/plain;charset=UTF-8"))
   @ResponseBody
   def getBodyPlain(@PathVariable("id") id:java.lang.Long,model:Model,locale:Locale):String = {
     return loadModel(id).getText();

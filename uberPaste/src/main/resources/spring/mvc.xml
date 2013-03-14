@@ -20,9 +20,12 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
        xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:oxm="http://www.springframework.org/schema/oxm"
        xmlns:mvc="http://www.springframework.org/schema/mvc"
       xsi:schemaLocation="http://www.springframework.org/schema/beans
                           http://www.springframework.org/schema/beans/spring-beans.xsd
+                          http://www.springframework.org/schema/oxm
+                          http://www.springframework.org/schema/oxm/spring-oxm.xsd
                           http://www.springframework.org/schema/context
                           http://www.springframework.org/schema/context/spring-context.xsd
                           http://www.springframework.org/schema/mvc
@@ -36,9 +39,12 @@
      <bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping"/>
 	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter"/>
 
+    <!--oxm:jaxb2-marshaller id="jaxbMarshaller">
+         <oxm:class-to-be-bound name="uber.paste.model.Paste" />
+    </oxm:jaxb2-marshaller-->
 
 
-<!--general -->
+    <!--general -->
     <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource"
           p:basenames="messages" />
 
@@ -109,8 +115,9 @@
         <property name="mediaTypes">
             <map>
                 <entry key="json" value="application/json" />
-                <entry key="xml" value="application/xml" />
-
+                <entry key="xxml" value="application/xml" />
+                <entry key="atom" value="application/atom+xml"/>
+                <entry key="rss" value="application/rss+xml"/>
 
             </map>
         </property>
@@ -123,7 +130,14 @@
                     <constructor-arg ref="xstreamMarshaller"/>
                     <property name="contentType" value="application/xml" />
                 </bean>
+                <bean class="uber.paste.controller.PasteAtomView">
+                    <property name="contentType" value="application/atom+xml" />
+                </bean>
+                <bean class="uber.paste.controller.PasteRssView">
+                    <property name="contentType" value="application/rss+xml" />
+                    <property name="externalUrl" value="${config.external-site-url}" />
 
+                </bean>
             </list>
         </property>
         <property name="viewResolvers">
@@ -137,6 +151,8 @@
         <property name="defaultContentType" value="text/html" />
         <property name="ignoreAcceptHeader" value="true" />
     </bean>
+
+
 
 
 </beans>

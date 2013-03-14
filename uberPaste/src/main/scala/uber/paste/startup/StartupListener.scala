@@ -17,12 +17,11 @@
 package uber.paste.startup
 
 
-import javax.servlet.ServletContext;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener
-import org.springframework.beans.factory.NoSuchBeanDefinitionException;
-import org.springframework.context.ApplicationContext;
-import org.apache.commons.io.FileUtils;
+import javax.servlet.{ServletContextListener, ServletContext, ServletContextEvent}
+
+import org.springframework.beans.factory.NoSuchBeanDefinitionException
+import org.springframework.context.ApplicationContext
+import org.apache.commons.io.FileUtils
 import org.springframework.web.context.support.WebApplicationContextUtils
 import java.io.File
 import uber.paste.model._
@@ -134,8 +133,7 @@ class StartupListener extends ServletContextListener with Loggered{
 
 
     try {
-      
-     
+
       
       val admin = userDao.save(
         UserBuilder.createNew()
@@ -171,6 +169,8 @@ class StartupListener extends ServletContextListener with Loggered{
 
       configDao.persist(ConfigProperty.IS_INSTALLED)
       configDao.persist(ConfigProperty.UPLOADS_DIR)
+
+
 
       reindex(ctx)
 

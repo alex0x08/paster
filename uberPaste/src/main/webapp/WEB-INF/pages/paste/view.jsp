@@ -127,18 +127,25 @@
 
                 <div class="row">
                     <div class="column grid-1">
-                        #
+                        <a href="#comment_l${comment.id}" title="<c:out value="${comment.id}"/>">#</a>
                     </div>
                     <div class="column grid-14">
                             <c:out value=" ${comment.text}" escapeXml="true"/>
                     </div>
 
-                    <c:if test="${comment.parentId==null}">
-                        <div class="column grid-1 right" style="font-size: 1em;text-align: right;">
-                            <a  href="javascript:void(0);"  class="linkLine" title="Comment this"
+                    <div class="column grid-1 right" style="font-size: 1em;text-align: right;">
+                        <c:if test="${comment.parentId==null}">
+                            <a  href="javascript:void(0);" class="linkLine" title="Comment this"
                                 onclick="SyntaxHighlighter.insertEditForm(${comment.lineNumber},${comment.id});"><span class="i">C</span></a>
-                            </div>
-                    </c:if>
+                        </c:if>
+                     <sec:authorize ifAnyGranted="ROLE_ADMIN">
+                        <a href="<c:url value='/main/paste/removeComment'>
+                                  <c:param name="pasteId" value="${model.id}"/>
+                                  <c:param name="commentId" value="${comment.id}"/>
+                                  <c:param name="lineNumber" value="${comment.lineNumber}"/>
+                                  </c:url>">X</a>
+                    </sec:authorize>
+                    </div>
 
                 </div>
 

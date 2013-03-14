@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation._
 import javax.validation.Valid;
 import java.util.Locale
 import scala.Array
+import org.springframework.http.HttpStatus
 
 
 abstract class GenericEditController[T <: Struct ] extends StructController[T] {    
@@ -45,6 +46,7 @@ abstract class GenericEditController[T <: Struct ] extends StructController[T] {
     }
 
   @RequestMapping(value = Array("/new"), method = Array(RequestMethod.GET))
+  @ResponseStatus(HttpStatus.CREATED)
   def createNew(model:Model,locale:Locale):String= {
 
     fillEditModel(getNewModelInstance(),model,locale)
@@ -53,8 +55,8 @@ abstract class GenericEditController[T <: Struct ] extends StructController[T] {
   }
 
 
-  @RequestMapping(value = Array("/edit/{id}"), method = Array(RequestMethod.GET))
-    def editWithId(model:Model,@PathVariable("id") id:Long,locale:Locale):String= {
+  @RequestMapping(value = Array("/edit/{id:[0-9]+}"), method = Array(RequestMethod.GET))
+  def editWithId(model:Model,@PathVariable("id") id:Long,locale:Locale):String= {
 
       fillEditModel(loadModel(id),model,locale)
 
@@ -107,7 +109,7 @@ abstract class GenericEditController[T <: Struct ] extends StructController[T] {
 
 
 
-  @RequestMapping(value = Array("/{id}"), method = Array(RequestMethod.GET))
+  @RequestMapping(value = Array("/{id:[0-9]+}"), method = Array(RequestMethod.GET))
   def getByPath(@PathVariable("id") id:java.lang.Long,model:Model,locale:Locale):String = {
 
     val m = loadModel(id)
@@ -121,7 +123,7 @@ abstract class GenericEditController[T <: Struct ] extends StructController[T] {
   }
 
 
-  @RequestMapping(value = Array("/xml/{id}"), method = Array(RequestMethod.GET))
+  @RequestMapping(value = Array("/xml/{id:[0-9]+}"), method = Array(RequestMethod.GET))
   @ResponseBody
   def getBody(@PathVariable("id") id:java.lang.Long,model:Model,locale:Locale):T = {
     return loadModel(id);

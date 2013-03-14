@@ -26,7 +26,15 @@
 
         <c:if test="${!loopStatus.last}"> | </c:if>
     </c:forEach>
-   </div>
+
+    </div>
+    <div class="column grid-2">
+        <a href="<c:url value="/main/paste/list/body.xml"/>"><img src="<c:url value='/images/xml.png'/>" title="xml" alt="xml"/></a> |
+        <a href="<c:url value="/main/paste/list/body.json"/>"><img src="<c:url value='/images/json.png'/>" title="json" alt="json"/></a> |
+        <a href="<c:url value="/main/paste/list.rss"/>"><img src="<c:url value='/images/rss.png'/>" title="rss" alt="rss"/></a> |
+        <a href="<c:url value="/main/paste/list.atom"/>"><img src="<c:url value='/images/atom.png'/>" title="atom" alt="atom"/></a>
+
+    </div>
  </div>
 
 <div class="row">

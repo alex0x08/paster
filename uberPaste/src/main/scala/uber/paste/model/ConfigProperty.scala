@@ -23,6 +23,8 @@ object ConfigProperty {
   
   val IS_INSTALLED = new ConfigProperty("config.property.is-installed","IS_INSTALLED","1")
   val UPLOADS_DIR = new ConfigProperty("config.property.upload-dir","UPLOAD_DIR","upload")
+  val EXTERNAL_SITE_URL = new ConfigProperty("config.property.external-site-url","EXTERNAL_SITE_URL","http://localhost")
+
 
 }
 

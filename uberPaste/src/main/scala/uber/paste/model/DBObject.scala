@@ -54,18 +54,18 @@ abstract class DBObject extends java.io.Serializable {
   }
 
   def getId():java.lang.Long = {
-    return id;
+    return id
   }
 
   def setId(id:java.lang.Long) {
-    this.id=id;
+    this.id=id
   }
 
   override def hashCode():Int = {
-    var hash:Int = 53*7;
+    var hash:Int = 53*7
         
     if (id != null) 
-      hash+=id.hashCode();
+      hash+=id.hashCode()
         
     return hash;
   }
@@ -73,9 +73,9 @@ abstract class DBObject extends java.io.Serializable {
   override def equals(from:Any):Boolean = {
 
     return if (from.isInstanceOf[DBObject]==false || isBlank()) {
-      false;
+      false
     } else {
-      from.asInstanceOf[DBObject].getId()==id;
+      from.asInstanceOf[DBObject].getId().equals(id);
     }
   }
 

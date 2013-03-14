@@ -166,8 +166,8 @@ abstract class GenericListController[T <: Struct ] extends StructController[T] {
 
 
   @RequestMapping(value = Array("/list/body"))
-  @ModelAttribute("items")
-  @ResponseBody
+  //@ModelAttribute("items")
+  //@ResponseBody
   def listBody():java.util.List[T] = {
     return manager.getList()
   }
