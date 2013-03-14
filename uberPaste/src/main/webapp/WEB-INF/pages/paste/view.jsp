@@ -137,7 +137,7 @@
                         <div class="column grid-1 right" style="font-size: 1em;text-align: right;">
                             <a  href="javascript:void(0);"  class="linkLine" title="Comment this"
                                 onclick="SyntaxHighlighter.insertEditForm(${comment.lineNumber},${comment.id});"><span class="i">C</span></a>
-                        </div>
+                            </div>
                     </c:if>
 
                 </div>
@@ -161,38 +161,69 @@
  <div id="commentForm" class="editForm"  style="display:none;" >
 
      <form:form action="${url}"
-           modelAttribute="comment"
-           method="POST" >
-
-    <input type="hidden" name="pasteId" value="${model.id}"/>
-    <form:hidden path="lineNumber" id="lineNumber"/>
-    <form:hidden path="parentId" id="commentParentId"/>
-
-    <form:textarea path="text" id="commentText" cssErrorClass="error"    />
-    <div class="commentOuter" style="">
-        <form:errors path="text" cssClass="error"   />
-    <input  name="submit" type="submit" value="Add comment"  />
-        to line <span id="pageNum"></span>
-
-        <sec:authorize ifAnyGranted="ROLE_USER,ROLE_ADMIN">
-          <span class="right"  style="padding-top: 0.5em;" >
-              <span  style="padding-top: 1em;">
-               <c:out escapeXml="true" value="${currentUser.name}" />
-
-              </span>
-            <a href="http://ru.gravatar.com/site/check/${currentUser.username}" title="GAvatar">
-                <img style="vertical-align: top;padding-bottom: 2px;" src="<c:out value='http://www.gravatar.com/avatar/${currentUser.avatarHash}?s=32'/>"/>
-            </a>
-
-  </span>
-
-        </sec:authorize>
-
-    </div>
+                modelAttribute="comment"
+                method="POST" >
 
 
+     <div class="row" >
+         <div class="column grid-15"  >
 
-</form:form>
+
+                 <input type="hidden" name="pasteId" value="${model.id}"/>
+                 <form:hidden path="lineNumber" id="lineNumber"/>
+                 <form:hidden path="parentId" id="commentParentId"/>
+
+                 <form:textarea path="text" id="commentText" cssErrorClass="error"  />
+
+         </div>
+         <div style="margin:0.5em;padding-right:0.5em;float:right;" >
+           <a class="btn sbtn" title="Cancel" href="javascript:void(0);" onclick="SyntaxHighlighter.hideEditForm();">
+               X
+           </a>
+
+         </div>
+     </div>
+
+         <div class="row">
+         <div class="column grid-16" >
+
+             <input  name="submit" type="submit" value="Add comment"  />
+             to line <span id="pageNum"></span>
+
+
+             <sec:authorize ifAnyGranted="ROLE_USER,ROLE_ADMIN">
+
+              <span class="right"  style="padding-top: 0.5em;" >
+                <span  style="padding-top: 1em;">
+                    <c:out escapeXml="true" value="${currentUser.name}" />
+                </span>
+
+                  <a href="http://ru.gravatar.com/site/check/${currentUser.username}" title="GAvatar">
+                        <img style="vertical-align: top;padding-bottom: 2px;" src="<c:out value='http://www.gravatar.com/avatar/${currentUser.avatarHash}?s=32'/>"/>
+                   </a>
+
+               </span>
+
+             </sec:authorize>
+
+         </div>
+             </div>
+
+         <div class="row">
+             <div class="column grid-16" >
+
+                 <form:errors path="text" cssClass="error"    />
+
+             </div>
+         </div>
+
+
+
+     </form:form>
+
+
+     </div>
+
 
 
  </div>
@@ -205,13 +236,13 @@
 
 window.addEvent('domready', function() {
 
-    document.addEvent('keydown', function(event){
+/*    document.addEvent('keydown', function(event){
         // the passed event parameter is already an instance of the Event type.
         alert(event.key);   // returns the lowercase letter pressed.
         alert(event.shift); // returns true if the key pressed is shift.
         if (event.key == 's' && event.control) alert('Document saved.'); //executes if the user presses Ctr+S.
     });
-
+  */
     ZeroClipboard.setDefaults( { moviePath: "<c:url value='/libs/zeroclipboard/ZeroClipboard.swf'/>" } );
 
     var clip = new ZeroClipboard(document.id("ctrlc_link"));

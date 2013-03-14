@@ -395,26 +395,27 @@
 .editForm {
     white-space: normal;
     position: relative;
-    max-width: 50em;
-    max-height: 7em;
-    width: 50em;
+    max-width: 35em;
+    max-height: 12em;
+    width: 35em;
     height: 7em;
     margin-left: 1em;
     margin-top: 1em;
     background-color: #e0e0e0;
+    padding-bottom: 0.5em;
 }
 .editForm textarea {
     -webkit-box-shadow: inset 2px 2px 2px 0px #dddddd;
     -moz-box-shadow: inset 2px 2px 2px 0px #dddddd;
     box-shadow: inset 2px 2px 2px 0px #dddddd;
     box-sizing:border-box; -moz-box-sizing:border-box;
+    margin-top: 0.5em;
 
     padding-left: 0.5em;
-    max-width: 50em;
+    max-width: 34em;
     max-height: 4em;
-    width: 50em;
+    width: 34em;
     height: 4em;
-    margin-left: 0.5em;
 
 
 }

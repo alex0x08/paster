@@ -7,7 +7,7 @@
            method="POST" >
 <div class="row">
     <div class="column grid-9" style="padding-top: 0.5em;margin-right: 0;">
-        <form:input path="query" name="query" id="pquery"  cssStyle="width:98%;margin-right:0.5em;max-width: 50em; min-width: 5em;" autocomplete="true"  />
+        <form:input path="query" name="query" id="pquery" cssStyle="width:97%;margin-right:0.5em;min-width: 5em;" autocomplete="true"  />
      </div>
     <div class="column grid-3" style="">
         <input name="submit" type="submit" value="Search" style="text-align:left;min-width: 5em;max-width: 5em;"  />

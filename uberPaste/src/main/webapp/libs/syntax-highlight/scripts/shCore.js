@@ -437,8 +437,10 @@ var sh = {
 
             $('ln_'+lineNumber).adopt($("numSpace_l"+lineNumber));
 
+    },  hideEditForm: function() {
 
-
+        $('commentForm').setStyle("display","none");
+        $("numSpace").setStyle("display","none");
 
     },  insertEditForm: function(lineNumber,parentId) {
        // alert(lineNumber);
@@ -447,6 +449,7 @@ var sh = {
         $('lineNumber').set("value",lineNumber);
 
         $('commentForm').setStyle("display","");
+        $("numSpace").setStyle("display","");
 
         if (parentId>0) {
 
@@ -471,6 +474,8 @@ sh['highlight']		= sh.highlight;
 sh['insertEditForm']			= sh.insertEditForm;
 sh['insertComment']			= sh.insertComment;
 sh['toggleComments'] = sh.toggleComments;
+sh['hideEditForm'] = sh.hideEditForm;
+
 
 /**
  * Checks if target DOM elements has specified CSS class.
