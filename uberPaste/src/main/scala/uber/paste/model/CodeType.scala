@@ -72,33 +72,33 @@ object CodeType {
   val Sql = new CodeType("code.type.sql","sql")
   val VisualBasic = new CodeType("code.type.vb","vb")
   val Xml = new CodeType("code.type.xml","xml")
-  
+
   val map = new HashMap[String,CodeType]
-  
+
+  add(Java)
+  add(JavaScript)
+  add(Xml)
+  add(CSS)
+  add(Scala)
   add(ActionScript)
   add(Bash)
   add(ColdFusion)
   add(CSharp)
   add(CPP)
-  add(CSS)
   add(Delphi)
   add(Diff)
   add(Erlang)
   add(Groovy)
-  add(JavaScript)
-  add(Java)
   add(JavaFX)
   add(Perl)
   add(Php)
-  add(Plain)
   add(PowerShell)
   add(Python)
   add(Ruby)
-  add(Scala)
   add(Sql)
   add(VisualBasic)
-  add(Xml)
-  
+  add(Plain)
+
   private def add(c:CodeType):Unit = {
     map.put(c.getCode,c)
   }

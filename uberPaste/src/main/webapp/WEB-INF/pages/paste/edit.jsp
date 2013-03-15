@@ -16,7 +16,7 @@
     </div>
 
     <div class="row">
-        <div class="column grid-9">
+        <div class="column grid-6">
 
     <c:choose>
         <c:when test="${model.blank}">
@@ -38,7 +38,14 @@
         </div>
 
         </div>
+
+
+    <div class="column grid-2" >
+           <form:label path="normalized" >Normalize</form:label>
+            <form:checkbox path="normalized" style="display:inline;" title="Normalize paste"/>
     </div>
+    </div>
+
 
     <div class="row">
         <div class="column grid-8">

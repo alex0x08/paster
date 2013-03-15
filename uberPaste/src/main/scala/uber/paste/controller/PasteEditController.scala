@@ -40,6 +40,8 @@ import org.codehaus.jackson.annotate.JsonIgnore
 import javax.xml.bind.annotation.XmlTransient
 import org.apache.commons.lang.StringUtils
 import scala.Array
+import com.google.gson.{JsonParser, GsonBuilder}
+import org.codehaus.jackson.map.ObjectMapper
 
 @Controller
 @RequestMapping(Array("/paste"))
@@ -78,6 +80,8 @@ class PasteController extends GenericEditController[Paste]   {
     }
     model.addAttribute("availableCodeTypes", CodeType.list)
     model.addAttribute("availablePriorities", Priority.list)
+
+
 
     obj.tagsAsString={
       val out =new StringBuilder
@@ -182,17 +186,29 @@ class PasteController extends GenericEditController[Paste]   {
        }
      }
 
-      if (b.isBlank()) {
+      if (b.isNormalized()) {
 
+        b.getCodeType() match {
+          case CodeType.JavaScript => {
+
+            val o = new JsonParser().parse(b.getText()).getAsJsonObject()
+            b.setText(new GsonBuilder().setPrettyPrinting().create().toJson(o))
+
+          }
+          case _ => {}
+        }
+      }
+
+      if (b.isBlank()) {
         if (isCurrentUserLoggedIn()) {
           b.setOwner(getCurrentUser())
         }
-
       }
 
-        logger.debug("__found comments "+b.getComments().size())
+      logger.debug("__found comments "+b.getComments().size())
 
-       return super.save(cancel,b,result,model,locale)
+       val out =super.save(cancel,b,result,model,locale)
+      return if (out.equals(listPage))  {"redirect:/main/paste/"+b.getId()} else {out}
    }
 
 

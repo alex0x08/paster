@@ -115,6 +115,8 @@ class Paste extends Struct with java.io.Serializable{
   @Transient
   var tagsAsString:String = null
 
+  private var normalized:Boolean = false
+
   @OneToMany(fetch = FetchType.LAZY,cascade = Array(CascadeType.PERSIST,CascadeType.MERGE,CascadeType.REMOVE),orphanRemoval = true)
   private var comments:java.util.List[Comment] = new ArrayList[Comment]()
 
@@ -160,6 +162,10 @@ class Paste extends Struct with java.io.Serializable{
 
   def isSticked() = sticked
   def setSticked(b:Boolean) {this.sticked=b}
+
+  def isNormalized() = normalized
+  def setNormalized(b:Boolean) {this.normalized=b}
+
 
   def getPasteSource() : PasteSource = PasteSource.valueOf(pasteSource)
 
