@@ -68,7 +68,7 @@
   font-style: italic !important;
 }
 .syntaxhighlighter .line {
-  white-space: pre !important;
+  white-space: pre ;
 }
 .syntaxhighlighter table {
   width: 100% !important;
@@ -225,7 +225,7 @@
   color: black !important;
 }
 
-.syntaxhighlighter {
+/*.syntaxhighlighter {
   background-color: white !important;
 }
 .syntaxhighlighter .line.alt1 {
@@ -233,7 +233,7 @@
 }
 .syntaxhighlighter .line.alt2 {
   background-color: white !important;
-}
+} */
 .syntaxhighlighter .line.highlighted.alt1, .syntaxhighlighter .line.highlighted.alt2 {
   background-color: #e0e0e0 !important;
 }

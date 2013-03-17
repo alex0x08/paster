@@ -107,7 +107,8 @@ var sh = {
 	vars : {
 		discoveredBrushes : null,
 		highlighters : {},
-        lineNumbers : {}
+        lineNumbers : {},
+        currentEditLine: null
 	},
 	
 	/** This object is populated by user included external brush files. */
@@ -442,6 +443,12 @@ var sh = {
         $('commentForm').setStyle("display","none");
         $("numSpace").setStyle("display","none");
 
+        if (sh.vars.currentEditLine != null) {
+            $('cl_lineHtml_'+sh.vars.currentEditLine).setStyle("display","");
+            $('cl_linePlain_'+sh.vars.currentEditLine).setStyle("display","none");
+        }
+
+
     },  insertEditForm: function(lineNumber,parentId) {
        // alert(lineNumber);
 
@@ -451,13 +458,32 @@ var sh = {
         $('commentForm').setStyle("display","");
         $("numSpace").setStyle("display","");
 
+        $('commentText').set("value","");
+
         if (parentId>0) {
 
             $('commentParentId').set("value",parentId);
-
             $('comment_l'+parentId).adopt($("commentForm"));
 
         } else {
+
+            if (sh.vars.currentEditLine != null) {
+                $('cl_lineHtml_'+sh.vars.currentEditLine).setStyle("display","");
+                $('cl_linePlain_'+sh.vars.currentEditLine).setStyle("display","none");
+            }
+
+            $('cl_lineHtml_'+lineNumber).setStyle("display","none");
+            $('cl_linePlain_'+lineNumber).setStyle("display","");
+
+
+            sh.vars.currentEditLine = lineNumber;
+
+            $("pasteLineCopyBtn").setStyle("display","inline-block");
+                                      //cl_linePlainCode_
+            $('pasteLineToCopy').set('html',$('cl_linePlainCode_'+lineNumber).get("html"));
+
+            $('cl_linePlain_'+lineNumber).adopt($("pasteLineCopyBtn"));
+
             $('cl_'+lineNumber).adopt($("commentForm"));
 
         }
@@ -1477,7 +1503,9 @@ sh.Highlighter.prototype = {
          } else {
              out+='<div id="cl_'+lineNumber+'" class="' + classes.join(' ') + '">';
 
-             out+='<a  href="javascript:void(0);"  class="linkLine" title="Comment line '+lineNumber+'" onclick="SyntaxHighlighter.insertEditForm('+lineNumber+',0);">' + code + '</a>';
+             out+='<span id="cl_lineHtml_'+lineNumber+'"><a  href="javascript:void(0);"  class="linkLine" title="Comment line '+lineNumber+'" onclick="SyntaxHighlighter.insertEditForm('+lineNumber+',0);">' + code + '</a></span>';
+             out+='<span style="display:none;"  id="cl_linePlain_'+lineNumber+'">';
+             out+='<span style="background-color: yellow;"  id="cl_linePlainCode_'+lineNumber+'">' + code + '</span></span>';
 
          }
         return out+='</div>';

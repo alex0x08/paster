@@ -1,6 +1,42 @@
 <%@ include file="/WEB-INF/pages/common/taglibs.jsp"%>
 
-<c:url var="url" value='/main/paste/save' />
+<script type="text/javascript">
+
+    var max_length= 255;
+
+    window.addEvent('paste', function(e){
+        if (e.event.clipboardData) {
+            console.log(e.event.clipboardData);
+            var text = e.event.clipboardData.getData('text/plain');
+            document.execCommand('insertHTML', false, text);
+
+            var block = '';
+
+            if (text.length<max_length-2) {
+                block = text.substring(0, text.length);
+            } else {
+                block  = text.substring(0, max_length-2)+'..';
+            }
+
+            document.getElementById("pname").set('value',block);
+
+            e.stop();
+        }
+    });
+
+    /*window.addEvent('domready', function() {
+
+         document.addEvent('keydown', function(event){
+         // the passed event parameter is already an instance of the Event type.
+         alert(event.key);   // returns the lowercase letter pressed.
+         alert(event.shift); // returns true if the key pressed is shift.
+         if (event.key == 's' && event.control) alert('Document saved.'); //executes if the user presses Ctr+S.
+         });
+
+    });*/
+</script>
+
+        <c:url var="url" value='/main/paste/save' />
 
 <fieldset class="perk">
     <legend><span class="i" style="font-size:2em;">/</span><c:out value="${requestScope.title}" escapeXml="true"/></legend>

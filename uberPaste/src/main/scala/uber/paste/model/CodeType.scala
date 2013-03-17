@@ -20,6 +20,7 @@ import java.util.HashMap
 import java.util.Collection
 import javax.persistence._
 import java.beans.PropertyEditorSupport
+import java.util
 
 /**
  * Brush aliases	File name
@@ -73,7 +74,7 @@ object CodeType {
   val VisualBasic = new CodeType("code.type.vb","vb")
   val Xml = new CodeType("code.type.xml","xml")
 
-  val map = new HashMap[String,CodeType]
+  val map = new java.util.LinkedHashMap[String,CodeType]
 
   add(Java)
   add(JavaScript)

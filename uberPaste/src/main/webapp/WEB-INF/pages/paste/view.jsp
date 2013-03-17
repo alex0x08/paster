@@ -63,7 +63,7 @@
         <a href="<c:url value="/main/paste/${model.id}.json"/>" title="View as JSON">json</a> |
         <a href="<c:url value="/main/paste/plain/${model.id}"/>" title="View as plain text">plain</a> |
 
-        <a id="ctrlc_link" data-clipboard-target="pasteTextPlain" href="javascript:void(0);" title="Copy to clipboard" >Ctrl-C</a> |
+        <a id="ctrlc_link" data-clipboard-target="pasteTextPlain" href="javascript:void(0);" title="Copy to clipboard" ><img src="<c:url value='/images/ctrlc.png'/>"/></a> |
 
         <a href="<c:url value="/main/paste/${model.id+1}"/>" title="Next paste">&#8594;</a>
 
@@ -165,6 +165,15 @@
 <div id="numSpace" class="listEditSpace" >
 </div>
 
+<span id="pasteLineCopyBtn" style="display:none; white-space: normal;">
+    <a id="ctrlc_line" data-clipboard-target="pasteLineToCopy" href="javascript:void(0);" style="float:left;" title="Copy to clipboard" >
+        <img src="<c:url value='/images/ctrlc.png'/>"/></a>
+</span>
+
+<span id="pasteLineToCopy" style="display:none;">
+                              NONE
+</span>
+
  <div id="commentForm" class="editForm"  style="display:none;" >
 
      <form:form action="${url}"
@@ -265,6 +274,24 @@ window.addEvent('domready', function() {
         //new MooDialog.Alert(args.text.length+' symbols copied to clipboard.');
 
     } );
+
+
+
+
+    var clipLine = new ZeroClipboard(document.id("ctrlc_line"));
+    //alert('Done! '+clip.ready());
+
+    clipLine.on( 'load', function(client) {
+        //     alert( "movie is loaded" );
+    } );
+
+    clipLine.on( 'complete', function(client, args) {
+        growl.notify(args.text.length+' symbols copied to clipboard.');
+        //alert(args.text.length+' symbols copied to clipboard.');
+        //new MooDialog.Alert(args.text.length+' symbols copied to clipboard.');
+
+    } );
+
 
     SyntaxHighlighter.config.tagName = "pre";
     SyntaxHighlighter.autoloader.apply(null, path(

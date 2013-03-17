@@ -29,10 +29,12 @@ class PasteWebserviceImpl extends PasteWebservice with Loggered{
 
   def addPaste(title:String,text:String,sourceType:String,codeType:String) {
 
+    logger.debug("addPaste text="+text+" sourceType="+sourceType+" codeType="+codeType)
+
     val p = new Paste
     p.setCodeType(CodeType.valueOf(codeType))
     p.setPasteSource(PasteSource.valueOf(sourceType))
-    p.setTitle(title)
+    p.setName(title)
     p.setText(text)
 
     pasteManager.save(p)
