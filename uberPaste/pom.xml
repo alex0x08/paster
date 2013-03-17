@@ -548,8 +548,8 @@
                 <jdbc.driverClassName>com.mysql.jdbc.Driver</jdbc.driverClassName>
 
                 <jdbc.url>jdbc:mysql://${appHost}:${appPort}/paster?characterEncoding=utf8</jdbc.url>
-                <jdbc.username>adminSFs5fPy</jdbc.username>
-                <jdbc.password>yqMu5nN8JL-v</jdbc.password>
+                <jdbc.username>adminrTlKFqN</jdbc.username>
+                <jdbc.password>9T5nre_cQRg-</jdbc.password>
                 <jdbc.show-sql>true</jdbc.show-sql>
 
                 <db.name>appdb</db.name>
