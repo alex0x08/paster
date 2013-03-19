@@ -8,6 +8,12 @@
         if (e.event.clipboardData) {
             console.log(e.event.clipboardData);
             var text = e.event.clipboardData.getData('text/plain');
+
+            var html = e.event.clipboardData.getData('text/html');
+            if (html !== undefined) {
+                text = html;
+            }
+
             document.execCommand('insertHTML', false, text);
 
             var block = '';
