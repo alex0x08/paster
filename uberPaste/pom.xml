@@ -547,7 +547,7 @@
                 <hibernate.dialect>org.hibernate.dialect.MySQL5InnoDBDialect</hibernate.dialect>
                 <jdbc.driverClassName>com.mysql.jdbc.Driver</jdbc.driverClassName>
 
-                <jdbc.url>jdbc:mysql://${appHost}:${appPort}/paster?characterEncoding=utf8</jdbc.url>
+                <jdbc.url>jdbc:mysql://${appHost}:${appPort}/paster?useUnicode=true&amp;amp;characterEncoding=utf8</jdbc.url>
                 <jdbc.username>adminrTlKFqN</jdbc.username>
                 <jdbc.password>9T5nre_cQRg-</jdbc.password>
                 <jdbc.show-sql>true</jdbc.show-sql>
