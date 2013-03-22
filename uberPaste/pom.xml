@@ -479,12 +479,19 @@
             <name>dyuproject-repo</name>
             <url>http://dyuproject.googlecode.com/svn/repos/maven2</url>
         </repository>
-            
-		<!--repository>
-			<id>Alexs Artifacts</id>
-			<name>Alexs Artifacts-releases</name>
-			<url>http://0x08.tk/artifactory/remote-repos</url>
-		</repository-->
+
+        <!--repository>
+            <id>russian-morphology.lucene.apache.org</id>
+            <name>Lucene Russian Morphology Repository for Maven</name>
+            <url>http://russianmorphology.googlecode.com/svn/repo/releases/</url>
+        </repository-->
+
+
+        <!--repository>
+            <id>Alexs Artifacts</id>
+            <name>Alexs Artifacts-releases</name>
+            <url>http://0x08.tk/artifactory/remote-repos</url>
+        </repository-->
     </repositories>
 
     <profiles>
@@ -529,6 +536,19 @@
             		<artifactId>standard</artifactId>
             		<version>${jstl.version}</version>
         	</dependency-->
+
+
+                <!--dependency>
+                    <groupId>org.apache.lucene.morphology</groupId>
+                    <artifactId>russian</artifactId>
+                    <version>1.0</version>
+                </dependency>
+
+                <dependency>
+                    <groupId>org.apache.lucene.morphology</groupId>
+                    <artifactId>english</artifactId>
+                    <version>1.0</version>
+                </dependency-->
 
 
             </dependencies>

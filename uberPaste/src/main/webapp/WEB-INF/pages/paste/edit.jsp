@@ -8,13 +8,14 @@
         if (e.event.clipboardData) {
             console.log(e.event.clipboardData);
             var text = e.event.clipboardData.getData('text/plain');
+          //  var html = e.event.clipboardData.getData('text/html');
 
-            var html = e.event.clipboardData.getData('text/html');
-            if (html !== undefined) {
+           /* if (html !== undefined && !(/^\s*$/).test(str)) {
                 text = html;
-            }
+             }*/
 
-            document.execCommand('insertHTML', false, text);
+           // document.execCommand('insertHTML', false, text);
+
 
             var block = '';
 
@@ -24,9 +25,10 @@
                 block  = text.substring(0, max_length-2)+'..';
             }
 
+
             document.getElementById("pname").set('value',block);
 
-            e.stop();
+            //e.stop();
         }
     });
 

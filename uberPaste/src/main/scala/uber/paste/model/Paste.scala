@@ -26,7 +26,7 @@ import javax.xml.bind.annotation._
 import uber.paste.base.Loggered
 import java.util.{Set,HashSet,ArrayList}
 import scala.collection.JavaConversions._
-
+import org.compass.core.lucene.LuceneEnvironment.Analyzer
 
 /**
  * 
@@ -88,9 +88,10 @@ class Paste extends Struct with java.io.Serializable{
   
   @Lob
   @NotNull
-  @SearchableProperty
+  //@SearchableProperty(analyzer = )
   @Size(min=3, message = "{struct.name.validator}")
   private var text: String = null
+
 
   //@NotNull
   @Column(length=256)
