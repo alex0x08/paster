@@ -1,5 +1,8 @@
 <%@ include file="/WEB-INF/pages/common/taglibs.jsp"%>
 
+<script type="text/javascript" src="<c:url value="/libs/word-count.js"/>"></script>
+
+
 <script type="text/javascript">
 
     var max_length= 255;
@@ -30,6 +33,10 @@
 
             //e.stop();
         }
+    });
+
+    window.addEvent('domready', function(){
+        var counter = new WordCount('wordCount', {inputName:'text'});
     });
 
     /*window.addEvent('domready', function() {
@@ -153,16 +160,26 @@
                 <a href="<c:url value="/main/paste/list"/>"><fmt:message key='button.cancel'/></a>
 
 
+
                 <c:if test="${!model.blank}">
                     <sec:authorize ifAnyGranted="ROLE_ADMIN">
                      |  <a href="<c:url value='/main/paste/delete'><c:param name="id" value="${model.id}"/> </c:url>"><fmt:message key='button.delete'/></a>
                     </sec:authorize>
 
-                    <div style="float:right;margin-top: 2em;">
-                        <kc:prettyTime date="${model.lastModified}" locale="${pageContext.response.locale}"/>
-                    </div>
 
                 </c:if>
+
+                <div style="float:right;margin-top: 2em;">
+
+                    <div id="wordCount"></div>
+
+                <c:if test="${!model.blank}">
+                    <kc:prettyTime date="${model.lastModified}" locale="${pageContext.response.locale}"/>
+
+                </c:if>
+
+                </div>
+
 
             </div>
         </div>
