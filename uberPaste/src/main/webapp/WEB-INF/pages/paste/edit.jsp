@@ -1,9 +1,41 @@
 <%@ include file="/WEB-INF/pages/common/taglibs.jsp"%>
 
+
+
 <script type="text/javascript" src="<c:url value="/libs/word-count.js"/>"></script>
+<script src="<c:url value='/libs/ace/src-noconflict/ace.js'/>" type="text/javascript" charset="utf-8"></script>
 
 
 <script type="text/javascript">
+
+
+    if (this.MooTools.build=='ab8ea8824dc3b24b6666867a2c4ed58ebb762cf0') {
+        delete Function.prototype.bind;
+
+        Function.implement({
+
+            /*<!ES5-bind>*/
+            bind: function(that){
+                var self = this,
+                        args = arguments.length > 1 ? Array.slice(arguments, 1) : null,
+                        F = function(){};
+
+                var bound = function(){
+                    var context = that, length = arguments.length;
+                    if (this instanceof bound){
+                        F.prototype = self.prototype;
+                        context = new F;
+                    }
+                    var result = (!args && !length)
+                            ? self.call(context)
+                            : self.apply(context, args && length ? args.concat(Array.slice(arguments)) : args || arguments);
+                    return context == that ? result : context;
+                };
+                return bound;
+            }
+            /*</!ES5-bind>*/
+        });
+    }
 
     var max_length= 255;
 
@@ -11,14 +43,6 @@
         if (e.event.clipboardData) {
             console.log(e.event.clipboardData);
             var text = e.event.clipboardData.getData('text/plain');
-          //  var html = e.event.clipboardData.getData('text/html');
-
-           /* if (html !== undefined && !(/^\s*$/).test(str)) {
-                text = html;
-             }*/
-
-           // document.execCommand('insertHTML', false, text);
-
 
             var block = '';
 
@@ -37,6 +61,18 @@
 
     window.addEvent('domready', function(){
         var counter = new WordCount('wordCount', {inputName:'text'});
+
+        var editor = ace.edit("editor");
+        editor.setTheme("ace/theme/twilight");
+        editor.getSession().setMode("ace/mode/scala");
+
+        var textarea = document.getElementById("ptext");
+
+        editor.getSession().setValue(textarea.get('value'));
+        editor.getSession().on('change', function(){
+            textarea.set('value',editor.getSession().getValue());
+        });
+
     });
 
     /*window.addEvent('domready', function() {
@@ -50,6 +86,9 @@
 
     });*/
 </script>
+
+
+
 
         <c:url var="url" value='/main/paste/save' />
 
@@ -142,9 +181,14 @@
         <div class="column grid-16">
 
         <form:label path="text"><fmt:message key="paste.text"/>:</form:label>
-    <form:textarea path="text" cssErrorClass="error" cssClass="notice" cssStyle="width:97%;"
+    <form:textarea path="text" cssErrorClass="error" cssClass="notice" cssStyle="display:none;"
                    name="text" id="ptext" placeHolder="paste text"
                    cols="120" rows="10" />
+
+            <pre id="editor" style="height: 50em;">
+
+            </pre>
+
     <form:errors path="text" cssClass="error" />
 
 
