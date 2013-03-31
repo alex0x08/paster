@@ -50,29 +50,29 @@ XML	xml, xhtml, xslt, html, xhtml
  */
 object CodeType {
   
-  val ActionScript = new CodeType("code.type.as3","actionscript3")
-  val Bash = new CodeType("code.type.bash","bash")
-  val ColdFusion = new CodeType("code.type.coldfusion","cf")
-  val CSharp = new CodeType("code.type.csharp","csharp")
-  val CPP = new CodeType("code.type.cpp","cpp")
-  val CSS = new CodeType("code.type.css","css")
-  val Delphi = new CodeType("code.type.delphi","delphi")
-  val Diff = new CodeType("code.type.diff","diff")
-  val Erlang = new CodeType("code.type.erlang","erlang")
-  val Groovy = new CodeType("code.type.groovy","groovy")
-  val JavaScript = new CodeType("code.type.js","js")
-  val Java = new CodeType("code.type.java","java")
-  val JavaFX = new CodeType("code.type.javafx","javafx")
-  val Perl = new CodeType("code.type.perl","perl")
-  val Php = new CodeType("code.type.php","php")
-  val Plain = new CodeType("code.type.plain","plain")
-  val PowerShell = new CodeType("code.type.powershell","powershell")
-  val Python = new CodeType("code.type.py","py")
-  val Ruby = new CodeType("code.type.ruby","ruby")
-  val Scala = new CodeType("code.type.scala","scala")
-  val Sql = new CodeType("code.type.sql","sql")
-  val VisualBasic = new CodeType("code.type.vb","vb")
-  val Xml = new CodeType("code.type.xml","xml")
+  val ActionScript = new CodeType("code.type.as3","actionscript3","text")
+  val Bash = new CodeType("code.type.bash","bash","sh")
+  val ColdFusion = new CodeType("code.type.coldfusion","cf","coldfusion")
+  val CSharp = new CodeType("code.type.csharp","csharp","csharp")
+  val CPP = new CodeType("code.type.cpp","cpp","c_cpp")
+  val CSS = new CodeType("code.type.css","css","css")
+  val Delphi = new CodeType("code.type.delphi","delphi","pascal")
+  val Diff = new CodeType("code.type.diff","diff","diff")
+  val Erlang = new CodeType("code.type.erlang","erlang","text")
+  val Groovy = new CodeType("code.type.groovy","groovy","groovy")
+  val JavaScript = new CodeType("code.type.js","js","javascript")
+  val Java = new CodeType("code.type.java","java","java")
+  val JavaFX = new CodeType("code.type.javafx","javafx","java")
+  val Perl = new CodeType("code.type.perl","perl","perl")
+  val Php = new CodeType("code.type.php","php","php")
+  val Plain = new CodeType("code.type.plain","plain","text")
+  val PowerShell = new CodeType("code.type.powershell","powershell","powershell")
+  val Python = new CodeType("code.type.py","py","python")
+  val Ruby = new CodeType("code.type.ruby","ruby","ruby")
+  val Scala = new CodeType("code.type.scala","scala","scala")
+  val Sql = new CodeType("code.type.sql","sql","sql")
+  val VisualBasic = new CodeType("code.type.vb","vb","vbscript")
+  val Xml = new CodeType("code.type.xml","xml","xml")
 
   val map = new java.util.LinkedHashMap[String,CodeType]
 
@@ -117,12 +117,18 @@ object CodeType {
 @Table(name = "codeTypes")
 class CodeType extends Key with java.io.Serializable{
 
-def this(name:String,code:String) = {
+  private var editType:String = null
+
+def this(name:String,code:String,editType:String) = {
     this()
     setName(name)
     setCode(code)
+    this.editType=editType;
   }
-  
+
+  def getEditType() = editType
+  def setEditType(e:String) { this.editType=editType}
+
  // def getAvailableCodeTypes() :Collection[CodeType] = CodeType.list
 }
 

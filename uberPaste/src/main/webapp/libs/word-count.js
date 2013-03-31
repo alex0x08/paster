@@ -25,7 +25,7 @@ var WordCount = new Class ({
 		charText: 'characters',			//The text that follows the number of characters
 		wordText: 'words',				//The text that follows the number of words
 		separator: ', ',				//The text that separates the number of words and the number of characters
-		liveCount: true,				//Whether or not to use the event trigger, set false if you'd like to call the getCount function separately
+		liveCount: false,				//Whether or not to use the event trigger, set false if you'd like to call the getCount function separately
 		eventTrigger: 'keyup'			//The event that triggers the count update
 	},
 

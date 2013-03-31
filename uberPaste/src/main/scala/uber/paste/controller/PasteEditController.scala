@@ -38,7 +38,7 @@ import java.util.Locale
 import scala.collection.JavaConversions._
 import org.codehaus.jackson.annotate.JsonIgnore
 import javax.xml.bind.annotation.XmlTransient
-import org.apache.commons.lang.StringUtils
+import org.apache.commons.lang.{WordUtils, StringUtils}
 import scala.Array
 import com.google.gson.{JsonParser, GsonBuilder}
 import org.codehaus.jackson.map.ObjectMapper
@@ -193,9 +193,12 @@ class PasteController extends GenericEditController[Paste]   {
 
             val o = new JsonParser().parse(b.getText()).getAsJsonObject()
             b.setText(new GsonBuilder().setPrettyPrinting().create().toJson(o))
-
           }
-          case _ => {}
+          case CodeType.Plain => {
+               b.setText(WordUtils.wrap(b.getText(),80))
+          }
+
+            case _ => {}
         }
       }
 
