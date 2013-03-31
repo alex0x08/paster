@@ -80,6 +80,12 @@
 
 
 
+        $('theme').addEvent('change',function(event) {
+                //alert(this.getElement(':selected').value);
+            editor.setTheme(this.getElement(':selected').value);
+
+        });
+
     });
 
     /*window.addEvent('domready', function() {

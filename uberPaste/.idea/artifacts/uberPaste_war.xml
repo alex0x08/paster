@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="uberPaste:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <root id="archive" name="uberPaste-1.0-SNAPSHOT.war">
+      <element id="artifact" artifact-name="uberPaste:war exploded" />
+    </root>
+  </artifact>
+</component>
