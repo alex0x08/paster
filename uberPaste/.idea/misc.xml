@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="EntryPointsManager">
+    <entry_points version="2.0" />
+  </component>
+  <component name="FrameworkDetectionExcludesConfiguration">
+    <file type="web" url="file://$PROJECT_DIR$" />
+  </component>
+  <component name="IdProvider" IDEtalkID="341CE52702525E3F1C6C381383373269" />
+  <component name="MavenProjectsManager">
+    <option name="originalFiles">
+      <list>
+        <option value="$PROJECT_DIR$/pom.xml" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_6" assert-keyword="true" jdk-15="true" project-jdk-name="1.7" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/classes" />
+  </component>
+  <component name="RSSPlugin">
+    <option name="rssFeed" value="&lt;?xml version=&quot;1.0&quot;?&gt;&#10;&lt;channels&gt;&#10;&#9;&lt;channel src=&quot;https://dev.iqcard.ru/paste/main/paste/list.rss&quot;/&gt;&#10;&lt;/channels&gt;" />
+    <option name="rssStyle" value="&lt;?xml version=&quot;1.0&quot;?&gt;&#10;&lt;xsl:stylesheet&#10;&#9;xmlns:xsl=&quot;http://www.w3.org/1999/XSL/Transform&quot;&#10;&#9;xmlns:rdf=&quot;http://www.w3.org/1999/02/22-rdf-syntax-ns#&quot;&#10;&#9;xmlns:dc=&quot;http://purl.org/dc/elements/1.1/&quot;&#10;&#9;xmlns:rss=&quot;http://purl.org/rss/1.0/&quot; version=&quot;1.0&quot;&gt;&#10;&lt;xsl:output method=&quot;html&quot;/&gt;&#10;&lt;xsl:strip-space elements=&quot;*&quot;/&gt;&#10;&lt;xsl:template match=&quot;channels/channel&quot;&gt;&#10;&#9;&lt;xsl:apply-templates select=&quot;document(@src)&quot;/&gt;&#10;&lt;/xsl:template&gt;&#10;&lt;!-- RSS 2.0 --&gt;&#10;&lt;xsl:template match=&quot;rss&quot;&gt;&#10;&#9;&lt;table width=&quot;100%&quot;&gt;&#10;&#9;&lt;tr&gt;&lt;th bgcolor=&quot;black&quot; color=&quot;white&quot;&gt;&lt;xsl:value-of select=&quot;channel/title&quot;/&gt;&lt;/th&gt;&lt;/tr&gt;&#10;&#9;&lt;xsl:for-each select=&quot;channel/item&quot;&gt;&#10;&#9;&#9;&lt;tr&gt;&lt;th bgcolor=&quot;#D0D0D0&quot;&gt;&lt;xsl:value-of select=&quot;title&quot;/&gt;&lt;/th&gt;&lt;/tr&gt;&#10;&#9;&#9;&lt;tr&gt;&lt;th bgcolor=&quot;#E0E0E0&quot;&gt;&lt;xsl:value-of select=&quot;pubDate&quot;/&gt;&lt;/th&gt;&lt;/tr&gt;&#10;&#9;&#9;&lt;tr&gt;&lt;th bgcolor=&quot;#E0E0E0&quot;&gt;&lt;a href=&quot;{link}&quot;&gt;&lt;xsl:value-of select=&quot;link&quot;/&gt;&lt;/a&gt;&lt;/th&gt;&lt;/tr&gt;&#10;&#9;&#9;&lt;tr&gt;&lt;td&gt;&lt;xsl:value-of select=&quot;description&quot; disable-output-escaping=&quot;yes&quot;/&gt;&lt;/td&gt;&lt;/tr&gt;&#10;&#9;&lt;/xsl:for-each&gt;&#10;&#9;&lt;/table&gt;&#10;&lt;/xsl:template&gt;&#10;&lt;!-- RSS 1.0 --&gt;&#10;&lt;xsl:template match=&quot;rdf:RDF&quot;&gt;&#10;&#9;&lt;table width=&quot;100%&quot;&gt;&#10;&#9;&lt;tr&gt;&lt;th bgcolor=&quot;black&quot; color=&quot;white&quot;&gt;&lt;xsl:value-of select=&quot;rss:channel/rss:title&quot;/&gt;&lt;/th&gt;&lt;/tr&gt;&#10;&#9;&lt;xsl:for-each select=&quot;rss:item&quot;&gt;&#10;&#9;&#9;&lt;tr&gt;&lt;th bgcolor=&quot;#D0D0D0&quot;&gt;&lt;xsl:value-of select=&quot;rss:title&quot;/&gt;&lt;/th&gt;&lt;/tr&gt;&#10;&#9;&#9;&lt;tr&gt;&lt;th bgcolor=&quot;#E0E0E0&quot;&gt;&lt;xsl:value-of select=&quot;dc:date&quot;/&gt;&lt;/th&gt;&lt;/tr&gt;&#10;&#9;&#9;&lt;tr&gt;&lt;th bgcolor=&quot;#E0E0E0&quot;&gt;&lt;a href=&quot;{rss:link}&quot;&gt;&lt;xsl:value-of select=&quot;rss:link&quot;/&gt;&lt;/a&gt;&lt;/th&gt;&lt;/tr&gt;&#10;&#9;&#9;&lt;tr&gt;&lt;td&gt;&lt;xsl:value-of select=&quot;rss:description&quot; disable-output-escaping=&quot;yes&quot;/&gt;&lt;/td&gt;&lt;/tr&gt;&#10;&#9;&lt;/xsl:for-each&gt;&#10;&#9;&lt;/table&gt;&#10;&lt;/xsl:template&gt;&#10;&lt;/xsl:stylesheet&gt;" />
+    <option name="rssDelay" value="30" />
+    <option name="proxyEnabled" value="false" />
+    <option name="proxyHost" value="" />
+    <option name="proxyPort" value="" />
+  </component>
+  <component name="masterDetails">
+    <states>
+      <state key="ProjectJDKs.UI">
+        <settings>
+          <last-edited>1.7</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+    </states>
+  </component>
+</project>
+
