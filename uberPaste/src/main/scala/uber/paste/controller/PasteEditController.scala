@@ -216,7 +216,7 @@ class PasteController extends GenericEditController[Paste]   {
 
 
 
-    @RequestMapping(value = Array("/{id:[0-9]+}"), method = Array(RequestMethod.GET))
+  @RequestMapping(value = Array("/{id:[0-9]+}"), method = Array(RequestMethod.GET))
   override def getByPath(@PathVariable("id") id:java.lang.Long,model:Model,locale:Locale):String = {
 
     val r = super.getByPath(id,model,locale)
@@ -231,6 +231,11 @@ class PasteController extends GenericEditController[Paste]   {
     return viewPage
   }
 
+  @RequestMapping(value = Array("/codetypes"), method = Array(RequestMethod.GET))
+  @ResponseBody
+  def getAvailableCodeTypes():java.util.Collection[CodeType] = {
+              return CodeType.list
+  }
 
   @RequestMapping(value = Array("/plain/{id:[0-9]+}"), method = Array(RequestMethod.GET), produces = Array("text/plain;charset=UTF-8"))
   @ResponseBody

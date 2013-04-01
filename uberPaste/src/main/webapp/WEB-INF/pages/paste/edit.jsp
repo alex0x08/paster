@@ -86,6 +86,13 @@
 
         });
 
+
+        $('ptype').addEvent('change',function(event) {
+           // alert(this.getElement(':selected').get("editCode"));
+            editor.getSession().setMode("ace/mode/"+this.getElement(':selected').get("editCode"));
+
+        });
+
     });
 
     /*window.addEvent('domready', function() {
@@ -165,7 +172,7 @@
     <form:select path="codeType" multiple="false" id="ptype">
                     
                     <c:forEach items="${availableCodeTypes}" var="codeType">
-				    <form:option value="${codeType.code}" >
+				    <form:option value="${codeType.code}" editCode="${codeType.editType}" >
                                     <fmt:message key="${codeType.name}"/>
                                 </form:option>
                     </c:forEach>
