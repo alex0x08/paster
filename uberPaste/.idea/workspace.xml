@@ -7,7 +7,7 @@
     <list default="true" id="f37b0aaf-04af-45ff-9ccf-b6d6c23298a2" name="Default" comment="" />
     <ignored path="uberPaste.iws" />
     <ignored path=".idea/workspace.xml" />
-    <file path="/Dummy.txt" changelist="f37b0aaf-04af-45ff-9ccf-b6d6c23298a2" time="1364728692647" ignored="false" />
+    <file path="/Dummy.txt" changelist="f37b0aaf-04af-45ff-9ccf-b6d6c23298a2" time="1364811305360" ignored="false" />
     <file path="/OpenIDAuthServlet.scala" changelist="f37b0aaf-04af-45ff-9ccf-b6d6c23298a2" time="1361463477156" ignored="false" />
     <file path="/UserManager.scala" changelist="f37b0aaf-04af-45ff-9ccf-b6d6c23298a2" time="1363101362489" ignored="false" />
     <file path="/User.scala" changelist="f37b0aaf-04af-45ff-9ccf-b6d6c23298a2" time="1361453167638" ignored="false" />
@@ -1784,7 +1784,11 @@
       <created>1364728706621</created>
       <updated>1364728706621</updated>
     </task>
-    <option name="localTasksCounter" value="30" />
+    <task id="LOCAL-00030" summary="ace integration 2">
+      <created>1364811315244</created>
+      <updated>1364811315244</updated>
+    </task>
+    <option name="localTasksCounter" value="31" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -1811,7 +1815,7 @@
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.36090687" sideWeight="0.67128026" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.35477942" sideWeight="0.67128026" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32641292" sideWeight="0.49019608" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="AIT RSS/Atom Reader" active="true" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32911393" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="3" side_tool="false" content_ui="combo" />
