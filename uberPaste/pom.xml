@@ -602,6 +602,30 @@
         </profile>
 
         <profile>
+            <id>db2</id>
+
+
+            <properties>
+
+                <jdbc.groupId>mysql</jdbc.groupId>
+                <jdbc.artifactId>mysql-connector-java</jdbc.artifactId>
+                <jdbc.version>5.1.13</jdbc.version>
+
+                <hibernate.dialect>org.hibernate.dialect.DB2Dialect</hibernate.dialect>
+                <jdbc.driverClassName>com.ibm.db2.jcc.DB2Driver</jdbc.driverClassName>
+
+                <jdbc.url>jdbc:db2://localhost:50000>/testdb</jdbc.url>
+                <jdbc.username>bpmadmin</jdbc.username>
+                <jdbc.password>bpmadmin</jdbc.password>
+                <jdbc.show-sql>true</jdbc.show-sql>
+
+                <db.name>appdb</db.name>
+
+            </properties>
+        </profile>
+
+
+        <profile>
             <id>h2</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
@@ -750,7 +774,7 @@
             <value>20000000</value>
         </systemProperty>
     </systemProperties>
-    <webDefaultXml>${project.basedir}/src/main/containers/jetty/webdefault.xml</webDefaultXml>
+    <!--webDefaultXml>${project.basedir}/src/main/containers/jetty/webdefault.xml</webDefaultXml-->
 
 
 </configuration>
