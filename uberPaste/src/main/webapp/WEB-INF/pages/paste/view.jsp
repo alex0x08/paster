@@ -76,11 +76,30 @@
 
   </div>
 
-            <div>
+<div class="row">
+<div class="column grid-12">
+    <pre id="pasteText" class="brush: ${model.codeType.code};toolbar: false; auto-links:false;" ><c:out value="${model.text}" escapeXml="true" /></pre>
+    <code id="pasteTextPlain" style="display:none;"><c:out value="${model.text}" escapeXml="true" /></code>
 
-                <pre id="pasteText" class="brush: ${model.codeType.code};toolbar: false; auto-links:false;" ><c:out value="${model.text}" escapeXml="true" /></pre>
-                <code id="pasteTextPlain" style="display:none;"><c:out value="${model.text}" escapeXml="true" /></code>
-            </div>
+</div>
+
+<div class="column grid-4">
+
+
+    <iframe id="shareFrame" src="http://localhost:8080/share/main/file/integrated/paste_${model.id}"
+            scrolling="auto" frameborder="0"
+            style="width:auto;"  allowTransparency="true"   >
+
+    </iframe>
+
+
+
+</div>
+
+
+
+
+
 
     <div id="commentsList">
 
@@ -242,7 +261,7 @@
 
 
 
- </div>
+
 
 
 
@@ -250,7 +269,28 @@
 
                        <script type="text/javascript">
 
-window.addEvent('domready', function() {
+
+
+
+                           window.addEvent('domready', function() {
+
+
+                               var sch = document.body.scrollHeight;
+
+                               if (sch < 1024)  {
+
+                                   $('shareFrame').setStyle('height','1024px');
+                                //   $('shareFrame').set('scrolling','yes');
+                                 //  $('shareFrame').set('frameborder','1');
+
+                                  // $('shareFrame').setStyle('overflow-y','scroll');
+
+                               } else {
+
+                                   $('shareFrame').setStyle('height', document.body.scrollHeight+'px');
+
+                               }
+
 
 /*    document.addEvent('keydown', function(event){
         // the passed event parameter is already an instance of the Event type.
