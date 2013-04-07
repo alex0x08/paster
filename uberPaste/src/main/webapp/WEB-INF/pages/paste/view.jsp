@@ -86,7 +86,7 @@
 <div class="column grid-4">
 
 
-    <iframe id="shareFrame" src="http://localhost:8080/share/main/file/integrated/paste_${model.id}"
+    <iframe id="shareFrame" src="http://localhost:8080/share/main/file/integrated/list/paste_${model.id}"
             scrolling="auto" frameborder="0"
             style="width:auto;"  allowTransparency="true"   >
 
