@@ -64,7 +64,7 @@
         var counter = new WordCount('wordCount');
 
         var editor = ace.edit("editor");
-        editor.setTheme("ace/theme/mono_industrial");
+        editor.setTheme("ace/theme/crimson_editor");
         editor.getSession().setMode("ace/mode/${model.codeType.editType}");
 
         var textarea = document.getElementById("ptext");

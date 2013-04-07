@@ -59,6 +59,8 @@ abstract class SearchableDaoImpl[T <: Struct](model:Class[T])
   }
   def search(query:Query):java.util.List[T] = {
 
+    logger.debug("_dao search "+query.getQuery())
+
     if (query.isEmpty) {
       return getList
     }
@@ -83,7 +85,7 @@ abstract class SearchableDaoImpl[T <: Struct](model:Class[T])
 
           try {
 
-            /*if (logger.isDebugEnabled()) {
+          /*  if (logger.isDebugEnabled()) {
               for (term <- mterms) {
                 val f = hits.highlighter(i).fragment(term)
                 logger.debug("fragment "+f)
@@ -95,7 +97,7 @@ abstract class SearchableDaoImpl[T <: Struct](model:Class[T])
 
           } catch {
             case e:org.compass.core.engine.SearchEngineException => {
-             // logger.error(e.getLocalizedMessage,e)
+           //   logger.error(e.getLocalizedMessage,e)
             }
           }
 

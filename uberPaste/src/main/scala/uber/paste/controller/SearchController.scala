@@ -144,6 +144,9 @@ abstract class SearchController[T <: Struct,QV <: Query ] extends GenericListCon
 
   def search(query:Query,result:SearchResult):java.util.List[_]= {
 
+
+    logger.debug("_search "+query.getQuery())
+
     return if(StringUtils.isBlank(query.getQuery()))
       getManagerBySearchResult(result).getList()
     else

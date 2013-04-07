@@ -88,7 +88,8 @@ class Paste extends Struct with java.io.Serializable{
   
   @Lob
   @NotNull
-  //@SearchableProperty(analyzer = )
+  @SearchableProperty
+  //(analyzer = )
   @Size(min=3, message = "{struct.name.validator}")
   private var text: String = null
 
