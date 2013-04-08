@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation._
 import uber.paste.model._
 import uber.paste.manager.{CommentManager, GenericSearchManager, PasteManager}
 import javax.servlet.http.HttpServletRequest
-import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.{Value, Autowired}
 import org.springframework.ui.Model
 import java.util.Locale
 import org.springframework.beans.support.PagedListHolder
@@ -47,6 +47,8 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
 
   @Autowired
   val commentManager:CommentManager = null
+
+
 
 
   def listPage()="redirect:/main/paste/list"
@@ -85,6 +87,12 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
     super.fillListModel(model,locale)
     model.addAttribute("title","Pastas")
     model.addAttribute("availableSourceTypes",PasteSource.list)
+
+
+    //config.share.integration=1
+    //config.share.url=https://dev.iqcard.ru/share
+
+
   }
 
 

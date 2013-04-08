@@ -2,6 +2,7 @@
 
 
 
+
 <div class="row">
     <div class="column grid-1" style="text-align:right;padding-right: 0;margin-top: -1em;" >
         <a class="mainLinkLine" href="<c:url value="/main/paste/new"></c:url>" title="<fmt:message key='paste.create.new'/>"><span class="i" style="font-size: 4em;">/</span></a>
@@ -85,20 +86,18 @@
 
 <div class="column grid-4">
 
+    <c:if test="${shareIntegration}">
 
-    <iframe id="shareFrame" src="http://localhost:8080/share/main/file/integrated/list/paste_${model.id}"
-            scrolling="auto" frameborder="0"
-            style="width:auto;"  allowTransparency="true"   >
+        <iframe id="shareFrame" src="${shareUrl}/main/file/integrated/list/paste_${model.id}"
+                scrolling="auto" frameborder="0"
+                style="width:auto;"  allowTransparency="true"   >
 
-    </iframe>
+        </iframe>
 
 
+    </c:if>
 
 </div>
-
-
-
-
 
 
     <div id="commentsList">
@@ -107,8 +106,6 @@
 
             <div id="numSpace_l${comment.lineNumber}" class="listSpace" >
             </div>
-
-
 
             <div id="comment_l${comment.id}" lineNumber="${comment.lineNumber}"  parentCommentId="${comment.parentId}" class="commentBlock" >
                 <div class="commentInner">
@@ -263,33 +260,26 @@
 
 
 
-
-
 <script type="text/javascript" src="<c:url value='/libs/zeroclipboard/ZeroClipboard.js'/>"></script>
 
-                       <script type="text/javascript">
 
+<c:if test="${shareIntegration}">
 
+<script type="text/javascript">
+    window.addEvent('domready', function() {
+        var sch = document.body.scrollHeight;
+        if (sch < 1024)  {
+            $('shareFrame').setStyle('height','1024px');
+        } else {
+            $('shareFrame').setStyle('height', document.body.scrollHeight+'px');
+        }
+    } );
+    </script>
+</c:if>
 
+                    <script type="text/javascript">
 
                            window.addEvent('domready', function() {
-
-
-                               var sch = document.body.scrollHeight;
-
-                               if (sch < 1024)  {
-
-                                   $('shareFrame').setStyle('height','1024px');
-                                //   $('shareFrame').set('scrolling','yes');
-                                 //  $('shareFrame').set('frameborder','1');
-
-                                  // $('shareFrame').setStyle('overflow-y','scroll');
-
-                               } else {
-
-                                   $('shareFrame').setStyle('height', document.body.scrollHeight+'px');
-
-                               }
 
 
 /*    document.addEvent('keydown', function(event){

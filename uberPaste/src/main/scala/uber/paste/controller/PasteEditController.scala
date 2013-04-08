@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation._
 import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.servlet.ModelAndView
 import uber.paste.model._
-import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.{Value, Autowired}
 import java.io.IOException
 import java.io.File
 import javax.servlet.http.HttpServletResponse
@@ -53,7 +53,14 @@ class PasteController extends GenericEditController[Paste]   {
 
   @Autowired
   val commentManager:CommentManager = null
- 
+
+  @Value("${config.share.integration}")
+  val shareIntegration:Boolean = false
+
+  @Value("${config.share.url}")
+  val shareUrl:String = null
+
+
   def listPage()="redirect:/main/paste/list"
   def editPage()="paste/edit"
   def viewPage()="paste/view"
@@ -80,6 +87,7 @@ class PasteController extends GenericEditController[Paste]   {
     }
     model.addAttribute("availableCodeTypes", CodeType.list)
     model.addAttribute("availablePriorities", Priority.list)
+
 
 
 
@@ -225,6 +233,8 @@ class PasteController extends GenericEditController[Paste]   {
 
     val p = model.asMap().get(GenericController.MODEL_KEY).asInstanceOf[Paste];
 
+    model.addAttribute("shareIntegration",shareIntegration)
+    model.addAttribute("shareUrl",shareUrl)
 
     model.addAttribute("title",getResource("paste.view.title",Array(p.getId,p.getName()),locale))
     
