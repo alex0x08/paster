@@ -360,14 +360,14 @@ var sh = {
 			target.parentNode.replaceChild(element, target);
 
             var roots = []
-            $$('div.commentBlock').each(function(el){
+            $$('div.commentBlock').each(function(el,index){
 
-                sh.insertComment(el,0);
+                sh.insertComment(el,0,index);
                 roots.push(el);
             });
 
             Array.each(roots, function(el, index){
-                sh.insertComment(el,1);
+                sh.insertComment(el,1,index);
             });
 
 
@@ -416,17 +416,29 @@ var sh = {
     },  recurseCommentReply: function(roots) {
         var sroots = []
         Array.each(roots, function(el, index){
-            sh.insertComment(el,1);
+            sh.insertComment(el,1,index);
             sroots.push(el);
         });
 
-    },  insertComment: function(cl,mode) {
+    },  insertComment: function(cl,mode,count) {
 
       //  var cl = document.getElementById('comment_l'+lineNumber);
+
+      cl.setStyle("zIndex",count);
+
+
 
         var lineNumber =  cl.getAttribute('lineNumber');
         var clParent =  cl.getAttribute('parentCommentId');
 
+        clInner = cl.getChildren('.commentInner');
+
+        clInner.addEvents({
+            click: function() {
+               // alert('click! '+count);
+                clInner.setStyle("zIndex","1");
+            }
+        });
 
         if (clParent == '' ) {
                 $('cl_'+lineNumber).adopt(cl);
@@ -465,6 +477,7 @@ var sh = {
             $('commentParentId').set("value",parentId);
             $('comment_l'+parentId).adopt($("commentForm"));
 
+            $("commentForm").setStyle("zIndex","1");
         } else {
 
             if (sh.vars.currentEditLine != null) {
@@ -484,7 +497,9 @@ var sh = {
 
             $('cl_linePlain_'+lineNumber).adopt($("pasteLineCopyBtn"));
 
+
             $('cl_'+lineNumber).adopt($("commentForm"));
+
 
         }
 

@@ -233,6 +233,17 @@ class PasteController extends GenericEditController[Paste]   {
 
     val p = model.asMap().get(GenericController.MODEL_KEY).asInstanceOf[Paste];
 
+    if (!p.isBlank()) {
+
+      if (manager.exists(p.getId()+1)) {
+        model.addAttribute("availableNext",true)
+      }
+      if (manager.exists(p.getId()-1)) {
+        model.addAttribute("availablePrev",true)
+      }
+    }
+
+
     model.addAttribute("shareIntegration",shareIntegration)
     model.addAttribute("shareUrl",shareUrl)
 

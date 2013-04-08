@@ -56,8 +56,11 @@
         </h4>
 
 
+        <c:if test="${availablePrev}">
+            <a href="<c:url value="/main/paste/${model.id-1}"/>" title="Previous paste">&#8592;</a>
+        </c:if>
 
-<a href="<c:url value="/main/paste/${model.id-1}"/>" title="Previous paste">&#8592;</a>
+
         <a href="<c:url value="/main/paste/list"/>" title="Go back to list">list</a> |
         <a href="<c:url value="/main/paste/edit/${model.id}"/>" title="Edit paste">edit</a> |
         <a href="<c:url value="/main/paste/xml/${model.id}"/>" title="View as XML">xml</a> |
@@ -66,11 +69,14 @@
 
         <a id="ctrlc_link" data-clipboard-target="pasteTextPlain" href="javascript:void(0);" title="Copy to clipboard" ><img src="<c:url value='/images/ctrlc.png'/>"/></a> |
 
-        <a href="<c:url value="/main/paste/${model.id+1}"/>" title="Next paste">&#8594;</a>
+        <c:if test="${availableNext}">
+            <a href="<c:url value="/main/paste/${model.id+1}"/>" title="Next paste">&#8594;</a>
+        </c:if>
 
         <br/>
 
   <div style="padding-left: 2em;">
+
       <span style="vertical-align: top;font-size: larger;" class="i" title="Comments">C</span>
       <a href="javascript:void(0);" onclick="SyntaxHighlighter.toggleComments(0);" title="hide comments">hide</a>|
       <a href="javascript:void(0);" onclick="SyntaxHighlighter.toggleComments(1);" title="show comments">show</a>
@@ -79,7 +85,7 @@
 
 <div class="row">
 <div class="column grid-12">
-    <pre id="pasteText" class="brush: ${model.codeType.code};toolbar: false; auto-links:false;" ><c:out value="${model.text}" escapeXml="true" /></pre>
+    <pre id="pasteText" class="brush: ${model.codeType.code};toolbar: false; auto-links:false;" style=" overflow-y: hidden;" ><c:out value="${model.text}" escapeXml="true" /></pre>
     <code id="pasteTextPlain" style="display:none;"><c:out value="${model.text}" escapeXml="true" /></code>
 
 </div>
@@ -90,7 +96,7 @@
 
         <iframe id="shareFrame" src="${shareUrl}/main/file/integrated/list/paste_${model.id}"
                 scrolling="auto" frameborder="0"
-                style="width:auto;"  allowTransparency="true"   >
+                style="width:340px; "  allowTransparency="true"   >
 
         </iframe>
 
