@@ -106,7 +106,7 @@
 </div>
 
 
-    <div id="commentsList">
+    <div id="commentsList" style="display:none;">
 
         <c:forEach var="comment" items="${model.comments}" varStatus="loopStatus">
 

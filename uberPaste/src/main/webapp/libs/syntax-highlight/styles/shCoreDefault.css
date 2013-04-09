@@ -385,7 +385,7 @@
     height: 4em;
     max-height: 4em;
     margin-left: 0.5em;
-    margin-top: 0.1em;
+    margin-top: 0.2em;
     padding-bottom: 0.1em;
     padding-top: 0;
 
@@ -398,15 +398,19 @@
 
 .editForm {
     white-space: normal;
-    position: relative;
+    position: absolute;
     max-width: 35em;
     max-height: 12em;
     width: 35em;
+    top: 0em;
     height: 7em;
     margin-left: 1em;
     margin-top: 1em;
     background-color: #e0e0e0;
     padding-bottom: 0.5em;
+    border: 1px solid black;
+    z-index: 9999;
+
 }
 .editForm textarea {
     -webkit-box-shadow: inset 2px 2px 2px 0px #dddddd;

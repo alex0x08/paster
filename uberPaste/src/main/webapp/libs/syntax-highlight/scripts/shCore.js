@@ -424,29 +424,41 @@ var sh = {
 
       //  var cl = document.getElementById('comment_l'+lineNumber);
 
-      cl.setStyle("zIndex",count);
-
 
 
         var lineNumber =  cl.getAttribute('lineNumber');
         var clParent =  cl.getAttribute('parentCommentId');
 
+        var id =  cl.getAttribute('id');
+
+
         clInner = cl.getChildren('.commentInner');
 
-        clInner.addEvents({
-            click: function() {
-               // alert('click! '+count);
-                clInner.setStyle("zIndex","1");
+
+       /* clInner.addEvents({
+            click: function(event) {
+
+                event.stopPropagation();
+
+
+                this.set("zIndex",9999);
+                this.setStyle("background-color","red");
+                this.setStyle("border","solid 1px green");
+
             }
-        });
+        });*/
 
         if (clParent == '' ) {
                 $('cl_'+lineNumber).adopt(cl);
+                cl.set("zIndex",count+1000);
 
-            } else {
+        } else {
             $('comment_l'+clParent).adopt(cl);
+            cl.set("zIndex",count);
 
         }
+
+        cl.setStyle("display","");
 
             $('ln_'+lineNumber).adopt($("numSpace_l"+lineNumber));
 
@@ -470,6 +482,10 @@ var sh = {
         $('commentForm').setStyle("display","");
         $("numSpace").setStyle("display","");
 
+      //  $("commentForm").setStyle("position","absolute");
+
+
+
         $('commentText').set("value","");
 
         if (parentId>0) {
@@ -477,8 +493,14 @@ var sh = {
             $('commentParentId').set("value",parentId);
             $('comment_l'+parentId).adopt($("commentForm"));
 
-            $("commentForm").setStyle("zIndex","1");
+            $('commentForm').setStyle("top","3.5em");
+            $('commentForm').setStyle("position","absolute");
+
+
         } else {
+
+            $('commentForm').setStyle("position","relative");
+
 
             if (sh.vars.currentEditLine != null) {
                 $('cl_lineHtml_'+sh.vars.currentEditLine).setStyle("display","");
@@ -502,6 +524,9 @@ var sh = {
 
 
         }
+
+        $("commentForm").set("zIndex",9000);
+
 
         $('ln_'+lineNumber).adopt($("numSpace"));
 
