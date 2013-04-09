@@ -27,6 +27,7 @@ import uber.paste.base.Loggered
 import java.util.{Set,HashSet,ArrayList}
 import scala.collection.JavaConversions._
 import org.compass.core.lucene.LuceneEnvironment.Analyzer
+import org.hibernate.envers.{NotAudited, Audited}
 
 /**
  * 
@@ -83,6 +84,7 @@ class PasteListener extends Loggered{
 @Searchable
 @XmlRootElement(name="paste")
 @EntityListeners(Array(classOf[PasteListener]))
+@Audited
 class Paste extends Struct with java.io.Serializable{
 
   
@@ -120,6 +122,7 @@ class Paste extends Struct with java.io.Serializable{
   private var normalized:Boolean = true
 
   @OneToMany(fetch = FetchType.LAZY,cascade = Array(CascadeType.PERSIST,CascadeType.MERGE,CascadeType.REMOVE),orphanRemoval = true)
+  @NotAudited
   private var comments:java.util.List[Comment] = new ArrayList[Comment]()
 
   @SearchableProperty

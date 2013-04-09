@@ -38,7 +38,7 @@ import java.util.Locale
 import scala.collection.JavaConversions._
 import org.codehaus.jackson.annotate.JsonIgnore
 import javax.xml.bind.annotation.XmlTransient
-import org.apache.commons.lang.{WordUtils, StringUtils}
+import org.apache.commons.lang.{StringEscapeUtils, WordUtils, StringUtils}
 import scala.Array
 import com.google.gson.{JsonParser, GsonBuilder}
 import org.codehaus.jackson.map.ObjectMapper
@@ -247,7 +247,7 @@ class PasteController extends GenericEditController[Paste]   {
     model.addAttribute("shareIntegration",shareIntegration)
     model.addAttribute("shareUrl",shareUrl)
 
-    model.addAttribute("title",getResource("paste.view.title",Array(p.getId,p.getName()),locale))
+    model.addAttribute("title",getResource("paste.view.title",Array(p.getId,StringEscapeUtils.escapeHtml(p.getName())),locale))
     
     return viewPage
   }

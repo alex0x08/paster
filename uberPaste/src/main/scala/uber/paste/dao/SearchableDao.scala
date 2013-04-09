@@ -28,14 +28,14 @@ import org.compass.core.CompassSession
 import org.compass.core.CompassException
 import java.util.ArrayList
 
-abstract trait SearchableDao[T <: Struct] extends StructDao[T] {
+abstract trait SearchableDao[T <: Struct] extends VersionDao[T] {
 
   def search(query:Query):java.util.List[T]
 }
 
 @Transactional(readOnly = true)
 abstract class SearchableDaoImpl[T <: Struct](model:Class[T])
-  extends StructDaoImpl[T](model) with SearchableDao[T] {
+  extends VersionDaoImpl[T](model) with SearchableDao[T] {
 
   @Autowired
   private val compassTemplate:CompassTemplate = null
