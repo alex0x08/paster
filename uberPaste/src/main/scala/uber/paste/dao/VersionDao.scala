@@ -52,12 +52,17 @@ abstract class VersionDaoImpl[T <: Struct](model:Class[T]) extends StructDaoImpl
       r = new java.lang.Integer(rev.intValue())
     }
 
-    val out = getReader().find(model, id, rev)
+    val out = getReader().find(model, id, r)
+    if (out==null) {
+      return null.asInstanceOf[T]
+    }
       //.asInstanceOf[T]
 
     logger.debug("getRevision id=" + id + ",rev=" + rev + ",found=" + out)
 
-    return getFull(out.getId())
+    out.loadFull()
+
+    return out
   }
 
   /**

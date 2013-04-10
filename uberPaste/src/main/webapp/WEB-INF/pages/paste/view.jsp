@@ -81,6 +81,16 @@
       <a href="javascript:void(0);" onclick="SyntaxHighlighter.toggleComments(0);" title="hide comments">hide</a>|
       <a href="javascript:void(0);" onclick="SyntaxHighlighter.toggleComments(1);" title="show comments">show</a>
 
+      <c:if test="${!model.blank and not empty availableRevisions}">
+
+          <jsp:include
+                  page="/WEB-INF/pages/common/revisions.jsp">
+              <jsp:param name="modelName" value="paste" />
+          </jsp:include>
+
+
+      </c:if>
+
   </div>
 
 <div class="row">

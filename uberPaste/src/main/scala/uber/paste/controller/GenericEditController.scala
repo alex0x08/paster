@@ -25,6 +25,15 @@ import java.util.Locale
 import scala.Array
 import org.springframework.http.HttpStatus
 
+object GenericEditController {
+
+  final val EDIT_ACTION = "/edit"
+  final val VIEW_ACTION = "/view"
+  final val SAVE_ACTION= "/save"
+  final val NEW_ACTION= "/new"
+  final val DELETE_ACTION= "/delete"
+
+}
 
 abstract class GenericEditController[T <: Struct ] extends StructController[T] {    
   
@@ -35,7 +44,6 @@ abstract class GenericEditController[T <: Struct ] extends StructController[T] {
       model.addAttribute(GenericController.MODEL_KEY, obj)
     }
 
-
     def loadModel(@RequestParam(required = false) id:java.lang.Long):T = {
       logger.debug("_new request id="+id)
 
@@ -45,7 +53,7 @@ abstract class GenericEditController[T <: Struct ] extends StructController[T] {
           null.asInstanceOf[T]
     }
 
-  @RequestMapping(value = Array("/new"), method = Array(RequestMethod.GET))
+  @RequestMapping(value = Array(GenericEditController.NEW_ACTION), method = Array(RequestMethod.GET))
   @ResponseStatus(HttpStatus.CREATED)
   def createNew(model:Model,locale:Locale):String= {
 
@@ -55,7 +63,7 @@ abstract class GenericEditController[T <: Struct ] extends StructController[T] {
   }
 
 
-  @RequestMapping(value = Array("/edit/{id:[0-9]+}"), method = Array(RequestMethod.GET))
+  @RequestMapping(value = Array(GenericEditController.EDIT_ACTION+"/{id:[0-9]+}"), method = Array(RequestMethod.GET))
   def editWithId(model:Model,@PathVariable("id") id:Long,locale:Locale):String= {
 
       fillEditModel(loadModel(id),model,locale)
@@ -64,7 +72,7 @@ abstract class GenericEditController[T <: Struct ] extends StructController[T] {
   }
 
 
-    @RequestMapping(value = Array("/save"), method = Array(RequestMethod.POST))
+    @RequestMapping(value = Array(GenericEditController.SAVE_ACTION), method = Array(RequestMethod.POST))
     def save(@RequestParam(required = false) cancel:String,
             @Valid @ModelAttribute(GenericController.MODEL_KEY) b:T,
             result:BindingResult, model:Model,locale:Locale):String = {
@@ -90,14 +98,14 @@ abstract class GenericEditController[T <: Struct ] extends StructController[T] {
         if (b.isBlank) {
             b.setId(r.getId())
         }
-    
+
         model.addAttribute("statusMessageKey", "action.success");
         return listPage;
     }
 
    
 
-    @RequestMapping(value = Array("/delete"), method = Array(RequestMethod.GET,RequestMethod.POST))
+    @RequestMapping(value = Array(GenericEditController.DELETE_ACTION), method = Array(RequestMethod.GET,RequestMethod.POST))
     def delete(@RequestParam(required = false) id:Long,
             model:Model):String = {
         manager.remove(id);
@@ -115,6 +123,8 @@ abstract class GenericEditController[T <: Struct ] extends StructController[T] {
       return page404
 
     model.addAttribute(GenericController.MODEL_KEY, m)
+
+    fillEditModel(m,model,locale)
 
     return viewPage
   }

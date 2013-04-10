@@ -103,13 +103,17 @@ class Paste extends Struct with java.io.Serializable{
 
   @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "owner_id")
+  @NotAudited
   private var owner:User = null
   
   @NotNull
   private var codeType:String = CodeType.Plain.getCode
 
+  private var integrationCode:String = null
+
   @ElementCollection(fetch = FetchType.EAGER)
   @SearchableProperty
+  @NotAudited
   private var tags:Set[String] = new HashSet[String]()
 
   @NotNull
@@ -155,6 +159,9 @@ class Paste extends Struct with java.io.Serializable{
   @JsonIgnore
   def getOwner(): User = owner
   def setOwner(u:User) {owner = u}
+
+  def getIntegrationCode(): String = integrationCode
+  def setIntegrationCode(code:String) { integrationCode = code}
 
   def getTags(): Set[String] = tags
 

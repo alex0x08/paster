@@ -36,9 +36,11 @@ import uber.paste.openid.MD5Util
 import org.apache.commons.lang.StringUtils
 import java.util
 import org.hibernate.annotations.IndexColumn
+import org.hibernate.envers.Audited
 
 @Entity
 @Searchable
+//@Audited
 class User extends Struct with UserDetails with java.io.Serializable{
 
   

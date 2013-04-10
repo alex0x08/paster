@@ -3,7 +3,7 @@
 <html lang="en">
     <head>
 
-        <link rel="icon" href="<c:url value='/images/paste.png'/>"/>
+        <link rel="icon" href="<c:url value='/images/ninja.png'/>"/>
 
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 

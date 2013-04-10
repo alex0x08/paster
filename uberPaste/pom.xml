@@ -779,7 +779,7 @@
             <value>20000000</value>
         </systemProperty>
     </systemProperties>
-    <!--webDefaultXml>${project.basedir}/src/main/containers/jetty/webdefault.xml</webDefaultXml-->
+    <webDefaultXml>${project.basedir}/src/main/containers/jetty/webdefault.xml</webDefaultXml>
 
 
 </configuration>

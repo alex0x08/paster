@@ -15,7 +15,8 @@ import javax.servlet.http.HttpServletRequest
  * To change this template use File | Settings | File Templates.
  */
 object VersionController {
-  protected val REVERT_ACTION = "/revert"
+
+  protected final val REVERT_ACTION = "/revert"
 
 }
 
@@ -29,7 +30,7 @@ abstract class VersionController[T <: Struct ] extends GenericEditController[T] 
 
     super.fillEditModel(obj, model,locale)
 
-    System.out.println("__putModel obj id=" + obj.getId())
+    logger.debug("__putModel obj id=" + obj.getId())
 
     if (!obj.isBlank()) {
       model.addAttribute("availableRevisions", manager.getRevisions(obj.getId()))
@@ -37,34 +38,35 @@ abstract class VersionController[T <: Struct ] extends GenericEditController[T] 
     }
   }
 
-      /*
-  @RequestMapping(value = Array(EDIT_ACTION), method = Array(RequestMethod.GET))
-  override def edit(model:Model,
-  @RequestParam(required = true) id:java.lang.Long,
-  @RequestParam(required = false) revision:java.lang.Long, locale:Locale):String = {
 
-    T omodel = revision!=null ? smanager.getRevision(id, revision) : manager.getFull(id);
+  @RequestMapping(value = Array(GenericEditController.EDIT_ACTION), method = Array(RequestMethod.GET))
+  def editWithRevision(model:Model,
+  @RequestParam(required = true) id:java.lang.Long,
+  @RequestParam(required = true) revision:java.lang.Long, locale:Locale):String = {
+
+    val out = viewWithRevision(model,id,revision,locale)
+
+    return if (!out.equals(viewPage)) { out } else { editPage }
+  }
+
+  @RequestMapping(value = Array(GenericEditController.VIEW_ACTION), method = Array(RequestMethod.GET))
+  def viewWithRevision(model:Model,
+                       @RequestParam(required = true) id:java.lang.Long,
+                       @RequestParam(required = true) revision:java.lang.Long, locale:Locale):String = {
+
+    val omodel:T = if (revision!=null) { manager.getRevision(id, revision) } else { manager.getFull(id) }
 
     if (omodel==null) {
       return page404;
     }
 
-    if (!checkAccess(omodel,model)) {
-      return page403;
-    }
+    model.addAttribute(GenericController.MODEL_KEY, omodel)
 
-    model.addAttribute(MODEL_KEY, omodel);
+    fillEditModel(omodel, model,locale)
 
-    putModel(omodel, model);
-
-    return editPage
+    return viewPage
   }
 
-  @RequestMapping(value = EDIT_ACTION+"-no-revision", method = RequestMethod.GET)
-  public String edit(Model model,@RequestParam(required = true) Long id, Locale locale) {
-    return super.edit(model, id, locale);
-  }
-        */
 
   @RequestMapping(value = Array(VersionController.REVERT_ACTION), method = Array(RequestMethod.POST, RequestMethod.GET))
   def revert(@RequestParam(required = false) cancel:String,
@@ -74,8 +76,9 @@ abstract class VersionController[T <: Struct ] extends GenericEditController[T] 
 
     manager.revertToRevision(id, revision)
 
-    return super.editWithId(model, id, locale)
+    editWithId(model, id, locale)
 
+    return viewPage
   }
 
 

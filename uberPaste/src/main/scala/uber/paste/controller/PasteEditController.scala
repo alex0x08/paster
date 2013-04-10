@@ -46,7 +46,7 @@ import org.codehaus.jackson.map.ObjectMapper
 @Controller
 @RequestMapping(Array("/paste"))
 //@SessionAttributes(Array(GenericController.MODEL_KEY))
-class PasteController extends GenericEditController[Paste]   {
+class PasteController extends VersionController[Paste]   {
 
   @Autowired
   val pasteManager:PasteManager = null
@@ -87,8 +87,6 @@ class PasteController extends GenericEditController[Paste]   {
     }
     model.addAttribute("availableCodeTypes", CodeType.list)
     model.addAttribute("availablePriorities", Priority.list)
-
-
 
 
     obj.tagsAsString={

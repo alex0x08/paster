@@ -30,6 +30,7 @@ import org.apache.commons.lang.builder.ToStringStyle
 import org.compass.core.CompassHighlighter
 import java.text.SimpleDateFormat
 import uber.paste.base.Loggered
+import org.hibernate.envers.Audited
 
 object Struct {
   
@@ -41,6 +42,7 @@ object Struct {
 }
 
 @MappedSuperclass
+@Audited
 abstract class Struct extends DBObject with SearchObject with  java.io.Serializable{
 
   @NotNull
