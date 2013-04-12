@@ -16,17 +16,17 @@
 
 package uber.paste.tiles2
 
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import org.apache.tiles.Attribute;
-import org.apache.tiles.AttributeContext;
-import org.apache.tiles.TilesContainer;
-import org.apache.tiles.TilesException;
-import org.springframework.util.StringUtils;
-import org.springframework.web.servlet.support.JstlUtils;
-import org.springframework.web.servlet.support.RequestContext;
-import org.springframework.web.util.WebUtils;
+import javax.servlet.ServletContext
+import javax.servlet.http.HttpServletRequest
+import javax.servlet.http.HttpServletResponse
+import org.apache.tiles.Attribute
+import org.apache.tiles.AttributeContext
+import org.apache.tiles.TilesContainer
+import org.apache.tiles.TilesException
+import org.springframework.util.StringUtils
+import org.springframework.web.servlet.support.JstlUtils
+import org.springframework.web.servlet.support.RequestContext
+import org.springframework.web.util.WebUtils
 import uber.paste.base.Loggered
 
 /**
@@ -34,13 +34,21 @@ import uber.paste.base.Loggered
  * 
  * @author David Winterfeldt
  */
+object TilesIntegrationConstants {
+
+  final val DEFAULT_TEMPLATE:String = "mainTemplate"
+  final val  THIRD_LEVELS:Array[String] = Array[String]("/raw","/integrated")
+
+}
+
+
 class DynamicTilesViewProcessor extends Loggered {
 
    /**
      * Keeps Tiles definition to use once derived.
      */
     private var derivedDefinitionName:String =null
-    private var tilesDefinitionName = "mainTemplate"
+    private var tilesDefinitionName =  TilesIntegrationConstants.DEFAULT_TEMPLATE
     private var tilesBodyAttributeName = "content"
     private var tilesDefinitionDelimiter = "."
 
@@ -84,10 +92,32 @@ class DynamicTilesViewProcessor extends Loggered {
              container:TilesContainer)
              {
 
-              val beanName = if (org.springframework.util.StringUtils.countOccurrencesOf(bName, "/")>1) {
-                 bName.substring(0,org.apache.commons.lang.StringUtils.ordinalIndexOf(bName, "/", 2) )
+               var beanName:String = bName.replaceAll("//","/")
+
+               if (!beanName.startsWith("/")) {
+                 beanName= "/"+beanName
+               }
+
+              beanName = if (org.springframework.util.StringUtils.countOccurrencesOf(bName, "/")>2) {
+
+                if (contains3rdLevel(beanName)) {
+
+                  if (org.springframework.util.StringUtils.countOccurrencesOf(beanName, "/")>3) {
+
+                    logger.debug("found 3rd level, calc beanName="+beanName)
+                    beanName.substring(0,org.apache.commons.lang.StringUtils.ordinalIndexOf(beanName, "/", 4) )
+
+                  } else {
+                    beanName
+                  }
+
+
+                }  else {
+                  beanName.substring(0,org.apache.commons.lang.StringUtils.ordinalIndexOf(beanName, "/", 3) )
+                }
+
                }  else {
-                 bName
+                 beanName
               }
 
         JstlUtils.exposeLocalizationContext(new RequestContext(request, servletContext));
@@ -100,6 +130,16 @@ class DynamicTilesViewProcessor extends Loggered {
 
         endDynamicDefinition(definitionName, beanName, request, response, container);
     }
+
+
+  private def contains3rdLevel(beanName:String):Boolean = {
+    for (s <-TilesIntegrationConstants.THIRD_LEVELS) {
+      if (beanName.contains(s)) {
+        return true
+      }
+    }
+    return false
+  }
 
     /**
      * Starts processing the dynamic Tiles definition by creating a temporary definition for rendering.
@@ -161,23 +201,24 @@ class DynamicTilesViewProcessor extends Loggered {
         // check if url (bean name) is a template definition, then 
         // check for main template
         if (derivedDefinitionName != null) {
-            return derivedDefinitionName;
+            return derivedDefinitionName
         } else if (container.isValidDefinition(beanName, request, response)) {
-            derivedDefinitionName = beanName;
 
-            return beanName;
+            derivedDefinitionName = beanName
+
+            return beanName
         } else {
-            var result:String = null;
+            var result:String = null
 
             val sb = new StringBuilder()
             
             val lastIndex = beanName.lastIndexOf("/")
             
-            var rootDefinition = false;
+            var rootDefinition = false
 
             // if delim, tiles def will start with it
             if (StringUtils.hasLength(tilesDefinitionDelimiter)) {
-                sb.append(tilesDefinitionDelimiter);
+                sb.append(tilesDefinitionDelimiter)
             }
 
             // if no '/', then at context root
@@ -201,9 +242,11 @@ class DynamicTilesViewProcessor extends Loggered {
             sb.append(tilesDefinitionName);
 
             if (container.isValidDefinition(sb.toString(), request, response)) {
-                result = sb.toString();
+                result = sb.toString()
+
             } else if (!rootDefinition) {
-                var root:String = null;
+
+                var root:String = null
 
                 if (StringUtils.hasLength(tilesDefinitionDelimiter)) {
                     root = tilesDefinitionDelimiter;
@@ -211,8 +254,10 @@ class DynamicTilesViewProcessor extends Loggered {
 
                 root += tilesDefinitionName;
 
+              System.out.println("_final "+root)
+
                 if (container.isValidDefinition(root, request, response)) {
-                    result = root;
+                    result = root
                 } else {
                     throw new TilesException("No defintion of found for "
                             + "'" + root + "'"
@@ -220,9 +265,9 @@ class DynamicTilesViewProcessor extends Loggered {
                 }
             }
 
-            derivedDefinitionName = result;
+            derivedDefinitionName = result
 
-            return result;
+            return result
         }
     }
 

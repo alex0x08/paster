@@ -21,22 +21,27 @@
                 <span class="i">]</span>
             </c:if>
             <c:out value="${model.name}" escapeXml="true"/>
+
+            <c:if test="${not empty model.integrationCode}">
+                (integrated with <c:out value="${model.integrationCode}"/>)
+            </c:if>
+
            <span style="font-weight: normal; font-size: 12px;">
 
-                  <tiles:insertDefinition name="common/tags" >
+                  <tiles:insertDefinition name="/common/tags" >
                       <tiles:putAttribute name="model" value="${model}"/>
                       <tiles:putAttribute name="modelName" value="paste"/>
                   </tiles:insertDefinition>
 
 
 
-                <tiles:insertDefinition name="common/owner" >
+                <tiles:insertDefinition name="/common/owner" >
                     <tiles:putAttribute name="model" value="${model}"/>
                     <tiles:putAttribute name="modelName" value="paste"/>
                 </tiles:insertDefinition>
 
 
-               <tiles:insertDefinition name="common/commentCount" >
+               <tiles:insertDefinition name="/common/commentCount" >
                    <tiles:putAttribute name="model" value="${model}"/>
                    <tiles:putAttribute name="modelName" value="paste"/>
                </tiles:insertDefinition>
@@ -115,6 +120,16 @@
 
 </div>
 
+<%--
+<div class="row">
+    <div class="column grid-12">
+
+
+
+
+    </div>
+</div>
+  --%>
 
     <div id="commentsList" style="display:none;">
 

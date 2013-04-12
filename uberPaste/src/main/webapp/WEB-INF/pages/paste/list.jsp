@@ -217,19 +217,19 @@
                         <span  class="pasteTitle"><c:out value="${paste.name}" escapeXml="true"  /></span>
                     </a>
 
-                    <tiles:insertDefinition name="common/tags" >
+                    <tiles:insertDefinition name="/common/tags" >
                         <tiles:putAttribute name="model" value="${paste}"/>
                         <tiles:putAttribute name="modelName" value="paste"/>
                     </tiles:insertDefinition>
 
-                    <tiles:insertDefinition name="common/commentCount" >
+                    <tiles:insertDefinition name="/common/commentCount" >
                         <tiles:putAttribute name="model" value="${paste}"/>
                         <tiles:putAttribute name="modelName" value="paste"/>
                     </tiles:insertDefinition>
 
 
                     <small>
-                        <tiles:insertDefinition name="common/owner" >
+                        <tiles:insertDefinition name="/common/owner" >
                             <tiles:putAttribute name="model" value="${paste}"/>
                             <tiles:putAttribute name="modelName" value="paste"/>
                         </tiles:insertDefinition>
@@ -258,7 +258,7 @@
                 <span  class="pasteTitle"><c:out value="${paste.text}" escapeXml="true"  /></span>
 
                 <small>
-                    <tiles:insertDefinition name="common/owner" >
+                    <tiles:insertDefinition name="/common/owner" >
                         <tiles:putAttribute name="model" value="${paste}"/>
                         <tiles:putAttribute name="modelName" value="paste"/>
                     </tiles:insertDefinition>

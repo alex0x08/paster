@@ -113,7 +113,11 @@
         <c:url var="url" value='/main/paste/save' />
 
 <fieldset class="perk">
-    <legend><span class="i" style="font-size:2em;">/</span><c:out value="${requestScope.title}" escapeXml="true"/></legend>
+    <legend><span class="i" style="font-size:2em;">/</span><c:out value="${requestScope.title}" escapeXml="true"/>
+        <c:if test="${not empty model.integrationCode}">
+             (integrated with <c:out value="${model.integrationCode}"/>)
+        </c:if>
+    </legend>
 
 <form:form action="${url}" cssClass="perk"
            modelAttribute="model"
@@ -130,6 +134,7 @@
 
     <c:choose>
         <c:when test="${model.blank}">
+            <form:hidden path="integrationCode"  />
         </c:when>
         <c:otherwise>
             <form:hidden path="id"  />

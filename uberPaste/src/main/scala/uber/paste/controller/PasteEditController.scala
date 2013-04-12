@@ -42,6 +42,7 @@ import org.apache.commons.lang.{StringEscapeUtils, WordUtils, StringUtils}
 import scala.Array
 import com.google.gson.{JsonParser, GsonBuilder}
 import org.codehaus.jackson.map.ObjectMapper
+import org.springframework.http.HttpStatus
 
 @Controller
 @RequestMapping(Array("/paste"))
@@ -167,8 +168,33 @@ class PasteController extends VersionController[Paste]   {
     return "redirect:/main/paste/" + pasteId + "#line_" + b.getLineNumber
   }
 
+  @RequestMapping(value = Array(GenericListController.INTEGRATED +GenericEditController.NEW_ACTION+ "/{integrationCode:[a-z0-9_]+}"),
+    method = Array(RequestMethod.GET))
+  @ResponseStatus(HttpStatus.CREATED)
+  def createNewIntegrated(model:Model,
+                          @PathVariable("integrationCode") integrationCode:String,
+                          locale:Locale):String= {
+
+    val newPaste =  getNewModelInstance()
+        newPaste.setIntegrationCode(integrationCode)
+
+    fillEditModel(newPaste,model,locale)
+
+    return editPage
+  }
+
+
+  @RequestMapping(value = Array("/save-plain"), method = Array(RequestMethod.POST))
+  override def save(@RequestParam(required = false) cancel:String,
+
+                              @Valid @ModelAttribute(GenericController.MODEL_KEY) b:Paste,
+                              result:BindingResult, model:Model,locale:Locale):String = {
+    return saveIntegrated(cancel,false,b,result,model,locale)
+  }
+
     @RequestMapping(value = Array("/save"), method = Array(RequestMethod.POST))
-   override def save(@RequestParam(required = false) cancel:String,
+   def saveIntegrated(@RequestParam(required = false) cancel:String,
+                      @RequestParam(required = false) integrationMode:Boolean,
            @Valid @ModelAttribute(GenericController.MODEL_KEY) b:Paste,
            result:BindingResult, model:Model,locale:Locale):String = {
 
@@ -178,7 +204,8 @@ class PasteController extends VersionController[Paste]   {
       if (!b.isBlank()) {
         val current = manager.getFull(b.getId());
         b.getComments().addAll(current.getComments())
-        b.setPasteSource(b.getPasteSource())
+        b.setPasteSource(current.getPasteSource())
+        b.setIntegrationCode(current.getIntegrationCode())
       }
 
      val tags =  b.tagsAsString
@@ -203,8 +230,7 @@ class PasteController extends VersionController[Paste]   {
           case CodeType.Plain => {
                b.setText(WordUtils.wrap(b.getText(),80))
           }
-
-            case _ => {}
+          case _ => {}
         }
       }
 
