@@ -228,7 +228,7 @@
         <div class="row">
 
                 <div class="column grid-4">
-                    <a class="listLinkLine" href="<c:url value="/main/paste/${paste.id}"></c:url>" title="Click to view paste vol. ${paste.id}">
+                    <a class="pastePreviewLink" href="<c:url value="/main/paste/${paste.id}"></c:url>" pasteId="${paste.id}" title="Click to view paste vol. ${paste.id}">
                         <img src="${paste.thumbImage}"/>
                     </a>
 
@@ -243,7 +243,7 @@
                         <div class="column grid-10">
 
                             <div class="pasteTitle" style="padding: 1em;">
-                                <a class="listLinkLine" href="<c:url value="/main/paste/${paste.id}"></c:url>" title="Click to view paste vol. ${paste.id}"><c:out value="${paste.title}"  escapeXml="true"/></a>
+                                <a class="listLinkLine" href="<c:url value="/main/paste/${paste.id}"></c:url>" pasteId="${paste.id}" title="Click to view paste vol. ${paste.id}"><c:out value="${paste.title}"  escapeXml="true"/></a>
                             </div>
 
                         </div>
@@ -344,6 +344,9 @@
 
 <script type="text/javascript">
 
+    var viewUrl = '${ctx}/main/paste';
+
+
     window.addEvent('domready', function() {
 
         document.body.getElements('.pasteTitle').each(function(el, i)
@@ -354,5 +357,41 @@
             );
 
         });
+
+        var pastePreview = new LightFace.IFrame(
+                { height:400,
+                  width:800,
+                  fadeDuration: 100,
+                  fadeDelay: 500,
+                 draggable:true , url:  '', title: 'Google!' })
+                .addButton('Close', function() { pastePreview.close(); },true);
+
+
+        document.body.getElements('.pastePreviewLink').each(function(el, i)
+        {
+
+            el.addEvent('mouseover:delay(1000)',function() {
+
+                 var pasteId = el.get('pasteId');
+
+
+                    pastePreview.load(viewUrl+ '/'+pasteId, 'Google!');
+                    pastePreview.open();
+
+
+
+              /*  light = new LightFace.IFrame({ height:400, width:800, url:  viewUrl+ '/'+pasteId, title: 'Google!' })
+                        .addButton('Close', function() { light.close(); },true).open();
+              */
+
+            });
+
+           /* el.addEvent('mouseout',function() {
+              pastePreview.close();
+
+            });*/
+
+        });
+
     });
 </script>

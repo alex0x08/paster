@@ -24,6 +24,7 @@
         <link href="<c:url value="/libs/moodialog/css/MooDialog.css"/>" rel="stylesheet" type="text/css">
         <link href="<c:url value="/libs/growler/growler.css"/>" rel="stylesheet" type="text/css">
 
+        <link href="<c:url value="/libs/lightface/Assets/LightFace.css"/>" rel="stylesheet" type="text/css">
 
         <!-- 
           I am based in LESS.js to render stylesheets. More information can
