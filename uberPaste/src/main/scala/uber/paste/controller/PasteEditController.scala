@@ -23,8 +23,7 @@ import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.servlet.ModelAndView
 import uber.paste.model._
 import org.springframework.beans.factory.annotation.{Value, Autowired}
-import java.io.IOException
-import java.io.File
+import java.io.{FileNotFoundException, IOException, File}
 import javax.servlet.http.HttpServletResponse
 import uber.paste.dao.ConfigDao
 import uber.paste.manager.{CommentManager, PasteManager}
@@ -43,6 +42,8 @@ import scala.Array
 import com.google.gson.{JsonParser, GsonBuilder}
 import org.codehaus.jackson.map.ObjectMapper
 import org.springframework.http.HttpStatus
+import java.net.UnknownHostException
+import com.google.gson.stream.MalformedJsonException
 
 @Controller
 @RequestMapping(Array("/paste"))
@@ -84,7 +85,7 @@ class PasteController extends VersionController[Paste]   {
     if (obj.isBlank) {
       model.addAttribute("title",getResource("paste.new",locale))
     } else {
-      model.addAttribute("title",getResource("paste.edit.title",Array(obj.getId,obj.getName()),locale))
+      model.addAttribute("title",getResource("paste.edit.title",Array(obj.getId,StringEscapeUtils.escapeHtml(obj.getName())),locale))
     }
     model.addAttribute("availableCodeTypes", CodeType.list)
     model.addAttribute("availablePriorities", Priority.list)
@@ -184,7 +185,7 @@ class PasteController extends VersionController[Paste]   {
   }
 
 
-  @RequestMapping(value = Array("/save-plain"), method = Array(RequestMethod.POST))
+ @RequestMapping(value = Array("/save-plain"), method = Array(RequestMethod.POST))
   override def save(@RequestParam(required = false) cancel:String,
 
                               @Valid @ModelAttribute(GenericController.MODEL_KEY) b:Paste,
@@ -206,6 +207,7 @@ class PasteController extends VersionController[Paste]   {
         b.getComments().addAll(current.getComments())
         b.setPasteSource(current.getPasteSource())
         b.setIntegrationCode(current.getIntegrationCode())
+       // b.setThumbImg(current.getThumbImg())
       }
 
      val tags =  b.tagsAsString
@@ -223,9 +225,18 @@ class PasteController extends VersionController[Paste]   {
 
         b.getCodeType() match {
           case CodeType.JavaScript => {
+            try {
 
-            val o = new JsonParser().parse(b.getText()).getAsJsonObject()
-            b.setText(new GsonBuilder().setPrettyPrinting().create().toJson(o))
+              val o = new JsonParser().parse(b.getText()).getAsJsonObject()
+              b.setText(new GsonBuilder().setPrettyPrinting().create().toJson(o))
+
+            } catch{
+              case e @ (_ : MalformedJsonException | _ :Exception) => {
+                      //ignore
+
+                }
+              }
+
           }
           case CodeType.Plain => {
                b.setText(WordUtils.wrap(b.getText(),80))
@@ -239,6 +250,10 @@ class PasteController extends VersionController[Paste]   {
           b.setOwner(getCurrentUser())
         }
       }
+
+
+      logger.debug("__found thumbnail "+b.getThumbImage())
+
 
       logger.debug("__found comments "+b.getComments().size())
 

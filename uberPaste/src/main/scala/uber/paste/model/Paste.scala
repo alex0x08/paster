@@ -28,6 +28,7 @@ import java.util.{Set,HashSet,ArrayList}
 import scala.collection.JavaConversions._
 import org.compass.core.lucene.LuceneEnvironment.Analyzer
 import org.hibernate.envers.{NotAudited, Audited}
+import org.springframework.web.multipart.MultipartFile
 
 /**
  * 
@@ -95,6 +96,13 @@ class Paste extends Struct with java.io.Serializable{
   @Size(min=3, message = "{struct.name.validator}")
   private var text: String = null
 
+  @Lob
+  //@NotNull
+  @NotAudited
+  private var thumbImage:String =null
+
+  //@Transient
+  //private var thumbUpload:MultipartFile = null
 
   //@NotNull
   @Column(length=256)
@@ -172,6 +180,16 @@ class Paste extends Struct with java.io.Serializable{
       priority = prior.getCode()
   }
 
+  @XmlTransient
+  @JsonIgnore
+  def getThumbImage() = thumbImage
+  def setThumbImage(img:String) {thumbImage = img}
+
+ /* @XmlTransient
+  @JsonIgnore
+  def getThumbUpload() = thumbUpload
+  def setThumbUpload(file:MultipartFile) {thumbUpload = file}
+   */
   def isSticked() = sticked
   def setSticked(b:Boolean) {this.sticked=b}
 

@@ -284,11 +284,9 @@
 
      </form:form>
 
-
      </div>
 
-
-
+<img style="border: 2px saddlebrown;" src="${model.thumbImage}"/>
 
 
 <script type="text/javascript" src="<c:url value='/libs/zeroclipboard/ZeroClipboard.js'/>"></script>

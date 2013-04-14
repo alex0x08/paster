@@ -9,11 +9,9 @@
 
         <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE9" />
 
+
+
         <title><tiles:insertAttribute name="pageTitle" /></title>
-     <!--
-        <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold" rel="stylesheet" type="text/css">
-        <link href="http://fonts.googleapis.com/css?family=PT+Sans+Narrow:regular,bold" rel="stylesheet" type="text/css">
-         -->
 
         <!-- 
    The {app.less} file is magic. It loads the perkins configurations,
@@ -69,10 +67,6 @@
             //less.env = "development";
             //less.watch();
         </script>
-
-        <!--[if lt IE 9]>
-          <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-        <![endif]-->
 
 
 

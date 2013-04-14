@@ -98,7 +98,7 @@ class DynamicTilesViewProcessor extends Loggered {
                  beanName= "/"+beanName
                }
 
-              beanName = if (org.springframework.util.StringUtils.countOccurrencesOf(bName, "/")>2) {
+              beanName = if (org.springframework.util.StringUtils.countOccurrencesOf(beanName, "/")>2) {
 
                 if (contains3rdLevel(beanName)) {
 
@@ -113,11 +113,13 @@ class DynamicTilesViewProcessor extends Loggered {
 
 
                 }  else {
-                  beanName.substring(0,org.apache.commons.lang.StringUtils.ordinalIndexOf(beanName, "/", 3) )
+                    beanName.substring(0,org.apache.commons.lang.StringUtils.ordinalIndexOf(beanName, "/", 3) )
+
                 }
 
                }  else {
-                 beanName
+
+                beanName
               }
 
         JstlUtils.exposeLocalizationContext(new RequestContext(request, servletContext));

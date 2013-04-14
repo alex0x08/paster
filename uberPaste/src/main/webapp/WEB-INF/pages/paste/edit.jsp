@@ -4,6 +4,16 @@
 
 <script type="text/javascript" src="<c:url value="/libs/word-count.js"/>"></script>
 <script src="<c:url value='/libs/ace/src-noconflict/ace.js'/>" type="text/javascript" charset="utf-8"></script>
+<script src="<c:url value='/libs/html2canvas.js'/>" type="text/javascript" charset="utf-8"></script>
+<script src="<c:url value='/libs/canvas-to-blob.js'/>" type="text/javascript" charset="utf-8"></script>
+<script src="<c:url value='/libs/base64.js'/>" type="text/javascript" charset="utf-8"></script>
+<script src="<c:url value='/libs/canvas2image.js'/>" type="text/javascript" charset="utf-8"></script>
+<script src="<c:url value='/libs/pixastic/pixastic.core.js'/>" type="text/javascript" charset="utf-8"></script>
+<script src="<c:url value='/libs/pixastic/actions/crop.js'/>" type="text/javascript" charset="utf-8"></script>
+
+
+
+
 
 
 <script type="text/javascript">
@@ -78,6 +88,25 @@
             counter.getCount(text);
         });
 
+        var normalizedCheck = $('normalized');
+
+        normalizedCheck.addEvent('click', function() {
+           // alert(normalizedCheck.get('checked'));
+            if(normalizedCheck.get('checked')) {
+                var col = 80;
+                editor.getSession().setUseWrapMode(true);
+                editor.getSession().setWrapLimitRange(col, col);
+                editor.renderer.setPrintMarginColumn(col);
+
+            } else {
+
+                editor.getSession().setUseWrapMode(false);
+                editor.renderer.setPrintMarginColumn(80);
+            }
+        });
+
+
+
 
 
         $('theme').addEvent('change',function(event) {
@@ -119,7 +148,105 @@
         </c:if>
     </legend>
 
-<form:form action="${url}" cssClass="perk"
+
+    <script type="text/javascript">
+
+        function onSave() {
+
+            var peditor = ace.edit("editor");
+
+            var editForm = document.getElementById('editForm');
+          //  var submitBtn = document.getElementById('submitBtn');
+            var editor = document.getElementById('pasteText');
+            var thumbImg = document.getElementById('thumbImg');
+
+           // $('pastePreview').setStyle('display','');
+
+           // var text = peditor.getSession().getValue();
+
+           // editor.set('html',text);
+
+          //  $('pasteText').set('html',text);
+
+
+            //SyntaxHighlighter.all();
+
+
+           //  SyntaxHighlighter.highlight();
+
+           // SyntaxHighlighter.highlight();
+
+
+            html2canvas($('editor'), {
+                allowTaint: true,
+                taintTest: false,
+
+                onrendered: function(canvas) {
+
+
+                   // document.body.appendChild(canvas);
+
+
+                   var img= Pixastic.process(canvas, "crop", {
+                        rect : {
+                            left : 15, top : 0, width : 800, height : 600
+                        }
+                    });
+
+
+                    img = Canvas2Image.saveAsPNG(img, true, 400, 200);
+
+                    //    alert(img.src);
+
+                    // blob = window.dataURLtoBlob && window.dataURLtoBlob(img);
+
+                    //$$('#thumbImg').value=img;
+
+                    document.body.appendChild(img);
+
+                   // img= img.toDataURL("image/png");
+
+                    thumbImg.set('value',img.src);
+
+                    // alert( $$('#thumbImg').get('value'));
+
+
+                     $('editForm').submit();
+
+
+                    // dataURL = dataURL.replace('/^data:image/(png|jpg);base64',/, "");
+                    //window.open(img);
+
+                    // document.body.appendChild(canvas);
+
+                    /*    var img = Canvas2Image.saveAsPNG(canvas, true, null, null);
+
+                     blob = window.dataURLtoBlob && window.dataURLtoBlob(img.src);
+
+                     var formData = $('editForm');
+                     //new FormData();
+                     formData.append('thumbUpload', blob, 'thumb.png');
+
+                     */
+
+
+                }
+            });
+        }
+
+        window.addEvent('domready', function(){
+
+            $('submitBtn').addEvent('click',function(){
+                event.preventDefault();
+                onSave();
+            });
+
+
+        });
+
+    </script>
+
+<form:form id="editForm" action="${url}" cssClass="perk"
            modelAttribute="model"
            method="POST" >
 
@@ -132,7 +259,10 @@
     <div class="row">
         <div class="column grid-6">
 
-    <c:choose>
+
+            <form:input id="thumbImg" path="thumbImage" cssStyle="display:none;"  />
+
+            <c:choose>
         <c:when test="${model.blank}">
             <form:hidden path="integrationCode"  />
         </c:when>
@@ -157,7 +287,7 @@
 
     <div class="column grid-2" >
            <form:label path="normalized" >Normalize</form:label>
-            <form:checkbox path="normalized" style="display:inline;" title="Normalize paste"/>
+            <form:checkbox id="normalized" path="normalized" style="display:inline;" title="Normalize paste"/>
     </div>
     </div>
 
@@ -174,7 +304,7 @@
 
 
         <form:label path="codeType">Hightlight like:</form:label>
-    <form:select path="codeType" multiple="false" id="ptype">
+        <form:select path="codeType" multiple="false" id="ptype">
                     
                     <c:forEach items="${availableCodeTypes}" var="codeType">
 				    <form:option value="${codeType.code}" editCode="${codeType.editType}" >
@@ -245,14 +375,13 @@
         </div>
     </div>
 
-    <div class="row">
+    <div  class="row">
         <div class="column grid-16">
 
         <form:label path="text"><fmt:message key="paste.text"/>:</form:label>
     <form:textarea path="text" cssErrorClass="error" cssClass="notice" cssStyle="display:none;"
                    name="text" id="ptext" placeHolder="paste text"
                    cols="120" rows="10" />
-
             <pre id="editor" style="height: 50em;">
 
             </pre>
@@ -265,9 +394,10 @@
 
                 <fmt:message var="submit_button_text" key="button.save"/>
 
-                <form:button name="submit" id="submitBtn"   >
-                    <c:out value="${submit_button_text}"/>
-                </form:button>
+                <input type="submit" name="submit_btn"
+                       id="submitBtn"
+                       value=" <c:out value='${submit_button_text}'/>"/>
+
 
                 <a href="<c:url value="/main/paste/list"/>"><fmt:message key='button.cancel'/></a>
 
@@ -303,3 +433,73 @@
      </fieldset>
 
 
+<%--
+
+<div  class="row" style=" ">
+    <div id="pastePreview" class="column grid-12" >
+        <pre id="pasteText" class="brush: plain;toolbar: false; auto-links:false;" style=" overflow-y: hidden;" > </pre>
+
+    </div>
+</div>
+
+<div  id="lineNumber"/>
+
+
+<script type="text/javascript">
+
+     SyntaxHighlighter.config.tagName = "pre";
+
+
+     window.addEvent('domready', function(){
+
+
+     SyntaxHighlighter.autoloader.apply(null, path(
+             'applescript            @shBrushAppleScript.js',
+             'actionscript3 as3      @shBrushAS3.js',
+             'bash shell             @shBrushBash.js',
+             'coldfusion cf          @shBrushColdFusion.js',
+             'cpp c                  @shBrushCpp.js',
+             'c# c-sharp csharp      @shBrushCSharp.js',
+             'css                    @shBrushCss.js',
+             'delphi pascal          @shBrushDelphi.js',
+             'diff patch pas         @shBrushDiff.js',
+             'erl erlang             @shBrushErlang.js',
+             'groovy                 @shBrushGroovy.js',
+             'java                   @shBrushJava.js',
+             'jfx javafx             @shBrushJavaFX.js',
+             'js jscript javascript  @shBrushJScript.js',
+             'perl pl                @shBrushPerl.js',
+             'php                    @shBrushPhp.js',
+             'text plain             @shBrushPlain.js',
+             'py python              @shBrushPython.js',
+             'ruby rails ror rb      @shBrushRuby.js',
+             'sass scss              @shBrushSass.js',
+             'scala                  @shBrushScala.js',
+             'sql                    @shBrushSql.js',
+             'vb vbnet               @shBrushVb.js',
+             'xml xhtml xslt html    @shBrushXml.js'
+     ));
+
+
+     });
+
+
+     function path()
+{
+var args = arguments,
+result = [];
+
+
+for(var i = 0; i < args.length; i++)
+    result.push(args[i].replace('@', '<c:url value="/libs/syntax-highlight/scripts/"/>'));
+
+//alert(result);
+return result
+};
+
+
+
+</script>
+
+
+      --%>
