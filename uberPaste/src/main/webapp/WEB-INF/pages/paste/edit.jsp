@@ -136,13 +136,11 @@
     });*/
 </script>
 
-
-
-
         <c:url var="url" value='/main/paste/save' />
 
 <fieldset class="perk">
-    <legend><span class="i" style="font-size:2em;">/</span><c:out value="${requestScope.title}" escapeXml="true"/>
+    <legend><span class="i" style="font-size:2em;">/</span>
+        ${requestScope.title}
         <c:if test="${not empty model.integrationCode}">
              (integrated with <c:out value="${model.integrationCode}"/>)
         </c:if>

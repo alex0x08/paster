@@ -370,26 +370,23 @@
         document.body.getElements('.pastePreviewLink').each(function(el, i)
         {
 
-            el.addEvent('mouseover:delay(1000)',function() {
+         /*   el.addEvent('mouseover',function() {
 
                  var pasteId = el.get('pasteId');
 
-
+                setTimeout(function() {
                     pastePreview.load(viewUrl+ '/'+pasteId, 'Google!');
                     pastePreview.open();
 
-
-
-              /*  light = new LightFace.IFrame({ height:400, width:800, url:  viewUrl+ '/'+pasteId, title: 'Google!' })
-                        .addButton('Close', function() { light.close(); },true).open();
-              */
+                }, 1000);
 
             });
+          */
 
-           /* el.addEvent('mouseout',function() {
-              pastePreview.close();
+            /* el.addEvent('mouseout',function() {
+               pastePreview.close();
 
-            });*/
+             });*/
 
         });
 

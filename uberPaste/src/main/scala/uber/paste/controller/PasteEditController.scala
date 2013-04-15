@@ -85,7 +85,7 @@ class PasteController extends VersionController[Paste]   {
     if (obj.isBlank) {
       model.addAttribute("title",getResource("paste.new",locale))
     } else {
-      model.addAttribute("title",getResource("paste.edit.title",Array(obj.getId,StringEscapeUtils.escapeHtml(obj.getName())),locale))
+      model.addAttribute("title",StringEscapeUtils.escapeHtml(getResource("paste.edit.title",Array(obj.getId,obj.getName()),locale)))
     }
     model.addAttribute("availableCodeTypes", CodeType.list)
     model.addAttribute("availablePriorities", Priority.list)
