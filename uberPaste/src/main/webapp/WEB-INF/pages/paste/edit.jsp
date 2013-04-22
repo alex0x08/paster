@@ -62,7 +62,6 @@
                 block  = text.substring(0, max_length-2)+'..';
             }
 
-
             document.getElementById("pname").set('value',block);
 
             //e.stop();

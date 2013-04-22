@@ -98,6 +98,7 @@ class Paste extends Struct with java.io.Serializable{
 
   @Lob
   //@NotNull
+  @XmlTransient
   @NotAudited
   private var thumbImage:String =null
 
@@ -180,7 +181,6 @@ class Paste extends Struct with java.io.Serializable{
       priority = prior.getCode()
   }
 
-  @XmlTransient
   @JsonIgnore
   def getThumbImage() = thumbImage
   def setThumbImage(img:String) {thumbImage = img}

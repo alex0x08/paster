@@ -204,69 +204,112 @@
 
                         <c:set var="priorTitle"><fmt:message key="${paste.priority.name}"/></c:set>
 
-                        <div>
-                            <c:if test="${paste.sticked}">
-                                <span class="i" title="Paste sticked">]</span>
-                            </c:if>
+                        <div class="row">
 
-                            <a class="i ${paste.priority.cssClass}" style="font-size:2em;"
-                               title="<c:out value="${paste.id}"/>: ${priorTitle}. Click to search with same priority."
-                            href="<c:url value='/main/paste/list/search?query=priority:${paste.priority.code}'/>">/</a>
+                            <div class="column grid-16">
 
+                                <c:if test="${paste.sticked}">
+                                    <span class="i" title="Paste sticked">]</span>
+                                </c:if>
 
-                            <a href="<c:url value='/main/paste/${paste.id}'></c:url>" title="Click to view paste vol. ${paste.id}">
-                            <span  class="pasteTitle"><c:out value="${paste.name}" escapeXml="true"  /></span>
-                            </a>
-
-                            <tiles:insertDefinition name="/common/tags" >
-                                <tiles:putAttribute name="model" value="${paste}"/>
-                                <tiles:putAttribute name="modelName" value="paste"/>
-                            </tiles:insertDefinition>
-
-                            <tiles:insertDefinition name="/common/commentCount" >
-                                <tiles:putAttribute name="model" value="${paste}"/>
-                                <tiles:putAttribute name="modelName" value="paste"/>
-                            </tiles:insertDefinition>
+                                <a class="i ${paste.priority.cssClass}" style="font-size:2em;"
+                                   title="<c:out value="${paste.id}"/>: ${priorTitle}. Click to search with same priority."
+                                   href="<c:url value='/main/paste/list/search?query=priority:${paste.priority.code}'/>">/</a>
 
 
-                            <small>
-                                <tiles:insertDefinition name="/common/owner" >
-                                    <tiles:putAttribute name="model" value="${paste}"/>
-                                    <tiles:putAttribute name="modelName" value="paste"/>
-                                </tiles:insertDefinition>
+
+                                <a href="<c:url value="/main/paste/${paste.id}"></c:url>" title="Click to view paste vol. ${paste.id}">
+                                    <span  class="pasteTitle"><c:out value="${paste.name}" escapeXml="true"  /></span>
+                                </a>
 
 
-                                ,<kc:prettyTime date="${paste.lastModified}" locale="${pageContext.response.locale}"/>
-                            </small>
-
-                            <sec:authorize ifAnyGranted="ROLE_ADMIN">
-                                |  <a href="<c:url value='/main/paste/delete'><c:param name='id' value='${paste.id}'/> </c:url>"><fmt:message key='button.delete'/></a>
-                            </sec:authorize>
-
-                            <div class="pasteTitle" style="padding: 1em;">
-                                <a class="listLinkLine" href="<c:url value='/main/paste/${paste.id}'></c:url>" title="Click to view paste vol. ${paste.id}"><c:out value="${paste.title}"  escapeXml="true"/></a>
                             </div>
+                        </div>
+
+                        <div class="row">
+
+                            <div class="column grid-4">
+                                <a class="pastePreviewLink" href="<c:url value="/main/paste/${paste.id}"></c:url>" pasteId="${paste.id}" title="Click to view paste vol. ${paste.id}">
+
+                                    <c:choose>
+                                        <c:when test="${not empty paste.thumbImage}">
+                                            <img src="${paste.thumbImage}"/>
+
+                                        </c:when>
+                                        <c:otherwise>
+                                            <img src="<c:url value='/images/nodata.png'/>"/>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </a>
+
+
+
+                            </div>
+
+                            <div class="column grid-10">
+
+                                <div class="row">
+
+                                    <div class="column grid-10">
+
+                                        <div class="pasteTitle" style="padding: 1em;">
+                                            <a class="listLinkLine" href="<c:url value="/main/paste/${paste.id}"></c:url>" pasteId="${paste.id}" title="Click to view paste vol. ${paste.id}"><c:out value="${paste.title}"  escapeXml="true"/></a>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="row">
+
+
+                                    <div class="column grid-10">
+
+                                        <tiles:insertDefinition name="/common/tags" >
+                                            <tiles:putAttribute name="model" value="${paste}"/>
+                                            <tiles:putAttribute name="modelName" value="paste"/>
+                                        </tiles:insertDefinition>
+
+                                        <tiles:insertDefinition name="/common/commentCount" >
+                                            <tiles:putAttribute name="model" value="${paste}"/>
+                                            <tiles:putAttribute name="modelName" value="paste"/>
+                                        </tiles:insertDefinition>
+
+
+                                        <small>
+                                            <tiles:insertDefinition name="/common/owner" >
+                                                <tiles:putAttribute name="model" value="${paste}"/>
+                                                <tiles:putAttribute name="modelName" value="paste"/>
+                                            </tiles:insertDefinition>
+
+
+                                            ,<kc:prettyTime date="${paste.lastModified}" locale="${pageContext.response.locale}"/>
+                                        </small>
+
+                                        <sec:authorize ifAnyGranted="ROLE_ADMIN">
+                                            |  <a href="<c:url value='/main/paste/delete'><c:param name="id" value="${paste.id}"/> </c:url>"><fmt:message key='button.delete'/></a>
+                                        </sec:authorize>
+
+
+
+                                    </div>
+
+                                </div>
+
+
+
+
+
+
+                            </div>
+
+
+
 
                         </div>
 
-                    </c:when>
-                    <c:when test="${paste['class'].name eq 'uber.paste.model.Comment'}">
-
-                        <a href="<c:url value='/main/paste/${paste.id}'></c:url>" title="Click to view paste vol. ${paste.id}">
-                        <span  class="pasteTitle"><c:out value="${paste.text}" escapeXml="true"  /></span>
-                        </a>
-
-                        <span  class="pasteTitle"><c:out value="${paste.text}" escapeXml="true"  /></span>
-
-                        <small>
-                            <tiles:insertDefinition name="/common/owner" >
-                                <tiles:putAttribute name="model" value="${paste}"/>
-                                <tiles:putAttribute name="modelName" value="paste"/>
-                            </tiles:insertDefinition>
 
 
-                            ,<kc:prettyTime date="${paste.lastModified}" locale="${pageContext.response.locale}"/>
-                        </small>
 
                     </c:when>
                 </c:choose>

@@ -229,7 +229,16 @@
 
                 <div class="column grid-4">
                     <a class="pastePreviewLink" href="<c:url value="/main/paste/${paste.id}"></c:url>" pasteId="${paste.id}" title="Click to view paste vol. ${paste.id}">
-                        <img src="${paste.thumbImage}"/>
+
+                       <c:choose>
+                           <c:when test="${not empty paste.thumbImage}">
+                               <img src="${paste.thumbImage}"/>
+
+                           </c:when>
+                           <c:otherwise>
+                               <img src="<c:url value='/images/nodata.png'/>"/>
+                           </c:otherwise>
+                       </c:choose>
                     </a>
 
 
