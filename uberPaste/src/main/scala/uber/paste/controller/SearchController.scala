@@ -98,7 +98,7 @@ abstract class SearchController[T <: Struct,QV <: Query ] extends GenericListCon
 
       for (r<-getAvailableResults()) {
 
-       var rout =  processPageListHolder(request,locale,model,page,NPpage,pageSize,new SourceCallback[T]() {
+       val rout =  processPageListHolder(request,locale,model,page,NPpage,pageSize,new SourceCallback[T]() {
 
          override def invokeCreate():PagedListHolder[T]= {
            try {
