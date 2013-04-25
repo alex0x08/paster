@@ -3,14 +3,15 @@
 <html lang="en">
     <head>
 
-        <link rel="icon" href="<c:url value='/images/paste.png'/>"/>
+        <link rel="icon" href="<c:url value='/images/ninja.png'/>"/>
 
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
-        <title><tiles:insertAttribute name="pageTitle" /></title>
+        <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE9" />
 
-        <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold" rel="stylesheet" type="text/css">
-        <link href="http://fonts.googleapis.com/css?family=PT+Sans+Narrow:regular,bold" rel="stylesheet" type="text/css">
+
+
+        <title><tiles:insertAttribute name="pageTitle" /></title>
 
         <!-- 
    The {app.less} file is magic. It loads the perkins configurations,
@@ -23,6 +24,7 @@
         <link href="<c:url value="/libs/moodialog/css/MooDialog.css"/>" rel="stylesheet" type="text/css">
         <link href="<c:url value="/libs/growler/growler.css"/>" rel="stylesheet" type="text/css">
 
+        <link href="<c:url value="/libs/lightface/Assets/LightFace.css"/>" rel="stylesheet" type="text/css">
 
         <!-- 
           I am based in LESS.js to render stylesheets. More information can
@@ -66,10 +68,6 @@
             //less.env = "development";
             //less.watch();
         </script>
-
-        <!--[if lt IE 9]>
-          <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-        <![endif]-->
 
 
 

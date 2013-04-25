@@ -2,6 +2,7 @@
 
 
 
+
 <div class="row">
     <div class="column grid-1" style="text-align:right;padding-right: 0;margin-top: -1em;" >
         <a class="mainLinkLine" href="<c:url value="/main/paste/new"></c:url>" title="<fmt:message key='paste.create.new'/>"><span class="i" style="font-size: 4em;">/</span></a>
@@ -20,22 +21,27 @@
                 <span class="i">]</span>
             </c:if>
             <c:out value="${model.name}" escapeXml="true"/>
+
+            <c:if test="${not empty model.integrationCode}">
+                (integrated with <c:out value="${model.integrationCode}"/>)
+            </c:if>
+
            <span style="font-weight: normal; font-size: 12px;">
 
-                  <tiles:insertDefinition name="common/tags" >
+                  <tiles:insertDefinition name="/common/tags" >
                       <tiles:putAttribute name="model" value="${model}"/>
                       <tiles:putAttribute name="modelName" value="paste"/>
                   </tiles:insertDefinition>
 
 
 
-                <tiles:insertDefinition name="common/owner" >
+                <tiles:insertDefinition name="/common/owner" >
                     <tiles:putAttribute name="model" value="${model}"/>
                     <tiles:putAttribute name="modelName" value="paste"/>
                 </tiles:insertDefinition>
 
 
-               <tiles:insertDefinition name="common/commentCount" >
+               <tiles:insertDefinition name="/common/commentCount" >
                    <tiles:putAttribute name="model" value="${model}"/>
                    <tiles:putAttribute name="modelName" value="paste"/>
                </tiles:insertDefinition>
@@ -55,8 +61,11 @@
         </h4>
 
 
+        <c:if test="${availablePrev}">
+            <a href="<c:url value="/main/paste/${model.id-1}"/>" title="Previous paste">&#8592;</a>
+        </c:if>
 
-<a href="<c:url value="/main/paste/${model.id-1}"/>" title="Previous paste">&#8592;</a>
+
         <a href="<c:url value="/main/paste/list"/>" title="Go back to list">list</a> |
         <a href="<c:url value="/main/paste/edit/${model.id}"/>" title="Edit paste">edit</a> |
         <a href="<c:url value="/main/paste/xml/${model.id}"/>" title="View as XML">xml</a> |
@@ -65,31 +74,69 @@
 
         <a id="ctrlc_link" data-clipboard-target="pasteTextPlain" href="javascript:void(0);" title="Copy to clipboard" ><img src="<c:url value='/images/ctrlc.png'/>"/></a> |
 
-        <a href="<c:url value="/main/paste/${model.id+1}"/>" title="Next paste">&#8594;</a>
+        <c:if test="${availableNext}">
+            <a href="<c:url value="/main/paste/${model.id+1}"/>" title="Next paste">&#8594;</a>
+        </c:if>
 
         <br/>
 
   <div style="padding-left: 2em;">
+
       <span style="vertical-align: top;font-size: larger;" class="i" title="Comments">C</span>
       <a href="javascript:void(0);" onclick="SyntaxHighlighter.toggleComments(0);" title="hide comments">hide</a>|
       <a href="javascript:void(0);" onclick="SyntaxHighlighter.toggleComments(1);" title="show comments">show</a>
 
+      <c:if test="${!model.blank and not empty availableRevisions}">
+
+          <jsp:include
+                  page="/WEB-INF/pages/common/revisions.jsp">
+              <jsp:param name="modelName" value="paste" />
+          </jsp:include>
+
+
+      </c:if>
+
   </div>
 
-            <div>
+<div class="row">
+<div class="column grid-12">
+    <pre id="pasteText" class="brush: ${model.codeType.code};toolbar: false; auto-links:false;" style=" overflow-y: hidden;" ><c:out value="${model.text}" escapeXml="true" /></pre>
+    <code id="pasteTextPlain" style="display:none;"><c:out value="${model.text}" escapeXml="true" /></code>
 
-                <pre id="pasteText" class="brush: ${model.codeType.code};toolbar: false; auto-links:false;" ><c:out value="${model.text}" escapeXml="true" /></pre>
-                <code id="pasteTextPlain" style="display:none;"><c:out value="${model.text}" escapeXml="true" /></code>
-            </div>
+</div>
 
-    <div id="commentsList">
+<div class="column grid-4">
+
+    <c:if test="${shareIntegration}">
+
+        <iframe id="shareFrame" src="${shareUrl}/main/file/integrated/list/paste_${model.id}"
+                scrolling="auto" frameborder="0"
+                style="width:340px; "  allowTransparency="true"   >
+
+        </iframe>
+
+
+    </c:if>
+
+</div>
+
+<%--
+<div class="row">
+    <div class="column grid-12">
+
+
+
+
+    </div>
+</div>
+  --%>
+
+    <div id="commentsList" style="display:none;">
 
         <c:forEach var="comment" items="${model.comments}" varStatus="loopStatus">
 
             <div id="numSpace_l${comment.lineNumber}" class="listSpace" >
             </div>
-
-
 
             <div id="comment_l${comment.id}" lineNumber="${comment.lineNumber}"  parentCommentId="${comment.parentId}" class="commentBlock" >
                 <div class="commentInner">
@@ -237,20 +284,32 @@
 
      </form:form>
 
-
      </div>
 
-
-
- </div>
-
+<img style="border: 2px saddlebrown;" src="${model.thumbImage}"/>
 
 
 <script type="text/javascript" src="<c:url value='/libs/zeroclipboard/ZeroClipboard.js'/>"></script>
 
-                       <script type="text/javascript">
 
-window.addEvent('domready', function() {
+<c:if test="${shareIntegration}">
+
+<script type="text/javascript">
+    window.addEvent('domready', function() {
+        var sch = document.body.scrollHeight;
+        if (sch < 1024)  {
+            $('shareFrame').setStyle('height','1024px');
+        } else {
+            $('shareFrame').setStyle('height', document.body.scrollHeight+'px');
+        }
+    } );
+    </script>
+</c:if>
+
+                    <script type="text/javascript">
+
+                           window.addEvent('domready', function() {
+
 
 /*    document.addEvent('keydown', function(event){
         // the passed event parameter is already an instance of the Event type.

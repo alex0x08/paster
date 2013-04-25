@@ -27,6 +27,8 @@ import uber.paste.base.Loggered
 import java.util.{Set,HashSet,ArrayList}
 import scala.collection.JavaConversions._
 import org.compass.core.lucene.LuceneEnvironment.Analyzer
+import org.hibernate.envers.{NotAudited, Audited}
+import org.springframework.web.multipart.MultipartFile
 
 /**
  * 
@@ -83,15 +85,25 @@ class PasteListener extends Loggered{
 @Searchable
 @XmlRootElement(name="paste")
 @EntityListeners(Array(classOf[PasteListener]))
+@Audited
 class Paste extends Struct with java.io.Serializable{
 
   
   @Lob
   @NotNull
-  //@SearchableProperty(analyzer = )
+  @SearchableProperty
+  //(analyzer = )
   @Size(min=3, message = "{struct.name.validator}")
   private var text: String = null
 
+  @Lob
+  //@NotNull
+  @XmlTransient
+  @NotAudited
+  private var thumbImage:String =null
+
+  //@Transient
+  //private var thumbUpload:MultipartFile = null
 
   //@NotNull
   @Column(length=256)
@@ -100,13 +112,17 @@ class Paste extends Struct with java.io.Serializable{
 
   @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "owner_id")
+  @NotAudited
   private var owner:User = null
   
   @NotNull
   private var codeType:String = CodeType.Plain.getCode
 
+  private var integrationCode:String = null
+
   @ElementCollection(fetch = FetchType.EAGER)
   @SearchableProperty
+  @NotAudited
   private var tags:Set[String] = new HashSet[String]()
 
   @NotNull
@@ -119,6 +135,7 @@ class Paste extends Struct with java.io.Serializable{
   private var normalized:Boolean = true
 
   @OneToMany(fetch = FetchType.LAZY,cascade = Array(CascadeType.PERSIST,CascadeType.MERGE,CascadeType.REMOVE),orphanRemoval = true)
+  @NotAudited
   private var comments:java.util.List[Comment] = new ArrayList[Comment]()
 
   @SearchableProperty
@@ -152,6 +169,9 @@ class Paste extends Struct with java.io.Serializable{
   def getOwner(): User = owner
   def setOwner(u:User) {owner = u}
 
+  def getIntegrationCode(): String = integrationCode
+  def setIntegrationCode(code:String) { integrationCode = code}
+
   def getTags(): Set[String] = tags
 
 
@@ -161,6 +181,15 @@ class Paste extends Struct with java.io.Serializable{
       priority = prior.getCode()
   }
 
+  @JsonIgnore
+  def getThumbImage() = thumbImage
+  def setThumbImage(img:String) {thumbImage = img}
+
+ /* @XmlTransient
+  @JsonIgnore
+  def getThumbUpload() = thumbUpload
+  def setThumbUpload(file:MultipartFile) {thumbUpload = file}
+   */
   def isSticked() = sticked
   def setSticked(b:Boolean) {this.sticked=b}
 

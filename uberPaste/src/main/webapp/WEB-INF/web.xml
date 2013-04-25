@@ -101,11 +101,24 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
         <filter-class>com.googlecode.webutilities.filters.YUIMinFilter</filter-class>
  </filter>
 
+    <filter>
+        <filter-name>crossSecurityFilter</filter-name>
+        <filter-class>uber.paste.web.CrossOriginResourceFilter</filter-class>
 
+    </filter>
 
 
  <!-- Mapping -->
- <filter-mapping>
+
+    <filter-mapping>
+        <filter-name>crossSecurityFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+        <!--url-pattern>*.json</url-pattern-->
+        <!--url-pattern>*.css</url-pattern-->
+    </filter-mapping>
+
+
+    <filter-mapping>
    <filter-name>responseCacheFilter</filter-name>
    <url-pattern>*.js</url-pattern>
    <!--url-pattern>*.json</url-pattern-->

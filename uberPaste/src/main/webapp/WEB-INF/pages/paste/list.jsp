@@ -191,7 +191,7 @@
 
 
 <div class="row">
-    <div class="column grid-14">
+    <div class="column grid-16">
 
 
     <div id="pastas">
@@ -203,48 +203,107 @@
 
                 <c:set var="priorTitle"><fmt:message key="${paste.priority.name}"/></c:set>
 
-                <div>
-                    <c:if test="${paste.sticked}">
-                        <span class="i" title="Paste sticked">]</span>
-                    </c:if>
+        <div class="row">
 
-                    <a class="i ${paste.priority.cssClass}" style="font-size:2em;"
-                       title="<c:out value="${paste.id}"/>: ${priorTitle}. Click to search with same priority."
-                       href="<c:url value='/main/paste/list/search?query=priority:${paste.priority.code}'/>">/</a>
+            <div class="column grid-16">
+
+                <c:if test="${paste.sticked}">
+                    <span class="i" title="Paste sticked">]</span>
+                </c:if>
+
+                <a class="i ${paste.priority.cssClass}" style="font-size:2em;"
+                   title="<c:out value="${paste.id}"/>: ${priorTitle}. Click to search with same priority."
+                   href="<c:url value='/main/paste/list/search?query=priority:${paste.priority.code}'/>">/</a>
 
 
-                    <a href="<c:url value="/main/paste/${paste.id}"></c:url>" title="Click to view paste vol. ${paste.id}">
-                        <span  class="pasteTitle"><c:out value="${paste.name}" escapeXml="true"  /></span>
+
+                <a href="<c:url value="/main/paste/${paste.id}"></c:url>" title="Click to view paste vol. ${paste.id}">
+                    <span  class="pasteTitle"><c:out value="${paste.name}" escapeXml="true"  /></span>
+                </a>
+
+
+            </div>
+        </div>
+
+        <div class="row">
+
+                <div class="column grid-4">
+                    <a class="pastePreviewLink" href="<c:url value="/main/paste/${paste.id}"></c:url>" pasteId="${paste.id}" title="Click to view paste vol. ${paste.id}">
+
+                       <c:choose>
+                           <c:when test="${not empty paste.thumbImage}">
+                               <img src="${paste.thumbImage}"/>
+
+                           </c:when>
+                           <c:otherwise>
+                               <img src="<c:url value='/images/nodata.png'/>"/>
+                           </c:otherwise>
+                       </c:choose>
                     </a>
 
-                    <tiles:insertDefinition name="common/tags" >
-                        <tiles:putAttribute name="model" value="${paste}"/>
-                        <tiles:putAttribute name="modelName" value="paste"/>
-                    </tiles:insertDefinition>
-
-                    <tiles:insertDefinition name="common/commentCount" >
-                        <tiles:putAttribute name="model" value="${paste}"/>
-                        <tiles:putAttribute name="modelName" value="paste"/>
-                    </tiles:insertDefinition>
 
 
-                    <small>
-                        <tiles:insertDefinition name="common/owner" >
-                            <tiles:putAttribute name="model" value="${paste}"/>
-                            <tiles:putAttribute name="modelName" value="paste"/>
-                        </tiles:insertDefinition>
+                </div>
+
+                <div class="column grid-10">
+
+                    <div class="row">
+
+                        <div class="column grid-10">
+
+                            <div class="pasteTitle" style="padding: 1em;">
+                                <a class="listLinkLine" href="<c:url value="/main/paste/${paste.id}"></c:url>" pasteId="${paste.id}" title="Click to view paste vol. ${paste.id}"><c:out value="${paste.title}"  escapeXml="true"/></a>
+                            </div>
+
+                        </div>
+
+                        </div>
+
+                    <div class="row">
 
 
-                        ,<kc:prettyTime date="${paste.lastModified}" locale="${pageContext.response.locale}"/>
-                    </small>
+                    <div class="column grid-10">
 
-                    <sec:authorize ifAnyGranted="ROLE_ADMIN">
-                        |  <a href="<c:url value='/main/paste/delete'><c:param name="id" value="${paste.id}"/> </c:url>"><fmt:message key='button.delete'/></a>
-                    </sec:authorize>
+                            <tiles:insertDefinition name="/common/tags" >
+                                <tiles:putAttribute name="model" value="${paste}"/>
+                                <tiles:putAttribute name="modelName" value="paste"/>
+                            </tiles:insertDefinition>
 
-                    <div class="pasteTitle" style="padding: 1em;">
-                        <a class="listLinkLine" href="<c:url value="/main/paste/${paste.id}"></c:url>" title="Click to view paste vol. ${paste.id}"><c:out value="${paste.title}"  escapeXml="true"/></a>
+                            <tiles:insertDefinition name="/common/commentCount" >
+                                <tiles:putAttribute name="model" value="${paste}"/>
+                                <tiles:putAttribute name="modelName" value="paste"/>
+                            </tiles:insertDefinition>
+
+
+                            <small>
+                                <tiles:insertDefinition name="/common/owner" >
+                                    <tiles:putAttribute name="model" value="${paste}"/>
+                                    <tiles:putAttribute name="modelName" value="paste"/>
+                                </tiles:insertDefinition>
+
+
+                                ,<kc:prettyTime date="${paste.lastModified}" locale="${pageContext.response.locale}"/>
+                            </small>
+
+                            <sec:authorize ifAnyGranted="ROLE_ADMIN">
+                                |  <a href="<c:url value='/main/paste/delete'><c:param name="id" value="${paste.id}"/> </c:url>"><fmt:message key='button.delete'/></a>
+                            </sec:authorize>
+
+
+
+                        </div>
+
                     </div>
+
+
+
+
+
+
+                </div>
+
+
+
 
                 </div>
 
@@ -258,7 +317,7 @@
                 <span  class="pasteTitle"><c:out value="${paste.text}" escapeXml="true"  /></span>
 
                 <small>
-                    <tiles:insertDefinition name="common/owner" >
+                    <tiles:insertDefinition name="/common/owner" >
                         <tiles:putAttribute name="model" value="${paste}"/>
                         <tiles:putAttribute name="modelName" value="paste"/>
                     </tiles:insertDefinition>
@@ -288,7 +347,14 @@
 </div>
 
 
+<script src="<c:url value='/libs/lightface/Source/LightFace.js'/>" type="text/javascript" charset="utf-8"></script>
+<script src="<c:url value='/libs/lightface/Source/LightFace.IFrame.js'/>" type="text/javascript" charset="utf-8"></script>
+
+
 <script type="text/javascript">
+
+    var viewUrl = '${ctx}/main/paste';
+
 
     window.addEvent('domready', function() {
 
@@ -299,10 +365,39 @@
                     'html', el.get('html').replace(/\[result[^\]]*\]([\s\S]*?)\[\/result\]/gi,"<span style='background-color: #e3e658; '>$1</span>")
             );
 
-
-           // el.set("html", 'FUCK');
-          //  alert(el.text);
-            // do something
         });
+
+        var pastePreview = new LightFace.IFrame(
+                { height:400,
+                  width:800,
+                  fadeDuration: 100,
+                  fadeDelay: 500,
+                 draggable:true , url:  '', title: 'Google!' })
+                .addButton('Close', function() { pastePreview.close(); },true);
+
+
+        document.body.getElements('.pastePreviewLink').each(function(el, i)
+        {
+
+         /*   el.addEvent('mouseover',function() {
+
+                 var pasteId = el.get('pasteId');
+
+                setTimeout(function() {
+                    pastePreview.load(viewUrl+ '/'+pasteId, 'Google!');
+                    pastePreview.open();
+
+                }, 1000);
+
+            });
+          */
+
+            /* el.addEvent('mouseout',function() {
+               pastePreview.close();
+
+             });*/
+
+        });
+
     });
 </script>

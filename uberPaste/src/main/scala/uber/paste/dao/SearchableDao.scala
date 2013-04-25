@@ -28,14 +28,14 @@ import org.compass.core.CompassSession
 import org.compass.core.CompassException
 import java.util.ArrayList
 
-abstract trait SearchableDao[T <: Struct] extends StructDao[T] {
+abstract trait SearchableDao[T <: Struct] extends VersionDao[T] {
 
   def search(query:Query):java.util.List[T]
 }
 
 @Transactional(readOnly = true)
 abstract class SearchableDaoImpl[T <: Struct](model:Class[T])
-  extends StructDaoImpl[T](model) with SearchableDao[T] {
+  extends VersionDaoImpl[T](model) with SearchableDao[T] {
 
   @Autowired
   private val compassTemplate:CompassTemplate = null
@@ -58,6 +58,8 @@ abstract class SearchableDaoImpl[T <: Struct](model:Class[T])
     return out
   }
   def search(query:Query):java.util.List[T] = {
+
+    logger.debug("_dao search "+query.getQuery())
 
     if (query.isEmpty) {
       return getList
@@ -83,7 +85,7 @@ abstract class SearchableDaoImpl[T <: Struct](model:Class[T])
 
           try {
 
-            /*if (logger.isDebugEnabled()) {
+          /*  if (logger.isDebugEnabled()) {
               for (term <- mterms) {
                 val f = hits.highlighter(i).fragment(term)
                 logger.debug("fragment "+f)
@@ -95,7 +97,7 @@ abstract class SearchableDaoImpl[T <: Struct](model:Class[T])
 
           } catch {
             case e:org.compass.core.engine.SearchEngineException => {
-             // logger.error(e.getLocalizedMessage,e)
+           //   logger.error(e.getLocalizedMessage,e)
             }
           }
 

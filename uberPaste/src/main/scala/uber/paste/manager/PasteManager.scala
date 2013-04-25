@@ -50,7 +50,10 @@ trait PasteManager extends GenericSearchManager[Paste]{
 
   def getBySourceType(sourceType:PasteSource,desc:Boolean) : java.util.List[Paste]
 
-  }
+  def getListIntegrated(code:String):java.util.List[Paste]
+
+
+}
 
 @Service("pasteManager")
 class PasteManagerImpl extends GenericSearchManagerImpl[Paste] with PasteManager {
@@ -70,8 +73,10 @@ class PasteManagerImpl extends GenericSearchManagerImpl[Paste] with PasteManager
   @Secured(Array("ROLE_ADMIN"))
   override def remove(id:Long) = super.remove(id)
 
+  def getListIntegrated(code:String):java.util.List[Paste] = pasteDao.getListIntegrated(code)
 
-    override def save(obj:Paste):Paste = {
+
+  override def save(obj:Paste):Paste = {
 
       val wasNew = obj.isBlank()
 

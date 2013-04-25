@@ -1,17 +1,28 @@
-<%-- 
-    Document   : 404
-    Created on : Nov 30, 2011, 5:26:31 AM
-    Author     : alex
---%>
+<%@ include file="/WEB-INF/pages/common/taglibs.jsp"%>
 
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Page not found</title>
+
+        <link rel="icon" href="<c:url value='/images/ninja.png'/>"/>
+
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+        <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE9" />
+
+        <title>404: Page not found</title>
     </head>
     <body>
-        <h1>Page not found</h1>
+
+
+              <h1>Page not found</h1>
+
+              <img src="<c:url value='/images/ninjas/404.jpg'/>"/>
+
+
+
+
+
+
     </body>
 </html>

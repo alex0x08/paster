@@ -5,6 +5,10 @@
 <%
     PrettyTime p = new PrettyTime();
     p.setLocale(locale);
-    String prettier = p.format(date);
-    out.println(prettier);
-%>
+    if (date!=null) {
+        String prettier = p.format(date);
+        out.println(prettier);
+    } else {
+        out.println("No date");
+    }
+ %>

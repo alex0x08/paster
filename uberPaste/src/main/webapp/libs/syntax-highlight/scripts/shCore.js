@@ -360,14 +360,14 @@ var sh = {
 			target.parentNode.replaceChild(element, target);
 
             var roots = []
-            $$('div.commentBlock').each(function(el){
+            $$('div.commentBlock').each(function(el,index){
 
-                sh.insertComment(el,0);
+                sh.insertComment(el,0,index);
                 roots.push(el);
             });
 
             Array.each(roots, function(el, index){
-                sh.insertComment(el,1);
+                sh.insertComment(el,1,index);
             });
 
 
@@ -416,25 +416,49 @@ var sh = {
     },  recurseCommentReply: function(roots) {
         var sroots = []
         Array.each(roots, function(el, index){
-            sh.insertComment(el,1);
+            sh.insertComment(el,1,index);
             sroots.push(el);
         });
 
-    },  insertComment: function(cl,mode) {
+    },  insertComment: function(cl,mode,count) {
 
       //  var cl = document.getElementById('comment_l'+lineNumber);
+
+
 
         var lineNumber =  cl.getAttribute('lineNumber');
         var clParent =  cl.getAttribute('parentCommentId');
 
+        var id =  cl.getAttribute('id');
+
+
+        clInner = cl.getChildren('.commentInner');
+
+
+       /* clInner.addEvents({
+            click: function(event) {
+
+                event.stopPropagation();
+
+
+                this.set("zIndex",9999);
+                this.setStyle("background-color","red");
+                this.setStyle("border","solid 1px green");
+
+            }
+        });*/
 
         if (clParent == '' ) {
                 $('cl_'+lineNumber).adopt(cl);
+                cl.set("zIndex",count+1000);
 
-            } else {
+        } else {
             $('comment_l'+clParent).adopt(cl);
+            cl.set("zIndex",count);
 
         }
+
+        cl.setStyle("display","");
 
             $('ln_'+lineNumber).adopt($("numSpace_l"+lineNumber));
 
@@ -458,6 +482,10 @@ var sh = {
         $('commentForm').setStyle("display","");
         $("numSpace").setStyle("display","");
 
+      //  $("commentForm").setStyle("position","absolute");
+
+
+
         $('commentText').set("value","");
 
         if (parentId>0) {
@@ -465,7 +493,14 @@ var sh = {
             $('commentParentId').set("value",parentId);
             $('comment_l'+parentId).adopt($("commentForm"));
 
+            $('commentForm').setStyle("top","3.5em");
+            $('commentForm').setStyle("position","absolute");
+
+
         } else {
+
+            $('commentForm').setStyle("position","relative");
+
 
             if (sh.vars.currentEditLine != null) {
                 $('cl_lineHtml_'+sh.vars.currentEditLine).setStyle("display","");
@@ -484,9 +519,14 @@ var sh = {
 
             $('cl_linePlain_'+lineNumber).adopt($("pasteLineCopyBtn"));
 
+
             $('cl_'+lineNumber).adopt($("commentForm"));
 
+
         }
+
+        $("commentForm").set("zIndex",9000);
+
 
         $('ln_'+lineNumber).adopt($("numSpace"));
 

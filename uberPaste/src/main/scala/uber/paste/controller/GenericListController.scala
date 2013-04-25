@@ -24,6 +24,8 @@ import org.springframework.web.bind.annotation._;
 import java.util.Locale
 
 object GenericListController {
+
+  final val INTEGRATED = "/integrated"
   final val LIST_ACTION = "/list"
   final val NEXT_PARAM = "next"
   final val PAGE_SET = "pageSet"
@@ -39,8 +41,6 @@ abstract class GenericListController[T <: Struct ] extends StructController[T] {
       return new PagedListHolder[T](manager.getList())
     }
   }
-
-
 
 
   protected def fillListModel(model:Model,locale:Locale) {

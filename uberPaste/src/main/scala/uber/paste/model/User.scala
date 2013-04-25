@@ -36,9 +36,12 @@ import uber.paste.openid.MD5Util
 import org.apache.commons.lang.StringUtils
 import java.util
 import org.hibernate.annotations.IndexColumn
+import org.hibernate.envers.Audited
+import javax.xml.bind.annotation.XmlTransient
 
 @Entity
 @Searchable
+//@Audited
 class User extends Struct with UserDetails with java.io.Serializable{
 
   
@@ -58,10 +61,12 @@ class User extends Struct with UserDetails with java.io.Serializable{
   @ElementCollection(fetch = FetchType.EAGER)
   private var roles:Set[String] = new HashSet[String]()
 
+  @XmlTransient
   private var openID:String  =null
 
 
   @OneToMany(fetch = FetchType.EAGER,cascade = Array(CascadeType.PERSIST,CascadeType.MERGE,CascadeType.REMOVE))
+  @XmlTransient
   private var savedSessions:java.util.List[SavedSession] = new ArrayList[SavedSession]()
 
   /**
@@ -69,6 +74,7 @@ class User extends Struct with UserDetails with java.io.Serializable{
    */
   @NotNull(message = "{validator.not-null}")
   @Length(min = 3, max = 250)
+  @XmlTransient
   private var password:String = null
     
   @Transient

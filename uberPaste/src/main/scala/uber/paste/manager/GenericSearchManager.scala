@@ -20,11 +20,11 @@ import uber.paste.model.Struct
 import uber.paste.model.Query
 import uber.paste.dao.SearchableDao
 
-trait GenericSearchManager[T <: Struct] extends StructManager[T] {
+trait GenericSearchManager[T <: Struct] extends VersionManager[T] {
    def search(query:Query):java.util.List[T]
 }
 
-abstract class GenericSearchManagerImpl[T <: Struct] extends StructManagerImpl[T] {
+abstract class GenericSearchManagerImpl[T <: Struct] extends VersionManagerImpl[T] {
 
   protected override def getDao:SearchableDao[T]
   def search(query:Query):java.util.List[T] = getDao.search(query)

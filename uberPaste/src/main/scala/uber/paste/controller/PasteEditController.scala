@@ -22,9 +22,8 @@ import org.springframework.web.bind.annotation._
 import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.servlet.ModelAndView
 import uber.paste.model._
-import org.springframework.beans.factory.annotation.Autowired
-import java.io.IOException
-import java.io.File
+import org.springframework.beans.factory.annotation.{Value, Autowired}
+import java.io.{FileNotFoundException, IOException, File}
 import javax.servlet.http.HttpServletResponse
 import uber.paste.dao.ConfigDao
 import uber.paste.manager.{CommentManager, PasteManager}
@@ -38,22 +37,32 @@ import java.util.Locale
 import scala.collection.JavaConversions._
 import org.codehaus.jackson.annotate.JsonIgnore
 import javax.xml.bind.annotation.XmlTransient
-import org.apache.commons.lang.{WordUtils, StringUtils}
+import org.apache.commons.lang.{StringEscapeUtils, WordUtils, StringUtils}
 import scala.Array
 import com.google.gson.{JsonParser, GsonBuilder}
 import org.codehaus.jackson.map.ObjectMapper
+import org.springframework.http.HttpStatus
+import java.net.UnknownHostException
+import com.google.gson.stream.MalformedJsonException
 
 @Controller
 @RequestMapping(Array("/paste"))
 //@SessionAttributes(Array(GenericController.MODEL_KEY))
-class PasteController extends GenericEditController[Paste]   {
+class PasteController extends VersionController[Paste]   {
 
   @Autowired
   val pasteManager:PasteManager = null
 
   @Autowired
   val commentManager:CommentManager = null
- 
+
+  @Value("${config.share.integration}")
+  val shareIntegration:Boolean = false
+
+  @Value("${config.share.url}")
+  val shareUrl:String = null
+
+
   def listPage()="redirect:/main/paste/list"
   def editPage()="paste/edit"
   def viewPage()="paste/view"
@@ -76,11 +85,10 @@ class PasteController extends GenericEditController[Paste]   {
     if (obj.isBlank) {
       model.addAttribute("title",getResource("paste.new",locale))
     } else {
-      model.addAttribute("title",getResource("paste.edit.title",Array(obj.getId,obj.getName()),locale))
+      model.addAttribute("title",StringEscapeUtils.escapeHtml(getResource("paste.edit.title",Array(obj.getId,obj.getName()),locale)))
     }
     model.addAttribute("availableCodeTypes", CodeType.list)
     model.addAttribute("availablePriorities", Priority.list)
-
 
 
     obj.tagsAsString={
@@ -161,8 +169,33 @@ class PasteController extends GenericEditController[Paste]   {
     return "redirect:/main/paste/" + pasteId + "#line_" + b.getLineNumber
   }
 
+  @RequestMapping(value = Array(GenericListController.INTEGRATED +GenericEditController.NEW_ACTION+ "/{integrationCode:[a-z0-9_]+}"),
+    method = Array(RequestMethod.GET))
+  @ResponseStatus(HttpStatus.CREATED)
+  def createNewIntegrated(model:Model,
+                          @PathVariable("integrationCode") integrationCode:String,
+                          locale:Locale):String= {
+
+    val newPaste =  getNewModelInstance()
+        newPaste.setIntegrationCode(integrationCode)
+
+    fillEditModel(newPaste,model,locale)
+
+    return editPage
+  }
+
+
+ @RequestMapping(value = Array("/save-plain"), method = Array(RequestMethod.POST))
+  override def save(@RequestParam(required = false) cancel:String,
+
+                              @Valid @ModelAttribute(GenericController.MODEL_KEY) b:Paste,
+                              result:BindingResult, model:Model,locale:Locale):String = {
+    return saveIntegrated(cancel,false,b,result,model,locale)
+  }
+
     @RequestMapping(value = Array("/save"), method = Array(RequestMethod.POST))
-   override def save(@RequestParam(required = false) cancel:String,
+   def saveIntegrated(@RequestParam(required = false) cancel:String,
+                      @RequestParam(required = false) integrationMode:Boolean,
            @Valid @ModelAttribute(GenericController.MODEL_KEY) b:Paste,
            result:BindingResult, model:Model,locale:Locale):String = {
 
@@ -172,7 +205,9 @@ class PasteController extends GenericEditController[Paste]   {
       if (!b.isBlank()) {
         val current = manager.getFull(b.getId());
         b.getComments().addAll(current.getComments())
-        b.setPasteSource(b.getPasteSource())
+        b.setPasteSource(current.getPasteSource())
+        b.setIntegrationCode(current.getIntegrationCode())
+       // b.setThumbImg(current.getThumbImg())
       }
 
      val tags =  b.tagsAsString
@@ -190,15 +225,23 @@ class PasteController extends GenericEditController[Paste]   {
 
         b.getCodeType() match {
           case CodeType.JavaScript => {
+            try {
 
-            val o = new JsonParser().parse(b.getText()).getAsJsonObject()
-            b.setText(new GsonBuilder().setPrettyPrinting().create().toJson(o))
+              val o = new JsonParser().parse(b.getText()).getAsJsonObject()
+              b.setText(new GsonBuilder().setPrettyPrinting().create().toJson(o))
+
+            } catch{
+              case e @ (_ : MalformedJsonException | _ :Exception) => {
+                      //ignore
+
+                }
+              }
+
           }
           case CodeType.Plain => {
                b.setText(WordUtils.wrap(b.getText(),80))
           }
-
-            case _ => {}
+          case _ => {}
         }
       }
 
@@ -208,6 +251,10 @@ class PasteController extends GenericEditController[Paste]   {
         }
       }
 
+
+      logger.debug("__found thumbnail "+b.getThumbImage())
+
+
       logger.debug("__found comments "+b.getComments().size())
 
        val out =super.save(cancel,b,result,model,locale)
@@ -216,7 +263,7 @@ class PasteController extends GenericEditController[Paste]   {
 
 
 
-    @RequestMapping(value = Array("/{id:[0-9]+}"), method = Array(RequestMethod.GET))
+  @RequestMapping(value = Array("/{id:[0-9]+}"), method = Array(RequestMethod.GET))
   override def getByPath(@PathVariable("id") id:java.lang.Long,model:Model,locale:Locale):String = {
 
     val r = super.getByPath(id,model,locale)
@@ -225,12 +272,30 @@ class PasteController extends GenericEditController[Paste]   {
 
     val p = model.asMap().get(GenericController.MODEL_KEY).asInstanceOf[Paste];
 
+    if (!p.isBlank()) {
 
-    model.addAttribute("title",getResource("paste.view.title",Array(p.getId,p.getName()),locale))
+      if (manager.exists(p.getId()+1)) {
+        model.addAttribute("availableNext",true)
+      }
+      if (manager.exists(p.getId()-1)) {
+        model.addAttribute("availablePrev",true)
+      }
+    }
+
+
+    model.addAttribute("shareIntegration",shareIntegration)
+    model.addAttribute("shareUrl",shareUrl)
+
+    model.addAttribute("title",getResource("paste.view.title",Array(p.getId,StringEscapeUtils.escapeHtml(p.getName())),locale))
     
     return viewPage
   }
 
+  @RequestMapping(value = Array("/codetypes"), method = Array(RequestMethod.GET))
+  @ResponseBody
+  def getAvailableCodeTypes():java.util.Collection[CodeType] = {
+              return CodeType.list
+  }
 
   @RequestMapping(value = Array("/plain/{id:[0-9]+}"), method = Array(RequestMethod.GET), produces = Array("text/plain;charset=UTF-8"))
   @ResponseBody

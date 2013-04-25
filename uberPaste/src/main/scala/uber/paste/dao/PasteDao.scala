@@ -27,6 +27,9 @@ trait PasteDao extends SearchableDao[Paste]{
 
   def getBySourceType(sourceType:PasteSource,desc:Boolean) : java.util.List[Paste]
 
+  def getListIntegrated(code:String):java.util.List[Paste]
+
+
   }
 
 @Repository("pasteDao")
@@ -69,5 +72,18 @@ class PasteDaoImpl extends SearchableDaoImpl[Paste](classOf[Paste]) with PasteDa
       .setMaxResults(BaseDaoImpl.MAX_RESULTS)
     return query.getResultList().asInstanceOf[java.util.List[Paste]]
   }
+
+  def getListIntegrated(code:String):java.util.List[Paste] = {
+
+    val cr = new CriteriaSet
+
+    val query:Query = em.createQuery(
+      cr.cr.where(Array(cr.cb.equal(cr.r.get("integrationCode"), code)):_*)
+        .orderBy(cr.cb.desc(cr.r.get("sticked"))
+        ,cr.cb.desc(cr.r.get("lastModified"))))
+        .setMaxResults(BaseDaoImpl.MAX_RESULTS)
+    return query.getResultList().asInstanceOf[java.util.List[Paste]]
+  }
+
 
 }

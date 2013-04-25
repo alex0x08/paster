@@ -31,10 +31,12 @@
   float: none !important;
   height: auto !important;
   left: auto !important;
-  line-height: 0.9em !important;
+  /*line-height: 0.9em !important;
+    */
   margin: 0 !important;
   outline: 0 !important;
-  overflow: visible !important;
+  /*overflow: visible !important;
+    */
   padding: 0 !important;
   position: static !important;
   right: auto !important;
@@ -55,7 +57,7 @@
   width: 100% !important;
   margin: 1em 0 1em 0 !important;
   position: relative !important;
-  overflow: auto !important;
+  /*overflow: auto !important;*/
   font-size: 1em !important;
 }
 .syntaxhighlighter.source {
@@ -330,9 +332,9 @@
 .listSpace {
     position: relative;
     max-width: 1em;
-    max-height: 4em;
+    max-height: 3em;
     width: 1em;
-    height: 4em;
+    height: 3em;
     margin-top: 1em;
 
 }
@@ -340,10 +342,10 @@
 .listEditSpace {
     position: relative;
     max-width: 1em;
-    max-height: 7em;
+    max-height: 9em;
     width: 1em;
-    height: 7em;
-    margin-top: 1em;
+    height: 9em;
+    margin-bottom: 0em;
 
 }
 
@@ -381,28 +383,34 @@
     max-width: 50em;
     width: 50em;
     height: 4em;
+    max-height: 4em;
     margin-left: 0.5em;
-    margin-top: 0.1em;
+    margin-top: 0.2em;
     padding-bottom: 0.1em;
     padding-top: 0;
+
 }
 
 .commentInner {
     background-color: #e0e0e0;
-
+    border: 1px solid black;
 }
 
 .editForm {
     white-space: normal;
-    position: relative;
+    position: absolute;
     max-width: 35em;
     max-height: 12em;
     width: 35em;
+    top: 0em;
     height: 7em;
     margin-left: 1em;
     margin-top: 1em;
     background-color: #e0e0e0;
     padding-bottom: 0.5em;
+    border: 1px solid black;
+    z-index: 9999;
+
 }
 .editForm textarea {
     -webkit-box-shadow: inset 2px 2px 2px 0px #dddddd;
