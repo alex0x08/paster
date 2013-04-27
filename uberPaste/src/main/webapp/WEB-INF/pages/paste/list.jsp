@@ -249,7 +249,7 @@
 
                     <div class="row">
 
-                        <div class="column grid-10">
+                        <div class="pasteTitle column grid-14">
 
                             <div class="pasteTitle" style="padding: 1em;">
                                 <a class="listLinkLine" href="<c:url value="/main/paste/${paste.id}"></c:url>" pasteId="${paste.id}" title="Click to view paste vol. ${paste.id}"><c:out value="${paste.title}"  escapeXml="true"/></a>

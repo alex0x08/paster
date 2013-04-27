@@ -13,9 +13,6 @@
 
 
 
-
-
-
 <script type="text/javascript">
 
 
@@ -54,7 +51,7 @@
             console.log(e.event.clipboardData);
             var text = e.event.clipboardData.getData('text/plain');
 
-            var block = '';
+            /*var block = '';
 
             if (text.length<max_length-2) {
                 block = text.substring(0, text.length);
@@ -63,7 +60,7 @@
             }
 
             document.getElementById("pname").set('value',block);
-
+              */
             //e.stop();
         }
     });

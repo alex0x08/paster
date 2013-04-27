@@ -99,7 +99,7 @@
   </div>
 
 <div class="row">
-<div class="column grid-12">
+<div class="column grid-16">
     <pre id="pasteText" class="brush: ${model.codeType.code};toolbar: false; auto-links:false;" style=" overflow-y: hidden;" ><c:out value="${model.text}" escapeXml="true" /></pre>
     <code id="pasteTextPlain" style="display:none;"><c:out value="${model.text}" escapeXml="true" /></code>
 

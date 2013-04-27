@@ -91,6 +91,8 @@ class PasteController extends VersionController[Paste]   {
     model.addAttribute("availablePriorities", Priority.list)
 
 
+  //  obj.tagsAsString = for (s<-obj.getTags()) yield s+" "
+
     obj.tagsAsString={
       val out =new StringBuilder
       for (s<-obj.getTags()) {

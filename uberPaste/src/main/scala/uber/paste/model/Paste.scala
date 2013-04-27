@@ -94,6 +94,7 @@ class Paste extends Struct with java.io.Serializable{
   @SearchableProperty
   //(analyzer = )
   @Size(min=3, message = "{struct.name.validator}")
+  @Column(length = Integer.MAX_VALUE)
   private var text: String = null
 
   @Lob
@@ -132,7 +133,7 @@ class Paste extends Struct with java.io.Serializable{
   @Transient
   var tagsAsString:String = null
 
-  private var normalized:Boolean = true
+  private var normalized:Boolean = false
 
   @OneToMany(fetch = FetchType.LAZY,cascade = Array(CascadeType.PERSIST,CascadeType.MERGE,CascadeType.REMOVE),orphanRemoval = true)
   @NotAudited
@@ -143,6 +144,7 @@ class Paste extends Struct with java.io.Serializable{
 
   private var sticked:Boolean = false
 
+  @NotAudited
   private[model] var commentsCount:java.lang.Integer = null
 
   override def terms():List[String] = Paste.terms

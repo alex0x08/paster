@@ -27,6 +27,7 @@ import java.util.Locale
 import org.springframework.beans.support.PagedListHolder
 
 object PasteSearchResult extends KeyValueObj[SearchResult] {
+
   val PASTE = new SearchResult("paste","result.paste.name","pasteItems")
   val COMMENT = new SearchResult("comment","result.comment.name","commentItems")
 
@@ -272,10 +273,11 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
       PasteSource.valueOf(sourceType.toUpperCase)
     } else {null}
 
-    val order = if (desc == null) {java.lang.Boolean.TRUE} else {desc};
+    val order = if (desc == null) {java.lang.Boolean.TRUE} else {desc}
 
     return processPageListHolder(request,locale,model,page,NPpage,pageSize,
-      if (ps==null) {pasterListCallback} else {new PasteListCallback(ps,order,integrationCode)},GenericController.NODE_LIST_MODEL_PAGE)
+      if (ps==null) {pasterListCallback} else {
+        new PasteListCallback(ps,order,integrationCode)},GenericController.NODE_LIST_MODEL_PAGE)
 
   }
 
