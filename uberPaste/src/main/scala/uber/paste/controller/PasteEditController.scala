@@ -30,8 +30,8 @@ import uber.paste.manager.{CommentManager, PasteManager}
 import org.springframework.ui.Model
 import uber.paste.base.Loggered
 
-import org.springframework.validation.BindingResult;
-import javax.validation.Valid;
+import org.springframework.validation.BindingResult
+import javax.validation.Valid
 import java.util.HashMap
 import java.util.Locale
 import scala.collection.JavaConversions._

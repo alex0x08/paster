@@ -30,12 +30,13 @@ import uber.paste.build._
 import org.compass.gps.CompassGps;
 import java.io.IOException
 import uber.paste.dao.UserExistsException
-import uber.paste.base.Loggered
+import uber.paste.base.{MergedPropertyConfigurer, Loggered}
 import uber.paste.build._
 import uber.paste.mail.EmbeddedSMTPServer
 import java.nio.file._
 import java.nio.file.attribute.BasicFileAttributes
 import uber.paste.manager.PasteManager
+import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer
 
 //import org.hibernate.event.{PostLoadEvent, PostLoadEventListener, LoadEvent, LoadEventListener}
 //import org.hibernate.event.LoadEventListener.LoadType
@@ -91,7 +92,7 @@ class StartupListener extends ServletContextListener with Loggered{
     sf.asInstanceOf[SessionFactoryImpl].getEventListeners.setPostLoadEventListeners(listeners)
     */
 
-
+    var props:MergedPropertyConfigurer =  ctx.getBean("propertyConfigurer").asInstanceOf[MergedPropertyConfigurer]
 
 
     val configDao:ConfigDao = ctx.getBean("configDao").asInstanceOf[ConfigDao]
@@ -101,7 +102,7 @@ class StartupListener extends ServletContextListener with Loggered{
     if (configDao.isPropertySet(ConfigProperty.IS_INSTALLED.getCode, "1")) {
       logger.info("Database already created. skipping db generation stage..")
 
-      reindex(ctx)
+      reindex(ctx,props)
 
 
 
@@ -121,7 +122,7 @@ class StartupListener extends ServletContextListener with Loggered{
         }
       }).start()
        */
-      startSmtpServer(ctx)
+      startSmtpServer(ctx,props)
 
      PasteManager.Stats.totalPastas.addAndGet(pasteDao.countAll().toInt)
 
@@ -172,11 +173,11 @@ class StartupListener extends ServletContextListener with Loggered{
 
 
 
-      reindex(ctx)
+      reindex(ctx,props)
 
       logger.info("db generation completed successfully.")
 
-      startSmtpServer(ctx)
+      startSmtpServer(ctx,props)
 
     } catch {
       case e:UserExistsException => {
@@ -195,17 +196,17 @@ class StartupListener extends ServletContextListener with Loggered{
   }
 
 
-  def startSmtpServer(ctx:ApplicationContext) {
+  def startSmtpServer(ctx:ApplicationContext,props:MergedPropertyConfigurer) {
 
-    if (System.getProperties().getProperty("smtpd","1").equals("1")) {
+    if (props.getProperty("config.smtpd.enabled").equals("1")) {
       EmbeddedSMTPServer.createInstance(ctx).start()
     } else {
       logger.info("smtpd was disabled. skipping it.")
     }
   }
 
-  def reindex( ctx:ApplicationContext):Unit = {
-    if (System.getProperties().getProperty("reindex","1").equals("1")) {
+  def reindex( ctx:ApplicationContext,props:MergedPropertyConfigurer):Unit = {
+    if (props.getProperty("config.reindex.enabled").equals("1")) {
       val compassGps:CompassGps = ctx.getBean("compassGps").asInstanceOf[CompassGps]
       compassGps.index()
       logger.info("reindex completed.")

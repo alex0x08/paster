@@ -32,7 +32,9 @@ Versions:
                 </c:otherwise>
             </c:choose>
 
-            |
+            <c:if test="${rev ne lastRevision}">
+               |
+            </c:if>
         </c:otherwise>
     </c:choose>
 

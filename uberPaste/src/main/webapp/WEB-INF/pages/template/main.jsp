@@ -9,8 +9,6 @@
 
         <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE9" />
 
-
-
         <title><tiles:insertAttribute name="pageTitle" /></title>
 
         <!-- 
@@ -30,53 +28,11 @@
           I am based in LESS.js to render stylesheets. More information can
           be found at {http://www.lesscss.org/}.
         -->
-        <script src="<c:url value="/js/less-1.1.3.min.js"/>"></script>
-        <script src="<c:url value="/js/mootools-core-1.4.5-full-compat.js"/>"></script>
-        <script src="<c:url value="/js/mootools-more-1.4.0.1.js"/>"></script>
-        <script src="<c:url value="/libs/moodialog/js/Overlay.js"/>"></script>
-        <script src="<c:url value="/libs/moodialog/js/MooDialog.js"/>"></script>
-
-        <script src="<c:url value="/libs/moodialog/js/MooDialog.Fx.js"/>"></script>
-        <script src="<c:url value="/libs/moodialog/js/MooDialog.Alert.js"/>"></script>
-        <script src="<c:url value="/libs/moodialog/js/MooDialog.Confirm.js"/>"></script>
-        <script src="<c:url value="/libs/moodialog/js/MooDialog.Error.js"/>"></script>
-        <script src="<c:url value="/libs/moodialog/js/MooDialog.Prompt.js"/>"></script>
-        <script src="<c:url value="/libs/moodialog/js/MooDialog.IFrame.js"/>"></script>
-        <script src="<c:url value="/libs/moodialog/js/MooDialog.Request.js"/>"></script>
-
-        <script src="<c:url value="/libs/growler/growler.js"/>"></script>
-
-        <script type="text/javascript">
-
-            var growl= null;
-
-            window.addEvent('domready',function() {
-               growl = new Growler.init();
-
-
-            });
-        </script>
-
-
-        <!-- 
-          Under development, this section allows you to preview your changes
-          immediately after saving them on the {app.less} file. However, you
-          must remove it once it enters the production stage or it will open
-          a bunch of requests to your server to retrieve new changes. 
-        -->
-        <script charset="utf-8">
-            //less.env = "development";
-            //less.watch();
-        </script>
+        <script src="<c:url value='/js/less-1.1.3.min.js'/>"></script>
+        <script src="<c:url value='/js/mootools-core-1.4.5-full-compat.js'/>"></script>
 
 
 
-        <script type="text/javascript" src="<c:url value="/libs/syntax-highlight/scripts/xregexp.js"/>"></script>
-
-        <script type="text/javascript" src="<c:url value="/libs/syntax-highlight/scripts/shCore.js"/>"></script>
-
-        <script type="text/javascript" src="<c:url value="/libs/syntax-highlight/scripts/shAutoloader.js"/>"></script>
- 
         <link type="text/css" rel="stylesheet" href="<c:url value="/libs/syntax-highlight/styles/shCoreDefault.css"/>"/>
 
     </head>
@@ -111,8 +67,6 @@
 
             <sec:authorize ifAnyGranted="ROLE_USER,ROLE_ADMIN">
 
-
-
             <script type="text/javascript">
 
                 var avatarUrl = 'http://www.gravatar.com/avatar/${currentUser.avatarHash}';
@@ -141,8 +95,6 @@
                 }
                 });
 
-
-
                 });
             </script>
                <div id="avatarImageDiv" >
@@ -153,13 +105,11 @@
                 <span style="display: inline; vertical-align: top; ">
                            <a title="Contact ${currentUser.name}" style="display: inline;vertical-align: top;" href="mailto:${currentUser.username}"><c:out value="${currentUser.name}" /></a>
                             <a class="btn sbtn" style="display: inline;vertical-align: top;" title="Logout" href="<c:url value="/act/logout"/>">X</a>
-
                 </span>
 
                </div>
 
             </sec:authorize>
-
 
         </div>
         </div>
@@ -169,9 +119,43 @@
         </div>
         <div class="column grid-14"  >
             <tiles:insertAttribute name="content" />
-
         </div>
      </div>
+
+
+    <script src="<c:url value='/js/mootools-more-1.4.0.1.js'/>"></script>
+    <script src="<c:url value="/libs/growler/growler.js"/>"></script>
+
+
+    <script type="text/javascript">
+
+        var growl= null;
+
+        window.addEvent('domready',function() {
+            growl = new Growler.init();
+
+        });
+    </script>
+
+
+
+    <script type="text/javascript" src="<c:url value="/libs/syntax-highlight/scripts/xregexp.js"/>"></script>
+
+    <script type="text/javascript" src="<c:url value="/libs/syntax-highlight/scripts/shCore.js"/>"></script>
+
+    <script type="text/javascript" src="<c:url value="/libs/syntax-highlight/scripts/shAutoloader.js"/>"></script>
+
+    <!--
+  Under development, this section allows you to preview your changes
+  immediately after saving them on the {app.less} file. However, you
+  must remove it once it enters the production stage or it will open
+  a bunch of requests to your server to retrieve new changes.
+-->
+    <script charset="utf-8">
+        //less.env = "development";
+        //less.watch();
+    </script>
+
 
 
 

@@ -25,7 +25,6 @@ object UserBuilder extends Loggered{
   
   def createNew():UserBuilder = {
     return new UserBuilder(new User)
-    
   }
 }
 
@@ -71,12 +70,9 @@ class UserBuilder(model:User) extends StructBuilder[User](model) {
       get.setName(get().getName+" "+axschema.get("lastname"))
     }
 
-
     if (axschema.containsKey("email")) {
-
       val mail = axschema.get("email")
       get.setUsername(mail)
-
       if (get.getName()==null) {
         get.setName(mail)
       }
@@ -87,9 +83,7 @@ class UserBuilder(model:User) extends StructBuilder[User](model) {
     if (logger.isDebugEnabled()) {
       logger.debug("user login="+get.getUsername()+", name={"+get.getName()+"}")
     }
-    /**
-     * костыль для работы с поделием криворуких уебков из яндекса
-     */
+
     if (get.getUsername().contains("yandex")) {
 
       val id = get.getUsername().substring(get.getUsername().lastIndexOf("/"))

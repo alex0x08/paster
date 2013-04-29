@@ -41,6 +41,7 @@ abstract class AbstractController extends Loggered{
    protected val messageSource:MessageSource = null
 
   def getResource(key:String,locale:Locale):String = messageSource.getMessage(key,new Array[java.lang.Object](0),locale)
+
   def getResource(key:String,args:Array[Any],locale:Locale):String = messageSource.getMessage(key,args.asInstanceOf[Array[java.lang.Object]],locale)
   
   /**

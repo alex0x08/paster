@@ -100,7 +100,7 @@ class Paste extends Struct with java.io.Serializable{
   @Lob
   //@NotNull
   @XmlTransient
-  @NotAudited
+  //@NotAudited
   private var thumbImage:String =null
 
   //@Transient
@@ -109,6 +109,7 @@ class Paste extends Struct with java.io.Serializable{
   //@NotNull
   @Column(length=256)
   @Size(min=3,max=256, message = "{struct.name.validator}")
+  @NotAudited
   private var title: String = null
 
   @ManyToOne(fetch = FetchType.EAGER)
@@ -123,7 +124,7 @@ class Paste extends Struct with java.io.Serializable{
 
   @ElementCollection(fetch = FetchType.EAGER)
   @SearchableProperty
-  @NotAudited
+  //@NotAudited
   private var tags:Set[String] = new HashSet[String]()
 
   @NotNull

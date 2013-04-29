@@ -32,7 +32,8 @@
         <a href="<c:url value="/main/paste/list/body.xml"/>"><img src="<c:url value='/images/xml.png'/>" title="xml" alt="xml"/></a> |
         <a href="<c:url value="/main/paste/list/body.json"/>"><img src="<c:url value='/images/json.png'/>" title="json" alt="json"/></a> |
         <a href="<c:url value="/main/paste/list.rss"/>"><img src="<c:url value='/images/rss.png'/>" title="rss" alt="rss"/></a> |
-        <a href="<c:url value="/main/paste/list.atom"/>"><img src="<c:url value='/images/atom.png'/>" title="atom" alt="atom"/></a>
+        <a href="<c:url value="/main/paste/list.atom"/>"><img src="<c:url value='/images/atom.png'/>" title="atom" alt="atom"/></a> |
+        <a href="<c:url value="/ws/paste?wsdl"/>"><img src="<c:url value='/images/wsdl_icon.png'/>" title="wsdl" alt="wsdl"/></a>
 
     </div>
  </div>
@@ -195,7 +196,11 @@
 
 
     <div id="pastas">
+
+
     <c:forEach var="paste" items="${pageItems.pageList}" varStatus="status">
+
+      <c:set property="curDate" value="${paste.lastModified}" target="${splitHelper}"/>
 
 
         <c:choose>
@@ -232,11 +237,11 @@
 
                        <c:choose>
                            <c:when test="${not empty paste.thumbImage}">
-                               <img src="${paste.thumbImage}"/>
+                               <img src="${paste.thumbImage}" width="300" height="200"/>
 
                            </c:when>
                            <c:otherwise>
-                               <img src="<c:url value='/images/nodata.png'/>"/>
+                               <img src="<c:url value='/images/nodata.png'/>" width="300" height="200"/>
                            </c:otherwise>
                        </c:choose>
                     </a>
@@ -331,8 +336,12 @@
 
 
 
+        <c:if test="${splitHelper.split}">
+            <c:out value="${splitHelper.splitTitle}"/>
+            <hr/>
+        </c:if>
 
-        
+
     </c:forEach>
 
 </div>

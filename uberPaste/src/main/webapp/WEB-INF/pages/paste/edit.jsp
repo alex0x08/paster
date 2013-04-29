@@ -1,137 +1,6 @@
 <%@ include file="/WEB-INF/pages/common/taglibs.jsp"%>
 
 
-
-<script type="text/javascript" src="<c:url value="/libs/word-count.js"/>"></script>
-<script src="<c:url value='/libs/ace/src-noconflict/ace.js'/>" type="text/javascript" charset="utf-8"></script>
-<script src="<c:url value='/libs/html2canvas.js'/>" type="text/javascript" charset="utf-8"></script>
-<script src="<c:url value='/libs/canvas-to-blob.js'/>" type="text/javascript" charset="utf-8"></script>
-<script src="<c:url value='/libs/base64.js'/>" type="text/javascript" charset="utf-8"></script>
-<script src="<c:url value='/libs/canvas2image.js'/>" type="text/javascript" charset="utf-8"></script>
-<script src="<c:url value='/libs/pixastic/pixastic.core.js'/>" type="text/javascript" charset="utf-8"></script>
-<script src="<c:url value='/libs/pixastic/actions/crop.js'/>" type="text/javascript" charset="utf-8"></script>
-
-
-
-<script type="text/javascript">
-
-
-    if (this.MooTools.build=='ab8ea8824dc3b24b6666867a2c4ed58ebb762cf0') {
-        delete Function.prototype.bind;
-
-        Function.implement({
-
-            /*<!ES5-bind>*/
-            bind: function(that){
-                var self = this,
-                        args = arguments.length > 1 ? Array.slice(arguments, 1) : null,
-                        F = function(){};
-
-                var bound = function(){
-                    var context = that, length = arguments.length;
-                    if (this instanceof bound){
-                        F.prototype = self.prototype;
-                        context = new F;
-                    }
-                    var result = (!args && !length)
-                            ? self.call(context)
-                            : self.apply(context, args && length ? args.concat(Array.slice(arguments)) : args || arguments);
-                    return context == that ? result : context;
-                };
-                return bound;
-            }
-            /*</!ES5-bind>*/
-        });
-    }
-
-    var max_length= 255;
-
-    window.addEvent('paste', function(e){
-        if (e.event.clipboardData) {
-            console.log(e.event.clipboardData);
-            var text = e.event.clipboardData.getData('text/plain');
-
-            /*var block = '';
-
-            if (text.length<max_length-2) {
-                block = text.substring(0, text.length);
-            } else {
-                block  = text.substring(0, max_length-2)+'..';
-            }
-
-            document.getElementById("pname").set('value',block);
-              */
-            //e.stop();
-        }
-    });
-
-    window.addEvent('domready', function(){
-
-        var counter = new WordCount('wordCount');
-
-        var editor = ace.edit("editor");
-        editor.setTheme("ace/theme/crimson_editor");
-        editor.getSession().setMode("ace/mode/${model.codeType.editType}");
-
-        var textarea = document.getElementById("ptext");
-
-        editor.getSession().setValue(textarea.get('value'));
-        counter.getCount(textarea.get('value'));
-
-        editor.getSession().on('change', function(){
-            var text = editor.getSession().getValue();
-            textarea.set('value',text);
-            counter.getCount(text);
-        });
-
-        var normalizedCheck = $('normalized');
-
-        normalizedCheck.addEvent('click', function() {
-           // alert(normalizedCheck.get('checked'));
-            if(normalizedCheck.get('checked')) {
-                var col = 80;
-                editor.getSession().setUseWrapMode(true);
-                editor.getSession().setWrapLimitRange(col, col);
-                editor.renderer.setPrintMarginColumn(col);
-
-            } else {
-
-                editor.getSession().setUseWrapMode(false);
-                editor.renderer.setPrintMarginColumn(80);
-            }
-        });
-
-
-
-
-
-        $('theme').addEvent('change',function(event) {
-                //alert(this.getElement(':selected').value);
-            editor.setTheme(this.getElement(':selected').value);
-
-        });
-
-
-        $('ptype').addEvent('change',function(event) {
-           // alert(this.getElement(':selected').get("editCode"));
-            editor.getSession().setMode("ace/mode/"+this.getElement(':selected').get("editCode"));
-
-        });
-
-    });
-
-    /*window.addEvent('domready', function() {
-
-         document.addEvent('keydown', function(event){
-         // the passed event parameter is already an instance of the Event type.
-         alert(event.key);   // returns the lowercase letter pressed.
-         alert(event.shift); // returns true if the key pressed is shift.
-         if (event.key == 's' && event.control) alert('Document saved.'); //executes if the user presses Ctr+S.
-         });
-
-    });*/
-</script>
-
         <c:url var="url" value='/main/paste/save' />
 
 <fieldset class="perk">
@@ -143,102 +12,6 @@
     </legend>
 
 
-    <script type="text/javascript">
-
-        function onSave() {
-
-            var peditor = ace.edit("editor");
-
-            var editForm = document.getElementById('editForm');
-          //  var submitBtn = document.getElementById('submitBtn');
-            var editor = document.getElementById('pasteText');
-            var thumbImg = document.getElementById('thumbImg');
-
-           // $('pastePreview').setStyle('display','');
-
-           // var text = peditor.getSession().getValue();
-
-           // editor.set('html',text);
-
-          //  $('pasteText').set('html',text);
-
-
-            //SyntaxHighlighter.all();
-
-
-           //  SyntaxHighlighter.highlight();
-
-           // SyntaxHighlighter.highlight();
-
-
-            html2canvas($('editor'), {
-                allowTaint: true,
-                taintTest: false,
-
-                onrendered: function(canvas) {
-
-
-                   // document.body.appendChild(canvas);
-
-
-                   var img= Pixastic.process(canvas, "crop", {
-                        rect : {
-                            left : 15, top : 0, width : 800, height : 600
-                        }
-                    });
-
-
-                    img = Canvas2Image.saveAsPNG(img, true, 400, 200);
-
-                    //    alert(img.src);
-
-                    // blob = window.dataURLtoBlob && window.dataURLtoBlob(img);
-
-                    //$$('#thumbImg').value=img;
-
-                    document.body.appendChild(img);
-
-                   // img= img.toDataURL("image/png");
-
-                    thumbImg.set('value',img.src);
-
-                    // alert( $$('#thumbImg').get('value'));
-
-
-                     $('editForm').submit();
-
-
-                    // dataURL = dataURL.replace('/^data:image/(png|jpg);base64',/, "");
-                    //window.open(img);
-
-                    // document.body.appendChild(canvas);
-
-                    /*    var img = Canvas2Image.saveAsPNG(canvas, true, null, null);
-
-                     blob = window.dataURLtoBlob && window.dataURLtoBlob(img.src);
-
-                     var formData = $('editForm');
-                     //new FormData();
-                     formData.append('thumbUpload', blob, 'thumb.png');
-
-                     */
-
-
-                }
-            });
-        }
-
-        window.addEvent('domready', function(){
-
-            $('submitBtn').addEvent('click',function(){
-                event.preventDefault();
-                onSave();
-            });
-
-
-        });
-
-    </script>
 
 <form:form id="editForm" action="${url}" cssClass="perk"
            modelAttribute="model"
@@ -252,7 +25,6 @@
 
     <div class="row">
         <div class="column grid-6">
-
 
             <form:input id="thumbImg" path="thumbImage" cssStyle="display:none;"  />
 
@@ -365,7 +137,6 @@
             </form:select>
             <form:errors path="priority" cssClass="error" />
 
-
         </div>
     </div>
 
@@ -385,23 +156,18 @@
 
     <div class="form-buttons">
             <div class="button">
-
                 <fmt:message var="submit_button_text" key="button.save"/>
 
                 <input type="submit" name="submit_btn"
                        id="submitBtn"
                        value=" <c:out value='${submit_button_text}'/>"/>
 
-
                 <a href="<c:url value="/main/paste/list"/>"><fmt:message key='button.cancel'/></a>
-
-
 
                 <c:if test="${!model.blank}">
                     <sec:authorize ifAnyGranted="ROLE_ADMIN">
                      |  <a href="<c:url value='/main/paste/delete'><c:param name="id" value="${model.id}"/> </c:url>"><fmt:message key='button.delete'/></a>
                     </sec:authorize>
-
 
                 </c:if>
 
@@ -417,14 +183,186 @@
                 </div>
 
 
+                    </div>
+                </div>
+
             </div>
         </div>
 
-        </div>
-    </div>
+        </form:form>
+    </fieldset>
 
-</form:form>
-     </fieldset>
+<script type="text/javascript" src="<c:url value="/libs/word-count.js"/>"></script>
+<script src="<c:url value='/libs/ace/src-noconflict/ace.js'/>" type="text/javascript" charset="utf-8"></script>
+<script src="<c:url value='/libs/html2canvas.js'/>" type="text/javascript" charset="utf-8"></script>
+<script src="<c:url value='/libs/canvas-to-blob.js'/>" type="text/javascript" charset="utf-8"></script>
+<script src="<c:url value='/libs/base64.js'/>" type="text/javascript" charset="utf-8"></script>
+<script src="<c:url value='/libs/canvas2image.js'/>" type="text/javascript" charset="utf-8"></script>
+<script src="<c:url value='/libs/pixastic/pixastic.core.js'/>" type="text/javascript" charset="utf-8"></script>
+<script src="<c:url value='/libs/pixastic/actions/crop.js'/>" type="text/javascript" charset="utf-8"></script>
+
+<script type="text/javascript">
+
+    if (this.MooTools.build=='ab8ea8824dc3b24b6666867a2c4ed58ebb762cf0') {
+        delete Function.prototype.bind;
+
+        Function.implement({
+
+            /*<!ES5-bind>*/
+            bind: function(that){
+                var self = this,
+                        args = arguments.length > 1 ? Array.slice(arguments, 1) : null,
+                        F = function(){};
+
+                var bound = function(){
+                    var context = that, length = arguments.length;
+                    if (this instanceof bound){
+                        F.prototype = self.prototype;
+                        context = new F;
+                    }
+                    var result = (!args && !length)
+                            ? self.call(context)
+                            : self.apply(context, args && length ? args.concat(Array.slice(arguments)) : args || arguments);
+                    return context == that ? result : context;
+                };
+                return bound;
+            }
+            /*</!ES5-bind>*/
+        });
+    }
+
+    var max_length= 255;
+
+    window.addEvent('paste', function(e){
+        if (e.event.clipboardData) {
+            console.log(e.event.clipboardData);
+            var text = e.event.clipboardData.getData('text/plain');
+
+            /*var block = '';
+
+             if (text.length<max_length-2) {
+             block = text.substring(0, text.length);
+             } else {
+             block  = text.substring(0, max_length-2)+'..';
+             }
+
+             document.getElementById("pname").set('value',block);
+             */
+            //e.stop();
+        }
+    });
+
+    window.addEvent('domready', function(){
+
+        var counter = new WordCount('wordCount');
+
+        var editor = ace.edit("editor");
+        editor.setTheme("ace/theme/crimson_editor");
+        editor.getSession().setMode("ace/mode/${model.codeType.editType}");
+
+        var textarea = document.getElementById("ptext");
+
+        editor.getSession().setValue(textarea.get('value'));
+        counter.getCount(textarea.get('value'));
+
+        editor.getSession().on('change', function(){
+            var text = editor.getSession().getValue();
+            textarea.set('value',text);
+            counter.getCount(text);
+        });
+
+        var normalizedCheck = $('normalized');
+
+        normalizedCheck.addEvent('click', function() {
+            if(normalizedCheck.get('checked')) {
+                var col = 80;
+                editor.getSession().setUseWrapMode(true);
+                editor.getSession().setWrapLimitRange(col, col);
+                editor.renderer.setPrintMarginColumn(col);
+
+            } else {
+
+                editor.getSession().setUseWrapMode(false);
+                editor.renderer.setPrintMarginColumn(80);
+            }
+        });
+
+        $('theme').addEvent('change',function(event) {
+            //alert(this.getElement(':selected').value);
+            editor.setTheme(this.getElement(':selected').value);
+        });
+
+
+        $('ptype').addEvent('change',function(event) {
+            // alert(this.getElement(':selected').get("editCode"));
+            editor.getSession().setMode("ace/mode/"+this.getElement(':selected').get("editCode"));
+
+        });
+
+    });
+
+    /*window.addEvent('domready', function() {
+
+     document.addEvent('keydown', function(event){
+     // the passed event parameter is already an instance of the Event type.
+     alert(event.key);   // returns the lowercase letter pressed.
+     alert(event.shift); // returns true if the key pressed is shift.
+     if (event.key == 's' && event.control) alert('Document saved.'); //executes if the user presses Ctr+S.
+     });
+
+     });*/
+</script>
+
+
+<script type="text/javascript">
+
+    function onSave() {
+
+        var peditor = ace.edit("editor");
+
+        var editForm = document.getElementById('editForm');
+        //  var submitBtn = document.getElementById('submitBtn');
+        var editor = document.getElementById('pasteText');
+        var thumbImg = document.getElementById('thumbImg');
+
+
+
+        html2canvas($('editor'), {
+            allowTaint: true,
+            taintTest: false,
+
+            onrendered: function(canvas) {
+
+                var img= Pixastic.process(canvas, "crop", {
+                    rect : {
+                        left : 15, top : 0, width : 800, height : 600
+                    }
+                });
+
+
+                img = Canvas2Image.saveAsPNG(img, true, 300, 200);
+
+                document.body.appendChild(img);
+
+                thumbImg.set('value',img.src);
+
+                $('editForm').submit();
+
+            }
+        });
+    }
+
+    window.addEvent('domready', function(){
+
+        $('submitBtn').addEvent('click',function(){
+            event.preventDefault();
+            onSave();
+        });
+
+
+    });
+
+</script>
 
 
 <%--

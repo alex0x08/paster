@@ -31,7 +31,7 @@
 
     <!-- JDBC connection properties are loaded to use in hibernate sessionfactory configuration -->
     <bean id="propertyConfigurer"
-          class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+          class="uber.paste.base.MergedPropertyConfigurer">
          
         <property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE"/>
         <property name="location" value="classpath:jdbc.properties"/>

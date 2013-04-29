@@ -1,8 +1,5 @@
 <%@ include file="/WEB-INF/pages/common/taglibs.jsp"%>
 
-
-
-
 <div class="row">
     <div class="column grid-1" style="text-align:right;padding-right: 0;margin-top: -1em;" >
         <a class="mainLinkLine" href="<c:url value="/main/paste/new"></c:url>" title="<fmt:message key='paste.create.new'/>"><span class="i" style="font-size: 4em;">/</span></a>
@@ -12,9 +9,11 @@
     </div>
 </div>
 
+<div class="row">
+    <div class="column grid-16">
 
-<c:set var="priorTitle"><fmt:message key="${model.priority.name}"/></c:set>
 
+        <c:set var="priorTitle"><fmt:message key="${model.priority.name}"/></c:set>
 
         <h4 class="f-h4" style="padding-top: 0;margin-top:0;"><span class="i ${model.priority.cssClass}" style="font-size:2em;" title="${priorTitle}" >/</span>
             <c:if test="${model.sticked}">
@@ -33,19 +32,15 @@
                       <tiles:putAttribute name="modelName" value="paste"/>
                   </tiles:insertDefinition>
 
-
-
                 <tiles:insertDefinition name="/common/owner" >
                     <tiles:putAttribute name="model" value="${model}"/>
                     <tiles:putAttribute name="modelName" value="paste"/>
                 </tiles:insertDefinition>
 
-
                <tiles:insertDefinition name="/common/commentCount" >
                    <tiles:putAttribute name="model" value="${model}"/>
                    <tiles:putAttribute name="modelName" value="paste"/>
                </tiles:insertDefinition>
-
 
                 <span style="font-size: 9px;">
                 ,<kc:prettyTime date="${model.lastModified}" locale="${pageContext.response.locale}"/>
@@ -53,7 +48,7 @@
                 </span>
 
                <sec:authorize ifAnyGranted="ROLE_ADMIN">
-                 |  <a href="<c:url value='/main/paste/delete'><c:param name="id" value="${model.id}"/> </c:url>"><fmt:message key='button.delete'/></a>
+                   |  <a href="<c:url value='/main/paste/delete'><c:param name="id" value="${model.id}"/> </c:url>"><fmt:message key='button.delete'/></a>
                </sec:authorize>
 
 
@@ -78,25 +73,36 @@
             <a href="<c:url value="/main/paste/${model.id+1}"/>" title="Next paste">&#8594;</a>
         </c:if>
 
-        <br/>
 
-  <div style="padding-left: 2em;">
+    </div>
+</div>
 
-      <span style="vertical-align: top;font-size: larger;" class="i" title="Comments">C</span>
-      <a href="javascript:void(0);" onclick="SyntaxHighlighter.toggleComments(0);" title="hide comments">hide</a>|
-      <a href="javascript:void(0);" onclick="SyntaxHighlighter.toggleComments(1);" title="show comments">show</a>
+<div class="row">
+    <div class="column grid-6">
 
-      <c:if test="${!model.blank and not empty availableRevisions}">
-
-          <jsp:include
-                  page="/WEB-INF/pages/common/revisions.jsp">
-              <jsp:param name="modelName" value="paste" />
-          </jsp:include>
+        <span style="vertical-align: top;font-size: larger;" class="i" title="Comments">C</span>
+        <a href="javascript:void(0);" onclick="SyntaxHighlighter.toggleComments(0);" title="hide comments">hide</a>|
+        <a href="javascript:void(0);" onclick="SyntaxHighlighter.toggleComments(1);" title="show comments">show</a>
 
 
-      </c:if>
+    </div>
 
-  </div>
+    <div class="column grid-10">
+
+        <c:if test="${!model.blank and not empty availableRevisions}">
+
+            <jsp:include
+                    page="/WEB-INF/pages/common/revisions.jsp">
+                <jsp:param name="modelName" value="paste" />
+            </jsp:include>
+
+
+        </c:if>
+
+
+    </div>
+</div>
+
 
 <div class="row">
 <div class="column grid-16">
@@ -123,9 +129,6 @@
 <%--
 <div class="row">
     <div class="column grid-12">
-
-
-
 
     </div>
 </div>
@@ -204,10 +207,7 @@
 
     </div>
 
-
-
 <c:url var="url" value='/main/paste/saveComment' />
-
 
 <div id="numSpace" class="listEditSpace" >
 </div>
@@ -253,7 +253,6 @@
              <input  name="submit" type="submit" value="Add comment"  />
              to line <span id="pageNum"></span>
 
-
              <sec:authorize ifAnyGranted="ROLE_USER,ROLE_ADMIN">
 
               <span class="right"  style="padding-top: 0.5em;" >
@@ -288,9 +287,7 @@
 
 <img style="border: 2px saddlebrown;" src="${model.thumbImage}"/>
 
-
 <script type="text/javascript" src="<c:url value='/libs/zeroclipboard/ZeroClipboard.js'/>"></script>
-
 
 <c:if test="${shareIntegration}">
 
@@ -306,8 +303,7 @@
     </script>
 </c:if>
 
-                    <script type="text/javascript">
-
+   <script type="text/javascript">
                            window.addEvent('domready', function() {
 
 
@@ -321,33 +317,16 @@
     ZeroClipboard.setDefaults( { moviePath: "<c:url value='/libs/zeroclipboard/ZeroClipboard.swf'/>" } );
 
     var clip = new ZeroClipboard(document.id("ctrlc_link"));
-        //alert('Done! '+clip.ready());
-
-    clip.on( 'load', function(client) {
-    //     alert( "movie is loaded" );
-    } );
 
     clip.on( 'complete', function(client, args) {
         growl.notify(args.text.length+' symbols copied to clipboard.');
-        //alert(args.text.length+' symbols copied to clipboard.');
-        //new MooDialog.Alert(args.text.length+' symbols copied to clipboard.');
 
     } );
-
-
-
 
     var clipLine = new ZeroClipboard(document.id("ctrlc_line"));
-    //alert('Done! '+clip.ready());
-
-    clipLine.on( 'load', function(client) {
-        //     alert( "movie is loaded" );
-    } );
 
     clipLine.on( 'complete', function(client, args) {
         growl.notify(args.text.length+' symbols copied to clipboard.');
-        //alert(args.text.length+' symbols copied to clipboard.');
-        //new MooDialog.Alert(args.text.length+' symbols copied to clipboard.');
 
     } );
 
@@ -383,25 +362,15 @@
     SyntaxHighlighter.all();
 
     });
-
-
-
-
             function path()
             {
                 var args = arguments,
                 result = [];
-                
-       
+
                 for(var i = 0; i < args.length; i++)
                     result.push(args[i].replace('@', '<c:url value="/libs/syntax-highlight/scripts/"/>'));
-       
-       
-                //alert(result);
                 return result
             };
-
-
 
         </script>
         

@@ -42,7 +42,7 @@ object Struct {
 }
 
 @MappedSuperclass
-@Audited
+//@Audited
 abstract class Struct extends DBObject with SearchObject with  java.io.Serializable{
 
   @NotNull

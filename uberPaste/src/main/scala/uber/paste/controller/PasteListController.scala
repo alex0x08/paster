@@ -25,6 +25,9 @@ import org.springframework.beans.factory.annotation.{Value, Autowired}
 import org.springframework.ui.Model
 import java.util.Locale
 import org.springframework.beans.support.PagedListHolder
+import org.joda.time.{DateTime, DateMidnight, Days}
+import org.apache.commons.lang.StringEscapeUtils
+
 
 object PasteSearchResult extends KeyValueObj[SearchResult] {
 
@@ -40,6 +43,51 @@ object PasteSearchResult extends KeyValueObj[SearchResult] {
 @Controller
 @RequestMapping(value=Array("/paste"))
 class PasteListController extends SearchController[Paste,OwnerQuery] {
+
+
+  class DateSplitHelper(locale:Locale) {
+
+    var prevDate:java.util.Date =null
+    var curDate:java.util.Date = null
+    var total:Int =0
+    var title:String =null
+
+    def setCurDate(date:java.util.Date) {
+      curDate = date
+
+      if (prevDate == null) {
+        prevDate = curDate
+      }
+      total.+=(1)
+    }
+
+    def getSplitTitle() = title
+
+    def isSplit():Boolean = {
+
+      val d = Days.daysBetween(new DateTime(prevDate), new DateTime(curDate))
+      //System.out.println("_split dys="+d.getDays+" prev="+prevDate+" cur="+curDate)
+      return if ( scala.math.abs(d.getDays())>14 )  {
+        title=  PasteListController.this.getResource("paste.list.slider.title",Array(curDate,prevDate,total),locale)
+
+        prevDate = curDate
+        total =0
+
+        true
+      } else {
+        false
+      }
+
+    }
+
+  }
+
+  @Value("${config.smtpd.enabled}")
+  val mailSource:Boolean = false
+
+  @Value("${config.skype.enabled}")
+  val skypeSource:Boolean = false
+
 
   @Autowired
   val pasteManager:PasteManager = null
@@ -82,8 +130,17 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
   protected override def fillListModel(model:Model,locale:Locale) {
     super.fillListModel(model,locale)
     model.addAttribute("title","Pastas")
+
+    if (!mailSource) {
+      PasteSource.list.remove(PasteSource.MAIL)
+    }
+    if (!skypeSource) {
+      PasteSource.list.remove(PasteSource.SKYPE)
+    }
+
     model.addAttribute("availableSourceTypes",PasteSource.list)
 
+    model.addAttribute("splitHelper",new DateSplitHelper(locale))
                     //config.share.integration=1
     //config.share.url=https://dev.iqcard.ru/share
 
