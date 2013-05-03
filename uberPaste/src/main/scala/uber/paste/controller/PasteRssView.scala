@@ -41,19 +41,19 @@ class PasteRssView extends AbstractRssFeedView{
 
     for (e:Paste<- contentList) {
 
-      var entry = new Item()
+      val entry = new Item()
 
       entry.setTitle(e.getName())
       entry.setLink(externalUrl+"/main/paste/"+e.getId())
       entry.setPubDate(e.getLastModified())
           entry.setAuthor( if (e.getOwner()!=null) { e.getOwner().getUsername()} else { "Anonymous"})
-      var d = new Description
+      val d = new Description
 
       d.setValue(e.getTitle())
 
       entry.setDescription(d)
 
-      var summary = new Content()
+      val summary = new Content()
       summary.setValue(e.getTitle())
       entry.setContent(summary)
 

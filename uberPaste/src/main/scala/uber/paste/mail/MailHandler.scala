@@ -44,13 +44,17 @@ object MailHandler {
 class MailHandler(appContext:ApplicationContext, ctx:MessageContext) extends Loggered with MessageHandler {
 
   private val userManager:UserManager = appContext.getBean("userManager").asInstanceOf[UserManager]
+
   private val pasteManager:PasteManager = appContext.getBean("pasteManager").asInstanceOf[PasteManager]
 
   private val settingsManager:ConfigManager = appContext.getBean("configManager").asInstanceOf[ConfigManager]
+
   private var allowed:Boolean =true
+
   private var currentUser:User=null
 
   private var mailFrom:String=null
+
   private var mailTo:String=null
 
 

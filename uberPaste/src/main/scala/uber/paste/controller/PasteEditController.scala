@@ -45,6 +45,10 @@ import org.springframework.http.HttpStatus
 import java.net.UnknownHostException
 import com.google.gson.stream.MalformedJsonException
 
+/**
+ * Paste model controller
+ * Support for all operations related to one paste model: edit,view,delete,add comments..
+ */
 @Controller
 @RequestMapping(Array("/paste"))
 //@SessionAttributes(Array(GenericController.MODEL_KEY))
@@ -62,15 +66,12 @@ class PasteController extends VersionController[Paste]   {
   @Value("${config.share.url}")
   val shareUrl:String = null
 
-
   def listPage()="redirect:/main/paste/list"
   def editPage()="paste/edit"
   def viewPage()="paste/view"
-  
 
   def manager():PasteManager = return pasteManager
- 
-  
+
   @InitBinder
   def initBinder(binder:WebDataBinder):Unit = {
     binder.initDirectFieldAccess()
@@ -81,7 +82,6 @@ class PasteController extends VersionController[Paste]   {
   override def fillEditModel(obj:Paste,model:Model,locale:Locale)  {
          super.fillEditModel(obj,model,locale)
 
-
     if (obj.isBlank) {
       model.addAttribute("title",getResource("paste.new",locale))
     } else {
@@ -90,9 +90,11 @@ class PasteController extends VersionController[Paste]   {
     model.addAttribute("availableCodeTypes", CodeType.list)
     model.addAttribute("availablePriorities", Priority.list)
 
-
   //  obj.tagsAsString = for (s<-obj.getTags()) yield s+" "
 
+    /**
+     * concatenate all model tags objects to one string
+     */
     obj.tagsAsString={
       val out =new StringBuilder
       for (s<-obj.getTags()) {
@@ -129,7 +131,6 @@ class PasteController extends VersionController[Paste]   {
       return page404
     }
 
-
     val c = new Comment
     c.setId(commentId)
 
@@ -137,10 +138,20 @@ class PasteController extends VersionController[Paste]   {
 
     manager.save(p)
 
+    model.asMap().clear()
+
     return "redirect:/main/paste/" + pasteId + "#line_" + lineNumber
   }
 
-
+  /**
+   * add new comment
+   * @param pasteId
+   * @param b
+   * @param result
+   * @param model
+   * @param locale
+   * @return
+   */
   @RequestMapping(value = Array("/saveComment"), method = Array(RequestMethod.POST))
   def saveComment(@RequestParam(required = true) pasteId:java.lang.Long,
                     @Valid b:Comment,
@@ -167,6 +178,8 @@ class PasteController extends VersionController[Paste]   {
       p.getComments().add(b)
 
       manager.save(p)
+
+    model.asMap().clear()
 
     return "redirect:/main/paste/" + pasteId + "#line_" + b.getLineNumber
   }
@@ -223,10 +236,17 @@ class PasteController extends VersionController[Paste]   {
        }
      }
 
+      /**
+       * check if normalized was set
+       */
       if (b.isNormalized()) {
 
         b.getCodeType() match {
+
           case CodeType.JavaScript => {
+            /**
+             * try to normalize json
+             */
             try {
 
               val o = new JsonParser().parse(b.getText()).getAsJsonObject()
@@ -235,12 +255,14 @@ class PasteController extends VersionController[Paste]   {
             } catch{
               case e @ (_ : MalformedJsonException | _ :Exception) => {
                       //ignore
-
                 }
               }
 
           }
           case CodeType.Plain => {
+            /**
+             * set word wrap for plain
+             */
                b.setText(WordUtils.wrap(b.getText(),80))
           }
           case _ => {}
@@ -255,12 +277,13 @@ class PasteController extends VersionController[Paste]   {
 
 
       logger.debug("__found thumbnail "+b.getThumbImage())
-
-
       logger.debug("__found comments "+b.getComments().size())
 
        val out =super.save(cancel,b,result,model,locale)
-      return if (out.equals(listPage))  {"redirect:/main/paste/"+b.getId()} else {out}
+      return if (out.equals(listPage))  {
+        model.asMap().clear()
+        "redirect:/main/paste/"+b.getId()
+      } else {out}
    }
 
 
@@ -293,18 +316,33 @@ class PasteController extends VersionController[Paste]   {
     return viewPage
   }
 
+  /**
+   *
+   * @return available code types
+   */
   @RequestMapping(value = Array("/codetypes"), method = Array(RequestMethod.GET))
   @ResponseBody
   def getAvailableCodeTypes():java.util.Collection[CodeType] = {
               return CodeType.list
   }
 
+  /**
+   * return plain paste text
+   * @param id
+   * @param model
+   * @param locale
+   * @return
+   */
   @RequestMapping(value = Array("/plain/{id:[0-9]+}"), method = Array(RequestMethod.GET), produces = Array("text/plain;charset=UTF-8"))
   @ResponseBody
   def getBodyPlain(@PathVariable("id") id:java.lang.Long,model:Model,locale:Locale):String = {
     return loadModel(id).getText();
   }
 
+  /**
+   *
+   * @return new search query object
+   */
   @ModelAttribute("query")
   def newQuery():OwnerQuery = {
     val out =new OwnerQuery

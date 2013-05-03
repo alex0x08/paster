@@ -40,16 +40,15 @@ class PasteAtomView extends AbstractAtomFeedView{
 
     for (e:Paste<- contentList) {
 
-      var entry = new Entry()
-      var date = String.format("%1$tY-%1$tm-%1$td", e.getLastModified())
+      val entry = new Entry()
+      val date = String.format("%1$tY-%1$tm-%1$td", e.getLastModified())
       // see http://diveintomark.org/archives/2004/05/28/howto-atom-id#other
       entry.setId(String.format("tag:springsource.com,%s:%d", date, e.getId()))
-      entry.setTitle(String.format("On %s, %s wrote", date, if (e.getOwner()!=null) { e.getOwner().getUsername()} else { "Anonymous"}))
+      entry.setTitle(String.format("On %s, %s wrote", date,
+        if (e.getOwner()!=null) { e.getOwner().getUsername()} else { "Anonymous"}))
       entry.setUpdated(e.getLastModified())
 
-
-
-      var summary = new Content()
+      val summary = new Content()
       summary.setValue(e.getText())
       entry.setSummary(summary)
 

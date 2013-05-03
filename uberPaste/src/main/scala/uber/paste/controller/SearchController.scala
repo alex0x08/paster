@@ -30,10 +30,14 @@ import org.apache.commons.lang.StringUtils
 import scala.collection.JavaConversions._
 
 
-
-
+/**
+ * Search result object
+ */
 class SearchResult extends KeyValue{
 
+  /**
+   * name of the model (used from web)
+   */
   private var itemsModel:String=null
 
   def this(code:String,desc:String,itemsModel:String) = {
@@ -54,15 +58,29 @@ object SearchController {
 
 }
 
+/**
+ * Abstract Search Controller.
+ * All children will have +1 search ability
+ * @tparam T model class
+ * @tparam QV query class
+ */
 abstract class SearchController[T <: Struct,QV <: Query ] extends GenericListController[T] {
 
-
+  /**
+   * linked search manager
+   * @return
+   */
   protected override def manager():GenericSearchManager[T]
  
    //@ModelAttribute
    def newQuery():QV
 
+  /**
+   *
+   * @return search results if any
+   */
   def getAvailableResults():java.util.Collection[SearchResult]
+
 
   def getSearchResultByCode(code:String):SearchResult
 
@@ -78,6 +96,17 @@ abstract class SearchController[T <: Struct,QV <: Query ] extends GenericListCon
     model.addAttribute(GenericListController.LIST_MODE,"search")
   }
 
+  /**
+   * main search function
+   * @param request
+   * @param locale
+   * @param query
+   * @param model
+   * @param page
+   * @param NPpage
+   * @param pageSize
+   * @return
+   */
   @RequestMapping(value = Array(SearchController.SEARCH_ACTION),
                   method = Array(RequestMethod.POST,RequestMethod.GET))
   @ModelAttribute(GenericController.NODE_LIST_MODEL)
@@ -142,9 +171,8 @@ abstract class SearchController[T <: Struct,QV <: Query ] extends GenericListCon
  //   return super.list(request, locale,model, page, NPpage, pageSize)
   }
 
+
   def search(query:Query,result:SearchResult):java.util.List[_]= {
-
-
     logger.debug("_search "+query.getQuery())
 
     return if(StringUtils.isBlank(query.getQuery()))

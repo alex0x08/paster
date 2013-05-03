@@ -37,7 +37,7 @@ object PasteManager {
 
 class PriorStat extends Key{
 
-     private var counter = new AtomicInteger
+     private val counter = new AtomicInteger
 
      def getCounter():Int = counter.get()
      def increment() = {counter.incrementAndGet()}

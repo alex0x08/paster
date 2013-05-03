@@ -36,8 +36,9 @@ object SessionStore {
 
 class SessionStore {
 
-  private var store:BiMap[String,String] = HashBiMap.create()
-  private var user_store:Map[String,User] = new HashMap[String,User]
+  private val store:BiMap[String,String] = HashBiMap.create()
+
+  private val user_store:Map[String,User] = new HashMap[String,User]
 
   private val lock = new Object
     
@@ -70,9 +71,9 @@ class SessionStore {
       return;
     }
 
-    var sessionID:String = getSessionForLogin(u.getUsername())
+    //var sessionID:String = getSessionForLogin(u.getUsername())
 
-    add(sessionID, u);
+    add(getSessionForLogin(u.getUsername()), u);
       
   }
 
@@ -132,7 +133,7 @@ class SessionStore {
    */
   def getSessions(skipLogin:String):java.util.List[User] = {
 
-    var out = new ArrayList[User]
+    val out = new ArrayList[User]
         
 
     for (i <- user_store.entrySet()) {
@@ -151,20 +152,21 @@ class SessionStore {
    * @return логин пользователя для указанной сессии
    */
   def getLoginForSession(sessionID:String):String = {
-    if (!isUserForSession(sessionID)) {
-      return null;
-    }
 
-    return store.get(sessionID)
-  }
+    return if (!isUserForSession(sessionID)) {
+      null
+    } else {
+      store.get(sessionID)
+    }
+ }
 
   def getUserForLogin(login:String):User = {
     
-    if (!isUserForLogin(login)) {
-      return null
+    return if (!isUserForLogin(login)) {
+     null
+    } else {
+      user_store.get(login)
     }
-
-    return user_store.get(login)
   }
 
 
@@ -174,10 +176,11 @@ class SessionStore {
    * @return id сессии
    */
   def getSessionForLogin(login:String):String = {
-    if (!isSessionForUser(login)) {
-      return null
+    return if (!isSessionForUser(login)) {
+      null
+    } else {
+      store.inverse().get(login)
     }
-    return store.inverse().get(login)
   }
     
   

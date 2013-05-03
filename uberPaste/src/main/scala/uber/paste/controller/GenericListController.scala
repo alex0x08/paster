@@ -26,15 +26,31 @@ import java.util.Locale
 object GenericListController {
 
   final val INTEGRATED = "/integrated"
+
   final val LIST_ACTION = "/list"
+
   final val NEXT_PARAM = "next"
+
   final val PAGE_SET = "pageSet"
+
   final val pageSet:Array[Int] = Array(5,10,50,100,500)
+  /**
+   * model attribute to specify list mode
+   * value can be 'search' or 'list'
+   */
   final val LIST_MODE = "listMode"
 }
 
+/**
+ * Abstract Controller to deal with lists
+ * Based on Spring PageListHolder heavy usage
+ * @tparam T model class
+ */
 abstract class GenericListController[T <: Struct ] extends StructController[T] {
 
+  /**
+   * default callback object: will simply use getList from attached manager
+   */
   protected val defaultListCallback:SourceCallback[T]  = new SourceCallback[T]() {
 
     override def invokeCreate():PagedListHolder[T] = {
@@ -44,12 +60,28 @@ abstract class GenericListController[T <: Struct ] extends StructController[T] {
 
 
   protected def fillListModel(model:Model,locale:Locale) {
+    /**
+     * set default list mode
+     */
     if (!model.containsAttribute(GenericListController.LIST_MODE)) {
       model.addAttribute(GenericListController.LIST_MODE,"list")
     }
   }
 
-
+  /**
+   * process pagination
+   *
+   * @param request
+   * @param locale
+   * @param model
+   * @param page
+   * @param NPpage
+   * @param pageSize
+   * @param callback
+   * @param pageHolderName
+   * @param createDefaultItemModel
+   * @return
+   */
   protected def processPageListHolder(request:HttpServletRequest,
                                       locale:Locale,
                                       model:Model,
@@ -63,11 +95,17 @@ abstract class GenericListController[T <: Struct ] extends StructController[T] {
             .getAttribute(pageHolderName)
             .asInstanceOf[PagedListHolder[T]]
 
+    /**
+     * if no pageListHolder found or no page controls is set - recreate pageListHolder (load data from db)
+     */
     if (pagedListHolder == null || (page == null && NPpage == null && pageSize==null)) {
       pagedListHolder = callback.invokeCreate()
       logger.debug("pagedListHolder created pageSize="+pageSize)
     } else {
-
+      /**
+       * NPage is string like NEXT or PREV
+       * check if exist and use it
+       */
       if (NPpage != null) {
         if (NPpage.equals(GenericListController.NEXT_PARAM)) {
           pagedListHolder.nextPage()
@@ -75,6 +113,9 @@ abstract class GenericListController[T <: Struct ] extends StructController[T] {
           pagedListHolder.previousPage()
         }
 
+        /**
+         * if page number was specified
+         */
       } else if (page!=null){
 
         var npage = page
@@ -91,12 +132,16 @@ abstract class GenericListController[T <: Struct ] extends StructController[T] {
 
     }
 
+    /**
+     * if items per page parameter was specified
+     */
     if (pageSize != null) {
-      pagedListHolder.setPageSize(pageSize);
+      pagedListHolder.setPageSize(pageSize)
     }
 
     request.getSession().setAttribute(pageHolderName, pagedListHolder)
     model.addAttribute(pageHolderName, pagedListHolder)
+
 
     if (createDefaultItemModel && !pageHolderName.equals(GenericController.NODE_LIST_MODEL_PAGE)) {
       model.addAttribute(GenericController.NODE_LIST_MODEL_PAGE, pagedListHolder)
@@ -156,8 +201,6 @@ abstract class GenericListController[T <: Struct ] extends StructController[T] {
 
     fillListModel(model,locale)
     // putListModel(model);
-
-
 
     return processPageListHolder(request,locale,model,page,NPpage,pageSize,defaultListCallback,
       result)

@@ -73,6 +73,7 @@ class UserSessionListener extends Loggered with ServletContextListener with Http
      * @see javax.servlet.http.HttpSessionAttributeListener#attributeAdded(javax.servlet.http.HttpSessionBindingEvent)
      */
     def attributeAdded(event:HttpSessionBindingEvent) {
+
         if (event.getName().equals(UserSessionListener.EVENT_KEY) && !isAnonymous()) {
           
             val  securityContext = event.getValue().asInstanceOf[SecurityContext]
