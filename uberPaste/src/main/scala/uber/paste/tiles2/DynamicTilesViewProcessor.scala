@@ -166,10 +166,10 @@ class DynamicTilesViewProcessor extends Loggered {
                                           new Attribute(tilesBodyAttributeName,
                                                         url.asInstanceOf[java.lang.Object]))
 
-            logger.debug("URL used for Tiles body.  url='" + url + "'.");
+            logger.debug("URL used for Tiles body.  url='" + url + "'.")
         }
 
-        return definitionName;
+        return definitionName
     }
 
     /**
@@ -181,7 +181,7 @@ class DynamicTilesViewProcessor extends Loggered {
                                        response:HttpServletResponse,
                                         container:TilesContainer) {
         if (!definitionName.equals(beanName)) {
-            container.endContext(request, response);
+            container.endContext(request, response)
         }
     }
 
@@ -202,14 +202,15 @@ class DynamicTilesViewProcessor extends Loggered {
         // if definition already derived use it, otherwise 
         // check if url (bean name) is a template definition, then 
         // check for main template
-        if (derivedDefinitionName != null) {
-            return derivedDefinitionName
+        return if (derivedDefinitionName != null) {
+            derivedDefinitionName
         } else if (container.isValidDefinition(beanName, request, response)) {
 
             derivedDefinitionName = beanName
 
-            return beanName
+            beanName
         } else {
+
             var result:String = null
 
             val sb = new StringBuilder()
@@ -225,16 +226,15 @@ class DynamicTilesViewProcessor extends Loggered {
 
             // if no '/', then at context root
             if (lastIndex == -1) {
-                rootDefinition = true;
+                rootDefinition = true
             } else {
                 var path = if (beanName != null ) { beanName.substring(0, lastIndex) } else { "" }
 
                 if (StringUtils.hasLength(tilesDefinitionDelimiter)) {
-                    path = StringUtils.replace(path, "/", tilesDefinitionDelimiter);
-
+                    path = StringUtils.replace(path, "/", tilesDefinitionDelimiter)
                 }
 
-                sb.append(path);
+                sb.append(path)
 
                 if (StringUtils.hasLength(tilesDefinitionDelimiter)) {
                     sb.append(tilesDefinitionDelimiter);
@@ -256,7 +256,7 @@ class DynamicTilesViewProcessor extends Loggered {
 
                 root += tilesDefinitionName;
 
-              System.out.println("_final "+root)
+             // System.out.println("_final "+root)
 
                 if (container.isValidDefinition(root, request, response)) {
                     result = root
@@ -269,7 +269,7 @@ class DynamicTilesViewProcessor extends Loggered {
 
             derivedDefinitionName = result
 
-            return result
+            result
         }
     }
 

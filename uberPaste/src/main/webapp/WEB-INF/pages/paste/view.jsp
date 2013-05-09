@@ -11,8 +11,6 @@
 
 <div class="row">
     <div class="column grid-16">
-
-
         <c:set var="priorTitle"><fmt:message key="${model.priority.name}"/></c:set>
 
         <h4 class="f-h4" style="padding-top: 0;margin-top:0;"><span class="i ${model.priority.cssClass}" style="font-size:2em;" title="${priorTitle}" >/</span>
@@ -84,28 +82,23 @@
         <a href="javascript:void(0);" onclick="SyntaxHighlighter.toggleComments(0);" title="hide comments">hide</a>|
         <a href="javascript:void(0);" onclick="SyntaxHighlighter.toggleComments(1);" title="show comments">show</a>
 
-
     </div>
 
     <div class="column grid-10">
-
-        <c:if test="${!model.blank and not empty availableRevisions}">
-
-            <jsp:include
+              <c:if test="${!model.blank and not empty availableRevisions}">
+                   <jsp:include
                     page="/WEB-INF/pages/common/revisions.jsp">
                 <jsp:param name="modelName" value="paste" />
             </jsp:include>
 
-
         </c:if>
-
 
     </div>
 </div>
 
 
 <div class="row">
-<div class="column grid-16">
+<div class="column grid-10">
     <pre id="pasteText" class="brush: ${model.codeType.code};toolbar: false; auto-links:false;" style=" overflow-y: hidden;" ><c:out value="${model.text}" escapeXml="true" /></pre>
     <code id="pasteTextPlain" style="display:none;"><c:out value="${model.text}" escapeXml="true" /></code>
 

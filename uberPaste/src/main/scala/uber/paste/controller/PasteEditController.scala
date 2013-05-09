@@ -287,6 +287,37 @@ class PasteController extends VersionController[Paste]   {
    }
 
 
+  @RequestMapping(value = Array("/loadFrom"), method = Array(RequestMethod.GET))
+  def getRemote(@RequestParam(required = false) id:java.lang.Long,
+                         model:Model,
+                         locale:Locale):String = {
+
+    val r = super.getByPath(id,model,locale)
+    if (!r.equals(viewPage))
+      return r;
+
+    val p = model.asMap().get(GenericController.MODEL_KEY).asInstanceOf[Paste];
+
+    if (!p.isBlank()) {
+
+      if (manager.exists(p.getId()+1)) {
+        model.addAttribute("availableNext",true)
+      }
+      if (manager.exists(p.getId()-1)) {
+        model.addAttribute("availablePrev",true)
+      }
+    }
+
+
+    model.addAttribute("shareIntegration",shareIntegration)
+    model.addAttribute("shareUrl",shareUrl)
+
+    model.addAttribute("title",getResource("paste.view.title",Array(p.getId,StringEscapeUtils.escapeHtml(p.getName())),locale))
+
+    return viewPage
+  }
+
+
 
   @RequestMapping(value = Array("/{id:[0-9]+}"), method = Array(RequestMethod.GET))
   override def getByPath(@PathVariable("id") id:java.lang.Long,model:Model,locale:Locale):String = {

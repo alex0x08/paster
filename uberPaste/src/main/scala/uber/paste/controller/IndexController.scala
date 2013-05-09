@@ -30,7 +30,8 @@ class IndexController extends AbstractController{
   def default() = "redirect:/main/paste/list"
   
   @RequestMapping(value = Array("/"))
-  def index() = {
+  def index(model:Model) = {
+    model.asMap().clear()
     "redirect:/main/paste/list"
   }
   

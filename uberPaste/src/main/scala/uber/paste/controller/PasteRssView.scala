@@ -5,6 +5,8 @@ import scala.collection.JavaConversions._
 import com.sun.syndication.feed.rss.{Description, Item, Channel, Content}
 import javax.servlet.http.{HttpServletResponse, HttpServletRequest}
 import uber.paste.model.Paste
+import java.util.Collections
+import com.sun.syndication.feed.atom.Entry
 
 /**
  * Created with IntelliJ IDEA.
@@ -34,6 +36,11 @@ class PasteRssView extends AbstractRssFeedView{
 
   override protected def buildFeedItems(model:java.util.Map[String, Object],
      request:HttpServletRequest, response:HttpServletResponse):java.util.List[Item] = {
+
+    if (!model.containsKey(GenericController.NODE_LIST_MODEL)) {
+      return Collections.emptyList[Item]()
+    }
+
 
     val  contentList = model.get(GenericController.NODE_LIST_MODEL).asInstanceOf[java.util.List[Paste]]
 

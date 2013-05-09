@@ -5,6 +5,7 @@ import javax.servlet.http.{HttpServletResponse, HttpServletRequest}
 import com.sun.syndication.feed.atom.{Content, Entry, Feed}
 import uber.paste.model.Paste
 import scala.collection.JavaConversions._
+import java.util.Collections
 
 /**
  * Created with IntelliJ IDEA.
@@ -33,6 +34,10 @@ class PasteAtomView extends AbstractAtomFeedView{
   @throws(classOf[Exception])
   override protected def buildFeedEntries(model:java.util.Map[String, Object] ,
                                           request:HttpServletRequest , response:HttpServletResponse ):java.util.List[Entry]=  {
+
+         if (!model.containsKey(GenericController.NODE_LIST_MODEL)) {
+           return Collections.emptyList[Entry]()
+         }
 
     val  contentList = model.get(GenericController.NODE_LIST_MODEL).asInstanceOf[java.util.List[Paste]]
 

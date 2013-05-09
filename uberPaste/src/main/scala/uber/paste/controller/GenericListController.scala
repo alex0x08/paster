@@ -20,7 +20,7 @@ import uber.paste.model.Struct
 import javax.servlet.http.HttpServletRequest
 import org.springframework.beans.support.PagedListHolder
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation._;
+import org.springframework.web.bind.annotation._
 import java.util.Locale
 
 object GenericListController {

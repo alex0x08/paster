@@ -20,6 +20,7 @@ package uber.paste.base
 import org.slf4j.{Logger, LoggerFactory}
 import org.apache.commons.lang.builder.{StandardToStringStyle, ToStringBuilder}
 import javax.jws.WebMethod
+import org.codehaus.jackson.annotate.JsonIgnore
 
 object Loggered {
 
@@ -38,10 +39,12 @@ trait Loggered {
 
   @transient
   @WebMethod(exclude = true)
+  @JsonIgnore
   def logger = LoggerFactory.getLogger(this.getClass.getName)
 
   @transient
   @WebMethod(exclude = true)
+  @JsonIgnore
   def getNewProtocolBuilder():ToStringBuilder = new ToStringBuilder(this, Loggered.style)
 
 }

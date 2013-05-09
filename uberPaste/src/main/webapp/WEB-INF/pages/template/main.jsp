@@ -117,7 +117,7 @@
     <div class="row">
         <div class="column grid-2">
         </div>
-        <div class="column grid-14"  >
+        <div class="column grid-18"  >
             <tiles:insertAttribute name="content" />
         </div>
      </div>

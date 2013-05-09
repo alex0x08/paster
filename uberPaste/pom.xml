@@ -467,6 +467,12 @@
             <version>1.3.1</version>
         </dependency>
 
+        <dependency>
+            <groupId>net.sf.jxls</groupId>
+            <artifactId>jxls-core</artifactId>
+            <version>1.0.2</version>
+        </dependency>
+
 
     </dependencies>
 
@@ -870,6 +876,15 @@
     <include>*.xml</include>
 </includes>
 </resource>
+
+    <resource>
+        <targetPath>templates</targetPath>
+        <directory>src/main/resources/templates</directory>
+        <includes>
+            <include>*.xls</include>
+        </includes>
+    </resource>
+
 
 
 </resources>

@@ -11,7 +11,7 @@
 </div>
 
 <div class="row">
-    <div class="column grid-12">
+    <div class="column grid-10">
        from
     <c:forEach var="source" items="${availableSourceTypes}" varStatus="loopStatus">
 
@@ -33,6 +33,7 @@
         <a href="<c:url value="/main/paste/list/body.json"/>"><img src="<c:url value='/images/json.png'/>" title="json" alt="json"/></a> |
         <a href="<c:url value="/main/paste/list.rss"/>"><img src="<c:url value='/images/rss.png'/>" title="rss" alt="rss"/></a> |
         <a href="<c:url value="/main/paste/list.atom"/>"><img src="<c:url value='/images/atom.png'/>" title="atom" alt="atom"/></a> |
+        <a href="<c:url value="/main/paste/list.xls"/>"><img src="<c:url value='/images/xls.gif'/>" title="xls" alt="xls"/></a> |
         <a href="<c:url value="/ws/paste?wsdl"/>"><img src="<c:url value='/images/wsdl_icon.png'/>" title="wsdl" alt="wsdl"/></a>
 
     </div>
