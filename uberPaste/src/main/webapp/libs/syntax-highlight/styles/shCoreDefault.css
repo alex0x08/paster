@@ -380,9 +380,9 @@
 .commentBlock {
     white-space: normal;
     position: relative;
-    max-width: 50em;
+    max-width: 40em;
     min-width: 5em;
-    width: 40em;
+    width: auto;
     height: 4em;
     max-height: 4em;
     margin-left: 0.5em;

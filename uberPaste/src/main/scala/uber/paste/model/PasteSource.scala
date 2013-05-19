@@ -12,10 +12,13 @@ object PasteSource extends KeyValueObj[PasteSource] {
   val FORM = new PasteSource("FORM","paste.source.form")
   val MAIL = new PasteSource("MAIL","paste.source.mail")
   val SKYPE = new PasteSource("SKYPE","paste.source.skype")
+  val REMOTE = new PasteSource("REMOTE","paste.source.remote")
 
   add(FORM)
   add(MAIL)
   add(SKYPE)
+  add(REMOTE)
+
 }
 
 class PasteSource extends KeyValue{

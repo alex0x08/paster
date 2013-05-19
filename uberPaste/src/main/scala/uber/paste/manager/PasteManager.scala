@@ -52,8 +52,9 @@ trait PasteManager extends GenericSearchManager[Paste]{
 
   def getListIntegrated(code:String):java.util.List[Paste]
 
+  def getByRemoteUrl(url:String) : Paste
 
-}
+  }
 
 @Service("pasteManager")
 class PasteManagerImpl extends GenericSearchManagerImpl[Paste] with PasteManager {
@@ -62,6 +63,10 @@ class PasteManagerImpl extends GenericSearchManagerImpl[Paste] with PasteManager
   val pasteDao:PasteDao = null
 
   protected override def getDao:PasteDao = pasteDao
+
+  def getByRemoteUrl(url:String) : Paste= {
+    return pasteDao.getByRemoteUrl(url)
+  }
 
   def getByOwner(owner:User) : java.util.List[Paste]= {
     return pasteDao.getByOwner(owner)

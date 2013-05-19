@@ -122,6 +122,8 @@ class Paste extends Struct with java.io.Serializable{
 
   private var integrationCode:String = null
 
+  private var remoteUrl:String = null
+
   @ElementCollection(fetch = FetchType.EAGER)
   @SearchableProperty
   //@NotAudited
@@ -199,6 +201,8 @@ class Paste extends Struct with java.io.Serializable{
   def isNormalized() = normalized
   def setNormalized(b:Boolean) {this.normalized=b}
 
+  def getRemoteUrl() = remoteUrl
+  def setRemoteUrl(url:String) {this.remoteUrl = url}
 
   def getPasteSource() : PasteSource = PasteSource.valueOf(pasteSource)
 

@@ -78,9 +78,14 @@
 <div class="row">
     <div class="column grid-6">
 
-        <span style="vertical-align: top;font-size: larger;" class="i" title="Comments">C</span>
-        <a href="javascript:void(0);" onclick="SyntaxHighlighter.toggleComments(0);" title="hide comments">hide</a>|
-        <a href="javascript:void(0);" onclick="SyntaxHighlighter.toggleComments(1);" title="show comments">show</a>
+        <c:if test="${not empty model.commentCount and model.commentCount>0}">
+
+            <span style="vertical-align: top;font-size: larger;" class="i" title="Comments">C</span>
+            <a href="javascript:void(0);" onclick="SyntaxHighlighter.toggleComments(0);" title="hide comments">hide</a>|
+            <a href="javascript:void(0);" onclick="SyntaxHighlighter.toggleComments(1);" title="show comments">show</a>
+
+
+        </c:if>
 
     </div>
 
@@ -88,23 +93,23 @@
               <c:if test="${!model.blank and not empty availableRevisions}">
                    <jsp:include
                     page="/WEB-INF/pages/common/revisions.jsp">
-                <jsp:param name="modelName" value="paste" />
-            </jsp:include>
-
-        </c:if>
+                        <jsp:param name="modelName" value="paste" />
+                    </jsp:include>
+               </c:if>
 
     </div>
 </div>
 
 
 <div class="row">
-<div class="column grid-10">
+
+    <div class="column grid-12">
     <pre id="pasteText" class="brush: ${model.codeType.code};toolbar: false; auto-links:false;" style=" overflow-y: hidden;" ><c:out value="${model.text}" escapeXml="true" /></pre>
     <code id="pasteTextPlain" style="display:none;"><c:out value="${model.text}" escapeXml="true" /></code>
 
 </div>
 
-<div class="column grid-4">
+    <div class="column grid-4">
 
     <c:if test="${shareIntegration}">
 
@@ -119,6 +124,7 @@
 
 </div>
 
+</div>
 <%--
 <div class="row">
     <div class="column grid-12">

@@ -27,6 +27,7 @@ import javax.annotation.Resource
 import java.util.Locale
 import scala.collection.JavaConversions._
 import uber.paste.manager.UserManager
+import org.codehaus.jackson.annotate.JsonIgnore
 
 abstract class AbstractController extends Loggered{
 
@@ -51,8 +52,8 @@ abstract class AbstractController extends Loggered{
    */
   @ExceptionHandler(Array(classOf[ObjectRetrievalFailureException]))
   def handleDAOException(ex:ObjectRetrievalFailureException):String= {
-    logger.error("Object not found: " + ex.getLocalizedMessage(), ex);
-    return page404;
+    logger.error("Object not found: " + ex.getLocalizedMessage(), ex)
+    return page404
   }
 
   /**
@@ -62,16 +63,19 @@ abstract class AbstractController extends Loggered{
    */
   @ExceptionHandler(Array(classOf[Throwable]))
   def handleException(ex:Throwable):String= {
-    logger.error("exception " + ex.getLocalizedMessage(), ex);
-    return page500;
+    logger.error("exception " + ex.getLocalizedMessage(), ex)
+    return page500
   }
 
+  @JsonIgnore
   def getCurrentUser():User = UserManager.getCurrentUser()
 
+  @JsonIgnore
   def isCurrentUserLoggedIn():Boolean = {
     return UserManager.getCurrentUser != null
   }
 
+  @JsonIgnore
   def isCurrentUserAdmin():Boolean = {
     val u:User = UserManager.getCurrentUser
     return u != null && u.isAdmin()

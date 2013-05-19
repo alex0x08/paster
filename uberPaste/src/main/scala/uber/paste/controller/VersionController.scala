@@ -33,7 +33,9 @@ abstract class VersionController[T <: Struct ] extends GenericEditController[T] 
     logger.debug("__putModel obj id=" + obj.getId())
 
     if (!obj.isBlank()) {
-      model.addAttribute("availableRevisions", manager.getRevisions(obj.getId()))
+        val revs = manager.getRevisions(obj.getId())
+      // skip revisions display if only one revision exist
+      model.addAttribute("availableRevisions", if (revs!=null && revs.size()>1) revs else null)
       model.addAttribute("lastRevision", manager.getCurrentRevisionNumber(obj.getId()))
     }
   }

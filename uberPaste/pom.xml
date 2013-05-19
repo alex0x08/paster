@@ -473,6 +473,12 @@
             <version>1.0.2</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.2.3</version>
+        </dependency>
+
 
     </dependencies>
 

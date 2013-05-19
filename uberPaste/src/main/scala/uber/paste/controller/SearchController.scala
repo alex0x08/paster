@@ -155,7 +155,8 @@ abstract class SearchController[T <: Struct,QV <: Query ] extends GenericListCon
      // model.addAttribute(SearchController.TOTAL_FOUND,totalFound)
 
       return if (out==null) {
-       model.addAttribute(GenericController.NODE_LIST_MODEL_PAGE,new PagedListHolder[T]( java.util.Collections.emptyList[T]()))
+       model.addAttribute(GenericController.NODE_LIST_MODEL_PAGE,
+         new PagedListHolder[T]( java.util.Collections.emptyList[T]()))
        logger.debug("no results found in any models")
 
        java.util.Collections.emptyList[T]()
@@ -164,7 +165,7 @@ abstract class SearchController[T <: Struct,QV <: Query ] extends GenericListCon
 
     } catch {
       case e:org.compass.core.engine.SearchEngineQueryParseException =>
-         model.addAttribute("statusMessageKey", "action.query.incorrect");
+         model.addAttribute("statusMessageKey", "action.query.incorrect")
          return manager.getList
     }  
     

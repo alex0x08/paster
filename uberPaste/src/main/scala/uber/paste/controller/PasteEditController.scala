@@ -23,13 +23,13 @@ import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.servlet.ModelAndView
 import uber.paste.model._
 import org.springframework.beans.factory.annotation.{Value, Autowired}
-import java.io.{FileNotFoundException, IOException, File}
+import java.io.{ByteArrayOutputStream, FileNotFoundException, IOException, File}
 import javax.servlet.http.HttpServletResponse
 import uber.paste.dao.ConfigDao
 import uber.paste.manager.{CommentManager, PasteManager}
 import org.springframework.ui.Model
 import uber.paste.base.Loggered
-
+import scala.util.control.Breaks._
 import org.springframework.validation.BindingResult
 import javax.validation.Valid
 import java.util.HashMap
@@ -41,9 +41,18 @@ import org.apache.commons.lang.{StringEscapeUtils, WordUtils, StringUtils}
 import scala.Array
 import com.google.gson.{JsonParser, GsonBuilder}
 import org.codehaus.jackson.map.ObjectMapper
-import org.springframework.http.HttpStatus
-import java.net.UnknownHostException
+import org.springframework.http.{HttpStatus}
+import java.net.{URL, UnknownHostException}
 import com.google.gson.stream.MalformedJsonException
+import org.apache.http.impl.client.DefaultHttpClient
+import org.apache.http.client.HttpClient
+import org.apache.http.client.methods.HttpGet
+import javax.annotation.Resource
+import org.springframework.context.MessageSource
+import java.util
+import org.apache.commons.io.FilenameUtils
+import org.springframework.security.web.util.UrlUtils
+
 
 /**
  * Paste model controller
@@ -65,6 +74,12 @@ class PasteController extends VersionController[Paste]   {
 
   @Value("${config.share.url}")
   val shareUrl:String = null
+
+  @Resource(name="mimeTypeSource")
+  protected val mimeSource:MessageSource = null
+
+  @Resource(name="mimeExtSource")
+  protected val mimeExtSource:MessageSource = null
 
   def listPage()="redirect:/main/paste/list"
   def editPage()="paste/edit"
@@ -286,49 +301,128 @@ class PasteController extends VersionController[Paste]   {
       } else {out}
    }
 
+  def getMimeResource(key:String):String = mimeSource.getMessage(key,
+    new Array[java.lang.Object](0),null,Locale.getDefault)
+
+  def getMimeExtResource(key:String):String = mimeExtSource.getMessage(key,
+    new Array[java.lang.Object](0),null,Locale.getDefault)
+
 
   @RequestMapping(value = Array("/loadFrom"), method = Array(RequestMethod.GET))
-  def getRemote(@RequestParam(required = false) id:java.lang.Long,
+  def getRemote(@RequestParam(required = false) url:java.lang.String,
                          model:Model,
                          locale:Locale):String = {
 
-    val r = super.getByPath(id,model,locale)
-    if (!r.equals(viewPage))
-      return r;
+    val client = new DefaultHttpClient; val method = new HttpGet(url)
 
-    val p = model.asMap().get(GenericController.MODEL_KEY).asInstanceOf[Paste];
+    val response =  client.execute(method)
 
-    if (!p.isBlank()) {
+    var paste =   manager.getByRemoteUrl(url)
 
-      if (manager.exists(p.getId()+1)) {
-        model.addAttribute("availableNext",true)
-      }
-      if (manager.exists(p.getId()-1)) {
-        model.addAttribute("availablePrev",true)
+    if (paste==null) {
+      paste =getNewModelInstance(); paste.setRemoteUrl(url)
+    } else {
+      paste.setName(null)
+    }
+
+    var fileName:String = null
+
+    val cd =response.getFirstHeader("Content-Disposition")
+    if (cd!=null) {
+      //val loop = new Breaks
+      breakable {
+        for (e<-cd.getElements) {
+          //     System.out.println("name="+e.getName)
+          if (e.getName().equalsIgnoreCase("attachment")||e.getName().equalsIgnoreCase("inline")) {
+            for (p<-e.getParameters) {
+              //                System.out.println("p="+p.getName+" |"+p.getValue)
+              if (p.getName.startsWith("filename")){
+                paste.setName(p.getValue)
+                fileName=p.getValue
+                break
+              }
+
+            }
+
+            break
+          }
+        }
       }
     }
 
+    if (StringUtils.isEmpty(paste.getName())) {
+      var fname =new URL(url).getFile
+      if (fname!=null) {
+        fname = FilenameUtils.getName(fname)
+        fileName=fname
+      }
+      paste.setName(if (fname!=null) {fname} else {url})
+    }
 
-    model.addAttribute("shareIntegration",shareIntegration)
-    model.addAttribute("shareUrl",shareUrl)
+      var mime:String = null
+      if (fileName!=null) {
+          mime=getMimeExtResource(FilenameUtils.getExtension(fileName))
+      }
 
-    model.addAttribute("title",getResource("paste.view.title",Array(p.getId,StringEscapeUtils.escapeHtml(p.getName())),locale))
+    if (mime==null) {
+      mime = response.getEntity.getContentType.getElements.head.getName
+    }
 
-    return viewPage
+
+    /*
+    for (el<-response.getEntity.getContentType.getElements) {
+               System.out.println("el "+el.getName+" "+el.getValue)
+                for (p<-el.getParameters) {
+                  System.out.println("p "+p.getName+" "+p.getValue)
+
+                }
+    } */
+
+    val codeType = getMimeResource(mime)
+
+    if (codeType == null) {
+        logger.debug("__unsupported mime type "+response.getEntity.getContentType.getValue)
+        model.addAttribute("statusMessageKey", "unsupported mime type "+response.getEntity.getContentType.getValue)
+      return "redirect:/main/paste/new"
+    }
+
+     paste.setCodeType(CodeType.valueOf(codeType))
+     paste.setPasteSource(PasteSource.REMOTE)
+
+    val buf =new ByteArrayOutputStream
+
+    response.getEntity.writeTo(buf)
+
+    paste.setText(new String(buf.toByteArray))
+
+    paste=manager.save(paste)
+
+    model.asMap().clear()
+
+    return "redirect:/main/paste/integrated/view/" + paste.getId()
+ }
+
+  @RequestMapping(value = Array("/integrated/view/{id:[0-9]+}"), method = Array(RequestMethod.GET))
+  def getByPathIntegrated(@PathVariable("id") id:java.lang.Long,model:Model,locale:Locale):String = {
+    val r = getByPath(id,model,locale)
+    return if (!r.equals(viewPage))
+      r
+    else
+      "/paste/integrated/view"
+
   }
-
-
 
   @RequestMapping(value = Array("/{id:[0-9]+}"), method = Array(RequestMethod.GET))
   override def getByPath(@PathVariable("id") id:java.lang.Long,model:Model,locale:Locale):String = {
 
     val r = super.getByPath(id,model,locale)
          if (!r.equals(viewPage))
-           return r;
+           return r
 
-    val p = model.asMap().get(GenericController.MODEL_KEY).asInstanceOf[Paste];
+    val p = model.asMap().get(GenericController.MODEL_KEY).asInstanceOf[Paste]
 
     if (!p.isBlank()) {
+
 
       if (manager.exists(p.getId()+1)) {
         model.addAttribute("availableNext",true)
@@ -353,6 +447,7 @@ class PasteController extends VersionController[Paste]   {
    */
   @RequestMapping(value = Array("/codetypes"), method = Array(RequestMethod.GET))
   @ResponseBody
+  @JsonIgnore
   def getAvailableCodeTypes():java.util.Collection[CodeType] = {
               return CodeType.list
   }

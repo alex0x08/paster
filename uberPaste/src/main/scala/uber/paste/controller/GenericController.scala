@@ -21,6 +21,7 @@ import uber.paste.model.DBObject
 import org.springframework.web.bind.annotation._
 import uber.paste.base.Loggered
 import uber.paste.openid.OpenIDServer
+import org.codehaus.jackson.annotate.JsonIgnore
 
 object GenericController {
   
@@ -53,9 +54,11 @@ abstract class GenericController[T <: DBObject ] extends AbstractController {
   }
 
   @ModelAttribute("availableServers")
+  @JsonIgnore
   def getAvailableOpenIDServers() = OpenIDServer.list
 
   @ModelAttribute("stats")
+  @JsonIgnore
   def getStats() = PasteManager.Stats
 
   protected def manager():GenericManager[T,Long]

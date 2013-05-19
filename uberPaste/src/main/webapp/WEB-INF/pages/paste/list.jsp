@@ -40,7 +40,7 @@
  </div>
 
 <div class="row">
-    <div class="column grid-12">
+    <div class="column grid-12"  >
 
       <c:if test="${listMode eq 'search' }">
 
@@ -63,69 +63,18 @@
       </c:if>
 
         <%-- processing page list --%>
-        <div class="paging" style="margin: auto; text-align: center;" >
 
-            <c:choose>
-                <%-- for search results --%>
-                <c:when test="${listMode eq 'search' }">
+        <tiles:insertDefinition name="/common/pageList" >
+            <tiles:putAttribute name="listMode" value="${listMode}"/>
+            <tiles:putAttribute name="pageItems" value="${pageItems}"/>
+            <tiles:putAttribute name="sortDesc" value="${sortDesc}"/>
 
-                    <c:if test="${!pageItems.firstPage}">
-                        <a href="<c:url value="/main/paste/list/search/${result}/prev"/>">&#8592;</a>
-                    </c:if>
-                    <c:if test="${pageItems.pageCount > 1}">
-                        <c:forEach begin="1" end="${pageItems.pageCount}" step="1" var="pnumber">
-                            <c:choose>
-                                <c:when test="${pnumber==pageItems.page+1}">
-                                    <c:out value="${pnumber}"/>
-                                </c:when>
-                                <c:otherwise>
-                                    <small>
-                                        <a href="<c:url value='/main/paste/list/search/${result}/${pnumber}'/>">${pnumber}</a>
-                                    </small>
-                                </c:otherwise>
-                            </c:choose>
-                            &nbsp;
-                        </c:forEach>
-                    </c:if>
-
-                    <c:if test="${!pageItems.lastPage}">
-                        <a href="<c:url value='/main/paste/list/search/${result}/next'/>">&#8594;</a>
-                    </c:if>
-
-                </c:when>
-                <c:when test="${listMode eq 'list'}">
-                    <%-- for list --%>
-
-                    <c:if test="${!pageItems.firstPage}">
-                        <a href="<c:url value="/main/paste/list/${sourceType}/prev"/>">&#8592;</a>
-                    </c:if>
-                    <c:if test="${pageItems.pageCount > 1}">
-                        <c:forEach begin="1" end="${pageItems.pageCount}" step="1" var="pnumber">
-                            <c:choose>
-                                <c:when test="${pnumber==pageItems.page+1}">
-                                    <c:out value="${pnumber}"/>
-                                </c:when>
-                                <c:otherwise>
-                                    <small>
-                                        <a href="<c:url value='/main/paste/list/${sourceType}/${pnumber}'/>">${pnumber}</a>
-                                    </small>
-                                </c:otherwise>
-                            </c:choose>
-                            &nbsp;
-                        </c:forEach>
-
-                    </c:if>
-
-                    <c:if test="${!pageItems.lastPage}">
-                        <a href="<c:url value='/main/paste/list/${sourceType}/next'/>">&#8594;</a>
-                    </c:if>
-
-                </c:when>
-            </c:choose>
+            <c:if test="${listMode eq 'search'}">
+                <tiles:putAttribute name="result" value="${result}"/>
+            </c:if>
+        </tiles:insertDefinition>
 
 
-
-        </div>
 
         <%-- processing elements per page and sort setup --%>
 
@@ -193,7 +142,7 @@
 
 
 <div class="row">
-    <div class="column grid-16">
+    <div class="column grid-16" >
 
 
     <div id="pastas">
@@ -231,7 +180,7 @@
             </div>
         </div>
 
-        <div class="row">
+        <div class="row" >
 
                 <div class="column grid-4">
                     <a class="pastePreviewLink" href="<c:url value="/main/paste/${paste.id}"></c:url>" pasteId="${paste.id}" title="Click to view paste vol. ${paste.id}">
@@ -251,7 +200,7 @@
 
                 </div>
 
-                <div class="column grid-10">
+                <div class="column grid-12" >
 
                     <div class="row">
 

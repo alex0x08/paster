@@ -98,6 +98,8 @@ class DynamicTilesViewProcessor extends Loggered {
                  beanName= "/"+beanName
                }
 
+               logger.debug("initial beanName "+beanName)
+
               beanName = if (org.springframework.util.StringUtils.countOccurrencesOf(beanName, "/")>2) {
 
                 if (contains3rdLevel(beanName)) {

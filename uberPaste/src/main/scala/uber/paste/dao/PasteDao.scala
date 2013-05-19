@@ -29,6 +29,8 @@ trait PasteDao extends SearchableDao[Paste]{
 
   def getListIntegrated(code:String):java.util.List[Paste]
 
+  def getByRemoteUrl(url:String) : Paste
+
 
   }
 
@@ -45,6 +47,24 @@ class PasteDaoImpl extends SearchableDaoImpl[Paste](classOf[Paste]) with PasteDa
       .setMaxResults(BaseDaoImpl.MAX_RESULTS)
     return query.getResultList().asInstanceOf[java.util.List[Paste]]
   }
+
+  def getByRemoteUrl(url:String) : Paste = {
+
+    val cr = new CriteriaSet
+
+    val query:Query = em.createQuery(cr.cr.where(Array(cr.cb.equal(cr.r.get("remoteUrl"), url)):_*)
+      .select(cr.r))
+      .setMaxResults(BaseDaoImpl.MAX_RESULTS)
+    return {
+      val results = query.getResultList().asInstanceOf[java.util.List[Paste]]
+      if (results.isEmpty) {
+        null.asInstanceOf[Paste]
+      } else {
+        results.get(0)
+      }
+    }
+  }
+
 
 
   def getBySourceType(sourceType:PasteSource,desc:Boolean) : java.util.List[Paste] = {

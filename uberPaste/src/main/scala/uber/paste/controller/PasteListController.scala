@@ -187,8 +187,10 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
                             model:Model,
                             locale:Locale) = listImpl(request,locale, model, null, "prev", null,source,true,integrationCode)
 
-  @RequestMapping(value = Array(GenericListController.INTEGRATED +GenericListController.LIST_ACTION+"/{integrationCode:[a-z0-9_]+}/{source:[a-zA-Z0-9]+}",
-    GenericListController.LIST_ACTION+"/{source:[a-zA-Z0-9]+}/earlier"),method = Array(RequestMethod.GET))
+  @RequestMapping(value = Array(
+    GenericListController.INTEGRATED +GenericListController.LIST_ACTION+"/{integrationCode:[a-z0-9_]+}/{source:[a-zA-Z0-9]+}/earlier",
+    GenericListController.INTEGRATED +GenericListController.LIST_ACTION+"/{integrationCode:[a-z0-9_]+}/{source:[a-zA-Z0-9]+}"
+  ),method = Array(RequestMethod.GET))
   @ModelAttribute(GenericController.NODE_LIST_MODEL)
   def listSourceIntegrated( request:HttpServletRequest,
                   @PathVariable("source") source:String,
@@ -203,7 +205,9 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
   }
 
 
-  @RequestMapping(value = Array(GenericListController.INTEGRATED +GenericListController.LIST_ACTION+"/{integrationCode:[a-z0-9_]+}/{source:[a-zA-Z0-9]+}/older"),method = Array(RequestMethod.GET))
+  @RequestMapping(value = Array(
+    GenericListController.INTEGRATED +GenericListController.LIST_ACTION+"/{integrationCode:[a-z0-9_]+}/{source:[a-zA-Z0-9]+}/older"),
+    method = Array(RequestMethod.GET))
   @ModelAttribute(GenericController.NODE_LIST_MODEL)
   def listSourceOlderIntegrated( request:HttpServletRequest,
                        @PathVariable("source") source:String,
@@ -219,7 +223,9 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
 
 
 
-  @RequestMapping(value = Array(GenericListController.INTEGRATED +GenericListController.LIST_ACTION+"/{integrationCode:[a-z0-9_]+}"),method = Array(RequestMethod.GET))
+  @RequestMapping(value = Array(
+    GenericListController.INTEGRATED +GenericListController.LIST_ACTION+"/{integrationCode:[a-z0-9_]+}"),
+    method = Array(RequestMethod.GET))
   @ModelAttribute(GenericController.NODE_LIST_MODEL)
   def listIntegrated( request:HttpServletRequest, locale:Locale,  model:Model,
                       @PathVariable("integrationCode") integrationCode:String,
