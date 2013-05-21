@@ -479,6 +479,17 @@
             <version>4.2.3</version>
         </dependency>
 
+        <dependency>
+            <groupId>fr.opensagres.xdocreport</groupId>
+            <artifactId>fr.opensagres.xdocreport.document.docx</artifactId>
+            <version>1.0.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>fr.opensagres.xdocreport</groupId>
+            <artifactId>fr.opensagres.xdocreport.template.velocity</artifactId>
+            <version>1.0.2</version>
+        </dependency>
 
     </dependencies>
 
@@ -888,6 +899,7 @@
         <directory>src/main/resources/templates</directory>
         <includes>
             <include>*.xls</include>
+            <include>*.docx</include>
         </includes>
     </resource>
 

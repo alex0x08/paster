@@ -23,6 +23,10 @@
         <put-attribute name="content" value="/WEB-INF/pages/paste/integrated/view.jsp" />
     </definition>
 
+    <definition name="/paste/integrated/preview" extends=".integratedTemplate">
+        <put-attribute name="content" value="/WEB-INF/pages/paste/integrated/preview.jsp" />
+    </definition>
+
     <definition name="/paste/integrated/list" extends=".integratedTemplate">
         <put-attribute name="content" value="/WEB-INF/pages/paste/integrated/list.jsp" />
     </definition>
@@ -72,5 +76,15 @@
         <put-attribute name="result" value="" />
         <put-attribute name="sortDesc" value="" />
     </definition>
+
+    <definition name="/common/pasteControls" template="/WEB-INF/pages/common/pasteControls.jsp" >
+        <put-attribute name="model" value="" />
+        <put-attribute name="mode" value="normal" />
+        <put-attribute name="prev" value="" />
+        <put-attribute name="next" value="" />
+
+
+    </definition>
+
 
 </tiles-definitions>

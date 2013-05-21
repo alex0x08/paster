@@ -75,68 +75,6 @@
         </tiles:insertDefinition>
 
 
-
-        <%-- processing elements per page and sort setup --%>
-
-        <div class="paging" style="margin: auto; text-align: center;float:right;  " >
-    <c:choose>
-        <c:when test="${listMode eq 'search' }">
-
-            <c:forEach var="page" items="${pageSet}" varStatus="loopStatus">
-
-                <c:choose>
-                    <c:when test="${pageItems.pageSize eq page}">
-                        <span style="font-size: larger; "><c:out value="${page}"/> </span>
-                    </c:when>
-                    <c:otherwise>
-                        <a href="<c:url value="/main/paste/list/search/${result}/limit/${page}"/>">${page}</a>
-                    </c:otherwise>
-                </c:choose>
-
-                <c:if test="${!loopStatus.last}"> | </c:if>
-            </c:forEach>
-
-
-        </c:when>
-        <c:when test="${listMode eq 'list' }">
-
-            <c:forEach var="page" items="${pageSet}" varStatus="loopStatus">
-
-                <c:choose>
-                    <c:when test="${pageItems.pageSize eq page}">
-                        <span style="font-size: larger; "><c:out value="${page}"/> </span>
-                    </c:when>
-                    <c:otherwise>
-                        <a href="<c:url value="/main/paste/list/${sourceType}/limit/${page}"/>">${page}</a>
-                    </c:otherwise>
-                </c:choose>
-
-                <c:if test="${!loopStatus.last}"> | </c:if>
-            </c:forEach>
-
-                    <span style="padding-left: 3em;">
-            <c:choose>
-                <c:when test="${sortDesc}">
-                    <span style="font-size: larger; "> &#x2191; </span>
-                    <a href="<c:url value="/main/paste/list/${sourceType}/older"/>"> &#8595;</a>
-                </c:when>
-                <c:otherwise>
-                    <span style="font-size: larger; "> &#8595; </span>
-                    <a href="<c:url value="/main/paste/list/${sourceType}/earlier"/>">&#x2191; </a>
-                </c:otherwise>
-            </c:choose>
-        </span>
-
-
-        </c:when>
-
-    </c:choose>
-
-
-        </div>
-
-
-
     </div>
 </div>
 
@@ -182,16 +120,16 @@
 
         <div class="row" >
 
-                <div class="column grid-4">
+                <div class="column grid-4" >
                     <a class="pastePreviewLink" href="<c:url value="/main/paste/${paste.id}"></c:url>" pasteId="${paste.id}" title="Click to view paste vol. ${paste.id}">
 
                        <c:choose>
                            <c:when test="${not empty paste.thumbImage}">
-                               <img src="${paste.thumbImage}" width="300" height="200"/>
+                               <img src="${paste.thumbImage}" />
 
                            </c:when>
                            <c:otherwise>
-                               <img src="<c:url value='/images/nodata.png'/>" width="300" height="200"/>
+                               <img src="<c:url value='/images/nodata.png'/>" />
                            </c:otherwise>
                        </c:choose>
                     </a>
@@ -237,7 +175,7 @@
                                 </tiles:insertDefinition>
 
 
-                                ,<kc:prettyTime date="${paste.lastModified}" locale="${pageContext.response.locale}"/>
+                                <kc:prettyTime date="${paste.lastModified}" locale="${pageContext.response.locale}"/>
                             </small>
 
                             <sec:authorize ifAnyGranted="ROLE_ADMIN">
@@ -245,19 +183,12 @@
                             </sec:authorize>
 
 
-
                         </div>
 
                     </div>
 
 
-
-
-
-
                 </div>
-
-
 
 
                 </div>
@@ -294,7 +225,19 @@
 
     </c:forEach>
 
-</div>
+<c:if test="${pageItems.nrOfElements > 5}">
+
+<tiles:insertDefinition name="/common/pageList" >
+            <tiles:putAttribute name="listMode" value="${listMode}"/>
+            <tiles:putAttribute name="pageItems" value="${pageItems}"/>
+
+            <c:if test="${listMode eq 'search'}">
+                <tiles:putAttribute name="result" value="${result}"/>
+            </c:if>
+        </tiles:insertDefinition>
+</c:if>
+
+    </div>
 
 <c:if test="${pageItems.nrOfElements == 0}">
     <center>

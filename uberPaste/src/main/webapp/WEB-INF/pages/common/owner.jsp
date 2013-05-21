@@ -13,4 +13,5 @@
                 <span style="display: inline;  ">
                         <a title="Contact ${model.owner.name}"  href="mailto:${model.owner.username}?subject=<c:out value='${model.name}' escapeXml="true"/>"><c:out value="${model.owner.name}" /></a>
                 </span>
+    ,
 </c:if>

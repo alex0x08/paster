@@ -105,7 +105,24 @@ class PasteController extends VersionController[Paste]   {
     model.addAttribute("availableCodeTypes", CodeType.list)
     model.addAttribute("availablePriorities", Priority.list)
 
-  //  obj.tagsAsString = for (s<-obj.getTags()) yield s+" "
+
+    if (!obj.isBlank()) {
+
+      model.addAttribute("availableNext",manager.exists(obj.getId()+1))
+      model.addAttribute("availablePrev",manager.exists(obj.getId()-1))
+    } else {
+      model.addAttribute("availableNext",false)
+      model.addAttribute("availablePrev",false)
+
+    }
+
+
+    model.addAttribute("shareIntegration",shareIntegration)
+    model.addAttribute("shareUrl",shareUrl)
+
+
+
+    //  obj.tagsAsString = for (s<-obj.getTags()) yield s+" "
 
     /**
      * concatenate all model tags objects to one string
@@ -412,6 +429,17 @@ class PasteController extends VersionController[Paste]   {
 
   }
 
+  @RequestMapping(value = Array("/integrated/preview/{id:[0-9]+}"), method = Array(RequestMethod.GET))
+  def getByPathIntegratedPreview(@PathVariable("id") id:java.lang.Long,model:Model,locale:Locale):String = {
+    val r = getByPath(id,model,locale)
+    return if (!r.equals(viewPage))
+      r
+    else
+      "/paste/integrated/preview"
+
+  }
+
+
   @RequestMapping(value = Array("/{id:[0-9]+}"), method = Array(RequestMethod.GET))
   override def getByPath(@PathVariable("id") id:java.lang.Long,model:Model,locale:Locale):String = {
 
@@ -421,25 +449,13 @@ class PasteController extends VersionController[Paste]   {
 
     val p = model.asMap().get(GenericController.MODEL_KEY).asInstanceOf[Paste]
 
-    if (!p.isBlank()) {
-
-
-      if (manager.exists(p.getId()+1)) {
-        model.addAttribute("availableNext",true)
-      }
-      if (manager.exists(p.getId()-1)) {
-        model.addAttribute("availablePrev",true)
-      }
-    }
-
-
-    model.addAttribute("shareIntegration",shareIntegration)
-    model.addAttribute("shareUrl",shareUrl)
 
     model.addAttribute("title",getResource("paste.view.title",Array(p.getId,StringEscapeUtils.escapeHtml(p.getName())),locale))
     
     return viewPage
   }
+
+
 
   /**
    *

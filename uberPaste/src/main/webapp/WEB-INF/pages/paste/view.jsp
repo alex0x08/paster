@@ -54,22 +54,14 @@
         </h4>
 
 
-        <c:if test="${availablePrev}">
-            <a href="<c:url value="/main/paste/${model.id-1}"/>" title="Previous paste">&#8592;</a>
-        </c:if>
+        <tiles:insertDefinition name="/common/pasteControls" >
+            <tiles:putAttribute name="model" value="${model}"/>
 
+            <tiles:putAttribute name="next" value="${availableNext}"/>
+            <tiles:putAttribute name="prev" value="${availablePrev}"/>
 
-        <a href="<c:url value="/main/paste/list"/>" title="Go back to list">list</a> |
-        <a href="<c:url value="/main/paste/edit/${model.id}"/>" title="Edit paste">edit</a> |
-        <a href="<c:url value="/main/paste/xml/${model.id}"/>" title="View as XML">xml</a> |
-        <a href="<c:url value="/main/paste/${model.id}.json"/>" title="View as JSON">json</a> |
-        <a href="<c:url value="/main/paste/plain/${model.id}"/>" title="View as plain text">plain</a> |
+        </tiles:insertDefinition>
 
-        <a id="ctrlc_link" data-clipboard-target="pasteTextPlain" href="javascript:void(0);" title="Copy to clipboard" ><img src="<c:url value='/images/ctrlc.png'/>"/></a> |
-
-        <c:if test="${availableNext}">
-            <a href="<c:url value="/main/paste/${model.id+1}"/>" title="Next paste">&#8594;</a>
-        </c:if>
 
 
     </div>
