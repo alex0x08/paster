@@ -144,6 +144,8 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
                     //config.share.integration=1
     //config.share.url=https://dev.iqcard.ru/share
 
+    model.addAttribute("sortDesc",false)
+
   }
 
 

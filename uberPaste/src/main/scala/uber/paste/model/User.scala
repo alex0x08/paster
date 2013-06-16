@@ -87,7 +87,11 @@ class User extends Struct with UserDetails with java.io.Serializable{
 
   private var credentialsExpired:Boolean = _
 
-   
+  private var totalPastas:Int = _
+
+  private var totalComments:Int = _
+
+
   /**
    * if object editable
    */
@@ -182,12 +186,21 @@ class User extends Struct with UserDetails with java.io.Serializable{
     return null
   }
 
+  def getTotalPastas() = totalPastas
+
+  def getTotalComments() = totalComments
+
+  def increaseTotalPastas() {
+    totalPastas+=1
+  }
+  def increaseTotalComments() {
+    totalComments+=1
+  }
+
   @JsonIgnore
   def getOpenID():String = openID
 
-
   def setOpenID(openid:String) { this.openID = openid  }
-
 
   @Override
   @JsonIgnore

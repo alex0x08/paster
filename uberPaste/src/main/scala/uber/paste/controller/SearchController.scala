@@ -157,7 +157,9 @@ abstract class SearchController[T <: Struct,QV <: Query ] extends GenericListCon
       return if (out==null) {
        model.addAttribute(GenericController.NODE_LIST_MODEL_PAGE,
          new PagedListHolder[T]( java.util.Collections.emptyList[T]()))
-       logger.debug("no results found in any models")
+        model.addAttribute("result","")          //tiles bug
+
+        logger.debug("no results found in any models")
 
        java.util.Collections.emptyList[T]()
 

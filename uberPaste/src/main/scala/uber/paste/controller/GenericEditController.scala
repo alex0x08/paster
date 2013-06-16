@@ -24,6 +24,7 @@ import javax.validation.Valid;
 import java.util.Locale
 import scala.Array
 import org.springframework.http.HttpStatus
+import org.springframework.web.servlet.mvc.support.RedirectAttributes
 
 object GenericEditController {
 
@@ -75,15 +76,16 @@ abstract class GenericEditController[T <: Struct ] extends StructController[T] {
     @RequestMapping(value = Array(GenericEditController.SAVE_ACTION), method = Array(RequestMethod.POST))
     def save(@RequestParam(required = false) cancel:String,
             @Valid @ModelAttribute(GenericController.MODEL_KEY) b:T,
-            result:BindingResult, model:Model,locale:Locale):String = {
+            result:BindingResult, model:Model,locale:Locale,
+            redirectAttributes:RedirectAttributes):String = {
 
         if (cancel != null) {
-            model.addAttribute("statusMessageKey", "action.cancelled");
-            return listPage;
+            redirectAttributes.addFlashAttribute("statusMessageKey", "action.cancelled")
+            return listPage
         }
 
         if (result.hasErrors()) {
-              logger.debug("form has errors " + result.getErrorCount());
+              logger.debug("form has errors " + result.getErrorCount())
               
              fillEditModel(b,model,locale)
            /* for ( f:FieldError : result.getFieldErrors()) {
@@ -99,8 +101,9 @@ abstract class GenericEditController[T <: Struct ] extends StructController[T] {
             b.setId(r.getId())
         }
 
-        model.addAttribute("statusMessageKey", "action.success");
-        return listPage;
+      redirectAttributes.addFlashAttribute("statusMessageKey", "action.success")
+
+      return listPage
     }
 
    

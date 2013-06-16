@@ -1,7 +1,8 @@
 <%@ include file="/WEB-INF/pages/common/taglibs.jsp"%>
 
+<fmt:message var="submit_button_text" key="button.save"/>
 
-        <c:url var="url" value='/main/paste/save' />
+<c:url var="url" value='/main/paste/save' />
 
 <fieldset class="perk">
     <legend><span class="i" style="font-size:2em;">/</span>
@@ -43,23 +44,46 @@
     </div>
 
     <div class="column grid-1" >
-        <div style="padding-top: 1em;vertical-align: middle;">
-            <span class="i" >]</span>
+            <form:label path="sticked" ><span class="i" >]</span></form:label>
             <form:checkbox path="sticked" style="display:inline;" title="Stick paste"/>
-        </div>
-
-        </div>
-
+    </div>
 
     <div class="column grid-2" >
            <form:label path="normalized" >Normalize</form:label>
             <form:checkbox id="normalized" path="normalized" style="display:inline;" title="Normalize paste"/>
     </div>
+
+
+
+        <div class="column grid-3 right">
+
+
+
+            <input type="submit" name="submit_btn"
+                   class="submitBtn"
+                   value=" <c:out value='${submit_button_text}'/>"/>
+
+
+            <a href="<c:url value="/main/paste/list"/>"><fmt:message key='button.cancel'/></a>
+
+            <c:if test="${!model.blank}">
+                <sec:authorize ifAnyGranted="ROLE_ADMIN">
+                    |  <a href="<c:url value='/main/paste/delete'><c:param name="id" value="${model.id}"/> </c:url>"><fmt:message key='button.delete'/></a>
+                </sec:authorize>
+
+            </c:if>
+
+
+        </div>
+
+
     </div>
 
 
+
+
     <div class="row">
-        <div class="column grid-8">
+        <div class="column grid-7">
 
         <form:label path="tagsAsString"><fmt:message key="paste.tags"/>:</form:label>
     <form:input path="tagsAsString" maxlength="155" cssStyle="width:97%;" autocomplete="true" placeholder="enter space-separated tags here"  />
@@ -83,7 +107,7 @@
         </div>
 
 
-        <div class="column grid-3">
+        <div class="column grid-4">
 
             <label for="theme">Theme</label>
             <select id="theme" size="1">
@@ -156,10 +180,9 @@
 
     <div class="form-buttons">
             <div class="button">
-                <fmt:message var="submit_button_text" key="button.save"/>
 
                 <input type="submit" name="submit_btn"
-                       id="submitBtn"
+                       class="submitBtn"
                        value=" <c:out value='${submit_button_text}'/>"/>
 
                 <a href="<c:url value="/main/paste/list"/>"><fmt:message key='button.cancel'/></a>
@@ -354,7 +377,7 @@
 
     window.addEvent('domready', function(){
 
-        $('submitBtn').addEvent('click',function(){
+        $$('.submitBtn').addEvent('click',function(){
             event.preventDefault();
             onSave();
         });

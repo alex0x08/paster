@@ -27,7 +27,7 @@ import uber.paste.base.Loggered
 import java.util.{Set,HashSet,ArrayList}
 import scala.collection.JavaConversions._
 import org.compass.core.lucene.LuceneEnvironment.Analyzer
-import org.hibernate.envers.{NotAudited, Audited}
+import org.hibernate.envers.{RelationTargetAuditMode, NotAudited, Audited}
 import org.springframework.web.multipart.MultipartFile
 
 /**
@@ -112,7 +112,7 @@ class Paste extends Struct with java.io.Serializable{
   @NotAudited
   private var title: String = null
 
-  @ManyToOne(fetch = FetchType.EAGER)
+  @ManyToOne(fetch = FetchType.EAGER,cascade= Array(CascadeType.ALL))
   @JoinColumn(name = "owner_id")
   @NotAudited
   private var owner:User = null
@@ -138,8 +138,11 @@ class Paste extends Struct with java.io.Serializable{
 
   private var normalized:Boolean = false
 
-  @OneToMany(fetch = FetchType.LAZY,cascade = Array(CascadeType.PERSIST,CascadeType.MERGE,CascadeType.REMOVE),orphanRemoval = true)
+  @OneToMany(fetch = FetchType.LAZY,
+    cascade = Array(CascadeType.PERSIST,CascadeType.MERGE,CascadeType.REMOVE),
+    orphanRemoval = true)
   @NotAudited
+  //@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
   private var comments:java.util.List[Comment] = new ArrayList[Comment]()
 
   @SearchableProperty

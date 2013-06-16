@@ -28,7 +28,7 @@ import javax.servlet.http.HttpServletResponse
 import uber.paste.dao.ConfigDao
 import uber.paste.manager.{CommentManager, PasteManager}
 import org.springframework.ui.Model
-import uber.paste.base.Loggered
+import uber.paste.base.{SessionStore, Loggered}
 import scala.util.control.Breaks._
 import org.springframework.validation.BindingResult
 import javax.validation.Valid
@@ -52,6 +52,7 @@ import org.springframework.context.MessageSource
 import java.util
 import org.apache.commons.io.FilenameUtils
 import org.springframework.security.web.util.UrlUtils
+import org.springframework.web.servlet.mvc.support.RedirectAttributes
 
 
 /**
@@ -207,16 +208,24 @@ class PasteController extends VersionController[Paste]   {
       return viewPage
     }
 
+    if (b.getOwner()!=null) {
+      b.getOwner().increaseTotalComments()
+    }
       p.getComments().add(b)
 
       manager.save(p)
+
+    if (b.getOwner()!=null) {
+      SessionStore.instance.updateUser(b.getOwner())
+    }
 
     model.asMap().clear()
 
     return "redirect:/main/paste/" + pasteId + "#line_" + b.getLineNumber
   }
 
-  @RequestMapping(value = Array(GenericListController.INTEGRATED +GenericEditController.NEW_ACTION+ "/{integrationCode:[a-z0-9_]+}"),
+  @RequestMapping(value = Array(
+    GenericListController.INTEGRATED +GenericEditController.NEW_ACTION+ "/{integrationCode:[a-z0-9_]+}"),
     method = Array(RequestMethod.GET))
   @ResponseStatus(HttpStatus.CREATED)
   def createNewIntegrated(model:Model,
@@ -236,21 +245,23 @@ class PasteController extends VersionController[Paste]   {
   override def save(@RequestParam(required = false) cancel:String,
 
                               @Valid @ModelAttribute(GenericController.MODEL_KEY) b:Paste,
-                              result:BindingResult, model:Model,locale:Locale):String = {
-    return saveIntegrated(cancel,false,b,result,model,locale)
+                              result:BindingResult, model:Model,locale:Locale
+                              ,redirectAttributes:RedirectAttributes):String = {
+    return saveIntegrated(cancel,false,b,result,model,locale,redirectAttributes)
   }
 
     @RequestMapping(value = Array("/save"), method = Array(RequestMethod.POST))
    def saveIntegrated(@RequestParam(required = false) cancel:String,
                       @RequestParam(required = false) integrationMode:Boolean,
            @Valid @ModelAttribute(GenericController.MODEL_KEY) b:Paste,
-           result:BindingResult, model:Model,locale:Locale):String = {
+           result:BindingResult, model:Model,locale:Locale,
+           redirectAttributes:RedirectAttributes):String = {
 
       /**
        * copy fields not filled in form
        */
       if (!b.isBlank()) {
-        val current = manager.getFull(b.getId());
+        val current = manager.getFull(b.getId())
         b.getComments().addAll(current.getComments())
         b.setPasteSource(current.getPasteSource())
         b.setIntegrationCode(current.getIntegrationCode())
@@ -304,6 +315,9 @@ class PasteController extends VersionController[Paste]   {
       if (b.isBlank()) {
         if (isCurrentUserLoggedIn()) {
           b.setOwner(getCurrentUser())
+          b.getOwner().increaseTotalPastas()
+
+          SessionStore.instance.updateUser(b.getOwner())
         }
       }
 
@@ -311,7 +325,7 @@ class PasteController extends VersionController[Paste]   {
       logger.debug("__found thumbnail "+b.getThumbImage())
       logger.debug("__found comments "+b.getComments().size())
 
-       val out =super.save(cancel,b,result,model,locale)
+       val out =super.save(cancel,b,result,model,locale,redirectAttributes)
       return if (out.equals(listPage))  {
         model.asMap().clear()
         "redirect:/main/paste/"+b.getId()
