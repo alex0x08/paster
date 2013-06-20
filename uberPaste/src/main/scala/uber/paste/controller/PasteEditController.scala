@@ -53,7 +53,18 @@ import java.util
 import org.apache.commons.io.FilenameUtils
 import org.springframework.security.web.util.UrlUtils
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.X509Certificate;
 
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.conn.scheme.Scheme;
+import org.apache.http.conn.ssl.SSLSocketFactory;
 
 /**
  * Paste model controller
@@ -338,6 +349,22 @@ class PasteController extends VersionController[Paste]   {
   def getMimeExtResource(key:String):String = mimeExtSource.getMessage(key,
     new Array[java.lang.Object](0),null,Locale.getDefault)
 
+  
+   private def  getTrustingManager():Array[TrustManager] =  Array[TrustManager] { new X509TrustManager() {
+            override def getAcceptedIssuers(): Array[java.security.cert.X509Certificate] = null
+
+            override def checkClientTrusted(certs:Array[X509Certificate], authType:String) {
+                // Do nothing
+            }
+
+            override def checkServerTrusted(certs:Array[X509Certificate], authType:String)  {
+                // Do nothing
+            }
+
+        
+      }
+    }
+  
 
   @RequestMapping(value = Array("/loadFrom"), method = Array(RequestMethod.GET))
   def getRemote(@RequestParam(required = false) url:java.lang.String,
@@ -346,6 +373,14 @@ class PasteController extends VersionController[Paste]   {
 
     val client = new DefaultHttpClient; val method = new HttpGet(url)
 
+     val sc:SSLContext = SSLContext.getInstance("SSL")
+     
+        sc.init(null, getTrustingManager(), new java.security.SecureRandom())
+
+        val socketFactory:SSLSocketFactory = new SSLSocketFactory(sc)
+        val sch:Scheme  = new Scheme("https", 443, socketFactory)
+        client.getConnectionManager().getSchemeRegistry().register(sch)
+    
     val response =  client.execute(method)
 
     var paste =   manager.getByRemoteUrl(url)

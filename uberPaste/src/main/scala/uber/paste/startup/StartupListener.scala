@@ -92,6 +92,8 @@ class StartupListener extends ServletContextListener with Loggered{
     sf.asInstanceOf[SessionFactoryImpl].getEventListeners.setPostLoadEventListeners(listeners)
     */
 
+    System.setProperty ("jsse.enableSNIExtension", "false")
+    
     var props:MergedPropertyConfigurer =  ctx.getBean("propertyConfigurer").asInstanceOf[MergedPropertyConfigurer]
 
 

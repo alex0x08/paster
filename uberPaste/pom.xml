@@ -495,6 +495,8 @@
 
     <repositories>
 
+         
+        
         <repository>
             <id>codehaus</id>
             <name>Codehaus</name>
@@ -514,12 +516,12 @@
         </repository>
             
 
-        <repository>
-            <id>dyuproject-repo</id>
-            <name>dyuproject-repo</name>
+      
+     <repository>
+            <id>xdyuproject-repo</id>
+            <name>xdyuproject-repo</name>
             <url>http://dyuproject.googlecode.com/svn/repos/maven2</url>
         </repository>
-
         <!--repository>
             <id>russian-morphology.lucene.apache.org</id>
             <name>Lucene Russian Morphology Repository for Maven</name>
@@ -686,225 +688,223 @@
                 <jdbc.artifactId>h2</jdbc.artifactId>
                 <jdbc.version>1.3.170</jdbc.version>
 
-</properties>
-</profile>
+            </properties>
+        </profile>
 
 
 
-</profiles>
+    </profiles>
 
-<build>
-<defaultGoal>package</defaultGoal>
+    <build>
+        <defaultGoal>package</defaultGoal>
 
-<pluginManagement>
-<plugins>
-<plugin>
-    <groupId>org.codehaus.mojo</groupId>
-    <artifactId>sonar-maven-plugin</artifactId>
-    <version>1.0-beta-2</version>
-</plugin>
-<plugin>
-    <groupId>org.eclipse.m2e</groupId>
-    <artifactId>lifecycle-mapping</artifactId>
-    <version>1.0.0</version>
-    <configuration>
-        <lifecycleMappingMetadata>
-            <pluginExecutions>
-                <pluginExecution>
-                    <pluginExecutionFilter>
-                        <groupId>org.scala-tools</groupId>
-                        <artifactId>maven-scala-plugin</artifactId>
-                        <versionRange>[2.15.2,)</versionRange>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>sonar-maven-plugin</artifactId>
+                    <version>1.0-beta-2</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.eclipse.m2e</groupId>
+                    <artifactId>lifecycle-mapping</artifactId>
+                    <version>1.0.0</version>
+                    <configuration>
+                        <lifecycleMappingMetadata>
+                            <pluginExecutions>
+                                <pluginExecution>
+                                    <pluginExecutionFilter>
+                                        <groupId>org.scala-tools</groupId>
+                                        <artifactId>maven-scala-plugin</artifactId>
+                                        <versionRange>[2.15.2,)</versionRange>
+                                        <goals>
+                                            <goal>compile</goal>
+                                        </goals>
+                                    </pluginExecutionFilter>
+                                    <action>
+                                        <execute>
+                                            <runOnIncremental>false</runOnIncremental>
+                                        </execute>
+                                    </action>
+                                </pluginExecution>
+                            </pluginExecutions>
+                        </lifecycleMappingMetadata>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
+        <plugins>
+
+
+            <plugin>
+                <groupId>org.scala-tools</groupId>
+                <artifactId>maven-scala-plugin</artifactId>
+                <version>2.15.2</version>
+                <configuration>
+                    <charset>UTF-8</charset>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>compile</id>
                         <goals>
                             <goal>compile</goal>
                         </goals>
-                    </pluginExecutionFilter>
-                    <action>
-                        <execute>
-                            <runOnIncremental>false</runOnIncremental>
-                        </execute>
-                    </action>
-                </pluginExecution>
-            </pluginExecutions>
-        </lifecycleMappingMetadata>
-    </configuration>
-</plugin>
-</plugins>
-</pluginManagement>
+                        <phase>compile</phase>
+                    </execution>
 
-<plugins>
+                </executions>
 
+            </plugin>
 
-<plugin>
-<groupId>org.scala-tools</groupId>
-<artifactId>maven-scala-plugin</artifactId>
-<version>2.15.2</version>
-<configuration>
-    <charset>UTF-8</charset>
-</configuration>
-<executions>
-    <execution>
-        <id>compile</id>
-        <goals>
-            <goal>compile</goal>
-        </goals>
-        <phase>compile</phase>
-    </execution>
-
-</executions>
-
-</plugin>
-
-<plugin>
-<groupId>org.apache.maven.plugins</groupId>
-<artifactId>maven-resources-plugin</artifactId>
-<version>2.5</version>
-</plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.5</version>
+            </plugin>
 
 
 
-<plugin>
-<groupId>org.apache.maven.plugins</groupId>
-<artifactId>maven-compiler-plugin</artifactId>
-<version>2.3.2</version>
-<configuration>
-    <source>1.5</source>
-    <target>1.5</target>
-    <encoding>UTF-8</encoding>
-    <showDeprecation>true</showDeprecation>
-</configuration>
-</plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <source>1.5</source>
+                    <target>1.5</target>
+                    <encoding>UTF-8</encoding>
+                    <showDeprecation>true</showDeprecation>
+                </configuration>
+            </plugin>
 
-<plugin>
-<groupId>org.apache.maven.plugins</groupId>
-<artifactId>maven-war-plugin</artifactId>
-<version>2.1.1</version>
-<configuration>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>2.1.1</version>
+                <configuration>
 
-    <failOnMissingWebXml>false</failOnMissingWebXml>
-    <archive>
-        <manifestEntries>
-            <Implementation-Build>${project.version}</Implementation-Build>
-            <AppName>${project.artifactId}</AppName>
-        </manifestEntries>
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
+                    <archive>
+                        <manifestEntries>
+                            <Implementation-Build>${project.version}</Implementation-Build>
+                            <AppName>${project.artifactId}</AppName>
+                        </manifestEntries>
 
-    </archive>
-</configuration>
-</plugin>
+                    </archive>
+                </configuration>
+            </plugin>
 
-<plugin>
-<groupId>org.mortbay.jetty</groupId>
-<artifactId>maven-jetty-plugin</artifactId>
-<version>6.1.26</version>
-<configuration>
-    <connectors>
-        <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
-            <port>9292</port>
-            <maxIdleTime>60000</maxIdleTime>
-        </connector>
-    </connectors>
-    <scanIntervalSeconds>10</scanIntervalSeconds>
-    <systemProperties>
-        <systemProperty>
-            <name>app.home</name>
-            <value>${user.home}/.${project.artifactId}</value>
-        </systemProperty>
-        <systemProperty>
-            <name>org.mortbay.jetty.Request.maxFormContentSize</name>
-            <value>20000000</value>
-        </systemProperty>
-    </systemProperties>
-    <webDefaultXml>${project.basedir}/src/main/containers/jetty/webdefault.xml</webDefaultXml>
-
-
-</configuration>
-
-</plugin>
+            <plugin>
+                <groupId>org.mortbay.jetty</groupId>
+                <artifactId>maven-jetty-plugin</artifactId>
+                <version>6.1.26</version>
+                <configuration>
+                    <connectors>
+                        <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
+                            <port>9292</port>
+                            <maxIdleTime>60000</maxIdleTime>
+                        </connector>
+                    </connectors>
+                    <scanIntervalSeconds>10</scanIntervalSeconds>
+                    <systemProperties>
+                        <systemProperty>
+                            <name>app.home</name>
+                            <value>${user.home}/.${project.artifactId}</value>
+                        </systemProperty>
+                        <systemProperty>
+                            <name>org.mortbay.jetty.Request.maxFormContentSize</name>
+                            <value>20000000</value>
+                        </systemProperty>
+                    </systemProperties>
+                    <webDefaultXml>${project.basedir}/src/main/containers/jetty/webdefault.xml</webDefaultXml>
 
 
- <plugin>
+                </configuration>
 
-                    <groupId>org.apache.tomcat.maven</groupId>
-                    <artifactId>tomcat7-maven-plugin</artifactId>
-                    <version>2.0</version>
-                    <configuration>
+            </plugin>
 
 
-                        <path>/${project.artifactId}</path>
-                        <!--contextFile>${tomcatConf}</contextFile-->
-                        <!--tomcatLoggingFile>src/main/tomcat/conf/logging.properties</tomcatLoggingFile -->
-                        <addContextWarDependencies>true</addContextWarDependencies>
-                        <charset>UTF-8</charset>
-                        <!--update>true</update -->
-                        <uriEncoding>UTF-8</uriEncoding>
-                        <systemProperties>
-                            <!--com.sun.management.jmxremote>true</com.sun.management.jmxremote>
-                                <com.sun.management.jmxremote.port>8050</com.sun.management.jmxremote.port>
-                                <com.sun.management.jmxremote.ssl>false</com.sun.management.jmxremote.ssl>
-                                <com.sun.management.jmxremote.authenticate>false</com.sun.management.jmxremote.authenticate>
-                                <logback.ContextSelector>JNDI</logback.ContextSelector -->
-                            <app.home>${user.home}/.${project.artifactId}</app.home>
-                            <JAVA_OPTS>-Xms256m -Xmx1024m -XX:MaxPermSize=512m -XX:NewRatio=6
-                                -XX:+CMSClassUnloadingEnabled -XX:+CMSPermGenSweepingEnabled
-                                -verbose:gc"
-                            </JAVA_OPTS>
-                        </systemProperties>
+            <plugin>
 
-                    </configuration>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <version>2.0</version>
+                <configuration>
 
 
-                    <dependencies>
+                    <path>/${project.artifactId}</path>
+                    <!--contextFile>${tomcatConf}</contextFile-->
+                    <!--tomcatLoggingFile>src/main/tomcat/conf/logging.properties</tomcatLoggingFile -->
+                    <addContextWarDependencies>true</addContextWarDependencies>
+                    <charset>UTF-8</charset>
+                    <!--update>true</update -->
+                    <uriEncoding>UTF-8</uriEncoding>
+                    <systemProperties>
+                        <!--com.sun.management.jmxremote>true</com.sun.management.jmxremote>
+                        <com.sun.management.jmxremote.port>8050</com.sun.management.jmxremote.port>
+                        <com.sun.management.jmxremote.ssl>false</com.sun.management.jmxremote.ssl>
+                        <com.sun.management.jmxremote.authenticate>false</com.sun.management.jmxremote.authenticate>
+                        <logback.ContextSelector>JNDI</logback.ContextSelector -->
+                        <app.home>${user.home}/.${project.artifactId}</app.home>
+                        <JAVA_OPTS>-Xms256m -Xmx1024m -XX:MaxPermSize=512m -XX:NewRatio=6
+                            -XX:+CMSClassUnloadingEnabled -XX:+CMSPermGenSweepingEnabled
+                            -verbose:gc"
+                        </JAVA_OPTS>
+                    </systemProperties>
 
-                        <dependency>
-                            <groupId>org.apache.tomcat</groupId>
-                            <artifactId>tomcat-juli</artifactId>
-                            <version>7.0.33</version>
-                        </dependency>
+                </configuration>
 
 
+                <dependencies>
 
-                    </dependencies>
-
-                </plugin>
-
-
-</plugins>
-
-
-<resources>
+                    <dependency>
+                        <groupId>org.apache.tomcat</groupId>
+                        <artifactId>tomcat-juli</artifactId>
+                        <version>7.0.33</version>
+                    </dependency>
 
 
 
-<resource>
-<directory>src/main/resources</directory>
-<includes>
-    <include>*.properties</include>
-    <include>*.xml</include>
-    <include>META-INF/*.xml</include>
-</includes>
-<filtering>true</filtering>
+                </dependencies>
 
-</resource>
+            </plugin>
 
-<resource>
-<targetPath>spring</targetPath>
-<directory>src/main/resources/spring</directory>
-<includes>
-    <include>*.xml</include>
-</includes>
-</resource>
 
-    <resource>
-        <targetPath>templates</targetPath>
-        <directory>src/main/resources/templates</directory>
-        <includes>
-            <include>*.xls</include>
-            <include>*.docx</include>
-        </includes>
-    </resource>
+        </plugins>
+
+
+        <resources>
 
 
 
-</resources>
-</build>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>*.properties</include>
+                    <include>*.xml</include>
+                    <include>META-INF/*.xml</include>
+                </includes>
+                <filtering>true</filtering>
+
+            </resource>
+
+            <resource>
+                <targetPath>spring</targetPath>
+                <directory>src/main/resources/spring</directory>
+                <includes>
+                    <include>*.xml</include>
+                </includes>
+            </resource>
+
+            <resource>
+                <targetPath>templates</targetPath>
+                <directory>src/main/resources/templates</directory>
+                <includes>
+                    <include>*.xls</include>
+                    <include>*.docx</include>
+                </includes>
+            </resource>
+
+        </resources>
+    </build>
 </project>
