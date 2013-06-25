@@ -1,0 +1,138 @@
+
+// Tooltip
+// --------------------------------------------------
+.tooltip.in { .opacity(100); }
+
+.tooltip-inner {
+    background:@popoverTitleBackground;
+    color:@gray;
+}
+.tooltip .arrow {
+    border-width: @tooltipArrowOuterWidth;
+}
+
+
+.tooltip {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: @zindexPopover;
+  display: none;
+  max-width: 276px;
+  padding: 1px;
+  text-align: left; // Reset given new insertion method
+  background-color: @popoverBackground;
+  -webkit-background-clip: padding-box;
+     -moz-background-clip: padding;
+          background-clip: padding-box;
+  border: 1px solid #ccc;
+  border: 1px solid rgba(0,0,0,.2);
+  .border-radius(6px);
+  .box-shadow(0 5px 10px rgba(0,0,0,.2));
+
+  // Overrides for proper insertion
+  white-space: normal;
+
+  // Offset the popover to account for the popover arrow
+  &.top     { margin-top: -10px; }
+  &.right   { margin-left: 10px; }
+  &.bottom  { margin-top: 10px; }
+  &.left    { margin-left: -10px; }
+}
+
+.tooltip-inner {
+  margin: 0; // reset heading margin
+  padding: 4px 8px;
+  font-size: @baseFontSize * 0.9;
+  font-weight: normal;
+  line-height: 18px;
+  background-color: @popoverTitleBackground;
+  border-bottom: 1px solid darken(@popoverTitleBackground, 5%);
+  .border-radius(5px 5px 0 0);
+
+  &:empty {
+    display: none;
+  }
+}
+
+// Arrows
+//
+// .arrow is outer, .arrow:after is inner
+
+.tooltip .tooltip-arrow,
+.tooltip .tooltip-arrow:after {
+  position: absolute;
+  display: block;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+}
+.tooltip .tooltip-arrow {
+  border-width: @tooltipArrowOuterWidth;
+}
+.tooltip .tooltip-arrow:after {
+  border-width: @tooltipArrowWidth;
+  content: "";
+}
+
+.tooltip {
+  &.top .tooltip-arrow {
+    left: 50%;
+    margin-left: -@tooltipArrowOuterWidth;
+    border-bottom-width: 0;
+    border-top-color: #999; // IE8 fallback
+    border-top-color: @popoverArrowOuterColor;
+    bottom: -@tooltipArrowOuterWidth;
+    &:after {
+      bottom: 1px;
+      margin-left: -@tooltipArrowWidth;
+      border-bottom-width: 0;
+      border-top-color: @tooltipArrowColor;
+    }
+  }
+  &.right .tooltip-arrow {
+    top: 50%;
+    left: -@tooltipArrowOuterWidth;
+    margin-top: -@tooltipArrowOuterWidth;
+    border-left-width: 0;
+    border-right-color: #999; // IE8 fallback
+    border-right-color: @tooltipArrowOuterColor;
+    &:after {
+      left: 1px;
+      bottom: -@tooltipArrowWidth;
+      border-left-width: 0;
+      border-right-color: @tooltipArrowColor;
+    }
+  }
+  &.bottom .tooltip-arrow {
+    left: 50%;
+    margin-left: -@tooltipArrowOuterWidth;
+    border-top-width: 0;
+    border-bottom-color: #999; // IE8 fallback
+    border-bottom-color: @tooltipArrowOuterColor;
+    top: -@tooltipArrowOuterWidth;
+    &:after {
+      top: 1px;
+      margin-left: -@tooltipArrowWidth;
+      border-top-width: 0;
+      border-bottom-color: @tooltipArrowColor;
+    }
+  }
+
+  &.left .tooltip-arrow {
+    top: 50%;
+    right: -@tooltipArrowOuterWidth;
+    margin-top: -@tooltipArrowOuterWidth;
+    border-right-width: 0;
+    border-left-color: #999; // IE8 fallback
+    border-left-color: @tooltipArrowOuterColor;
+    &:after {
+      right: 1px;
+      border-right-width: 0;
+      border-left-color: @tooltipArrowColor;
+      bottom: -@tooltipArrowWidth;
+    }
+  }
+
+}

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 2.0//EN"
+       "http://tiles.apache.org/dtds/tiles-config_2_0.dtd">
+
+<tiles-definitions>
+
+	<!-- Default Main Template -->
+    <definition name=".mainTemplate" template="/WEB-INF/jsp/templates/main3.jsp">
+        <put-attribute name="header" value="" />
+        <put-attribute name="footer" value="/WEB-INF/jsp/templates/footer.jsp" />
+        <put-attribute name="menu" value="/WEB-INF/jsp/templates/menu.jsp" />
+        <put-attribute name="content" value="" />
+    </definition>
+
+    <definition name=".integratedTemplate" template="/WEB-INF/jsp/templates/widget-main.jsp">
+        <put-attribute name="content" value="" />
+    </definition>
+
+
+    <definition name=".welcomeTemplate" template="/WEB-INF/jsp/templates/welcome.jsp">
+        <put-attribute name="content" value="" />
+        <put-attribute name="header" value="" />
+        <put-attribute name="footer" value="" />
+        <put-attribute name="menu" value="" />
+    </definition>
+
+    <definition name=".fileTemplate" extends=".mainTemplate">
+        <put-attribute name="header" value="/WEB-INF/jsp/templates/file-search-header.jsp" />		
+    </definition>
+
+
+    <definition name="/welcome" extends=".mainTemplate">
+        <put-attribute name="content" value="/WEB-INF/jsp/welcome.jsp" />
+    </definition>
+
+
+    <definition name="/file/list" extends=".fileTemplate">
+        <put-attribute name="content" value="/WEB-INF/jsp/file/list.jsp" />
+    </definition>
+
+    <definition name="/file/edit" extends=".fileTemplate">
+        <put-attribute name="content" value="/WEB-INF/jsp/file/edit.jsp" />
+    </definition>
+
+    <definition name="/file/view" extends=".fileTemplate">
+        <put-attribute name="content" value="/WEB-INF/jsp/file/view.jsp" />
+    </definition>
+
+
+    <definition name="/user/list" extends=".mainTemplate">
+        <put-attribute name="header" value="/WEB-INF/jsp/templates/user-search-header.jsp" />
+        <put-attribute name="content" value="/WEB-INF/jsp/user/list.jsp" />
+    </definition>
+
+
+    <definition name="/file/raw/view" template="/WEB-INF/jsp/templates/empty.jsp">
+        <put-attribute name="content" value="/WEB-INF/jsp/file/raw/view.jsp" />
+    </definition>
+    
+    <definition name="/file/raw/pdfview" template="/WEB-INF/jsp/templates/empty.jsp">
+        <put-attribute name="content" value="/WEB-INF/jsp/file/raw/pdfview.jsp" />
+    </definition>
+    
+    <definition name="/file/integrated/view" extends=".integratedTemplate">
+        <put-attribute name="content" value="/WEB-INF/jsp/file/integrated/view.jsp" />
+    </definition>
+
+    <definition name="/file/integrated/list" extends=".integratedTemplate">
+        <put-attribute name="content" value="/WEB-INF/jsp/file/integrated/list.jsp" />
+    </definition>
+
+    <definition name="/file/save/integrated" extends=".integratedTemplate">
+        <put-attribute name="content" value="/WEB-INF/jsp/file/integrated/list.jsp" />
+    </definition>
+
+
+</tiles-definitions>
