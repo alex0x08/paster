@@ -143,6 +143,7 @@ public abstract class GenericDaoImpl<T extends BaseDBObject, PK extends Serializ
      * {@inheritDoc}
      */
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+        @Override
     public void remove(PK id) {
         em.remove(get(id));
     }

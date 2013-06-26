@@ -18,38 +18,39 @@ package uber.megashare.model;
 import java.io.File;
 import java.io.Serializable;
 import java.util.Date;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 
 /**
- *  Базовые настройки системы
+ * Базовые настройки системы
+ *
  * @author alex
  */
 @Entity
 @Table(name = "system_properties")
 public class SystemProperties extends BaseDBObject implements Serializable {
-    
+
     /**
-	 * 
-	 */
-	private static final long serialVersionUID = -4774995385477116623L;
-
-	@Temporal(javax.persistence.TemporalType.DATE)
+     *
+     */
+    private static final long serialVersionUID = -4774995385477116623L;
+    
+    @Temporal(javax.persistence.TemporalType.DATE)
     private Date installDate;
+    
+    private String tmpDir,baseUrl,uploadDir,uploadUrl;
 
-    private String tmpDir;
+    @Embedded
+    private AppVersion appVer = new AppVersion();
 
-    private String baseUrl;
-    
-    private String uploadDir;
-    
-    private String uploadUrl;
+    public AppVersion getAppVersion() {
+        return appVer;
+    }       
 
-    
-    
     public String getUploadDir() {
-        return System.getProperty("app.home")+File.separator+uploadDir;
+        return System.getProperty("app.home") + File.separator + uploadDir;
     }
 
     public void setUploadDir(String uploadDir) {
@@ -63,10 +64,10 @@ public class SystemProperties extends BaseDBObject implements Serializable {
     public void setUploadUrl(String uploadUrl) {
         this.uploadUrl = uploadUrl;
     }
-    
 
     /**
-     *  Базовый урл (для адресов в почте)
+     * Базовый урл (для адресов в почте)
+     *
      * @return
      */
     public String getBaseUrl() {
@@ -75,10 +76,11 @@ public class SystemProperties extends BaseDBObject implements Serializable {
 
     public void setBaseUrl(String baseUrl) {
         this.baseUrl = baseUrl;
-    } 
+    }
 
     /**
      * Временный каталог
+     *
      * @return
      */
     public String getTmpDir() {
@@ -87,10 +89,8 @@ public class SystemProperties extends BaseDBObject implements Serializable {
 
     public void setTmpDir(String tmpDir) {
         this.tmpDir = tmpDir;
-    } 
+    }
 
-   
-  
     /**
      *
      * @return дата установки системы (базы)
@@ -102,9 +102,8 @@ public class SystemProperties extends BaseDBObject implements Serializable {
     public void setInstallDate(Date installDate) {
         this.installDate = installDate;
     }
-    
-   public void loadFull() {
+
+    public void loadFull() {
         //no lazy deps
     }
-
 }

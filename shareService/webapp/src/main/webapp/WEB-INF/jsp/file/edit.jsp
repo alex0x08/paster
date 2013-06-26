@@ -233,8 +233,8 @@
                                                type="submit" value="${submit_button_text}" />
                                     </c:when>
                                     <c:otherwise>
-                                        <input name="cancel" type="submit" class="btn"
-                                               value="&larr; <fmt:message key="button.back"/>" />
+                                        <a href="<c:url value='/main/file/${model.id}'/>" class="btn" >&larr; <fmt:message key="button.back"/></a>
+                                        
                                         <fmt:message var="submit_button_text" key="button.save" />
 
                                         <input name="delete" type="submit" class="btn btn-danger fileDeleteBtn"

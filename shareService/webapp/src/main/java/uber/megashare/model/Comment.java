@@ -34,6 +34,7 @@ import org.hibernate.search.annotations.IndexedEmbedded;
 
 /**
  * Комментарий
+ *
  * @author alex
  */
 @Entity
@@ -42,11 +43,11 @@ import org.hibernate.search.annotations.IndexedEmbedded;
 public class Comment extends BaseDBObject implements Serializable {
 
     /**
-	 * 
-	 */
-	private static final long serialVersionUID = -6941001653905900312L;
-	
-	@ManyToOne(fetch = FetchType.EAGER)
+     *
+     */
+    private static final long serialVersionUID = -6941001653905900312L;
+    
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "author_id")
     @IndexedEmbedded
     private User author;
@@ -65,6 +66,7 @@ public class Comment extends BaseDBObject implements Serializable {
 
     /**
      * Автор комментария
+     *
      * @return пользователь
      */
     public User getAuthor() {
@@ -77,6 +79,7 @@ public class Comment extends BaseDBObject implements Serializable {
 
     /**
      * Есть ли аттач
+     *
      * @return true - есть, false - нет
      */
     //@Transient
@@ -86,6 +89,7 @@ public class Comment extends BaseDBObject implements Serializable {
 
     /**
      * Приаттаченный файл
+     *
      * @return AttachedFile
      */
     public AttachedFile getFile() {
@@ -98,6 +102,7 @@ public class Comment extends BaseDBObject implements Serializable {
 
     /**
      * Текст сообщения
+     *
      * @return строка
      */
     public String getMessage() {
@@ -110,6 +115,7 @@ public class Comment extends BaseDBObject implements Serializable {
 
     /**
      * Дата создания
+     *
      * @return дата
      */
     public Date getCreated() {
@@ -126,11 +132,10 @@ public class Comment extends BaseDBObject implements Serializable {
     }
 
     public void loadFull() {
-            
+
         author.loadFull();
-        if (file!=null) {
+        if (file != null) {
             file.loadFull();
         }
     }
-
 }

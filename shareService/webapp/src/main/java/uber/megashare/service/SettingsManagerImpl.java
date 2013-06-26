@@ -31,27 +31,25 @@ import uber.megashare.model.SystemProperties;
 public class SettingsManagerImpl extends GenericManagerImpl<SystemProperties, Long> implements SettingsManager {
 
     /**
-	 * 
-	 */
-	private static final long serialVersionUID = -8424104873701515425L;
-	
+     *
+     */
+    private static final long serialVersionUID = -8424104873701515425L;
+    
     private SettingsDao settingsDao;
 
-    
-    
     @Autowired
     public SettingsManagerImpl(SettingsDao settingsDao) {
         super(settingsDao);
         this.settingsDao = settingsDao;
     }
-    
-    
-    public String getCalculatedFileDir(Date date,Long version) {
-    
-        Calendar c=  Calendar.getInstance();
+
+    @Override
+    public String getCalculatedFileDir(Date date, Long version) {
+
+        Calendar c = Calendar.getInstance();
         c.setTime(date);
-        
-        
+
+
         return new StringBuilder()
                 .append(File.separator)
                 .append(c.get(Calendar.YEAR))
@@ -60,15 +58,17 @@ public class SettingsManagerImpl extends GenericManagerImpl<SystemProperties, Lo
                 .append(File.separator)
                 .append(c.get(Calendar.DAY_OF_MONTH))
                 .append(File.separator)
-                .append(version) 
+                .append(version)
                 .toString();
-       
+
     }
 
+    @Override
     public SystemProperties getCurrentSettings() {
         return settingsDao.getCurrentSettings();
     }
 
+    @Override
     public SystemProperties merge(SystemProperties t) {
         return settingsDao.saveObject(t);
     }

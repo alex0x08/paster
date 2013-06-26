@@ -37,6 +37,7 @@ public class SessionSupport extends LoggedClass {
      *
      */
     private static final long serialVersionUID = -5393186807111808503L;
+    
     private final BiMap<String, //session
             String //login
             > store = HashBiMap.create();

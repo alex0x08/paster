@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import static uber.megashare.controller.EditConstants.MODEL_KEY;
 import uber.megashare.model.Comment;
 import uber.megashare.model.CommentedStruct;
 import uber.megashare.service.GenericVersioningManager;
@@ -39,7 +38,6 @@ public abstract class GenericCommentController<T extends CommentedStruct> extend
 
     public GenericCommentController(GenericVersioningManager<T> manager) {
         super(manager);
-
     }
     
     @ModelAttribute(COMMENT_MODEL_KEY)
@@ -100,6 +98,7 @@ public abstract class GenericCommentController<T extends CommentedStruct> extend
         */
    
         model.asMap().clear();
+        
       return  "redirect:/main"+viewPage+"?id="+r.getId();
     }
 }

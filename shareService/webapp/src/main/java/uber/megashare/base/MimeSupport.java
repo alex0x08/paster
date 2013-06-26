@@ -31,7 +31,7 @@ public class MimeSupport extends LoggedClass {
         return FileType.lookup(mimeToImage.getProperty(mime, "type.binary"));
     }
 
-    private final MimeSupport load() {
+    private MimeSupport load() {
         try {
             mimeToImage.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("mimeIcons.properties"));
             return this;

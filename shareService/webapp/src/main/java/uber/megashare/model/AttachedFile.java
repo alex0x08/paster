@@ -22,9 +22,9 @@ import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-
 /**
  * Приаттаченный файл
+ *
  * @author alex
  */
 @Entity
@@ -32,34 +32,34 @@ import javax.persistence.Transient;
 public class AttachedFile extends Struct implements Serializable {
 
     /**
-	 * 
-	 */
-	private static final long serialVersionUID = -2536130579096562810L;
-
-	@Transient
+     *
+     */
+    private static final long serialVersionUID = -2536130579096562810L;
+    
+    @Transient
     public static final String ICON_TYPE = "image/png";//все генерируемые изображния в PNG-формате
-
+    
     @Lob
-    @Column(length=Integer.MAX_VALUE)
+    @Column(length = Integer.MAX_VALUE)
     private byte[] icon;
-
     @Lob
-    @Column(name="content",length=Integer.MAX_VALUE)
+    @Column(name = "content", length = Integer.MAX_VALUE)
     private byte[] data;
-
+    
     private String mime;
-    
-    
+
     /**
      * является ли файл картинкой
+     *
      * @return true - да, false -нет
      */
     public boolean isImage() {
-        return icon!=null;
+        return icon != null;
     }
 
     /**
      * строка mime-типа файла
+     *
      * @return
      */
     public String getMime() {
@@ -72,6 +72,7 @@ public class AttachedFile extends Struct implements Serializable {
 
     /**
      * блоб с иконкой (если файл - картинка)
+     *
      * @return массив байт
      */
     public byte[] getIcon() {
@@ -81,11 +82,12 @@ public class AttachedFile extends Struct implements Serializable {
     public void setIcon(byte[] icon) {
         this.icon = icon.clone();
     }
+
     /**
      * массив байтов (блоб в базе) с содержимым файла
+     *
      * @return массив байт
      */
-
     public byte[] getData() {
         return data;
     }
@@ -96,10 +98,9 @@ public class AttachedFile extends Struct implements Serializable {
 
     @Override
     public void loadFull() {
-    
-      getData();
-      getIcon();
-      
-    }
 
+        getData();
+        getIcon();
+
+    }
 }

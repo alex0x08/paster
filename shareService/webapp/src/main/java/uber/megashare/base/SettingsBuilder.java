@@ -48,6 +48,13 @@ public class SettingsBuilder extends AbstractBuilder<SystemProperties> {
         return this;
     }
 
+   
+    
+    public SettingsBuilder addAppVersion() {
+        obj.getAppVersion().fillFromManifest();
+        return this;
+    }
+    
     public SettingsBuilder addBaseUrl(String url) {
         obj.setBaseUrl(url);
         return this;

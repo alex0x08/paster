@@ -34,7 +34,10 @@ import uber.megashare.model.Role;
 import uber.megashare.model.User;
 import uber.megashare.service.SettingsManager;
 import uber.megashare.service.UserManager;
-
+import com.jcabi.manifests.Manifests;
+import java.io.IOException;
+import uber.megashare.model.AppVersion;
+import uber.megashare.model.SystemProperties;
 /**
  * <p>StartupListener class used to initialize and database settings and
  * populate any application-wide drop-downs.
@@ -49,6 +52,8 @@ import uber.megashare.service.UserManager;
  */
 public class StartupListener extends LoggedClass implements ServletContextListener {
 
+   
+    
     /**
      *
      */
@@ -76,96 +81,136 @@ public class StartupListener extends LoggedClass implements ServletContextListen
      * @param context The servlet context
      */
     private void setupContext(ServletContext context) {
-        ApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(context);
-
-
-        User startup = new User();
-        startup.setName("DB Startup");
-        startup.setLogin("startup");
-        startup.setPassword("startup");
-        startup.getRoles().add(Role.ROLE_ADMIN);
-
-        // log user in automatically
-        UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
-                "startup", "startup", startup.getAuthorities());
-        auth.setDetails(startup);
-        SecurityContextHolder.getContext().setAuthentication(auth);
-
-
-        SettingsManager settingsDao = (SettingsManager) ctx.getBean("settingsManager");
-        UserManager userManager = (UserManager) ctx.getBean("userManager");
-        userDao = (UserDao) ctx.getBean("userDao");
-        shareDao = (SharedFileDao) ctx.getBean("shareDao");
-
-//        UserCustomExtendedRepository repo = (UserCustomExtendedRepository) ctx.getBean("userCustomExtendedRepository");
-
-        // EmbeddedSMTPServer.createInstance(ctx).start();
-
-
-        getLogger().debug("__currentSettings:" + settingsDao.getCurrentSettings());
-        if (settingsDao.getCurrentSettings() != null && settingsDao.getCurrentSettings().getInstallDate() != null) {
-
-            reindex();
-
-            getLogger().info("Database already set. Aborting creation..");
-
-            return;
-        }
-
-        settingsDao.merge(SettingsBuilder.getInstance() //install date
-                .addInstallDate(Calendar.getInstance().getTime()) // обратный адрес для почты
-                .addUploadDir("files")
-                .get());
-
-        File uf = new File(settingsDao.getCurrentSettings().getUploadDir());
-        if (!uf.exists()) {
-
-            if (!uf.mkdirs()) {
-                throw new IllegalStateException("Cannot create directory " + uf.getAbsolutePath());
-            }
-        }
-
-        User admin = new User();
-        admin.setName("Administrator");
-        admin.setLogin("admin");
-        admin.getRoles().add(Role.ROLE_ADMIN);
-
-        admin = userManager.changePassword(admin, "admin");
-        admin = userDao.saveObject(admin);
-        
-        
-
-
-        User alex = new User();
-        alex.setName("Alex");
-        alex.setLogin("alex");
-        alex.setEmail("alex@0x08.tk");
-        alex.getRoles().add(Role.ROLE_USER);
-        alex = userManager.changePassword(alex, "login");
-        alex = userDao.saveObject(alex);
-
-        getLogger().info("alex=" + alex.getLogin() + "|" + alex.getPassword());
-
-
-
-
-
-
-        List<User> found_users;
         try {
-            found_users = userDao.search("name:" + alex.getName());
+            ApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(context);
 
-            getLogger().info("Found " + found_users.size() + " users containing login : " + alex.getLogin());
-            for (User u : found_users) {
-                getLogger().info("login=" + u.getLogin() + "|" + u.getPassword());
+             Manifests.append(context);
+            
+           
 
+            User startup = new User();
+            startup.setName("DB Startup");
+            startup.setLogin("startup");
+            startup.setPassword("startup");
+            startup.getRoles().add(Role.ROLE_ADMIN);
+
+            // log user in automatically
+            UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
+                    "startup", "startup", startup.getAuthorities());
+            auth.setDetails(startup);
+            SecurityContextHolder.getContext().setAuthentication(auth);
+
+
+            SettingsManager settingsDao = (SettingsManager) ctx.getBean("settingsManager");
+            UserManager userManager = (UserManager) ctx.getBean("userManager");
+            userDao = (UserDao) ctx.getBean("userDao");
+            shareDao = (SharedFileDao) ctx.getBean("shareDao");
+
+    //        UserCustomExtendedRepository repo = (UserCustomExtendedRepository) ctx.getBean("userCustomExtendedRepository");
+
+            // EmbeddedSMTPServer.createInstance(ctx).start();
+
+
+            SystemProperties sp = settingsDao.getCurrentSettings();
+            getLogger().debug("__currentSettings:" + sp);
+            if (sp != null && sp.getInstallDate() != null) {
+
+                
+                AppVersion mf_version = new AppVersion().fillFromManifest();
+                
+                int check = mf_version.compareTo(sp.getAppVersion());
+                
+                switch(check) {
+           
+                    case 0:
+                        getLogger().info("Application and db versions match.");
+                        break;
+                    case 1:
+                        getLogger().warn("DB version is older than application: "
+                                +sp.getAppVersion().getImplVersionFull()+" | "+mf_version.getImplVersionFull()+". You can get problems.");
+                        break;
+                        
+                    case -1:    
+                        getLogger().warn("Application version is older than database: "
+                                +sp.getAppVersion().getImplVersionFull()+" | "+mf_version.getImplVersionFull()+". You can get problems.");
+                        break;
+                    
+                    case -2:
+                    default:    
+                    throw new IllegalStateException("Uncomparable db and application versios: "
+                             +sp.getAppVersion().getImplVersionFull()+" | "+mf_version.getImplVersionFull()+". Cannot continue.");
+           
+                        
+                }
+                                
+                
+                 getLogger().info("Loading application ver. "+mf_version.getImplVersionFull()+" db ver. "+sp.getAppVersion().getImplVersionFull());
+           
+                
+                reindex();
+
+                getLogger().info("Database already set. Aborting creation..");
+
+                return;
             }
 
-        } catch (ParseException ex) {
-            getLogger().error(ex.getLocalizedMessage(), ex);
-        }
+            sp =settingsDao.merge(SettingsBuilder.getInstance() //install date
+                    .addInstallDate(Calendar.getInstance().getTime())
+                    .addAppVersion()                    
+                    .addUploadDir("files")
+                    .get());
 
-        getLogger().info("__done creation");
+            
+            getLogger().info("Loading application ver. "+sp.getAppVersion().getImplVersionFull());
+            
+            File uf = new File(settingsDao.getCurrentSettings().getUploadDir());
+            if (!uf.exists()) {
+
+                if (!uf.mkdirs()) {
+                    throw new IllegalStateException("Cannot create directory " + uf.getAbsolutePath());
+                }
+            }
+
+            User admin = new User();
+            admin.setName("Administrator");
+            admin.setLogin("admin");
+            admin.getRoles().add(Role.ROLE_ADMIN);
+
+            admin = userManager.changePassword(admin, "admin");
+            admin = userDao.saveObject(admin);
+        
+        
+
+
+            User alex = new User();
+            alex.setName("Alex");
+            alex.setLogin("alex");
+            alex.setEmail("alex@0x08.tk");
+            alex.getRoles().add(Role.ROLE_USER);
+            alex = userManager.changePassword(alex, "login");
+            alex = userDao.saveObject(alex);
+
+            getLogger().info("alex=" + alex.getLogin() + "|" + alex.getPassword());
+
+
+            List<User> found_users;
+         
+                found_users = userDao.search("name:" + alex.getName());
+
+                getLogger().info("Found " + found_users.size() + " users containing login : " + alex.getLogin());
+                for (User u : found_users) {
+                    getLogger().info("login=" + u.getLogin() + "|" + u.getPassword());
+
+                }
+   
+                getLogger().info("__done creation");
+   
+            } catch (ParseException ex) {
+                getLogger().error(ex.getLocalizedMessage(), ex);
+         
+        } catch (IOException ex) {
+                getLogger().error(ex.getLocalizedMessage(), ex);
+        }
 
     }
 

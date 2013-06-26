@@ -100,26 +100,32 @@ public class SharedFileManagerImpl extends GenericSearchableManagerImpl<SharedFi
         return shareDao.search(query.getQuery(), query.getUserId(), query.getLevels());
     }
 
+    @Override
     public List<SharedFile> getFiles(AccessLevel[] levels) {
         return shareDao.getFiles(levels);
     }
 
+    @Override
     public List<SharedFile> getFilesForIntegration(String intergationCode) {
         return shareDao.getFilesForIntegration(intergationCode);
     }
 
+    @Override
     public List<SharedFile> getFilesForUser(Long id, AccessLevel[] levels) {
         return shareDao.getFilesForUser(id, levels);
     }
 
+    @Override
     public SharedFile getFileFromUUID(String uuid) {
         return shareDao.getFileFromUUID(uuid);
     }
     
+    @Override
     public String getMimeExt(String ext) {
         return mimeExt.getMessage(ext, null, null, Locale.getDefault());
     }
     
+    @Override
     public FileType lookupType(String mime) {
         return FileType.lookup(mimeIcons.getMessage(mime, null, "type.binary", Locale.getDefault()));
     }

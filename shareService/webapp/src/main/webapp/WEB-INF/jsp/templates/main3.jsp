@@ -51,23 +51,23 @@
 
     </head>
 
-    <body data-spy="scroll" data-target=".subnav" data-offset="50" screen_capture_injected="true">
+    <body data-spy="scroll" data-target=".subnav" data-offset="80" screen_capture_injected="true">
 
 
-        <div class="navbar  navbar-fixed-top ">
+        <div class="navbar navbar-fixed-top ">
             <div class="navbar-inner">
-                <div class="container-fluid">
+                <div class="container-fluid" >
                     <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
                         <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>                                               
                     </a>
 
                     <a class="brand" href="<c:url value='/'/>"><img style="width:35px;height:35px;" src="<c:url value='/images/file.png'/>"/></a>    
-                    <div class="nav-collapse collapse navbar-responsive-collapse">
-
-                        <tiles:insertAttribute name="header" />
-
+                    
+                    <div class="nav-collapse collapse">
+                       
+                        <tiles:insertAttribute name="header" />     
+                       
                         <sec:authorize ifAnyGranted="ROLE_ANONYMOUS">
 
                             <div class="btn-group pull-right">
@@ -82,7 +82,6 @@
 
                                     <li style="padding-right:5px;padding-left: 5px;" >
 
-
                                         <form  action="<c:url value='/j_spring_security_check' />"  method="POST">
 
                                             <div class="input-prepend">
@@ -95,12 +94,7 @@
                                                 <input class="span2"  name="j_password" type="password" placeholder="Password">
                                             </div>
 
-
-                                            <label class="checkbox">
-                                                <input type="checkbox" name="_spring_security_remember_me"> <fmt:message key="login.rememberMe"/>
-                                            </label>
-
-                                            <button type="submit" class="btn">Sign in</button>
+                                            <button type="submit" class="btn"><fmt:message key="button.login"/></button>
 
                                         </form>
                                     </li>
@@ -123,8 +117,16 @@
                                     <c:if test="${pageContext.response.locale.language ne locale}">
 
                                         <li>
+                                           
                                             <a href="<c:url value="${request.requestURL}">
-                                                   <c:param name="locale" value="${locale}" /></c:url>">
+                                                   <c:param name="locale" value="${locale}" />
+                                                    <c:forEach items="${param}" var="currentParam">
+                                                        <c:if test="${currentParam.key ne 'locale'}">
+                                                            <c:param name="${currentParam.key}" value="${currentParam.value}"/>
+                                                        </c:if>
+                                                    </c:forEach>
+                                                   
+                                               </c:url>">
                                                    <img style="display: inline; vertical-align:middle;" 
                                                         title="<fmt:message key="locale.${locale}"/>" 
                                                    src="<c:url value='/images/flags/flag_${locale}.png'/>"/>
@@ -144,7 +146,7 @@
                             <div class="btn-group pull-right">
 
                                 <a class="btn dropdown-toggle btn-primary" data-toggle="dropdown" href="#">
-                                    <img  src="<c:out value='http://www.gravatar.com/avatar/${currentUser.avatarHash}?s=32'/>"/>
+                                    <img  src="<c:out value='http://www.gravatar.com/avatar/${currentUser.avatarHash}?s=16'/>"/>
                                     <sec:authentication property="principal.username" />
                                     <span class="caret"></span>
                                 </a>
@@ -170,12 +172,13 @@
                 </div>
             </div>
         </div>
-
+                         
         <div class="container-fluid">
 
             <div class="row-fluid">
                 <div class="span3">
                     <div class="well sidebar-nav">
+                        
                         <tiles:insertAttribute name="menu" />
 
                     </div><!--/.well -->

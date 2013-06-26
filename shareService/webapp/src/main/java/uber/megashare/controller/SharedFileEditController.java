@@ -17,7 +17,6 @@ package uber.megashare.controller;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
@@ -37,7 +36,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-import uber.megashare.base.MimeSupport;
 import uber.megashare.base.logging.LoggedCall;
 import static uber.megashare.controller.EditConstants.VIEW_ACTION;
 import static uber.megashare.controller.GenericEditController.DELETE_ACTION;
@@ -49,7 +47,6 @@ import uber.megashare.model.SharedFile;
 import uber.megashare.model.SharedFileSearchQuery;
 import uber.megashare.service.SharedFileManager;
 import uber.megashare.service.image.ImageBuilder;
-import uber.megashare.service.servlet.ServletUtils;
 
 
 /**
@@ -143,7 +140,7 @@ public class SharedFileEditController extends GenericCommentController<SharedFil
 
                 log.append("uploadSave starting ,currentUser=" + getCurrentUser() + " file=" + input);
 
-                SharedFile old = null;
+                SharedFile old;
 
                 if (!input.isBlank()) {
                     old = manager.getFull(input.getId());
@@ -309,8 +306,6 @@ public class SharedFileEditController extends GenericCommentController<SharedFil
             @ModelAttribute(MODEL_KEY) SharedFile b,
             BindingResult result, Model model,
             HttpServletResponse response, HttpServletRequest request)  {
-
-
 
         if (!isCurrentUserLoggedIn()) {
             return createJsonError("access-denied");

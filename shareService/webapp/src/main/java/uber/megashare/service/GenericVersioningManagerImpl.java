@@ -17,7 +17,6 @@ package uber.megashare.service;
 
 import java.util.List;
 import uber.megashare.dao.GenericVersioningDao;
-import uber.megashare.model.SearchQuery;
 import uber.megashare.model.Struct;
 
 

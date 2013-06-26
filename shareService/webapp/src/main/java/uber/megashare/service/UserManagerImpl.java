@@ -45,7 +45,9 @@ public class UserManagerImpl extends GenericSearchableManagerImpl<User, UserSear
      *
      */
     private static final long serialVersionUID = 5771857264720031121L;
+    
     private UserDao userRepository;
+    
     private PasswordEncoder passwordEncoder;
 
     @Autowired
@@ -56,11 +58,13 @@ public class UserManagerImpl extends GenericSearchableManagerImpl<User, UserSear
         this.passwordEncoder = passwordEncoder;
     }
     
+    @Override
     public String getSSOCookieName() {
         return SavedSession.SSO_COOKIE_NAME;
     }
     
 
+    @Override
     public void invalidateSSOCookie(HttpServletResponse response) {
 
         Cookie c = new Cookie(SavedSession.SSO_COOKIE_NAME, null);
@@ -69,6 +73,7 @@ public class UserManagerImpl extends GenericSearchableManagerImpl<User, UserSear
         response.addCookie(c);
     }
 
+    @Override
     public String getSSOCookie(HttpServletRequest request) {
 
         if (request.getCookies() == null) {
@@ -86,6 +91,7 @@ public class UserManagerImpl extends GenericSearchableManagerImpl<User, UserSear
         return null;
     }
 
+    @Override
     public Cookie createNewSSOCookie(SavedSession s) {
     
         Cookie out = new Cookie(SavedSession.SSO_COOKIE_NAME,new String(Base64.encode(s.getCode().getBytes())));

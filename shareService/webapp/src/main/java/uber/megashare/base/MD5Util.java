@@ -21,42 +21,41 @@ import java.security.NoSuchAlgorithmException;
 
 public class MD5Util extends LoggedClass {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 8951807230587307847L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 8951807230587307847L;
+    
+    private static MessageDigest md;
 
-    private static 	MessageDigest md;
-
-    private MD5Util()  {
+    private MD5Util() {
         try {
-            md= MessageDigest.getInstance("MD5");
+            md = MessageDigest.getInstance("MD5");
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
     }
 
     public String hex(byte[] array) {
-		StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder();
         for (byte anArray : array) {
             sb.append(Integer.toHexString((anArray & 0xFF) | 0x100).substring(
                     1, 3));
         }
-		return sb.toString();
-	}
+        return sb.toString();
+    }
 
-	public String md5Hex(String message) {
-		try {
-			return hex(md.digest(message.getBytes("UTF-8")));
-		} catch (UnsupportedEncodingException  e) {
-			throw new RuntimeException(e);
+    public String md5Hex(String message) {
+        try {
+            return hex(md.digest(message.getBytes("UTF-8")));
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
         }
 
-	}
+    }
+    private static final MD5Util instance = new MD5Util();
 
-	private static final MD5Util instance = new MD5Util();
-
-	public static MD5Util getInstance() {
-		return instance;
-	}
+    public static MD5Util getInstance() {
+        return instance;
+    }
 }

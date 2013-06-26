@@ -56,7 +56,6 @@ public abstract class GenericController<T extends Struct> extends AbstractContro
         // if (request.getSession().getAttribute(NODE_LIST_MODEL_PAGE) != null) {
         request.getSession().removeAttribute(NODE_LIST_MODEL_PAGE);
         //}
-
     }
 
     public String getViewPage() {

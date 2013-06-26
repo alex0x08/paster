@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import uber.megashare.base.LoggedClass;
 import uber.megashare.listener.SessionSupport;
+import uber.megashare.model.SystemProperties;
 import uber.megashare.model.User;
 import uber.megashare.service.SettingsManager;
 import uber.megashare.service.UserManager;
@@ -48,12 +49,15 @@ public abstract class AbstractController extends LoggedClass {
      *
      */
     private static final long serialVersionUID = -7713053747053956403L;
+    
     protected static final String STATUS_MESSAGE_KEY = "statusMessageKey",
             MSG_ACCESS_DENIED = "access-denied",
             MSG_ACTION_CANCELLED = "action.cancelled",
             MSG_ACTION_SUCCESS = "action.success";
+    
     protected final String page404 = "404",
             page403 = "403";
+    
     @Autowired
     protected UserManager userManager;
     @Autowired
@@ -74,6 +78,11 @@ public abstract class AbstractController extends LoggedClass {
     @Value("${paste.integration.enabled}")
     protected boolean pasteIntegrationEnabled;
 
+    @ModelAttribute("currentSettings")
+    public SystemProperties getCurrentSettings() {
+        return settingsManager.getCurrentSettings();
+    }
+    
     @ModelAttribute("pasteIntegrationEnabled")
     public boolean isPasteIntegrationEnabled() {
         return pasteIntegrationEnabled;
@@ -124,13 +133,12 @@ public abstract class AbstractController extends LoggedClass {
     }
 
     @ModelAttribute("availableUsers")
-    public List<User> availableUsers() {
-        if (isCurrentUserAdmin()) {
-            return userManager.getAll();
-        }
-        return Collections.EMPTY_LIST;
+    public List<User> availableUsers() {        
+        return isCurrentUserAdmin() ? userManager.getAll() :Collections.EMPTY_LIST;
     }
 
+    
+    
     public boolean isCurrentUserLoggedIn() {
         return getCurrentUser() != null;
     }

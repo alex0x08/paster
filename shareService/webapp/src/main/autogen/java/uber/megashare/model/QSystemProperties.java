@@ -31,9 +31,13 @@ public class QSystemProperties extends EntityPathBase<SystemProperties> {
 
     private static final long serialVersionUID = 1921423580;
 
+    private static final PathInits INITS = PathInits.DIRECT;
+
     public static final QSystemProperties systemProperties = new QSystemProperties("systemProperties");
 
     public final QBaseDBObject _super = new QBaseDBObject(this);
+
+    public final QAppVersion appVer;
 
     public final StringPath baseUrl = createString("baseUrl");
 
@@ -52,15 +56,20 @@ public class QSystemProperties extends EntityPathBase<SystemProperties> {
     public final StringPath uploadUrl = createString("uploadUrl");
 
     public QSystemProperties(String variable) {
-        super(SystemProperties.class, forVariable(variable));
-    }
-
-    public QSystemProperties(Path<? extends SystemProperties> entity) {
-        super(entity.getType(), entity.getMetadata());
+        this(SystemProperties.class, forVariable(variable), INITS);
     }
 
     public QSystemProperties(PathMetadata<?> metadata) {
-        super(SystemProperties.class, metadata);
+        this(metadata, metadata.isRoot() ? INITS : PathInits.DEFAULT);
+    }
+
+    public QSystemProperties(PathMetadata<?> metadata, PathInits inits) {
+        this(SystemProperties.class, metadata, inits);
+    }
+
+    public QSystemProperties(Class<? extends SystemProperties> type, PathMetadata<?> metadata, PathInits inits) {
+        super(type, metadata, inits);
+        this.appVer = inits.isInitialized("appVer") ? new QAppVersion(forProperty("appVer")) : null;
     }
 
 }

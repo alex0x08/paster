@@ -82,7 +82,6 @@ public abstract class GenericEditController<T extends Struct> extends GenericCon
     public String view(@RequestParam(required = false) Long id, Model model, Locale locale) {
 
         String result = edit(model, id, locale);
-
         return result.equals(editPage) ? viewPage : result;
     }
 

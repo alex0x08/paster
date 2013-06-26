@@ -21,6 +21,7 @@ import uber.megashare.model.SystemProperties;
 
 /**
  * слой работы с базой для настроек
+ *
  * @author alex
  */
 @Repository("settingsDao")
@@ -28,21 +29,19 @@ import uber.megashare.model.SystemProperties;
 public class SettingsDaoImpl extends GenericDaoImpl<SystemProperties, Long> implements SettingsDao {
 
     /**
-	 * 
-	 */
-	private static final long serialVersionUID = -7529054970042516343L;
+     *
+     */
+    private static final long serialVersionUID = -7529054970042516343L;
 
-	public SettingsDaoImpl() {
+    public SettingsDaoImpl() {
         super(SystemProperties.class);
     }
 
     /**
-     * 
+     *
      * @return текущие настройки
      */
     public SystemProperties getCurrentSettings() {
         return getEntityManager().find(SystemProperties.class, 1l);
     }
-
-   
 }

@@ -62,6 +62,7 @@ public abstract class GenericDSLDaoImpl<T extends BaseDBObject, PK extends Seria
     /**
      * {@inheritDoc}
      */
+    @Override
     public JPQLQuery createQuery(Predicate... predicate) {
         return new JPAQuery(getEntityManager()).from(path).where(predicate).limit(MAX_RESULTS);
     }

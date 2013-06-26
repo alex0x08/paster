@@ -25,14 +25,14 @@ import uber.megashare.model.Struct;
  *
  * @author alex
  */
-public abstract class GenericSearchableManagerImpl<T extends Struct,SQ extends SearchQuery> extends GenericVersioningManagerImpl<T> {
+public abstract class GenericSearchableManagerImpl<T extends Struct, SQ extends SearchQuery> extends GenericVersioningManagerImpl<T> {
 
     /**
-	 * 
-	 */
-	private static final long serialVersionUID = 8809680810462568782L;
-	
-	protected GenericSearchableDao<T> sdao;
+     *
+     */
+    private static final long serialVersionUID = 8809680810462568782L;
+    
+    protected GenericSearchableDao<T> sdao;
 
     public GenericSearchableManagerImpl(GenericSearchableDao<T> genericDao) {
         super(genericDao);

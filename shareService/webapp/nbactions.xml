@@ -17,4 +17,11 @@
                 <goal>dependency:tree</goal>
             </goals>
         </action>
+        <action>
+            <actionName>CUSTOM-jetty-war</actionName>
+            <displayName>jetty-war</displayName>
+            <goals>
+                <goal>jetty:run-war</goal>
+            </goals>
+        </action>
     </actions>
