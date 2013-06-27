@@ -114,7 +114,7 @@ class OpenIDAuthServlet extends HttpServlet with Loggered{
 
   @throws(classOf[ServletException])
   override def init()  {
-    super.init();
+    super.init()
 
     val appContext =  WebApplicationContextUtils.getWebApplicationContext(getServletContext())
 
@@ -138,10 +138,10 @@ class OpenIDAuthServlet extends HttpServlet with Loggered{
   override def doPost(request:HttpServletRequest, response:HttpServletResponse)
   {
 
-    var errorMsg = OpenIdServletFilter.DEFAULT_ERROR_MSG;
+    var errorMsg = OpenIdServletFilter.DEFAULT_ERROR_MSG
     try
     {
-      val  user:OpenIdUser = _relyingParty.discover(request);
+      val  user:OpenIdUser = _relyingParty.discover(request)
       if(user==null)
       {
         if(RelyingParty.isAuthResponse(request))
@@ -157,7 +157,7 @@ class OpenIDAuthServlet extends HttpServlet with Loggered{
 
           // new user
           //  request.getRequestDispatcher(PAGE_AFTER_AUTH).forward(request, response);
-          response.sendRedirect(request.getContextPath() + "/");
+          response.sendRedirect(request.getContextPath() + "/")
         }
         return;
       }
@@ -196,7 +196,7 @@ class OpenIDAuthServlet extends HttpServlet with Loggered{
           // request.getRequestDispatcher(PAGE_AFTER_AUTH).forward(request, response);
           response.sendRedirect(request.getContextPath() + "/")
         }
-        return;
+        return
       }
 
       // associate and authenticate user
