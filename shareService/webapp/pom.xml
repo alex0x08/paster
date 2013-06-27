@@ -17,6 +17,16 @@
       <tag>HEAD</tag>
   </scm>
 
+    
+  <distributionManagement>
+      <repository>
+          <id>deployment</id>
+          <name>Internal Releases</name>
+          <url>file:///c:/work/releases/repository/maven-repository/</url>
+          <!--url>https://github.com/alex0x08/paster/raw/master</url-->
+      </repository>
+   </distributionManagement>
+
 
     <properties>
 
