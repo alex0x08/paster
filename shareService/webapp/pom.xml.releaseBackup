@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>uber.megashare</groupId>
     <artifactId>uberShareApp</artifactId>
-    <version>1.4-SNAPSHOT</version>
+    <version>1.3-SNAPSHOT</version>
     <packaging>war</packaging>
     <name>UberShareApp</name>
     <description>
@@ -823,11 +823,11 @@
             <url>http://repo1.maven.org/maven2</url>
         </repository>
     
-        <!--repository>
+        <repository>
             <id>nexus</id>
             <name>nexus</name>
             <url>https://repository.sonatype.org</url>
-        </repository-->
+        </repository>
 		
         <repository>
             <id>download</id>

@@ -18,6 +18,9 @@ package uber.megashare.service.servlet;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import javax.mail.internet.MimeUtility;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -195,24 +198,37 @@ public class SharedFileDownloadServlet extends AbstractBaseServlet {
         }
     }
 
+     private String getContentDispositionFileName(HttpServletRequest request, String fileName, boolean isAttachment)
+            throws UnsupportedEncodingException {
+
+        StringBuilder cp = new StringBuilder(isAttachment ? "attachment;" : "inline;");
+
+        String agent = request.getHeader("User-Agent").toLowerCase();
+
+        if (agent == null || agent.contains("msie")) {
+            cp.append(" filename=\"").append(URLEncoder.encode(fileName, "utf-8")).append("\"");
+            return cp.toString();
+        }
+
+        if (agent.contains("opera")) {
+            cp.append(" filename=").append(URLEncoder.encode(fileName, "utf-8"));
+            return cp.toString();
+        }
+
+        cp.append(" filename=\"").append(MimeUtility.encodeText(fileName, "UTF8", "B")).append("\"");
+        return cp.toString();
+
+
+    }
+
     private void setContentDispositionHeader(HttpServletRequest request, 
             HttpServletResponse response, boolean isAttachment, 
-            String fileName) {
+            String fileName) throws UnsupportedEncodingException {
 
-
-        StringBuilder b = new StringBuilder(isAttachment ? "attachment; " : "inline; ");
-        //if (isIE(request)) {
-            b.append("filename=");
-       // } else {
-        //    b.append("filename*=UTF-8''");
-       // }
-        b.append(fileName);
-
-        response.setHeader("Content-Disposition", b.toString());
+         
+        response.setHeader("Content-Disposition", 
+               getContentDispositionFileName(request,fileName,isAttachment));
     }
 
-    private boolean isIE(HttpServletRequest request) {
-        String userAgent = request.getHeader("User-Agent");
-        return userAgent == null ? false : userAgent.contains("MSIE");
-    }
+  
 }
