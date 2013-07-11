@@ -22,6 +22,7 @@ import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
+import uber.megashare.base.SystemInfo;
 
 /**
  * Базовые настройки системы
@@ -45,8 +46,12 @@ public class SystemProperties extends BaseDBObject implements Serializable {
     @Embedded
     private AppVersion appVer = new AppVersion();
 
-    public AppVersion getAppVersion() {
+      public AppVersion getAppDbVersion() {
         return appVer;
+    }     
+    
+    public AppVersion getAppVersion() {
+        return SystemInfo.getInstance().getRuntimeVersion();
     }       
 
     public String getUploadDir() {

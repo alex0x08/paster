@@ -25,7 +25,7 @@ import uber.megashare.model.SystemProperties;
  * @author alex
  */
 @Repository("settingsDao")
-@Transactional(readOnly = true, rollbackFor = Exception.class)
+//@Transactional(readOnly = true, rollbackFor = Exception.class,value= "transactionManager")
 public class SettingsDaoImpl extends GenericDaoImpl<SystemProperties, Long> implements SettingsDao {
 
     /**

@@ -455,6 +455,27 @@
             <version>1.0</version>
         </dependency>
 
+  <!-- Neo4j dependencies -->
+    <dependency>
+        <groupId>org.springframework.data</groupId>
+        <artifactId>spring-data-neo4j</artifactId>
+        <version>2.2.1.RELEASE</version>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.data</groupId>
+        <artifactId>spring-data-neo4j-rest</artifactId>
+        <version>2.2.1.RELEASE</version>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.data</groupId>
+        <artifactId>spring-data-neo4j-cross-store</artifactId>
+        <version>2.2.1.RELEASE</version>
+    </dependency>
+    <dependency>
+       <groupId>org.codehaus.janino</groupId>
+<artifactId>janino</artifactId>
+<version>2.5.15</version>
+    </dependency>
 
     </dependencies>
 
@@ -562,6 +583,7 @@
 
         <pluginManagement>
             <plugins>
+                
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>sonar-maven-plugin</artifactId>
@@ -599,6 +621,8 @@
 
 
         <plugins>
+            
+            
             
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -817,6 +841,13 @@
 
     <repositories>
     
+         <repository>
+        <id>spring-maven-snapshot</id>
+        <snapshots><enabled>true</enabled></snapshots>
+        <name>Springframework Maven MILESTONE Repository</name>
+        <url>http://maven.springframework.org/milestone</url>
+    </repository>
+        
         <repository>
             <id>maven1</id>
             <name>maven1</name>

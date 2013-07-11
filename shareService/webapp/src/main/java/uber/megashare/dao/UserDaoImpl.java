@@ -20,13 +20,14 @@ import java.util.UUID;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import uber.megashare.model.QUser;
 import uber.megashare.model.SavedSession;
 import uber.megashare.model.User;
 
 @Repository("userDao")
-@Transactional(readOnly = true)
+//@Transactional(readOnly = true,value= "transactionManager")
 public class UserDaoImpl extends GenericSearchableDaoImpl<User> implements UserDao {
 
     /**
@@ -38,6 +39,7 @@ public class UserDaoImpl extends GenericSearchableDaoImpl<User> implements UserD
         super(User.class);
     }
 
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED,value= "transactionManager",rollbackFor = Exception.class)
     public SavedSession createSession(Long userId) {
     
         User user = get(userId);

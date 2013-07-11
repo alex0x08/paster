@@ -33,7 +33,7 @@ import org.apache.lucene.morphology.russian.RussianAnalyzer;
  *
  * @author alex
  */
-@Transactional(readOnly = true, rollbackFor = Exception.class)
+//@Transactional(readOnly = true, rollbackFor = Exception.class,value= "transactionManager")
 public abstract class GenericSearchableDaoImpl<T extends Struct> extends GenericVersioningDaoImpl<T> {
 
     /**
@@ -57,6 +57,7 @@ public abstract class GenericSearchableDaoImpl<T extends Struct> extends Generic
     /**
      * {@inheritDoc}
      */
+    @Transactional(readOnly = true, rollbackFor = Exception.class,value= "transactionManager")
     public void indexAll() {
         FullTextEntityManager fsession = getFullTextEntityManager();
         /**
@@ -71,6 +72,7 @@ public abstract class GenericSearchableDaoImpl<T extends Struct> extends Generic
      * {@inheritDoc}
      */
     @SuppressWarnings("unchecked")
+    @Transactional(readOnly = true, rollbackFor = Exception.class,value= "transactionManager")
     public List<T> search(String query) throws ParseException {
 
         /**

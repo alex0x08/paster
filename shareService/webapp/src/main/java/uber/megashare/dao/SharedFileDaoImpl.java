@@ -38,7 +38,7 @@ import uber.megashare.model.SharedFile;
  * @author alex
  */
 @Repository("shareDao")
-@Transactional(readOnly = true)
+//@Transactional(readOnly = true,value= "transactionManager")
 public class SharedFileDaoImpl extends GenericSearchableDaoImpl<SharedFile> implements SharedFileDao {
 
     /**

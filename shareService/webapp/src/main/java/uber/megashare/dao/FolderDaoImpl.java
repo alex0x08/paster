@@ -34,7 +34,7 @@ import uber.megashare.model.SharedFile;
 
 
 @Repository("folderDao")
-@Transactional(readOnly = true)
+//@Transactional(readOnly = true,value= "transactionManager")
 public class FolderDaoImpl extends GenericSearchableDaoImpl<Folder>{
 
 	/**

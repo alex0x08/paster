@@ -13,28 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package uber.megashare.dao;
 
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
-import uber.megashare.model.Comment;
+package uber.megashare.service.tree;
+
+import org.springframework.data.neo4j.repository.GraphRepository;
+import uber.megashare.model.tree.FolderNode;
 
 /**
  *
- * @author alex
+ * @author aachernyshev
  */
-@Repository("commentDao")
-@Transactional(readOnly = true, rollbackFor = Exception.class,value= "transactionManager")
-public class CommentDaoImpl extends GenericDaoImpl<Comment, Long> implements CommentDao {
-
-    /**
-     *
-     */
-    private static final long serialVersionUID = 3947946208075599466L;
-
-    public CommentDaoImpl() {
-        super(Comment.class);
-    }
-
+public interface FolderService extends GraphRepository<FolderNode>{
     
 }

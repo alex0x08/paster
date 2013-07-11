@@ -107,6 +107,7 @@
 
                         <sec:authorize ifAnyGranted="ROLE_ADMIN,ROLE_MANAGER,ROLE_USER">
 
+                                
                             <li>
                                 <a title="<fmt:message key="button.edit"/>" target="${menuTarget}" 
                                    href="<c:url value="/main/file/edit/${model.id}"/>">

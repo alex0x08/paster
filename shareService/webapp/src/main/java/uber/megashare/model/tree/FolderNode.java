@@ -13,28 +13,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package uber.megashare.dao;
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package uber.megashare.model.tree;
 
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
-import uber.megashare.model.Comment;
+import org.springframework.data.neo4j.annotation.GraphId;
+import org.springframework.data.neo4j.annotation.NodeEntity;
 
 /**
  *
- * @author alex
+ * @author aachernyshev
  */
-@Repository("commentDao")
-@Transactional(readOnly = true, rollbackFor = Exception.class,value= "transactionManager")
-public class CommentDaoImpl extends GenericDaoImpl<Comment, Long> implements CommentDao {
+@NodeEntity
+public class FolderNode {
+    
+    
+    @GraphId
+    private Long id;
+    
+    private String name;
 
-    /**
-     *
-     */
-    private static final long serialVersionUID = 3947946208075599466L;
-
-    public CommentDaoImpl() {
-        super(Comment.class);
+    public Long getId() {
+        return id;
+    }
+    
+    public String getName() {
+        return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
     
+    
+ 
 }

@@ -237,7 +237,10 @@
                                         
                                         <fmt:message var="submit_button_text" key="button.save" />
 
-                                        <input name="delete" type="submit" class="btn btn-danger fileDeleteBtn"
+                                        
+                                          <c:if test="${model.accessLevel eq 'OWNER' or model.owner eq currentUser or currentUser.admin}">
+                                     
+                                               <input name="delete" type="submit" class="btn btn-danger fileDeleteBtn"
                                                targetIcon="<c:url value='/images/mime/${model.icon}'/>"
                                                targetTitle="${model.name} &nbsp; ${model.formattedFileSize} &nbsp; ${modelLastModified}  &nbsp; ${model.owner.name}"
 
@@ -245,6 +248,10 @@
                                                    <c:param name="id" value="${model.id}"/>
                                                </c:url>"
                                                value="<fmt:message key="button.delete"/>" />
+                                              
+                                          </c:if>
+                                       
+                                        
                                         <input name="submit" type="submit" class="btn btn-large btn-primary" value="${submit_button_text}" />
                                     </c:otherwise>
                                 </c:choose>

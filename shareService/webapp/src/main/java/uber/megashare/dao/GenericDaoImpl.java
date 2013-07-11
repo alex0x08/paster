@@ -45,7 +45,7 @@ import uber.megashare.model.BaseDBObject;
  * @param <T> a type variable
  * @param <PK> the primary key for that type
  */
-@Transactional(readOnly = true, rollbackFor = Exception.class)
+//@Transactional(readOnly = true, rollbackFor = Exception.class,value= "transactionManager")
 public abstract class GenericDaoImpl<T extends BaseDBObject, PK extends Serializable> extends LoggedClass implements GenericDao<T, PK> {
    
     /**
@@ -131,7 +131,7 @@ public abstract class GenericDaoImpl<T extends BaseDBObject, PK extends Serializ
     /**
      * {@inheritDoc}
      */
-    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED,value= "transactionManager",rollbackFor = Exception.class)
     @Override
     public T saveObject(T object) {
         T out = em.merge(object);
@@ -142,7 +142,7 @@ public abstract class GenericDaoImpl<T extends BaseDBObject, PK extends Serializ
     /**
      * {@inheritDoc}
      */
-    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED,value= "transactionManager",rollbackFor = Exception.class)
         @Override
     public void remove(PK id) {
         em.remove(get(id));

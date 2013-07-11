@@ -51,7 +51,7 @@ public class SettingsBuilder extends AbstractBuilder<SystemProperties> {
    
     
     public SettingsBuilder addAppVersion() {
-        obj.getAppVersion().fillFromManifest();
+        obj.getAppDbVersion().fillFromManifest();
         return this;
     }
     

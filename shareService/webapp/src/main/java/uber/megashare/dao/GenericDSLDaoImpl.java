@@ -38,7 +38,7 @@ import uber.megashare.model.BaseDBObject;
  * @author achernyshev
  * @since 1.0
  */
-@Transactional(readOnly = true)
+//@Transactional(readOnly = true,value= "transactionManager")
 public abstract class GenericDSLDaoImpl<T extends BaseDBObject, PK extends Serializable> extends GenericDaoImpl<T, PK> implements GenericDSLDao<T, PK> {
 
     protected final EntityPath<T> path;

@@ -36,6 +36,7 @@ import uber.megashare.service.SettingsManager;
 import uber.megashare.service.UserManager;
 import com.jcabi.manifests.Manifests;
 import java.io.IOException;
+import uber.megashare.base.SystemInfo;
 import uber.megashare.model.AppVersion;
 import uber.megashare.model.SystemProperties;
 /**
@@ -113,10 +114,14 @@ public class StartupListener extends LoggedClass implements ServletContextListen
 
             SystemProperties sp = settingsDao.getCurrentSettings();
             getLogger().debug("__currentSettings:" + sp);
+           
             if (sp != null && sp.getInstallDate() != null) {
-
+           
                 
                 AppVersion mf_version = new AppVersion().fillFromManifest();
+                
+                SystemInfo.getInstance().setRuntimeVersion(mf_version);
+                
                 
                 int check = mf_version.compareTo(sp.getAppVersion());
                 
@@ -137,7 +142,7 @@ public class StartupListener extends LoggedClass implements ServletContextListen
                     
                     case -2:
                     default:    
-                    throw new IllegalStateException("Uncomparable db and application versios: "
+                    getLogger().error("Uncomparable db and application versios: "
                              +sp.getAppVersion().getImplVersionFull()+" | "+mf_version.getImplVersionFull()+". Cannot continue.");
            
                         
@@ -145,7 +150,7 @@ public class StartupListener extends LoggedClass implements ServletContextListen
                                 
                 
                  getLogger().info("Loading application ver. "+mf_version.getImplVersionFull()+" db ver. "+sp.getAppVersion().getImplVersionFull());
-           
+               
                 
                 reindex();
 
@@ -160,6 +165,8 @@ public class StartupListener extends LoggedClass implements ServletContextListen
                     .addUploadDir("files")
                     .get());
 
+            SystemInfo.getInstance().setRuntimeVersion(sp.getAppDbVersion());
+                
             
             getLogger().info("Loading application ver. "+sp.getAppVersion().getImplVersionFull());
             
@@ -205,11 +212,9 @@ public class StartupListener extends LoggedClass implements ServletContextListen
    
                 getLogger().info("__done creation");
    
-            } catch (ParseException ex) {
+            } catch (ParseException | IOException ex) {
                 getLogger().error(ex.getLocalizedMessage(), ex);
          
-        } catch (IOException ex) {
-                getLogger().error(ex.getLocalizedMessage(), ex);
         }
 
     }
@@ -229,6 +234,7 @@ public class StartupListener extends LoggedClass implements ServletContextListen
      * @param servletContextEvent The servlet context event
      */
     //  @Override
+    @Override
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
      
     }

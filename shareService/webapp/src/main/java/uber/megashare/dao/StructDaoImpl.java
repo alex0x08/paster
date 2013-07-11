@@ -22,7 +22,7 @@ import uber.megashare.model.Struct;
  *
  * @author alex
  */
-@Transactional(readOnly = true)
+//@Transactional(readOnly = true,value= "transactionManager")
 public abstract class StructDaoImpl<T extends Struct> extends GenericDSLDaoImpl<T, Long> implements StructDao<T> {
 
     /**

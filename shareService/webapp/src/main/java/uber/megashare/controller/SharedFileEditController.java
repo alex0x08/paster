@@ -155,6 +155,17 @@ public class SharedFileEditController extends GenericCommentController<SharedFil
                     input.setName(old.getName());
                     input.setIntegrationCode(old.getIntegrationCode());
                     
+                    /**
+                     * allow upload and replace exist pulic file for all logged in users
+                     */
+                    if (old.getAccessLevel()== AccessLevel.ALL && !input.getOwner().equals(getCurrentUser())) {
+                        input.setAccessLevel(AccessLevel.ALL);
+                        input.setOwner(getCurrentUser());
+                    }
+                    
+                    /**
+                     *  if file is integrated - it can be only public
+                     */
                     if (input.getIntegrationCode()!=null) {
                         input.setAccessLevel(AccessLevel.ALL);
                     }

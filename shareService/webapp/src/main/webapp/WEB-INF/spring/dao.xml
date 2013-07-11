@@ -5,9 +5,12 @@
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:tx="http://www.springframework.org/schema/tx"
        xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+       xmlns:neo4j="http://www.springframework.org/schema/data/neo4j"
        xmlns:jee="http://www.springframework.org/schema/jee"         
        xsi:schemaLocation="http://www.springframework.org/schema/beans                             
-                           http://www.springframework.org/schema/beans/spring-beans.xsd 
+                           http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/data/neo4j 
+                           http://www.springframework.org/schema/data/neo4j/spring-neo4j.xsd 
                            http://www.springframework.org/schema/context 
                            http://www.springframework.org/schema/context/spring-context.xsd
                            http://www.springframework.org/schema/data/jpa
@@ -17,21 +20,67 @@
 
 
 
-    <context:annotation-config/>
+    <!--context:annotation-config/-->
+    <!--context:spring-configured/-->
     
-    <context:component-scan base-package="uber.megashare" />
+    <!--tx:jta-transaction-manager /-->
+     
+    <tx:annotation-driven transaction-manager="transactionManager"  />
     
-    <tx:annotation-driven transaction-manager="transactionManager" />
     
+        <!--bean id="transactionManager"
+          class="org.springframework.data.neo4j.transaction.ChainedTransactionManager" >
+              <constructor-arg>
+                  <list>
+                      <ref bean="jpaTransactionManager"/>
+                      <ref bean="neo4jTransactionManager"/>
+                  </list>
+              </constructor-arg>
+          </bean-->  
 
     
-    
-    <bean id="transactionManager" 
+     <bean id="transactionManager" 
           class="org.springframework.orm.jpa.JpaTransactionManager"
-          p:entityManagerFactory-ref="entityManagerFactory" />
-    <bean class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor"/>
-  <bean class="org.springframework.orm.hibernate4.HibernateExceptionTranslator"/>
+          p:entityManagerFactory-ref="entityManagerFactory"  />
+     
+    <!--
+      
+    <bean id="neo4jTransactionManager"
+    	   class="org.springframework.transaction.jta.JtaTransactionManager">
+        <property name="transactionManager">
+            <bean class="org.neo4j.kernel.impl.transaction.SpringTransactionManager">
+                <constructor-arg ref="graphDatabaseService"/>
+            </bean>
+        </property>
+        <property name="userTransaction">
+            <bean class="org.neo4j.kernel.impl.transaction.UserTransactionImpl">
+                <constructor-arg ref="graphDatabaseService"/>
+            </bean>
+        </property>
+        <property name="allowCustomIsolationLevels" value="true"/>
+    </bean-->
+    
+   
   
+  <bean id="graphDatabaseService" class="org.neo4j.kernel.EmbeddedGraphDatabase"
+            destroy-method="shutdown">
+        <constructor-arg index="0" value="${app.home}/trees"/>
+        <constructor-arg index="1">
+            <map>
+                <entry key="allow_store_upgrade" value="true"/>
+            </map>
+        </constructor-arg>
+       
+    </bean>
+
+
+        
+
+    
+    <neo4j:config graphDatabaseService="graphDatabaseService" entityManagerFactory="entityManagerFactory"/>
+
+    <neo4j:repositories base-package="uber.megashare.service.tree"/>
+    
 
     <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
       destroy-method="close">
@@ -92,5 +141,9 @@
 
     <bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor"/>
     
+    <bean class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor"/>
+  
+    <bean class="org.springframework.orm.hibernate4.HibernateExceptionTranslator"/>
+
      
 </beans>

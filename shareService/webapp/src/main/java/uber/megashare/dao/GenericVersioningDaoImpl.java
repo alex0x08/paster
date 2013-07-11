@@ -29,13 +29,14 @@ import uber.megashare.model.Struct;
  *
  * @author alex
  */
-@Transactional(readOnly = true)
+//@Transactional(readOnly = true,value= "transactionManager")
 public abstract class GenericVersioningDaoImpl<T extends Struct> extends  StructDaoImpl<T> {
 
     public GenericVersioningDaoImpl(Class<T> clazz) {
         super(clazz);
     }
     
+    @Transactional(readOnly = true, rollbackFor = Exception.class,value= "transactionManager")
     public Number getCurrentRevisionNumber(Long id) {
        List<Number> revs = getRevisions(id);
 
@@ -48,6 +49,7 @@ public abstract class GenericVersioningDaoImpl<T extends Struct> extends  Struct
     /**
      * {@inheritDoc}
      */
+    @Transactional(readOnly = true, rollbackFor = Exception.class,value= "transactionManager")
     public List<Number> getRevisions(Long id) {
         return getReader().getRevisions(persistentClass, id);
     }
@@ -55,6 +57,7 @@ public abstract class GenericVersioningDaoImpl<T extends Struct> extends  Struct
     /**
      * {@inheritDoc}
      */
+    @Transactional(readOnly = true, rollbackFor = Exception.class,value= "transactionManager")
     public T getRevision(Long id, Number rev) {
         /**
          * fix stupid envers bug
@@ -73,7 +76,7 @@ public abstract class GenericVersioningDaoImpl<T extends Struct> extends  Struct
     /**
      * {@inheritDoc}
      */
-    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED,value= "transactionManager",rollbackFor = Exception.class)
     public void revertToRevision(Long id, Number rev) {
         saveObject(getRevision(id, rev));
 
