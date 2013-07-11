@@ -216,8 +216,21 @@
     <script src="<c:url value='/js/bootstrap-carousel.js'/>"></script>
     <script src="<c:url value='/js/bootstrap-typeahead.js'/>"></script>
 
+    <script type="text/javascript" src="<c:url value='/libs/flowplayer/flowplayer-3.2.12.min.js'/>"></script>
 
-
+    <script type="text/javascript">
+        $(document).ready(function() {
+    flowplayer("a.embedPlayer", "<c:url value='/libs/flowplayer/flowplayer-3.2.16.swf'/>", {
+      clip:  {
+          autoPlay: false,
+          autoBuffering: true
+      }
+  });
+       }
+    );
+    
+    </script> 
+ 
     <script type="text/javascript">
         $('#auth-dropdown').click(function(event){
             event.stopPropagation();

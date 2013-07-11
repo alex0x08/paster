@@ -622,7 +622,51 @@
 
         <plugins>
             
-            
+              <plugin>
+
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <version>2.0</version>
+                <configuration>
+
+
+                    <path>/${project.artifactId}</path>
+                    <!--contextFile>${tomcatConf}</contextFile-->
+                    <!--tomcatLoggingFile>src/main/tomcat/conf/logging.properties</tomcatLoggingFile -->
+                    <addContextWarDependencies>true</addContextWarDependencies>
+                    <charset>UTF-8</charset>
+                    <!--update>true</update -->
+                    <uriEncoding>UTF-8</uriEncoding>
+                    <systemProperties>
+                        <!--com.sun.management.jmxremote>true</com.sun.management.jmxremote>
+                        <com.sun.management.jmxremote.port>8050</com.sun.management.jmxremote.port>
+                        <com.sun.management.jmxremote.ssl>false</com.sun.management.jmxremote.ssl>
+                        <com.sun.management.jmxremote.authenticate>false</com.sun.management.jmxremote.authenticate>
+                        <logback.ContextSelector>JNDI</logback.ContextSelector -->
+                        <app.home>${user.home}/.${project.artifactId}</app.home>
+                        <JAVA_OPTS>-Xms256m -Xmx1024m -XX:MaxPermSize=512m -XX:NewRatio=6
+                            -XX:+CMSClassUnloadingEnabled -XX:+CMSPermGenSweepingEnabled
+                            -verbose:gc"
+                        </JAVA_OPTS>
+                    </systemProperties>
+
+                </configuration>
+
+
+                <dependencies>
+
+                    <dependency>
+                        <groupId>org.apache.tomcat</groupId>
+                        <artifactId>tomcat-juli</artifactId>
+                        <version>7.0.33</version>
+                    </dependency>
+
+
+
+                </dependencies>
+
+            </plugin>
+
             
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

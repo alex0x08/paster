@@ -197,25 +197,25 @@
     </div>
         <div >
 
-            <%--
             
-            <c:if test="${model.type eq 'VIDEO'}">
             
-                ${model.mime}
-                <video id="my_video_1" class="video-js vjs-default-skin" controls
- preload="auto" width="640" height="264" poster="my_video_poster.png"
- data-setup="{}">
- <source src="<c:url value="/act/download">
-                                   <c:param name="id" value="${model.uuid}"/>
-                                     
-                               </c:url>" type='${model.mime}'/>
- 
-</video>
+            <c:if test="${model.type eq 'VIDEO' and model.mime eq 'video/x-flv'}">
+            
+              
+                <a class="embedPlayer" 
+			 href="<c:url value="/act/download">
+                                   <c:param name="id" value="${model.uuid}"/>                                     
+                               </c:url>"
+			  
+			 > 
+		</a> 
+                
+                
                 
                 
                 
             </c:if>
-            --%>
+            
             
         <c:if test="${model.containsPreview}">
 
