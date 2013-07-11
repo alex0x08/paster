@@ -103,7 +103,7 @@ public class SharedFileDaoImpl extends GenericSearchableDaoImpl<SharedFile> impl
                         continue;
                     }
 
-                    if (userId == null || file.getOwner().getId().equals(userId)) {
+                    if (userId == null || file.getOwner().getId().equals(userId) || file.getAccessLevel() == AccessLevel.ALL) {
 
                         out.add(file);
                         log.append("added " + file.getId() + " to output");

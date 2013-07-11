@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.support.PagedListHolder;
 import org.springframework.stereotype.Controller;
@@ -92,9 +93,10 @@ public class SharedFileListController extends GenericSearchableController<Shared
             @PathVariable("integrationCode") String integrationCode,
              @PathVariable("page") Integer page,
             HttpServletRequest request,
+             final HttpSession session,
             Model model,
             Locale locale) {
-        return listIntegrated(integrationCode,request, model, page, null, null, locale);
+        return listIntegrated(integrationCode,request, session, model, page, null, null, locale);
     }
 
     @RequestMapping(value =INTEGRATED_PREFIX+LIST_ACTION+"/{integrationCode:[a-z0-9_]+}/limit/{pageSize:[0-9]+}", method = RequestMethod.GET)
@@ -103,9 +105,10 @@ public class SharedFileListController extends GenericSearchableController<Shared
              @PathVariable("integrationCode") String integrationCode,
              @PathVariable("pageSize") Integer pageSize,
             HttpServletRequest request,
+             final HttpSession session,
             Model model,
             Locale locale) {
-        return listIntegrated(integrationCode,request, model, null, null, pageSize, locale);
+        return listIntegrated(integrationCode,request, session, model, null, null, pageSize, locale);
     }
 
     @RequestMapping(value = INTEGRATED_PREFIX+LIST_ACTION+"/{integrationCode:[a-z0-9_]+}/next", method = RequestMethod.GET)
@@ -113,9 +116,10 @@ public class SharedFileListController extends GenericSearchableController<Shared
     Collection<SharedFile> listByPathNextIntegrated(
              @PathVariable("integrationCode") String integrationCode,
             HttpServletRequest request,
+             final HttpSession session,
             Model model,
             Locale locale) {
-        return listIntegrated(integrationCode,request, model, null, NEXT_PARAM, null, locale);
+        return listIntegrated(integrationCode,request, session, model, null, NEXT_PARAM, null, locale);
     }
 
     @RequestMapping(value = INTEGRATED_PREFIX+LIST_ACTION+"/{integrationCode:[a-z0-9_]+}/prev", method = RequestMethod.GET)
@@ -123,16 +127,19 @@ public class SharedFileListController extends GenericSearchableController<Shared
     Collection<SharedFile> listByPathPrevIntegrated(
              @PathVariable("integrationCode") String integrationCode,
              HttpServletRequest request,
+              final HttpSession session,
             Model model,
             Locale locale) {
-        return listIntegrated(integrationCode,request, model, null, "prev", null, locale);
+        return listIntegrated(integrationCode,request, session, model, null, "prev", null, locale);
     }
 
     @RequestMapping(value = INTEGRATED_PREFIX+LIST_ACTION+"/{integrationCode:[a-z0-9_]+}", method = RequestMethod.GET)
     public @ModelAttribute(NODE_LIST_MODEL)
     Collection<SharedFile> listIntegrated(
             final @PathVariable("integrationCode") String integrationCode,
-            HttpServletRequest request, Model model,
+            HttpServletRequest request,
+             final HttpSession session,
+             Model model,
             @RequestParam(required = false) Integer page,
             @RequestParam(required = false) String NPpage,
             @RequestParam(required = false) Integer pageSize, Locale locale) {
@@ -174,10 +181,12 @@ public class SharedFileListController extends GenericSearchableController<Shared
      */
     @ModelAttribute(QUERY_MODEL)
     @Override
-    public SharedFileSearchQuery getNewQuery() {
+    public SharedFileSearchQuery getNewQuery(final HttpSession session) {
 
         SharedFileSearchQuery query = new SharedFileSearchQuery();
 
+        query.setQuery((String)session.getAttribute("queryString"));
+        
         if (isCurrentUserLoggedIn()) {
 
             if (query.getUserId() == null) {

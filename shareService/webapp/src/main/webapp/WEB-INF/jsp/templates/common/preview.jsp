@@ -92,7 +92,12 @@
 
 <div class="box well" >
     <div class="caption" style="vertical-align: top;" >
-        <img style="text-align: left; display: inline; " src="<c:url value='/images/mime/${model.icon}'/>"/>
+        
+        
+        <a href="<c:url value='/main/file/list/search?query=type:${model.type}'/>">
+            <img style="text-align: left; display: inline; " src="<c:url value='/images/mime/${model.icon}'/>"/>
+        </a>
+        
         <a href="<c:out value='${detailUrl}'/>" target="${target}">${model.name}</a>
 
         <div class="pull-right">
@@ -136,10 +141,11 @@
                         <c:if test="${pasteEnable}">
                         
                               <li>
+                                  
                                     <a class="pastePreviewBtn"
-                                        targetIcon="<c:url value='/images/mime/${model.icon}'/>"
+                                       targetIcon="<c:url value='/images/mime/${model.icon}'/>"
                                        targetTitle="${model.name} &nbsp; ${model.formattedFileSize} &nbsp; ${modelLastModified}  &nbsp; ${model.owner.name}"
-                                      targetId="${model.uuid}"
+                                       targetId="${model.uuid}"
                                        title="<fmt:message key="paste.preview.title"/>"  
                                        >
                                         <img style="display: inline;"
@@ -190,30 +196,30 @@
 
         <div style="padding-left:10px;" >${model.formattedFileSize} 
             &nbsp; ${modelLastModified} 
-            &nbsp;   ${model.owner.name}
+            
+             <a href="<c:url value='/main/file/list/search?query=ownerName:${model.owner.name}'/>">
+                     <c:out value="${model.owner.name}"/>   
+                </a>
+            &nbsp;  
             <span style="display: block;font-size:smaller;"> 
-                <fmt:message key="${model.accessLevel.desc}"/></span> 
+            
+                <a href="<c:url value='/main/file/list/search?query=accessLevel:${model.accessLevel.code}'/>">
+                    <fmt:message key="${model.accessLevel.desc}"/>
+                </a>
+                
+            </span> 
         </div>
     </div>
         <div >
-
-            
-            
+  
             <c:if test="${model.type eq 'VIDEO' and model.mime eq 'video/x-flv'}">
-            
               
                 <a class="embedPlayer" 
 			 href="<c:url value="/act/download">
                                    <c:param name="id" value="${model.uuid}"/>                                     
-                               </c:url>"
-			  
-			 > 
+                               </c:url>"> 
 		</a> 
-                
-                
-                
-                
-                
+               
             </c:if>
             
             
@@ -234,6 +240,7 @@
                       <c:param name="inline" value="1"/>  
             </c:url>
 
+            
             <c:choose>
 
                 <%--
@@ -245,6 +252,8 @@
                 
                 --%>
 
+               
+                
                 <c:when test="${model.previewWidth>100 and model.previewHeight>300}">
                     <c:set var="previewClass" value="zoombox w${model.previewWidth} h${model.previewHeight} zgallery1"/>
                 </c:when>
@@ -253,7 +262,7 @@
                 </c:otherwise>
             </c:choose>
 
-
+            
             <a title="<fmt:message key="button.edit"/>" class="${previewClass}" target="${target}" href="<c:out value='${fullImgUrl}'/>">
                 <img style="border: none;"   src="<c:url value='/act/download'>
                          <c:choose>
@@ -270,6 +279,10 @@
 
                      </c:url>"/>
             </a>
+                <div>
+                 <c:out value="${model.previewWidth} x ${model.previewHeight}"/>
+                </div>
+                
         </c:if>
     </div>
 

@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import org.apache.lucene.queryParser.ParseException;
 import org.springframework.beans.support.PagedListHolder;
 import org.springframework.ui.Model;
@@ -55,18 +56,17 @@ public abstract class GenericSearchableController<T extends Struct, SQ extends S
     }
 
     //@ModelAttribute("query")
-    public abstract SearchQuery getNewQuery();
+    public abstract SearchQuery getNewQuery(final HttpSession session);
 
     @RequestMapping(value = SEARCH_ACTION, method = {RequestMethod.POST,RequestMethod.GET})
     public @ModelAttribute(NODE_LIST_MODEL)
     Collection<T> search(HttpServletRequest request,
+            final HttpSession session,
             Model model, Locale locale,
             final @ModelAttribute(QUERY_MODEL) SQ query,
             @RequestParam(required = false) Integer page,
             @RequestParam(required = false) String NPpage,
             @RequestParam(required = false) Integer pageSize) throws ParseException {
-
-
      
         putListModel(model, locale);
 
@@ -76,6 +76,11 @@ public abstract class GenericSearchableController<T extends Struct, SQ extends S
             public PagedListHolder<T> invokeCreate() {
                 try {
                     List<T> result = smanager.search(query);
+                    if (result!=null) {
+                        session.setAttribute("queryString", query.getQuery());
+                    } else {
+                        session.removeAttribute("queryString");
+                    }
                     return new PagedListHolder<>(result!=null ? result : Collections.EMPTY_LIST);
                 } catch (ParseException e) {
                     //getLogger().error(e.getLocalizedMessage(), e);

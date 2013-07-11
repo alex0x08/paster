@@ -17,6 +17,7 @@ package uber.megashare.controller;
 
 import java.util.List;
 import java.util.Locale;
+import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -61,7 +62,7 @@ public class UserListController extends GenericSearchableController<User, UserSe
 
     @ModelAttribute(QUERY_MODEL)
     @Override
-    public UserSearchQuery getNewQuery() {
+    public UserSearchQuery getNewQuery(final HttpSession session) {
         return new UserSearchQuery();
     }
 }

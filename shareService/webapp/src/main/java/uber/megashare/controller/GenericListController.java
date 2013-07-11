@@ -16,9 +16,11 @@
 package uber.megashare.controller;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import org.springframework.beans.support.PagedListHolder;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -52,53 +54,60 @@ public abstract class GenericListController<T extends Struct> extends GenericCon
 
     protected abstract void putListModel(Model model, Locale locale);
     
-    protected final SourceCallback<T> defaultListCallback = new SourceCallback<T>() {
+  /*  protected final SourceCallback<T> defaultListCallback = new SourceCallback<T>() {
 
         @Override
         public PagedListHolder<T> invokeCreate() {
+              session.removeAttribute("queryString");
             return new PagedListHolder<>(getModels());
         }
-    };
+    };*/
 
     @RequestMapping(value = LIST_ACTION + "/{page:[0-9]+}", method = RequestMethod.GET)
     public @ModelAttribute(NODE_LIST_MODEL)
     Collection<T> listByPath(@PathVariable("page") Integer page,
             HttpServletRequest request,
+            final HttpSession session,
             Model model,
             Locale locale) {
-        return list(request, model, page, null, null, locale);
+        return list(request,session, model, page, null, null, locale);
     }
 
     @RequestMapping(value = LIST_ACTION + "/limit/{pageSize:[0-9]+}", method = RequestMethod.GET)
     public @ModelAttribute(NODE_LIST_MODEL)
     Collection<T> listByPathSize(@PathVariable("pageSize") Integer pageSize,
             HttpServletRequest request,
+            final HttpSession session,
             Model model,
             Locale locale) {
-        return list(request, model, null, null, pageSize, locale);
+        return list(request,session, model, null, null, pageSize, locale);
     }
 
     @RequestMapping(value = LIST_ACTION + "/next", method = RequestMethod.GET)
     public @ModelAttribute(NODE_LIST_MODEL)
     Collection<T> listByPathNext(
             HttpServletRequest request,
+            final HttpSession session,
             Model model,
             Locale locale) {
-        return list(request, model, null, NEXT_PARAM, null, locale);
+        return list(request,session, model, null, NEXT_PARAM, null, locale);
     }
 
     @RequestMapping(value = LIST_ACTION + "/prev", method = RequestMethod.GET)
     public @ModelAttribute(NODE_LIST_MODEL)
     Collection<T> listByPathPrev(
             HttpServletRequest request,
+            final HttpSession session,
             Model model,
             Locale locale) {
-        return list(request, model, null, "prev", null, locale);
+        return list(request,session, model, null, "prev", null, locale);
     }
 
     @RequestMapping(value = LIST_ACTION, method = RequestMethod.GET)
     public @ModelAttribute(NODE_LIST_MODEL)
-    Collection<T> list(HttpServletRequest request, Model model,
+    Collection<T> list(HttpServletRequest request,
+            final HttpSession session,
+            Model model,
             @RequestParam(required = false) Integer page,
             @RequestParam(required = false) String NPpage,
             @RequestParam(required = false) Integer pageSize, Locale locale) {
@@ -106,7 +115,17 @@ public abstract class GenericListController<T extends Struct> extends GenericCon
     
         putListModel(model, locale);
 
-        return processPagination(request, model, page, NPpage, pageSize, defaultListCallback);
+        return processPagination(request, model, page, NPpage, pageSize,new SourceCallback<T>() {
+
+        @Override
+        public PagedListHolder<T> invokeCreate() {
+            List<T> result = getModels();
+            
+                    session.removeAttribute("queryString");
+                    return new PagedListHolder<>(result!=null ? result : Collections.EMPTY_LIST);
+            
+        }
+    });
     }
 
     protected Collection<T> processPagination(HttpServletRequest request,
@@ -116,12 +135,14 @@ public abstract class GenericListController<T extends Struct> extends GenericCon
         @SuppressWarnings("unchecked")
         PagedListHolder<T> pagedListHolder = (PagedListHolder<T>) request.getSession().getAttribute(NODE_LIST_MODEL_PAGE);
 
-        if (pagedListHolder == null || (page == null && NPpage == null)) {
+        if (pagedListHolder == null || (page == null && NPpage == null && pageSize == null)  ) {
             pagedListHolder = createCall.invokeCreate();
             getLogger().debug("pagedListHolder created ");
         } else {
 
-            if (NPpage != null) {
+            if (pageSize != null) {
+                pagedListHolder.setPageSize(pageSize);
+            } else if (NPpage != null) {
 
                 if (NPpage.equals(NEXT_PARAM)) {
                     pagedListHolder.nextPage();
@@ -129,7 +150,7 @@ public abstract class GenericListController<T extends Struct> extends GenericCon
                     pagedListHolder.previousPage();
                 }
 
-            } else {
+            } else if (page!=null) {
 
                 if (page < 1) {
                     page = 1;
@@ -143,9 +164,7 @@ public abstract class GenericListController<T extends Struct> extends GenericCon
 
         }
 
-        if (pageSize != null) {
-            pagedListHolder.setPageSize(pageSize);
-        }
+        
 
         request.getSession().setAttribute(NODE_LIST_MODEL_PAGE, pagedListHolder);
 
