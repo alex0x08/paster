@@ -197,6 +197,26 @@
     </div>
         <div >
 
+            <%--
+            
+            <c:if test="${model.type eq 'VIDEO'}">
+            
+                ${model.mime}
+                <video id="my_video_1" class="video-js vjs-default-skin" controls
+ preload="auto" width="640" height="264" poster="my_video_poster.png"
+ data-setup="{}">
+ <source src="<c:url value="/act/download">
+                                   <c:param name="id" value="${model.uuid}"/>
+                                     
+                               </c:url>" type='${model.mime}'/>
+ 
+</video>
+                
+                
+                
+            </c:if>
+            --%>
+            
         <c:if test="${model.containsPreview}">
 
             <c:url value='/act/download' var="fullImgUrl">
@@ -207,10 +227,11 @@
                     </c:when>
                     <c:otherwise>
                         <c:param name="id" value="${model.uuid}"/>
-
+              
                     </c:otherwise>
+                     
                 </c:choose>                       
-
+                      <c:param name="inline" value="1"/>  
             </c:url>
 
             <c:choose>
@@ -225,7 +246,7 @@
                 --%>
 
                 <c:when test="${model.previewWidth>100 and model.previewHeight>300}">
-                    <c:set var="previewClass" value="zoombox w${model.previewWidth} h${model.previewHeight}"/>
+                    <c:set var="previewClass" value="zoombox w${model.previewWidth} h${model.previewHeight} zgallery1"/>
                 </c:when>
                 <c:otherwise>
                     <c:set var="previewClass" value=""/>        

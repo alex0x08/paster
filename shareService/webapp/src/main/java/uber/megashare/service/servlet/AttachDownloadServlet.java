@@ -56,6 +56,7 @@ public class AttachDownloadServlet extends AbstractBaseServlet{
 
 
         Long id  = NumberUtils.toLong(request.getParameter("id"),-1);
+        
        
         if (id<=0) {
             writeError(response,"Comment id not set");

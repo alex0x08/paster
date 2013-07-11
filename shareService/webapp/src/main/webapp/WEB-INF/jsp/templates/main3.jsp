@@ -233,8 +233,9 @@
                 animation   : true,             // Do we have to animate the box ?
                 width       : 1024,              // Default width
                 height      : 768,              // Default height
-                gallery     : false,             // Allow gallery thumb view
-                autoplay : false                // Autoplay for video
+                gallery     : true,             // Allow gallery thumb view
+                autoplay : true,                // Autoplay for video
+                overflow: true
             });
               
         });

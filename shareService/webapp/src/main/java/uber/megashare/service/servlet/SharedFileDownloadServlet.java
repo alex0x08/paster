@@ -121,6 +121,9 @@ public class SharedFileDownloadServlet extends AbstractBaseServlet {
             return;
         }
         
+         boolean inline = request.getParameter("inline")!=null;
+       
+        
         Long revision = NumberUtils.toLong(request.getParameter("revision"));
        
 
@@ -170,7 +173,7 @@ public class SharedFileDownloadServlet extends AbstractBaseServlet {
         }
 
         setContentDispositionHeader(request, response,
-                f.getType() != FileType.IMAGE && f.getType() != FileType.TEXT,
+                !inline || ( f.getType() != FileType.IMAGE && f.getType() != FileType.TEXT),
                 f.getName());
 
         response.setContentType(f.getMime());
