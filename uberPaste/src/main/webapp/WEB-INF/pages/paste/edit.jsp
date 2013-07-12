@@ -58,10 +58,10 @@
         <div class="column grid-3 right">
 
 
-
-            <input type="submit" name="submit_btn"
-                   class="submitBtn"
-                   value=" <c:out value='${submit_button_text}'/>"/>
+            <button id="addCommentBtn" class="submitBtn" name="submit_btn" type="submit">
+                <img id="btnIcon" style="display:none;" src="<c:url value='/images/gear_sml.gif'/>"/>
+                <span id="btnCaption"><c:out value='${submit_button_text}'/></span>
+            </button>
 
 
             <a href="<c:url value="/main/paste/list"/>"><fmt:message key='button.cancel'/></a>
@@ -181,9 +181,13 @@
     <div class="form-buttons">
             <div class="button">
 
-                <input type="submit" name="submit_btn"
-                       class="submitBtn"
-                       value=" <c:out value='${submit_button_text}'/>"/>
+                <button
+                        name="submit_btn"
+                        class="submitBtn" type="submit">
+
+                <img id="btnIcon" style="display:none;" src="<c:url value='/images/gear_sml.gif'/>"/>
+                <span id="btnCaption"><c:out value='${submit_button_text}'/></span>
+            </button>
 
                 <a href="<c:url value="/main/paste/list"/>"><fmt:message key='button.cancel'/></a>
 
@@ -261,7 +265,7 @@
             console.log(e.event.clipboardData);
             var text = e.event.clipboardData.getData('text/plain');
 
-            /*var block = '';
+            var block = '';
 
              if (text.length<max_length-2) {
              block = text.substring(0, text.length);
@@ -270,7 +274,7 @@
              }
 
              document.getElementById("pname").set('value',block);
-             */
+
             //e.stop();
         }
     });
@@ -377,7 +381,11 @@
 
     window.addEvent('domready', function(){
 
+
         $$('.submitBtn').addEvent('click',function(){
+            this.getElementById('btnCaption').set('text','Submitting...').disabled = true;
+            this.getElementById('btnIcon').setStyle('display','');
+
             event.preventDefault();
             onSave();
         });

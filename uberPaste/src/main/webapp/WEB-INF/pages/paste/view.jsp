@@ -214,7 +214,7 @@
 
  <div id="commentForm" class="editForm"  style="display:none;" >
 
-     <form:form action="${url}"
+     <form:form action="${url}" id="addCommentForm"
                 modelAttribute="comment"
                 method="POST" >
 
@@ -241,7 +241,11 @@
          <div class="row">
          <div class="column grid-16" >
 
-             <input  name="submit" type="submit" value="Add comment"  />
+             <button id="addCommentBtn" type="submit">
+                 <img id="btnIcon" style="display:none;" src="<c:url value='/images/gear_sml.gif'/>"/>
+                <span id="btnCaption">Add comment</span>
+             </button>
+
              to line <span id="pageNum"></span>
 
              <sec:authorize ifAnyGranted="ROLE_USER,ROLE_ADMIN">
@@ -297,14 +301,23 @@
    <script type="text/javascript">
                            window.addEvent('domready', function() {
 
+                               $('addCommentBtn').addEvent('click',function(){
+                                   this.getElementById('btnCaption').set('text','Submitting...').disabled = true;
+                                   this.getElementById('btnIcon').setStyle('display','');
+                                   $("addCommentForm").submit();
 
-/*    document.addEvent('keydown', function(event){
-        // the passed event parameter is already an instance of the Event type.
-        alert(event.key);   // returns the lowercase letter pressed.
-        alert(event.shift); // returns true if the key pressed is shift.
-        if (event.key == 's' && event.control) alert('Document saved.'); //executes if the user presses Ctr+S.
-    });
-  */
+                               });
+
+
+
+
+                               /*    document.addEvent('keydown', function(event){
+                                       // the passed event parameter is already an instance of the Event type.
+                                       alert(event.key);   // returns the lowercase letter pressed.
+                                       alert(event.shift); // returns true if the key pressed is shift.
+                                       if (event.key == 's' && event.control) alert('Document saved.'); //executes if the user presses Ctr+S.
+                                   });
+                                 */
     ZeroClipboard.setDefaults( { moviePath: "<c:url value='/libs/zeroclipboard/ZeroClipboard.swf'/>" } );
 
     var clip = new ZeroClipboard(document.id("ctrlc_link"));
