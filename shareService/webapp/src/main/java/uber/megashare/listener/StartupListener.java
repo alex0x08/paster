@@ -36,9 +36,19 @@ import uber.megashare.service.SettingsManager;
 import uber.megashare.service.UserManager;
 import com.jcabi.manifests.Manifests;
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
+import org.neo4j.graphdb.traversal.Evaluators;
+import org.neo4j.graphdb.traversal.TraversalDescription;
+import org.neo4j.kernel.Traversal;
+import org.neo4j.kernel.Uniqueness;
 import uber.megashare.base.SystemInfo;
 import uber.megashare.model.AppVersion;
 import uber.megashare.model.SystemProperties;
+import uber.megashare.model.tree.FolderNode;
+import uber.megashare.model.tree.NodeType;
+import uber.megashare.model.tree.Rels;
+import uber.megashare.service.tree.FolderService;
 /**
  * <p>StartupListener class used to initialize and database settings and
  * populate any application-wide drop-downs.
@@ -209,6 +219,79 @@ public class StartupListener extends LoggedClass implements ServletContextListen
                     getLogger().info("login=" + u.getLogin() + "|" + u.getPassword());
 
                 }
+                
+                
+               FolderService folderManager = (FolderService)ctx.getBean("folderService");
+               
+               FolderNode defaultParent = new FolderNode();
+                          defaultParent.setName("Default parent");
+                          defaultParent.setType(NodeType.PARENT);
+                          
+                        defaultParent =  folderManager.save(defaultParent);
+                
+                        System.out.println("_parent id: "+defaultParent.getId()+" type "+defaultParent.getType());
+                        
+                         FolderNode sub1 = new FolderNode();
+                          sub1.setName("Sub 1");
+                          sub1.setType(NodeType.FOLDER);
+                          
+                          
+                        FolderNode sub2 = new FolderNode();
+                          sub2.setName("Sub 2");
+                         sub2.setType(NodeType.FOLDER);
+                          
+                          sub1.setParent(defaultParent);
+                          
+                        /*  Set<FolderNode> ch = new HashSet<>();
+                          ch.add(sub2);
+                          sub1.setChildren(ch);
+                          */
+                          
+                          
+                          
+                          sub1 =  folderManager.save(sub1);
+
+                          sub2.setParent(sub1);
+
+                          sub2 =  folderManager.save(sub2);
+
+                          
+                        System.out.println("_sub1 id: "+sub1.getId()+" type "+sub1.getType()+" sub2 id: "+sub2.getId()+" sub2 parent "+sub2.getParent().getId());
+                    
+            
+          final TraversalDescription FRIENDS_TRAVERSAL = Traversal.description()
+        .depthFirst()
+        .relationships( Rels.CHILD )
+         .evaluator(Evaluators.includingDepths(1, 2))
+        .uniqueness( Uniqueness.RELATIONSHIP_GLOBAL );
+               
+          for (FolderNode friend : folderManager.findAllByQuery("START a=node(1)\n" +
+"MATCH a-[:CHILD*1..3]->x\n" +
+"RETURN a,x", uf)) {
+    
+              System.out.println("node from parent: " + friend.getId());
+
+          }
+          
+          
+          /* for (FolderNode friend : folderManager.findAllByTraversal(sub1,FRIENDS_TRAVERSAL)) {
+    
+              System.out.println("node from sub1: " + friend.getId());
+
+          }*/
+          
+        
+          /*
+            for (FolderNode f : folderManager.findAllByPropertyValue("type", NodeType.PARENT)) {
+                    System.out.println("parent node: " + f.getName());
+            
+                for (FolderNode ff : f.getChildren()) {
+                    System.out.println("sub nodes : " + ff.getName());
+                }
+            }
+            */ 
+             
+
    
                 getLogger().info("__done creation");
    
