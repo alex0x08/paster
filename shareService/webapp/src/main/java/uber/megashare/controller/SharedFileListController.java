@@ -37,6 +37,7 @@ import uber.megashare.model.SharedFileSearchQuery;
 import uber.megashare.service.SharedFileManager;
 
 import static uber.megashare.controller.SharedFileConstants.FILE_PREFIX;
+import uber.megashare.service.tree.FolderService;
 
 
 /**
@@ -56,13 +57,16 @@ public class SharedFileListController extends GenericSearchableController<Shared
       
     private final SharedFileManager fileManager;
    
+    private FolderService folderManager;
 
     @Autowired
-    public SharedFileListController(SharedFileManager fileManager
+    public SharedFileListController(
+            SharedFileManager fileManager,
+            FolderService folderManager
            ) {
         super(fileManager);
         this.fileManager = fileManager;
-       
+        this.folderManager = folderManager;
 
         setListPage("redirect:"+FILE_PREFIX+LIST_ACTION);
         /**
@@ -71,6 +75,8 @@ public class SharedFileListController extends GenericSearchableController<Shared
         setEditPage(FILE_PREFIX+EDIT_ACTION);
     }
 
+    
+    
     /**
      * get list of shared files
      */

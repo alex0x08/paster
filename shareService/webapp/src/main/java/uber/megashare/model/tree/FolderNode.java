@@ -19,13 +19,22 @@
  */
 package uber.megashare.model.tree;
 
+import java.util.Set;
+import org.neo4j.graphdb.Direction;
+import org.neo4j.graphdb.RelationshipType;
+
 import org.springframework.data.neo4j.annotation.GraphId;
+import org.springframework.data.neo4j.annotation.Indexed;
 import org.springframework.data.neo4j.annotation.NodeEntity;
+import org.springframework.data.neo4j.annotation.RelatedTo;
+
 
 /**
  *
  * @author aachernyshev
  */
+
+
 @NodeEntity
 public class FolderNode {
     
@@ -33,8 +42,43 @@ public class FolderNode {
     @GraphId
     private Long id;
     
+    @Indexed
     private String name;
 
+    @RelatedTo(direction = Direction.INCOMING, type = "CHILD")
+    private FolderNode parent;
+
+    @RelatedTo(direction = Direction.OUTGOING, type = "CHILD")
+    private Set<FolderNode> children;
+
+    @Indexed
+    private NodeType type = NodeType.FOLDER;
+
+    public NodeType getType() {
+        return type;
+    }
+
+    public void setType(NodeType type) {
+        this.type = type;
+    }
+    
+    
+    public FolderNode getParent() {
+        return parent;
+    }
+
+    public void setParent(FolderNode parent) {
+        this.parent = parent;
+    }
+
+    public Set<FolderNode> getChildren() {
+        return children;
+    }
+
+    public void setChildren(Set<FolderNode> children) {
+        this.children = children;
+    }
+    
     public Long getId() {
         return id;
     }
