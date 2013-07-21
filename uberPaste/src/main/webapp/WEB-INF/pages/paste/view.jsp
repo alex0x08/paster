@@ -68,8 +68,8 @@
 </div>
 
 <div class="row">
-    <div class="column grid-6">
-
+    <div class="column grid-12">
+    &nbsp;
         <c:if test="${not empty model.commentCount and model.commentCount>0}">
 
             <span style="vertical-align: top;font-size: larger;" class="i" title="Comments">C</span>
@@ -77,17 +77,21 @@
             <a href="javascript:void(0);" onclick="SyntaxHighlighter.toggleComments(1);" title="show comments">show</a>
 
 
+
+        </c:if>
+        <c:if test="${!model.blank and not empty availableRevisions}">
+            <jsp:include
+                    page="/WEB-INF/pages/common/revisions.jsp">
+                <jsp:param name="modelName" value="paste" />
+            </jsp:include>
         </c:if>
 
     </div>
 
-    <div class="column grid-10">
-              <c:if test="${!model.blank and not empty availableRevisions}">
-                   <jsp:include
-                    page="/WEB-INF/pages/common/revisions.jsp">
-                        <jsp:param name="modelName" value="paste" />
-                    </jsp:include>
-               </c:if>
+    <div class="column grid-3">
+        <c:if test="${shareIntegration}">
+            <a id="rightPanelCtrl" href="javascript:void(0);" onclick="toggleRight();" title="toggle right panel">hide</a>
+        </c:if>
 
     </div>
 </div>
@@ -95,15 +99,25 @@
 
 <div class="row">
 
-    <div class="column grid-12">
+    <c:choose>
+        <c:when test="${shareIntegration}">
+              <c:set var="centerGridSize" value="grid-12"/>
+        </c:when>
+        <c:otherwise>
+            <c:set var="centerGridSize" value="grid-15"/>
+    </c:otherwise>
+    </c:choose>
+
+    <div id="centerPanel" class="column ${centerGridSize}">
     <pre id="pasteText" class="brush: ${model.codeType.code};toolbar: false; auto-links:false;" style=" overflow-y: hidden;" ><c:out value="${model.text}" escapeXml="true" /></pre>
     <code id="pasteTextPlain" style="display:none;"><c:out value="${model.text}" escapeXml="true" /></code>
 
-</div>
+    </div>
 
-    <div class="column grid-4">
 
     <c:if test="${shareIntegration}">
+
+        <div id="rightPanel" class="column grid-4" >
 
         <iframe id="shareFrame" src="${shareUrl}/main/file/integrated/list/paste_${model.id}"
                 scrolling="auto" frameborder="0"
@@ -111,10 +125,8 @@
 
         </iframe>
 
-
+        </div>
     </c:if>
-
-</div>
 
 </div>
 <%--
@@ -287,7 +299,28 @@
 <c:if test="${shareIntegration}">
 
 <script type="text/javascript">
-    window.addEvent('domready', function() {
+
+    function toggleRight() {
+
+        var rightPanel = document.getElementById('rightPanel');
+        var centerPanel = document.getElementById('centerPanel');
+        var rightPanelCtrl = document.getElementById('rightPanelCtrl');
+
+       // alert(rightPanel.getStyle('display'));
+        if (rightPanel.getStyle('display') != 'none') {
+            rightPanel.setStyle('display','none');
+            centerPanel.set('class','column grid-15');
+            rightPanelCtrl.set('text','show');
+        } else {
+            centerPanel.set('class','column grid-12');
+            rightPanel.setStyle('display','');
+            rightPanelCtrl.set('text','hide');
+         }
+
+
+    }
+
+        window.addEvent('domready', function() {
         var sch = document.body.scrollHeight;
         if (sch < 1024)  {
             $('shareFrame').setStyle('height','1024px');

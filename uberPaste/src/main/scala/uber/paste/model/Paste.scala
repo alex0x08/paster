@@ -101,6 +101,7 @@ class Paste extends Struct with java.io.Serializable{
   //@NotNull
   @XmlTransient
   //@NotAudited
+  @SearchableProperty(store=Store.YES,index=Index.NO)
   private var thumbImage:String =null
 
   //@Transient
