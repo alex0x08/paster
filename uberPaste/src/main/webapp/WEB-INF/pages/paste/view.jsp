@@ -73,8 +73,9 @@
         <c:if test="${not empty model.commentCount and model.commentCount>0}">
 
             <span style="vertical-align: top;font-size: larger;" class="i" title="Comments">C</span>
-            <a href="javascript:void(0);" onclick="SyntaxHighlighter.toggleComments(0);" title="hide comments">hide</a>|
-            <a href="javascript:void(0);" onclick="SyntaxHighlighter.toggleComments(1);" title="show comments">show</a>
+            <a id="toggleCommentsCtl" href="javascript:void(0);" onclick="SyntaxHighlighter.toggleComments(this);" title="hide comments">
+                <span  class="i" >-</span>
+            </a>
 
 
 
@@ -90,7 +91,9 @@
 
     <div class="column grid-3">
         <c:if test="${shareIntegration}">
-            <a id="rightPanelCtrl" href="javascript:void(0);" onclick="toggleRight();" title="toggle right panel">hide</a>
+            <a id="rightPanelCtrl" href="javascript:void(0);" onclick="toggleRight();" title="toggle right panel">
+                <span class="i">-</span>
+            </a>
         </c:if>
 
     </div>
@@ -310,11 +313,11 @@
         if (rightPanel.getStyle('display') != 'none') {
             rightPanel.setStyle('display','none');
             centerPanel.set('class','column grid-15');
-            rightPanelCtrl.set('text','show');
+            rightPanelCtrl.getElement('span').set('text','+');
         } else {
             centerPanel.set('class','column grid-12');
             rightPanel.setStyle('display','');
-            rightPanelCtrl.set('text','hide');
+            rightPanelCtrl.getElement('span').set('text','-');
          }
 
 

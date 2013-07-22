@@ -108,7 +108,8 @@ var sh = {
 		discoveredBrushes : null,
 		highlighters : {},
         lineNumbers : {},
-        currentEditLine: null
+        currentEditLine: null,
+        showComments: true
 	},
 	
 	/** This object is populated by user included external brush files. */
@@ -405,13 +406,20 @@ var sh = {
 			'load',
 			function() { sh.highlight(params); }
 		);
-    },  toggleComments: function(check) {
+    },  toggleComments: function(ctrl) {
+
+
+
+        sh.vars.showComments = !sh.vars.showComments;
+
+        ctrl.getElement('span').set('text', sh.vars.showComments ? '-' : '+');
+
 
         $$('div.commentBlock').each(function(el){
-            el.setStyle('display', check == 0 ? 'none' : '');
+            el.setStyle('display', sh.vars.showComments == false ? 'none' : '');
         });
         $$('div.listSpace').each(function(el){
-            el.setStyle('display', check == 0 ? 'none' : '');
+            el.setStyle('display', sh.vars.showComments == false ? 'none' : '');
         });
     },  recurseCommentReply: function(roots) {
         var sroots = []
