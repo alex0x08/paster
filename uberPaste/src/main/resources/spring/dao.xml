@@ -29,20 +29,7 @@
     <bean class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor"/>
 
 
-    <!-- JDBC connection properties are loaded to use in hibernate sessionfactory configuration -->
-    <bean id="propertyConfigurer"
-          class="uber.paste.base.MergedPropertyConfigurer">
-         
-        <property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE"/>
-         <property name="locations">
-            <list>
-                <value>classpath:jdbc.properties</value>
-                <value>file:${app.home}/app.properties</value>
-            </list>
-        </property>
-      
-    </bean>
-
+  
    
     
 
