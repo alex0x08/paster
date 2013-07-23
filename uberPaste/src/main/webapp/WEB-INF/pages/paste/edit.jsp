@@ -64,7 +64,8 @@
             </button>
 
 
-            <a href="<c:url value="/main/paste/list"/>"><fmt:message key='button.cancel'/></a>
+            <a href="<c:url value="/main/paste/list"/>">
+                <fmt:message key='button.cancel'/></a>
 
             <c:if test="${!model.blank}">
                 <sec:authorize ifAnyGranted="ROLE_ADMIN">
@@ -85,7 +86,7 @@
     <div class="row">
         <div class="column grid-7">
 
-        <form:label path="tagsAsString"><fmt:message key="paste.tags"/>:</form:label>
+        <form:label path="tagsAsString"><span  class="i" >T</span><fmt:message key="paste.tags"/>:</form:label>
     <form:input path="tagsAsString" maxlength="155" cssStyle="width:97%;" autocomplete="true" placeholder="enter space-separated tags here"  />
     <form:errors path="tagsAsString" cssClass="error" />
 
@@ -189,7 +190,8 @@
                 <span id="btnCaption"><c:out value='${submit_button_text}'/></span>
             </button>
 
-                <a href="<c:url value="/main/paste/list"/>"><fmt:message key='button.cancel'/></a>
+                <a href="<c:url value="/main/paste/list"/>">
+                    <fmt:message key='button.cancel'/></a>
 
                 <c:if test="${!model.blank}">
                     <sec:authorize ifAnyGranted="ROLE_ADMIN">

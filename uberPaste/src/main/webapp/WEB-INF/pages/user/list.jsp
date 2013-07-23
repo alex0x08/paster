@@ -2,7 +2,11 @@
 
 
  <h1>Users</h1>
- <div>
+
+
+<a href="<c:url value='/main/user/new'/>">Create new user</a>
+
+<div>
    <c:forEach var="user" items="${items}" varStatus="status">
        <div>
            <span style="background-color: darksalmon;" ><c:out value="${user.id}"/></span>
