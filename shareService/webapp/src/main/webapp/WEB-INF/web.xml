@@ -129,6 +129,12 @@
         <servlet-name>spring</servlet-name>
         <url-pattern>/main/*</url-pattern>
     </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>spring</servlet-name>
+        <url-pattern>/api-main/*</url-pattern>
+    </servlet-mapping>
+    
     <servlet-mapping>
         <servlet-name>file-download</servlet-name>
         <url-pattern>/act/download</url-pattern>

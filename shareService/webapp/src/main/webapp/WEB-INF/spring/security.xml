@@ -22,7 +22,7 @@
     <http pattern="/main/logoutSuccess*" security="none" />
 
  
-   <http pattern="/login-basic/**"   >
+   <http pattern="/api-main/**"   >
         <intercept-url pattern="/**" access="ROLE_USER,ROLE_ADMIN,ROLE_MANAGER" />
         <http-basic />
         
