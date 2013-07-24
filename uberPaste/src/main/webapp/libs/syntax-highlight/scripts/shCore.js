@@ -430,46 +430,26 @@ var sh = {
 
     },  insertComment: function(cl,mode,count) {
 
-      //  var cl = document.getElementById('comment_l'+lineNumber);
-
-
-
+    
         var lineNumber =  cl.getAttribute('lineNumber');
-        var clParent =  cl.getAttribute('parentCommentId');
+        var id =  cl.getAttribute('commentId');
 
-        var id =  cl.getAttribute('id');
+    
+               $('cl_'+lineNumber).adopt(cl);
+ 
+
+    cl.setStyle("display","");
+
+    var space = $("numSpace_l"+id);
+    
+  //  alert(cl.getStyle("height"));
+    space.setStyle("height",cl.getStyle("height"));
 
 
-        clInner = cl.getChildren('.commentInner');
+              $('ln_'+lineNumber).adopt(space);
 
-
-       /* clInner.addEvents({
-            click: function(event) {
-
-                event.stopPropagation();
-
-
-                this.set("zIndex",9999);
-                this.setStyle("background-color","red");
-                this.setStyle("border","solid 1px green");
-
-            }
-        });*/
-
-        if (clParent == '' ) {
-                $('cl_'+lineNumber).adopt(cl);
-                cl.set("zIndex",count+1000);
-
-        } else {
-            $('comment_l'+clParent).adopt(cl);
-            cl.set("zIndex",count);
-
-        }
-
-        cl.setStyle("display","");
-
-            $('ln_'+lineNumber).adopt($("numSpace_l"+lineNumber));
-
+  
+  
     },  hideEditForm: function() {
 
         $('commentForm').setStyle("display","none");
@@ -496,7 +476,7 @@ var sh = {
 
         $('commentText').set("value","");
 
-        if (parentId>0) {
+        /*if (parentId>0) {
 
             $('commentParentId').set("value",parentId);
             $('comment_l'+parentId).adopt($("commentForm"));
@@ -505,7 +485,7 @@ var sh = {
             $('commentForm').setStyle("position","absolute");
 
 
-        } else {
+        } else {*/
 
             $('commentForm').setStyle("position","relative");
 
@@ -531,7 +511,7 @@ var sh = {
             $('cl_'+lineNumber).adopt($("commentForm"));
 
 
-        }
+        //}
 
         $("commentForm").set("zIndex",9000);
 

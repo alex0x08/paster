@@ -19,12 +19,12 @@
                     transition: Fx.Transitions.Bounce.easeOut // This could have been also 'bounce:out'
                 }).tween('height', '140px');
 
-                $('avatarImage').src=avatarUrl+'?s=128';
+                $('avatarImage').src=avatarUrl+'?s=128&d=monsterid';
 
             },
             mouseleave: function(){
                 this.set('tween', {}).tween('height', '40px');
-                $('avatarImage').src=avatarUrl+'?s=32';
+                $('avatarImage').src=avatarUrl+'?s=32&d=monsterid';
             }
         });
 
@@ -32,7 +32,13 @@
 </script>
 <div id="avatarImageDiv" >
     <a href="http://ru.gravatar.com/site/check/${currentUser.username}" >
-        <img id="avatarImage" style="min-width: 40px;" alt="Gavatar" src="<c:out value='http://www.gravatar.com/avatar/${currentUser.avatarHash}?s=32'/>"/>
+        <img id="avatarImage" style="min-width: 40px;" alt="Gavatar" src="
+              <c:url value='http://www.gravatar.com/avatar/${currentUser.avatarHash}'>
+                 <c:param name='s' value='32'/>
+                 <c:param name='d' value='monsterid'/>
+             </c:url>"/>
+             
+             
     </a>
                 <span style="display: inline; vertical-align: top; ">
                            <a title="Contact ${currentUser.name}" style="display: inline;vertical-align: top;" href="mailto:${currentUser.username}"><c:out value="${currentUser.name}" /></a>

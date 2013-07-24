@@ -144,10 +144,10 @@
 
         <c:forEach var="comment" items="${model.comments}" varStatus="loopStatus">
 
-            <div id="numSpace_l${comment.lineNumber}" class="listSpace" >
+            <div id="numSpace_l${comment.id}" class="listSpace" >
             </div>
 
-            <div id="comment_l${comment.id}" lineNumber="${comment.lineNumber}"  parentCommentId="${comment.parentId}" class="commentBlock" >
+            <div id="comment_l${comment.id}" commentId="${comment.id}" lineNumber="${comment.lineNumber}"  parentCommentId="${comment.parentId}" class="commentBlock" >
                 <div class="commentInner">
 
                 <div class="row">
@@ -271,7 +271,7 @@
                 </span>
 
                   <a href="http://ru.gravatar.com/site/check/${currentUser.username}" title="GAvatar">
-                        <img style="vertical-align: top;padding-bottom: 2px;" src="<c:out value='http://www.gravatar.com/avatar/${currentUser.avatarHash}?s=32'/>"/>
+                        <img style="vertical-align: top;padding-bottom: 2px;" src="<c:out value='http://www.gravatar.com/avatar/${currentUser.avatarHash}?s=32&d=monsterid'/>"/>
                    </a>
 
                </span>

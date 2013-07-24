@@ -2,7 +2,7 @@
 
 <c:url var="url" value='/main/paste/list/search' />
 
-<form:form action="${url}"
+<form:form action="${url}" id="searchForm"
            modelAttribute="query"
            method="POST" >
 <div class="row">
@@ -10,7 +10,14 @@
         <form:input path="query" name="query" id="pquery" cssStyle="width:97%;margin-right:0.5em;min-width: 5em;" autocomplete="true"  />
      </div>
     <div class="column grid-3" style="">
-        <input name="submit" type="submit" value="Search" style="text-align:left;min-width: 5em;max-width: 5em;"  />
+        
+        <button id="doSearchBtn" type="submit">
+                 <img id="btnIcon" style="display:none;" src="<c:url value='/images/gear_sml.gif'/>"/>
+                <span id="btnCaption">Search</span>
+             </button>
+
+        <!--
+        <input name="submit" type="submit" value="Search" style="text-align:left;min-width: 5em;max-width: 5em;"  />-->
         <form:errors path="query" cssClass="error" element="div"/>
     </div>
 </div>
@@ -33,3 +40,22 @@
 
 
 </form:form>
+
+
+<script type="text/javascript">
+
+    
+    window.addEvent('domready', function() {
+    
+          $('doSearchBtn').addEvent('click',function(){
+                                   this.getElementById('btnCaption').set('text','Submitting...').disabled = true;
+                                   this.getElementById('btnIcon').setStyle('display','');
+                                   $("searchForm").submit();
+
+                               });
+
+        
+        
+    });
+    
+</script>
