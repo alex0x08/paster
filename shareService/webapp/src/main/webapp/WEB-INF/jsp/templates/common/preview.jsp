@@ -89,12 +89,16 @@
 
 <kc:prettyTime var="modelLastModified" date="${model.lastModified}" locale="${pageContext.response.locale}"/>
 
+ <c:url value="${externalUrl}/act/download" var="selfExternalUrl">
+            <!--${model.uuid} -->
+            <c:param name="id" value="${model.uuid}"/>
+        </c:url>
 
 <div class="box well" >
     <div class="caption" style="vertical-align: top;" >
         
         
-        <a href="<c:url value='/main/file/list/search?query=type:${model.type}'/>">
+        <a href="<c:url value='/main/file/list/search?query=type:${model.type}'/>" target="${not empty param.integrationMode ? "_blank" : target}">
             <img style="text-align: left; display: inline; " src="<c:url value='/images/mime/${model.icon}'/>"/>
         </a>
         
@@ -121,7 +125,7 @@
                                     <fmt:message key="button.edit"/></a>    
                             </li>
 
-                            <c:if test="${model.owner eq currentUser or currentUser.admin}">
+                            <c:if test="${empty param.integrationMode and ( model.owner eq currentUser or currentUser.admin )}">
 
                                 <li>
                                     <a class="fileDeleteBtn"
@@ -142,7 +146,10 @@
                         
                               <li>
                                   
-                                    <a class="pastePreviewBtn"
+                                  <c:choose>
+                                      <c:when test="${empty param.integrationMode}">
+                                          
+                                          <a class="pastePreviewBtn"
                                        targetIcon="<c:url value='/images/mime/${model.icon}'/>"
                                        targetTitle="${model.name} &nbsp; ${model.formattedFileSize} &nbsp; ${modelLastModified}  &nbsp; ${model.owner.name}"
                                        targetId="${model.uuid}"
@@ -151,31 +158,92 @@
                                         <img style="display: inline;"
                                            src="<c:url value='/images/ninja.png'/>"/>
                                         <fmt:message key="paste.preview.title"/></a>    
+                                          
+                                      </c:when>
+                                      <c:otherwise>
+                                          
+                                          <a href="${pasteUrl}/main/paste/loadFrom?url=${selfExternalUrl}"
+                                            target="_blank" class="btn"
+                                             title="<fmt:message key="paste.preview.title"/>" >
+                                        <img style="display: inline;"
+                                           src="<c:url value='/images/ninja.png'/>"/>
+                                        <fmt:message key="paste.preview.title"/></a>    
+                                          
+                                      </c:otherwise>
+                                  </c:choose>
+                                  
+                                    
                                 </li>
                         </c:if>
                                 
                         <c:if test="${gdocsEnable}">
 
                             <li>
-                                <a title="<fmt:message key="file.gdocs.preview"/>"
+                                
+                                 <c:choose>
+                                     <c:when test="${empty param.integrationMode}">
+                                
+                                         <a title="<fmt:message key="file.gdocs.preview"/>"
                                    data-target="#gdocsPreviewModal_${model.id}" 
                                    class="btn" data-toggle="modal"
                                    >
                                     <img style="display: inline;" 
                                          src="<c:url value='/images/mime/${model.icon}'/>"/> 
                                     <fmt:message key="file.gdocs.preview"/></a>    
+                                         
+                                     </c:when>
+                                     <c:otherwise>
+                                         
+                                         <c:url value="http://docs.google.com/viewer" var="gdocsUrl">
+                                             <c:param name="url" value="${selfExternalUrl}"/>
+                                             <c:param name="embedded" value="true"/>        
+                                         </c:url>
+
+                                         <a title="<fmt:message key="file.gdocs.preview"/>"
+                                            href="${gdocsUrl}" target="_blank"
+                                            class="btn" 
+                                            >
+                                             <img style="display: inline;" 
+                                                  src="<c:url value='/images/mime/${model.icon}'/>"/> 
+                                             <fmt:message key="file.gdocs.preview"/></a>    
+                                         
+                                     </c:otherwise>
+                                 </c:choose>
+                                
                             </li>
                         </c:if>        
 
                         <c:if test="${model.type eq 'PDF'}">
                             <li>
-                                <a title="<fmt:message key="file.pdf.preview"/>"
-                                   data-target="#pdfPreviewModal_${model.id}" 
-                                   class="btn" data-toggle="modal"
-                                   >
-                                    <img style="display: inline;" 
-                                         src="<c:url value='/images/mime/pdf.gif'/>"/> 
-                                    <fmt:message key="file.pdf.preview"/></a>    
+                                
+                                 <c:choose>
+                                     <c:when test="${empty param.integrationMode}">
+                                
+                                         <a title="<fmt:message key="file.pdf.preview"/>"
+                                            data-target="#pdfPreviewModal_${model.id}" 
+                                            class="btn" data-toggle="modal"
+                                            >
+                                             <img style="display: inline;" 
+                                                  src="<c:url value='/images/mime/pdf.gif'/>"/> 
+                                             <fmt:message key="file.pdf.preview"/></a>    
+                                         
+                                     </c:when>
+                                     <c:otherwise>
+                                         
+                                         <a title="<fmt:message key="file.pdf.preview"/>"
+                                            target="_blank"
+                                            class="btn" 
+                                            href="<c:url value='/main/file/raw/pdfview'><c:param name='id' value='${model.id}'/></c:url>"
+                                                >
+                                                <img style="display: inline;" 
+                                                     src="<c:url value='/images/mime/pdf.gif'/>"/> 
+                                            <fmt:message key="file.pdf.preview"/>
+                                         </a>    
+                                         
+                                     </c:otherwise>
+                                 </c:choose>
+                                
+                                
                             </li>
 
                         </c:if>        
@@ -186,7 +254,8 @@
                                    <c:param name="id" value="${model.uuid}"/>
                                </c:url>">
 
-                                <img style="display: inline;" src="<c:url value='/images/download.png'/>"/> <fmt:message key="file.download"/></a>    
+                                <img style="display: inline;" src="<c:url value='/images/download.png'/>"/>
+                                <fmt:message key="file.download"/></a>    
                         </li>
                     </ul>
                 </div>
@@ -197,13 +266,15 @@
         <div style="padding-left:10px;" >${model.formattedFileSize} 
             &nbsp; ${modelLastModified} 
             
-             <a href="<c:url value='/main/file/list/search?query=ownerName:${model.owner.name}'/>">
+             <a href="<c:url value='/main/file/list/search?query=ownerName:${model.owner.name}'/>"
+                target="${not empty param.integrationMode ? "_blank" : target}">
                      <c:out value="${model.owner.name}"/>   
                 </a>
             &nbsp;  
             <span style="display: block;font-size:smaller;"> 
             
-                <a href="<c:url value='/main/file/list/search?query=accessLevel:${model.accessLevel.code}'/>">
+                <a href="<c:url value='/main/file/list/search?query=accessLevel:${model.accessLevel.code}'/>" 
+                   target="${not empty param.integrationMode ? "_blank" : target}">
                     <fmt:message key="${model.accessLevel.desc}"/>
                 </a>
                 
@@ -237,7 +308,8 @@
                     </c:otherwise>
                      
                 </c:choose>                       
-                      <c:param name="inline" value="1"/>  
+                      <c:param name="inline" value="1"/>
+                      <c:param name="fname" value="${model.name}"/>
             </c:url>
 
             
@@ -254,7 +326,7 @@
 
                
                 
-                <c:when test="${model.previewWidth>100 and model.previewHeight>300}">
+                <c:when test="${empty param.integrationMode and model.previewWidth>100 and model.previewHeight>300}">
                     <c:set var="previewClass" value="zoombox w${model.previewWidth} h${model.previewHeight} zgallery1"/>
                 </c:when>
                 <c:otherwise>
@@ -263,7 +335,8 @@
             </c:choose>
 
             
-            <a title="<fmt:message key="button.edit"/>" class="${previewClass}" target="${target}" href="<c:out value='${fullImgUrl}'/>">
+            
+            <a title="<fmt:message key="button.edit"/>" class="${previewClass}" target="${not empty param.integrationMode ? "_blank" : target}" href="<c:out value='${fullImgUrl}'/>">
                 <img style="border: none;"   src="<c:url value='/act/download'>
                          <c:choose>
                              <c:when test="${not empty param.revision}">          
@@ -289,9 +362,10 @@
 </div>
 
 
-<c:if test="${gdocsEnable}">
+<c:if test="${gdocsEnable and empty param.integrationMode}">
 
-    <div id="gdocsPreviewModal_${model.id}" class="modal hide fade" tabindex="-1" style="width:650px;"
+   
+            <div id="gdocsPreviewModal_${model.id}" class="modal hide fade" tabindex="-1" style="width:650px;"
          role="dialog" aria-labelledby="googledocModalLabel" aria-hidden="true">
         <div class="modal-header">
             <img style="text-align: left; display: inline; " src="<c:url value='/images/mime/${model.icon}'/>"/>
@@ -299,10 +373,7 @@
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
         </div>
 
-        <c:url value="${externalUrl}/act/download" var="selfExternalUrl">
-            <!--${model.uuid} -->
-            <c:param name="id" value="${model.uuid}"/>
-        </c:url>
+      
 
         <c:url value="http://docs.google.com/viewer" var="gdocsUrl">
             <c:param name="url" value="${selfExternalUrl}"/>
@@ -316,11 +387,14 @@
             </iframe>     
         </div>
     </div>
-
+           
+      
+    
+    
 </c:if>
 
 
-<c:if test="${model.type eq 'PDF'}">
+<c:if test="${model.type eq 'PDF' and empty param.integrationMode}">
 
     <div id="pdfPreviewModal_${model.id}" class="modal hide fade" tabindex="-1" style="width:680px;"
          role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">

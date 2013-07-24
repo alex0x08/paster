@@ -36,30 +36,17 @@
         </jsp:include>
 
 
-         <c:if test="${viewMode eq 'integrated'}">
-         
-               <div class="form-buttons pull-left">
-                <c:if test="${not empty availablePrev}">
-                    <a class="btn" href="<c:url value='/main/file/integrated/view'>
-                           <c:param name='id' value='${model.id-1}'/>
-                           <c:param name='integrationMode' value='${viewMode}'/>
-                       </c:url>">&#8592;</a>
-                </c:if>
+        <c:if test="${viewMode eq 'integrated'}">
+
+            <div class="form-buttons pull-left">
 
                 <a class="btn btn-primary btn-large" target="_blank" href="<c:out value='${downloadUrl}'/>">
                     <img style="display: inline;" src="<c:url value='/images/download.png'/>"/>
                     <fmt:message key="file.download"/></a>
-               
-                <c:if test="${not empty availableNext}">
-                    <a class="btn" href="<c:url value='/main/file/integrated/view'>
-                           <c:param name='id' value='${model.id+1}'/>
-                           <c:param name='integrationMode' value='${viewMode}'/>
-                       </c:url>">&#8594;</a>
-                </c:if>
 
             </div>
-             
-         </c:if>
+
+        </c:if>
         
     </div>
 

@@ -117,6 +117,8 @@ $.fn.zoombox = function(opts){
  * Load the content (with or without loader) and call open()
  * */
 function load(){
+    
+   
     if(state=='closed') isOpen = false;
     state = 'load';
     setDim();
@@ -128,6 +130,8 @@ function load(){
         timer = window.setInterval(function(){loadImg(img);},100);
     }else{
         setContent();
+        
+        
         open();
     }
 }
@@ -148,7 +152,8 @@ function build(){
     // We add a specific class to define the box theme
     $('#zoombox').addClass(options.theme);
     // We bind the close behaviour (click on the mask / click on the close button)
-    $('#zoombox .zoombox_mask,.zoombox_close').click(function(){
+    $('#zoombox .zoombox_mask,.zoombox_close, .zoombox_img_close').click(function(){
+        
         close();
         return false;
     });
@@ -265,6 +270,9 @@ function open(){
     // If it's an image we load the content now (to get a good animation)
     if(type=='img' && isOpen == false && options.animation == true){
         $('#zoombox .zoombox_content').append(content);
+         $('.zoombox_img_close').click(function(){
+               close();
+         });
     }
     // Default position/size of the box to make the "zoom effect"
     if(elem != null && elem.find('img').length != 0 && isOpen == false){
@@ -312,6 +320,9 @@ function open(){
         $('#zoombox .zoombox_container').animate(css,options.duration,function(){
             if(type == 'multimedia' || isOpen == true){
                 $('#zoombox .zoombox_content').append(content);
+                    $('.zoombox_img_close').click(function() {
+                        close();
+                    });
             }
             if(type == 'image' || isOpen == true){
                 $('#zoombox .zoombox_content img').css('opacity',0).fadeTo(300,1);
@@ -332,6 +343,11 @@ function open(){
         $('#zoombox .zoombox_container').css(css);
         $('#zoombox .zoombox_mask').show();
         $('#zoombox .zoombox_mask').css('opacity',options.opacity);
+        
+         $('.zoombox_img_close').click(function() {
+                        close();
+                    });
+        
         if(!isOpen){
             gallery();
         }
@@ -398,6 +414,9 @@ function close(){
  * Set the HTML Content of the box
  * */
 function setContent(){
+    
+   
+    
     // Overtflow
     if(options.overflow == false){
         if(width*1 + 50 > windowW()){
@@ -413,7 +432,8 @@ function setContent(){
     type = 'multimedia';
     if(filtreImg.test(url)){
         type = 'img';
-        content='<img src="'+link+'" width="100%" height="100%"/>';
+        content='<img class="zoombox_img_close" src="'+link+'" width="100%" height="100%" />';
+       
     }else if(filtreMP3.test(url)){
         width=300;
         height=40;
@@ -465,8 +485,11 @@ function setContent(){
         url=url[0];
         content='<object type="application/x-shockwave-flash" data="'+url+'" width="'+width+'" height="'+height+'"><param name="movie" value="'+url+'"><embed src="'+url+'" type="application/x-shockwave-flash" width="'+width+'" height="'+height+'"  wmode="transparent"></embed></object>';
     }else{
-        content='<iframe src="'+url+'" width="'+width+'" height="'+height+'" border="0"></iframe>';
+        content='<iframe  src="'+url+'" width="'+width+'" height="'+height+'" border="0"></iframe>';
     }
+    
+    //alert(content);
+    
     return content;
 }
 /**
