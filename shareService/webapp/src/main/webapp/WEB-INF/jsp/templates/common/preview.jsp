@@ -40,6 +40,21 @@
 </c:choose>
 
 
+ <c:url value="/act/download" var="fullDownloadUrl">
+
+                <c:choose>
+                    <c:when test="${not empty param.revision}">          
+                        <c:param name="id" value="${model.id}"/>
+                        <c:param name="revision" value="${param.revision}"/>          
+                    </c:when>
+                    <c:otherwise>
+                        <c:param name="id" value="${model.uuid}"/>
+
+                    </c:otherwise>
+                </c:choose>
+
+            </c:url>
+
 <c:choose>
     <c:when test="${not empty param.downloadLink}">
 
@@ -250,9 +265,7 @@
 
                         <li>
                             <a title="<fmt:message key="button.download"/>" 
-                               target="${menuTarget}" href=" <c:url value="/act/download">
-                                   <c:param name="id" value="${model.uuid}"/>
-                               </c:url>">
+                               target="${menuTarget}" href="<c:out value='${fullDownloadUrl}'/>">
 
                                 <img style="display: inline;" src="<c:url value='/images/download.png'/>"/>
                                 <fmt:message key="file.download"/></a>    

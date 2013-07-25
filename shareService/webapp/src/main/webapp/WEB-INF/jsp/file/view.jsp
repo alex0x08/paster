@@ -14,9 +14,24 @@
             <p><fmt:message key="${statusMessageKey}"/></p>
         </c:if>
 
-        <c:url value="/act/download" var="downloadUrl">
-            <c:param name="id" value="${model.uuid}"/>
-        </c:url>
+            
+            
+ <c:url value="/act/download" var="downloadUrl">
+
+                <c:choose>
+                    <c:when test="${not empty param.revision}">          
+                        <c:param name="id" value="${model.id}"/>
+                        <c:param name="revision" value="${param.revision}"/>          
+                    </c:when>
+                    <c:otherwise>
+                        <c:param name="id" value="${model.uuid}"/>
+
+                    </c:otherwise>
+                </c:choose>
+
+            </c:url>
+
+       
 
         <div class="form-row pull-left">
             <label for="file"><fmt:message key="file.file.uploaded"/>:</label>
