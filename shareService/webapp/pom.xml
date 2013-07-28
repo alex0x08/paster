@@ -317,6 +317,12 @@
                     <groupId>org.springframework.data</groupId>
                     <artifactId>spring-data-jpa</artifactId>
                     <version>1.1.1.RELEASE</version>
+                    <exclusions>
+                        <exclusion>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-orm</artifactId>
+                        </exclusion>
+                    </exclusions>
                 </dependency>
 
        
@@ -885,12 +891,7 @@
 
     <repositories>
     
-         <repository>
-        <id>spring-maven-snapshot</id>
-        <snapshots><enabled>true</enabled></snapshots>
-        <name>Springframework Maven MILESTONE Repository</name>
-        <url>http://maven.springframework.org/milestone</url>
-    </repository>
+        
         
         <repository>
             <id>maven1</id>
@@ -898,11 +899,11 @@
             <url>http://repo1.maven.org/maven2</url>
         </repository>
     
-        <!--repository>
-            <id>nexus</id>
-            <name>nexus</name>
-            <url>https://repository.sonatype.org</url>
-        </repository-->
+        <repository>
+            <id>neo4j</id>
+            <name>neo4j</name>
+            <url>http://m2.neo4j.org/content/repositories/releases</url>
+        </repository>
 		
         <repository>
             <id>download</id>

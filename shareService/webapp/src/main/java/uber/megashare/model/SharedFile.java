@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011 aachernyshev <alex@0x08.tk>
+ * Copyright (C) 2011 alex <alex@0x08.tk>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import org.apache.commons.io.FileUtils;
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
 import org.hibernate.search.annotations.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -42,6 +44,7 @@ import uber.megashare.base.LoggedClass;
 @Indexed(index = "indexes/sharedfile")
 @Table(name = "s_files")
 @Audited
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class SharedFile extends Node {
 
     public static final String PASTER_PREFIX= "paste_";
