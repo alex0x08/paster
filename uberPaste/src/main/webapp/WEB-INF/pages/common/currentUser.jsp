@@ -31,7 +31,7 @@
     });
 </script>
 <div id="avatarImageDiv" >
-    <a href="http://ru.gravatar.com/site/check/${currentUser.username}" >
+    <a href="http://ru.gravatar.com/site/check/${currentUser.email}" >
         <img id="avatarImage" style="min-width: 40px;" alt="Gavatar" src="
               <c:url value='http://www.gravatar.com/avatar/${currentUser.avatarHash}'>
                  <c:param name='s' value='32'/>

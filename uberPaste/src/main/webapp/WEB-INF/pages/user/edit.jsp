@@ -50,7 +50,17 @@
             </span>
         </div>
 
-         <div class="form-row">
+        <div class="form-row">
+            <label for="pmail"><fmt:message key="user.email"/>:</label>
+            <span class="input">
+                <form:input path="email" name="email" id="pmail"  />
+                <form:errors path="email" cssClass="error" />
+
+            </span>
+        </div>
+
+
+        <div class="form-row">
             <label for="username"><fmt:message key="user.login"/>:</label>
             <span class="input">
                 <form:input path="username" name="username" id="login"  />

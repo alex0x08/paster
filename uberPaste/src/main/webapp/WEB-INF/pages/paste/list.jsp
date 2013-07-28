@@ -29,8 +29,10 @@
 
     </div>
     <div class="column grid-2">
-        <a href="<c:url value="/main/paste/list/body.xml"/>"><img src="<c:url value='/images/xml.png'/>" title="xml" alt="xml"/></a> |
-        <a href="<c:url value="/main/paste/list/body.json"/>"><img src="<c:url value='/images/json.png'/>" title="json" alt="json"/></a> |
+        <a href="<c:url value="/main/paste/list/body.xml"/>">
+            <img src="<c:url value='/images/xml.png'/>" title="xml" alt="xml"/></a> |
+        <a href="<c:url value="/main/paste/list/body.json"/>">
+            <img src="<c:url value='/images/json.png'/>" title="json" alt="json"/></a> |
         <a href="<c:url value="/main/paste/list.rss"/>"><img src="<c:url value='/images/rss.png'/>" title="rss" alt="rss"/></a> |
         <a href="<c:url value="/main/paste/list.atom"/>"><img src="<c:url value='/images/atom.png'/>" title="atom" alt="atom"/></a> |
         <a href="<c:url value="/main/paste/list.xls"/>"><img src="<c:url value='/images/xls.gif'/>" title="xls" alt="xls"/></a> |
@@ -178,9 +180,11 @@
                                 <kc:prettyTime date="${paste.lastModified}" locale="${pageContext.response.locale}"/>
                             </small>
 
-                            <sec:authorize ifAnyGranted="ROLE_ADMIN">
-                                |  <a href="<c:url value='/main/paste/delete'><c:param name="id" value="${paste.id}"/> </c:url>"><fmt:message key='button.delete'/></a>
-                            </sec:authorize>
+                        <tiles:insertDefinition name="/common/deleteLink" >
+                            <tiles:putAttribute name="model" value="${paste}"/>
+                            <tiles:putAttribute name="modelName" value="paste"/>
+                            <tiles:putAttribute name="currentUser" value="${currentUser}"/>
+                        </tiles:insertDefinition>
 
 
                         </div>

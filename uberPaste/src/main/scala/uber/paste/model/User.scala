@@ -79,7 +79,15 @@ class User extends Struct with UserDetails with java.io.Serializable{
     
   @Transient
   private var passwordRepeat:String = null
-    
+
+//  @Length(min = 3, max = 250)
+  // @Pattern(regex = "^\\w*$", message = "not a valid username")
+ // @NotNull(message = "{validator.not-null}")
+  @SearchableProperty
+  //@Column(nullable = false, length = 50,unique=true)
+  private var email:String = null
+
+
   /**
    * if this user account is expired
    */
@@ -98,7 +106,9 @@ class User extends Struct with UserDetails with java.io.Serializable{
   private var editable:Boolean = true
 
   def getAvatarHash():String = {
-    return if (username==null) {
+    return if (email!=null) {
+      MD5Util.instance.md5Hex(email)
+    } else if (username==null) {
       null
     } else {
       MD5Util.instance.md5Hex(username)
@@ -158,6 +168,14 @@ class User extends Struct with UserDetails with java.io.Serializable{
   @Override
   def isCredentialsNonExpired(): Boolean = {
     return !credentialsExpired;
+  }
+
+  def getEmail():String = {
+    return email;
+  }
+
+  def setEmail(mail:String)  {
+    this.email = mail;
   }
 
   @Override

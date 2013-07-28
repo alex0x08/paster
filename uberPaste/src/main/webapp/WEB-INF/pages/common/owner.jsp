@@ -7,7 +7,7 @@
 
 <c:if test="${model.owner ne null}">
     ,  by
-    <a href="http://ru.gravatar.com/site/check/${model.owner.username}" title="GAvatar">
+    <a href="http://ru.gravatar.com/site/check/${model.owner.email}" title="GAvatar">
         <img style="vertical-align: middle;padding-bottom: 2px;" src="
              <c:url value='http://www.gravatar.com/avatar/${model.owner.avatarHash}'>
                  <c:param name='s' value='32'/>

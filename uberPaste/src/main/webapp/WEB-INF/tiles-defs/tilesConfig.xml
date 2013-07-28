@@ -69,6 +69,13 @@
         <put-attribute name="modelName" value="" />
     </definition>
 
+    <definition name="/common/deleteLink" template="/WEB-INF/pages/common/deleteLink.jsp" >
+        <put-attribute name="model" value="" />
+        <put-attribute name="modelName" value="" />
+        <put-attribute name="currentUser" value="" />
+
+    </definition>
+
 
     <definition name="/common/pageList" template="/WEB-INF/pages/common/pageList.jsp" >
         <put-attribute name="listMode" value="" />

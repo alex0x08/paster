@@ -178,6 +178,9 @@ class Paste extends Struct with java.io.Serializable{
   def getOwner(): User = owner
   def setOwner(u:User) {owner = u}
 
+  def isHasOwner() = owner!=null
+
+
   def getIntegrationCode(): String = integrationCode
   def setIntegrationCode(code:String) { integrationCode = code}
 

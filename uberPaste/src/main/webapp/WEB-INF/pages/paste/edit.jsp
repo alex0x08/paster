@@ -37,10 +37,15 @@
             <form:hidden path="id"  />
         </c:otherwise>
     </c:choose>
-            <form:label path="name"><fmt:message key="paste.title"/>:</form:label>
-                <form:input cssClass="notice" cssErrorClass="error" path="name" name="title"
+            <form:label path="name"><fmt:message key="paste.title"/>
+                <a id="cleanTitleBtn" onclick="cleanTitle();" href="javascript:void(0);" title="Clean title">
+                <span class="i">d</span>
+                </a>  : </form:label>
+                <form:input  cssClass="notice" cssErrorClass="error" path="name" name="title"
                             id="pname" cssStyle="width:97%;" maxlength="255" title="Paste title" placeholder="enter paste title"  />
+
                 <form:errors path="name" cssClass="error" />
+
     </div>
 
     <div class="column grid-1" >
@@ -67,10 +72,15 @@
             <a href="<c:url value="/main/paste/list"/>">
                 <fmt:message key='button.cancel'/></a>
 
+
             <c:if test="${!model.blank}">
-                <sec:authorize ifAnyGranted="ROLE_ADMIN">
-                    |  <a href="<c:url value='/main/paste/delete'><c:param name="id" value="${model.id}"/> </c:url>"><fmt:message key='button.delete'/></a>
-                </sec:authorize>
+
+
+                <tiles:insertDefinition name="/common/deleteLink" >
+                    <tiles:putAttribute name="model" value="${model}"/>
+                    <tiles:putAttribute name="modelName" value="paste"/>
+                    <tiles:putAttribute name="currentUser" value="${currentUser}"/>
+                </tiles:insertDefinition>
 
             </c:if>
 
@@ -152,14 +162,20 @@
 
         <div class="column grid-2" style="float:right;">
 
-            <form:label path="priority"><fmt:message key="paste.priority"/>:</form:label>
-            <form:select path="priority" multiple="false" id="pprior">
-                <c:forEach items="${availablePriorities}" var="prior">
-                    <form:option value="${prior.code}" >
-                        <fmt:message key="${prior.name}"/>
-                    </form:option>
-                </c:forEach>
-            </form:select>
+
+
+            <form:label path="priority">
+                <fmt:message key="paste.priority"/>:
+            </form:label>
+               <form:select cssStyle="display:inline;" path="priority" multiple="false" id="pprior">
+                   <c:forEach items="${availablePriorities}" var="prior">
+                       <form:option value="${prior.code}" cssClass="${prior.cssClass}" x-css-class-name="${prior.cssClass}">
+                           <fmt:message key="${prior.name}"/>
+                       </form:option>
+                   </c:forEach>
+               </form:select>
+               <span id="priorPreview" class="i priority_normal" style="font-size:1.5em;">/</span>
+
             <form:errors path="priority" cssClass="error" />
 
         </div>
@@ -194,9 +210,13 @@
                     <fmt:message key='button.cancel'/></a>
 
                 <c:if test="${!model.blank}">
-                    <sec:authorize ifAnyGranted="ROLE_ADMIN">
-                     |  <a href="<c:url value='/main/paste/delete'><c:param name="id" value="${model.id}"/> </c:url>"><fmt:message key='button.delete'/></a>
-                    </sec:authorize>
+
+
+                    <tiles:insertDefinition name="/common/deleteLink" >
+                        <tiles:putAttribute name="model" value="${model}"/>
+                        <tiles:putAttribute name="modelName" value="paste"/>
+                        <tiles:putAttribute name="currentUser" value="${currentUser}"/>
+                    </tiles:insertDefinition>
 
                 </c:if>
 
@@ -229,6 +249,7 @@
 <script src="<c:url value='/libs/canvas2image.js'/>" type="text/javascript" charset="utf-8"></script>
 <script src="<c:url value='/libs/pixastic/pixastic.core.js'/>" type="text/javascript" charset="utf-8"></script>
 <script src="<c:url value='/libs/pixastic/actions/crop.js'/>" type="text/javascript" charset="utf-8"></script>
+<script src="<c:url value='/libs/pixastic/actions/blurfast.js'/>" type="text/javascript" charset="utf-8"></script>
 
 <script type="text/javascript">
 
@@ -260,7 +281,7 @@
         });
     }
 
-    var max_length= 255;
+    var max_length= 100;
 
     window.addEvent('paste', function(e){
         if (e.event.clipboardData) {
@@ -293,6 +314,15 @@
 
         editor.getSession().setValue(textarea.get('value'));
         counter.getCount(textarea.get('value'));
+
+
+        //To focus the ace editor
+        editor.focus();
+        //Get the number of lines
+        var  count = editor.getSession().getLength();
+        //Go to end of the last line
+        editor.gotoLine(count, editor.getSession().getLine(count-1).length);
+
 
         editor.getSession().on('change', function(){
             var text = editor.getSession().getValue();
@@ -328,7 +358,21 @@
 
         });
 
+        $('pprior').addEvent('change',function(event) {
+            // alert(this.getElement(':selected').get("x-css-class-name"));
+
+         var prPreview = $('priorPreview');
+
+            prPreview.erase('class');
+            prPreview.addClass('i');
+            prPreview.addClass(this.getElement(':selected').get("x-css-class-name"));
+
+        });
+
+
     });
+
+
 
     /*window.addEvent('domready', function() {
 
@@ -364,10 +408,11 @@
 
                 var img= Pixastic.process(canvas, "crop", {
                     rect : {
-                        left : 15, top : 0, width : 800, height : 600
+                        left : 15, top : 0, width : 400, height : 300
                     }
                 });
 
+                //img =Pixastic.process(img, "blurfast", {amount:0.5});
 
                 img = Canvas2Image.saveAsPNG(img, true, 300, 200);
 
@@ -381,7 +426,14 @@
         });
     }
 
+    function cleanTitle() {
+            $('pname').set('value','');
+
+    }
+
+
     window.addEvent('domready', function(){
+
 
 
         $$('.submitBtn').addEvent('click',function(){

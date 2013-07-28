@@ -40,18 +40,22 @@
                    <tiles:putAttribute name="modelName" value="paste"/>
                </tiles:insertDefinition>
 
+                       <tiles:insertDefinition name="/common/deleteLink" >
+                           <tiles:putAttribute name="model" value="${model}"/>
+                           <tiles:putAttribute name="modelName" value="paste"/>
+                           <tiles:putAttribute name="currentUser" value="${currentUser}"/>
+                       </tiles:insertDefinition>
+
+
                 <span style="font-size: 9px;">
                 ,<kc:prettyTime date="${model.lastModified}" locale="${pageContext.response.locale}"/>
 
                 </span>
 
-               <sec:authorize ifAnyGranted="ROLE_ADMIN">
-                   |  <a href="<c:url value='/main/paste/delete'><c:param name="id" value="${model.id}"/> </c:url>"><fmt:message key='button.delete'/></a>
-               </sec:authorize>
-
 
            </span>
         </h4>
+
 
 
         <tiles:insertDefinition name="/common/pasteControls" >
@@ -147,8 +151,9 @@
             <div id="numSpace_l${comment.id}" class="listSpace" >
             </div>
 
-            <div id="comment_l${comment.id}" commentId="${comment.id}" lineNumber="${comment.lineNumber}"  parentCommentId="${comment.parentId}" class="commentBlock" >
-                <div class="commentInner">
+            <div id="comment_l${comment.id}" commentId="${comment.id}"
+                 lineNumber="${comment.lineNumber}"  parentCommentId="${comment.parentId}" class=" commentBlock" >
+                <div class="commentInner p-comment">
 
                 <div class="row">
                     <div class="column grid-1" style="padding-top: 0.2em;">
@@ -227,7 +232,7 @@
                               NONE
 </span>
 
- <div id="commentForm" class="editForm"  style="display:none;" >
+ <div id="commentForm" class="editForm p-comment"  style="display:none;" >
 
      <form:form action="${url}" id="addCommentForm"
                 modelAttribute="comment"
