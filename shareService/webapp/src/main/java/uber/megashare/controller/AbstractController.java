@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011 alex <alex@0x08.tk>
+ * Copyright (C) 2011 Alex <alex@0x08.tk>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ import org.springframework.orm.ObjectRetrievalFailureException;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import uber.megashare.base.LoggedClass;
 import uber.megashare.listener.SessionSupport;
 import uber.megashare.model.SystemProperties;
@@ -148,16 +149,16 @@ public abstract class AbstractController extends LoggedClass {
         return u != null && u.isAdmin();
     }
 
-    public void addMessageDenied(Model model) {
-        model.addAttribute(STATUS_MESSAGE_KEY, MSG_ACCESS_DENIED);
+    public void addMessageDenied(RedirectAttributes redirect) {
+        redirect.addFlashAttribute(STATUS_MESSAGE_KEY, MSG_ACCESS_DENIED);
     }
 
-    public void addMessageCancelled(Model model) {
-        model.addAttribute(STATUS_MESSAGE_KEY, MSG_ACTION_CANCELLED);
+    public void addMessageCancelled(RedirectAttributes redirect) {
+        redirect.addFlashAttribute(STATUS_MESSAGE_KEY, MSG_ACTION_CANCELLED);
     }
 
-    public void addMessageSuccess(Model model) {
-        model.addAttribute(STATUS_MESSAGE_KEY, MSG_ACTION_SUCCESS);
+    public void addMessageSuccess(RedirectAttributes redirect) {
+        redirect.addFlashAttribute(STATUS_MESSAGE_KEY, MSG_ACTION_SUCCESS);
     }
 
     @ModelAttribute("usersOnline")

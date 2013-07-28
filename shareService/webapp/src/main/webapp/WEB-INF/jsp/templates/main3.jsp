@@ -184,6 +184,14 @@
                     </div><!--/.well -->
                 </div><!--/span-->
                 <div class="span9">
+                    
+                    <c:if test="${not empty statusMessageKey}">
+                        <div class="alert alert-block alert-warning" style="width:20em;">
+                            <a class="close" data-dismiss="alert" href="#">×</a>
+                            <p><fmt:message key="${statusMessageKey}"/></p>
+                        </div>
+                    </c:if>
+               
                     <tiles:insertAttribute name="content" />
                     <!--/span-->
                 </div><!--/row-->

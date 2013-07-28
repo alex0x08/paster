@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011 alex <alex@0x08.tk>
+ * Copyright (C) 2011 Alex <alex@0x08.tk>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,6 +36,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import uber.megashare.base.logging.LoggedCall;
 import static uber.megashare.controller.EditConstants.VIEW_ACTION;
 import static uber.megashare.controller.GenericEditController.DELETE_ACTION;
@@ -366,13 +367,14 @@ public class SharedFileEditController extends GenericCommentController<SharedFil
             @Valid
             @ModelAttribute(MODEL_KEY) SharedFile b,
             BindingResult result, Model model,
-            HttpServletRequest request) {
+            HttpServletRequest request,
+            RedirectAttributes redirectAttributes) {
 
         /**
          * allow upload only for authorized users
          */
         if (!isCurrentUserLoggedIn()) {
-            addMessageDenied(model);
+            addMessageDenied(redirectAttributes);
             return b.getIntegrationCode()!=null ? FILE_PREFIX+INTEGRATED_PREFIX+LIST_ACTION : editPage;
         }
 
@@ -380,7 +382,7 @@ public class SharedFileEditController extends GenericCommentController<SharedFil
          * process cancel button
          */
         if (cancel != null) {
-            addMessageCancelled(model);
+            addMessageCancelled(redirectAttributes);
             
             model.asMap().clear();
    
@@ -438,7 +440,7 @@ public class SharedFileEditController extends GenericCommentController<SharedFil
 
         resetPagingList(request);
 
-        addMessageSuccess(model);
+        addMessageSuccess(redirectAttributes);
 
         model.asMap().clear();
    

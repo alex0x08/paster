@@ -109,7 +109,9 @@
             <c:param name="id" value="${model.uuid}"/>
         </c:url>
 
-<div class="box well" >
+           
+            
+<div class="box well ${model.accessLevel == 'OWNER' ? "alert alert-info" : ""} " >
     <div class="caption" style="vertical-align: top;" >
         
         

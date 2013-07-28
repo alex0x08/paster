@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011 alex <alex@0x08.tk>
+ * Copyright (C) 2011 Alex <alex@0x08.tk>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import uber.megashare.model.Comment;
 import uber.megashare.model.CommentedStruct;
 import uber.megashare.service.GenericVersioningManager;
@@ -51,11 +52,13 @@ public abstract class GenericCommentController<T extends CommentedStruct> extend
     public String addComment(@RequestParam(required = true) Long modelId,
             @Valid
             @ModelAttribute(COMMENT_MODEL_KEY) Comment newComment,
-            BindingResult result, Model model, HttpServletRequest request) {
+            BindingResult result, Model model, 
+            HttpServletRequest request,
+            RedirectAttributes redirectAttributes) {
 
 
         if (!isCurrentUserLoggedIn()) {
-            addMessageDenied(model);
+            addMessageDenied(redirectAttributes);
             return viewPage;
         }
 
@@ -88,7 +91,7 @@ public abstract class GenericCommentController<T extends CommentedStruct> extend
 
         //resetPagingList(request);
 
-        addMessageSuccess(model);
+        addMessageSuccess(redirectAttributes);
         
         /*  model.addAttribute(MODEL_KEY,r);
 

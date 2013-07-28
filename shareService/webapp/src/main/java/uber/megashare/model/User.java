@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011 alex <alex@0x08.tk>
+ * Copyright (C) 2011 Alex <alex@0x08.tk>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -63,6 +63,8 @@ public class User extends Struct implements Serializable, UserDetails {
     @Column(length = Integer.MAX_VALUE)
     private String password;
     
+    private transient String newPassword,repeatPassword;
+    
     @Field
     @Column(unique = true)
     private String email;
@@ -79,6 +81,23 @@ public class User extends Struct implements Serializable, UserDetails {
     @IndexColumn(name="sess_indx")
    //@NotAudited
     private List<SavedSession> savedSessions = new ArrayList<>();
+
+    public String getNewPassword() {
+        return newPassword;
+    }
+
+    public void setNewPassword(String newPassword) {
+        this.newPassword = newPassword;
+    }
+
+    
+    public String getRepeatPassword() {
+        return repeatPassword;
+    }
+
+    public void setRepeatPassword(String repeatPassword) {
+        this.repeatPassword = repeatPassword;
+    }
     
     public List<SavedSession> getSavedSessions() {
         return savedSessions;

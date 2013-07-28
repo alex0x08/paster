@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011 alex <alex@0x08.tk>
+ * Copyright (C) 2011 Alex <alex@0x08.tk>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -49,6 +50,8 @@ public class ProfileController extends AbstractController {
     protected User newRequest(@RequestParam(required = false) Long id, Model model) {
         return (id != null ? userManager.getFull(id) : null);
     }
+    
+    
 
     @RequestMapping(value = "/view", method = RequestMethod.GET)
     public String view(@RequestParam(required = false) Long id, Model model) {
@@ -147,6 +150,20 @@ public class ProfileController extends AbstractController {
         current.setDefaultFileAccessLevel(b.getDefaultFileAccessLevel());
         current.setName(b.getName());
 
+        if (b.getNewPassword()!=null) {
+            
+            if (!b.getNewPassword().equals(b.getRepeatPassword())) {
+           
+                result.addError(new ObjectError("newPassword","Password must match."));
+                return editPage; 
+            }
+            
+            current = userManager.changePassword(current, b.getNewPassword());
+            
+        } 
+        
+        
+        
         userManager.save(current);
 
         getLogger().debug("user " + current.getId() + " saved");

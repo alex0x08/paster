@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011 alex <alex@0x08.tk>
+ * Copyright (C) 2011 Alex <alex@0x08.tk>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import static uber.megashare.controller.EditConstants.MODEL_KEY;
 import uber.megashare.model.Struct;
 import uber.megashare.service.StructManager;
@@ -110,13 +111,14 @@ public abstract class GenericEditController<T extends Struct> extends GenericCon
     }
 
     @RequestMapping(value = NEW_ACTION, method = RequestMethod.GET)
-    public String createNew(Model model) {
+    public String createNew(Model model,
+                            RedirectAttributes redirectAttributes) {
 
         /**
          * allow create only for authorized users
          */
         if (!isCurrentUserLoggedIn()) {
-            addMessageDenied(model);
+            addMessageDenied(redirectAttributes);
             return listPage;
         }
         model.addAttribute(MODEL_KEY, getNewModelInstance());
@@ -128,18 +130,19 @@ public abstract class GenericEditController<T extends Struct> extends GenericCon
     public String save(@RequestParam(required = false) String cancel,
             @Valid
             @ModelAttribute(MODEL_KEY) T b,
-            BindingResult result, Model model, HttpServletRequest request) {
+            BindingResult result, Model model, HttpServletRequest request,
+            RedirectAttributes redirectAttributes) {
 
         /**
          * allow upload only for authorized users
          */
         if (!isCurrentUserLoggedIn()) {
-            addMessageDenied(model);
+            addMessageDenied(redirectAttributes);
             return editPage;
         }
 
         if (cancel != null) {
-            addMessageCancelled(model);
+            addMessageCancelled(redirectAttributes);
             return listPage;
         }
 
@@ -163,7 +166,7 @@ public abstract class GenericEditController<T extends Struct> extends GenericCon
 
         resetPagingList(request);
 
-        addMessageSuccess(model);
+        addMessageSuccess(redirectAttributes);
         return listPage;
     }
 
