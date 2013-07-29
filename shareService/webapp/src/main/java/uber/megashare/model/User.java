@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011 Alex <alex@0x08.tk>
+ * Copyright (C) 2011 aachernyshev <alex@0x08.tk>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.

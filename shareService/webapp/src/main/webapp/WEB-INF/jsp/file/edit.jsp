@@ -32,12 +32,17 @@
                 <script src="<c:url value='/js/jquery.fileupload-ui.js'/>"></script>
                 <script src="<c:url value='/js/jquery.fileupload-fp.js'/>"></script>
 
+                  <script src="<c:url value='/libs/datepicker/js/bootstrap-datepicker.js'/>"></script>
+
 
                 <c:url var="url" value='/main/file/upload-xdr' />
 
                 <script type="text/javascript">
 
                     $(document).ready(function() {
+
+
+                        $('#dp3').datepicker();
 
                         $('#file_upload').fileupload({
                             dataType: 'json',
@@ -85,21 +90,23 @@
             <c:otherwise>
 
                 <script src="<c:url value='/libs/jasny-bootstrap/js/jasny-bootstrap.js'/>"></script>
-
+     
+              
 
                 <c:url var="url" value='/main/file/save' />
             </c:otherwise>
         </c:choose>
 
 
-
+                  
+                         
         <form:form action="${url}" modelAttribute="model" 
                    method="POST" id="file_upload" cssClass="form-horizontal"
                    enctype="multipart/form-data">
 
 
             <fieldset>
-                <form:errors path="*" cssClass="errorblock" element="div"/>
+                <form:errors cssClass="errorblock" element="div"/>
 
 
                 <c:if test="${not empty model.integrationCode}">
@@ -122,6 +129,11 @@
                     </c:otherwise>
                 </c:choose>
 
+             
+                
+
+                  
+                
                   <sec:authorize ifAnyGranted="ROLE_USER,ROLE_ADMIN">
 
                     <c:if test="${model.blank or (model.owner eq currentUser or currentUser.admin)}">
@@ -140,6 +152,8 @@
 
                             </c:choose>
 
+                          
+
                             <form:select id="accessLevel" path="accessLevel" disabled="${accessLevelDisabled}">
 
                                 <c:forEach items="${model.accessLevel.levels}" var="level">
@@ -149,12 +163,26 @@
                                 </c:forEach>
                             </form:select>
 
+                            
                             <c:if test="${not empty model.integrationCode}">
                                 File integrated, cannot set access level.
                             </c:if>
 
                             <form:errors path="accessLevel" cssClass="error" />
                         </div>
+                        <br/>
+                         <div class="control-group">
+                            <form:label cssClass="control-label" path="file"><fmt:message key="file.removeAfter"/>:</form:label>
+                            <div class="controls">
+                                <div class="input-append date" id="dp3" data-date="" data-date-format="${datePatternPicker}">
+                                    <form:input path="removeAfter" name="file" cssClass="span6" size="16"  /> 
+                                <span class="add-on"><i class="icon-th"></i></span>
+                            </div>
+                                     <form:errors path="removeAfter" cssClass="error" />
+                            </div>
+                        </div>
+                            
+                        
                         </c:if>
                          </sec:authorize>
 

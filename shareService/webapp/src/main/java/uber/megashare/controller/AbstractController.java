@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011 Alex <alex@0x08.tk>
+ * Copyright (C) 2011 aachernyshev <alex@0x08.tk>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,10 +19,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
 import org.springframework.orm.ObjectRetrievalFailureException;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -79,6 +81,9 @@ public abstract class AbstractController extends LoggedClass {
     @Value("${paste.integration.enabled}")
     protected boolean pasteIntegrationEnabled;
 
+    @Resource(name = "messageSource")
+    protected MessageSource messageSource;
+    
     @ModelAttribute("currentSettings")
     public SystemProperties getCurrentSettings() {
         return settingsManager.getCurrentSettings();

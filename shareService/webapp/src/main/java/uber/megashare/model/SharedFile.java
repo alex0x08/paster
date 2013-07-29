@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011 Alex <alex@0x08.tk>
+ * Copyright (C) 2011 aachernyshev <alex@0x08.tk>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,12 +15,14 @@
  */
 package uber.megashare.model;
 
+import java.util.Date;
 import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -84,6 +86,16 @@ public class SharedFile extends Node {
     
     private int previewWidth, previewHeight;
 
+    @Temporal(javax.persistence.TemporalType.DATE)
+    private Date removeAfter;
+
+    public Date getRemoveAfter() {
+        return removeAfter;
+    }
+
+    public void setRemoveAfter(Date removeAfter) {
+        this.removeAfter = removeAfter;
+    }
     
     public boolean isPasterIntegrated() {
         return integrationCode!=null && integrationCode.startsWith(PASTER_PREFIX);

@@ -19,6 +19,9 @@
     <bean id="mimeExtSource" class="org.springframework.context.support.ResourceBundleMessageSource"
           p:basenames="mimeExt" />
 
+     <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource"
+          p:basenames="messages" />
+
 
 	<bean id="propertyConfigurer"
           class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
