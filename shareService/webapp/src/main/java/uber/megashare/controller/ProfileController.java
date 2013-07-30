@@ -16,6 +16,7 @@
 package uber.megashare.controller;
 
 import javax.validation.Valid;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -150,29 +151,24 @@ public class ProfileController extends AbstractController {
         current.setDefaultFileAccessLevel(b.getDefaultFileAccessLevel());
         current.setName(b.getName());
 
-        if (b.getNewPassword()!=null) {
+        if (!StringUtils.isBlank(b.getNewPassword())) {
             
             if (!b.getNewPassword().equals(b.getRepeatPassword())) {
            
                 result.addError(new ObjectError("newPassword","Password must match."));
                 return editPage; 
             }
-            
-            current = userManager.changePassword(current, b.getNewPassword());
-            
         } 
         
         
-        
-        userManager.save(current);
+        current=userManager.save(current);
 
-        getLogger().debug("user " + current.getId() + " saved");
+        getLogger().debug("user " + current.getId() + " saved roles="+current.getRoles().size());
 
         model.addAttribute("statusMessageKey", "action.success");
 
         model.asMap().clear();
    
-
         return redirectEditPage;
     }
 }

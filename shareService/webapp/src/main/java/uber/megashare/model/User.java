@@ -60,7 +60,7 @@ public class User extends Struct implements Serializable, UserDetails {
     private String login;
     
     @NotNull(message = "{validator.not-null}")
-    @Column(length = Integer.MAX_VALUE)
+    @Column(nullable = false, length = Integer.MAX_VALUE)
     private String password;
     
     private transient String newPassword,repeatPassword;

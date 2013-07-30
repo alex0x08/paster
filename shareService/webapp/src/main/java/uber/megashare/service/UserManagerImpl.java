@@ -134,15 +134,19 @@ public class UserManagerImpl extends GenericSearchableManagerImpl<User, UserSear
     @Override
     @Secured({"ROLE_ADMIN", "ROLE_USER"})
     public User save(User object) {
-        getLogger().debug("___GenericManagerImpl.save obj=" + object);
+        getLogger().debug("___UserManagerImpl.save obj=" + object);
 
+         object = changePassword(object, object.getPassword());
+
+        object=dao.saveObject(object);
+       
         SessionSupport.getInstance().updateUser(object);
 
-        object = changePassword(object, object.getPassword());
-
-        return dao.saveObject(object);
+       
+        return object;
     }
 
+    @Override
     public User changePassword(final User user, final String newPassword) {
 
         return new LoggedCall<User>() {
