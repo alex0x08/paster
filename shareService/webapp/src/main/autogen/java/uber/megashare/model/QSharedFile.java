@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011 Alex <alex@0x08.tk>
+ * Copyright (C) 2011 aachernyshev <alex@0x08.tk>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -75,6 +75,8 @@ public class QSharedFile extends EntityPathBase<SharedFile> {
     public final StringPath previewUrl = createString("previewUrl");
 
     public final NumberPath<Integer> previewWidth = createNumber("previewWidth", Integer.class);
+
+    public final DateTimePath<java.util.Date> removeAfter = createDateTime("removeAfter", java.util.Date.class);
 
     public final EnumPath<FileType> type = createEnum("type", FileType.class);
 

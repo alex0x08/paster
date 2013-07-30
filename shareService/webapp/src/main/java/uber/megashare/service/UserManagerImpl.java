@@ -30,7 +30,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.codec.Base64;
 import org.springframework.stereotype.Service;
-
 import uber.megashare.base.logging.LoggedCall;
 import uber.megashare.dao.UserDao;
 import uber.megashare.listener.SessionSupport;
