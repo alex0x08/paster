@@ -109,19 +109,28 @@
             <c:param name="id" value="${model.uuid}"/>
         </c:url>
 
-           
+            <c:choose>
+                <c:when test="${model.willBeRemoved}">
+                    <c:set var="boxClass" value="alert-error"/>
+                </c:when>
+                 <c:when test="${model.accessLevel == 'OWNER'}">
+                    <c:set var="boxClass" value="alert-info"/>
+                </c:when>
+                <c:otherwise>
+                    <c:set var="boxClass" value=""/>
+                    
+                </c:otherwise>
+            </c:choose>          
             
-<div class="box well ${model.accessLevel == 'OWNER' ? "alert alert-info" : ""} " >
-    <div class="caption" style="vertical-align: top;" >
-        
-        
-        <a href="<c:url value='/main/file/list/search?query=type:${model.type}'/>" target="${not empty param.integrationMode ? "_blank" : target}">
-            <img style="text-align: left; display: inline; " src="<c:url value='/images/mime/${model.icon}'/>"/>
-        </a>
-        
-        <a href="<c:out value='${detailUrl}'/>" target="${target}">${model.name}</a>
-
-        <div class="pull-right">
+         
+            
+<div class="box well ${boxClass} " >
+ 
+    <ul class="nav nav-tabs" >
+                <li><a href="#file_${model.id}" data-toggle="tab" >File</a></li>
+                <li><a href="#comments_${model.id}" data-toggle="tab" class="commentsBtn" modelId="${model.id}">Comments</a></li>
+                
+                 <div class="pull-right">
 
             <c:if test="${empty param.detail}">
 
@@ -277,6 +286,22 @@
             </c:if>
 
         </div>
+                
+            </ul>
+            
+                <div  class="tab-content">
+                <div class="tab-pane active" id="file_${model.id}">
+                    
+                       <div class="caption" style="vertical-align: top;" >
+        
+        
+        <a href="<c:url value='/main/file/list/search?query=type:${model.type}'/>" target="${not empty param.integrationMode ? "_blank" : target}">
+            <img style="text-align: left; display: inline; " src="<c:url value='/images/mime/${model.icon}'/>"/>
+        </a>
+        
+        <a href="<c:out value='${detailUrl}'/>" target="${target}">${model.name}</a>
+
+       
 
         <div style="padding-left:10px;" >${model.formattedFileSize} 
             &nbsp; ${modelLastModified} 
@@ -294,6 +319,15 @@
                 </a>
                 
             </span> 
+                
+                    <c:if test="${model.willBeRemoved}">
+                        <fmt:message key="list.removal.days">
+                            <fmt:param value="${model.daysBeforeRemoval}"/>
+                        </fmt:message> 
+                        (<fmt:formatDate value="${model.removeAfter}" pattern="${dateTimePattern}"/> )
+                    </c:if>   
+                
+                
         </div>
     </div>
         <div >
@@ -374,6 +408,13 @@
         </c:if>
     </div>
 
+                    
+                </div>
+                    <div class="tab-pane" id="comments_${model.id}" >
+                </div>
+
+            </div>
+    
 </div>
 
 

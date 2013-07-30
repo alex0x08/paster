@@ -58,6 +58,12 @@
         <put-attribute name="content" value="/WEB-INF/jsp/file/raw/view.jsp" />
     </definition>
     
+    
+    <definition name="/file/raw/comments" template="/WEB-INF/jsp/templates/empty.jsp">
+        <put-attribute name="content" value="/WEB-INF/jsp/file/raw/comments.jsp" />
+    </definition>
+    
+    
     <definition name="/file/raw/pdfview" template="/WEB-INF/jsp/templates/empty.jsp">
         <put-attribute name="content" value="/WEB-INF/jsp/file/raw/pdfview.jsp" />
     </definition>

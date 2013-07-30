@@ -38,12 +38,12 @@
         
     </bean>
 
-   
-    
+       
 
     <!-- Imports the configurations of the different infrastructure systems of the application -->
     <import resource="dao.xml" />
     <import resource="security.xml" />
+    <import resource="scheduler.xml" />
     <import resource="mvc.xml" />
    
 </beans>
