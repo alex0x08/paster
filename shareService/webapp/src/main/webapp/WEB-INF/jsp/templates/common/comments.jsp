@@ -5,6 +5,11 @@
 
     <div  class="offset1">
 
+        <c:if test="${empty model.comments}">
+        <div class="well">
+            <fmt:message key="comments.not-found"/>
+        </div>
+        </c:if>
         <c:forEach var="comment" items="${model.comments}">
 
             <div class="well">

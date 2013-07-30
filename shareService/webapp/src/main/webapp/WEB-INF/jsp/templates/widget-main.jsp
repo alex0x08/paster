@@ -50,5 +50,24 @@
     <script type="text/javascript" src="<c:url value='/js/jquery.validate.unobtrusive.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/js/jquery.unobtrusive-ajax.js'/>"></script>
 
-    
+    <script type="text/javascript">
+
+     var commentsUrl = '<c:url value="/main/file/raw/comments"/>';
+
+        $(document).ready(function() {
+
+            $("[rel='tooltip']").tooltip();
+  
+               $(".commentsBtn").live('click', function(e) {
+               
+                 var thisTab = e.target // activated tab
+                  var pageTarget = $(thisTab).attr('href');
+                  
+                  $(pageTarget).load(commentsUrl+'?id='+$(thisTab).attr('modelId'));
+                  
+                 
+                });
+        });
+        </script>
+   
 </html>

@@ -127,8 +127,8 @@
 <div class="box well ${boxClass} " >
  
     <ul class="nav nav-tabs" >
-                <li><a href="#file_${model.id}" data-toggle="tab" >File</a></li>
-                <li><a href="#comments_${model.id}" data-toggle="tab" class="commentsBtn" modelId="${model.id}">Comments</a></li>
+                <li><a href="#file_${model.id}" data-toggle="tab" ><fmt:message key="file.tab.file"/></a></li>
+                <li><a href="#comments_${model.id}" data-toggle="tab" class="commentsBtn" modelId="${model.id}"><fmt:message key="file.tab.comments"/></a></li>
                 
                  <div class="pull-right">
 
@@ -375,7 +375,7 @@
 
                
                 
-                <c:when test="${empty param.integrationMode and model.previewWidth>100 and model.previewHeight>300}">
+                <c:when test="${empty param.integrationMode and  model.previewWidth >100 and model.previewHeight>300}">
                     <c:set var="previewClass" value="zoombox w${model.previewWidth} h${model.previewHeight} zgallery1"/>
                 </c:when>
                 <c:otherwise>
@@ -401,10 +401,13 @@
 
                      </c:url>"/>
             </a>
-                <div>
-                 <c:out value="${model.previewWidth} x ${model.previewHeight}"/>
-                </div>
                 
+                 <c:if test="${model.previewWidth >0 and model.previewHeight>0}">
+                    <div>
+                        <c:out value="${model.previewWidth} x ${model.previewHeight}"/>
+                    </div>
+                
+                </c:if>
         </c:if>
     </div>
 
