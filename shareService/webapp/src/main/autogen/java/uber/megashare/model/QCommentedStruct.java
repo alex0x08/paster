@@ -37,6 +37,8 @@ public class QCommentedStruct extends EntityPathBase<CommentedStruct> {
 
     public final ListPath<Comment, QComment> comments = this.<Comment, QComment>createList("comments", Comment.class, QComment.class);
 
+    public final NumberPath<Integer> commentsCount = createNumber("commentsCount", Integer.class);
+
     //inherited
     public final BooleanPath disabled = _super.disabled;
 

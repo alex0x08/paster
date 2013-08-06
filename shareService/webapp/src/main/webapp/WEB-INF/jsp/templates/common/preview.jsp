@@ -128,7 +128,13 @@
  
     <ul class="nav nav-tabs" >
                 <li><a href="#file_${model.id}" data-toggle="tab" ><fmt:message key="file.tab.file"/></a></li>
-                <li><a href="#comments_${model.id}" data-toggle="tab" class="commentsBtn" modelId="${model.id}"><fmt:message key="file.tab.comments"/></a></li>
+                <li><a href="#comments_${model.id}" data-toggle="tab" class="commentsBtn" modelId="${model.id}">
+                        <fmt:message key="file.tab.comments"/>
+                        <c:if test="${model.commentsCount>0}">
+                          (  <c:out value="${model.commentsCount}"/> )
+                        </c:if>
+                    </a>
+                </li>
                 
                  <div class="pull-right">
 

@@ -15,6 +15,7 @@
  */
 package uber.megashare.controller;
 
+import java.util.Calendar;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,7 +65,6 @@ public abstract class GenericCommentController<T extends CommentedStruct> extend
             addMessageDenied(redirectAttributes);
             return viewPage;
         }
-
         
          T b = manager.getFull(modelId);
         
@@ -75,7 +75,7 @@ public abstract class GenericCommentController<T extends CommentedStruct> extend
         Comment toRemove = new Comment();
         toRemove.setId(commentId);
         
-        b.getComments().remove(toRemove);
+        b.removeComment(toRemove);
 
         T r = manager.save(b);
         
@@ -113,10 +113,10 @@ public abstract class GenericCommentController<T extends CommentedStruct> extend
             return page404;
         }
 
-        b.getComments().add(newComment);
-
+        b.addComment(newComment);
+        
         T r = manager.save(b);
-
+ 
 
         /**
          * set id from create this is needed to correct model's id postback when

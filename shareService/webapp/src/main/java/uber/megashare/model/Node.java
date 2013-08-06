@@ -24,9 +24,11 @@ import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Store;
 import org.hibernate.search.annotations.TermVector;
 
+
 @MappedSuperclass
 //@Entity
 @Audited
+@EntityListeners({UpdateOwnerListener.class})
 public abstract class Node extends CommentedStruct {
 
     /**
@@ -37,7 +39,7 @@ public abstract class Node extends CommentedStruct {
     private String code;
     
     @Field(index = Index.YES, store = Store.YES, termVector = TermVector.YES)
-    private String ownerName;
+    String ownerName;
     
     /**
      * The owner of this file
@@ -47,21 +49,11 @@ public abstract class Node extends CommentedStruct {
     @JoinColumn(name = "owner_id")
     //@NotAudited
     @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
-    private User owner;
+    User owner;
     
     @Enumerated(EnumType.STRING)
     @Field(index = Index.YES, store = Store.YES, termVector = TermVector.NO)
     private AccessLevel accessLevel = AccessLevel.OWNER;
-
-    
-    @PreUpdate
-    @PrePersist
-    public void updateOwnerName() {
-       if (owner!=null) {
-        ownerName = owner.getName();
-       }
-    }
-
     
     public String getOwnerName() {
         return ownerName;

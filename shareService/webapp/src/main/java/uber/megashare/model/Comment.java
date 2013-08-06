@@ -28,9 +28,13 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
+import org.hibernate.search.annotations.Boost;
 import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.IndexedEmbedded;
+import org.hibernate.search.annotations.Store;
+import org.hibernate.search.annotations.TermVector;
 
 /**
  * Комментарий
@@ -58,7 +62,7 @@ public class Comment extends BaseDBObject implements Serializable {
     
     @Lob
     @Column(length = Integer.MAX_VALUE)
-    @Field
+    @Field(index = Index.YES, store = Store.YES, termVector = TermVector.YES, boost=@Boost(1.2f))
     private String message;
     
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

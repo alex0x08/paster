@@ -47,6 +47,9 @@ public class QFolder extends EntityPathBase<Folder> {
     public final ListPath<Comment, QComment> comments;
 
     //inherited
+    public final NumberPath<Integer> commentsCount;
+
+    //inherited
     public final BooleanPath disabled;
 
     public final ListPath<SharedFile, QSharedFile> files = this.<SharedFile, QSharedFile>createList("files", SharedFile.class, QSharedFile.class);
@@ -86,6 +89,7 @@ public class QFolder extends EntityPathBase<Folder> {
         this.accessLevel = _super.accessLevel;
         this.code = _super.code;
         this.comments = _super.comments;
+        this.commentsCount = _super.commentsCount;
         this.disabled = _super.disabled;
         this.id = _super.id;
         this.lastModified = _super.lastModified;

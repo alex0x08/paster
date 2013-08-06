@@ -28,6 +28,7 @@ import org.hibernate.search.jpa.FullTextQuery;
 import org.springframework.transaction.annotation.Transactional;
 import uber.megashare.model.Struct;
 import org.apache.lucene.morphology.russian.RussianAnalyzer;
+import org.apache.lucene.queryParser.MultiFieldQueryParser;
 
 /**
  *
@@ -43,6 +44,13 @@ public abstract class GenericSearchableDaoImpl<T extends Struct> extends Generic
 
     protected GenericSearchableDaoImpl(Class<T> clazz) {
         super(clazz);
+    }
+    
+    protected static final String DEFAULT_START_FIELDS[] = {"name"};
+
+
+    public String[] getDefaultStartFields() {
+        return DEFAULT_START_FIELDS;
     }
 
     /**
@@ -94,7 +102,11 @@ public abstract class GenericSearchableDaoImpl<T extends Struct> extends Generic
         /**
          * "name" is default search field
          */
-        QueryParser pparser = new QueryParser(Version.LUCENE_31, "name", an); //new StandardAnalyzer(Version.LUCENE_31)
+        
+
+
+        QueryParser pparser = new MultiFieldQueryParser(Version.LUCENE_35, getDefaultStartFields(), an);
+        //QueryParser pparser = new QueryParser(Version.LUCENE_31, "name", an); //new StandardAnalyzer(Version.LUCENE_31)
 
         getLogger().debug("searching for "+query);
         
@@ -104,6 +116,8 @@ public abstract class GenericSearchableDaoImpl<T extends Struct> extends Generic
         return fquery.getResultList();
 
     }
+    
+
     
     protected static RussianAnalyzer an=null;
     static {

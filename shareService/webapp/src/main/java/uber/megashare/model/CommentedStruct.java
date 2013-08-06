@@ -17,6 +17,7 @@ package uber.megashare.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.FetchType;
@@ -24,34 +25,55 @@ import javax.persistence.ManyToMany;
 import javax.persistence.MappedSuperclass;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.hibernate.envers.Audited;
-import org.hibernate.envers.ModificationStore;
 import org.hibernate.envers.NotAudited;
-import org.hibernate.envers.RelationTargetAuditMode;
 import org.hibernate.search.annotations.IndexedEmbedded;
 
 /**
  *
  * @author alex
  */
+
 @MappedSuperclass
 @Audited
 public class CommentedStruct extends Struct implements Serializable {
-
-    /**
-     *
-     */
+    
     private static final long serialVersionUID = 8839150374530598001L;
     
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @IndexedEmbedded
+    
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.REMOVE})
+   // @ContainedIn
+    //@IndexedEmbedded
     @NotAudited
    // @Audited(modStore=ModificationStore.FULL, targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
-    private List<Comment> comments = new ArrayList<>();
+    @IndexedEmbedded(depth = 1, prefix = "comments_")
+   private List<Comment> comments = new ArrayList<>();
 
+    @NotAudited
+    private int commentsCount;
+    
+    public CommentedStruct addComment(Comment c) {
+        
+        comments.add(c);
+        
+        commentsCount=comments.size();
+        
+        return this;
+    }
+   
+    public CommentedStruct removeComment(Comment c) {
+        comments.remove(c);
+        commentsCount=comments.size();
+        return this;
+    }
+   
+   public int getCommentsCount() {
+       return commentsCount;
+   }
+    
 //    @NotAudited
     @JsonIgnore
     public List<Comment> getComments() {
-        return comments;
+        return Collections.unmodifiableList(comments);
     }
 
     public void setComments(List<Comment> comments) {

@@ -122,6 +122,8 @@
                 <entry key="hibernate.search.default.indexBase" value="${app.home}/index"/>
                 <!--entry key="hibernate.search.default.directory_provider"		
                        value="org.hibernate.search.store.FSDirectoryProvider"/-->
+                <entry key="hibernate.search.lucene_version"		
+                       value="LUCENE_35"/>              
                 <entry key="hibernate.hbm2ddl.auto"		
                        value="update"/>              
                  <entry key="hibernate.query.substitutions"		

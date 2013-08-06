@@ -45,6 +45,9 @@ public class QNode extends EntityPathBase<Node> {
     public final ListPath<Comment, QComment> comments = _super.comments;
 
     //inherited
+    public final NumberPath<Integer> commentsCount = _super.commentsCount;
+
+    //inherited
     public final BooleanPath disabled = _super.disabled;
 
     //inherited

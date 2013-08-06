@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.lucene.queryParser.MultiFieldQueryParser;
 import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.search.Query;
@@ -29,6 +30,8 @@ import org.hibernate.search.jpa.FullTextQuery;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 import uber.megashare.base.logging.LoggedCall;
+import static uber.megashare.dao.GenericSearchableDaoImpl.DEFAULT_START_FIELDS;
+import static uber.megashare.dao.GenericSearchableDaoImpl.an;
 import uber.megashare.model.AccessLevel;
 import uber.megashare.model.QSharedFile;
 import uber.megashare.model.SharedFile;
@@ -46,10 +49,15 @@ public class SharedFileDaoImpl extends GenericSearchableDaoImpl<SharedFile> impl
      */
     private static final long serialVersionUID = -4874510100464951022L;
 
+     protected static final String SHARE_START_FIELDS[] = {"name","nameContents","comments_message"};
+
+    
     public SharedFileDaoImpl() {
         super(SharedFile.class);
     }
 
+ 
+    
     /**
      * {@inheritDoc}
      */
@@ -86,7 +94,8 @@ public class SharedFileDaoImpl extends GenericSearchableDaoImpl<SharedFile> impl
                 List<SharedFile> out = new ArrayList<>();
                 FullTextEntityManager fsession = getFullTextEntityManager();
 
-                QueryParser pparser = new QueryParser(Version.LUCENE_35, "name", an); // new StandardAnalyzer(Version.LUCENE_31)
+                   QueryParser pparser = new MultiFieldQueryParser(Version.LUCENE_35, SHARE_START_FIELDS, an);
+     
                 Query lucenceQuery = pparser.parse(qquery);
 
                 FullTextQuery fquery = fsession.createFullTextQuery(lucenceQuery, persistentClass);

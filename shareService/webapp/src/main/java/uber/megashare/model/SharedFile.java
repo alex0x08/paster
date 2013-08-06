@@ -19,6 +19,7 @@ import java.util.Date;
 import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Table;
@@ -83,6 +84,10 @@ public class SharedFile extends Node {
     @Field(index = Index.YES, store = Store.YES, termVector = TermVector.NO)
     private String mime;
     
+    @Field(index = Index.YES, store = Store.YES, termVector = TermVector.YES)
+    private String nameContents;
+    
+    
     private String previewUrl;
     
     private long fileSize;
@@ -92,6 +97,15 @@ public class SharedFile extends Node {
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date removeAfter;
 
+    @JsonIgnore
+    public String getNameContents() {
+        return nameContents;
+    }
+
+    public void setNameContents(String nameContents) {
+        this.nameContents = nameContents;
+    }
+    
     public Date getRemoveAfter() {
         return removeAfter;
     }
@@ -210,6 +224,19 @@ public class SharedFile extends Node {
     public void setUrl(String url) {
         this.url = url;
     }
+    
+    /**
+     *
+     * @param name
+     */
+    @Override
+    public void setName(String name) {
+       super.setName(name);
+      
+     nameContents=name.replaceAll("\\.", " ").replaceAll("-", " ").replaceAll("_", " ");
+       
+    }
+
 
     @JsonIgnore
     public MultipartFile getFile() {

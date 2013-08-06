@@ -47,6 +47,9 @@ public class QSharedFile extends EntityPathBase<SharedFile> {
     public final ListPath<Comment, QComment> comments;
 
     //inherited
+    public final NumberPath<Integer> commentsCount;
+
+    //inherited
     public final BooleanPath disabled;
 
     public final NumberPath<Long> fileSize = createNumber("fileSize", Long.class);
@@ -63,6 +66,8 @@ public class QSharedFile extends EntityPathBase<SharedFile> {
 
     //inherited
     public final StringPath name;
+
+    public final StringPath nameContents = createString("nameContents");
 
     // inherited
     public final QUser owner;
@@ -102,6 +107,7 @@ public class QSharedFile extends EntityPathBase<SharedFile> {
         this.accessLevel = _super.accessLevel;
         this.code = _super.code;
         this.comments = _super.comments;
+        this.commentsCount = _super.commentsCount;
         this.disabled = _super.disabled;
         this.id = _super.id;
         this.lastModified = _super.lastModified;

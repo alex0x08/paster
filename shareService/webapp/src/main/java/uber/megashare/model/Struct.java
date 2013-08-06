@@ -18,9 +18,8 @@ package uber.megashare.model;
 import java.util.Calendar;
 import java.util.Date;
 import javax.persistence.Column;
+import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
 import javax.persistence.Temporal;
 import javax.validation.constraints.Pattern;
 import org.apache.solr.analysis.LowerCaseFilterFactory;
@@ -29,6 +28,7 @@ import org.apache.solr.analysis.StandardTokenizerFactory;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
 import org.hibernate.search.annotations.AnalyzerDef;
+import org.hibernate.search.annotations.Boost;
 import org.hibernate.search.annotations.DateBridge;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Index;
@@ -39,6 +39,7 @@ import org.hibernate.search.annotations.TermVector;
 import org.hibernate.search.annotations.TokenFilterDef;
 import org.hibernate.search.annotations.TokenizerDef;
 import uber.megashare.base.LoggedClass;
+
 
 /**
  * Базовая структура (id и название) Сохраняет дату своей последней модификации
@@ -56,6 +57,7 @@ filters = {
     })
 })
 @Audited
+@EntityListeners({UpdateLastModifiedListener.class})
 public abstract class Struct extends BaseDBObject {
 
     /**
@@ -65,7 +67,7 @@ public abstract class Struct extends BaseDBObject {
     
     @Pattern(regexp = "(.+)", message = "{struct.name.validator}")
     @Column(name = "s_name", nullable = false)
-    @Field(index = Index.YES, store = Store.YES, termVector = TermVector.YES)
+    @Field(index = Index.YES, store = Store.YES, termVector = TermVector.YES, boost=@Boost(2f))
     //   @Analyzer(definition = "customanalyzer")
     private String name;
     
@@ -74,16 +76,9 @@ public abstract class Struct extends BaseDBObject {
     @Field(index = Index.YES)
     @DateBridge(resolution = Resolution.DAY)
     @NotAudited
-    private Date lastModified = Calendar.getInstance().getTime();
+    Date lastModified = Calendar.getInstance().getTime();
 
-    /**
-     * Хук для обновления даты последней модификации
-     */
-    @PreUpdate
-    @PrePersist
-    public void updateTimeStamps() {
-        lastModified = Calendar.getInstance().getTime();
-    }
+    
 
     /**
      * Дата последней модификации объекта
@@ -117,6 +112,10 @@ public abstract class Struct extends BaseDBObject {
 
     @Override
     public String toString() {
-        return LoggedClass.getStaticInstance().getNewProtocolBuilder().append("name", name).append("lastModified", lastModified).toString() + super.toString();
+        return LoggedClass.getStaticInstance()
+                .getNewProtocolBuilder()
+                .append("name", name)
+                .append("lastModified", lastModified)
+                .toString() + super.toString();
     }
 }
