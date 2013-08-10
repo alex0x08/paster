@@ -228,8 +228,9 @@ object UserManager extends Loggered{
         /**
          * this almost all time means that we got anonymous user
          */
-        logger.debug("getCurrentUser ,unknown principal type: " + SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString)
-        return null;
+        logger.debug("getCurrentUser ,unknown principal type: " + 
+                     SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString)
+        null
       }
     }
 

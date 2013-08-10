@@ -28,6 +28,7 @@ import java.util.Locale
 import scala.collection.JavaConversions._
 import uber.paste.manager.UserManager
 import org.codehaus.jackson.annotate.JsonIgnore
+import org.springframework.web.bind.annotation._
 
 abstract class AbstractController extends Loggered{
 
@@ -68,8 +69,9 @@ abstract class AbstractController extends Loggered{
   }
 
   @JsonIgnore
+  @ModelAttribute("currentUser")
   def getCurrentUser():User = UserManager.getCurrentUser()
-
+ 
   @JsonIgnore
   def isCurrentUserLoggedIn():Boolean = {
     return UserManager.getCurrentUser != null

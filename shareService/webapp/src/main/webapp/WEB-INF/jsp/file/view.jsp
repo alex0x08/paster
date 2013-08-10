@@ -111,7 +111,8 @@
     <jsp:param name="model" value="${model}" />
     <jsp:param name="modelName" value="file" />
     <jsp:param name="addComment" value="1" />
-
+<jsp:param name="currentUser" value="${currentUser}" />
+  
 </jsp:include>
 
 

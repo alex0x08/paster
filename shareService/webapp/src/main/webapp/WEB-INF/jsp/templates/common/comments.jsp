@@ -3,8 +3,13 @@
 
 <div class="row" style="padding-top: 1em;">
 
-    <div class="span6 offset1">
+    <div  class="offset1">
 
+        <c:if test="${empty model.comments}">
+        <div class="well">
+            <fmt:message key="comments.not-found"/>
+        </div>
+        </c:if>
         <c:forEach var="comment" items="${model.comments}">
 
             <div class="well">
@@ -14,12 +19,21 @@
                 </div>
 
                 <div class="row-fluid">
+                    
                     <div class=" pull-right">
                         <img  src="<c:out value='http://www.gravatar.com/avatar/${comment.author.avatarHash}?s=32'/>"/>
                         <c:out value="${comment.author.name}"/>
 
                         <kc:prettyTime var="" date="${comment.created}" locale="${pageContext.response.locale}"/>
 
+                        <c:if test="${comment.author eq currentUser or currentUser.admin}">
+                          
+                            <a class="btn-mini alert-danger" href="<c:url value='/main/file/deleteComment'>
+                                     <c:param name="modelId" value="${model.id}"/>
+                                     <c:param name="commentId" value="${comment.id}"/></c:url>">X</a>
+          
+                          </c:if>
+                          
                     </div>
 
                 </div>

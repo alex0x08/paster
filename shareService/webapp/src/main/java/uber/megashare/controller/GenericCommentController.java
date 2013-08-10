@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011 Alex <alex@0x08.tk>
+ * Copyright (C) 2011 aachernyshev <alex@0x08.tk>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package uber.megashare.controller;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import uber.megashare.model.Comment;
 import uber.megashare.model.CommentedStruct;
+import uber.megashare.service.CommentManager;
 import uber.megashare.service.GenericVersioningManager;
 
 /**
@@ -34,9 +36,12 @@ import uber.megashare.service.GenericVersioningManager;
  */
 public abstract class GenericCommentController<T extends CommentedStruct> extends GenericVersioningController<T> {
 
-    protected static final String ADD_COMMENT_ACTION = "/addComment",
+    protected static final String ADD_COMMENT_ACTION = "/addComment",REMOVE_COMMENT_ACTION = "/deleteComment",
             COMMENT_MODEL_KEY = "newComment";
 
+    @Autowired
+    private CommentManager commentManager;
+    
     public GenericCommentController(GenericVersioningManager<T> manager) {
         super(manager);
     }
@@ -47,6 +52,38 @@ public abstract class GenericCommentController<T extends CommentedStruct> extend
         c.setAuthor(getCurrentUser());
         return c;
     }
+    
+    @RequestMapping(value = REMOVE_COMMENT_ACTION, method = {RequestMethod.POST,RequestMethod.GET})
+    public String deleteComment(
+            @RequestParam(required = true) Long modelId,
+            @RequestParam(required = true) Long commentId, 
+            HttpServletRequest request,
+            RedirectAttributes redirectAttributes) {
+
+        if (!isCurrentUserLoggedIn()) {
+            addMessageDenied(redirectAttributes);
+            return viewPage;
+        }
+
+        
+         T b = manager.getFull(modelId);
+        
+        if (b==null) {
+            return page404;
+        }
+
+        Comment toRemove = new Comment();
+        toRemove.setId(commentId);
+        
+        b.getComments().remove(toRemove);
+
+        T r = manager.save(b);
+        
+
+        addMessageSuccess(redirectAttributes);
+     
+      return  "redirect:/main"+viewPage+"?id="+r.getId();
+    }    
 
     @RequestMapping(value = ADD_COMMENT_ACTION, method = RequestMethod.POST)
     public String addComment(@RequestParam(required = true) Long modelId,

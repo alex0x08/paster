@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011 Alex <alex@0x08.tk>
+ * Copyright (C) 2011 aachernyshev <alex@0x08.tk>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,10 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
 import org.hibernate.search.annotations.*;
+import org.joda.time.DateTime;
+import org.joda.time.Days;
 import org.springframework.web.multipart.MultipartFile;
+import uber.megashare.base.DateBuilder;
 import uber.megashare.base.LoggedClass;
 
 /**
@@ -96,6 +99,22 @@ public class SharedFile extends Node {
     public void setRemoveAfter(Date removeAfter) {
         this.removeAfter = removeAfter;
     }
+    
+    public int getDaysBeforeRemoval() {
+    
+        if (!isWillBeRemoved()) {
+            return -1;
+        }
+        
+        DateTime start = new DateTime(this.removeAfter),
+                 end = new DateTime(DateBuilder.getInstance().setTimeFromBegin().getDate().getTime());
+        
+        return Days.daysBetween(start, end).getDays();
+     }
+    
+    public boolean isWillBeRemoved() {
+        return this.removeAfter!=null;
+    }   
     
     public boolean isPasterIntegrated() {
         return integrationCode!=null && integrationCode.startsWith(PASTER_PREFIX);

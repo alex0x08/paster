@@ -10,9 +10,12 @@
 
 <c:url var="blockUrl" value='/main/file/raw/view' />
 
-<script src="<c:url value='/js/vendor/jquery.ui.widget.js'/>"></script>
+ <script src="<c:url value='/js/vendor/jquery.ui.widget.js'/>"></script>
+ <link href="<c:url value='/libs/datepicker/css/datepicker.css'/>" rel="stylesheet"/>
+ <link href="<c:url value='/libs/bootstrap-switch/stylesheets/bootstrap-switch.css'/>" rel="stylesheet"/>
+ 
 
-<div class="row">
+ <div class="row">
     <div class="span10">     
 
 
@@ -33,6 +36,7 @@
                 <script src="<c:url value='/js/jquery.fileupload-fp.js'/>"></script>
 
                   <script src="<c:url value='/libs/datepicker/js/bootstrap-datepicker.js'/>"></script>
+                  <script src="<c:url value='/libs/bootstrap-switch/js/bootstrap-switch.js'/>"></script>
 
 
                 <c:url var="url" value='/main/file/upload-xdr' />
@@ -40,9 +44,32 @@
                 <script type="text/javascript">
 
                     $(document).ready(function() {
+                       
+                   
+                     $('#enableRemovalSwitch').on('change', function (e) {
+                           
+                           if (this.checked) {
+                                $('#inputRemovalDateBlock').css('display','');
+                           } else {
+                                $('#inputRemovalDateBlock').css('display','none'); 
+                                $('#removeAfter').val('');
+                           }
+                              
+                            
+                        });
 
 
-                        $('#dp3').datepicker();
+                        var nowTemp = new Date();
+                        var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0);
+
+                        var removalPicker =$('#inputRemovalDateBlock').datepicker({
+                            
+                          onRender: function(date) {
+                            return date.valueOf() < now.valueOf() ? 'disabled' : '';
+                            }   
+                        }).on('changeDate', function(ev) {
+                            removalPicker.hide();
+                        }).data('datepicker');
 
                         $('#file_upload').fileupload({
                             dataType: 'json',
@@ -128,11 +155,7 @@
 
                     </c:otherwise>
                 </c:choose>
-
-             
-                
-
-                  
+     
                 
                   <sec:authorize ifAnyGranted="ROLE_USER,ROLE_ADMIN">
 
@@ -174,8 +197,13 @@
                          <div class="control-group">
                             <form:label cssClass="control-label" path="file"><fmt:message key="file.removeAfter"/>:</form:label>
                             <div class="controls">
-                                <div class="input-append date" id="dp3" data-date="" data-date-format="${datePatternPicker}">
-                                    <form:input path="removeAfter" name="file" cssClass="span6" size="16"  /> 
+                                
+                                <div class="switch">
+                                    <input id='enableRemovalSwitch' type="checkbox"  >
+                                </div>
+                                
+                                <div id='inputRemovalDateBlock' class="input-append date" data-date="" data-date-format="${datePatternPicker}" style="display:none;">
+                                    <form:input id="removeAfter" path="removeAfter" name="file" cssClass="span6" size="16"  /> 
                                 <span class="add-on"><i class="icon-th"></i></span>
                             </div>
                                      <form:errors path="removeAfter" cssClass="error" />
@@ -285,11 +313,7 @@
                                 </c:choose>
                             </div>
                         </c:if>
-                        <jsp:include
-                            page="/WEB-INF/jsp/templates/common/comments.jsp">
-                            <jsp:param name="model" value="${model}" />
-                            <jsp:param name="modelName" value="file" />
-                        </jsp:include>
+                       
                     
                
             </fieldset>

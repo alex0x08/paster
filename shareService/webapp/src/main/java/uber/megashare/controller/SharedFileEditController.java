@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011 Alex <alex@0x08.tk>
+ * Copyright (C) 2011 aachernyshev <alex@0x08.tk>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -89,13 +89,22 @@ public class SharedFileEditController extends GenericCommentController<SharedFil
     private void dateBinder(WebDataBinder binder,Locale locale) {
         
         //The date format to parse or output your dates
-        SimpleDateFormat dateFormat = new SimpleDateFormat(messageSource.getMessage("date.format.picker", null, locale));
+        SimpleDateFormat dateFormat = new SimpleDateFormat(messageSource.getMessage("date.format", null, locale));
         //Create a new CustomDateEditor
         CustomDateEditor editor = new CustomDateEditor(dateFormat, true);
         //Register it as custom editor for the Date type
         binder.registerCustomEditor(Date.class, editor);
     }
 
+    @RequestMapping(value = RAW_PREFIX+"/comments", method = RequestMethod.GET)
+    public String viewRawComments(@RequestParam(required = true) Long id, Model model,Locale locale) {
+
+        String sp = super.view(id, model,locale);
+
+        return !sp.equals(viewPage)? sp : FILE_PREFIX +RAW_PREFIX+"/comments";
+    }
+
+    
     @RequestMapping(value = RAW_PREFIX+VIEW_ACTION, method = RequestMethod.GET)
     public String viewRaw(@RequestParam(required = true) Long id, Model model,Locale locale) {
 

@@ -199,13 +199,17 @@
                             <a  href="javascript:void(0);" class="linkLine" title="Comment this"
                                 onclick="SyntaxHighlighter.insertEditForm(${comment.lineNumber},${comment.id});"><span class="i">C</span></a>
                         </c:if>
-                     <sec:authorize ifAnyGranted="ROLE_ADMIN">
-                        <a href="<c:url value='/main/paste/removeComment'>
-                                  <c:param name="pasteId" value="${model.id}"/>
-                                  <c:param name="commentId" value="${comment.id}"/>
-                                  <c:param name="lineNumber" value="${comment.lineNumber}"/>
-                                  </c:url>">X</a>
-                    </sec:authorize>
+                        <sec:authorize access="${currentUser !=null and (currentUser.admin or ( comment.hasOwner  and comment.owner eq currentUser)) }">
+                            <a href="<c:url value='/main/paste/removeComment'>
+                                   <c:param name="pasteId" value="${model.id}"/>
+                                   <c:param name="commentId" value="${comment.id}"/>
+                                   <c:param name="lineNumber" value="${comment.lineNumber}"/>
+                               </c:url>" title="<fmt:message key='button.delete'/>">
+                                <span style="font-size: larger;" class="i">d</span>
+                            </a>
+
+                        </sec:authorize>
+   
                     </div>
 
                 </div>

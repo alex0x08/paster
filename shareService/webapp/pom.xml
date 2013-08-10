@@ -478,10 +478,23 @@
         <version>2.2.1.RELEASE</version>
     </dependency>
     <dependency>
-       <groupId>org.codehaus.janino</groupId>
-<artifactId>janino</artifactId>
-<version>2.5.15</version>
+        <groupId>org.codehaus.janino</groupId>
+        <artifactId>janino</artifactId>
+        <version>2.5.15</version>
     </dependency>
+
+    <dependency>
+        <groupId>quartz</groupId>
+        <artifactId>quartz</artifactId>
+        <version>1.5.2</version>
+    </dependency>
+
+    <dependency>
+        <groupId>joda-time</groupId>
+        <artifactId>joda-time</artifactId>
+        <version>1.6.2</version>
+    </dependency>
+
 
     </dependencies>
 

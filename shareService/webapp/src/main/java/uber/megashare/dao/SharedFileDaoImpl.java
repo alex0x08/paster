@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011 Alex <alex@0x08.tk>
+ * Copyright (C) 2011 aachernyshev <alex@0x08.tk>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package uber.megashare.dao;
 
 import com.mysema.query.types.expr.BooleanExpression;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.lucene.queryParser.ParseException;
@@ -26,7 +27,6 @@ import org.apache.lucene.util.Version;
 import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.jpa.FullTextQuery;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import uber.megashare.base.logging.LoggedCall;
 import uber.megashare.model.AccessLevel;
@@ -120,13 +120,24 @@ public class SharedFileDaoImpl extends GenericSearchableDaoImpl<SharedFile> impl
     /**
      * {@inheritDoc}
      */
+    @Override
     public List<SharedFile> getFilesForUser(Long id, AccessLevel[] levels) {
         return findAll(
                 BooleanExpression.anyOf(QSharedFile.sharedFile.accessLevel.in(levels).and(QSharedFile.sharedFile.owner.id.eq(id)),
                 QSharedFile.sharedFile.accessLevel.eq(AccessLevel.ALL)), QSharedFile.sharedFile.lastModified.desc());
-
     }
 
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+     public List<SharedFile> getFilesToRemoval() {
+        return findAll(
+                QSharedFile.sharedFile.removeAfter.isNotNull().and(QSharedFile.sharedFile.removeAfter.lt(Calendar.getInstance().getTime())));
+
+    }
+    
     /**
      * {@inheritDoc}
      */
