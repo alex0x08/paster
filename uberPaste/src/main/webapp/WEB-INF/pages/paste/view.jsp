@@ -108,15 +108,16 @@
 
     <c:choose>
         <c:when test="${shareIntegration}">
-              <c:set var="centerGridSize" value="grid-12"/>
+              <c:set var="centerGridSize" value="grid-10"/>
         </c:when>
         <c:otherwise>
             <c:set var="centerGridSize" value="grid-15"/>
     </c:otherwise>
     </c:choose>
 
-    <div id="centerPanel" class="column ${centerGridSize}">
-    <pre id="pasteText" class="brush: ${model.codeType.code};toolbar: false; auto-links:false;" style=" overflow-y: hidden;" ><c:out value="${model.text}" escapeXml="true" /></pre>
+    <div id="centerPanel" class="column ${centerGridSize}" style="min-width:650px;">
+    <pre id="pasteText" class="brush: ${model.codeType.code};toolbar: false; auto-links:false;" style=" overflow-y: hidden;" >
+        <c:out value="${model.text}" escapeXml="true" /></pre>
     <code id="pasteTextPlain" style="display:none;"><c:out value="${model.text}" escapeXml="true" /></code>
 
     </div>
@@ -124,7 +125,7 @@
 
     <c:if test="${shareIntegration}">
 
-        <div id="rightPanel" class="column grid-4" >
+        <div id="rightPanel" class="column grid-4" style="min-width:150px;" >
 
         <iframe id="shareFrame" src="${shareUrl}/main/file/integrated/list/paste_${model.id}"
                 scrolling="auto" frameborder="0"
@@ -153,49 +154,26 @@
 
             <div id="comment_l${comment.id}" commentId="${comment.id}"
                  lineNumber="${comment.lineNumber}"  parentCommentId="${comment.parentId}" class=" commentBlock" >
-                <div class="commentInner p-comment">
+                <div id="innerBlock" class="commentInner p-comment">
 
                 <div class="row">
-                    <div class="column grid-1" style="padding-top: 0.2em;">
+                   
+                    <div class="column grid-12" style="font-size: small;padding-left: 0.1em; margin: 0;  ">
+                        
+                        <tiles:insertDefinition name="/common/owner" >
+                            <tiles:putAttribute name="model" value="${comment}"/>
+                            <tiles:putAttribute name="modelName" value="comment"/>
+                        </tiles:insertDefinition>
 
-                        <c:choose>
-                            <c:when test="${not empty comment.owner}">
-                                <a href="http://ru.gravatar.com/site/check/${comment.owner.username}" title="GAvatar">
-                                    <img style="vertical-align: top;padding-bottom: 2px;" src="<c:out value='http://www.gravatar.com/avatar/${comment.owner.avatarHash}?s=32'/>"/>
-                                </a>
-                            </c:when>
-                            <c:otherwise>
-                                <span style="font-size: 2em;" class="i" title="Anonymous">x</span>
-                        </c:otherwise>
-                        </c:choose>
-
-                    </div>
-                    <div class="column grid-14" style="font-size: small;padding-left: 0.1em; margin: 0;  ">
-                        <c:choose>
-                            <c:when test="${not empty comment.owner}">
-                                    <a title="Contact ${comment.owner.name}"  href="mailto:${comment.owner.username}?subject=${model.name}"><c:out value="${comment.owner.name}" /></a>
-                            </c:when>
-                            <c:otherwise>
-                                Anonymous
-                            </c:otherwise>
-
-                        </c:choose>
+                      
                         , <kc:prettyTime date="${comment.lastModified}" locale="${pageContext.response.locale}"/>
 
                     </div>
-
-                </div>
-
-                <div class="row">
-                    <div class="column grid-1">
-                        <a href="#comment_l${comment.id}" title="<c:out value="${comment.id}"/>">#</a>
-                    </div>
-                    <div class="column grid-14">
-                            <c:out value=" ${comment.text}" escapeXml="true"/>
-                    </div>
-
-                    <div class="column grid-1 right" style="font-size: 1em;text-align: right;">
-                        <c:if test="${comment.parentId==null}">
+                        
+                        <div class="column grid-3 right">
+                        <a href="#comment_l${comment.id}" title="<c:out value="${comment.id}"/>">#${model.id}.${comment.id}</a>
+                    
+                          <c:if test="${comment.parentId==null}">
                             <a  href="javascript:void(0);" class="linkLine" title="Comment this"
                                 onclick="SyntaxHighlighter.insertEditForm(${comment.lineNumber},${comment.id});"><span class="i">C</span></a>
                         </c:if>
@@ -209,8 +187,17 @@
                             </a>
 
                         </sec:authorize>
-   
+                         
+                         </div>
+
+                </div>
+
+                <div class="row">
+                   
+                    <div class="column grid-16">
+                            <c:out value=" ${comment.text}" escapeXml="true"/>
                     </div>
+
 
                 </div>
 
@@ -273,7 +260,7 @@
              to line <span id="pageNum"></span>
 
              <sec:authorize ifAnyGranted="ROLE_USER,ROLE_ADMIN">
-
+                 
               <span class="right"  style="padding-top: 0.5em;" >
                 <span  style="padding-top: 1em;">
                     <c:out escapeXml="true" value="${currentUser.name}" />

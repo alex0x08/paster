@@ -337,7 +337,6 @@
     height: 3em;
     margin-top: 0.5em;
     margin-bottom: -0.2em;
-    
 
 }
 
@@ -382,7 +381,7 @@
 .commentBlock {
     white-space: normal;
     position: relative;
-    max-width: 40em;
+    max-width: 35em;
     min-width: 5em;
     width: auto;
   /*  height: 4em;*/
@@ -395,7 +394,12 @@
 }
 
 .commentInner {
-    background-color: #e0e0e0;
+    background-color: #f8f8f8;
+    border: 1px solid black;
+}
+
+.commentCurrent {
+    background-color: #ffff67;
     border: 1px solid black;
 }
 
@@ -403,10 +407,10 @@
     white-space: normal;
    /* position: absolute;*/
     max-width: 35em;
-    max-height: 12em;
+ /*   max-height: 12em;*/
     width: 35em;
     top: 0em;
-    height: 7em;
+  /*  height: 7em; */
     margin-left: 1em;
     margin-top: 1em;
     background-color: #e0e0e0;
@@ -424,10 +428,10 @@
 
     padding-left: 0.5em;
     max-width: 34em;
-    max-height: 4em;
+  /*  max-height: 4em; */
     width: 34em;
-    height: 4em;
-
+    height: 4em; 
+ 
 
 }
 .editForm .commentOuter{
