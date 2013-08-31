@@ -112,7 +112,7 @@
 
 
 
-                <a href="<c:url value="/main/paste/${paste.id}"></c:url>" title="Click to view paste vol. ${paste.id}">
+                <a href="<c:url value="/${paste.id}"></c:url>" title="Click to view paste vol. ${paste.id}">
                     <span  class="pasteTitle"><c:out value="${paste.name}" escapeXml="true"  /></span>
                 </a>
 
@@ -123,7 +123,7 @@
         <div class="row" >
 
                 <div class="column grid-4" >
-                    <a class="pastePreviewLink" href="<c:url value="/main/paste/${paste.id}"></c:url>" pasteId="${paste.id}" title="Click to view paste vol. ${paste.id}">
+                    <a class="pastePreviewLink" href="<c:url value="/${paste.id}"></c:url>" pasteId="${paste.id}" title="Click to view paste vol. ${paste.id}">
 
                        <c:choose>
                            <c:when test="${not empty paste.thumbImage}">
@@ -147,7 +147,7 @@
                         <div class="pasteTitle column grid-14">
 
                             <div class="pasteTitle" style="padding: 1em;">
-                                <a class="listLinkLine" href="<c:url value="/main/paste/${paste.id}"></c:url>" pasteId="${paste.id}" title="Click to view paste vol. ${paste.id}"><c:out value="${paste.title}"  escapeXml="true"/></a>
+                                <a class="listLinkLine" href="<c:url value="/${paste.id}"></c:url>" pasteId="${paste.id}" title="Click to view paste vol. ${paste.id}"><c:out value="${paste.title}"  escapeXml="true"/></a>
                             </div>
 
                         </div>
@@ -200,7 +200,7 @@
             </c:when>
             <c:when test="${paste['class'].name eq 'uber.paste.model.Comment'}">
 
-                <a href="<c:url value="/main/paste/${paste.id}"></c:url>" title="Click to view paste vol. ${paste.id}">
+                <a href="<c:url value="/${paste.id}"></c:url>" title="Click to view paste vol. ${paste.id}">
                     <span  class="pasteTitle"><c:out value="${paste.text}" escapeXml="true"  /></span>
                 </a>
 
