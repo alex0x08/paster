@@ -88,7 +88,7 @@
         <div class="form-buttons pull-left">
 
             <c:if test="${not empty availablePrev}">
-                <a class="btn" href="<c:url value='/main/file/${model.id-1}'/>">&#8592;</a>
+                <a class="btn" href="<c:url value='/${model.id-1}'/>">&#8592;</a>
             </c:if>
 
             <a class="btn btn-primary btn-large" href="<c:out value='${downloadUrl}'/>">
@@ -96,7 +96,7 @@
                 <fmt:message key="file.download"/></a>
 
             <c:if test="${not empty availableNext}">
-                <a class="btn" href="<c:url value='/main/file/${model.id+1}'/>">&#8594;</a>
+                <a class="btn" href="<c:url value='/${model.id+1}'/>">&#8594;</a>
             </c:if>
 
         </div>
