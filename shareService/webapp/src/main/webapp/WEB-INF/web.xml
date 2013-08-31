@@ -81,10 +81,10 @@
     
    
     
-    <filter-mapping>
+    <!--filter-mapping>
         <filter-name>etagFilter</filter-name>
         <url-pattern>/act/download</url-pattern>
-    </filter-mapping>
+    </filter-mapping-->
 
     <filter-mapping>
         <filter-name>etagFilter</filter-name>
