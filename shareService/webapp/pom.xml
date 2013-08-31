@@ -104,6 +104,11 @@
 
     <dependencies>
 
+         <dependency>
+            <groupId>org.tuckey</groupId>
+            <artifactId>urlrewritefilter</artifactId>
+            <version>4.0.4</version>
+        </dependency>
 
 
         <dependency>

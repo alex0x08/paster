@@ -12,4 +12,7 @@
 <c:set var="datePatternPicker"><fmt:message key="date.format.picker"/></c:set>
     
 <c:set var="dateTimePattern"><fmt:message key="date.format.hours"/></c:set>
- <sec:authentication property="principal" var="currentUser" />
+ 
+<%--
+<sec:authentication property="principal" var="currentUser" />
+--%>

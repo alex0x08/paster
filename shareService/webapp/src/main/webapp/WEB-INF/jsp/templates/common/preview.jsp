@@ -95,7 +95,7 @@
                 </c:url>
             </c:when>
             <c:otherwise>
-                <c:url value="/main/file/${model.id}" var="detailUrl"/>
+                <c:url value="/${model.id}" var="detailUrl"/>
             </c:otherwise>
         </c:choose>
     </c:otherwise>
