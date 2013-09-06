@@ -54,6 +54,9 @@ public class QNode extends EntityPathBase<Node> {
     public final NumberPath<Long> id = _super.id;
 
     //inherited
+    public final StringPath integrationCode = _super.integrationCode;
+
+    //inherited
     public final DateTimePath<java.util.Date> lastModified = _super.lastModified;
 
     //inherited

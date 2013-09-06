@@ -62,7 +62,6 @@ public interface SharedFileDao extends GenericSearchableDao<SharedFile> {
      */
      SharedFile getFileFromUUID(String uuid);
      
-     List<SharedFile> getFilesForIntegration(String intergationCode);
     
      List<SharedFile> getFilesToRemoval();
 }

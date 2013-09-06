@@ -105,10 +105,7 @@ public class SharedFileManagerImpl extends GenericSearchableManagerImpl<SharedFi
         return shareDao.getFiles(levels);
     }
 
-    @Override
-    public List<SharedFile> getFilesForIntegration(String intergationCode) {
-        return shareDao.getFilesForIntegration(intergationCode);
-    }
+  
 
     @Override
     public List<SharedFile> getFilesForUser(Long id, AccessLevel[] levels) {

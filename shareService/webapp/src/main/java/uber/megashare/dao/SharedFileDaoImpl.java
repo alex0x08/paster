@@ -30,7 +30,6 @@ import org.hibernate.search.jpa.FullTextQuery;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 import uber.megashare.base.logging.LoggedCall;
-import static uber.megashare.dao.GenericSearchableDaoImpl.DEFAULT_START_FIELDS;
 import static uber.megashare.dao.GenericSearchableDaoImpl.an;
 import uber.megashare.model.AccessLevel;
 import uber.megashare.model.QSharedFile;
@@ -143,20 +142,21 @@ public class SharedFileDaoImpl extends GenericSearchableDaoImpl<SharedFile> impl
     @Override
      public List<SharedFile> getFilesToRemoval() {
         return findAll(
-                QSharedFile.sharedFile.removeAfter.isNotNull().and(QSharedFile.sharedFile.removeAfter.lt(Calendar.getInstance().getTime())));
+                QSharedFile.sharedFile.removeAfter.isNotNull()
+                .and(QSharedFile.sharedFile.removeAfter.lt(Calendar.getInstance().getTime())));
 
     }
     
     /**
      * {@inheritDoc}
      */
+    @Override
     public List<SharedFile> getFiles(AccessLevel[] levels) {
-
         return findAll(QSharedFile.sharedFile.accessLevel.in(levels), QSharedFile.sharedFile.lastModified.desc());
-
     }
 
-    public List<SharedFile> getFilesForIntegration(String intergationCode) {
+    @Override
+    public List<SharedFile> getObjectsForIntegration(String intergationCode) {
         return findAll(QSharedFile.sharedFile.accessLevel.eq(AccessLevel.ALL)
                 .and(QSharedFile.sharedFile.integrationCode.eq(intergationCode)),
                 QSharedFile.sharedFile.lastModified.desc());

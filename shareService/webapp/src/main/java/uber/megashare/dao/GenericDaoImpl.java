@@ -17,6 +17,7 @@ package uber.megashare.dao;
 
 import org.springframework.orm.ObjectRetrievalFailureException;
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -101,7 +102,7 @@ public abstract class GenericDaoImpl<T extends BaseDBObject, PK extends Serializ
     	CriteriaSet cr = new CriteriaSet();
     	
         Query query = getEntityManager().createQuery(cr.cr.orderBy(cr.cb.desc(cr.r.get("lastModified"))));
-        return (List<T>) query.getResultList();
+        return query.getResultList().isEmpty() ? Collections.EMPTY_LIST : query.getResultList();
  
     }
 

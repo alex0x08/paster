@@ -15,6 +15,7 @@
  */
 package uber.megashare.dao;
 
+import java.util.List;
 import uber.megashare.model.Struct;
 
 /**
@@ -22,5 +23,7 @@ import uber.megashare.model.Struct;
  * @author alex
  */
 public interface StructDao<T extends Struct> extends GenericDSLDao<T,Long> {
-    
+ 
+    List<T> getObjectsForIntegration(String integrationCode);
+
 }

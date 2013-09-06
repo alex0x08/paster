@@ -1,5 +1,7 @@
 <%@ include file="/WEB-INF/jsp/templates/common/taglibs.jsp"%>
 
+               <script src="<c:url value='/libs/jasny-bootstrap/js/jasny-bootstrap.js'/>"></script>
+ 
 
 <div id="notice"></div>
 
@@ -54,16 +56,27 @@
                     <form:hidden path="integrationCode" />
                     <form:hidden path="accessLevel" />
 
+                    
                     <div class="control-group">
+                            <form:label cssClass="control-label" path="file">
+                                <fmt:message key="file.file.new"/>:</form:label>
+                                <div class="controls">
+                                    <div class="fileupload fileupload-new" data-provides="fileupload">
+                                        <span class="btn btn-file">
+                                            <span class="fileupload-new"><fmt:message key="button.select"/></span>
+                                        <form:input path="file" name="file" cssClass="input-file"
+                                                    type="file" /> 
+                                        <span class="fileupload-exists"><fmt:message key="button.change"/></span>
+                                    </span>
+                                    <span class="fileupload-preview"></span>
+                                    <a href="#" class="close fileupload-exists" data-dismiss="fileupload" style="float: none">×</a>
+                                </div>
+                                <form:errors path="file" cssClass="error" />
+                            </div>      
+                        </div>
 
-                        <form:label cssClass="control-label" path="file"><fmt:message key="file.file.new"/>:</form:label>
-
-                            <div class="controls">
-                            <form:input path="file" name="file" cssClass="input-file"
-                                        type="file" /> 
-                            <form:errors path="file" cssClass="error" />
-                        </div>      
-                    </div>
+                    
+                   
                     <div class="form-actions">
                         <fmt:message var="submit_button_text" key="button.upload" />
                         <input name="submit" class="btn btn-primary" type="submit" value="${submit_button_text}" />
@@ -109,6 +122,10 @@
                 </ul>
             </div>
 
+                       
+                            
+                               
+                            
             <script type="text/javascript">
                 $('#auth-dropdown').click(function(event){
                     event.stopPropagation();

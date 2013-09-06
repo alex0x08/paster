@@ -51,7 +51,7 @@ import uber.megashare.base.LoggedClass;
 @Table(name = "s_files")
 @Audited
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class SharedFile extends Node {
+public class SharedFile extends Node  {
 
     public static final String PASTER_PREFIX= "paste_";
     
@@ -77,8 +77,6 @@ public class SharedFile extends Node {
     @Field(index = Index.YES, store = Store.YES, termVector = TermVector.NO)
     private FileType type = FileType.BINARY;
     
-    @Field(index = Index.YES, store = Store.YES, termVector = TermVector.NO)
-    private String integrationCode;
     
     @Column(nullable = false)
     @Field(index = Index.YES, store = Store.YES, termVector = TermVector.NO)
@@ -155,13 +153,7 @@ public class SharedFile extends Node {
         this.previewWidth = previewWidth;
     }
 
-    public String getIntegrationCode() {
-        return integrationCode;
-    }
-
-    public void setIntegrationCode(String integrationCode) {
-        this.integrationCode = integrationCode;
-    }
+   
 
     public String getUuid() {
         return uuid;
@@ -270,7 +262,6 @@ public class SharedFile extends Node {
                 .append("uuid", uuid)
                 .append("owner", getOwner())
                 .append("accessLevel", getAccessLevel())
-                .append("integrationCode", integrationCode)
                 .append("fileType", type)
                 .append("previewUrl", previewUrl)
                 .append("mime", mime)

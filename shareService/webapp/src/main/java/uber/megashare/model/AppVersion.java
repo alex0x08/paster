@@ -16,6 +16,7 @@
 package uber.megashare.model;
 
 import com.jcabi.manifests.Manifests;
+import java.io.Serializable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.persistence.Embeddable;
@@ -30,7 +31,7 @@ import uber.megashare.base.LoggedClass;
 
 
 @Embeddable
-public class AppVersion{
+public class AppVersion implements Serializable{
 
     public static final String UNDEFINED = "UNDEFINED",
             MF_IMPLEMENTATION_VERSION="Implementation-Version",

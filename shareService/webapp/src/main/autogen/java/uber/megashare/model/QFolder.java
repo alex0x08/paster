@@ -60,6 +60,9 @@ public class QFolder extends EntityPathBase<Folder> {
     public final NumberPath<Long> id;
 
     //inherited
+    public final StringPath integrationCode;
+
+    //inherited
     public final DateTimePath<java.util.Date> lastModified;
 
     //inherited
@@ -92,6 +95,7 @@ public class QFolder extends EntityPathBase<Folder> {
         this.commentsCount = _super.commentsCount;
         this.disabled = _super.disabled;
         this.id = _super.id;
+        this.integrationCode = _super.integrationCode;
         this.lastModified = _super.lastModified;
         this.name = _super.name;
         this.owner = _super.owner;

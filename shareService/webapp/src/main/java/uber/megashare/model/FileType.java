@@ -15,6 +15,8 @@
  */
 package uber.megashare.model;
 
+import org.apache.commons.lang.StringUtils;
+
 /**
  * Enum with abstact file types
  * 
@@ -50,7 +52,7 @@ public enum FileType {
     
     public static FileType lookup(String code) {
         
-        if (code==null || code.trim().length()==0) {
+        if (StringUtils.isBlank(code)) {
             return BINARY;
         }
         

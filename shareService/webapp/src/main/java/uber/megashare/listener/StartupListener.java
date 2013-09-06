@@ -36,8 +36,6 @@ import uber.megashare.service.SettingsManager;
 import uber.megashare.service.UserManager;
 import com.jcabi.manifests.Manifests;
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
 import org.neo4j.graphdb.traversal.Evaluators;
 import org.neo4j.graphdb.traversal.TraversalDescription;
 import org.neo4j.kernel.Traversal;

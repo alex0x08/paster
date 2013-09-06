@@ -15,6 +15,7 @@
  */
 package uber.megashare.service;
 
+import java.util.List;
 import uber.megashare.dao.StructDao;
 import uber.megashare.model.Struct;
 
@@ -22,14 +23,22 @@ import uber.megashare.model.Struct;
  *
  * @author alex
  */
-public abstract class StructManagerImpl<T extends Struct> extends GenericManagerImpl<T,Long> implements StructManager<T> {
-    
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 8647134621403862511L;
+public abstract class StructManagerImpl<T extends Struct> extends GenericManagerImpl<T, Long> implements StructManager<T> {
 
-	protected StructManagerImpl(StructDao<T> dao) {
+    /**
+     *
+     */
+    private static final long serialVersionUID = 8647134621403862511L;
+
+    private StructDao<T> structDao;
+    
+    protected StructManagerImpl(StructDao<T> dao) {
         super(dao);
+        this.structDao=dao;
+    }
+    
+    @Override
+    public List<T> getObjectsForIntegration(String integrationCode) {
+        return structDao.getObjectsForIntegration(integrationCode);
     }
 }

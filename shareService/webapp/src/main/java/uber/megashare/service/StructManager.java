@@ -15,6 +15,7 @@
  */
 package uber.megashare.service;
 
+import java.util.List;
 import uber.megashare.model.Struct;
 
 /**
@@ -23,4 +24,6 @@ import uber.megashare.model.Struct;
  */
 public interface StructManager<T extends Struct> extends GenericManager<T,Long> {
     
+   List<T> getObjectsForIntegration(String integrationCode);
+
 }

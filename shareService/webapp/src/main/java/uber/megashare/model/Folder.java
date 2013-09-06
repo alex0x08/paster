@@ -32,43 +32,35 @@ import org.hibernate.search.annotations.Indexed;
 @Indexed(index = "indexes/nodes")
 public class Folder extends Node {
 
-	public static final String ROOT_CODE="_root_";
-	
-	public static final String TRASH_CODE="_trash_";
-	
-	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -2025308492906065162L;
-
-	@OneToMany(fetch = FetchType.LAZY, cascade = { CascadeType.REMOVE,CascadeType.PERSIST })
-	private List<Folder> folders = new ArrayList<>();
-
-
-    @OneToMany(fetch = FetchType.LAZY, cascade = { CascadeType.REMOVE,CascadeType.PERSIST })
-	private List<SharedFile> files = new ArrayList<>();
+    public static final String ROOT_CODE = "_root_";
+    public static final String TRASH_CODE = "_trash_";
+    /**
+     *
+     */
+    private static final long serialVersionUID = -2025308492906065162L;
+    
+    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
+    private List<Folder> folders = new ArrayList<>();
+    
+    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
+    private List<SharedFile> files = new ArrayList<>();
 
     public List<Folder> getFolders() {
         return folders;
     }
-
-   
 
     public List<SharedFile> getFiles() {
         return files;
     }
 
     public void loadFull() {
-    
-        for (Folder f:folders) {
+
+        for (Folder f : folders) {
             f.loadFull();
         }
-        
-        for (SharedFile s:files) {
+
+        for (SharedFile s : files) {
             s.loadFull();
         }
     }
-
-	
 }

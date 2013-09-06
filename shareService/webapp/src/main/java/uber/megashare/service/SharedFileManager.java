@@ -52,7 +52,6 @@ public interface SharedFileManager extends GenericSearchableManager<SharedFile,S
      */
      SharedFile getFileFromUUID(String uuid);
      
-     List<SharedFile> getFilesForIntegration(String intergationCode);
     
      String getMimeExt(String ext);
     

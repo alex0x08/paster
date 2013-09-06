@@ -85,6 +85,8 @@
             <list>
                 <bean class="org.springframework.web.servlet.view.json.MappingJacksonJsonView" >
                     <property name="contentType" value="application/json" />
+                     <!--property name="modelKey" value="result" /-->
+                     
                 </bean>
                 <bean class="org.springframework.web.servlet.view.xml.MarshallingView">
                     <constructor-arg>
