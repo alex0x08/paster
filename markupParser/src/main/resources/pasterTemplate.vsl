@@ -1,0 +1,6 @@
+## Velocity Template.
+
+   <iframe  src="$pasteUrl/main/paste/integrated/preview/$modelId"
+                     scrolling="auto" frameborder="0"
+                     style="width:630px;height: 400px;"  allowTransparency="true"   >
+   </iframe>  
