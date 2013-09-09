@@ -161,11 +161,11 @@
             <version>${slf4j.version}</version>
         </dependency>
 
-        <dependency>
+        <!--dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>log4j-over-slf4j</artifactId>
             <version>${slf4j.version}</version>
-        </dependency>
+        </dependency-->
 
         <dependency>
             <groupId>ch.qos.logback</groupId>
@@ -500,6 +500,12 @@
         <version>1.6</version>
     </dependency>
 
+    <dependency>
+        <groupId>uber.markup</groupId>
+        <artifactId>uni-markup-parser</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </dependency>
+   
 
     </dependencies>
 

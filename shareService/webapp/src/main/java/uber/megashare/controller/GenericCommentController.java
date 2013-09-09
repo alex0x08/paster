@@ -15,7 +15,7 @@
  */
 package uber.megashare.controller;
 
-import java.util.Calendar;
+import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +26,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import uber.kaba.markup.parser.AppMode;
+import uber.kaba.markup.parser.KabaMarkupParser;
 import uber.megashare.model.Comment;
 import uber.megashare.model.CommentedStruct;
 import uber.megashare.service.CommentManager;
@@ -42,6 +44,7 @@ public abstract class GenericCommentController<T extends CommentedStruct> extend
 
     @Autowired
     private CommentManager commentManager;
+    
     
     public GenericCommentController(GenericVersioningManager<T> manager) {
         super(manager);
@@ -91,7 +94,7 @@ public abstract class GenericCommentController<T extends CommentedStruct> extend
             @ModelAttribute(COMMENT_MODEL_KEY) Comment newComment,
             BindingResult result, Model model, 
             HttpServletRequest request,
-            RedirectAttributes redirectAttributes) {
+            RedirectAttributes redirectAttributes) throws IOException {
 
 
         if (!isCurrentUserLoggedIn()) {
@@ -113,6 +116,11 @@ public abstract class GenericCommentController<T extends CommentedStruct> extend
             return page404;
         }
 
+        newComment.setMessage(
+        KabaMarkupParser.getInstance().setSource(newComment.getMessage()).setMode(AppMode.SHARE)
+                .setPasteUrl(pasterUrl).setShareUrl(externalUrl).parseAll().get());
+    
+        
         b.addComment(newComment);
         
         T r = manager.save(b);

@@ -15,7 +15,7 @@
             <div class="well">
 
                 <div class="row-fluid">
-                    <c:out value="${comment.message}"/>    
+                    ${comment.message}    
                 </div>
 
                 <div class="row-fluid">
