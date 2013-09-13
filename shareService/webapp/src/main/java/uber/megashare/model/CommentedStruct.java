@@ -15,6 +15,7 @@
  */
 package uber.megashare.model;
 
+import com.thoughtworks.xstream.annotations.XStreamImplicit;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,7 +24,6 @@ import javax.persistence.CascadeType;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
 import javax.persistence.MappedSuperclass;
-import org.codehaus.jackson.annotate.JsonIgnore;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
 import org.hibernate.search.annotations.IndexedEmbedded;
@@ -46,7 +46,8 @@ public class CommentedStruct extends Struct implements Serializable {
     @NotAudited
    // @Audited(modStore=ModificationStore.FULL, targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     @IndexedEmbedded(depth = 1, prefix = "comments_")
-   private List<Comment> comments = new ArrayList<>();
+    @XStreamImplicit(keyFieldName="comments")
+    private List<Comment> comments = new ArrayList<>();
 
     @NotAudited
     private int commentsCount;
@@ -71,7 +72,7 @@ public class CommentedStruct extends Struct implements Serializable {
    }
     
 //    @NotAudited
-    @JsonIgnore
+    //@JsonIgnore
     public List<Comment> getComments() {
         return Collections.unmodifiableList(comments);
     }

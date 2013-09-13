@@ -15,6 +15,8 @@
  */
 package uber.megashare.model;
 
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+import com.thoughtworks.xstream.annotations.XStreamOmitField;
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
@@ -28,6 +30,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
+import javax.xml.bind.annotation.XmlTransient;
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.hibernate.search.annotations.Boost;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Index;
@@ -44,6 +48,7 @@ import org.hibernate.search.annotations.TermVector;
 @Entity
 @Table(name = "COMMENTS")
 @Indexed(index = "indexes/comments")
+@XStreamAlias("comment")
 public class Comment extends BaseDBObject implements Serializable {
 
     /**
@@ -66,6 +71,7 @@ public class Comment extends BaseDBObject implements Serializable {
     private String message;
     
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @XStreamOmitField
     private AttachedFile file;
 
     /**
@@ -96,6 +102,8 @@ public class Comment extends BaseDBObject implements Serializable {
      *
      * @return AttachedFile
      */
+    @JsonIgnore
+    @XmlTransient
     public AttachedFile getFile() {
         return file;
     }

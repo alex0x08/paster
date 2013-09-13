@@ -15,6 +15,7 @@
  */
 package uber.megashare.model;
 
+import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import javax.persistence.*;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.hibernate.envers.Audited;
@@ -36,9 +37,11 @@ public abstract class Node extends CommentedStruct {
      */
     private static final long serialVersionUID = 8335426398422307477L;
     
+    @XStreamAsAttribute
     private String code;
     
     @Field(index = Index.YES, store = Store.YES, termVector = TermVector.YES)
+    @XStreamAsAttribute
     String ownerName;
     
     /**

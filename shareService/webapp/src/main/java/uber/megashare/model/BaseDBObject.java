@@ -15,6 +15,7 @@
  */
 package uber.megashare.model;
 
+import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import java.io.Serializable;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -36,6 +37,7 @@ public abstract class BaseDBObject extends BaseObject implements Serializable, I
 	
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @XStreamAsAttribute
     private Long id;
     
     private boolean disabled;

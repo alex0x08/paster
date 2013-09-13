@@ -85,16 +85,25 @@
             <list>
                 <bean class="org.springframework.web.servlet.view.json.MappingJacksonJsonView" >
                     <property name="contentType" value="application/json" />
-                     <!--property name="modelKey" value="result" /-->
+                    <property name="prettyPrint" value="true" />
+                     
+                    <property name="modelKeys">
+                        <set>
+                            <value>model</value>
+                            <value>items</value>
+                        </set>
+                    </property>
                      
                 </bean>
-                <bean class="org.springframework.web.servlet.view.xml.MarshallingView">
+                <bean class="uber.megashare.web.ConfigurableMarshallingView">
                     <constructor-arg>
                         <bean class="org.springframework.oxm.xstream.XStreamMarshaller"
-                              p:autodetectAnnotations="true" />
+                              p:autodetectAnnotations="true" p:encoding="UTF-8" />
                     </constructor-arg>
                     <property name="contentType" value="application/xml" />
-                </bean>
+                    <property name="modelKeys" value="model,items" />
+                    
+                 </bean>
             
             </list>
         </property>

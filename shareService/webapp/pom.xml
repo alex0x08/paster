@@ -55,7 +55,7 @@
 
         <jdbc.groupId>com.h2database</jdbc.groupId>
         <jdbc.artifactId>h2</jdbc.artifactId>
-        <jdbc.version>1.2.132</jdbc.version>
+        <jdbc.version>1.3.173</jdbc.version>
 
         <hibernate.dialect>org.hibernate.dialect.H2Dialect</hibernate.dialect>
         <jdbc.driverClassName>org.h2.Driver</jdbc.driverClassName>
@@ -234,8 +234,7 @@
             <artifactId>jsr250-api</artifactId>
             <version>1.0</version>
         </dependency-->
-            
-
+      
         <dependency>
             <groupId>com.thoughtworks.xstream</groupId>
             <artifactId>xstream</artifactId>
@@ -247,7 +246,6 @@
             <artifactId>jackson-mapper-asl</artifactId>
             <version>1.9.13</version>
         </dependency>
-
 
 
         <dependency>
@@ -266,11 +264,12 @@
                 </exclusion>
             </exclusions>
         </dependency>
-<dependency>
-	<groupId>org.apache.tiles</groupId>
-	<artifactId>tiles-servlet</artifactId>
-	<version>${tiles.version}</version>
-</dependency>
+
+        <dependency>
+            <groupId>org.apache.tiles</groupId>
+            <artifactId>tiles-servlet</artifactId>
+            <version>${tiles.version}</version>
+        </dependency>
             
 
                 <dependency>
@@ -297,36 +296,36 @@
                 </dependency>
 
        
-<dependency>
-    <groupId>javax.servlet</groupId>
-    <artifactId>jstl</artifactId>
-    <version>1.2</version>
-</dependency>
+                <dependency>
+                    <groupId>javax.servlet</groupId>
+                    <artifactId>jstl</artifactId>
+                    <version>1.2</version>
+                </dependency>
 
 
 
-   <dependency>
-            <groupId>org.tuckey</groupId>
-            <artifactId>urlrewritefilter</artifactId>
-            <version>4.0.4</version>
-        </dependency>
+                <dependency>
+                    <groupId>org.tuckey</groupId>
+                    <artifactId>urlrewritefilter</artifactId>
+                    <version>4.0.4</version>
+                </dependency>
 
 
 
-		<!-- google collections -->
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>r09</version>
-        </dependency>
+                <!-- google collections -->
+                <dependency>
+                    <groupId>com.google.guava</groupId>
+                    <artifactId>guava</artifactId>
+                    <version>r09</version>
+                </dependency>
 
-		<!-- Apache Commons Upload -->
+                <!-- Apache Commons Upload -->
 
-        <dependency>
-            <groupId>commons-fileupload</groupId>
-            <artifactId>commons-fileupload</artifactId>
-            <version>1.3</version>
-        </dependency>
+                <dependency>
+                    <groupId>commons-fileupload</groupId>
+                    <artifactId>commons-fileupload</artifactId>
+                    <version>1.3</version>
+                </dependency>
 
 
         <dependency>
@@ -509,6 +508,13 @@
         <groupId>joda-time</groupId>
         <artifactId>joda-time</artifactId>
         <version>1.6.2</version>
+    </dependency>
+
+
+    <dependency>
+      <groupId>javax.mail</groupId>
+      <artifactId>mail</artifactId>
+      <version>1.4.7</version>
     </dependency>
 
     <dependency>

@@ -15,6 +15,11 @@
  */
 package uber.megashare.model;
 
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
+import com.thoughtworks.xstream.annotations.XStreamConverter;
+import com.thoughtworks.xstream.annotations.XStreamOmitField;
+import com.thoughtworks.xstream.converters.enums.EnumConverter;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -22,6 +27,8 @@ import java.util.List;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import javax.xml.bind.annotation.XmlTransient;
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.hibernate.annotations.IndexColumn;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Indexed;
@@ -36,6 +43,7 @@ import uber.megashare.base.MD5Util;
 @Table(name = "s_users")
 //@Audited
 @Indexed(index = "indexes/user")
+@XStreamAlias("user")
 public class User extends Struct implements Serializable, UserDetails {
 
     /**
@@ -47,16 +55,19 @@ public class User extends Struct implements Serializable, UserDetails {
     @NotNull(message = "{validator.not-null}")
     @Column(nullable = false, length = 50, unique = true)
     @Field
+    @XStreamAsAttribute
     private String login;
     
     @NotNull(message = "{validator.not-null}")
     @Column(nullable = false, length = Integer.MAX_VALUE)
+    @XStreamOmitField
     private String password;
     
     private transient String newPassword,repeatPassword;
     
     @Field
     @Column(unique = true)
+    @XStreamAsAttribute
     private String email;
     
     private AccessLevel defaultFileAccessLevel = AccessLevel.OWNER;
@@ -70,8 +81,11 @@ public class User extends Struct implements Serializable, UserDetails {
     @OneToMany(fetch = FetchType.EAGER,cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.REMOVE})
     @IndexColumn(name="sess_indx")
    //@NotAudited
+    @XmlTransient
+    @XStreamOmitField
     private List<SavedSession> savedSessions = new ArrayList<>();
 
+    @JsonIgnore
     public String getNewPassword() {
         return newPassword;
     }
@@ -80,7 +94,7 @@ public class User extends Struct implements Serializable, UserDetails {
         this.newPassword = newPassword;
     }
 
-    
+    @JsonIgnore
     public String getRepeatPassword() {
         return repeatPassword;
     }
@@ -89,6 +103,7 @@ public class User extends Struct implements Serializable, UserDetails {
         this.repeatPassword = repeatPassword;
     }
     
+    @JsonIgnore
     public List<SavedSession> getSavedSessions() {
         return savedSessions;
     }
@@ -105,6 +120,7 @@ public class User extends Struct implements Serializable, UserDetails {
         return null;
     }
     
+    @JsonIgnore
     public AccessLevel getDefaultFileAccessLevel() {
         return defaultFileAccessLevel;
     }
@@ -139,6 +155,8 @@ public class User extends Struct implements Serializable, UserDetails {
     /**
      * @return stored password
      */
+    @JsonIgnore
+    @XmlTransient
     @Override
     public String getPassword() {
         return password;
@@ -161,6 +179,8 @@ public class User extends Struct implements Serializable, UserDetails {
         return roles;
     }
 
+    @JsonIgnore
+    @XmlTransient
     public boolean isPasswordSet() {
         return getPassword() != null && getPassword().trim().length() > 0;
     }

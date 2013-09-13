@@ -15,6 +15,7 @@
  */
 package uber.megashare.model;
 
+import com.thoughtworks.xstream.annotations.XStreamAlias;
 import org.apache.commons.lang.StringUtils;
 
 /**
@@ -23,6 +24,7 @@ import org.apache.commons.lang.StringUtils;
  * 
  * @author alex
  */
+@XStreamAlias("fileType")
 public enum FileType {
         IMAGE("type.image","image.gif"),
         BINARY("type.binary","binary.gif"),

@@ -69,7 +69,6 @@
                     </c:when>
                     <c:otherwise>
                         <c:param name="id" value="${model.uuid}"/>
-
                     </c:otherwise>
                 </c:choose>
 
@@ -123,6 +122,8 @@
             </c:choose>          
             
          
+
+            
             
 <div class="box well ${boxClass} " >
  
@@ -135,6 +136,7 @@
                         </c:if>
                     </a>
                 </li>
+                <li><a href="#api_${model.id}" data-toggle="tab" ><fmt:message key="file.api.file"/></a></li>
                 
                  <div class="pull-right">
 
@@ -420,6 +422,50 @@
                     
                 </div>
                     <div class="tab-pane" id="comments_${model.id}" >
+                </div>
+                
+                
+                   <div class="tab-pane" id="api_${model.id}" >
+                       
+                       
+                  
+                       <c:choose>
+                           <c:when test="${not empty param.revision}">          
+                               <c:url value="/main/file.json" var="jsonUrl">
+                                   <c:param name="id" value="${model.id}"/>
+                                   <c:param name="revision" value="${param.revision}"/>          
+                               </c:url>
+                               <c:url value="/main/file.xml" var="xmlUrl">
+                                   <c:param name="id" value="${model.id}"/>
+                                   <c:param name="revision" value="${param.revision}"/>          
+                               </c:url>
+
+                           </c:when>
+                           <c:otherwise>
+                               <c:url value="/main/file/${model.id}.xml" var="xmlUrl"/>
+                               <c:url value="/main/file/${model.id}.json" var="jsonUrl"/>
+                               
+                           </c:otherwise>
+                       </c:choose>
+
+                       
+                       <p>
+
+                           <a title="<fmt:message key="model.view.json"/>" target="_blank" 
+                              href="<c:out value='${jsonUrl}'/>">
+                               <img style="display: inline;" src="<c:url value='/images/mime/json.png'/>"/>
+                           </a>    
+
+                           <a title="<fmt:message key="model.view.xml"/>" target="_blank" 
+                              href="<c:out value='${xmlUrl}'/>">
+                               <img style="display: inline;" src="<c:url value='/images/mime/xml.gif'/>"/>
+                           </a>    
+                       </p>
+                     
+                       
+                       <textarea  class="field span12" ><iframe src="${externalUrl}/main/file/integrated/view?id=${model.id}" width="400" height="400" frameborder="0"></iframe>
+                       </textarea>
+                       
                 </div>
 
             </div>
