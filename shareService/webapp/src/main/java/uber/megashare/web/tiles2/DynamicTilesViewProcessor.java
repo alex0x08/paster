@@ -15,6 +15,7 @@
  */
 package uber.megashare.web.tiles2;
 
+import java.util.Locale;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -23,10 +24,15 @@ import org.apache.tiles.Attribute;
 import org.apache.tiles.AttributeContext;
 import org.apache.tiles.TilesContainer;
 import org.apache.tiles.TilesException;
+import org.apache.tiles.request.ApplicationContext;
+import org.apache.tiles.request.Request;
+import org.apache.tiles.request.servlet.ServletUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.web.servlet.support.JstlUtils;
 import org.springframework.web.servlet.support.RequestContext;
+import org.springframework.web.servlet.support.RequestContextUtils;
 
 /**
  * <p>Used for rendering and processing a dynamic tiles view.</p>
@@ -83,6 +89,8 @@ public class DynamicTilesViewProcessor {
             TilesContainer container)
             throws Exception {
         
+        Request tilesRequest = createTilesRequest(ServletUtil.getApplicationContext(servletContext),request, response);
+	
         
         beanName = beanName.replaceAll("//","/");
         
@@ -114,14 +122,16 @@ public class DynamicTilesViewProcessor {
                 JstlUtils.exposeLocalizationContext(new RequestContext(request, servletContext));       
         
     
-        String definitionName = startDynamicDefinition(beanName, url, request, response, container);
+        String definitionName = startDynamicDefinition(beanName, url, tilesRequest, container);
 
         
         logger.debug("found definition "+definitionName+" beanName="+beanName);
         
-        container.render(definitionName, request, response);
+        	//this.renderer.render(getUrl(), tilesRequest);
+        
+        container.render(definitionName, tilesRequest);
 
-        endDynamicDefinition(definitionName, beanName, request, response, container);
+        endDynamicDefinition(definitionName, beanName, tilesRequest, container);
     }
 
     private static final String[] third_level = new String[] {"/raw","/integrated"};
@@ -139,18 +149,17 @@ public class DynamicTilesViewProcessor {
      * Starts processing the dynamic Tiles definition by creating a temporary definition for rendering.
      */
     protected String startDynamicDefinition(String beanName, String url,
-            HttpServletRequest request, HttpServletResponse response,
+            Request tilesRequest,
             TilesContainer container)
             throws TilesException {
-        String definitionName = processTilesDefinitionName(beanName, container,
-                request, response);
+        String definitionName = processTilesDefinitionName(beanName, container,tilesRequest);
 
         // create a temporary context and render using the incoming url as the
         // body attribute
         if (!definitionName.equals(beanName)) {
-           
-            AttributeContext attributeContext = container.startContext(request, response);
-            attributeContext.putAttribute(tilesBodyAttributeName, new Attribute(tilesBodyAttributeName,(Object)url));
+          
+            AttributeContext attributeContext = container.startContext(tilesRequest);
+            attributeContext.putAttribute(tilesBodyAttributeName, new Attribute(url));
 
             logger.debug("URL used for Tiles body.  url='" + url + "'.");
         }
@@ -162,10 +171,10 @@ public class DynamicTilesViewProcessor {
      * Closes the temporary Tiles definition.
      */
     protected void endDynamicDefinition(String definitionName, String beanName,
-            HttpServletRequest request, HttpServletResponse response,
+           Request tilesRequest,
             TilesContainer container) {
         if (!definitionName.equals(beanName)) {
-            container.endContext(request, response);
+            container.endContext(tilesRequest);
         }
     }
 
@@ -178,9 +187,7 @@ public class DynamicTilesViewProcessor {
      * @throws 	TilesException		If no valid Tiles definition is found. 
      */
     protected String processTilesDefinitionName(String beanName,
-            TilesContainer container,
-            HttpServletRequest request,
-            HttpServletResponse response)
+            TilesContainer container,Request tilesRequest)
             throws TilesException {
         
            
@@ -192,7 +199,7 @@ public class DynamicTilesViewProcessor {
             return derivedDefinitionName;
         } 
         
-        if (container.isValidDefinition(beanName, request, response)) {
+        if (container.isValidDefinition(beanName, tilesRequest)) {
             derivedDefinitionName = beanName;        
             return beanName;
         } 
@@ -226,9 +233,8 @@ public class DynamicTilesViewProcessor {
             }
 
             sb.append(tilesDefinitionName);
-
-            
-            if (container.isValidDefinition(sb.toString(), request, response)) {
+    
+            if (container.isValidDefinition(sb.toString(), tilesRequest)) {
                 result = sb.toString();
             } else if (!rootDefinition) {
                 String root = null;
@@ -239,7 +245,7 @@ public class DynamicTilesViewProcessor {
 
                 root += tilesDefinitionName;
 
-                if (container.isValidDefinition(root, request, response)) {
+                if (container.isValidDefinition(root, tilesRequest)) {
                     result = root;
                 } else {
                     throw new TilesException("No defintion of found for "
@@ -253,4 +259,17 @@ public class DynamicTilesViewProcessor {
             return result;
         
     }
+    
+    
+    protected Request createTilesRequest(final ApplicationContext applicationContext,final HttpServletRequest request, HttpServletResponse response) {
+		return new org.apache.tiles.request.servlet.ServletRequest(applicationContext, request, response) {
+			@Override
+			public Locale getRequestLocale() {
+				return RequestContextUtils.getLocale(request);
+			}
+		};
+	}
+
+
+    
 }
