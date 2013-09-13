@@ -224,16 +224,12 @@ public class KabaMarkupParser {
 
        // System.out.println("__start parse");
 
-        StringReader sr = null;
-        LineNumberReader r = null;
-
-        try {
-            sr = new StringReader(data.toString());
-            r = new LineNumberReader(sr);
-
+      
+        try (LineNumberReader r = new LineNumberReader(new StringReader(data.toString()))) {
+      
             clear();
 
-            String line = "";
+            String line;
 
             StringBuilder block = new StringBuilder();
             boolean codeStarts = false, noParse = false, wasMath = false;
@@ -283,7 +279,6 @@ public class KabaMarkupParser {
                 }
 
                 if (codeStarts) {
-
                     block.append(line).append("\n");
                 }
 
@@ -303,10 +298,6 @@ public class KabaMarkupParser {
 
                     block.append(line);
                     codeStarts = true;
-                    // continue;
-
-
-                    //System.out.println("line after code_start={" + line + "}");
                 }
 
 
@@ -352,34 +343,17 @@ public class KabaMarkupParser {
 
                 data.append(line).append(LINE_BR);
             }
+            
+            
             //for lazy fucks who don't use :code
             if (block.length() > 0) {
                 if (wasMath) {
-                    appendMath(block.toString());
-                    wasMath = false;
+                    appendMath(block.toString());                    
                 } else {
                     appendCode(block.toString());
                 }
 
-
-
-            }
-
-        } finally {
-         
-            if (r != null) {
-                try {
-                    r.close();
-                } catch (Exception e) {
-                }
-            }
-            
-            if (sr != null) {
-                try {
-                    sr.close();
-                } catch (Exception e) {
-                }
-            }
+            }        
             
         }
 
@@ -397,62 +371,42 @@ public class KabaMarkupParser {
     }
     
     
-     private String parseShare(String line) throws IOException {
+     private String parseTemplate(String line,Pattern p,VelocityContext context,Template template) throws IOException {
     
-         Matcher matcher = SHARE_LINK_PATTERN.matcher(line);
+         Matcher matcher = p.matcher(line);
         StringBuffer sbm = new StringBuffer();
-        while (matcher.find()) {           
-           
-            VelocityContext context = new VelocityContext();
-       
+        while (matcher.find()) { 
             context.put("modelId",  matcher.group(matcher.groupCount()) );
-            context.put("shareUrl", shareUrl);
-        
-            matcher.appendReplacement(sbm, parseVelocity(context,shareTemplate));
+            matcher.appendReplacement(sbm, parseVelocity(context,template));
         }
 
         matcher.appendTail(sbm);
     
         return sbm.toString();
         }
+    
+    private String parseShare(String line) throws IOException {
+        
+        VelocityContext context = new VelocityContext();
+        context.put("shareUrl", shareUrl);
+
+        return parseTemplate(line, SHARE_LINK_PATTERN, context, shareTemplate);
+
+    }
     
    
     
     private String parsePaste(String line) throws IOException {
-    
-         Matcher matcher = PASTE_LINK_PATTERN.matcher(line);
-        StringBuffer sbm = new StringBuffer();
-        while (matcher.find()) {           
-           
-            VelocityContext context = new VelocityContext();
-       
-            context.put("modelId",  matcher.group(matcher.groupCount()) );
-            context.put("pasteUrl", pasteUrl);
-        
-            matcher.appendReplacement(sbm, parseVelocity(context,pasterTemplate));
-        }
 
-        matcher.appendTail(sbm);
-    
-        return sbm.toString();
-        }
+        VelocityContext context = new VelocityContext();
+        context.put("pasteUrl", pasteUrl);
+
+        return parseTemplate(line, PASTE_LINK_PATTERN, context, pasterTemplate);
+
+    }
     
     private String parseYoutube(String line) throws IOException {
-   
-        Matcher matcher = YOUTUBE_PATTERN.matcher(line);
-        StringBuffer sbm = new StringBuffer();
-        while (matcher.find()) {           
-           
-            VelocityContext context = new VelocityContext();
-       
-            context.put("modelId",  matcher.group(matcher.groupCount()) );
-   
-            matcher.appendReplacement(sbm, parseVelocity(context,youtubeTemplate));
-        }
-
-        matcher.appendTail(sbm);
-    
-        return sbm.toString();
+        return parseTemplate(line, YOUTUBE_PATTERN,  new VelocityContext(), youtubeTemplate);
      }
 
     private void appendCode(String block) {
@@ -461,7 +415,6 @@ public class KabaMarkupParser {
                 .append(block)
                 .append("</pre>")
                 .append("<br/>");
-
     }
 
     private void appendMath(String block) {
@@ -470,33 +423,29 @@ public class KabaMarkupParser {
                 .append(block)
                 .append("--math-end--</p>")
                 .append("<br/>");
-
-
     }
 
     private String prettyText(String line) {
 
 
          //smart curly double quotes
-        line = line.replaceAll("\"([^<]*)\"", "&#8220;$1&#8221;");
+        return line.replaceAll("\"([^<]*)\"", "&#8220;$1&#8221;")
 
            //smart curly single quotes
-        line = line.replaceAll("\'([^<]*)\'", "&#8216;$1&#8217;");
+        .replaceAll("\'([^<]*)\'", "&#8216;$1&#8217;")
 
         //dashes
         //em
-        line = line.replaceAll("\\-{3}", "&mdash;");
+        .replaceAll("\\-{3}", "&mdash;")
 
         //en
-        line = line.replaceAll("\\-{2}", "&ndash;");
+        .replaceAll("\\-{2}", "&ndash;")
         //...
-        line = line.replaceAll("\\.{3}", "&hellip;");
+        .replaceAll("\\.{3}", "&hellip;")
         //(c)
-        line = line.replaceAll("\\(c\\)", "&#169;");
+        .replaceAll("\\(c\\)", "&#169;")
         //trade mark
-        line = line.replaceAll("\\s+tm.", "&#8482;");
-
-        return line;
+        .replaceAll("\\s+tm.", "&#8482;");
     }
 
     private String parseLine(String line) throws IOException {
@@ -508,40 +457,39 @@ public class KabaMarkupParser {
          /**
          * remove extra spaces
          */
-        line = line.replaceAll("\\s+{2}", " ");
+        line = line.replaceAll("\\s+{2}", " ")
 
         //line = prettyText(line);
 
 
         /**
-         * ПОРЯДОК РАЗБОРА ВАЖЕН БЛЕАТЬ
+         * ПОРЯДОК РАЗБОРА ВАЖЕН 
          *
          */
         /**
          *  полужирный __тест__ или **текст**
          */
-        line = line.replaceAll("\\*{2}([^<]*)\\*{2}", "<strong>$1</strong>");
-        line = line.replaceAll("_{2}([^<]*)_{2}", "<strong>$1</strong>");
+        .replaceAll("\\*{2}([^<]*)\\*{2}", "<strong>$1</strong>")
+        .replaceAll("_{2}([^<]*)_{2}", "<strong>$1</strong>")
 
 
         /**
          *  курсив _italic_ *italic*
          */
-        line = line.replaceAll("\\*([^<]*)\\*", "<em>$1</em>");
-        line = line.replaceAll("_([^<]*)_", "<em>$1</em>");
+        .replaceAll("\\*([^<]*)\\*", "<em>$1</em>")
+        .replaceAll("_([^<]*)_", "<em>$1</em>")
 
 
         /**
          *  перечеркнутый текст text^H или ^text^
          */
-        line = line.replaceAll("\\s+([^<]*)\\^H", "<strike>$1</strike>");
-        line = line.replaceAll("\\^([^<]*)\\^", "<strike>$1</strike>");
+        .replaceAll("\\s+([^<]*)\\^H", "<strike>$1</strike>")
+        .replaceAll("\\^([^<]*)\\^", "<strike>$1</strike>");
 
 
-
-
-        if (line.contains("mailto:"))
+        if (line.contains("mailto:")) {
             canPrettify=false;
+        }
         /**
          * mailto:
          */
@@ -567,18 +515,24 @@ public class KabaMarkupParser {
 
 
         // NO BRACES TILL THIS LINE (no links) !!!!!!
-        if (canPrettify)
+        if (canPrettify) {
             line = prettyText(line);
-
-        line = line.replaceAll("^[\\s+]?//([^<]*)", "<span class='color2'>$1</span>");
-
-        line = line.replaceAll("^[\\s+]?#([^<]*)", "<span class='color3'>$1</span>");
+        }
+        
+        
+        line = line.replaceAll("^[\\s+]?//([^<]*)", "<span class='color2'>$1</span>")
+                .replaceAll("^[\\s+]?#([^<]*)", "<span class='color3'>$1</span>");
         
         
         /**
          *  ссылки на посты вида >>21
          */
         
+        
+                 line = line.replaceAll("\\&gt;\\&gt;([0-9]+)*", 
+                         "<a href='" + ( mode == AppMode.PASTE ? pasteUrl : shareUrl) + "/$1'>>>$1</a>&nbsp;");
+       
+        /*
         switch(mode) {
         
             case PASTE: {
@@ -589,7 +543,7 @@ public class KabaMarkupParser {
                  line = line.replaceAll("\\&gt;\\&gt;([0-9]+)*", "<a href='" + shareUrl  + "/$1'>>>$1</a>&nbsp;");
                  break;
             }   
-        }
+        }*/
         
          
          line = parsePaste(line);
