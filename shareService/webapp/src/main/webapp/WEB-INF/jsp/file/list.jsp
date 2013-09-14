@@ -29,8 +29,8 @@
 
 <c:if test="${pageItems.pageCount > 1}">
 
-    <div class="pagination ">
-        <ul>
+    <div class='row' style="text-align:center;" >
+        <ul class='pagination'>
 
             <c:if test="${!pageItems.firstPage}">
                 <li>
@@ -63,7 +63,8 @@
             </c:if>
 
         </ul>
-    </div>
+      </div>
+    
 
 </c:if>
 

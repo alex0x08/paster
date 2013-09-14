@@ -21,8 +21,8 @@
                 </form:select>
             </sec:authorize>
 
-            <button type="submit" class="btn">
-                <i class="icon-search" title="<fmt:message key="button.search"/>"></i>
+            <button type="submit" class="btn btn-sm btn-info">
+                <span class="glyphicon glyphicon-search" title="<fmt:message key="button.search"/>"></span>
             </button>
         </div>
 

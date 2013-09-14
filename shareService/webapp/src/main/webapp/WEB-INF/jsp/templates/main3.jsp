@@ -5,15 +5,13 @@
         <meta charset="utf-8">
         <title><fmt:message key="site.title"/></title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="description" content="">
-        <meta name="author" content="alex">
+        <meta name="description" content="<fmt:message key="site.title"/>">
+        <meta name="author" content="Alex">
 
-        <link href="<c:url value='/css/metro-bootstrap.css'/>" rel="stylesheet"/>
+        <link href="<c:url value='/main/assets/bootstrap/3.0.0/css/bootstrap.min.css'/>" rel="stylesheet"/>
+        <link href="<c:url value='/main/assets/bootstrap/3.0.0/css/bootstrap-theme.min.css'/>" rel="stylesheet"/>
         <style type="text/css">
-            body {
-                padding-top: 60px;
-                padding-bottom: 40px;
-            }
+           
             .sidebar-nav {
                 padding: 9px 0;
             }
@@ -23,54 +21,41 @@
 
         </style>
 
-        <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
-        <!--[if lt IE 9]>
-          <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-        <![endif]-->
-
-
         <link rel="stylesheet" type="text/css" media="all" href="<c:url value='/css/main.css'/>" />
         <link href="<c:url value='/libs/zoombox/zoombox.css'/>" rel="stylesheet" type="text/css" media="screen" />
-        <link href="<c:url value='/libs/jasny-bootstrap/css/jasny-bootstrap.css'/>" rel="stylesheet" type="text/css" media="screen" />
-        <link href="<c:url value='/libs/jasny-bootstrap/css/jasny-bootstrap-responsive.css'/>" rel="stylesheet" type="text/css" media="screen" />
-
-        <!-- Le fav and touch icons -->
+        <!--
+        <link href="<c:url value='/main/assets/jasny-bootstrap/2.3.0-j5/css/jasny-bootstrap.css'/>" rel="stylesheet" type="text/css" media="screen" />
+        <link href="<c:url value='/main/assets/jasny-bootstrap/2.3.0-j5/css/jasny-bootstrap-responsive.css'/>" rel="stylesheet" type="text/css" media="screen" />
+        -->
         <link rel="shortcut icon" href="<c:url value='/favicon.png'/>">
-        <link rel="apple-touch-icon-precomposed" sizes="144x144" 
-              href="<c:url value='/assets/ico/apple-touch-icon-144-precomposed.png'/>">
-        <link rel="apple-touch-icon-precomposed" sizes="114x114" 
-              href="<c:url value='/assets/ico/apple-touch-icon-114-precomposed.png'/>">
-        <link rel="apple-touch-icon-precomposed" sizes="72x72" 
-              href="<c:url value='/assets/ico/apple-touch-icon-72-precomposed.png'/>">
-        <link rel="apple-touch-icon-precomposed" 
-              href="<c:url value='/assets/ico/apple-touch-icon-57-precomposed.png'/>">
-
-        <script src="<c:url value='/js/jquery-1.8.0.js'/>"></script>
-        <script src="<c:url value='/libs/zoombox/zoombox.js'/>"></script>
-
+    
+      <script src="<c:url value='/main/assets/jquery/2.0.3/jquery.js'/>"></script>
+      <script src="<c:url value='/main/assets/jquery-ui/1.10.2/ui/minified/jquery-ui.min.js'/>"></script>
+      
+      <script src="<c:url value='/main/assets/bootstrap/3.0.0/js/bootstrap.min.js'/>"></script>
+      <script src="<c:url value='/libs/zoombox/zoombox.js'/>"></script>
 
     </head>
 
-    <body data-spy="scroll" data-target=".subnav" data-offset="80" screen_capture_injected="true">
+    <body class='container'>
 
-
-        <div class="navbar navbar-fixed-top ">
-            <div class="navbar-inner">
-                <div class="container-fluid" >
-                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>                                               
-                    </a>
-
-                    <a class="brand" href="<c:url value='/'/>"><img style="width:35px;height:35px;" src="<c:url value='/images/file.png'/>"/></a>    
-                    
-                    <div class="nav-collapse collapse">
-                       
+         <div class="navbar navbar-static-top">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+            
+                 <tiles:insertAttribute name="menu" />
+      
+        </div>
+        <div class="navbar-collapse collapse">
+            
                         <tiles:insertAttribute name="header" />     
                        
                         <sec:authorize ifAnyGranted="ROLE_ANONYMOUS">
-
-                            <div class="btn-group pull-right">
+                            <div class="btn-group pull-right box">
 
                                 <a class="btn dropdown-toggle btn-danger" data-toggle="dropdown" href="#">
                                     <fmt:message key="login.title"/>
@@ -104,7 +89,7 @@
 
                         </sec:authorize>
 
-                        <div class="btn-group pull-right">
+                        <div class="btn-group pull-right box">
                             <a class="btn dropdown-toggle " data-toggle="dropdown" href="#">
                                 <img style="display: inline; vertical-align:middle;" 
                                      title="<fmt:message key="locale.${pageContext.response.locale.language}"/>" 
@@ -143,9 +128,9 @@
 
                         <sec:authorize ifAnyGranted="ROLE_USER,ROLE_ADMIN">
 
-                            <div class="btn-group pull-right">
+                            <div class="btn-group pull-right box">
 
-                                <a class="btn dropdown-toggle btn-primary" data-toggle="dropdown" href="#">
+                                <a class="btn dropdown-toggle btn-default" data-toggle="dropdown" href="#">
                                     <img  src="<c:out value='http://www.gravatar.com/avatar/${currentUser.avatarHash}?s=16'/>"/>
                                     <sec:authentication property="principal.username" />
                                     <span class="caret"></span>
@@ -155,11 +140,11 @@
                                     <li >
 
                                         <a class="profile" href="<c:url value="/main/profile"/>">
-                                            <i class="icon-user"></i><fmt:message key="profile.title"/></a> 
+                                            <span class="glyphicon glyphicon-user"></span> <fmt:message key="profile.title"/></a> 
                                     </li>
 
                                     <li>  <a href="<c:url value="/act/doLogout"/>">
-                                            <i class="icon-off"></i>
+                                           <span class="glyphicon glyphicon-log-out"></span>
                                             <fmt:message key="button.logout"/></a>
                                     </li>
                                     <!-- dropdown menu links -->
@@ -168,21 +153,42 @@
 
                         </sec:authorize>
 
-                    </div><!--/.nav-collapse -->
-                </div>
-            </div>
+                  
+            
+    <!--      <ul class="nav navbar-nav">
+              
+                      
+              
+            <li class="active"><a href="#">Link</a></li>
+            <li><a href="#">Link</a></li>
+            <li><a href="#">Link</a></li>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                <li><a href="#">Action</a></li>
+                <li><a href="#">Another action</a></li>
+                <li><a href="#">Something else here</a></li>
+                <li class="divider"></li>
+                <li class="dropdown-header">Nav header</li>
+                <li><a href="#">Separated link</a></li>
+                <li><a href="#">One more separated link</a></li>
+              </ul>
+            </li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li class="active"><a href="./">Default</a></li>
+            <li><a href="../navbar-static-top/">Static top</a></li>
+            <li><a href="../navbar-fixed-top/">Fixed top</a></li>
+          </ul>-->
+                                
         </div>
-                         
+        
+                                
+                       
         <div class="container-fluid">
 
             <div class="row-fluid">
-                <div class="span3">
-                    <div class="well sidebar-nav">
-                        
-                        <tiles:insertAttribute name="menu" />
-
-                    </div><!--/.well -->
-                </div><!--/span-->
+               
                 <div class="span9">
                     
                     <c:if test="${not empty statusMessageKey}">
@@ -208,64 +214,17 @@
 
     </div><!--/.fluid-container-->
 
-    <!-- Le javascript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="<c:url value='/js/bootstrap-transition.js'/>"></script>
-    <script src="<c:url value='/js/bootstrap-alert.js'/>"></script>
-    <script src="<c:url value='/js/bootstrap-modal.js'/>"></script>
-    <script src="<c:url value='/js/bootstrap-dropdown.js'/>"></script>
-    <script src="<c:url value='/js/bootstrap-scrollspy.js'/>"></script>
-    <script src="<c:url value='/js/bootstrap-tab.js'/>"></script>
-    <script src="<c:url value='/js/bootstrap-tooltip.js'/>"></script>
-    <script src="<c:url value='/js/bootstrap-popover.js'/>"></script>
-    <script src="<c:url value='/js/bootstrap-button.js'/>"></script>
-    <script src="<c:url value='/js/bootstrap-collapse.js'/>"></script>
-    <script src="<c:url value='/js/bootstrap-carousel.js'/>"></script>
-    <script src="<c:url value='/js/bootstrap-typeahead.js'/>"></script>
-
-    <script type="text/javascript" src="<c:url value='/libs/flowplayer/flowplayer-3.2.12.min.js'/>"></script>
-
-    <script type="text/javascript">
-        $(document).ready(function() {
-    flowplayer("a.embedPlayer", "<c:url value='/libs/flowplayer/flowplayer-3.2.16.swf'/>", {
-      clip:  {
-          autoPlay: false,
-          autoBuffering: true
-      }
-  });
-       }
-    );
     
-    </script> 
- 
-    <script type="text/javascript">
-        $('#auth-dropdown').click(function(event){
-            event.stopPropagation();
-        }
-    );
-        
-        $(document).ready(function() {
-              
-            $('a.zoombox').zoombox({
-                theme       : 'simple',        //available themes : zoombox,lightbox, prettyphoto, darkprettyphoto, simple
-                opacity     : 0.3,              // Black overlay opacity
-                duration    : 800,              // Animation duration
-                animation   : true,             // Do we have to animate the box ?
-                width       : 1024,              // Default width
-                height      : 768,              // Default height
-                gallery     : true,             // Allow gallery thumb view
-                autoplay : true,                // Autoplay for video
-                overflow: true
-            });
-              
-        });
-        
-    </script>
+   
 
 
     <!-- Boostrap modal dialog -->
-    <div id="delete_confirmation" class="modal hide fade" style="display: none; ">
+    <div id="delete_confirmation" class="modal fade" aria-labelledby="myModalLabel" aria-hidden="true">
+        
+        <div class="modal-dialog">
+            <div class="modal-content">
+                
+         
         <div class="modal-header">
             <a href="#" class="close" data-dismiss="modal">x</a>
             <h3><fmt:message key="dialog.confirm"/></h3>
@@ -285,9 +244,16 @@
             <a href="#" class="btn btn-danger btn-large confirm_delete_the_item no_return"><fmt:message key="button.delete"/></a>
             <a href="#" class="btn btn-secondary " data-dismiss="modal"><fmt:message key="button.cancel"/></a>
         </div>
+           </div>
+       
+        </div>    
     </div>
         
-      <div id="paste_preview" class="modal hide fade" style="display: none;width:660px;height: 400px; ">
+      <div id="paste_preview" class="modal fade" >
+          
+           <div class="modal-dialog">
+               <div class="modal-content">
+                   
         <div class="modal-header">
             <a href="#" class="close" data-dismiss="modal">x</a>
                   <div>
@@ -304,29 +270,58 @@
                 </div>
             </div>
         </div>
+               </div></div>
     </div>
     
-        
+
+
+           
+
+
+    <script type="text/javascript" src="<c:url value='/libs/flowplayer/flowplayer-3.2.12.min.js'/>"></script>
+
     <script type="text/javascript">
-
-    var commentsUrl = '<c:url value="/main/file/raw/comments"/>';
-
+        
+           $('#auth-dropdown').click(function(event){
+                event.stopPropagation();
+                }
+            );
+        
         $(document).ready(function() {
+    
+         $('a.zoombox').zoombox({
+                theme       : 'simple',        //available themes : zoombox,lightbox, prettyphoto, darkprettyphoto, simple
+                opacity     : 0.3,              // Black overlay opacity
+                duration    : 800,              // Animation duration
+                animation   : true,             // Do we have to animate the box ?
+                width       : 1024,              // Default width
+                height      : 768,              // Default height
+                gallery     : true,             // Allow gallery thumb view
+                autoplay : true,                // Autoplay for video
+                overflow: true
+            });
+     
+        flowplayer("a.embedPlayer", "<c:url value='/libs/flowplayer/flowplayer-3.2.16.swf'/>", {
+      clip:  {
+          autoPlay: false,
+          autoBuffering: true
+      }
+  });
+     
+        var commentsUrl = '<c:url value="/main/file/raw/comments"/>';
 
             $("[rel='tooltip']").tooltip();
   
-               $(".commentsBtn").live('click', function(e) {
+               $(".commentsBtn").bind('click', function(e) {
                
-                 var thisTab = e.target // activated tab
+                 var thisTab = e.target; 
                   var pageTarget = $(thisTab).attr('href');
                   
                   $(pageTarget).load(commentsUrl+'?id='+$(thisTab).attr('modelId'));
-                  
-                 
                 });
         
               
-         $(".pastePreviewBtn").live('click', function() {
+         $(".pastePreviewBtn").bind('click', function() {
                 var link=$(this);
            
            
@@ -341,29 +336,24 @@
                 clink+= '" scrolling="auto" frameborder="0" style="width:640px;height:320px; "  allowTransparency="true" > </iframe>';
                 
                 $('#pasteContent').html(clink);
-                
-                
-                $('#paste_preview').modal({backdrop: false}, "show");
-                
+               $('#paste_preview').modal({backdrop: false}, "show");
               
                 return false;
 
             });
-
-
    
    
-            $(".fileDeleteBtn").live('click', function() {
-                var link=$(this);
+            $(".fileDeleteBtn").click(function() {
+                var link=$(this);           
             
                 $('#deleteTargetImg').attr('src',link.attr('targetIcon'));
                 $('#deleteTargetTitle').html(link.attr('targetTitle'));
             
                 $('#delete_confirmation').modal({backdrop: false}, "show");
-                $('.confirm_delete_the_item').live('click', function(e) {
+                
+                $('.confirm_delete_the_item').click(function(e) {
                     $('#delete_confirmation').modal("hide");
                     e.preventDefault();
-                    // alert(link.attr('href'));
                     location.href=link.attr('deleteLink');
                     return true;
    

@@ -19,11 +19,12 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import com.thoughtworks.xstream.annotations.XStreamConverter;
 import com.thoughtworks.xstream.annotations.XStreamOmitField;
-import com.thoughtworks.xstream.converters.enums.EnumConverter;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -70,13 +71,16 @@ public class User extends Struct implements Serializable, UserDetails {
     @XStreamAsAttribute
     private String email;
     
+    @XStreamAsAttribute
     private AccessLevel defaultFileAccessLevel = AccessLevel.OWNER;
     /**
      * User's roles
      */
     @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
-    private List<Role> roles = new ArrayList<>();
+    //@XStreamImplicit
+    @XStreamConverter(EnumListConverter.class)
+    private Set<Role> roles = new HashSet<>();
 
     @OneToMany(fetch = FetchType.EAGER,cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.REMOVE})
     @IndexColumn(name="sess_indx")
@@ -166,11 +170,11 @@ public class User extends Struct implements Serializable, UserDetails {
         this.password = password;
     }
 
-    public List<Role> getRoles() {
+    public Set<Role> getRoles() {
         return roles;
     }
 
-    public void setRoles(List<Role> roles) {
+    public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
 

@@ -1,21 +1,17 @@
 <%-- 
-    Document   : 403
-    Created on : Nov 30, 2011, 5:27:23 AM
-    Author     : alex
+    Document   : 500
+    Created on : 14.09.2013, 12:18:50
+    Author     : aachernyshev
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-
-<% response.setStatus(403); %>
-
-
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Access denied</title>
+        <title>JSP Page</title>
     </head>
     <body>
-        <h1>Access denied</h1>
+        <h1>Hello World!</h1>
     </body>
 </html>

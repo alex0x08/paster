@@ -29,6 +29,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -166,6 +167,7 @@ public class SharedFileEditController extends GenericCommentController<SharedFil
 
                 log.append("uploadSave starting ,currentUser=" + getCurrentUser() + " file=" + input);
 
+                
                 SharedFile old;
 
                 if (!input.isBlank()) {

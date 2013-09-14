@@ -15,7 +15,6 @@
  */
 package uber.megashare.model;
 
-import com.thoughtworks.xstream.annotations.XStreamImplicit;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -46,7 +45,7 @@ public class CommentedStruct extends Struct implements Serializable {
     @NotAudited
    // @Audited(modStore=ModificationStore.FULL, targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     @IndexedEmbedded(depth = 1, prefix = "comments_")
-    @XStreamImplicit(keyFieldName="comments")
+    //@XStreamImplicit(keyFieldName="comments")
     private List<Comment> comments = new ArrayList<>();
 
     @NotAudited

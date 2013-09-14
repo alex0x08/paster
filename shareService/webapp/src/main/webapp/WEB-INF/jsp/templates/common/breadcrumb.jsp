@@ -1,9 +1,9 @@
 <%@ include file="/WEB-INF/jsp/templates/common/taglibs.jsp"%>
 
-<ul class="breadcrumb">
+<ol class="breadcrumb">
     
-    <li><a href="<c:url value='/main/welcome'/>"><fmt:message key="site.title"/></a> <span class="divider">/</span></li>
-    <li><a href="<c:url value='/main/file/list'/>"><fmt:message key="files.title"/></a> <span class="divider">/</span></li>
+    <li><a href="<c:url value='/main/welcome'/>"><fmt:message key="site.title"/></a> </li>
+    <li><a href="<c:url value='/main/file/list'/>"><fmt:message key="files.title"/></a> </li>
     <li class="active">
         <c:choose>
             <c:when test="${model.blank}">
@@ -15,4 +15,4 @@
             </c:otherwise>
         </c:choose>
     </li>
-</ul>
+</ol>

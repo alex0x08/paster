@@ -37,6 +37,9 @@
               p:paramName="locale" />
     </mvc:interceptors>
     
+    <mvc:resources mapping="/assets/**" location="classpath:/META-INF/resources/webjars/"/>
+  
+    
     <bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver" />
 
     <!-- tiles-->    

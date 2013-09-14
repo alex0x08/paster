@@ -58,7 +58,7 @@ public class QUser extends EntityPathBase<User> {
 
     public final StringPath password = createString("password");
 
-    public final ListPath<Role, EnumPath<Role>> roles = this.<Role, EnumPath<Role>>createList("roles", Role.class, EnumPath.class);
+    public final SetPath<Role, EnumPath<Role>> roles = this.<Role, EnumPath<Role>>createSet("roles", Role.class, EnumPath.class);
 
     public final ListPath<SavedSession, QSavedSession> savedSessions = this.<SavedSession, QSavedSession>createList("savedSessions", SavedSession.class, QSavedSession.class);
 

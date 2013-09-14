@@ -10,8 +10,12 @@
 
 <c:url var="blockUrl" value='/main/file/raw/view' />
 
- <script src="<c:url value='/js/vendor/jquery.ui.widget.js'/>"></script>
- <link href="<c:url value='/libs/datepicker/css/datepicker.css'/>" rel="stylesheet"/>
+
+  <script src="<c:url value='/main/assets/jquery-ui/1.10.2/ui/minified/jquery.ui.widget.min.js'/>"></script>
+       <link href="<c:url value='/main/assets/jquery-file-upload/8.4.2/css/jquery.fileupload-ui.css'/>" rel="stylesheet"/>
+
+ <link href="<c:url value='/main/assets/bootstrap-datepicker/1.1.3/css/datepicker.css'/>" rel="stylesheet"/>
+
  <link href="<c:url value='/libs/bootstrap-switch/stylesheets/bootstrap-switch.css'/>" rel="stylesheet"/>
  
 
@@ -30,21 +34,79 @@
         <c:choose>
             <c:when test="${model.blank}">
 
-
-                <script src="<c:url value='/js/jquery.fileupload.js'/>"></script>
-                <script src="<c:url value='/js/jquery.fileupload-ui.js'/>"></script>
-                <script src="<c:url value='/js/jquery.fileupload-fp.js'/>"></script>
-
-                  <script src="<c:url value='/libs/datepicker/js/bootstrap-datepicker.js'/>"></script>
+                
+            
+                
+           <!--   <script src="<c:url value='/main/assets/jquery-file-upload/8.4.2/js/jquery.iframe-transport.js'/>"></script>
+               -->  
+                 <script src="<c:url value='/main/assets/jquery-file-upload/8.4.2/js/jquery.fileupload.js'/>"></script>
+                 <script src="<c:url value='/main/assets/jquery-file-upload/8.4.2/js/jquery.fileupload-process.js'/>"></script>
+    <script src="<c:url value='/main/assets/jquery-file-upload/8.4.2/js/jquery.fileupload-ui.js'/>"></script>
+              
+          
                   <script src="<c:url value='/libs/bootstrap-switch/js/bootstrap-switch.js'/>"></script>
-
+                  <script src="<c:url value='/main/assets/bootstrap-datepicker/1.1.3/js/bootstrap-datepicker.js'/>"></script>
+ 
 
                 <c:url var="url" value='/main/file/upload-xdr' />
 
                 <script type="text/javascript">
 
                     $(document).ready(function() {
-                       
+                              
+                  $('#file_upload').fileupload({
+                            dataType: 'json',
+                            autoUpload: true,
+                            change: function (e, data) {
+        $.each(data.files, function (index, file) {
+            console.log('Selected file: ' + file.name);
+        });
+    },
+                            progressall: function(e, data) {
+                                
+                                var progress = parseInt(data.loaded / data.total * 100, 10);
+            $('#progress .progress-bar').css(
+                'width',
+                progress + '%'
+            );
+                                
+                                
+                                console.log(progress + '%');
+           
+                                            
+                            }, done: function(e, data) {
+
+                            
+                             $('#progress .progress-bar').css(
+                'width', '0'
+            );
+                                
+                                try {
+
+                                    console.log(data);
+
+                                    if (typeof data.result['error'] == "undefined") {
+                                        /*
+                                        $("#messages").append('<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert">&times;</button>File ' + data.result['name'] + ' uploaded sucessfully</div>');
+                                         */
+                                        $.get("${blockUrl}?id=" + data.result['id'], function(data) {
+                                            $("#gallery").append(data);
+                                        });
+                                    } else {
+                                        $("#messages").append('<div class="alert alert-error"><button type="button" class="close" data-dismiss="alert">&times;</button>File ' + data.result['name'] + ' failed to upload!</div>');
+                                    }
+                                } catch (e) {
+                                    alert(e.message);
+
+                                }
+                            }, error: function(data) {
+                                console.log(data);
+
+                            }
+
+
+                        });
+              
                    
                      $('#enableRemovalSwitch').on('change', function (e) {
                            
@@ -71,44 +133,6 @@
                             removalPicker.hide();
                         }).data('datepicker');
 
-                        $('#file_upload').fileupload({
-                            dataType: 'json',
-                            progressall: function(e, data) {
-
-                                var progress = parseInt(data.loaded / data.total * 100, 10);
-                                $('.progress .bar').css(
-                                'width',
-                                progress + '%'
-                            );
-                                console.log(progress + '%');
-           
-                                            
-                            }, done: function(e, data) {
-                                try {
-
-                                    console.log(data);
-
-                                    if (typeof data.result['error'] == "undefined") {
-                                        /*
-                                        $("#messages").append('<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert">&times;</button>File ' + data.result['name'] + ' uploaded sucessfully</div>');
-                                         */
-                                        $.get("${blockUrl}?id=" + data.result['id'], function(data) {
-                                            $("#gallery").append(data);
-                                        });
-                                    } else {
-                                        $("#messages").append('<div class="alert alert-error"><button type="button" class="close" data-dismiss="alert">&times;</button>File ' + data.result['name'] + ' failed to upload!</div>');
-                                    }
-                                } catch (e) {
-                                    alert(e.message);
-
-                                }
-                            }, error: function(data) {
-                                console.log(data);
-
-                            }
-
-
-                        });
                     });
 
                 </script>       
@@ -127,12 +151,12 @@
 
                   
                          
-        <form:form action="${url}" modelAttribute="model" 
-                   method="POST" id="file_upload" cssClass="form-horizontal"
+        <form:form action="${url}" modelAttribute="model" id="file_upload"
+                   method="POST"  cssClass="form-horizontal"
                    enctype="multipart/form-data">
 
 
-            <fieldset>
+         
                 <form:errors cssClass="errorblock" element="div"/>
 
 
@@ -161,7 +185,7 @@
 
                     <c:if test="${model.blank or (model.owner eq currentUser or currentUser.admin)}">
 
-                        <form:label cssClass="control-label" path="accessLevel"><fmt:message key="file.accessLevel"/>:</form:label>
+                        <form:label cssClass="col-lg-2 control-label" path="accessLevel"><fmt:message key="file.accessLevel"/>:</form:label>
 
                         <div class="controls">
                             <c:choose>
@@ -194,7 +218,7 @@
                             <form:errors path="accessLevel" cssClass="error" />
                         </div>
                         <br/>
-                         <div class="control-group">
+                         <div class="form-group">
                             <form:label cssClass="control-label" path="file"><fmt:message key="file.removeAfter"/>:</form:label>
                             <div class="controls">
                                 
@@ -216,18 +240,27 @@
 
                 <c:choose>
                     <c:when test="${model.blank}">
-                        <div class="control-group">
+                        <div class="form-group">
                             <form:label cssClass="control-label" path="file"><fmt:message key="file.file.new"/>:</form:label>
                             <div class="controls">
-                                <form:input path="file" name="file" 
+                                
+                                
+                                <!-- The fileinput-button span is used to style the file input field as button -->
+                                <span class="btn btn-success fileinput-button">
+                                    <i class="glyphicon glyphicon-plus"></i>
+                                    <span>Select files...</span>
+                                <form:input path="file" name="file"   
                                             type="file" /> 
+                            </span>
+                                
+                                
                                 <form:errors path="file" cssClass="error" />
-                                <div class="fileupload-progress" style="height:2em;">
-                                    <div class="progress progress-success progress-striped active" 
-                                         role="progressbar" aria-valuemin="0" aria-valuemax="100">
-                                        <div class="bar" style="width:0%;"></div>
-                                    </div>
+
+                                <div id="progress" class="progress">
+                                    <div class="progress-bar progress-bar-success"></div>
                                 </div>
+                                
+                             
                             </div>      
                         </div>
 
@@ -273,7 +306,7 @@
                             <form:label cssClass="control-label" path="accessLevel">
                                 <fmt:message key="struct.versions"/>:</form:label>
 
-                                <div class="controls">
+                                <div class="form-group">
                                 <jsp:include
                                     page="/WEB-INF/jsp/templates/common/revisions.jsp">
                                     <jsp:param name="modelName" value="file" />
@@ -316,7 +349,7 @@
                        
                     
                
-            </fieldset>
+          
         </form:form>
 
     </div>
@@ -324,7 +357,7 @@
 </div>
 
 <div class="row">
-    <div id="messages" style="well">
+    <div id="messages" >
     </div>
 
     <div id="gallery">
