@@ -52,10 +52,16 @@
         </div>
         <div class="navbar-collapse collapse">
             
-                        <tiles:insertAttribute name="header" />     
+            <div class='col-lg-8' >
+                        <tiles:insertAttribute name="header" />   
+                
+            </div>
                        
-                        <sec:authorize ifAnyGranted="ROLE_ANONYMOUS">
-                            <div class="btn-group pull-right box">
+                        <div class="box col-lg-3" >
+                     
+                               <sec:authorize ifAnyGranted="ROLE_ANONYMOUS">
+                                   
+                            <div class="btn-group">
 
                                 <a class="btn dropdown-toggle btn-danger" data-toggle="dropdown" href="#">
                                     <fmt:message key="login.title"/>
@@ -67,17 +73,27 @@
 
                                     <li style="padding-right:5px;padding-left: 5px;" >
 
-                                        <form  action="<c:url value='/j_spring_security_check' />"  method="POST">
+                                        <form  action="<c:url value='/j_spring_security_check' />" role='form'  method="POST">
 
-                                            <div class="input-prepend">
-                                                <span class="add-on"><i class="icon-user"></i></span>
-                                                <input class="span2"  name="j_username" type="text" placeholder="Username">
+
+                                            <div class='row'>
+                                                <div class='col-lg-12'>
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
+                                                        <input class="form-control"  name="j_username" type="text" placeholder="Username">
+                                                    </div>
+                                                </div>
+                                            </div>  
+
+                                            <div class='row' style="padding-top: 0.5em; padding-bottom: 0.5em;">
+                                                <div class='col-lg-12'>
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
+                                                        <input class="form-control"  name="j_password" type="password" placeholder="Password">
+                                                    </div>
+                                                </div>
                                             </div>
 
-                                            <div class="input-prepend">
-                                                <span class="add-on"><i class="icon-password"></i></span>
-                                                <input class="span2"  name="j_password" type="password" placeholder="Password">
-                                            </div>
 
                                             <button type="submit" class="btn"><fmt:message key="button.login"/></button>
 
@@ -89,7 +105,37 @@
 
                         </sec:authorize>
 
-                        <div class="btn-group pull-right box">
+                            
+                                  <sec:authorize ifAnyGranted="ROLE_USER,ROLE_ADMIN">
+
+                                      <div class="btn-group" >
+
+                                <a class="btn dropdown-toggle btn-default" data-toggle="dropdown" href="#">
+                                    <img  src="<c:out value='http://www.gravatar.com/avatar/${currentUser.avatarHash}?s=16'/>"/>
+                                    <sec:authentication property="principal.username" />
+                                    <span class="caret"></span>
+                                </a>
+
+                                <ul class="dropdown-menu">
+                                    <li >
+
+                                        <a class="profile" href="<c:url value="/main/profile"/>">
+                                            <span class="glyphicon glyphicon-user"></span> <fmt:message key="profile.title"/></a> 
+                                    </li>
+
+                                    <li>  <a href="<c:url value="/act/doLogout"/>">
+                                           <span class="glyphicon glyphicon-log-out"></span>
+                                            <fmt:message key="button.logout"/></a>
+                                    </li>
+                                    <!-- dropdown menu links -->
+                                </ul>
+                            </div>
+
+                        </sec:authorize>
+
+                            
+                            
+                            <div class="btn-group pull-right" >
                             <a class="btn dropdown-toggle " data-toggle="dropdown" href="#">
                                 <img style="display: inline; vertical-align:middle;" 
                                      title="<fmt:message key="locale.${pageContext.response.locale.language}"/>" 
@@ -125,34 +171,16 @@
 
                             </ul>
                         </div>
+                            
+                        </div>
+                        
+                     
+                        
+                     
+                        
+                      
 
-                        <sec:authorize ifAnyGranted="ROLE_USER,ROLE_ADMIN">
-
-                            <div class="btn-group pull-right box">
-
-                                <a class="btn dropdown-toggle btn-default" data-toggle="dropdown" href="#">
-                                    <img  src="<c:out value='http://www.gravatar.com/avatar/${currentUser.avatarHash}?s=16'/>"/>
-                                    <sec:authentication property="principal.username" />
-                                    <span class="caret"></span>
-                                </a>
-
-                                <ul class="dropdown-menu">
-                                    <li >
-
-                                        <a class="profile" href="<c:url value="/main/profile"/>">
-                                            <span class="glyphicon glyphicon-user"></span> <fmt:message key="profile.title"/></a> 
-                                    </li>
-
-                                    <li>  <a href="<c:url value="/act/doLogout"/>">
-                                           <span class="glyphicon glyphicon-log-out"></span>
-                                            <fmt:message key="button.logout"/></a>
-                                    </li>
-                                    <!-- dropdown menu links -->
-                                </ul>
-                            </div>
-
-                        </sec:authorize>
-
+                     
                   
             
     <!--      <ul class="nav navbar-nav">

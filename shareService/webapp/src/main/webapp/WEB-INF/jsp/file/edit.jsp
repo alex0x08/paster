@@ -11,16 +11,15 @@
 <c:url var="blockUrl" value='/main/file/raw/view' />
 
 
-  <script src="<c:url value='/main/assets/jquery-ui/1.10.2/ui/minified/jquery.ui.widget.min.js'/>"></script>
-       <link href="<c:url value='/main/assets/jquery-file-upload/8.4.2/css/jquery.fileupload-ui.css'/>" rel="stylesheet"/>
+<script src="<c:url value='/main/assets/jquery-ui/1.10.2/ui/minified/jquery.ui.widget.min.js'/>"></script>
 
- <link href="<c:url value='/main/assets/bootstrap-datepicker/1.1.3/css/datepicker.css'/>" rel="stylesheet"/>
+<link href="<c:url value='/main/assets/jquery-file-upload/8.4.2/css/jquery.fileupload-ui.css'/>" rel="stylesheet"/>
+<link href="<c:url value='/main/assets/bootstrap-datepicker/1.1.3/css/datepicker.css'/>" rel="stylesheet"/>
+<link href="<c:url value='/libs/bootstrap-switch/stylesheets/bootstrap-switch.css'/>" rel="stylesheet"/>
 
- <link href="<c:url value='/libs/bootstrap-switch/stylesheets/bootstrap-switch.css'/>" rel="stylesheet"/>
- 
 
  <div class="row">
-    <div class="span10">     
+    <div class="col-xs-4 col-md-10 col-md-offset-1">     
 
 
 
@@ -34,19 +33,14 @@
         <c:choose>
             <c:when test="${model.blank}">
 
-                
-            
-                
-           <!--   <script src="<c:url value='/main/assets/jquery-file-upload/8.4.2/js/jquery.iframe-transport.js'/>"></script>
-               -->  
-                 <script src="<c:url value='/main/assets/jquery-file-upload/8.4.2/js/jquery.fileupload.js'/>"></script>
-                 <script src="<c:url value='/main/assets/jquery-file-upload/8.4.2/js/jquery.fileupload-process.js'/>"></script>
-    <script src="<c:url value='/main/assets/jquery-file-upload/8.4.2/js/jquery.fileupload-ui.js'/>"></script>
-              
-          
-                  <script src="<c:url value='/libs/bootstrap-switch/js/bootstrap-switch.js'/>"></script>
-                  <script src="<c:url value='/main/assets/bootstrap-datepicker/1.1.3/js/bootstrap-datepicker.js'/>"></script>
- 
+<!--   <script src="<c:url value='/main/assets/jquery-file-upload/8.4.2/js/jquery.iframe-transport.js'/>"></script>
+                -->  
+                <script src="<c:url value='/main/assets/jquery-file-upload/8.4.2/js/jquery.fileupload.js'/>"></script>
+                <script src="<c:url value='/main/assets/jquery-file-upload/8.4.2/js/jquery.fileupload-process.js'/>"></script>
+                <script src="<c:url value='/main/assets/jquery-file-upload/8.4.2/js/jquery.fileupload-ui.js'/>"></script>
+
+                <script src="<c:url value='/libs/bootstrap-switch/js/bootstrap-switch.js'/>"></script>
+                <script src="<c:url value='/main/assets/bootstrap-datepicker/1.1.3/js/bootstrap-datepicker.js'/>"></script>
 
                 <c:url var="url" value='/main/file/upload-xdr' />
 
@@ -58,33 +52,20 @@
                             dataType: 'json',
                             autoUpload: true,
                             change: function (e, data) {
-        $.each(data.files, function (index, file) {
-            console.log('Selected file: ' + file.name);
-        });
-    },
-                            progressall: function(e, data) {
-                                
+                                $.each(data.files, function (index, file) {
+                                    console.log('Selected file: ' + file.name);
+                                    $('#progress').css('display','');
+                                });
+                    },progressall: function(e, data) {
                                 var progress = parseInt(data.loaded / data.total * 100, 10);
-            $('#progress .progress-bar').css(
-                'width',
-                progress + '%'
-            );
-                                
-                                
+                                $('#progress .progress-bar').css('width',progress + '%');
                                 console.log(progress + '%');
-           
-                                            
-                            }, done: function(e, data) {
-
-                            
-                             $('#progress .progress-bar').css(
-                'width', '0'
-            );
+                    }, done: function(e, data) {
+                            $('#progress').css('display','none'); 
+                            $('#progress .progress-bar').css('width', '0');
                                 
                                 try {
-
                                     console.log(data);
-
                                     if (typeof data.result['error'] == "undefined") {
                                         /*
                                         $("#messages").append('<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert">&times;</button>File ' + data.result['name'] + ' uploaded sucessfully</div>');
@@ -97,16 +78,11 @@
                                     }
                                 } catch (e) {
                                     alert(e.message);
-
                                 }
                             }, error: function(data) {
                                 console.log(data);
-
                             }
-
-
-                        });
-              
+                        });              
                    
                      $('#enableRemovalSwitch').on('change', function (e) {
                            
@@ -140,8 +116,7 @@
             </c:when>
             <c:otherwise>
 
-                <script src="<c:url value='/libs/jasny-bootstrap/js/jasny-bootstrap.js'/>"></script>
-     
+               
               
 
                 <c:url var="url" value='/main/file/save' />
@@ -149,25 +124,11 @@
         </c:choose>
 
 
-                  
-                         
-        <form:form action="${url}" modelAttribute="model" id="file_upload"
+                 <form:form action="${url}" modelAttribute="model" id="file_upload"
                    method="POST"  cssClass="form-horizontal"
                    enctype="multipart/form-data">
-
-
-         
-                <form:errors cssClass="errorblock" element="div"/>
-
-
-                <c:if test="${not empty model.integrationCode}">
-
-                    <c:out value="Used integration code: ${model.integrationCode}" escapeXml="true" />
-                    <form:hidden path="integrationCode" />
-
-                </c:if>
-
-                <c:choose>
+                    
+                    <c:choose>
                     <c:when test="${model.blank}">
 
                         <form:hidden path="url" />
@@ -178,97 +139,117 @@
                         <form:hidden path="id" />
 
                     </c:otherwise>
-                </c:choose>
-     
-                
-                  <sec:authorize ifAnyGranted="ROLE_USER,ROLE_ADMIN">
+                </c:choose>  
+                     
+                     
+                     <div class="form-group">
+                         <div class="col-lg-10">
+                             <form:errors cssClass="errorblock" element="div"/>
+
+                             <c:if test="${not empty model.integrationCode}">
+                                 <c:out value="Used integration code: ${model.integrationCode}" escapeXml="true" />
+                                 <form:hidden path="integrationCode" />
+                             </c:if>
+                         </div>
+                     </div> 
+
+
+                                  <sec:authorize ifAnyGranted="ROLE_USER,ROLE_ADMIN">
 
                     <c:if test="${model.blank or (model.owner eq currentUser or currentUser.admin)}">
 
-                        <form:label cssClass="col-lg-2 control-label" path="accessLevel"><fmt:message key="file.accessLevel"/>:</form:label>
+                        
+                           <div class="form-group">
+                                   <form:label  path="accessLevel"><fmt:message key="file.accessLevel"/>:</form:label>
+                                       <div class="col-lg-10">
 
-                        <div class="controls">
-                            <c:choose>
-                                <c:when test="${not empty model.integrationCode}">
-                                    <c:set var="accessLevelDisabled" value="true"/>
+                                       <c:choose>
+                                           <c:when test="${not empty model.integrationCode}">
+                                               <c:set var="accessLevelDisabled" value="true"/>
+                                           </c:when>
+                                           <c:otherwise>
+                                               <c:set var="accessLevelDisabled" value="false"/>                                    
+                                           </c:otherwise>
 
-                                </c:when>
-                                <c:otherwise>
-                                    <c:set var="accessLevelDisabled" value="false"/>                                    
-                                </c:otherwise>
+                                       </c:choose>
 
-                            </c:choose>
+                                       <form:select id="accessLevel" path="accessLevel" disabled="${accessLevelDisabled}" 
+                                                    cssClass="form-control" cssStyle="max-width:12em;" >
+                                           <c:forEach items="${model.accessLevel.levels}" var="level">
+                                               <form:option value="${level.code}">
+                                                   <fmt:message key="${level.desc}" />
+                                               </form:option>
+                                           </c:forEach>
+                                       </form:select>
 
-                          
 
-                            <form:select id="accessLevel" path="accessLevel" disabled="${accessLevelDisabled}">
+                                       <c:if test="${not empty model.integrationCode}">
+                                           File integrated, cannot set access level.
+                                       </c:if>
 
-                                <c:forEach items="${model.accessLevel.levels}" var="level">
-                                    <form:option value="${level.code}">
-                                        <fmt:message key="${level.desc}" />
-                                    </form:option>
-                                </c:forEach>
-                            </form:select>
+                                       <form:errors path="accessLevel" cssClass="error" />
 
-                            
-                            <c:if test="${not empty model.integrationCode}">
-                                File integrated, cannot set access level.
-                            </c:if>
+                                   </div>
+                           </div>
 
-                            <form:errors path="accessLevel" cssClass="error" />
-                        </div>
-                        <br/>
+                     
+                                             
                          <div class="form-group">
-                            <form:label cssClass="control-label" path="file"><fmt:message key="file.removeAfter"/>:</form:label>
-                            <div class="controls">
+                            <form:label  path="file"><fmt:message key="file.removeAfter"/>:</form:label>
+                            <div class="col-lg-10">
+                             <form:errors path="removeAfter" cssClass="error" />
                                 
-                                <div class="switch">
+                                <div class="switch" >
                                     <input id='enableRemovalSwitch' type="checkbox"  >
                                 </div>
-                                
-                                <div id='inputRemovalDateBlock' class="input-append date" data-date="" data-date-format="${datePatternPicker}" style="display:none;">
-                                    <form:input id="removeAfter" path="removeAfter" name="file" cssClass="span6" size="16"  /> 
+                             
+                                <div id='inputRemovalDateBlock'  class="date" data-date="" data-date-format="${datePatternPicker}" 
+                                 style="display:none;padding-top: 0.5em;max-width: 7em;">
+                                    <form:input id="removeAfter" path="removeAfter" name="file" cssClass="form-control" size="10"  /> 
                                 <span class="add-on"><i class="icon-th"></i></span>
+                            </div>      
+                             
                             </div>
-                                     <form:errors path="removeAfter" cssClass="error" />
-                            </div>
-                        </div>
                             
+                                                   
+                        </div>                            
                         
                         </c:if>
-                         </sec:authorize>
-
+                         </sec:authorize>  
+          
+                             
                 <c:choose>
                     <c:when test="${model.blank}">
+
                         <div class="form-group">
                             <form:label cssClass="control-label" path="file"><fmt:message key="file.file.new"/>:</form:label>
-                            <div class="controls">
-                                
-                                
-                                <!-- The fileinput-button span is used to style the file input field as button -->
-                                <span class="btn btn-success fileinput-button">
-                                    <i class="glyphicon glyphicon-plus"></i>
-                                    <span>Select files...</span>
-                                <form:input path="file" name="file"   
-                                            type="file" /> 
-                            </span>
-                                
-                                
+                                <div class="col-lg-10">
+                                    <!-- The fileinput-button span is used to style the file input field as button -->
+                                    <span class="btn btn-success fileinput-button">
+                                        <i class="glyphicon glyphicon-plus"></i>
+                                        <span>Select file...</span>
+                                    <form:input path="file" name="file"   
+                                                type="file" /> 
+                                </span>
+
+
                                 <form:errors path="file" cssClass="error" />
 
-                                <div id="progress" class="progress">
+                                <div id="progress" class="progress" style="display:none;">
                                     <div class="progress-bar progress-bar-success"></div>
                                 </div>
-                                
-                             
-                            </div>      
+
+                            </div>
                         </div>
+
 
                     </c:when>
                     <c:otherwise>
-                        <div class="control-group">
+                        
+                        
+                        <div class="form-group">
                             <form:label cssClass="control-label" path="file"><fmt:message key="file.file.uploaded"/>:</form:label>
-                            <div class="controls">
+                            <div class="col-lg-10">
                                 <jsp:include
                                     page="/WEB-INF/jsp/templates/common/preview.jsp">
                                     <jsp:param name="detail" value="1" />
@@ -276,91 +257,91 @@
                                 </jsp:include>
                             </div>
                         </div>
+                        
+                            <div class="form-group">
+                            <form:label cssClass="control-label" path="file"/>
+                                <div class="col-lg-10">
 
-                        <div class="control-group">
-                            <form:label cssClass="control-label" path="file">
-                                <fmt:message key="file.file.replace"/>:</form:label>
-                                <div class="controls">
                                     <div class="fileupload fileupload-new" data-provides="fileupload">
-                                        <span class="btn btn-file">
-                                            <span class="fileupload-new"><fmt:message key="button.select"/></span>
-                                        <form:input path="file" name="file" cssClass="input-file"
-                                                    type="file" /> 
-                                        <span class="fileupload-exists"><fmt:message key="button.change"/></span>
-                                    </span>
-                                    <span class="fileupload-preview"></span>
-                                    <a href="#" class="close fileupload-exists" data-dismiss="fileupload" style="float: none">×</a>
-                                </div>
-                                <form:errors path="file" cssClass="error" />
-                            </div>      
-                        </div>
 
+                                        <span class="btn btn-success fileinput-button">
+                                            <i class="glyphicon glyphicon-plus"></i>
+                                            <span>Select files...</span>
+                                            <form:input path="file" name="file"   
+                                                        type="file" /> 
+                                        </span>
+                                    </div>
+                                    <form:errors path="file" cssClass="error" />
+                                </div>
+                            </div>
                     </c:otherwise>
                 </c:choose>
-
-
               
-
+                             
                         <c:if test="${!model.blank and not empty availableRevisions}">
 
-                            <form:label cssClass="control-label" path="accessLevel">
-                                <fmt:message key="struct.versions"/>:</form:label>
+                            <div class="form-group">
+                                <form:label cssClass="control-label" path="accessLevel">
+                                    <fmt:message key="struct.versions"/>:</form:label>
+                                    <div class="col-lg-10">
 
-                                <div class="form-group">
-                                <jsp:include
-                                    page="/WEB-INF/jsp/templates/common/revisions.jsp">
-                                    <jsp:param name="modelName" value="file" />
-                                </jsp:include>
+                                    <jsp:include
+                                        page="/WEB-INF/jsp/templates/common/revisions.jsp">
+                                        <jsp:param name="modelName" value="file" />
+                                    </jsp:include>
+
+                                </div>
                             </div>
-                        </c:if>
-                        <c:if test="${!model.blank}">
-                            <div class="form-actions">
-                                <c:choose>
-                                    <c:when test="${model.blank}">
-                                        <fmt:message var="submit_button_text" key="button.upload" />
-                                        <input name="submit" class="btn btn-primary" 
-                                               type="submit" value="${submit_button_text}" />
-                                    </c:when>
-                                    <c:otherwise>
-                                        <a href="<c:url value='/main/file/${model.id}'/>" class="btn" >&larr; <fmt:message key="button.back"/></a>
-                                        
-                                        <fmt:message var="submit_button_text" key="button.save" />
+                        </c:if>      
+                             
+                     
+                             <c:if test="${!model.blank}">
 
-                                        
-                                          <c:if test="${model.accessLevel eq 'OWNER' or model.owner eq currentUser or currentUser.admin}">
-                                     
-                                               <input name="delete" type="submit" class="btn btn-danger fileDeleteBtn"
-                                               targetIcon="<c:url value='/images/mime/${model.icon}'/>"
-                                               targetTitle="${model.name} &nbsp; ${model.formattedFileSize} &nbsp; ${modelLastModified}  &nbsp; ${model.owner.name}"
+                                 <div class="form-group">
+                                     <div class="col-lg-10">
+                                         <c:choose>
+                                             <c:when test="${model.blank}">
+                                                 <fmt:message var="submit_button_text" key="button.upload" />
+                                                 <input name="submit" class="btn btn-primary" 
+                                                        type="submit" value="${submit_button_text}" />
+                                             </c:when>
+                                             <c:otherwise>
+                                                 <a href="<c:url value='/main/file/${model.id}'/>" class="btn" >&larr; <fmt:message key="button.back"/></a>
 
-                                               deleteLink="<c:url value="/main/file/delete">
-                                                   <c:param name="id" value="${model.id}"/>
-                                               </c:url>"
-                                               value="<fmt:message key="button.delete"/>" />
-                                              
-                                          </c:if>
-                                       
-                                        
-                                        <input name="submit" type="submit" class="btn btn-large btn-primary" value="${submit_button_text}" />
-                                    </c:otherwise>
-                                </c:choose>
-                            </div>
-                        </c:if>
-                       
-                    
-               
-          
-        </form:form>
+                                                 <fmt:message var="submit_button_text" key="button.save" />
+
+
+                                                 <c:if test="${model.accessLevel eq 'OWNER' or model.owner eq currentUser or currentUser.admin}">
+
+                                                     <input name="delete" type="submit" class="btn btn-danger fileDeleteBtn"
+                                                            targetIcon="<c:url value='/images/mime/${model.icon}'/>"
+                                                            targetTitle="${model.name} &nbsp; ${model.formattedFileSize} &nbsp; ${modelLastModified}  &nbsp; ${model.owner.name}"
+
+                                                            deleteLink="<c:url value="/main/file/delete">
+                                                                <c:param name="id" value="${model.id}"/>
+                                                            </c:url>"
+                                                            value="<fmt:message key="button.delete"/>" />
+                                                 </c:if>
+
+                                                 <input name="submit" type="submit" class="btn btn-large btn-primary" value="${submit_button_text}" />
+                                             </c:otherwise>
+                                         </c:choose>
+
+                                     </div>
+                                 </div>
+                             </c:if>
+                     
+                 </form:form>
 
     </div>
 
 </div>
 
 <div class="row">
-    <div id="messages" >
+    <div id="messages"  class="col-xs-4 col-md-10 col-md-offset-1">
     </div>
 
-    <div id="gallery">
+    <div id="gallery" class="col-xs-4 col-md-10 col-md-offset-1">
     </div>
 
 </div>

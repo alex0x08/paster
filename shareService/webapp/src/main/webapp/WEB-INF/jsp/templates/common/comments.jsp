@@ -3,7 +3,7 @@
 
 <div class="row" style="padding-top: 1em;">
 
-    <div  class="offset1">
+    <div  class="col-xs-4 col-md-8">
 
         <c:if test="${empty model.comments}">
         <div class="well">
@@ -14,11 +14,11 @@
 
             <div class="well">
 
-                <div class="row-fluid">
+                <div class="row">
                     ${comment.message}    
                 </div>
 
-                <div class="row-fluid">
+                <div class="row">
                     
                     <div class=" pull-right">
                         <img  src="<c:out value='http://www.gravatar.com/avatar/${comment.author.avatarHash}?s=32'/>"/>
@@ -47,7 +47,7 @@
 <c:if test="${not empty param.addComment}">
 
     <div class="row">  
-    <div class="span12 offset1" >
+    <div class="col-xs-4 col-md-6" >
 
         <c:url var="commentUrl" value='/main/${param.modelName}/addComment' />
 

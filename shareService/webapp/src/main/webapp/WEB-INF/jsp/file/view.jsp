@@ -8,15 +8,15 @@
 </jsp:include>
 
 <div class="row">  
-    <div class="span16">
+    <div class="col-xs-4 col-md-10">
 
         <c:if test="${not empty statusMessageKey}">
             <p><fmt:message key="${statusMessageKey}"/></p>
         </c:if>
 
-            
-            
- <c:url value="/act/download" var="downloadUrl">
+
+
+            <c:url value="/act/download" var="downloadUrl">
 
                 <c:choose>
                     <c:when test="${not empty param.revision}">          
@@ -31,7 +31,7 @@
 
             </c:url>
 
-       
+
 
         <div class="form-row pull-left">
             <label for="file"><fmt:message key="file.file.uploaded"/>:</label>

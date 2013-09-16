@@ -452,7 +452,7 @@
                                <img style="display: inline;" src="<c:url value='/images/mime/xml.gif'/>"/>
                            </a>    
                        </p>
-                       <textarea  class="field span12" ><iframe src="${externalUrl}/main/file/integrated/view?id=${model.id}" width="400" height="400" frameborder="0"></iframe>
+                       <textarea  class="form-control" cols="40" rows="6"  ><iframe src="${externalUrl}/main/file/integrated/view?id=${model.id}" width="400" height="400" frameborder="0"></iframe>
                        </textarea>
                        
                 </div>
