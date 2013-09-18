@@ -126,12 +126,9 @@ public class StartupListener extends LoggedClass implements ServletContextListen
             if (sp != null && sp.getInstallDate() != null) {
            
                 
-                AppVersion mf_version = new AppVersion().fillFromManifest();
-                
-                SystemInfo.getInstance().setRuntimeVersion(mf_version);
                 
                 
-                int check = mf_version.compareTo(sp.getAppVersion());
+                int check =  SystemInfo.getInstance().getRuntimeVersion().compareTo(sp.getAppVersion());
                 
                 switch(check) {
            
@@ -140,24 +137,24 @@ public class StartupListener extends LoggedClass implements ServletContextListen
                         break;
                     case 1:
                         getLogger().warn("DB version is older than application: "
-                                +sp.getAppVersion().getImplVersionFull()+" | "+mf_version.getImplVersionFull()+". You can get problems.");
+                                +sp.getAppVersion().getImplVersionFull()+" | "+SystemInfo.getInstance().getRuntimeVersion().getImplVersionFull()+". You can get problems.");
                         break;
                         
                     case -1:    
                         getLogger().warn("Application version is older than database: "
-                                +sp.getAppVersion().getImplVersionFull()+" | "+mf_version.getImplVersionFull()+". You can get problems.");
+                                +sp.getAppVersion().getImplVersionFull()+" | "+SystemInfo.getInstance().getRuntimeVersion().getImplVersionFull()+". You can get problems.");
                         break;
                     
                     case -2:
                     default:    
                     getLogger().error("Uncomparable db and application versios: "
-                             +sp.getAppVersion().getImplVersionFull()+" | "+mf_version.getImplVersionFull()+". Cannot continue.");
+                             +sp.getAppVersion().getImplVersionFull()+" | "+SystemInfo.getInstance().getRuntimeVersion().getImplVersionFull()+". Cannot continue.");
            
                         
                 }
                                 
                 
-                 getLogger().info("Loading application ver. "+mf_version.getImplVersionFull()+" db ver. "+sp.getAppVersion().getImplVersionFull());
+                 getLogger().info("Loading application ver. "+SystemInfo.getInstance().getRuntimeVersion().getImplVersionFull()+" db ver. "+sp.getAppVersion().getImplVersionFull());
                
                 
                 reindex();

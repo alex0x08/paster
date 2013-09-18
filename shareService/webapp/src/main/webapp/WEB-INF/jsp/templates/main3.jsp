@@ -8,8 +8,8 @@
         <meta name="description" content="<fmt:message key="site.title"/>">
         <meta name="author" content="Alex">
 
-        <link href="<c:url value='/main/assets/bootstrap/3.0.0/css/bootstrap.min.css'/>" rel="stylesheet"/>
-        <link href="<c:url value='/main/assets/bootstrap/3.0.0/css/bootstrap-theme.min.css'/>" rel="stylesheet"/>
+        <link href="<c:url value='/main/assets/${appVersion}/bootstrap/3.0.0/css/bootstrap.min.css'/>" rel="stylesheet"/>
+        <link href="<c:url value='/main/assets/${appVersion}/bootstrap/3.0.0/css/bootstrap-theme.min.css'/>" rel="stylesheet"/>
         <style type="text/css">
            
             .sidebar-nav {
@@ -21,19 +21,16 @@
 
         </style>
 
-        <link rel="stylesheet" type="text/css" media="all" href="<c:url value='/css/main.css'/>" />
-        <link href="<c:url value='/libs/zoombox/zoombox.css'/>" rel="stylesheet" type="text/css" media="screen" />
-        <!--
-        <link href="<c:url value='/main/assets/jasny-bootstrap/2.3.0-j5/css/jasny-bootstrap.css'/>" rel="stylesheet" type="text/css" media="screen" />
-        <link href="<c:url value='/main/assets/jasny-bootstrap/2.3.0-j5/css/jasny-bootstrap-responsive.css'/>" rel="stylesheet" type="text/css" media="screen" />
-        -->
+        <link rel="stylesheet" type="text/css" media="all" href="<c:url value='/main/static/${appVersion}/css/main.css'/>" />
+        <link href="<c:url value='/main/static/${appVersion}/libs/zoombox/zoombox.css'/>" rel="stylesheet" type="text/css" media="screen" />
+      
         <link rel="shortcut icon" href="<c:url value='/favicon.png'/>">
     
-      <script src="<c:url value='/main/assets/jquery/2.0.3/jquery.js'/>"></script>
-      <script src="<c:url value='/main/assets/jquery-ui/1.10.2/ui/minified/jquery-ui.min.js'/>"></script>
+      <script src="<c:url value='/main/assets/${appVersion}/jquery/2.0.3/jquery.js'/>"></script>
+      <script src="<c:url value='/main/assets/${appVersion}/jquery-ui/1.10.2/ui/minified/jquery-ui.min.js'/>"></script>
       
-      <script src="<c:url value='/main/assets/bootstrap/3.0.0/js/bootstrap.min.js'/>"></script>
-      <script src="<c:url value='/libs/zoombox/zoombox.js'/>"></script>
+      <script src="<c:url value='/main/assets/${appVersion}/bootstrap/3.0.0/js/bootstrap.min.js'/>"></script>
+      <script src="<c:url value='/main/static/${appVersion}/libs/zoombox/zoombox.js'/>"></script>
 
     </head>
 
@@ -52,94 +49,90 @@
         </div>
         <div class="navbar-collapse collapse">
             
-            <div class='col-lg-8' >
-                        <tiles:insertAttribute name="header" />   
-                
-            </div>
-                       
-                        <div class="box col-lg-3" >
-                     
+            <ul class="nav navbar-nav">
+            <li>
+                  <tiles:insertAttribute name="header" />   
+            </li>
+                    
+            </ul>   
+                 <ul class='nav navbar-nav navbar-right'>    
                                <sec:authorize ifAnyGranted="ROLE_ANONYMOUS">
                                    
-                            <div class="btn-group">
+                                   <li>
+                             <div class="btn-group box">
 
                                 <a class="btn dropdown-toggle btn-danger" data-toggle="dropdown" href="#">
                                     <fmt:message key="login.title"/>
                                     <span class="caret"></span>
                                 </a>
 
-                                <ul class="dropdown-menu" id="auth-dropdown">
+                                <ul class="dropdown-menu" id="auth-dropdown" role='menu'>
 
+                                    <li >
+                                        <div style="width:12em;" class='box'>
+                                       
+                                             <form  action="<c:url value='/j_spring_security_check' />" role='form'  method="POST" class="form-inline">
 
-                                    <li style="padding-right:5px;padding-left: 5px;" >
-
-                                        <form  action="<c:url value='/j_spring_security_check' />" role='form'  method="POST">
-
-
-                                            <div class='row'>
-                                                <div class='col-lg-12'>
-                                                    <div class="input-group">
-                                                        <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
-                                                        <input class="form-control"  name="j_username" type="text" placeholder="Username">
-                                                    </div>
-                                                </div>
-                                            </div>  
-
-                                            <div class='row' style="padding-top: 0.5em; padding-bottom: 0.5em;">
-                                                <div class='col-lg-12'>
-                                                    <div class="input-group">
-                                                        <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
-                                                        <input class="form-control"  name="j_password" type="password" placeholder="Password">
-                                                    </div>
-                                                </div>
+                                            <div class="input-group">
+                                                <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
+                                                <input class="form-control"  name="j_username" type="text" placeholder="Username">
                                             </div>
-
-
-                                            <button type="submit" class="btn"><fmt:message key="button.login"/></button>
-
+                                                 <div class="input-group" style="padding-top:0.5em;padding-bottom: 0.5em;">
+                                                <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
+                                                <input class="form-control"  name="j_password" type="password" placeholder="Password">
+                                            </div>  
+                                            <button type="submit" class="btn" ><fmt:message key="button.login"/></button>
                                         </form>
+                                            
+                                        </div>
+                                        
+                                       
                                     </li>
                                 </ul>
                             </div>
-
+           
+                                   </li>
+                           
 
                         </sec:authorize>
 
                             
                                   <sec:authorize ifAnyGranted="ROLE_USER,ROLE_ADMIN">
+                                      <li>
+                                          <div class="btn-group">
 
-                                      <div class="btn-group" >
+                                              <a class="btn dropdown-toggle btn-default" data-toggle="dropdown" href="#">
+                                                  <img  src="<c:out value='http://www.gravatar.com/avatar/${currentUser.avatarHash}?s=16'/>"/>
+                                                  <sec:authentication property="principal.username" />
+                                                  <span class="caret"></span>
+                                              </a>
 
-                                <a class="btn dropdown-toggle btn-default" data-toggle="dropdown" href="#">
-                                    <img  src="<c:out value='http://www.gravatar.com/avatar/${currentUser.avatarHash}?s=16'/>"/>
-                                    <sec:authentication property="principal.username" />
-                                    <span class="caret"></span>
-                                </a>
+                                              <ul class="dropdown-menu ">
+                                                  <li >
 
-                                <ul class="dropdown-menu">
-                                    <li >
+                                                      <a class="profile" href="<c:url value="/main/profile"/>">
+                                                          <span class="glyphicon glyphicon-user"></span> <fmt:message key="profile.title"/></a> 
+                                                  </li>
 
-                                        <a class="profile" href="<c:url value="/main/profile"/>">
-                                            <span class="glyphicon glyphicon-user"></span> <fmt:message key="profile.title"/></a> 
-                                    </li>
+                                                  <li>  <a href="<c:url value="/act/doLogout"/>">
+                                                          <span class="glyphicon glyphicon-log-out"></span>
+                                                          <fmt:message key="button.logout"/></a>
+                                                  </li>
+                                                  <!-- dropdown menu links -->
+                                              </ul>
+                                          </div>                              
+                                      </li>
 
-                                    <li>  <a href="<c:url value="/act/doLogout"/>">
-                                           <span class="glyphicon glyphicon-log-out"></span>
-                                            <fmt:message key="button.logout"/></a>
-                                    </li>
-                                    <!-- dropdown menu links -->
-                                </ul>
-                            </div>
 
                         </sec:authorize>
 
-                            
-                            
-                            <div class="btn-group pull-right" >
+                             <li>
+                   <div class="btn-group" >
+                                
                             <a class="btn dropdown-toggle " data-toggle="dropdown" href="#">
                                 <img style="display: inline; vertical-align:middle;" 
                                      title="<fmt:message key="locale.${pageContext.response.locale.language}"/>" 
-                                     src="<c:url value='/images/flags/flag_${pageContext.response.locale.language}.png'/>"/>
+                                     src="<c:url value='/main/static/${appVersion}/images/flags/flag_${pageContext.response.locale.language}.png'/>"/>
                                 <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu">
@@ -160,7 +153,7 @@
                                                </c:url>">
                                                    <img style="display: inline; vertical-align:middle;" 
                                                         title="<fmt:message key="locale.${locale}"/>" 
-                                                   src="<c:url value='/images/flags/flag_${locale}.png'/>"/>
+                                                   src="<c:url value='/main/static/${appVersion}/images/flags/flag_${locale}.png'/>"/>
                                                <fmt:message key="locale.${locale}"/>
                                             </a>
                                         </li>
@@ -171,44 +164,19 @@
 
                             </ul>
                         </div>
+                         
+            </li>
+                      
+                                      
+                     </ul>        
+            
+                         
                             
                         </div>
-                        
-                     
-                        
-                     
-                        
-                      
+                
+            </li>        
+               
 
-                     
-                  
-            
-    <!--      <ul class="nav navbar-nav">
-              
-                      
-              
-            <li class="active"><a href="#">Link</a></li>
-            <li><a href="#">Link</a></li>
-            <li><a href="#">Link</a></li>
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
-              <ul class="dropdown-menu">
-                <li><a href="#">Action</a></li>
-                <li><a href="#">Another action</a></li>
-                <li><a href="#">Something else here</a></li>
-                <li class="divider"></li>
-                <li class="dropdown-header">Nav header</li>
-                <li><a href="#">Separated link</a></li>
-                <li><a href="#">One more separated link</a></li>
-              </ul>
-            </li>
-          </ul>
-          <ul class="nav navbar-nav navbar-right">
-            <li class="active"><a href="./">Default</a></li>
-            <li><a href="../navbar-static-top/">Static top</a></li>
-            <li><a href="../navbar-fixed-top/">Fixed top</a></li>
-          </ul>-->
-                                
         </div>
         
                                 
@@ -306,7 +274,7 @@
            
 
 
-    <script type="text/javascript" src="<c:url value='/libs/flowplayer/flowplayer-3.2.12.min.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/main/static/${appVersion}/libs/flowplayer/flowplayer-3.2.12.min.js'/>"></script>
 
     <script type="text/javascript">
         
@@ -329,7 +297,7 @@
                 overflow: true
             });
      
-        flowplayer("a.embedPlayer", "<c:url value='/libs/flowplayer/flowplayer-3.2.16.swf'/>", {
+        flowplayer("a.embedPlayer", "<c:url value='/main/static/${appVersion}/libs/flowplayer/flowplayer-3.2.16.swf'/>", {
       clip:  {
           autoPlay: false,
           autoBuffering: true

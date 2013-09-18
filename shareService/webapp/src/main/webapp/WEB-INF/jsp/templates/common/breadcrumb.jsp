@@ -10,7 +10,7 @@
                 <fmt:message key="file.upload.title"/>
             </c:when>
             <c:otherwise>
-               <img style="text-align: left; display: inline; " src="<c:url value='/images/mime/${model.icon}'/>"/>
+               <img style="text-align: left; display: inline; " src="<c:url value='/main/static/${appVersion}/images/mime/${model.icon}'/>"/>
                <c:out value="${model.name}"/>
             </c:otherwise>
         </c:choose>

@@ -155,7 +155,7 @@
 
                                 <li>
                                     <a class="fileDeleteBtn"
-                                       targetIcon="<c:url value='/images/mime/${model.icon}'/>"
+                                       targetIcon="<c:url value='/main/static/${appVersion}/images/mime/${model.icon}'/>"
                                        targetTitle="${model.name} &nbsp; ${model.formattedFileSize} &nbsp; ${modelLastModified}  &nbsp; ${model.owner.name}"
                                        title="<fmt:message key="button.delete"/>"  
                                        deleteLink="<c:url value="/main/file/delete">
@@ -177,13 +177,13 @@
                                       <c:when test="${empty param.integrationMode}">
                                           
                                           <a class="pastePreviewBtn"
-                                       targetIcon="<c:url value='/images/mime/${model.icon}'/>"
+                                       targetIcon="<c:url value='/main/static/${appVersion}/images/mime/${model.icon}'/>"
                                        targetTitle="${model.name} &nbsp; ${model.formattedFileSize} &nbsp; ${modelLastModified}  &nbsp; ${model.owner.name}"
                                        targetId="${model.uuid}"
                                        title="<fmt:message key="paste.preview.title"/>"  
                                        >
                                         <img style="display: inline;"
-                                           src="<c:url value='/images/ninja.png'/>"/>
+                                           src="<c:url value='/main/static/${appVersion}/images/ninja.png'/>"/>
                                         <fmt:message key="paste.preview.title"/></a>    
                                           
                                       </c:when>
@@ -193,7 +193,7 @@
                                             target="_blank" class="btn"
                                              title="<fmt:message key="paste.preview.title"/>" >
                                         <img style="display: inline;"
-                                           src="<c:url value='/images/ninja.png'/>"/>
+                                           src="<c:url value='/main/static/${appVersion}/images/ninja.png'/>"/>
                                         <fmt:message key="paste.preview.title"/></a>    
                                           
                                       </c:otherwise>
@@ -215,7 +215,7 @@
                                    class="btn" data-toggle="modal"
                                    >
                                     <img style="display: inline;" 
-                                         src="<c:url value='/images/mime/${model.icon}'/>"/> 
+                                         src="<c:url value='/main/static/${appVersion}/images/mime/${model.icon}'/>"/> 
                                     <fmt:message key="file.gdocs.preview"/></a>    
                                          
                                      </c:when>
@@ -231,7 +231,7 @@
                                             class="btn" 
                                             >
                                              <img style="display: inline;" 
-                                                  src="<c:url value='/images/mime/${model.icon}'/>"/> 
+                                                  src="<c:url value='/main/static/${appVersion}/images/mime/${model.icon}'/>"/> 
                                              <fmt:message key="file.gdocs.preview"/></a>    
                                          
                                      </c:otherwise>
@@ -251,7 +251,7 @@
                                             class="btn" data-toggle="modal"
                                             >
                                              <img style="display: inline;" 
-                                                  src="<c:url value='/images/mime/pdf.gif'/>"/> 
+                                                  src="<c:url value='/main/static/${appVersion}/images/mime/pdf.gif'/>"/> 
                                              <fmt:message key="file.pdf.preview"/></a>    
                                          
                                      </c:when>
@@ -263,7 +263,7 @@
                                             href="<c:url value='/main/file/raw/pdfview'><c:param name='id' value='${model.id}'/></c:url>"
                                                 >
                                                 <img style="display: inline;" 
-                                                     src="<c:url value='/images/mime/pdf.gif'/>"/> 
+                                                     src="<c:url value='/main/static/${appVersion}/images/mime/pdf.gif'/>"/> 
                                             <fmt:message key="file.pdf.preview"/>
                                          </a>    
                                          
@@ -298,7 +298,7 @@
         
         
         <a href="<c:url value='/main/file/list/search?query=type:${model.type}'/>" target="${not empty param.integrationMode ? "_blank" : target}">
-            <img style="text-align: left; display: inline; " src="<c:url value='/images/mime/${model.icon}'/>"/>
+            <img style="text-align: left; display: inline; " src="<c:url value='/main/static/${appVersion}/images/mime/${model.icon}'/>"/>
             
         </a>
         
@@ -444,12 +444,12 @@
 
                            <a title="<fmt:message key="model.view.json"/>" target="_blank" 
                               href="<c:out value='${jsonUrl}'/>">
-                               <img style="display: inline;" src="<c:url value='/images/mime/json.png'/>"/>
+                               <img style="display: inline;" src="<c:url value='/main/static/${appVersion}/images/mime/json.png'/>"/>
                            </a>    
 
                            <a title="<fmt:message key="model.view.xml"/>" target="_blank" 
                               href="<c:out value='${xmlUrl}'/>">
-                               <img style="display: inline;" src="<c:url value='/images/mime/xml.gif'/>"/>
+                               <img style="display: inline;" src="<c:url value='/main/static/${appVersion}/images/mime/xml.gif'/>"/>
                            </a>    
                        </p>
                        <textarea  class="form-control" cols="40" rows="6"  ><iframe src="${externalUrl}/main/file/integrated/view?id=${model.id}" width="400" height="400" frameborder="0"></iframe>
@@ -469,7 +469,7 @@
             <div id="gdocsPreviewModal_${model.id}" class="modal hide fade" tabindex="-1" style="width:650px;"
          role="dialog" aria-labelledby="googledocModalLabel" aria-hidden="true">
         <div class="modal-header">
-            <img style="text-align: left; display: inline; " src="<c:url value='/images/mime/${model.icon}'/>"/>
+            <img style="text-align: left; display: inline; " src="<c:url value='/main/static/${appVersion}/images/mime/${model.icon}'/>"/>
             <a href="<c:out value='${detailUrl}'/>" target="${target}">${model.name}</a>
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
         </div>
@@ -500,7 +500,7 @@
     <div id="pdfPreviewModal_${model.id}" class="modal  fade" tabindex="-1" style="width:680px;"
          role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-header">
-            <img style="text-align: left; display: inline; " src="<c:url value='/images/mime/${model.icon}'/>"/>
+            <img style="text-align: left; display: inline; " src="<c:url value='/main/static/${appVersion}/images/mime/${model.icon}'/>"/>
             <a href="<c:out value='${detailUrl}'/>" target="${target}">${model.name}</a>
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
         </div>

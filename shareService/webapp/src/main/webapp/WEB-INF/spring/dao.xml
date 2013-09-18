@@ -64,7 +64,7 @@
   
   <bean id="graphDatabaseService" class="org.neo4j.kernel.EmbeddedGraphDatabase"
             destroy-method="shutdown">
-        <constructor-arg index="0" value="${app.home}/trees"/>
+        <constructor-arg index="0" value="${share.app.home}/trees"/>
         <constructor-arg index="1">
             <map>
                 <entry key="allow_store_upgrade" value="true"/>
@@ -119,7 +119,7 @@
         </property>
         <property name="jpaPropertyMap">
             <map>
-                <entry key="hibernate.search.default.indexBase" value="${app.home}/index"/>
+                <entry key="hibernate.search.default.indexBase" value="${share.app.home}/index"/>
                 <!--entry key="hibernate.search.default.directory_provider"		
                        value="org.hibernate.search.store.FSDirectoryProvider"/-->
                 <entry key="hibernate.search.lucene_version"		

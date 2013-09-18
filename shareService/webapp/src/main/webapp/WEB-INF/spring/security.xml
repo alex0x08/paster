@@ -18,7 +18,8 @@
 
     <http pattern="/images/*" security="none"/>
     <http pattern="/css/*" security="none"/>
-    <http pattern="/main/assets/**" security="none"/>
+    <http pattern="/main/assets/${app.version}/**" security="none"/>
+    <http pattern="/main/static/${app.version}/**" security="none"/>
     
     <http pattern="/main/login*" security="none" />
     <http pattern="/main/logoutSuccess*" security="none" />

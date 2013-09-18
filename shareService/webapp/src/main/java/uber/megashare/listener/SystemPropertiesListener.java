@@ -26,6 +26,8 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.rolling.FixedWindowRollingPolicy;
 import ch.qos.logback.core.rolling.RollingFileAppender;
 import ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy;
+import uber.megashare.base.SystemInfo;
+import uber.megashare.model.AppVersion;
 
 public class SystemPropertiesListener implements ServletContextListener {
 
@@ -38,7 +40,7 @@ public class SystemPropertiesListener implements ServletContextListener {
 
         
         
-        if (!System.getProperties().containsKey("app.home")) {
+        if (!System.getProperties().containsKey("share.app.home")) {
 
             String user_home = System.getProperty("user.home");
 
@@ -46,9 +48,9 @@ public class SystemPropertiesListener implements ServletContextListener {
 
             app_home = new File(app_home, appName);
 
-            System.setProperty("app.home", app_home.getAbsolutePath());
+            System.setProperty("share.app.home", app_home.getAbsolutePath());
         } else {
-            app_home = new File(System.getProperty("app.home"));
+            app_home = new File(System.getProperty("share.app.home"));
         }
 
         if (!app_home.exists() || !app_home.isDirectory()) {
@@ -60,6 +62,13 @@ public class SystemPropertiesListener implements ServletContextListener {
         }
 
 
+        AppVersion mf_version = new AppVersion().fillFromManifest();
+                
+        SystemInfo.getInstance().setRuntimeVersion(mf_version);
+        
+        
+        System.setProperty("share.app.version", mf_version.getImplBuildTime());
+        
         //getLogger().info("application home:"+System.getProperty("app.home"));
 
         LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();

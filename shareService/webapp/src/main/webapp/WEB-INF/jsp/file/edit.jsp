@@ -11,15 +11,15 @@
 <c:url var="blockUrl" value='/main/file/raw/view' />
 
 
-<script src="<c:url value='/main/assets/jquery-ui/1.10.2/ui/minified/jquery.ui.widget.min.js'/>"></script>
+<script src="<c:url value='/main/assets/${appVersion}/jquery-ui/1.10.2/ui/minified/jquery.ui.widget.min.js'/>"></script>
 
-<link href="<c:url value='/main/assets/jquery-file-upload/8.4.2/css/jquery.fileupload-ui.css'/>" rel="stylesheet"/>
-<link href="<c:url value='/main/assets/bootstrap-datepicker/1.1.3/css/datepicker.css'/>" rel="stylesheet"/>
-<link href="<c:url value='/libs/bootstrap-switch/stylesheets/bootstrap-switch.css'/>" rel="stylesheet"/>
+<link href="<c:url value='/main/assets/${appVersion}/jquery-file-upload/8.4.2/css/jquery.fileupload-ui.css'/>" rel="stylesheet"/>
+<link href="<c:url value='/main/assets/${appVersion}/bootstrap-datepicker/1.1.3/css/datepicker.css'/>" rel="stylesheet"/>
+<link href="<c:url value='/main/static/${appVersion}/libs/bootstrap-switch/stylesheets/bootstrap-switch.css'/>" rel="stylesheet"/>
 
 
  <div class="row">
-    <div class="col-xs-4 col-md-10 col-md-offset-1">     
+    <div class="col-md-16 col-md-offset-1">     
 
 
 
@@ -39,7 +39,7 @@
                 <script src="<c:url value='/main/assets/jquery-file-upload/8.4.2/js/jquery.fileupload-process.js'/>"></script>
                 <script src="<c:url value='/main/assets/jquery-file-upload/8.4.2/js/jquery.fileupload-ui.js'/>"></script>
 
-                <script src="<c:url value='/libs/bootstrap-switch/js/bootstrap-switch.js'/>"></script>
+                <script src="<c:url value='/main/static/${appVersion}/libs/bootstrap-switch/js/bootstrap-switch.js'/>"></script>
                 <script src="<c:url value='/main/assets/bootstrap-datepicker/1.1.3/js/bootstrap-datepicker.js'/>"></script>
 
                 <c:url var="url" value='/main/file/upload-xdr' />
@@ -91,8 +91,7 @@
                            } else {
                                 $('#inputRemovalDateBlock').css('display','none'); 
                                 $('#removeAfter').val('');
-                           }
-                              
+                            }                             
                             
                         });
 
@@ -115,10 +114,6 @@
 
             </c:when>
             <c:otherwise>
-
-               
-              
-
                 <c:url var="url" value='/main/file/save' />
             </c:otherwise>
         </c:choose>
@@ -128,18 +123,15 @@
                    method="POST"  cssClass="form-horizontal"
                    enctype="multipart/form-data">
                     
-                    <c:choose>
-                    <c:when test="${model.blank}">
-
-                        <form:hidden path="url" />
-                        <form:hidden path="name" />
-
-                    </c:when>
-                    <c:otherwise>
-                        <form:hidden path="id" />
-
-                    </c:otherwise>
-                </c:choose>  
+                     <c:choose>
+                         <c:when test="${model.blank}">
+                             <form:hidden path="url" />
+                             <form:hidden path="name" />
+                         </c:when>
+                         <c:otherwise>
+                             <form:hidden path="id" />
+                         </c:otherwise>
+                     </c:choose>  
                      
                      
                      <div class="form-group">
@@ -154,68 +146,68 @@
                      </div> 
 
 
-                                  <sec:authorize ifAnyGranted="ROLE_USER,ROLE_ADMIN">
+                             <sec:authorize ifAnyGranted="ROLE_USER,ROLE_ADMIN">
 
-                    <c:if test="${model.blank or (model.owner eq currentUser or currentUser.admin)}">
-
-                        
-                           <div class="form-group">
-                                   <form:label  path="accessLevel"><fmt:message key="file.accessLevel"/>:</form:label>
-                                       <div class="col-lg-10">
-
-                                       <c:choose>
-                                           <c:when test="${not empty model.integrationCode}">
-                                               <c:set var="accessLevelDisabled" value="true"/>
-                                           </c:when>
-                                           <c:otherwise>
-                                               <c:set var="accessLevelDisabled" value="false"/>                                    
-                                           </c:otherwise>
-
-                                       </c:choose>
-
-                                       <form:select id="accessLevel" path="accessLevel" disabled="${accessLevelDisabled}" 
-                                                    cssClass="form-control" cssStyle="max-width:12em;" >
-                                           <c:forEach items="${model.accessLevel.levels}" var="level">
-                                               <form:option value="${level.code}">
-                                                   <fmt:message key="${level.desc}" />
-                                               </form:option>
-                                           </c:forEach>
-                                       </form:select>
+                                 <c:if test="${model.blank or (model.owner eq currentUser or currentUser.admin)}">
 
 
-                                       <c:if test="${not empty model.integrationCode}">
-                                           File integrated, cannot set access level.
-                                       </c:if>
+                                     <div class="form-group">
+                                         <form:label  path="accessLevel"><fmt:message key="file.accessLevel"/>:</form:label>
+                                             <div >
 
-                                       <form:errors path="accessLevel" cssClass="error" />
+                                             <c:choose>
+                                                 <c:when test="${not empty model.integrationCode}">
+                                                     <c:set var="accessLevelDisabled" value="true"/>
+                                                 </c:when>
+                                                 <c:otherwise>
+                                                     <c:set var="accessLevelDisabled" value="false"/>                                    
+                                                 </c:otherwise>
 
-                                   </div>
-                           </div>
+                                             </c:choose>
 
-                     
-                                             
-                         <div class="form-group">
-                            <form:label  path="file"><fmt:message key="file.removeAfter"/>:</form:label>
-                            <div class="col-lg-10">
-                             <form:errors path="removeAfter" cssClass="error" />
-                                
-                                <div class="switch" >
-                                    <input id='enableRemovalSwitch' type="checkbox"  >
-                                </div>
-                             
-                                <div id='inputRemovalDateBlock'  class="date" data-date="" data-date-format="${datePatternPicker}" 
-                                 style="display:none;padding-top: 0.5em;max-width: 7em;">
-                                    <form:input id="removeAfter" path="removeAfter" name="file" cssClass="form-control" size="10"  /> 
-                                <span class="add-on"><i class="icon-th"></i></span>
-                            </div>      
-                             
-                            </div>
-                            
-                                                   
-                        </div>                            
-                        
-                        </c:if>
-                         </sec:authorize>  
+                                             <form:select id="accessLevel" path="accessLevel" disabled="${accessLevelDisabled}" 
+                                                          cssClass="form-control" cssStyle="max-width:12em;" >
+                                                 <c:forEach items="${model.accessLevel.levels}" var="level">
+                                                     <form:option value="${level.code}">
+                                                         <fmt:message key="${level.desc}" />
+                                                     </form:option>
+                                                 </c:forEach>
+                                             </form:select>
+
+
+                                             <c:if test="${not empty model.integrationCode}">
+                                                 File integrated, cannot set access level.
+                                             </c:if>
+
+                                             <form:errors path="accessLevel" cssClass="error" />
+
+                                         </div>
+                                     </div>
+
+
+
+                                     <div class="form-group">
+                                         <form:label  path="file"><fmt:message key="file.removeAfter"/>:</form:label>
+                                             <div class="col-lg-10">
+                                             <form:errors path="removeAfter" cssClass="error" />
+
+                                             <div class="switch" >
+                                                 <input id='enableRemovalSwitch' type="checkbox"  >
+                                             </div>
+
+                                             <div id='inputRemovalDateBlock'  class="date" data-date="" data-date-format="${datePatternPicker}" 
+                                                  style="display:none;padding-top: 0.5em;max-width: 7em;">
+                                                 <form:input id="removeAfter" path="removeAfter" name="file" cssClass="form-control" size="10"  /> 
+                                                 <span class="add-on"><i class="icon-th"></i></span>
+                                             </div>      
+
+                                         </div>
+
+
+                                     </div>                            
+
+                                 </c:if>
+                             </sec:authorize>  
           
                              
                 <c:choose>
@@ -246,9 +238,8 @@
                     </c:when>
                     <c:otherwise>
                         
-                        
                         <div class="form-group">
-                            <form:label cssClass="control-label" path="file"><fmt:message key="file.file.uploaded"/>:</form:label>
+                            <form:label  path="file"><fmt:message key="file.file.uploaded"/>:</form:label>
                             <div class="col-lg-10">
                                 <jsp:include
                                     page="/WEB-INF/jsp/templates/common/preview.jsp">
@@ -280,9 +271,10 @@
                              
                         <c:if test="${!model.blank and not empty availableRevisions}">
 
-                            <div class="form-group">
-                                <form:label cssClass="control-label" path="accessLevel">
+                             <form:label cssClass="control-label" path="accessLevel">
                                     <fmt:message key="struct.versions"/>:</form:label>
+                               
+                            <div class="form-group">
                                     <div class="col-lg-10">
 
                                     <jsp:include

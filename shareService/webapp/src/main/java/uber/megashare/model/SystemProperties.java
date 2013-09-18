@@ -55,7 +55,7 @@ public class SystemProperties extends BaseDBObject implements Serializable {
     }       
 
     public String getUploadDir() {
-        return System.getProperty("app.home") + File.separator + uploadDir;
+        return System.getProperty("share.app.home") + File.separator + uploadDir;
     }
 
     public void setUploadDir(String uploadDir) {
