@@ -6,8 +6,8 @@
 
 <html>
     <head>
-          <link href="<c:url value='/css/metro-bootstrap.css'/>" rel="stylesheet"/>
-    
+        <link href="<c:url value='/main/assets/${appVersion}/bootstrap/3.0.0/css/bootstrap.min.css'/>" rel="stylesheet"/>
+        <link href="<c:url value='/main/assets/${appVersion}/bootstrap/3.0.0/css/bootstrap-theme.min.css'/>" rel="stylesheet"/>
     </head>
     
 <body>
@@ -24,7 +24,7 @@
   </div>
 
   <!-- Use latest PDF.js build from Github -->
-  <script type="text/javascript" src="<c:url value='/js/pdf.js'/>"></script>
+  <script type="text/javascript" src="<c:url value='/main/static/${appVersion}/js/pdf.js'/>"></script>
   
   <script type="text/javascript">
     //

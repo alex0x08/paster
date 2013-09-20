@@ -17,33 +17,22 @@
 <link href="<c:url value='/main/assets/${appVersion}/bootstrap-datepicker/1.1.3/css/datepicker.css'/>" rel="stylesheet"/>
 <link href="<c:url value='/main/static/${appVersion}/libs/bootstrap-switch/stylesheets/bootstrap-switch.css'/>" rel="stylesheet"/>
 
+ 
 
- <div class="row">
-    <div class="col-md-16 col-md-offset-1">     
-
-
-
-        <c:if test="${not empty param.statusMessageKey}">
-            <p>
-                <fmt:message key="${param.statusMessageKey}" />
-            </p>
-        </c:if>
-
-
-        <c:choose>
+ <c:choose>
             <c:when test="${model.blank}">
 
-<!--   <script src="<c:url value='/main/assets/jquery-file-upload/8.4.2/js/jquery.iframe-transport.js'/>"></script>
-                -->  
-                <script src="<c:url value='/main/assets/jquery-file-upload/8.4.2/js/jquery.fileupload.js'/>"></script>
-                <script src="<c:url value='/main/assets/jquery-file-upload/8.4.2/js/jquery.fileupload-process.js'/>"></script>
-                <script src="<c:url value='/main/assets/jquery-file-upload/8.4.2/js/jquery.fileupload-ui.js'/>"></script>
-
+                <script src="<c:url value='/main/assets/${appVersion}/jquery-file-upload/8.4.2/js/jquery.fileupload.js'/>"></script>
+                <script src="<c:url value='/main/assets/${appVersion}/jquery-file-upload/8.4.2/js/jquery.fileupload-process.js'/>"></script>
+                <script src="<c:url value='/main/assets/${appVersion}/jquery-file-upload/8.4.2/js/jquery.fileupload-ui.js'/>"></script>
+              
                 <script src="<c:url value='/main/static/${appVersion}/libs/bootstrap-switch/js/bootstrap-switch.js'/>"></script>
-                <script src="<c:url value='/main/assets/bootstrap-datepicker/1.1.3/js/bootstrap-datepicker.js'/>"></script>
+                <script src="<c:url value='/main/assets/${appVersion}/bootstrap-datepicker/1.1.3/js/bootstrap-datepicker.js'/>"></script>
 
                 <c:url var="url" value='/main/file/upload-xdr' />
 
+                <c:set var="mainBlockStyle" value="col-md-2"/>
+                
                 <script type="text/javascript">
 
                     $(document).ready(function() {
@@ -51,6 +40,16 @@
                   $('#file_upload').fileupload({
                             dataType: 'json',
                             autoUpload: true,
+                            dropZone: $('#dropzone'),
+                             drop: function (e, data) {
+        $.each(data.files, function (index, file) {
+        
+        console.log('Selected file: ' + file.name);
+        $('#progress').css('display','');    
+        
+           
+        });
+    },
                             change: function (e, data) {
                                 $.each(data.files, function (index, file) {
                                     console.log('Selected file: ' + file.name);
@@ -71,7 +70,21 @@
                                         $("#messages").append('<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert">&times;</button>File ' + data.result['name'] + ' uploaded sucessfully</div>');
                                          */
                                         $.get("${blockUrl}?id=" + data.result['id'], function(data) {
-                                            $("#gallery").append(data);
+                                            $("#gallery").prepend(data);
+                                            
+                                            
+                                            $('a.zoombox').zoombox({
+                theme       : 'simple',        //available themes : zoombox,lightbox, prettyphoto, darkprettyphoto, simple
+                opacity     : 0.3,              // Black overlay opacity
+                duration    : 800,              // Animation duration
+                animation   : true,             // Do we have to animate the box ?
+                width       : 1024,              // Default width
+                height      : 768,              // Default height
+                gallery     : true,             // Allow gallery thumb view
+                autoplay : true,                // Autoplay for video
+                overflow: true
+            });
+                                            
                                         });
                                     } else {
                                         $("#messages").append('<div class="alert alert-error"><button type="button" class="close" data-dismiss="alert">&times;</button>File ' + data.result['name'] + ' failed to upload!</div>');
@@ -100,10 +113,9 @@
                         var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0);
 
                         var removalPicker =$('#inputRemovalDateBlock').datepicker({
-                            
-                          onRender: function(date) {
-                            return date.valueOf() < now.valueOf() ? 'disabled' : '';
-                            }   
+                          
+                          startDate: now,  
+                          
                         }).on('changeDate', function(ev) {
                             removalPicker.hide();
                         }).data('datepicker');
@@ -114,10 +126,29 @@
 
             </c:when>
             <c:otherwise>
+                <c:set var="mainBlockStyle" value="col-md-12"/>
+                
                 <c:url var="url" value='/main/file/save' />
+                
+                  <script type="text/javascript">
+                      
+                      
+                       $(document).ready(function() {
+                              
+                              $('#fileSelectBtn').bind('change', function() {
+                                  
+                                  $('#fileSelectLabel').text($(this).val());
+                              });
+                       
+                    });
+                      
+                  </script>
+                
             </c:otherwise>
         </c:choose>
 
+ <div class="row">
+    <div class="${mainBlockStyle} col-md-offset-1">     
 
                  <form:form action="${url}" modelAttribute="model" id="file_upload"
                    method="POST"  cssClass="form-horizontal"
@@ -135,7 +166,7 @@
                      
                      
                      <div class="form-group">
-                         <div class="col-lg-10">
+                         <div class="controls">
                              <form:errors cssClass="errorblock" element="div"/>
 
                              <c:if test="${not empty model.integrationCode}">
@@ -185,28 +216,37 @@
                                      </div>
 
 
+                                          
+
+                                 </c:if>
+                                 
+                                    <c:if test="${model.blank}">
+
 
                                      <div class="form-group">
                                          <form:label  path="file"><fmt:message key="file.removeAfter"/>:</form:label>
-                                             <div class="col-lg-10">
-                                             <form:errors path="removeAfter" cssClass="error" />
-
+                                             <div class="controls">
+                                                   
                                              <div class="switch" >
                                                  <input id='enableRemovalSwitch' type="checkbox"  >
                                              </div>
-
-                                             <div id='inputRemovalDateBlock'  class="date" data-date="" data-date-format="${datePatternPicker}" 
+                                             
+                                            
+                                                 <div id='inputRemovalDateBlock'  class="date" data-date="" data-date-format="${datePatternPicker}" 
                                                   style="display:none;padding-top: 0.5em;max-width: 7em;">
                                                  <form:input id="removeAfter" path="removeAfter" name="file" cssClass="form-control" size="10"  /> 
                                                  <span class="add-on"><i class="icon-th"></i></span>
                                              </div>      
 
-                                         </div>
+                                              
+                                                
+                                               <form:errors path="removeAfter" cssClass="error" />
 
+                                             </div>
 
-                                     </div>                            
-
-                                 </c:if>
+                                     </div>   
+                                             </c:if>
+                                 
                              </sec:authorize>  
           
                              
@@ -214,32 +254,32 @@
                     <c:when test="${model.blank}">
 
                         <div class="form-group">
-                            <form:label cssClass="control-label" path="file"><fmt:message key="file.file.new"/>:</form:label>
-                                <div class="col-lg-10">
-                                    <!-- The fileinput-button span is used to style the file input field as button -->
+                           
+                                
+                                 <!-- The fileinput-button span is used to style the file input field as button -->
                                     <span class="btn btn-success fileinput-button">
                                         <i class="glyphicon glyphicon-plus"></i>
-                                        <span>Select file...</span>
+                                        <span><fmt:message key="button.select-upload"/></span>
                                     <form:input path="file" name="file"   
                                                 type="file" /> 
                                 </span>
-
 
                                 <form:errors path="file" cssClass="error" />
 
                                 <div id="progress" class="progress" style="display:none;">
                                     <div class="progress-bar progress-bar-success"></div>
                                 </div>
-
+                                                           
+                            
+                             
                             </div>
-                        </div>
+                       
 
 
                     </c:when>
                     <c:otherwise>
                         
                         <div class="form-group">
-                            <form:label  path="file"><fmt:message key="file.file.uploaded"/>:</form:label>
                             <div class="col-lg-10">
                                 <jsp:include
                                     page="/WEB-INF/jsp/templates/common/preview.jsp">
@@ -250,15 +290,15 @@
                         </div>
                         
                             <div class="form-group">
-                            <form:label cssClass="control-label" path="file"/>
                                 <div class="col-lg-10">
 
                                     <div class="fileupload fileupload-new" data-provides="fileupload">
 
                                         <span class="btn btn-success fileinput-button">
-                                            <i class="glyphicon glyphicon-plus"></i>
-                                            <span>Select files...</span>
-                                            <form:input path="file" name="file"   
+                                            <i class="glyphicon glyphicon-repeat"></i>
+                                            
+                                            <span id="fileSelectLabel">Replace file</span>
+                                            <form:input id="fileSelectBtn" path="file" name="file"   
                                                         type="file" /> 
                                         </span>
                                     </div>
@@ -327,6 +367,13 @@
 
     </div>
 
+    <c:if test="${model.blank}">
+        <div class="col-lg-4">                                    
+            <div id="dropzone" class="box well" style="width:30em;height:10em;">Drop files here</div>
+         </div>
+     
+    </c:if>
+        
 </div>
 
 <div class="row">

@@ -41,7 +41,7 @@
             <div class="form-buttons pull-left">
 
                 <a class="btn btn-primary btn-large" target="_blank" href="<c:out value='${downloadUrl}'/>">
-                    <img style="display: inline;" src="<c:url value='/images/download.png'/>"/>
+                    <img style="display: inline;" src="<c:url value='/main/static/${appVersion}/images/download.png'/>"/>
                     <fmt:message key="file.download"/></a>
 
             </div>

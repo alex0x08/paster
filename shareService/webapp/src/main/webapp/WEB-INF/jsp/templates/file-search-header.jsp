@@ -5,7 +5,7 @@
 <div class="btn-group" style="min-width: 5em;">
 
     <form:form action="${url}" commandName="query" 
-               class="form-inline box"  
+               class="form-inline"  
                method="POST" >
         <form:errors path="*" cssClass="errorblock" element="span"/>
 
@@ -36,7 +36,7 @@
 </div>
 <div class="btn-group" style="min-width: 5em;">
 
-    <div class="alert" style="font-size: 11px;margin: 0.0em;padding:0.0em;padding-left: 0.5em;padding-top:0.2em;line-height: 1.8em;">
+    <div  style="font-size: 11px;margin: 0.0em;padding:0.0em;padding-left: 0.5em;line-height: 1.8em;">
 
         <fmt:message key="search.query.samples"/>:
 

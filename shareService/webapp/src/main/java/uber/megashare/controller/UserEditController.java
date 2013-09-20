@@ -100,6 +100,12 @@ public class UserEditController extends GenericEditController<User> {
             }
             return editPage;
         }
+        
+        
+          if (b.getRoles()==null ||b.getRoles().isEmpty()) {
+                    result.addError(new ObjectError("user.roles","Roles not set."));
+                    return editPage; 
+            }
 
         if (!b.isBlank()) {
             User current = userManager.getFull(b.getId());
@@ -107,6 +113,8 @@ public class UserEditController extends GenericEditController<User> {
             current.setDefaultFileAccessLevel(b.getDefaultFileAccessLevel());
             current.setName(b.getName());
          
+            current.setRoles(b.getRoles());
+            
             if (b.getNewPassword()!=null) {
             
                 if (!b.getNewPassword().equals(b.getRepeatPassword())) {
@@ -121,10 +129,7 @@ public class UserEditController extends GenericEditController<User> {
             b = current;
         } else {
         
-            if (b.getRoles()==null ||b.getRoles().isEmpty()) {
-                    result.addError(new ObjectError("user.roles","Roles not set."));
-                    return editPage; 
-            }
+          
 
            if (b.getNewPassword()!=null && !b.getNewPassword().equals(b.getRepeatPassword())) {
                     result.addError(new ObjectError("newPassword","Password must match."));

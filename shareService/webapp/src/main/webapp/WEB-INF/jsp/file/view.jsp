@@ -74,16 +74,13 @@
                      scrolling="auto" frameborder="0"
                      style="width:630px;height: 400px;"  allowTransparency="true"   >
                     </iframe>  
-          
                  
             </span>
              
          </div>   
 
          </c:if>
-
-             
-            
+     
             
         <div class="form-buttons pull-left">
 
@@ -92,7 +89,7 @@
             </c:if>
 
             <a class="btn btn-primary btn-large" href="<c:out value='${downloadUrl}'/>">
-                <img style="display: inline;" src="<c:url value='/images/download.png'/>"/>
+                <img style="display: inline;" src="<c:url value='/main/static/${appVersion}/images/download.png'/>"/>
                 <fmt:message key="file.download"/></a>
 
             <c:if test="${not empty availableNext}">

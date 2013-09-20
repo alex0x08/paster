@@ -14,11 +14,11 @@
 
         <li >
             <a  href="<c:url value="/main/file/new"/>">
-                <span class="glyphicon glyphicon-upload"></span><fmt:message key="file.upload.title"/></a> 
+                <span class="glyphicon glyphicon-upload"></span> <fmt:message key="file.upload.title"/></a> 
         </li>
     </sec:authorize>
     <li >
-        <a  href="<c:url value="/main/file/list"/>"><span class="glyphicon glyphicon-folder-close"></span><fmt:message key="files.title"/></a>
+        <a  href="<c:url value="/main/file/list"/>"><span class="glyphicon glyphicon-folder-close"></span> <fmt:message key="files.title"/></a>
 
     </li>
 
@@ -26,12 +26,12 @@
         <li class="nav-header"><fmt:message key="users.title"/></li>
 
         <li class="">
-            <a class="new-user" href="<c:url value="/main/user/new"/>"><fmt:message key="user.new.title"/></a> 
+            <a class="new-user" href="<c:url value="/main/user/new"/>"> <fmt:message key="user.new.title"/></a> 
         </li>
 
         <li class="">
 
-            <a class="users" href="<c:url value="/main/user/list"/>"><fmt:message key="users.title"/></a>
+            <a class="users" href="<c:url value="/main/user/list"/>"> <fmt:message key="users.title"/></a>
 
         </li>
 

@@ -108,7 +108,7 @@
                     <c:set var="boxClass" value="panel-info"/>
                 </c:when>
                 <c:otherwise>
-                    <c:set var="boxClass" value=""/>
+                    <c:set var="boxClass" value="panel-default"/>
                     
                 </c:otherwise>
             </c:choose>          
@@ -440,6 +440,13 @@
                                
                            </c:otherwise>
                        </c:choose>
+                       
+                       <P>
+                           ID: ${model.id}
+                           <br/>
+                           UUID: ${model.uuid}
+                       </P>
+                       
                        <p>
 
                            <a title="<fmt:message key="model.view.json"/>" target="_blank" 
@@ -497,19 +504,33 @@
 
 <c:if test="${model.type eq 'PDF' and empty param.integrationMode}">
 
-    <div id="pdfPreviewModal_${model.id}" class="modal  fade" tabindex="-1" style="width:680px;"
-         role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-header">
-            <img style="text-align: left; display: inline; " src="<c:url value='/main/static/${appVersion}/images/mime/${model.icon}'/>"/>
+    
+           <div id="pdfPreviewModal_${model.id}" class="modal fade" >
+
+                <div class="modal-dialog">
+                    <div class="modal-content" style="width:690px;">
+
+                        <div class="modal-header">
+                            <div>
+                                       <img style="text-align: left; display: inline; " src="<c:url value='/main/static/${appVersion}/images/mime/${model.icon}'/>"/>
             <a href="<c:out value='${detailUrl}'/>" target="${target}">${model.name}</a>
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        </div>
-        <div class="modal-body" style="height:460px;overflow: hidden;" >
-            <iframe  src="<c:url value='/main/file/raw/pdfview'><c:param name='id' value='${model.id}'/></c:url>"
+     
+                               
+                            </div>
+                        </div>
+                        <div class="modal-body">
+                            <div class="paddingT15 paddingB15" id="modal_text">    
+
+                                 <iframe  src="<c:url value='/main/file/raw/pdfview'><c:param name='id' value='${model.id}'/></c:url>"
                      scrolling="auto" frameborder="0"
                      style="width:660px;height: 400px;"  allowTransparency="true"   >
-                </iframe>     
+                </iframe>  
+                            </div>
+                        </div>
+                    </div></div>
             </div>
-        </div>
+
+    
 
 </c:if>
