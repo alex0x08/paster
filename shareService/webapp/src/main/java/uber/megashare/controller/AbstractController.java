@@ -91,7 +91,7 @@ public abstract class AbstractController extends LoggedClass {
     
     @ModelAttribute("appVersion")
     public String getAppVersion() {
-        return settingsManager.getCurrentSettings().getAppVersion().getImplBuildTime();
+        return settingsManager.getCurrentSettings().getAppVersion().getImplBuildNum();
     }
     
     @ModelAttribute("pasteIntegrationEnabled")

@@ -93,9 +93,7 @@ public class StartupListener extends LoggedClass implements ServletContextListen
         try {
             ApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(context);
 
-             Manifests.append(context);
-            
-           
+          
 
             User startup = new User();
             startup.setName("DB Startup");
@@ -290,7 +288,7 @@ public class StartupListener extends LoggedClass implements ServletContextListen
    
                 getLogger().info("__done creation");
    
-            } catch (ParseException | IOException ex) {
+            } catch (ParseException ex) {
                 getLogger().error(ex.getLocalizedMessage(), ex);
          
         }

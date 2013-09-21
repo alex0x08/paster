@@ -806,8 +806,9 @@
                         </manifest>
                             
                         <manifestEntries>
-                            <Implementation-Build>${build.buildNumber}</Implementation-Build>
-                            <Implementation-Build-Time>${maven.build.timestamp}</Implementation-Build-Time>
+                            <Share-Implementation-Version>${project.version}</Share-Implementation-Version>
+                            <Share-Implementation-Build>${build.buildNumber}</Share-Implementation-Build>
+                            <Share-Implementation-Build-Time>${maven.build.timestamp}</Share-Implementation-Build-Time>
                         </manifestEntries>
                     </archive>
                 </configuration>

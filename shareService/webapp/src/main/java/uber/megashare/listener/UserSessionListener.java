@@ -37,7 +37,7 @@ import uber.megashare.model.User;
  *
  * @author <a href="mailto:matt@raibledesigns.com">Matt Raible</a>
  */
-public class UserCounterListener implements ServletContextListener, HttpSessionAttributeListener {
+public class UserSessionListener implements ServletContextListener, HttpSessionAttributeListener {
    
     /**
      * The default event we're looking to trap.

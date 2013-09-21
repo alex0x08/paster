@@ -34,9 +34,9 @@ import uber.megashare.base.LoggedClass;
 public class AppVersion implements Serializable{
 
     public static final String UNDEFINED = "UNDEFINED",
-            MF_IMPLEMENTATION_VERSION="Implementation-Version",
-            MF_IMPLEMENTATION_BUILD="Implementation-Build",
-            MF_IMPLEMENTATION_BUILD_DATE="Implementation-Build-Time";
+            MF_IMPLEMENTATION_VERSION="Share-Implementation-Version",
+            MF_IMPLEMENTATION_BUILD="Share-Implementation-Build",
+            MF_IMPLEMENTATION_BUILD_DATE="Share-Implementation-Build-Time";
     
     private String implVer, //app version
                    implBuildNum, // build number
@@ -48,6 +48,7 @@ public class AppVersion implements Serializable{
     
     public AppVersion fillFromManifest() {
     
+       
         
         implVer = getManifestValue(MF_IMPLEMENTATION_VERSION);
 

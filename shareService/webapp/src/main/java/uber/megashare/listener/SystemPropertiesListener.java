@@ -26,6 +26,8 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.rolling.FixedWindowRollingPolicy;
 import ch.qos.logback.core.rolling.RollingFileAppender;
 import ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy;
+import com.jcabi.manifests.Manifests;
+import java.io.IOException;
 import uber.megashare.base.SystemInfo;
 import uber.megashare.model.AppVersion;
 
@@ -36,6 +38,13 @@ public class SystemPropertiesListener implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent event) {
 
+       try {
+            Manifests.append(event.getServletContext());
+        } catch (IOException ex) {
+            throw new IllegalStateException("Error reading manifest "+ex.getLocalizedMessage(),ex);
+         }
+            
+        
         File app_home;
 
         
@@ -67,7 +76,7 @@ public class SystemPropertiesListener implements ServletContextListener {
         SystemInfo.getInstance().setRuntimeVersion(mf_version);
         
         
-        System.setProperty("share.app.version", mf_version.getImplBuildTime());
+        System.setProperty("share.app.version", mf_version.getImplBuildNum());
         
         //getLogger().info("application home:"+System.getProperty("app.home"));
 

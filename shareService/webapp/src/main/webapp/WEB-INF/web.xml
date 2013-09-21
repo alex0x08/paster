@@ -181,7 +181,7 @@
     </listener>
     <listener>
         <listener-class>
-            uber.megashare.listener.UserCounterListener
+            uber.megashare.listener.UserSessionListener
         </listener-class>
     </listener>
     <session-config>
