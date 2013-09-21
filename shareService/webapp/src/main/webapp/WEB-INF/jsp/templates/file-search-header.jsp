@@ -2,7 +2,7 @@
 
 <c:url var="url" value='/main/file/list/search' />
 
-<div class="btn-group" style="min-width: 5em;">
+<div class="btn-group box" style="min-width: 5em;">
 
     <form:form action="${url}" commandName="query" 
                class="form-inline"  
@@ -13,7 +13,7 @@
 
             <fmt:message var="searchPlaceholder" key='search.placeholder.default'/>
 
-            <form:input path="query" type="text" placeholder="${searchPlaceholder}" />
+            <form:input path="query" type="text" placeholder="${searchPlaceholder}" cssClass="form-control" cssStyle="width:40em;"   />
         </div>
         
 

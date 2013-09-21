@@ -41,15 +41,14 @@
                             dataType: 'json',
                             autoUpload: true,
                             dropZone: $('#dropzone'),
+                            
                              drop: function (e, data) {
-        $.each(data.files, function (index, file) {
+                                $.each(data.files, function (index, file) {
         
-        console.log('Selected file: ' + file.name);
-        $('#progress').css('display','');    
-        
-           
-        });
-    },
+                                console.log('Selected file: ' + file.name);
+                                $('#progress').css('display','');    
+                                });
+                            },
                             change: function (e, data) {
                                 $.each(data.files, function (index, file) {
                                     console.log('Selected file: ' + file.name);
@@ -64,36 +63,29 @@
                             $('#progress .progress-bar').css('width', '0');
                                 
                                 try {
-                                    console.log(data);
+                                    /*console.log(data);*/
+                                    
                                     if (typeof data.result['error'] == "undefined") {
-                                        /*
-                                        $("#messages").append('<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert">&times;</button>File ' + data.result['name'] + ' uploaded sucessfully</div>');
-                                         */
+                                       
                                         $.get("${blockUrl}?id=" + data.result['id'], function(data) {
                                             $("#gallery").prepend(data);
                                             
                                             
-                                            $('a.zoombox').zoombox({
-                theme       : 'simple',        //available themes : zoombox,lightbox, prettyphoto, darkprettyphoto, simple
-                opacity     : 0.3,              // Black overlay opacity
-                duration    : 800,              // Animation duration
-                animation   : true,             // Do we have to animate the box ?
-                width       : 1024,              // Default width
-                height      : 768,              // Default height
-                gallery     : true,             // Allow gallery thumb view
-                autoplay : true,                // Autoplay for video
-                overflow: true
-            });
-                                            
+                                       initZoombox();
+                                       initFlowPlayer();
+                                       initButtons();
+        
                                         });
                                     } else {
-                                        $("#messages").append('<div class="alert alert-error"><button type="button" class="close" data-dismiss="alert">&times;</button>File ' + data.result['name'] + ' failed to upload!</div>');
+                                        showError('File ' + data.result['name'] + ' failed to upload!');
                                     }
                                 } catch (e) {
-                                    alert(e.message);
+                                    showError(e.message);
                                 }
                             }, error: function(data) {
                                 console.log(data);
+                                try {
+                                showError(data.responseText); } catch (e) {showError(data);}
                             }
                         });              
                    
@@ -119,6 +111,10 @@
                         }).on('changeDate', function(ev) {
                             removalPicker.hide();
                         }).data('datepicker');
+
+
+                       
+     
 
                     });
 
@@ -196,14 +192,23 @@
 
                                              </c:choose>
 
-                                             <form:select id="accessLevel" path="accessLevel" disabled="${accessLevelDisabled}" 
-                                                          cssClass="form-control" cssStyle="max-width:12em;" >
+                                       
+                                                 
+                                                 <div class="btn-group" data-toggle="buttons">
+
                                                  <c:forEach items="${model.accessLevel.levels}" var="level">
-                                                     <form:option value="${level.code}">
+                                                     <label class="btn btn-default" >
                                                          <fmt:message key="${level.desc}" />
-                                                     </form:option>
+                                                         <form:radiobutton path="accessLevel" value="${level.code}"  />
+                                                     </label>
+
                                                  </c:forEach>
-                                             </form:select>
+
+
+                                             </div>    
+                                             
+                                                 
+                                            
 
 
                                              <c:if test="${not empty model.integrationCode}">
@@ -369,7 +374,7 @@
 
     <c:if test="${model.blank}">
         <div class="col-lg-4">                                    
-            <div id="dropzone" class="box well" style="width:30em;height:10em;">Drop files here</div>
+            <div id="dropzone" class="box well" style="width:30em;height:10em;border:1px solid black;"><fmt:message key='file.upload.dropzone'/></div>
          </div>
      
     </c:if>

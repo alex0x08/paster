@@ -20,7 +20,9 @@ import java.io.Serializable;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
+import org.hibernate.envers.NotAudited;
 import uber.megashare.base.LoggedClass;
 
 /**
@@ -42,6 +44,8 @@ public abstract class BaseDBObject extends BaseObject implements Serializable, I
     
     private boolean disabled;
 
+    
+    
     /**
      * является ли объект отключенным
      *

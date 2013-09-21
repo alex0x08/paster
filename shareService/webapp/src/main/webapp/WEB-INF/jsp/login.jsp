@@ -1,9 +1,6 @@
 <%@ include file="/WEB-INF/jsp/templates/common/taglibs.jsp"%>
 
 
-<%@ page import="net.tanesha.recaptcha.ReCaptcha" %>
-<%@ page import="net.tanesha.recaptcha.ReCaptchaFactory" %>
-
 <div class='row'>
     <div class='col-md-offset-3 col-xs-4 col-md-5'>
 

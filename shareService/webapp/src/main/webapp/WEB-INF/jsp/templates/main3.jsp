@@ -147,6 +147,9 @@
                
                 <div class="col-xs-12 col-md-12">
                     
+                    
+                    <div id="jsErrors"></div>
+                    
                     <c:if test="${not empty statusMessageKey}">
                         <div class="alert alert-block alert-warning" style="width:20em;">
                             <a class="close" data-dismiss="alert" href="#">×</a>

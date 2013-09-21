@@ -23,8 +23,36 @@
     <canvas id="the-canvas" style="border:1px solid black"></canvas>
   </div>
 
-  <!-- Use latest PDF.js build from Github -->
-  <script type="text/javascript" src="<c:url value='/main/static/${appVersion}/js/pdf.js'/>"></script>
+  <script src="<c:url value='/main/assets/${appVersion}/jquery/2.0.3/jquery.js'/>"></script>
+      
+     <script type="text/javascript" src="<c:url value='/main/assets/${appVersion}/pdf-js/0.5.5/external/webL10n/l10n.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/main/assets/${appVersion}/pdf-js/0.5.5/src/core.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/main/assets/${appVersion}/pdf-js/0.5.5/src/util.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/main/assets/${appVersion}/pdf-js/0.5.5/src/api.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/main/assets/${appVersion}/pdf-js/0.5.5/src/metadata.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/main/assets/${appVersion}/pdf-js/0.5.5/src/canvas.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/main/assets/${appVersion}/pdf-js/0.5.5/src/obj.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/main/assets/${appVersion}/pdf-js/0.5.5/src/function.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/main/assets/${appVersion}/pdf-js/0.5.5/src/charsets.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/main/assets/${appVersion}/pdf-js/0.5.5/src/cidmaps.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/main/assets/${appVersion}/pdf-js/0.5.5/src/colorspace.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/main/assets/${appVersion}/pdf-js/0.5.5/src/crypto.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/main/assets/${appVersion}/pdf-js/0.5.5/src/evaluator.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/main/assets/${appVersion}/pdf-js/0.5.5/src/fonts.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/main/assets/${appVersion}/pdf-js/0.5.5/src/glyphlist.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/main/assets/${appVersion}/pdf-js/0.5.5/src/image.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/main/assets/${appVersion}/pdf-js/0.5.5/src/metrics.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/main/assets/${appVersion}/pdf-js/0.5.5/src/parser.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/main/assets/${appVersion}/pdf-js/0.5.5/src/pattern.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/main/assets/${appVersion}/pdf-js/0.5.5/src/stream.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/main/assets/${appVersion}/pdf-js/0.5.5/src/worker.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/main/assets/${appVersion}/pdf-js/0.5.5/external/jpgjs/jpg.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/main/assets/${appVersion}/pdf-js/0.5.5/src/jpx.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/main/assets/${appVersion}/pdf-js/0.5.5/src/jbig2.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/main/assets/${appVersion}/pdf-js/0.5.5/src/bidi.js'/>"></script>
+    <script type="text/javascript">PDFJS.workerSrc = '<c:url value='/main/assets/${appVersion}/pdf-js/0.5.5/src/worker_loader.js'/>';</script>
+
+  
   
   <script type="text/javascript">
     //
@@ -41,7 +69,7 @@
     // Disable workers to avoid yet another cross-origin issue (workers need the URL of
     // the script to be loaded, and currently do not allow cross-origin scripts)
     //
-    PDFJS.disableWorker = true;
+    //PDFJS.disableWorker = true;
 
     var pdfDoc = null,
         pageNum = 1,
@@ -92,13 +120,17 @@
       renderPage(pageNum);
     }
 
+    $(document).ready(function() {
+    
     //
     // Asynchronously download PDF as an ArrayBuffer
     //
-    PDFJS.getDocument(url).then(function getPdfHelloWorld(_pdfDoc) {
-      pdfDoc = _pdfDoc;
+    PDFJS.getDocument(url).then(function (pdf) {
+      pdfDoc = pdf;
       renderPage(pageNum);
     });
+    
+     });
   </script>  
 </body>
 </html>

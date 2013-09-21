@@ -9,13 +9,19 @@
 
     <script type="text/javascript">
         
-           $('#auth-dropdown').click(function(event){
-                event.stopPropagation();
-                }
-            );
+        var commentsUrl = '<c:url value="/main/file/raw/comments"/>';
+
+        function showError(message) {
+            
+         console.log('js error: ' + message);
+         $('#jsErrors').append('<div id="jsErrorMessage" class="alert alert-block alert-danger fade in">'+
+                        '<button type="button" class="close" data-dismiss="alert"  >&times;</button>'+
+                        '<h4>Oh snap! You got an error!</h4>'+
+                        '<p>'+message+'</p></div>');         
+        }
         
-        $(document).ready(function() {
-    
+        function initZoombox() {
+            
          $('a.zoombox').zoombox({
                 theme       : 'simple',        //available themes : zoombox,lightbox, prettyphoto, darkprettyphoto, simple
                 opacity     : 0.3,              // Black overlay opacity
@@ -26,18 +32,23 @@
                 gallery     : true,             // Allow gallery thumb view
                 autoplay : true,                // Autoplay for video
                 overflow: true
-            });
-     
+            });   
+        }
+        
+        function initFlowPlayer() {
+      
         flowplayer("a.embedPlayer", "<c:url value='/main/static/${appVersion}/libs/flowplayer/flowplayer-3.2.16.swf'/>", {
       clip:  {
           autoPlay: false,
           autoBuffering: true
       }
+           
   });
-     
-        var commentsUrl = '<c:url value="/main/file/raw/comments"/>';
-
-            $("[rel='tooltip']").tooltip();
+        }
+        
+        function initButtons() {
+            
+              $("[rel='tooltip']").tooltip();
   
                $(".commentsBtn").bind('click', function(e) {
                
@@ -90,5 +101,31 @@
 
             });
 
+            
+        }
+        
+        
+           $('#auth-dropdown').click(function(event){
+                event.stopPropagation();
+                }
+            );
+        
+        $(document).ready(function() {
+    
+         initZoombox();
+         initFlowPlayer();
+         initButtons();
+     
+           /* Bootstrappable btn-group with checkables inside
+         - hide inputs and set bootstrap class*/
+        $('.btn-group label.btn input[type=radio]')
+          .hide()
+          .filter(':checked').parent('.btn').addClass('active');
+   
+         // showError('Fuck!');
+          
+         // setTimeout("showError('Die')",4000);
         });
     </script>
+
+    

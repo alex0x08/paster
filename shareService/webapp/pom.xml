@@ -565,7 +565,27 @@
     <artifactId>jquery-ui</artifactId>
     <version>1.10.2-1</version>
 </dependency>
-                        
+                  
+
+<dependency>
+    <groupId>org.webjars</groupId>
+    <artifactId>pdf-js</artifactId>
+    <version>0.5.5</version>
+</dependency>                              
+
+
+<dependency>
+    <groupId>org.webjars</groupId>
+    <artifactId>stacktrace</artifactId>
+    <version>0.5.0</version>
+</dependency>      
+
+
+<dependency>
+    <groupId>org.webjars</groupId>
+    <artifactId>prettify</artifactId>
+    <version>4-Mar-2013</version>
+</dependency>      
 
     </dependencies>
 
@@ -984,9 +1004,9 @@
         </repository>
 		
         <repository>
-            <id>download</id>
-            <name>download</name>
-            <url>http://download.java.net/maven/2</url>
+            <id>ibiblio</id>
+            <name>ibiblio</name>
+            <url>http://mirrors.ibiblio.org/maven2</url>
         </repository>
 		
         <repository>

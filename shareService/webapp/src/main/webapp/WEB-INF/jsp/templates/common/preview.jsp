@@ -118,7 +118,8 @@
  
     <div class="panel-heading" style="margin:0;padding:0;border:0;">   <ul class="nav nav-tabs" >
             <li class="active">
-                    <a href="#file_${model.id}" data-toggle="tab" ><span class="glyphicon glyphicon-file"></span> <fmt:message key="file.tab.file"/></a></li>
+                    <a href="#file_${model.id}" data-toggle="tab" >
+                        <span class="glyphicon glyphicon-file"></span> <fmt:message key="file.tab.file"/></a></li>
                 <li>                        
         
                     <a href="#comments_${model.id}" data-toggle="tab" class="commentsBtn" modelId="${model.id}">
@@ -388,7 +389,7 @@
 
             
             
-            <a title="<fmt:message key="button.edit"/>" class="${previewClass}" target="${not empty param.integrationMode ? "_blank" : target}" href="<c:out value='${fullImgUrl}'/>">
+            <a title="${model.name}" class="${previewClass}" target="${not empty param.integrationMode ? "_blank" : target}" href="<c:out value='${fullImgUrl}'/>">
                 <img style="border: none;"   src="<c:url value='/act/download'>
                          <c:choose>
                              <c:when test="${not empty param.revision}">          
@@ -445,6 +446,8 @@
                            ID: ${model.id}
                            <br/>
                            UUID: ${model.uuid}
+                           <br/>
+                          
                        </P>
                        
                        <p>
