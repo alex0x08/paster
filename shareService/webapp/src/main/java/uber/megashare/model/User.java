@@ -31,6 +31,7 @@ import javax.validation.constraints.Pattern;
 import javax.xml.bind.annotation.XmlTransient;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.hibernate.annotations.IndexColumn;
+import org.hibernate.envers.NotAudited;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Indexed;
 import org.springframework.security.core.GrantedAuthority;
@@ -89,6 +90,18 @@ public class User extends Struct implements Serializable, UserDetails {
     @XStreamOmitField
     private List<SavedSession> savedSessions = new ArrayList<>();
 
+    @OneToOne(fetch = FetchType.EAGER,cascade=CascadeType.ALL)
+    private Project relatedProject;
+
+    public Project getRelatedProject() {
+        return relatedProject;
+    }
+
+    public void setRelatedProject(Project relatedProject) {
+        this.relatedProject = relatedProject;
+    }   
+    
+        
     @JsonIgnore
     public String getNewPassword() {
         return newPassword;

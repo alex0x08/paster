@@ -21,7 +21,7 @@ package uber.megashare.model;
  */
 public enum AccessLevel {
     ALL("level.all"),
-    //GROUP("level.group"),
+    PROJECT("level.project"),
     OWNER("level.owner");
     
     private final String desc;

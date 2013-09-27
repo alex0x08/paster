@@ -41,8 +41,6 @@ public class QStruct extends EntityPathBase<Struct> {
     //inherited
     public final NumberPath<Long> id = _super.id;
 
-    public final StringPath integrationCode = createString("integrationCode");
-
     public final DateTimePath<java.util.Date> lastModified = createDateTime("lastModified", java.util.Date.class);
 
     public final StringPath name = createString("name");

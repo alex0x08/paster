@@ -31,6 +31,8 @@ public class QUser extends EntityPathBase<User> {
 
     private static final long serialVersionUID = -1536610587;
 
+    private static final PathInits INITS = PathInits.DIRECT;
+
     public static final QUser user = new QUser("user");
 
     public final QStruct _super = new QStruct(this);
@@ -46,9 +48,6 @@ public class QUser extends EntityPathBase<User> {
     public final NumberPath<Long> id = _super.id;
 
     //inherited
-    public final StringPath integrationCode = _super.integrationCode;
-
-    //inherited
     public final DateTimePath<java.util.Date> lastModified = _super.lastModified;
 
     public final StringPath login = createString("login");
@@ -58,20 +57,27 @@ public class QUser extends EntityPathBase<User> {
 
     public final StringPath password = createString("password");
 
+    public final QProject relatedProject;
+
     public final SetPath<Role, EnumPath<Role>> roles = this.<Role, EnumPath<Role>>createSet("roles", Role.class, EnumPath.class);
 
     public final ListPath<SavedSession, QSavedSession> savedSessions = this.<SavedSession, QSavedSession>createList("savedSessions", SavedSession.class, QSavedSession.class);
 
     public QUser(String variable) {
-        super(User.class, forVariable(variable));
-    }
-
-    public QUser(Path<? extends User> entity) {
-        super(entity.getType(), entity.getMetadata());
+        this(User.class, forVariable(variable), INITS);
     }
 
     public QUser(PathMetadata<?> metadata) {
-        super(User.class, metadata);
+        this(metadata, metadata.isRoot() ? INITS : PathInits.DEFAULT);
+    }
+
+    public QUser(PathMetadata<?> metadata, PathInits inits) {
+        this(User.class, metadata, inits);
+    }
+
+    public QUser(Class<? extends User> type, PathMetadata<?> metadata, PathInits inits) {
+        super(type, metadata, inits);
+        this.relatedProject = inits.isInitialized("relatedProject") ? new QProject(forProperty("relatedProject")) : null;
     }
 
 }

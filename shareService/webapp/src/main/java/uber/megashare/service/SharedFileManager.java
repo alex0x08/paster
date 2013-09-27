@@ -36,14 +36,14 @@ public interface SharedFileManager extends GenericSearchableManager<SharedFile,S
      *          a list of access levels
      * @return 
      */
-    List<SharedFile> getFilesForUser(Long id,AccessLevel[] levels);
+    List<SharedFile> getFilesForUser(Long id,Long projectId,AccessLevel[] levels);
     /**
      * get all files with specified access levels
      * @param levels
      *      a list of access levels
      * @return 
      */
-    List<SharedFile> getFiles(AccessLevel[] levels);
+    List<SharedFile> getFiles(Long projectId,AccessLevel[] levels);
     /**
      * get file from it's UUID
      * @param uuid

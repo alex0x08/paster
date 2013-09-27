@@ -24,6 +24,7 @@ package uber.megashare.service.security;
  * @author <a href="mailto:matt@raibledesigns.com">Matt Raible</a>
  */
 public class UserExistsException extends Exception {
+    
     private static final long serialVersionUID = 4050482305178810162L;
 
     /**

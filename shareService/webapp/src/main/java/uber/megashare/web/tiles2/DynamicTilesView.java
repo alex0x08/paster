@@ -24,7 +24,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.tiles.TilesContainer;
 import org.apache.tiles.access.TilesAccess;
 import org.apache.tiles.request.servlet.ServletUtil;
-
 import org.springframework.web.servlet.view.AbstractUrlBasedView;
 
 /**
@@ -89,6 +88,7 @@ public class DynamicTilesView extends AbstractUrlBasedView {
 	 * Renders output using Tiles.
 	 */
 	@SuppressWarnings("unchecked")
+        @Override
 	protected void renderMergedOutputModel(@SuppressWarnings("rawtypes") Map model,
 	                                       HttpServletRequest request, HttpServletResponse response)
 	       throws Exception {

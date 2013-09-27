@@ -30,6 +30,8 @@ public class SharedFileSearchQuery extends UserSearchQuery {
 	
 	private List<AccessLevel> levels;
 
+       
+        
     public List<AccessLevel> getLevels() {
         return levels;
     }

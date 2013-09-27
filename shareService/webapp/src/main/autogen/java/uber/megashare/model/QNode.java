@@ -54,9 +54,6 @@ public class QNode extends EntityPathBase<Node> {
     public final NumberPath<Long> id = _super.id;
 
     //inherited
-    public final StringPath integrationCode = _super.integrationCode;
-
-    //inherited
     public final DateTimePath<java.util.Date> lastModified = _super.lastModified;
 
     //inherited
@@ -80,7 +77,7 @@ public class QNode extends EntityPathBase<Node> {
 
     public QNode(Class<? extends Node> type, PathMetadata<?> metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.owner = inits.isInitialized("owner") ? new QUser(forProperty("owner")) : null;
+        this.owner = inits.isInitialized("owner") ? new QUser(forProperty("owner"), inits.get("owner")) : null;
     }
 
 }

@@ -41,7 +41,8 @@ public abstract class StructDaoImpl<T extends Struct> extends GenericDSLDaoImpl<
 
         CriteriaSet cr = new CriteriaSet();
 
-        Query query = getEntityManager().createQuery(cr.cr.where(cr.cb.equal(cr.r.get("integrationCode"), integrationCode))
+        Query query = getEntityManager().createQuery(
+                cr.cr.where(cr.cb.equal(cr.r.get("integrationCode"), integrationCode))
                 .orderBy(cr.cb.desc(cr.r.get("lastModified"))));
         return query.getResultList().isEmpty() ? Collections.EMPTY_LIST : query.getResultList();
 

@@ -44,8 +44,6 @@ public class QComment extends EntityPathBase<Comment> {
     //inherited
     public final BooleanPath disabled = _super.disabled;
 
-    public final QAttachedFile file;
-
     //inherited
     public final NumberPath<Long> id = _super.id;
 
@@ -65,8 +63,7 @@ public class QComment extends EntityPathBase<Comment> {
 
     public QComment(Class<? extends Comment> type, PathMetadata<?> metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.author = inits.isInitialized("author") ? new QUser(forProperty("author")) : null;
-        this.file = inits.isInitialized("file") ? new QAttachedFile(forProperty("file")) : null;
+        this.author = inits.isInitialized("author") ? new QUser(forProperty("author"), inits.get("author")) : null;
     }
 
 }

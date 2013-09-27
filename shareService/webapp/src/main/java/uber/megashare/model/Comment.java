@@ -16,22 +16,17 @@
 package uber.megashare.model;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
-import com.thoughtworks.xstream.annotations.XStreamOmitField;
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
-import javax.xml.bind.annotation.XmlTransient;
-import org.codehaus.jackson.annotate.JsonIgnore;
 import org.hibernate.search.annotations.Boost;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Index;
@@ -70,9 +65,7 @@ public class Comment extends BaseDBObject implements Serializable {
     @Field(index = Index.YES, store = Store.YES, termVector = TermVector.YES, boost=@Boost(1.2f))
     private String message;
     
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @XStreamOmitField
-    private AttachedFile file;
+    
 
     /**
      * Автор комментария
@@ -87,31 +80,8 @@ public class Comment extends BaseDBObject implements Serializable {
         this.author = author;
     }
 
-    /**
-     * Есть ли аттач
-     *
-     * @return true - есть, false - нет
-     */
-    //@Transient
-    public boolean isContainsAttach() {
-        return file != null;
-    }
-
-    /**
-     * Приаттаченный файл
-     *
-     * @return AttachedFile
-     */
-    @JsonIgnore
-    @XmlTransient
-    public AttachedFile getFile() {
-        return file;
-    }
-
-    public void setFile(AttachedFile file) {
-        this.file = file;
-    }
-
+    
+   
     /**
      * Текст сообщения
      *
@@ -146,8 +116,5 @@ public class Comment extends BaseDBObject implements Serializable {
     public void loadFull() {
 
         author.loadFull();
-        if (file != null) {
-            file.loadFull();
-        }
     }
 }

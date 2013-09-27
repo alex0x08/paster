@@ -15,6 +15,10 @@
 
 
 <blockquote class="pull-right">
+    <p>
+        ${currentUser.relatedProject.name}
+    </p>  
+    
   <p title="<c:out value="${currentSettings.appVersion.implVersionFull}"/>">
     <c:out value="${currentSettings.appVersion.implVersion}"/>
   </p>

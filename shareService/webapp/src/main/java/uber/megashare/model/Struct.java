@@ -81,18 +81,7 @@ public abstract class Struct extends BaseDBObject {
     @XStreamAsAttribute
     Date lastModified = Calendar.getInstance().getTime();
 
-    @Field(index = Index.YES, store = Store.YES, termVector = TermVector.NO)
-    @XStreamAsAttribute
-    String integrationCode;
     
-    
-     public String getIntegrationCode() {
-        return integrationCode;
-    }
-
-    public void setIntegrationCode(String integrationCode) {
-        this.integrationCode = integrationCode;
-    }
 
     /**
      * Дата последней модификации объекта
@@ -129,7 +118,6 @@ public abstract class Struct extends BaseDBObject {
         return LoggedClass.getStaticInstance()
                 .getNewProtocolBuilder()
                 .append("name", name)
-                 .append("integrationCode", integrationCode)
                 .append("lastModified", lastModified)
                 .toString() + super.toString();
     }

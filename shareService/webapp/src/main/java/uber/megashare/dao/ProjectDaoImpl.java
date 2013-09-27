@@ -13,36 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package uber.megashare.model;
+package uber.megashare.dao;
+
+import org.springframework.stereotype.Repository;
+import uber.megashare.model.Project;
 
 /**
  *
- * @author alex
+ * @author aachernyshev
  */
-public class UserSearchQuery extends SearchQuery {
-
-    /**
-     *
-     */
-    private static final long serialVersionUID = 1665332063216034083L;
+@Repository("projectDao")
+public class ProjectDaoImpl  extends GenericSearchableDaoImpl<Project> implements ProjectDao{
     
-    private Long userId;
+    public ProjectDaoImpl() {
+        super(Project.class);
+    }
     
-    private Long projectId;
-
-    public Long getProjectId() {
-        return projectId;
-    }
-
-    public void setProjectId(Long projectId) {
-        this.projectId = projectId;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
+    
 }

@@ -19,11 +19,16 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import com.thoughtworks.xstream.annotations.XStreamOmitField;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.Transient;
@@ -34,7 +39,9 @@ import org.apache.commons.io.FileUtils;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.IndexColumn;
 import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
 import org.hibernate.search.annotations.*;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
@@ -107,7 +114,28 @@ public class SharedFile extends Node  {
     @Temporal(javax.persistence.TemporalType.DATE)
     @XStreamAsAttribute
     private Date removeAfter;
+    
+    @Field(index = Index.YES, store = Store.YES, termVector = TermVector.NO)
+    @XStreamAsAttribute
+    String integrationCode;
+    
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
+    @IndexColumn(name = "proj_indx")
+    @NotAudited
+    private Set<Project> relatedProjects = new HashSet<>();
 
+    public Set<Project> getRelatedProjects() {
+        return relatedProjects;
+    }
+    
+    public String getIntegrationCode() {
+        return integrationCode;
+    }
+
+    public void setIntegrationCode(String integrationCode) {
+        this.integrationCode = integrationCode;
+    }
+    
     @JsonIgnore
     public String getNameContents() {
         return nameContents;
@@ -276,6 +304,7 @@ public class SharedFile extends Node  {
                 .append("owner", getOwner())
                 .append("accessLevel", getAccessLevel())
                 .append("fileType", type)
+                .append("integrationCode", integrationCode)
                 .append("previewUrl", previewUrl)
                 .append("mime", mime)
                 .append("fileSize", fileSize).toString() + super.toString();

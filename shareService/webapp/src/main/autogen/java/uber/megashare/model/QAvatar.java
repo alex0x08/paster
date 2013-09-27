@@ -24,45 +24,31 @@ import javax.annotation.Generated;
 
 
 /**
- * QAttachedFile is a Querydsl query type for AttachedFile
+ * QAvatar is a Querydsl query type for Avatar
  */
 @Generated("com.mysema.query.codegen.EntitySerializer")
-public class QAttachedFile extends EntityPathBase<AttachedFile> {
+public class QAvatar extends EntityPathBase<Avatar> {
 
-    private static final long serialVersionUID = -420413862;
+    private static final long serialVersionUID = 216049139;
 
-    public static final QAttachedFile attachedFile = new QAttachedFile("attachedFile");
-
-    public final QStruct _super = new QStruct(this);
-
-    public final ArrayPath<Byte> data = createArray("data", Byte[].class);
-
-    //inherited
-    public final BooleanPath disabled = _super.disabled;
+    public static final QAvatar avatar = new QAvatar("avatar");
 
     public final ArrayPath<Byte> icon = createArray("icon", Byte[].class);
 
-    //inherited
-    public final NumberPath<Long> id = _super.id;
+    public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    //inherited
-    public final DateTimePath<java.util.Date> lastModified = _super.lastModified;
+    public final ArrayPath<Byte> picture = createArray("picture", Byte[].class);
 
-    public final StringPath mime = createString("mime");
-
-    //inherited
-    public final StringPath name = _super.name;
-
-    public QAttachedFile(String variable) {
-        super(AttachedFile.class, forVariable(variable));
+    public QAvatar(String variable) {
+        super(Avatar.class, forVariable(variable));
     }
 
-    public QAttachedFile(Path<? extends AttachedFile> entity) {
+    public QAvatar(Path<? extends Avatar> entity) {
         super(entity.getType(), entity.getMetadata());
     }
 
-    public QAttachedFile(PathMetadata<?> metadata) {
-        super(AttachedFile.class, metadata);
+    public QAvatar(PathMetadata<?> metadata) {
+        super(Avatar.class, metadata);
     }
 
 }

@@ -37,7 +37,7 @@ public interface SharedFileDao extends GenericSearchableDao<SharedFile> {
      *          list of found files
      * @throws ParseException 
      */
-    List<SharedFile> search(String query,Long userId,List<AccessLevel> levels) throws ParseException;
+    List<SharedFile> search(String query,Long userId,Long projectId,List<AccessLevel> levels) throws ParseException;
     /**
      * get list of shared files for specified user and access levels
      * @param id
@@ -46,14 +46,14 @@ public interface SharedFileDao extends GenericSearchableDao<SharedFile> {
      *          a list of access levels
      * @return 
      */
-    List<SharedFile> getFilesForUser(Long id,AccessLevel[] levels);
+    List<SharedFile> getFilesForUser(Long id,Long projectId,AccessLevel[] levels);
     /**
      * get all files with specified access levels
      * @param levels
      *      a list of access levels
      * @return 
      */
-    List<SharedFile> getFiles(AccessLevel[] levels);
+    List<SharedFile> getFiles(Long projectId,AccessLevel[] levels);
     /**
      * get file from it's UUID
      * @param uuid

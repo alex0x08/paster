@@ -33,22 +33,22 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.support.JstlUtils;
 import org.springframework.web.servlet.support.RequestContext;
 import org.springframework.web.servlet.support.RequestContextUtils;
+import uber.megashare.base.LoggedClass;
 
 /**
  * <p>Used for rendering and processing a dynamic tiles view.</p>
  * 
  * @author David Winterfeldt
  */
-public class DynamicTilesViewProcessor {
+public class DynamicTilesViewProcessor extends LoggedClass {
 
-    final Logger logger = LoggerFactory.getLogger(DynamicTilesViewProcessor.class);
     /**
      * Keeps Tiles definition to use once derived.
      */
-    private String derivedDefinitionName = null;
-    private String tilesDefinitionName = "mainTemplate";
-    private String tilesBodyAttributeName = "content";
-    private String tilesDefinitionDelimiter = ".";
+    private String derivedDefinitionName,
+                   tilesDefinitionName = "mainTemplate",
+                   tilesBodyAttributeName = "content",
+                   tilesDefinitionDelimiter = ".";
 
     /**
      * Main template name.  The default is 'mainTemplate'.
@@ -98,7 +98,7 @@ public class DynamicTilesViewProcessor {
             beanName= "/"+beanName;
         }
         
-         logger.debug("start beanName="+beanName);
+         getLogger().debug("start beanName="+beanName);
         
         /**
          * there we extract bean name from url
@@ -111,7 +111,7 @@ public class DynamicTilesViewProcessor {
                     beanName = beanName.substring(0,StringUtils.ordinalIndexOf(beanName, "/", 4) );
                 }
                 
-                logger.debug("found 3rd level, calc beanName="+beanName);
+                getLogger().debug("found 3rd level, calc beanName="+beanName);
                 
             } else {
             
@@ -125,7 +125,7 @@ public class DynamicTilesViewProcessor {
         String definitionName = startDynamicDefinition(beanName, url, tilesRequest, container);
 
         
-        logger.debug("found definition "+definitionName+" beanName="+beanName);
+        getLogger().debug("found definition "+definitionName+" beanName="+beanName);
         
         	//this.renderer.render(getUrl(), tilesRequest);
         
@@ -161,7 +161,7 @@ public class DynamicTilesViewProcessor {
             AttributeContext attributeContext = container.startContext(tilesRequest);
             attributeContext.putAttribute(tilesBodyAttributeName, new Attribute(url));
 
-            logger.debug("URL used for Tiles body.  url='" + url + "'.");
+            getLogger().debug("URL used for Tiles body.  url='" + url + "'.");
         }
 
         return definitionName;
@@ -188,8 +188,7 @@ public class DynamicTilesViewProcessor {
      */
     protected String processTilesDefinitionName(String beanName,
             TilesContainer container,Request tilesRequest)
-            throws TilesException {
-        
+            throws TilesException {       
            
         
         // if definition already derived use it, otherwise 

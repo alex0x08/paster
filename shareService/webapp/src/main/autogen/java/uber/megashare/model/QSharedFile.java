@@ -57,8 +57,7 @@ public class QSharedFile extends EntityPathBase<SharedFile> {
     //inherited
     public final NumberPath<Long> id;
 
-    //inherited
-    public final StringPath integrationCode;
+    public final StringPath integrationCode = createString("integrationCode");
 
     //inherited
     public final DateTimePath<java.util.Date> lastModified;
@@ -81,6 +80,8 @@ public class QSharedFile extends EntityPathBase<SharedFile> {
     public final StringPath previewUrl = createString("previewUrl");
 
     public final NumberPath<Integer> previewWidth = createNumber("previewWidth", Integer.class);
+
+    public final SetPath<Project, QProject> relatedProjects = this.<Project, QProject>createSet("relatedProjects", Project.class, QProject.class);
 
     public final DateTimePath<java.util.Date> removeAfter = createDateTime("removeAfter", java.util.Date.class);
 
@@ -111,7 +112,6 @@ public class QSharedFile extends EntityPathBase<SharedFile> {
         this.commentsCount = _super.commentsCount;
         this.disabled = _super.disabled;
         this.id = _super.id;
-        this.integrationCode = _super.integrationCode;
         this.lastModified = _super.lastModified;
         this.name = _super.name;
         this.owner = _super.owner;

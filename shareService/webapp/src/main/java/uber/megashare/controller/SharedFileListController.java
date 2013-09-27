@@ -88,8 +88,8 @@ public class SharedFileListController
          * if the method was called by authorized user - show only his own
          * files, else - only public files
          */
-            return !isCurrentUserLoggedIn()? fileManager.getFiles(new AccessLevel[]{AccessLevel.ALL}):
-                    fileManager.getFilesForUser(getCurrentUser().getId(),
+            return !isCurrentUserLoggedIn()? fileManager.getFiles(null,new AccessLevel[]{AccessLevel.ALL}):
+                    fileManager.getFilesForUser(getCurrentUser().getId(),getCurrentUser().getRelatedProject().getId(),
                     AccessLevel.values());
     }
    

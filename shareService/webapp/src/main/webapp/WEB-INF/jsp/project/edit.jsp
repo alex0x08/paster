@@ -3,13 +3,12 @@
 
 
 
-<c:url var="url" value='/main/user/save' />
+<c:url var="url" value='/main/project/save' />
 
 <div class="row">
 
     <div class="col-md-3" style="text-align:right;">
-        <img src="<c:out value='http://www.gravatar.com/avatar/${model.avatarHash}?s=128'/>"/>
-
+      
         <div class="form-group">
 
             <c:out value="${model.login}"/> ,      

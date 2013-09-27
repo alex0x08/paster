@@ -34,14 +34,13 @@ import uber.megashare.model.Role;
 import uber.megashare.model.User;
 import uber.megashare.service.SettingsManager;
 import uber.megashare.service.UserManager;
-import com.jcabi.manifests.Manifests;
-import java.io.IOException;
 import org.neo4j.graphdb.traversal.Evaluators;
 import org.neo4j.graphdb.traversal.TraversalDescription;
 import org.neo4j.kernel.Traversal;
 import org.neo4j.kernel.Uniqueness;
 import uber.megashare.base.SystemInfo;
-import uber.megashare.model.AppVersion;
+import uber.megashare.dao.ProjectDao;
+import uber.megashare.model.Project;
 import uber.megashare.model.SystemProperties;
 import uber.megashare.model.tree.FolderNode;
 import uber.megashare.model.tree.NodeType;
@@ -71,6 +70,8 @@ public class StartupListener extends LoggedClass implements ServletContextListen
     private UserDao userDao;
     
     private SharedFileDao shareDao;
+    
+    private ProjectDao projectDao;
 
     /**
      * {@inheritDoc}
@@ -112,6 +113,8 @@ public class StartupListener extends LoggedClass implements ServletContextListen
             UserManager userManager = (UserManager) ctx.getBean("userManager");
             userDao = (UserDao) ctx.getBean("userDao");
             shareDao = (SharedFileDao) ctx.getBean("shareDao");
+            projectDao = (ProjectDao) ctx.getBean("projectDao");
+            
 
     //        UserCustomExtendedRepository repo = (UserCustomExtendedRepository) ctx.getBean("userCustomExtendedRepository");
 
@@ -122,9 +125,6 @@ public class StartupListener extends LoggedClass implements ServletContextListen
             getLogger().debug("__currentSettings:" + sp);
            
             if (sp != null && sp.getInstallDate() != null) {
-           
-                
-                
                 
                 int check =  SystemInfo.getInstance().getRuntimeVersion().compareTo(sp.getAppVersion());
                 
@@ -181,9 +181,23 @@ public class StartupListener extends LoggedClass implements ServletContextListen
                 }
             }
 
+            Project test_p = new Project();
+            test_p.setDescription("Sample project description");
+            test_p.setName("Sample Project");
+            
+            test_p = projectDao.saveObject(test_p);
+            
+             Project test_p2 = new Project();
+            test_p2.setDescription("Sample project2 description");
+            test_p2.setName("Sample Project2");
+           
+            test_p2 = projectDao.saveObject(test_p2);
+           
+            
             User admin = new User();
             admin.setName("Administrator");
             admin.setLogin("admin");
+            admin.setRelatedProject(test_p);
             admin.getRoles().add(Role.ROLE_ADMIN);
 
             admin = userManager.changePassword(admin, "admin");
@@ -197,6 +211,7 @@ public class StartupListener extends LoggedClass implements ServletContextListen
             alex.setLogin("alex");
             alex.setEmail("alex@0x08.tk");
             alex.getRoles().add(Role.ROLE_USER);
+            alex.setRelatedProject(test_p2);
             alex = userManager.changePassword(alex, "login");
             alex = userDao.saveObject(alex);
 

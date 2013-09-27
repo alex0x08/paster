@@ -15,7 +15,9 @@
  */
 package uber.megashare.dao;
 
+import com.mysema.query.types.Expression;
 import com.mysema.query.types.expr.BooleanExpression;
+import com.mysema.query.types.expr.CaseBuilder;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -30,8 +32,8 @@ import org.hibernate.search.jpa.FullTextQuery;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 import uber.megashare.base.logging.LoggedCall;
-import static uber.megashare.dao.GenericSearchableDaoImpl.an;
 import uber.megashare.model.AccessLevel;
+import uber.megashare.model.Project;
 import uber.megashare.model.QSharedFile;
 import uber.megashare.model.SharedFile;
 
@@ -68,7 +70,7 @@ public class SharedFileDaoImpl extends GenericSearchableDaoImpl<SharedFile> impl
      * {@inheritDoc}
      */
     public List<SharedFile> search(final String query,
-            final Long userId,
+            final Long userId,final Long projectId,
             final List<AccessLevel> levels) throws ParseException {
 
         return new LoggedCall<List<SharedFile>>() {
@@ -79,8 +81,8 @@ public class SharedFileDaoImpl extends GenericSearchableDaoImpl<SharedFile> impl
                 if (org.apache.commons.lang.StringUtils.isBlank(query) || query.trim().equals("*")) {
                     log.append("empty query, return all files for user");
                     return userId != null
-                            ? getFilesForUser(userId, AccessLevel.values())
-                            : getFiles(new AccessLevel[]{AccessLevel.ALL});
+                            ? getFilesForUser(userId,projectId, AccessLevel.values())
+                            : getFiles(projectId,new AccessLevel[]{AccessLevel.ALL});
                 }
 
                 String qquery = query;
@@ -125,14 +127,27 @@ public class SharedFileDaoImpl extends GenericSearchableDaoImpl<SharedFile> impl
 
     }
 
+   
     /**
      * {@inheritDoc}
      */
     @Override
-    public List<SharedFile> getFilesForUser(Long id, AccessLevel[] levels) {
-        return findAll(
-                BooleanExpression.anyOf(QSharedFile.sharedFile.accessLevel.in(levels).and(QSharedFile.sharedFile.owner.id.eq(id)),
-                QSharedFile.sharedFile.accessLevel.eq(AccessLevel.ALL)), QSharedFile.sharedFile.lastModified.desc());
+    public List<SharedFile> getFilesForUser(Long userId, Long projectId, AccessLevel[] levels) {
+        
+        List<BooleanExpression> out = new ArrayList<>();
+        
+        out.add(projectId!=null ? 
+                QSharedFile.sharedFile.relatedProjects.contains(new Project(projectId)):
+                QSharedFile.sharedFile.accessLevel.in(AccessLevel.ALL));
+        
+        out.add(BooleanExpression.anyOf(
+                QSharedFile.sharedFile.accessLevel.in(levels)
+                .and(QSharedFile.sharedFile.owner.id.eq(userId)),
+                QSharedFile.sharedFile.accessLevel.in(AccessLevel.PROJECT)
+                ));
+        
+        return findAll(BooleanExpression.allOf(out.toArray(new BooleanExpression[out.size()])), 
+                QSharedFile.sharedFile.lastModified.desc());
     }
 
     
@@ -151,8 +166,20 @@ public class SharedFileDaoImpl extends GenericSearchableDaoImpl<SharedFile> impl
      * {@inheritDoc}
      */
     @Override
-    public List<SharedFile> getFiles(AccessLevel[] levels) {
-        return findAll(QSharedFile.sharedFile.accessLevel.in(levels), QSharedFile.sharedFile.lastModified.desc());
+    public List<SharedFile> getFiles(Long projectId,AccessLevel[] levels) {
+        
+          List<BooleanExpression> out = new ArrayList<>();
+        
+          out.add(projectId!=null ? 
+                QSharedFile.sharedFile.relatedProjects.contains(new Project(projectId)):
+                QSharedFile.sharedFile.accessLevel.in(AccessLevel.ALL));
+        
+        
+        
+        out.add(QSharedFile.sharedFile.accessLevel.in(levels));
+        
+        return findAll(BooleanExpression.allOf(out.toArray(new BooleanExpression[out.size()])), 
+                QSharedFile.sharedFile.lastModified.desc());
     }
 
     @Override

@@ -24,23 +24,21 @@ import javax.annotation.Generated;
 
 
 /**
- * QAttachedFile is a Querydsl query type for AttachedFile
+ * QProject is a Querydsl query type for Project
  */
 @Generated("com.mysema.query.codegen.EntitySerializer")
-public class QAttachedFile extends EntityPathBase<AttachedFile> {
+public class QProject extends EntityPathBase<Project> {
 
-    private static final long serialVersionUID = -420413862;
+    private static final long serialVersionUID = -1566639681;
 
-    public static final QAttachedFile attachedFile = new QAttachedFile("attachedFile");
+    public static final QProject project = new QProject("project");
 
     public final QStruct _super = new QStruct(this);
 
-    public final ArrayPath<Byte> data = createArray("data", Byte[].class);
+    public final StringPath description = createString("description");
 
     //inherited
     public final BooleanPath disabled = _super.disabled;
-
-    public final ArrayPath<Byte> icon = createArray("icon", Byte[].class);
 
     //inherited
     public final NumberPath<Long> id = _super.id;
@@ -48,21 +46,19 @@ public class QAttachedFile extends EntityPathBase<AttachedFile> {
     //inherited
     public final DateTimePath<java.util.Date> lastModified = _super.lastModified;
 
-    public final StringPath mime = createString("mime");
-
     //inherited
     public final StringPath name = _super.name;
 
-    public QAttachedFile(String variable) {
-        super(AttachedFile.class, forVariable(variable));
+    public QProject(String variable) {
+        super(Project.class, forVariable(variable));
     }
 
-    public QAttachedFile(Path<? extends AttachedFile> entity) {
+    public QProject(Path<? extends Project> entity) {
         super(entity.getType(), entity.getMetadata());
     }
 
-    public QAttachedFile(PathMetadata<?> metadata) {
-        super(AttachedFile.class, metadata);
+    public QProject(PathMetadata<?> metadata) {
+        super(Project.class, metadata);
     }
 
 }
