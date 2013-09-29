@@ -90,12 +90,20 @@
 
     <c:forEach var="paste" items="${pageItems.pageList}" varStatus="status">
 
-      <c:set property="curDate" value="${paste.lastModified}" target="${splitHelper}"/>
+        
 
+     
 
         <c:choose>
             <c:when test="${paste['class'].name eq 'uber.paste.model.Paste'}">
 
+                
+                 <c:if test="${not paste.sticked}">
+ 
+             <c:set property="curDate" value="${paste.lastModified}" target="${splitHelper}"/>
+
+         </c:if>
+                
                 <c:set var="priorTitle"><fmt:message key="${paste.priority.name}"/></c:set>
 
         <div class="row">
@@ -200,6 +208,9 @@
             </c:when>
             <c:when test="${paste['class'].name eq 'uber.paste.model.Comment'}">
 
+                             <c:set property="curDate" value="${paste.lastModified}" target="${splitHelper}"/>
+
+                
                 <a href="<c:url value="/${paste.id}"></c:url>" title="Click to view paste vol. ${paste.id}">
                     <span  class="pasteTitle"><c:out value="${paste.text}" escapeXml="true"  /></span>
                 </a>
