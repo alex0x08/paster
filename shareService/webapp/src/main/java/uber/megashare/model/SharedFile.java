@@ -28,7 +28,7 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.Transient;
@@ -39,7 +39,6 @@ import org.apache.commons.io.FileUtils;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.IndexColumn;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
 import org.hibernate.search.annotations.*;
@@ -119,14 +118,20 @@ public class SharedFile extends Node  {
     @XStreamAsAttribute
     String integrationCode;
     
-    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
-    @IndexColumn(name = "proj_indx")
-    @NotAudited
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    //@JoinColumn(name="proj_id")
+    //@OrderColumn(name = "proj_indx")
+    //@NotAudited
     private Set<Project> relatedProjects = new HashSet<>();
 
     public Set<Project> getRelatedProjects() {
         return relatedProjects;
     }
+
+    public void setRelatedProjects(Set<Project> relatedProjects) {
+        this.relatedProjects = relatedProjects;
+    }   
+    
     
     public String getIntegrationCode() {
         return integrationCode;

@@ -90,7 +90,7 @@ public class User extends Struct implements Serializable, UserDetails {
     @XStreamOmitField
     private List<SavedSession> savedSessions = new ArrayList<>();
 
-    @OneToOne(fetch = FetchType.EAGER,cascade=CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER,cascade=CascadeType.ALL)
     private Project relatedProject;
 
     public Project getRelatedProject() {

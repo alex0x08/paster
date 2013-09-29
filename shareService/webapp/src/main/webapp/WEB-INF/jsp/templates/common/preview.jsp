@@ -448,6 +448,12 @@
                            UUID: ${model.uuid}
                            <br/>
                           
+                           <c:forEach var="proj" items="${model.relatedProjects}" >
+
+                                ${proj.name}
+
+                           </c:forEach>
+                           
                        </P>
                        
                        <p>
@@ -462,7 +468,7 @@
                                <img style="display: inline;" src="<c:url value='/main/static/${appVersion}/images/mime/xml.gif'/>"/>
                            </a>    
                        </p>
-                       <textarea  class="form-control" cols="40" rows="6"  ><iframe src="${externalUrl}/main/file/integrated/view?id=${model.id}" width="400" height="400" frameborder="0"></iframe>
+                       <textarea  class="form-control" cols="40" rows="6" disabled="true"  ><iframe src="${externalUrl}/main/file/integrated/view?id=${model.id}" width="400" height="400" frameborder="0"></iframe>
                        </textarea>
                        
                 </div>

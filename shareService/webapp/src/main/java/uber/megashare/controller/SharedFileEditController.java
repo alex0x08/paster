@@ -15,6 +15,7 @@
  */
 package uber.megashare.controller;
 
+import java.beans.PropertyEditorSupport;
 import java.io.File;
 import java.io.FileInputStream;
 import java.text.SimpleDateFormat;
@@ -29,7 +30,6 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -50,6 +50,7 @@ import static uber.megashare.controller.GenericEditController.SAVE_ACTION;
 import static uber.megashare.controller.ListConstants.LIST_ACTION;
 import static uber.megashare.controller.SharedFileConstants.FILE_PREFIX;
 import uber.megashare.model.AccessLevel;
+import uber.megashare.model.Project;
 import uber.megashare.model.SharedFile;
 import uber.megashare.model.SharedFileSearchQuery;
 import uber.megashare.service.SharedFileManager;
@@ -87,7 +88,8 @@ public class SharedFileEditController extends GenericCommentController<SharedFil
     }
     
     @InitBinder
-    private void dateBinder(WebDataBinder binder,Locale locale) {
+    protected void initBinder(WebDataBinder binder,Locale locale) {
+       
         
         //The date format to parse or output your dates
         SimpleDateFormat dateFormat = new SimpleDateFormat(messageSource.getMessage("date.format", null, locale));
@@ -95,6 +97,8 @@ public class SharedFileEditController extends GenericCommentController<SharedFil
         CustomDateEditor editor = new CustomDateEditor(dateFormat, true);
         //Register it as custom editor for the Date type
         binder.registerCustomEditor(Date.class, editor);
+        
+       
     }
 
     @RequestMapping(value = RAW_PREFIX+"/comments", method = RequestMethod.GET)
@@ -182,6 +186,7 @@ public class SharedFileEditController extends GenericCommentController<SharedFil
                     input.setUuid(old.getUuid());
                     input.setName(old.getName());
                     input.setIntegrationCode(old.getIntegrationCode());
+                    input.setRelatedProjects(old.getRelatedProjects());
                     
                     /**
                      * allow upload and replace exist pulic file for all logged in users
@@ -203,6 +208,7 @@ public class SharedFileEditController extends GenericCommentController<SharedFil
                      * always will be an user
                      */
                     input.setOwner(getCurrentUser());
+                    input.getRelatedProjects().add(getCurrentUser().getRelatedProject());
                 }
 
                 //SharedFile out = new SharedFile();

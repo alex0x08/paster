@@ -56,7 +56,7 @@ public abstract class Node extends CommentedStruct {
     
     @Enumerated(EnumType.STRING)
     @Field(index = Index.YES, store = Store.YES, termVector = TermVector.NO)
-    private AccessLevel accessLevel = AccessLevel.OWNER;
+    private AccessLevel accessLevel = AccessLevel.PROJECT;
     
     public String getOwnerName() {
         return ownerName;

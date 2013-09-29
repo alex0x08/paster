@@ -12,8 +12,12 @@
                  <c:out value="${user.login}"/> ,      
                             <c:forEach items="${user.roles}" var="role"  >
                                 <fmt:message key="${role.desc}"/>
-                            </c:forEach>               
-                </div>
+                            </c:forEach> 
+                            <p>
+                                  <c:out value="${user.relatedProject.name}"/>
+                            </p>    
+                </div>                            
+                           
     </div>
 
     <div class="col-md-4"> 

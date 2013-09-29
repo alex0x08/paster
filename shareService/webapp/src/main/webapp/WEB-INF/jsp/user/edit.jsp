@@ -15,7 +15,10 @@
             <c:out value="${model.login}"/> ,      
             <c:forEach items="${model.roles}" var="role"  >
                 <fmt:message key="${role.desc}"/>
-            </c:forEach>               
+            </c:forEach>   
+            <p>
+                <c:out value="${model.relatedProject.name}"/>
+            </p> 
         </div>
     </div>
 
@@ -97,6 +100,26 @@
                         </span>
                     </div>
                 </div>
+                        
+                        
+                 <div class="form-group">
+                    <label cssClass="control-label" for="projects"><fmt:message key="user.relatedProject"/>:</label>
+                    <div class="controls">
+                        <span class="input">
+                            <form:select id="projects" path="relatedProject" multiple="false"  cssErrorClass="form-control alert alert-danger" 
+                                         cssStyle="width:20em;" 
+                                         cssClass="form-control">
+                                <c:forEach items="${availableProjects}" var="project">
+                                    <form:option value="${project}" >
+                                        <c:out value="${project.name}"/>
+                                    </form:option>
+                                </c:forEach>
+                            </form:select> 
+                            <form:errors path="relatedProject" cssClass="help-block alert alert-danger" /> 
+                        </span>
+                    </div>
+                </div>        
+                        
 
                 <div class="form-group ">
 

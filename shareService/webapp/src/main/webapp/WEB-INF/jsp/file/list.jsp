@@ -1,6 +1,9 @@
 <%@ include file="/WEB-INF/jsp/templates/common/taglibs.jsp"%>
 
 
+<script src="<c:url value='/main/static/${appVersion}/libs/bootstrap-pagination/bootstrap-pagination.min.js'/>"></script>
+
+
 <div id="notice"></div>
 
 <c:url var="url" value='/main/file/list' />
@@ -14,7 +17,7 @@
 
             <ul class="dropdown-menu" id="pageDropdown" >
 
-            <c:forTokens items="5,10,50,100" delims="," var="pg" >
+            <c:forTokens items="5,10,50,100,500" delims="," var="pg" >
                 <li >
                     <a href="<c:url value="/main/file/list/limit/${pg}">
                        </c:url>"><c:out value="${pg}"/></a>
@@ -30,7 +33,10 @@
 <c:if test="${pageItems.pageCount > 1}">
 
     <div class='row' style="text-align:center;" >
-        <ul class='pagination'>
+        
+           <div class="pagination pagination-centered pagination-small"></div>
+ 
+        <%-- <ul class='pagination'>
 
             <c:if test="${!pageItems.firstPage}">
                 <li>
@@ -62,7 +68,8 @@
                 </li>
             </c:if>
 
-        </ul>
+        </ul> --%>
+       
       </div>
     
 
@@ -86,3 +93,24 @@
 
 </c:if>
 
+
+            
+   <script type="text/javascript">
+    $(document).ready(function() {
+        
+      var target = $('.pagination'),
+          options = {
+            prev: 'prev',
+            next: 'next',
+            left: 3,
+            right: 3,
+            page: 9,
+            lastPage: ${pageItems.pageCount},
+            click: function(i) {
+              options.page = i;
+              target.pagination(options);
+            }
+          };
+      target.pagination(options);
+    });
+    </script>          
