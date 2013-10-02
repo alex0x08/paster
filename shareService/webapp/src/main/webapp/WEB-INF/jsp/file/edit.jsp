@@ -31,7 +31,7 @@
 
                 <c:url var="url" value='/main/file/upload-xdr' />
 
-                <c:set var="mainBlockStyle" value="col-md-2"/>
+                <c:set var="mainBlockStyle" value="col-md-3"/>
                 
                 <script type="text/javascript">
 
@@ -206,9 +206,6 @@
 
 
                                              </div>    
-                                             
-                                                 
-                                            
 
 
                                              <c:if test="${not empty model.integrationCode}">

@@ -43,8 +43,6 @@ public class SystemInfo {
     }
 
     
-  
-    
     private static final SystemInfo instance = new SystemInfo();
     
     public static final SystemInfo getInstance() {

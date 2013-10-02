@@ -1,10 +1,29 @@
 <%@ include file="/WEB-INF/jsp/templates/common/taglibs.jsp"%>
 
-               <script src="<c:url value='/libs/jasny-bootstrap/js/jasny-bootstrap.js'/>"></script>
- 
+
+
+
 
 <div id="notice"></div>
 
+
+<script src="<c:url value='/main/assets/${appVersion}/jquery-ui/1.10.2/ui/minified/jquery.ui.widget.min.js'/>"></script>
+
+<link href="<c:url value='/main/assets/${appVersion}/jquery-file-upload/8.4.2/css/jquery.fileupload-ui.css'/>" rel="stylesheet"/>
+
+ <script type="text/javascript">
+                      
+                      
+                       $(document).ready(function() {
+                              
+                              $('#fileSelectBtn').bind('change', function() {
+                                  
+                                  $('#fileSelectLabel').text($(this).val());
+                              });
+                       
+                    });
+                      
+                  </script>
 
 <c:url var="url" value='/main/file/integrated/list' />
 
@@ -13,34 +32,10 @@
 <div class="row-fluid">
     <div class="span6">
 
-        <div class="btn-group pull-left">
-            <a class="btn dropdown-toggle " data-toggle="dropdown" href="#">
-                <img style="display: inline; vertical-align:middle;" 
-                     title="<fmt:message key="locale.${pageContext.response.locale.language}"/>" 
-                     src="<c:url value='/images/flags/flag_${pageContext.response.locale.language}.png'/>"/>
-                <span class="caret"></span>
-            </a>
-            <ul class="dropdown-menu">
-
-                <c:forTokens items="ru,en" delims="," var="locale" >
-                    <c:if test="${pageContext.response.locale.language ne locale}">
-
-                        <li>
-                            <a href="<c:url value="${request.requestURL}">
-                                   <c:param name="locale" value="${locale}" /></c:url>">
-                                   <img style="display: inline; vertical-align:middle;" 
-                                        title="<fmt:message key="locale.${locale}"/>" 
-                                   src="<c:url value='/images/flags/flag_${locale}.png'/>"/>
-                               <fmt:message key="locale.${locale}"/>
-                            </a>
-                        </li>
-
-                    </c:if>
-
-                </c:forTokens>   
-            </ul>
-        </div>        
-        <sec:authorize ifAnyGranted="ROLE_USER,ROLE_ADMIN">
+              <jsp:include page="/WEB-INF/jsp/templates/common/lang-select.jsp"/>
+           
+        
+       <sec:authorize ifAnyGranted="ROLE_USER,ROLE_ADMIN">
 
             <form:form action="${uploadUrl}" modelAttribute="model" 
                        method="POST" id="file_upload" cssClass="form-vertical"
@@ -61,16 +56,19 @@
                             <form:label cssClass="control-label" path="file">
                                 <fmt:message key="file.file.new"/>:</form:label>
                                 <div class="controls">
-                                    <div class="fileupload fileupload-new" data-provides="fileupload">
-                                        <span class="btn btn-file">
-                                            <span class="fileupload-new"><fmt:message key="button.select"/></span>
-                                        <form:input path="file" name="file" cssClass="input-file"
-                                                    type="file" /> 
-                                        <span class="fileupload-exists"><fmt:message key="button.change"/></span>
-                                    </span>
-                                    <span class="fileupload-preview"></span>
-                                    <a href="#" class="close fileupload-exists" data-dismiss="fileupload" style="float: none">×</a>
-                                </div>
+                                    
+                                     <div class="fileupload fileupload-new" data-provides="fileupload">
+
+                                        <span class="btn btn-success fileinput-button">
+                                            <i class="glyphicon glyphicon-repeat"></i>
+                                            
+                                            <span id="fileSelectLabel">Select file</span>
+                                            <form:input id="fileSelectBtn" path="file" name="file"   
+                                                        type="file" /> 
+                                        </span>
+                                    </div>
+                                    
+                                    
                                 <form:errors path="file" cssClass="error" />
                             </div>      
                         </div>

@@ -15,8 +15,6 @@
  */
 package uber.megashare.service.job;
 
-import java.util.ArrayList;
-import java.util.List;
 import org.slf4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.scheduling.quartz.QuartzJobBean;
@@ -35,13 +33,11 @@ public abstract class AbstractJob extends QuartzJobBean {
     protected final Logger log = LoggedClass.newInstance(getClass()).getLogger();
 
     protected ApplicationContext applicationContext;
-
-   
-    
+ 
     public void setApplicationContext(ApplicationContext appContext) {
         applicationContext = appContext;
        
-         User startup = new User();
+            User startup = new User();
             startup.setName("Scheduler User");
             startup.setLogin("job");
             startup.setPassword("jobstartup");

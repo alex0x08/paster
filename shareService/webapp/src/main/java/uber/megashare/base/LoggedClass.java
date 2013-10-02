@@ -16,7 +16,6 @@
 package uber.megashare.base;
 
 import java.io.Serializable;
-
 import org.apache.commons.lang.builder.StandardToStringStyle;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.slf4j.Logger;
@@ -31,16 +30,16 @@ import org.slf4j.LoggerFactory;
 public class LoggedClass implements Serializable {
 
     /**
-	 * 
-	 */
-	private static final long serialVersionUID = 2163919862005646481L;
-	/**
+     *
+     */
+    private static final long serialVersionUID = 2163919862005646481L;
+    /**
      * инстанс логгера из slf4, название берется из класса потомка
      */
     private transient Logger log;
 
     public LoggedClass() {
-       log  = LoggerFactory.getLogger(getClass().getName());
+        log = LoggerFactory.getLogger(getClass().getName());
     }
 
     protected LoggedClass(Class<?> c) {
@@ -50,7 +49,6 @@ public class LoggedClass implements Serializable {
     public Logger getLogger() {
         return log;
     }
-
    
     public void logDebug(String msg) {
 

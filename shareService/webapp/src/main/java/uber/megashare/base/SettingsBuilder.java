@@ -46,9 +46,7 @@ public class SettingsBuilder extends AbstractBuilder<SystemProperties> {
     public SettingsBuilder addUploadDir(String dir) {
         obj.setUploadDir(dir);
         return this;
-    }
-
-   
+    }   
     
     public SettingsBuilder addAppVersion() {
         obj.getAppDbVersion().fillFromManifest();

@@ -15,7 +15,6 @@
  */
 package uber.megashare.controller;
 
-import java.beans.PropertyEditorSupport;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -28,15 +27,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.orm.ObjectRetrievalFailureException;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import uber.megashare.base.LoggedClass;
 import uber.megashare.listener.SessionSupport;
-import uber.megashare.model.BaseDBObject;
-import uber.megashare.model.Project;
 import uber.megashare.model.SystemProperties;
 import uber.megashare.model.User;
 import uber.megashare.service.SettingsManager;
@@ -51,7 +46,10 @@ public abstract class AbstractController extends LoggedClass {
 
     interface ActionListener {
 
-        void invokeAction(Model model, HttpServletRequest request, HttpServletResponse response, Locale locale);
+        void invokeAction(Model model, 
+                HttpServletRequest request, 
+                HttpServletResponse response, 
+                Locale locale);
     }
     /**
      *
@@ -88,6 +86,13 @@ public abstract class AbstractController extends LoggedClass {
 
     @Resource(name = "messageSource")
     protected MessageSource messageSource;
+    
+    private final static List<Locale> availableLocales = new ArrayList<>();
+
+    static {
+        availableLocales.add(Locale.ENGLISH);
+        availableLocales.add(new Locale("ru", "RU"));
+    }
     
     @ModelAttribute("currentSettings")
     public SystemProperties getCurrentSettings() {
@@ -138,12 +143,7 @@ public abstract class AbstractController extends LoggedClass {
         getLogger().error("Object not found: " + ex.getLocalizedMessage(), ex);
         return page404;
     }
-    private final static List<Locale> availableLocales = new ArrayList<>();
-
-    static {
-        availableLocales.add(Locale.ENGLISH);
-        availableLocales.add(new Locale("ru", "RU"));
-    }
+    
 
     @ModelAttribute("availableLocales")
     public List<Locale> getAvailableLocales() {
