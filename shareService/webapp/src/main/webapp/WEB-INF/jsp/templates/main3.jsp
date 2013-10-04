@@ -3,11 +3,14 @@
 <html >
     <head>
        <%@ include file="/WEB-INF/jsp/templates/common/template-common-head.jsp"%>
+       
+    
+       
     </head>
 
     <body>
 
-        <div class="navbar navbar-default" >
+        <div class="navbar navbar-default" style="margin-bottom: 0.5em;" >
         <div class="navbar-header" >
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
             <span class="icon-bar"></span>
@@ -107,12 +110,18 @@
                        
         <div class="container">
 
+            
             <div class="row">
                
-                <div class="col-xs-12 col-md-12">
                     
                     
-                    <div id="jsErrors"></div>
+                  <div class="col-xs-12 col-md-12" >
+                    
+                     <div id="jsErrors"></div>
+                    
+                    <div id="notice"></div>
+                     
+
                     
                     <c:if test="${not empty statusMessageKey}">
                         <div class="alert alert-block alert-warning" style="width:20em;">
@@ -120,13 +129,14 @@
                             <p><fmt:message key="${statusMessageKey}"/></p>
                         </div>
                     </c:if>
+                </div>
                
                     <tiles:insertAttribute name="content" />
                     
                    
                 </div>
             </div>
-        </div>
+       
                     
         <hr>
 

@@ -13,7 +13,7 @@
 
             <fmt:message var="searchPlaceholder" key='search.placeholder.default'/>
 
-            <form:input path="query" type="text" placeholder="${searchPlaceholder}" cssClass="form-control" cssStyle="width:40em;"   />
+            <form:input path="query" type="text" placeholder="${searchPlaceholder}" cssClass="form-control" cssStyle="width:25em;"   />
         </div>
         
 

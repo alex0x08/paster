@@ -4,8 +4,6 @@
     Author     : aachernyshev
 --%>
 <%@ include file="/WEB-INF/jsp/templates/common/taglibs.jsp"%>
-
-
         <meta charset="utf-8">
         <title><fmt:message key="site.title"/></title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -22,9 +20,27 @@
             .dropdown-menu {
              min-width: 0px;
             }
+   
+            .pace .pace-progress {
+                background: #29d;
+                position: fixed;
+                z-index: 2000;
+                top: 0;
+                left: 0;
+                height: 2px;
 
-        </style>
+                -webkit-transition: width 1s;
+                -moz-transition: width 1s;
+                -o-transition: width 1s;
+                transition: width 1s;
+            }
 
+            .pace-inactive {
+                display: none;
+            }
+           
+       </style>
+        
         <link rel="stylesheet" type="text/css" media="all" href="<c:url value='/main/static/${appVersion}/css/main.css'/>" />
         <link href="<c:url value='/main/static/${appVersion}/libs/zoombox/zoombox.css'/>" rel="stylesheet" type="text/css" media="screen" />
       
@@ -32,6 +48,9 @@
 
           <script src="<c:url value='/main/assets/${appVersion}/stacktrace/0.5.0/stacktrace.js'/>"></script>
 
+                <script src="<c:url value='/main/static/${appVersion}/libs/pace/pace.min.js'/>"></script>
+
+          
       <script src="<c:url value='/main/assets/${appVersion}/jquery/2.0.3/jquery.js'/>"></script>
       <script src="<c:url value='/main/assets/${appVersion}/jquery-ui/1.10.2/ui/minified/jquery-ui.min.js'/>"></script>
       

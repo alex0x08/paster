@@ -1,25 +1,24 @@
 <%@ include file="/WEB-INF/jsp/templates/common/taglibs.jsp"%>
 
 <div class="btn-group box">
-    
-     <a class="btn dropdown-toggle btn-primary" data-toggle="dropdown" href="#">
-          <span class="glyphicon glyphicon-folder-close"></span>
-                                    <span class="caret"></span>
-                                </a>
+
+    <a class="btn dropdown-toggle btn-primary" data-toggle="dropdown" href="#">
+        <span class="glyphicon glyphicon-folder-close"></span>
+        <span class="caret"></span>
+    </a>
     
 <ul class="dropdown-menu">
 
   
-    <sec:authorize ifAnyGranted="ROLE_ADMIN,ROLE_USER">    
-
-        <li >
+    <sec:authorize ifAnyGranted="ROLE_ADMIN,ROLE_USER">
+        <li>
             <a  href="<c:url value="/main/file/new"/>">
                 <span class="glyphicon glyphicon-upload"></span> <fmt:message key="file.upload.title"/></a> 
         </li>
     </sec:authorize>
-    <li >
+        
+    <li>
         <a  href="<c:url value="/main/file/list"/>"><span class="glyphicon glyphicon-folder-close"></span> <fmt:message key="files.title"/></a>
-
     </li>
 
     <sec:authorize ifAnyGranted="ROLE_ADMIN"> 
@@ -35,6 +34,19 @@
 
         </li>
 
+        
+         <li class="nav-header"><fmt:message key="projects.title"/></li>
+
+        <li class="">
+            <a class="new-user" href="<c:url value="/main/project/new"/>"> <fmt:message key="project.new.title"/></a> 
+        </li>
+
+        <li class="">
+
+            <a class="users" href="<c:url value="/main/project/list"/>"> <fmt:message key="projects.title"/></a>
+
+        </li>
+        
     </sec:authorize>
 
 

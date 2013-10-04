@@ -46,22 +46,22 @@
                                 $.each(data.files, function (index, file) {
         
                                 console.log('Selected file: ' + file.name);
-                                $('#progress').css('display','');    
+                               /* $('#progress').css('display','');*/    
                                 });
                             },
                             change: function (e, data) {
                                 $.each(data.files, function (index, file) {
                                     console.log('Selected file: ' + file.name);
-                                    $('#progress').css('display','');
+                                  /*  $('#progress').css('display','');*/
                                 });
                     },progressall: function(e, data) {
                                 var progress = parseInt(data.loaded / data.total * 100, 10);
-                                $('#progress .progress-bar').css('width',progress + '%');
+                              /*  $('#progress .progress-bar').css('width',progress + '%');*/
                                 console.log(progress + '%');
                     }, done: function(e, data) {
-                            $('#progress').css('display','none'); 
+                            /*$('#progress').css('display','none'); 
                             $('#progress .progress-bar').css('width', '0');
-                                
+                              */  
                                 try {
                                     /*console.log(data);*/
                                     
@@ -262,7 +262,7 @@
                                     <span class="btn btn-success fileinput-button">
                                         <i class="glyphicon glyphicon-plus"></i>
                                         <span><fmt:message key="button.select-upload"/></span>
-                                    <form:input path="file" name="file"   
+                                        <form:input path="file" name="file" 
                                                 type="file" /> 
                                 </span>
 

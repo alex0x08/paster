@@ -272,7 +272,7 @@ public class SharedFileEditController extends GenericCommentController<SharedFil
                             .getUploadDir(),calcPath);
                     fullUploadPath.mkdirs();
                     
-                    input.setUrl(calcPath +File.separator+System.currentTimeMillis() +"."+ ext);
+                    input.setUrl(calcPath +File.separator+input.getUuid() +"."+ ext);
 
                 
                     File fout = new File(settingsManager.getCurrentSettings()
@@ -298,7 +298,7 @@ public class SharedFileEditController extends GenericCommentController<SharedFil
                         input.setPreviewWidth(builder.getImageInfo().getWidth());
                         
                         
-                        input.setPreviewUrl(calcPath +File.separator+System.currentTimeMillis() + "_preview.png");
+                        input.setPreviewUrl(calcPath +File.separator+input.getUuid()+ "_preview.png");
                         
                         FileUtils.writeByteArrayToFile(
                                 new File(settingsManager.getCurrentSettings().getUploadDir(), input.getPreviewUrl()), img);

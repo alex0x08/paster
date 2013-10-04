@@ -1,82 +1,46 @@
 <%@ include file="/WEB-INF/jsp/templates/common/taglibs.jsp"%>
 
 
-<script src="<c:url value='/main/static/${appVersion}/libs/bootstrap-pagination/bootstrap-pagination.min.js'/>"></script>
+<script src="<c:url value='/main/static/${appVersion}/libs/bootstrap-paginator/bootstrap-paginator.min.js'/>"></script>
 
-
-<div id="notice"></div>
 
 <c:url var="url" value='/main/file/list' />
 
-    <div class="btn-group pull-right" >
 
-        <a class="btn dropdown-toggle btn-danger" data-toggle="dropdown" href="#">
-            <c:out value="${pageItems.pageSize}"/> 
-            <span class="caret"></span>
-        </a>
+<div class="row" style="margin: 0; padding: 0;">                
 
-            <ul class="dropdown-menu" id="pageDropdown" >
+    <div class="col-md-10 centered text-center"  >        
+        <c:if test="${pageItems.pageCount > 1}">       
+            <ul id="file-pagination" style="" ></ul>  
+        </c:if>   
+    </div>     
 
-            <c:forTokens items="5,10,50,100,500" delims="," var="pg" >
-                <li >
-                    <a href="<c:url value="/main/file/list/limit/${pg}">
-                       </c:url>"><c:out value="${pg}"/></a>
-                </li>
-            </c:forTokens>   
-
-
-        </ul>
-
-    </div>
-
-
-<c:if test="${pageItems.pageCount > 1}">
-
-    <div class='row' style="text-align:center;" >
-        
-           <div class="pagination pagination-centered pagination-small"></div>
- 
-        <%-- <ul class='pagination'>
-
-            <c:if test="${!pageItems.firstPage}">
-                <li>
-                    <a href="<c:url value="/main/file/list/prev"/>" 
-                       title="<fmt:message key="button.prev"/>"><b>&larr; </b></a>
-                </li>
-            </c:if>
-
-            <c:forEach begin="1" end="${pageItems.pageCount}" step="1" var="pnumber">
-                <c:choose>
-                    <c:when test="${pnumber==pageItems.page+1}">
-                        <li class="disabled"><a href="#">${pnumber}</a></li>                     
-                    </c:when>
-                    <c:otherwise>
-                        <li >
-                            <a title="<fmt:message key="list.page.goto"><fmt:param value="${pnumber}"/></fmt:message>" href="<c:url value="/main/file/list/${pnumber}">
-                               </c:url>">${pnumber}</a>
-                        </li>
-
-                    </c:otherwise>
-                </c:choose>
-
-            </c:forEach>
-
-            <c:if test="${!pageItems.lastPage}">
-                <li >
-                    <a href="<c:url value="/main/file/list/next">
-                       </c:url>" title="<fmt:message key="button.next"/>"><b> &rarr;</b></a>
-                </li>
-            </c:if>
-
-        </ul> --%>
-       
-      </div>
     
+    <div class="col-md-2 centered" style="padding-top: 1em;"  >
 
-</c:if>
+        <div class="btn-group">
+            <button type="button" class="btn btn-danger"><c:out value="${pageItems.pageSize}"/></button>
+            <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown">
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
 
+                <c:forEach items="${fn:split('5,10,50,100,500',',')}" var="pg">
+                    <li >
+                        <a href="<c:url value="/main/file/list/limit/${pg}">
+                           </c:url>"><c:out value="${pg}"/></a>
+                    </li>
+                </c:forEach>   
+            </ul>
+        </div>   
+    </div>         
+    
+</div>
 
-<div id="gallery">
+<div class="row">
+
+    <div id="gallery" class="col-md-12">  
+    
     <c:forEach var="obj" items="${pageItems.pageList}" varStatus="status">
 
         <c:set var="model" value="${obj}" scope="request"></c:set>
@@ -85,32 +49,60 @@
 
     </c:forEach>
 
-</div>
 
 
 <c:if test="${pageItems.nrOfElements == 0}">
-        <jsp:include page="/WEB-INF/jsp/templates/common/noFiles.jsp" />
+    <jsp:include page="/WEB-INF/jsp/templates/common/noFiles.jsp" />
 
 </c:if>
 
 
+
+    </div>
+</div>
+     <c:url value="/main/file/list/" var="listUrl"/>
             
    <script type="text/javascript">
     $(document).ready(function() {
         
-      var target = $('.pagination'),
-          options = {
-            prev: 'prev',
-            next: 'next',
-            left: 3,
-            right: 3,
-            page: 9,
-            lastPage: ${pageItems.pageCount},
-            click: function(i) {
-              options.page = i;
-              target.pagination(options);
-            }
-          };
-      target.pagination(options);
+        
+         var options = {
+            bootstrapMajorVersion: 3, 
+            currentPage: ${pageItems.page+1},
+            totalPages: ${pageItems.pageCount},
+            itemContainerClass: function (type, page, current) {
+                return (page === current) ? "active" : "pointer-cursor";
+            },
+            pageUrl: function(type, page, current){
+
+                return "${listUrl}"+page;
+
+            },
+            useBootstrapTooltip:true,
+            tooltipTitles: function (type, page, current) {
+                switch (type) {
+                case "first":
+                    return "<fmt:message key="button.first"/> <i class='icon-fast-backward icon-white'></i>";
+                case "prev":
+                    return "<fmt:message key="button.prev"/> <i class='icon-backward icon-white'></i>";
+                case "next":
+                    return "<fmt:message key="button.next"/> <i class='icon-forward icon-white'></i>";
+                case "last":
+                    return "<fmt:message key="button.last"/> <i class='icon-fast-forward icon-white'></i>";
+                case "page":
+                    return "<fmt:message key='list.page.goto.no-param'/>"+page;
+                }
+            },
+            bootstrapTooltipOptions: {
+                html: true,
+                placement: 'bottom'
+            },
+                size:'normal'
+                
+        }
+
+        $('#file-pagination').bootstrapPaginator(options);
+        
+      
     });
     </script>          

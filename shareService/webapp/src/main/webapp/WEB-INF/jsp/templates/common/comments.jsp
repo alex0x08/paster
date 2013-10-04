@@ -3,7 +3,7 @@
 
 <div class="row" style="padding-top: 1em;">
 
-    <div  class="col-xs-6 col-md-12">
+    <div  class="col-md-8">
 
         <c:if test="${empty model.comments}">
         <div class="well">
@@ -15,7 +15,7 @@
             <div class="well">
 
                 <div class="row">
-                    ${comment.message}    
+                    <c:out escapeXml="false" value="${comment.message}" />    
                 </div>
 
                 <div class="row">
