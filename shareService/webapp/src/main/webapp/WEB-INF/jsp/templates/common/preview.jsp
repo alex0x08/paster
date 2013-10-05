@@ -105,6 +105,9 @@
                     <c:set var="boxClass" value="panel-danger"/>
                 </c:when>
                  <c:when test="${model.accessLevel == 'OWNER'}">
+                    <c:set var="boxClass" value="panel-success"/>
+                </c:when>
+                 <c:when test="${model.accessLevel == 'PROJECT'}">
                     <c:set var="boxClass" value="panel-info"/>
                 </c:when>
                 <c:otherwise>

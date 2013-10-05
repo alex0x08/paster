@@ -53,10 +53,7 @@
 
 <c:if test="${pageItems.nrOfElements == 0}">
     <jsp:include page="/WEB-INF/jsp/templates/common/noFiles.jsp" />
-
 </c:if>
-
-
 
     </div>
 </div>
@@ -64,8 +61,6 @@
             
    <script type="text/javascript">
     $(document).ready(function() {
-        
-        
          var options = {
             bootstrapMajorVersion: 3, 
             currentPage: ${pageItems.page+1},
@@ -74,9 +69,7 @@
                 return (page === current) ? "active" : "pointer-cursor";
             },
             pageUrl: function(type, page, current){
-
                 return "${listUrl}"+page;
-
             },
             useBootstrapTooltip:true,
             tooltipTitles: function (type, page, current) {

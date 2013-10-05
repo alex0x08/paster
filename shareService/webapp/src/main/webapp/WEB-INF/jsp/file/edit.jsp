@@ -29,36 +29,97 @@
                 <script src="<c:url value='/main/static/${appVersion}/libs/bootstrap-switch/js/bootstrap-switch.js'/>"></script>
                 <script src="<c:url value='/main/assets/${appVersion}/bootstrap-datepicker/1.1.3/js/bootstrap-datepicker.js'/>"></script>
 
+                    <script src="<c:url value='/main/assets/${appVersion}/jquery-knob/1.2.2/jquery.knob.js'/>"></script>
+
+                
                 <c:url var="url" value='/main/file/upload-xdr' />
 
                 <c:set var="mainBlockStyle" value="col-md-3"/>
                 
                 <script type="text/javascript">
 
+                 // Helper function that formats the file sizes
+    function formatFileSize(bytes) {
+        if (typeof bytes !== 'number') {
+            return '';
+        }
+
+        if (bytes >= 1000000000) {
+            return (bytes / 1000000000).toFixed(2) + ' GB';
+        }
+
+        if (bytes >= 1000000) {
+            return (bytes / 1000000).toFixed(2) + ' MB';
+        }
+
+        return (bytes / 1000).toFixed(2) + ' KB';
+    }
+
+     
+
+
                     $(document).ready(function() {
-                              
+     
+        var ul = $('#upload_block');
+                         
                   $('#file_upload').fileupload({
                             dataType: 'json',
                             autoUpload: true,
                             dropZone: $('#dropzone'),
-                            
-                             drop: function (e, data) {
-                                $.each(data.files, function (index, file) {
-        
-                                console.log('Selected file: ' + file.name);
-                               /* $('#progress').css('display','');*/    
-                                });
-                            },
-                            change: function (e, data) {
-                                $.each(data.files, function (index, file) {
-                                    console.log('Selected file: ' + file.name);
-                                  /*  $('#progress').css('display','');*/
-                                });
-                    },progressall: function(e, data) {
-                                var progress = parseInt(data.loaded / data.total * 100, 10);
-                              /*  $('#progress .progress-bar').css('width',progress + '%');*/
-                                console.log(progress + '%');
-                    }, done: function(e, data) {
+                    
+        add: function (e, data) {
+           // alert('add!');
+            var tpl = $('<li class="working"><input type="text" value="0" data-width="48" data-height="48"'+
+                ' data-fgColor="#0788a5" data-readOnly="1" data-bgColor="#3e4043" /><p></p><span></span></li>');
+
+            tpl.find('p').text(data.files[0].name)
+                         .append('<i>' + formatFileSize(data.files[0].size) + '</i>');
+
+            data.context = tpl.appendTo(ul);
+
+            tpl.find('input').knob();
+
+            tpl.find('span').click(function(){
+
+                if(tpl.hasClass('working')){
+                    jqXHR.abort();
+                }
+
+                tpl.fadeOut(function(){
+                    tpl.remove();
+                });
+
+            });
+
+            var jqXHR = data.submit();
+        },
+
+        progress: function(e, data){
+
+            // Calculate the completion percentage of the upload
+            var progress = parseInt(data.loaded / data.total * 100, 10);
+
+            // Update the hidden input field and trigger a change
+            // so that the jQuery knob plugin knows to update the dial
+            data.context.find('input').val(progress).change();
+
+            if(progress == 100){
+                data.context.removeClass('working');
+                
+                data.context.fadeOut(function(){
+                   data.context.remove();
+                });
+            }
+        },
+
+        fail:function(e, data){
+            // Something has gone wrong!
+            data.context.addClass('error');
+        },
+
+            
+            
+                              done: function(e, data) {
                             /*$('#progress').css('display','none'); 
                             $('#progress .progress-bar').css('width', '0');
                               */  
@@ -111,10 +172,6 @@
                         }).on('changeDate', function(ev) {
                             removalPicker.hide();
                         }).data('datepicker');
-
-
-                       
-     
 
                     });
 
@@ -262,15 +319,16 @@
                                     <span class="btn btn-success fileinput-button">
                                         <i class="glyphicon glyphicon-plus"></i>
                                         <span><fmt:message key="button.select-upload"/></span>
-                                        <form:input path="file" name="file" 
+                                        <form:input path="file" name="file" multiple="true"
                                                 type="file" /> 
                                 </span>
 
                                 <form:errors path="file" cssClass="error" />
 
-                                <div id="progress" class="progress" style="display:none;">
-                                    <div class="progress-bar progress-bar-success"></div>
-                                </div>
+                                <ul id='upload_block'>
+				<!-- The file uploads will be shown here -->
+                                </ul>
+                                    
                                                            
                             
                              
@@ -299,7 +357,7 @@
                                         <span class="btn btn-success fileinput-button">
                                             <i class="glyphicon glyphicon-repeat"></i>
                                             
-                                            <span id="fileSelectLabel">Replace file</span>
+                                            <span id="fileSelectLabel"><fmt:message key="button.change"/></span>
                                             <form:input id="fileSelectBtn" path="file" name="file"   
                                                         type="file" /> 
                                         </span>
