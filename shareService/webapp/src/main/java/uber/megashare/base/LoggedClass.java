@@ -38,7 +38,7 @@ public class LoggedClass implements Serializable {
      */
     private transient Logger log;
 
-    public LoggedClass() {
+    protected LoggedClass() {
         log = LoggerFactory.getLogger(getClass().getName());
     }
 

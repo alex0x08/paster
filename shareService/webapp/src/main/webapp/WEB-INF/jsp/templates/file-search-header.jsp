@@ -20,7 +20,7 @@
             <sec:authorize ifAnyGranted="ROLE_ADMIN">
                 <div class="form-group">
 
-                    <form:select path="userId" cssClass="btn" >
+                    <form:select path="userId" cssClass="btn chosen_select_box" >
                         <form:options  items="${availableUsers}" itemValue="id" itemLabel="name"  />
                     </form:select>
                 </div>

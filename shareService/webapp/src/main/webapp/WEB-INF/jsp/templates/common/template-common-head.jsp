@@ -109,24 +109,23 @@
            
        </style>
         
-        <link rel="stylesheet" type="text/css" media="all" href="<c:url value='/main/static/${appVersion}/css/main.css'/>" />
-        <link href="<c:url value='/main/static/${appVersion}/libs/zoombox/zoombox.css'/>" rel="stylesheet" type="text/css" media="screen" />
-      
-        <link rel="shortcut icon" href="<c:url value='/favicon.png'/>">
+       <link rel="stylesheet" type="text/css" media="all" href="<c:url value='/main/static/${appVersion}/css/main.css'/>" />
+       <link href="<c:url value='/main/static/${appVersion}/libs/zoombox/zoombox.css'/>" rel="stylesheet" type="text/css" media="screen" />
+       <link href="<c:url value='/main/assets/${appVersion}/chosen/0.9.12/chosen/chosen.css'/>" rel="stylesheet" type="text/css" media="screen" />
 
-          <script src="<c:url value='/main/assets/${appVersion}/stacktrace/0.5.0/stacktrace.js'/>"></script>
+       <link rel="shortcut icon" href="<c:url value='/favicon.png'/>">
 
-                <script src="<c:url value='/main/static/${appVersion}/libs/pace/pace.min.js'/>"></script>
+       <script src="<c:url value='/main/assets/${appVersion}/stacktrace/0.5.0/stacktrace.js'/>"></script>
+       <script src="<c:url value='/main/static/${appVersion}/libs/pace/pace.min.js'/>"></script>
 
-          
-      <script src="<c:url value='/main/assets/${appVersion}/jquery/2.0.3/jquery.js'/>"></script>
-      <script src="<c:url value='/main/assets/${appVersion}/jquery-ui/1.10.2/ui/minified/jquery-ui.min.js'/>"></script>
+       <script src="<c:url value='/main/assets/${appVersion}/jquery/2.0.3/jquery.js'/>"></script>
+       <script src="<c:url value='/main/assets/${appVersion}/jquery-ui/1.10.2/ui/minified/jquery-ui.min.js'/>"></script>
 
-            <script src="<c:url value='/main/assets/${appVersion}/jquery-easing/1.3/jquery.easing.min.js'/>"></script>
-        <script src="<c:url value='/main/static/${appVersion}/libs/jquery-scrollup/jquery.scrollUp.min.js'/>"></script>
+       <script src="<c:url value='/main/assets/${appVersion}/jquery-easing/1.3/jquery.easing.min.js'/>"></script>
+       <script src="<c:url value='/main/assets/${appVersion}/chosen/0.9.12/chosen/chosen.jquery.min.js'/>"></script>
+   
+       <script src="<c:url value='/main/static/${appVersion}/libs/jquery-scrollup/jquery.scrollUp.min.js'/>"></script>
 
-      
-      <script src="<c:url value='/main/assets/${appVersion}/bootstrap/3.0.0/js/bootstrap.min.js'/>"></script>
-      <script src="<c:url value='/main/static/${appVersion}/libs/zoombox/zoombox.js'/>"></script>
-
+       <script src="<c:url value='/main/assets/${appVersion}/bootstrap/3.0.0/js/bootstrap.min.js'/>"></script>
+       <script src="<c:url value='/main/static/${appVersion}/libs/zoombox/zoombox.js'/>"></script>
        <script src="<c:url value='/main/assets/${appVersion}/prettify/4-Mar-2013/run_prettify.js'/>"></script> 

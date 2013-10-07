@@ -54,21 +54,19 @@
 
         return (bytes / 1000).toFixed(2) + ' KB';
     }
+   
 
-     
 
-
-                    $(document).ready(function() {
+       $(document).ready(function() {
      
         var ul = $('#upload_block');
                          
-                  $('#file_upload').fileupload({
+       $('#file_upload').fileupload({
                             dataType: 'json',
                             autoUpload: true,
-                            dropZone: $('#dropzone'),
-                    
+                            dropZone: $('#dropzone'),                    
         add: function (e, data) {
-           // alert('add!');
+        
             var tpl = $('<li class="working"><input type="text" value="0" data-width="48" data-height="48"'+
                 ' data-fgColor="#0788a5" data-readOnly="1" data-bgColor="#3e4043" /><p></p><span></span></li>');
 
@@ -96,16 +94,12 @@
 
         progress: function(e, data){
 
-            // Calculate the completion percentage of the upload
             var progress = parseInt(data.loaded / data.total * 100, 10);
 
-            // Update the hidden input field and trigger a change
-            // so that the jQuery knob plugin knows to update the dial
             data.context.find('input').val(progress).change();
 
             if(progress == 100){
                 data.context.removeClass('working');
-                
                 data.context.fadeOut(function(){
                    data.context.remove();
                 });
@@ -113,37 +107,33 @@
         },
 
         fail:function(e, data){
-            // Something has gone wrong!
             data.context.addClass('error');
         },
-
-            
-            
-                              done: function(e, data) {
-                            /*$('#progress').css('display','none'); 
-                            $('#progress .progress-bar').css('width', '0');
-                              */  
-                                try {
-                                    /*console.log(data);*/
+        done: function(e, data) {
+             
+         try {
                                     
-                                    if (typeof data.result['error'] == "undefined") {
-                                       
-                                        $.get("${blockUrl}?id=" + data.result['id'], function(data) {
-                                            $("#gallery").prepend(data);
+            if (typeof data.result['error'] == "undefined") {
+         
+                $.get("${blockUrl}?id=" + data.result['id'], function(data) {
                                             
-                                            
-                                       initZoombox();
-                                       initFlowPlayer();
-                                       initButtons();
+                $("#gallery").prepend(data);
+                
+                initZoombox();
+                initFlowPlayer();
+                initButtons();
         
-                                        });
-                                    } else {
-                                        showError('File ' + data.result['name'] + ' failed to upload!');
-                                    }
-                                } catch (e) {
-                                    showError(e.message);
-                                }
-                            }, error: function(data) {
+                });
+                
+            } else {
+                  showError('File ' + data.result['name'] + ' failed to upload!');                                    
+                   }
+                   
+             } catch (e) {
+                 showError(e.message);
+                          }
+                            },
+          error: function(data) {
                                 console.log(data);
                                 try {
                                 showError(data.responseText); } catch (e) {showError(data);}
@@ -184,15 +174,10 @@
                 <c:url var="url" value='/main/file/save' />
                 
                   <script type="text/javascript">
-                      
-                      
                        $(document).ready(function() {
-                              
                               $('#fileSelectBtn').bind('change', function() {
-                                  
                                   $('#fileSelectLabel').text($(this).val());
                               });
-                       
                     });
                       
                   </script>
@@ -248,8 +233,6 @@
                                                  </c:otherwise>
 
                                              </c:choose>
-
-                                       
                                                  
                                                  <div class="btn-group" data-toggle="buttons">
 
@@ -258,12 +241,9 @@
                                                          <fmt:message key="${level.desc}" />
                                                          <form:radiobutton path="accessLevel" value="${level.code}"  />
                                                      </label>
-
                                                  </c:forEach>
 
-
                                              </div>    
-
 
                                              <c:if test="${not empty model.integrationCode}">
                                                  File integrated, cannot set access level.
@@ -274,13 +254,9 @@
                                          </div>
                                      </div>
 
-
-                                          
-
                                  </c:if>
                                  
                                     <c:if test="${model.blank}">
-
 
                                      <div class="form-group">
                                          <form:label  path="file"><fmt:message key="file.removeAfter"/>:</form:label>
@@ -289,16 +265,13 @@
                                              <div class="switch" >
                                                  <input id='enableRemovalSwitch' type="checkbox"  >
                                              </div>
-                                             
                                             
                                                  <div id='inputRemovalDateBlock'  class="date" data-date="" data-date-format="${datePatternPicker}" 
                                                   style="display:none;padding-top: 0.5em;max-width: 7em;">
                                                  <form:input id="removeAfter" path="removeAfter" name="file" cssClass="form-control" size="10"  /> 
                                                  <span class="add-on"><i class="icon-th"></i></span>
                                              </div>      
-
-                                              
-                                                
+                           
                                                <form:errors path="removeAfter" cssClass="error" />
 
                                              </div>
@@ -313,7 +286,6 @@
                     <c:when test="${model.blank}">
 
                         <div class="form-group">
-                           
                                 
                                  <!-- The fileinput-button span is used to style the file input field as button -->
                                     <span class="btn btn-success fileinput-button">
@@ -328,9 +300,6 @@
                                 <ul id='upload_block'>
 				<!-- The file uploads will be shown here -->
                                 </ul>
-                                    
-                                                           
-                            
                              
                             </div>
                        

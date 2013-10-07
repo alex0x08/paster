@@ -40,7 +40,6 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
-import org.hibernate.envers.NotAudited;
 import org.hibernate.search.annotations.*;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
@@ -119,9 +118,6 @@ public class SharedFile extends Node  {
     String integrationCode;
     
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    //@JoinColumn(name="proj_id")
-    //@OrderColumn(name = "proj_indx")
-    //@NotAudited
     private Set<Project> relatedProjects = new HashSet<>();
 
     public Set<Project> getRelatedProjects() {
@@ -165,7 +161,8 @@ public class SharedFile extends Node  {
         }
         
         DateTime start = new DateTime(this.removeAfter),
-                 end = new DateTime(DateBuilder.getInstance().setTimeFromBegin().getDate().getTime());
+                 end = new DateTime(DateBuilder.getInstance()
+                .setTimeFromBegin().getDate().getTime());
         
         return Days.daysBetween(start, end).getDays();
      }

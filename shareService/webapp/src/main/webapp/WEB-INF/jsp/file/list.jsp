@@ -14,50 +14,39 @@
             <ul id="file-pagination" style="" ></ul>  
         </c:if>   
     </div>     
-
     
     <div class="col-md-2 centered" style="padding-top: 1em;"  >
-
         <div class="btn-group">
             <button type="button" class="btn btn-danger"><c:out value="${pageItems.pageSize}"/></button>
             <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown">
                 <span class="caret"></span>
             </button>
             <ul class="dropdown-menu" role="menu">
-
                 <c:forEach items="${fn:split('5,10,50,100,500',',')}" var="pg">
                     <li >
-                        <a href="<c:url value="/main/file/list/limit/${pg}">
-                           </c:url>"><c:out value="${pg}"/></a>
+                        <a href="<c:url value="/main/file/list/limit/${pg}"></c:url>"><c:out value="${pg}"/></a>
                     </li>
                 </c:forEach>   
             </ul>
         </div>   
-    </div>         
+    </div>       
     
 </div>
 
 <div class="row">
-
-    <div id="gallery" class="col-md-12">  
-    
+    <div id="gallery" class="col-md-12">      
     <c:forEach var="obj" items="${pageItems.pageList}" varStatus="status">
-
         <c:set var="model" value="${obj}" scope="request"></c:set>
-
         <jsp:include page="/WEB-INF/jsp/templates/common/preview.jsp" />
-
     </c:forEach>
 
-
-
-<c:if test="${pageItems.nrOfElements == 0}">
-    <jsp:include page="/WEB-INF/jsp/templates/common/noFiles.jsp" />
-</c:if>
-
+    <c:if test="${pageItems.nrOfElements == 0}">
+        <jsp:include page="/WEB-INF/jsp/templates/common/noFiles.jsp" />
+    </c:if>
     </div>
 </div>
-     <c:url value="/main/file/list/" var="listUrl"/>
+    
+   <c:url value="/main/file/list/" var="listUrl"/>
             
    <script type="text/javascript">
     $(document).ready(function() {
@@ -89,8 +78,7 @@
             bootstrapTooltipOptions: {
                 html: true,
                 placement: 'bottom'
-            },
-                size:'normal'
+            },  size:'normal'
                 
         }
 

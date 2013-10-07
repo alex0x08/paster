@@ -16,7 +16,7 @@
 package uber.megashare.model;
 
 /**
- *
+ * Уровень доступа
  * @author alex
  */
 public enum AccessLevel {

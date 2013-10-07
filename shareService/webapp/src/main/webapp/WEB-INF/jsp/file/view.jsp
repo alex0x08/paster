@@ -14,8 +14,6 @@
             <p><fmt:message key="${statusMessageKey}"/></p>
         </c:if>
 
-
-
             <c:url value="/act/download" var="downloadUrl">
 
                 <c:choose>
@@ -25,12 +23,9 @@
                     </c:when>
                     <c:otherwise>
                         <c:param name="id" value="${model.uuid}"/>
-
                     </c:otherwise>
                 </c:choose>
-
             </c:url>
-
 
 
         <div class="form-row pull-left">
@@ -45,18 +40,15 @@
 
          <c:if test="${!model.blank and not empty availableRevisions}">
 
-         <div class="form-row pull-left">
-         
+         <div class="form-row pull-left">         
              <label for="file"><fmt:message key="struct.versions"/>:</label>
-
              <span class="input" style="padding-left:1em;">
                       <jsp:include
                         page="/WEB-INF/jsp/templates/common/revisions.jsp">
                         <jsp:param name="modelName" value="file" />
                     </jsp:include>
-            </span>
-             
-         </div>   
+            </span>             
+         </div>  
 
          </c:if>
 
@@ -65,16 +57,12 @@
          <c:if test="${!model.blank and pasteIntegrationEnabled and model.pasterIntegrated}">
 
          <div class="form-row pull-left">
-         
              <label for="file">Integrated with paste :</label>
-
-             <span class="input" style="padding-left:1em;">
-          
+               <span class="input" style="padding-left:1em;">
                    <iframe  src="${pasteUrl}/main/paste/integrated/preview/${model.pasterId}"
                      scrolling="auto" frameborder="0"
                      style="width:630px;height: 400px;"  allowTransparency="true"   >
                     </iframe>  
-                 
             </span>
              
          </div>   
