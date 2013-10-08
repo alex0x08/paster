@@ -22,7 +22,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -117,7 +116,9 @@ public class SharedFile extends Node  {
     @XStreamAsAttribute
     String integrationCode;
     
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER)
+    //@ContainedIn
+    @IndexedEmbedded(depth = 1, prefix = "relatedProjects_")
     private Set<Project> relatedProjects = new HashSet<>();
 
     public Set<Project> getRelatedProjects() {

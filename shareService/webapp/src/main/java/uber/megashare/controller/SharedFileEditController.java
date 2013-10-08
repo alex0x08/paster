@@ -144,6 +144,13 @@ public class SharedFileEditController extends GenericCommentController<SharedFil
             return true;
         }
         
+         /**
+         * if user is admin
+         */
+        if (isCurrentUserAdmin()) {
+            return true;
+        }
+        
         if (obj.getAccessLevel().equals(AccessLevel.PROJECT) ) {
             
             if (!isCurrentUserLoggedIn()) {
@@ -151,16 +158,8 @@ public class SharedFileEditController extends GenericCommentController<SharedFil
             }
             
             return obj.getRelatedProjects().contains(getCurrentUser().getRelatedProject());
-           
         }
-        
-        /**
-         * if user is admin
-         */
-        if (isCurrentUserAdmin()) {
-            return true;
-        }
-
+      
         /**
          * if current user is file owner
          */

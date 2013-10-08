@@ -4,12 +4,21 @@
     Author     : alex
 --%>
 
-<%@ page language="java" pageEncoding="UTF-8" contentType="text/html;charset=utf-8" trimDirectiveWhitespaces="true" %>
+<%@ page language="java" pageEncoding="UTF-8" contentType="text/html;charset=utf-8" trimDirectiveWhitespaces="true" 
+         import="uber.megashare.base.SystemInfo"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <% response.setStatus(404); %>
 
 
+
+<% 
+
+String appVersion = SystemInfo.getInstance().getRuntimeVersion().getImplBuildNum();
+
+ pageContext.setAttribute("appVersion", appVersion);
+
+%>
 
 
 <!DOCTYPE html>
@@ -17,7 +26,7 @@
 <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>- ooops! -</title>
-<link rel="stylesheet" href="<c:url value='/css/error.css'/>" type="text/css" media="all" />
+  <link href="<c:url value='/main/static/${appVersion}/css/error.css'/>" rel="stylesheet" type="text/css" media="all" />
 </head>
 <body>
 <span class="neg">ERROR 404</span>

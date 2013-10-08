@@ -7,16 +7,7 @@
 
 <div class="row">
 
-    <div class="col-md-3" style="text-align:right;">
-      
-        <div class="form-group">
-
-            <c:out value="${model.login}"/> ,      
-            <c:forEach items="${model.roles}" var="role"  >
-                <fmt:message key="${role.desc}"/>
-            </c:forEach>               
-        </div>
-    </div>
+   
 
             <div class="col-md-4">
 
@@ -34,7 +25,7 @@
                 <div class="form-group ">
 
                     <form:label cssClass="control-label" path="name">
-                        <fmt:message key="user.name"/>:</form:label>
+                        <fmt:message key="struct.name"/>:</form:label>
 
                         <div class="input-group input-group-sm">
                             <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
@@ -42,74 +33,27 @@
                                         cssErrorClass="form-control alert alert-danger" 
                                         cssClass="form-control"/>
                     </div>                    
-                    <form:errors path="login" cssClass="help-block alert alert-danger" /> 
+                    <form:errors path="name" cssClass="help-block alert alert-danger" /> 
                 </div>    
 
                 <div class="form-group ">
 
-                    <form:label cssClass="control-label" path="login">
+                    <form:label cssClass="control-label" path="description">
                         <fmt:message key="user.login"/>:</form:label>
 
                         <div class="input-group input-group-sm">
                             <span class="input-group-addon"><span class="glyphicon glyphicon-log-in"></span></span>
-                            <form:input path="login" cssStyle="width:10em;" 
+                            <form:input path="description" cssStyle="width:10em;" 
                                         cssErrorClass="form-control alert alert-danger" 
                                         cssClass="form-control"/>
                     </div>                    
-                    <form:errors path="login" cssClass="help-block alert alert-danger" /> 
+                    <form:errors path="description" cssClass="help-block alert alert-danger" /> 
                 </div>    
 
-                <div class="form-group ">
+               
+              
 
-                    <form:label cssClass="control-label" path="password">
-                        <fmt:message key="user.pass"/>:</form:label>
-
-                        <div class="input-group input-group-sm">
-                            <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
-                            <form:password path="newPassword" cssStyle="width:10em;" 
-                                           cssErrorClass="form-control alert alert-danger" 
-                                           cssClass="form-control"/>
-
-                        <span class="input-group-addon"><fmt:message key="user.pass.repeat"/>
-                        </span>
-                        <form:password path="repeatPassword" cssStyle="width:10em;" 
-                                       cssErrorClass="form-control alert alert-danger" 
-                                       cssClass="form-control"/>
-                    </div>                    
-                    <form:errors path="newPassword" cssClass="help-block alert alert-danger" /> 
-                </div>    
-
-                <div class="form-group">
-                    <label cssClass="control-label" for="roles"><fmt:message key="user.roles"/>:</label>
-                    <div class="controls">
-                        <span class="input">
-                            <form:select path="roles" multiple="true"  cssErrorClass="form-control alert alert-danger" 
-                                         cssStyle="width:10em;" 
-                                         cssClass="form-control">
-                                <c:forEach items="${availableRoles}" var="role">
-                                    <form:option value="${role.code}" >
-                                        <fmt:message key="${role.desc}"/>
-                                    </form:option>
-                                </c:forEach>
-                            </form:select> 
-                            <form:errors path="roles" cssClass="help-block alert alert-danger" /> 
-                        </span>
-                    </div>
-                </div>
-
-                <div class="form-group ">
-
-                    <form:label cssClass="control-label" path="email">
-                        <fmt:message key="user.email"/>:</form:label>
-
-                        <div class="input-group input-group-sm">
-                            <span class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span></span>
-                            <form:input path="email" cssStyle="width:10em;" 
-                                        cssErrorClass="form-control alert alert-danger" 
-                                        cssClass="form-control"/>
-                    </div>                    
-                    <form:errors path="email" cssClass="help-block alert alert-danger" /> 
-                </div>    
+               
                 <div class="form-group">
                     <input name="submit" type="submit" class="btn btn-primary" value="<fmt:message key="button.save"/>" />
 

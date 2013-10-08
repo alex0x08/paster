@@ -320,10 +320,30 @@
             &nbsp;  
             <span style="display: block;font-size:smaller;"> 
             
+                <c:choose>
+                    <c:when test="${model.accessLevel eq 'PROJECT'}">
+                        
+                          <c:forEach var="proj" items="${model.relatedProjects}" >
+
+                              <a href="<c:url value='/main/file/list/search?query=relatedProjects_name:${proj.name}'/>" 
+                                 target="${not empty param.integrationMode ? "_blank" : target}">
+                                  <c:out value="${proj.name}"/>
+                              </a>   
+                              
+
+                           </c:forEach>
+                       
+                        
+                    </c:when>
+                    <c:otherwise>
                 <a href="<c:url value='/main/file/list/search?query=accessLevel:${model.accessLevel.code}'/>" 
                    target="${not empty param.integrationMode ? "_blank" : target}">
                     <fmt:message key="${model.accessLevel.desc}"/>
-                </a>
+                </a>         
+                    </c:otherwise>
+                </c:choose>
+               
+               
                 
             </span> 
                 
@@ -453,7 +473,7 @@
                           
                            <c:forEach var="proj" items="${model.relatedProjects}" >
 
-                                ${proj.name}
+                               <c:out value="${proj.name}"/>
 
                            </c:forEach>
                            
