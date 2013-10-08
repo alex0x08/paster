@@ -143,6 +143,17 @@ public class SharedFileEditController extends GenericCommentController<SharedFil
         if (obj.getAccessLevel().equals(AccessLevel.ALL)) {
             return true;
         }
+        
+        if (obj.getAccessLevel().equals(AccessLevel.PROJECT) ) {
+            
+            if (!isCurrentUserLoggedIn()) {
+                return false;
+            }
+            
+            return obj.getRelatedProjects().contains(getCurrentUser().getRelatedProject());
+           
+        }
+        
         /**
          * if user is admin
          */

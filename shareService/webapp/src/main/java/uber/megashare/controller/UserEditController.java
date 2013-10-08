@@ -16,10 +16,13 @@
 package uber.megashare.controller;
 
 import java.beans.PropertyEditorSupport;
+import java.io.FileWriter;
+import java.io.Writer;
 import java.util.List;
 import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -32,7 +35,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import uber.megashare.model.BaseDBObject;
 import uber.megashare.model.Project;
 import uber.megashare.model.Role;
 import uber.megashare.model.User;
@@ -147,6 +149,7 @@ public class UserEditController extends GenericEditController<User> {
         }
 
         if (!b.isBlank()) {
+            
             User current = userManager.getFull(b.getId());
             current.setEmail(b.getEmail());
             current.setDefaultFileAccessLevel(b.getDefaultFileAccessLevel());
@@ -162,9 +165,9 @@ public class UserEditController extends GenericEditController<User> {
             current.setRelatedProject(p);
             current.setRoles(b.getRoles());
             
-            if (b.getNewPassword()!=null) {
-            
-                if (!b.getNewPassword().equals(b.getRepeatPassword())) {
+            if (!StringUtils.isBlank(b.getNewPassword())) {
+                
+               if (!b.getNewPassword().equals(b.getRepeatPassword())) {
            
                     result.addError(new ObjectError("newPassword","Password must match."));
                     return editPage; 
@@ -174,9 +177,12 @@ public class UserEditController extends GenericEditController<User> {
             }
             
             b = current;
+            
+            System.out.println("_saving pass "+b.getPassword());
+            
         } else {
 
-           if (b.getNewPassword()!=null && !b.getNewPassword().equals(b.getRepeatPassword())) {
+           if (!StringUtils.isBlank(b.getNewPassword()) && !b.getNewPassword().equals(b.getRepeatPassword())) {
                     result.addError(new ObjectError("newPassword","Password must match."));
                     return editPage; 
                 }

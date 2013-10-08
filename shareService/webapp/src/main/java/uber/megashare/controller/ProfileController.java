@@ -157,6 +157,9 @@ public class ProfileController extends AbstractController {
            
                 result.addError(new ObjectError("newPassword","Password must match."));
                 return editPage; 
+            } else {
+                
+                current= userManager.changePassword(current, b.getNewPassword());
             }
         } 
         

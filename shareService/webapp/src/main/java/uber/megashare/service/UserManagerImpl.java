@@ -24,11 +24,11 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.authentication.encoding.PasswordEncoder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.codec.Base64;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import uber.megashare.base.logging.LoggedCall;
 import uber.megashare.dao.UserDao;
@@ -135,7 +135,7 @@ public class UserManagerImpl extends GenericSearchableManagerImpl<User, UserSear
     public User save(User object) {
         getLogger().debug("___UserManagerImpl.save obj=" + object);
 
-         object = changePassword(object, object.getPassword());
+         //object = changePassword(object, object.getPassword());
 
         object=dao.saveObject(object);
        
@@ -167,7 +167,8 @@ public class UserManagerImpl extends GenericSearchableManagerImpl<User, UserSear
 
                     // If password was changed (or new user), encrypt it
                     if (passwordChanged) {
-                        user.setPassword(passwordEncoder.encode(newPassword));
+                        user.setPassword(passwordEncoder.encodePassword(newPassword,null));
+                       // user.setPassword(passwordEncoder.encode(newPassword));
                         log.append("__password was encrypted");
                     }
 

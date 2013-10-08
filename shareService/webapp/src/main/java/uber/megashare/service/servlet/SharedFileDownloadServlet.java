@@ -37,6 +37,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import uber.megashare.model.AccessLevel;
 import uber.megashare.model.SharedFile;
+import uber.megashare.model.User;
 import uber.megashare.service.SettingsManager;
 import uber.megashare.service.SharedFileManager;
 import static uber.megashare.service.servlet.AbstractBaseServlet.writeError;
@@ -163,17 +164,34 @@ public class SharedFileDownloadServlet extends AbstractBaseServlet {
         }
 
 
-        if (!f.getAccessLevel().equals(AccessLevel.ALL) ) {
-          
-            if (getCurrentUser(request)==null || (!getCurrentUser(request).isAdmin()
-                    && !f.getOwner().equals(getCurrentUser(request)))) {
+        switch(f.getAccessLevel()) {
+            case PROJECT: {
+                
+                User current = getCurrentUser(request);
+                
+                if (current == null || (!current.isAdmin()
+                        && !f.getRelatedProjects().contains(current.getRelatedProject()))) {
 
-                writeError(response, "Access denied on file " + id);
-                return;
+                    writeError(response, "Access denied on file " + id);
+                    return;
+                }
+                break;
             }
+            case OWNER: {
+                if (getCurrentUser(request) == null || (!getCurrentUser(request).isAdmin()
+                        && !f.getOwner().equals(getCurrentUser(request)))) {
 
+                    writeError(response, "Access denied on file " + id);
+                    return;
+                }
+                break;
+            }
+            case ALL: {
+            
+            }    
         }
-
+        
+       
         boolean preview = request.getParameter("preview") != null;
 
 

@@ -121,7 +121,10 @@
     </authentication-manager>
 
     <!-- Override the default password-encoder (SHA) by uncommenting the following and changing the class -->
-    <beans:bean id="passwordEncoder" class="org.springframework.security.crypto.password.StandardPasswordEncoder"/>
+    
+    <beans:bean id="passwordEncoder" class="org.springframework.security.authentication.encoding.ShaPasswordEncoder"/>
+
+    <!--beans:bean id="passwordEncoder" class="org.springframework.security.crypto.password.StandardPasswordEncoder"/-->
 
     <!-- Automatically receives AuthenticationEvent messages -->
     <beans:bean id="loggerListener" class="org.springframework.security.authentication.event.LoggerListener"/>

@@ -90,7 +90,7 @@ public class User extends Struct implements Serializable, UserDetails {
     @XStreamOmitField
     private List<SavedSession> savedSessions = new ArrayList<>();
 
-    @ManyToOne(fetch = FetchType.EAGER,cascade=CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER)
     private Project relatedProject;
 
     public Project getRelatedProject() {
@@ -99,8 +99,7 @@ public class User extends Struct implements Serializable, UserDetails {
 
     public void setRelatedProject(Project relatedProject) {
         this.relatedProject = relatedProject;
-    }   
-    
+    }       
         
     @JsonIgnore
     public String getNewPassword() {
