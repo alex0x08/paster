@@ -510,6 +510,7 @@ public class SharedFileEditController extends GenericCommentController<SharedFil
          if (file!=null) {
             manager.remove(id);
             resetPagingList(request);
+            
          }
              
          model.asMap().clear();

@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import static uber.megashare.controller.GenericController.INTEGRATED_PREFIX;
+import static uber.megashare.controller.ListConstants.LIST_ACTION;
 import uber.megashare.model.SearchQuery;
 import uber.megashare.model.Struct;
 import uber.megashare.service.GenericSearchableManager;
@@ -44,6 +45,33 @@ extends GenericSearchableController<T, SQ> implements ListConstants
      }
     
      
+    @RequestMapping(value = {INTEGRATED_PREFIX +LIST_ACTION + "/{integrationCode:[a-z0-9_]+}/sort/{sortColumn:[a-zA-Z0-9]+}",
+                             INTEGRATED_PREFIX +LIST_ACTION + "/{integrationCode:[a-z0-9_]+}/sort/{sortColumn:[a-zA-Z0-9]+}/up"}, 
+                             method = RequestMethod.GET)
+    public @ModelAttribute(NODE_LIST_MODEL)
+    Collection<T> listWithSortIntegrated(
+            @PathVariable("integrationCode") String integrationCode,
+            @PathVariable("sortColumn") String sortColumn,
+            HttpServletRequest request,
+            final HttpSession session,
+            Model model,
+            Locale locale) {
+        return listIntegrated(integrationCode, request,session, model, null, null,null, sortColumn,false, locale);
+    }
+    
+    @RequestMapping(value = LIST_ACTION + "/{integrationCode:[a-z0-9_]+}/sort/{sortColumn:[a-zA-Z0-9]+}/down", 
+                    method = RequestMethod.GET)
+    public @ModelAttribute(NODE_LIST_MODEL)
+    Collection<T> listWithSortDownIntegrated(
+            @PathVariable("integrationCode") String integrationCode,
+            @PathVariable("sortColumn") String sortColumn,
+            HttpServletRequest request,
+            final HttpSession session,
+            Model model,
+            Locale locale) {
+        return listIntegrated(integrationCode,request,session, model, null, null,null, sortColumn,true, locale);
+    } 
+     
     @RequestMapping(value = INTEGRATED_PREFIX + LIST_ACTION + "/{integrationCode:[a-z0-9_]+}/{page:[0-9]+}", method = RequestMethod.GET)
     public @ModelAttribute(NODE_LIST_MODEL)
     Collection<T> listByPathIntegrated(
@@ -53,7 +81,7 @@ extends GenericSearchableController<T, SQ> implements ListConstants
             final HttpSession session,
             Model model,
             Locale locale) {
-        return listIntegrated(integrationCode, request, session, model, page, null, null, locale);
+        return listIntegrated(integrationCode, request, session, model, page, null, null,null,false, locale);
     }
 
     @RequestMapping(value =INTEGRATED_PREFIX+LIST_ACTION+"/{integrationCode:[a-z0-9_]+}/limit/{pageSize:[0-9]+}", method = RequestMethod.GET)
@@ -65,7 +93,7 @@ extends GenericSearchableController<T, SQ> implements ListConstants
              final HttpSession session,
             Model model,
             Locale locale) {
-        return listIntegrated(integrationCode,request, session, model, null, null, pageSize, locale);
+        return listIntegrated(integrationCode,request, session, model, null, null, pageSize,null,false, locale);
     }
 
     @RequestMapping(value = INTEGRATED_PREFIX+LIST_ACTION+"/{integrationCode:[a-z0-9_]+}/next", method = RequestMethod.GET)
@@ -76,7 +104,7 @@ extends GenericSearchableController<T, SQ> implements ListConstants
              final HttpSession session,
             Model model,
             Locale locale) {
-        return listIntegrated(integrationCode,request, session, model, null, NEXT_PARAM, null, locale);
+        return listIntegrated(integrationCode,request, session, model, null, NEXT_PARAM, null,null,false, locale);
     }
 
     @RequestMapping(value = INTEGRATED_PREFIX+LIST_ACTION+"/{integrationCode:[a-z0-9_]+}/prev", method = RequestMethod.GET)
@@ -87,7 +115,7 @@ extends GenericSearchableController<T, SQ> implements ListConstants
               final HttpSession session,
             Model model,
             Locale locale) {
-        return listIntegrated(integrationCode,request, session, model, null, "prev", null, locale);
+        return listIntegrated(integrationCode,request, session, model, null, "prev", null,null,false, locale);
     }
 
     @RequestMapping(value = INTEGRATED_PREFIX+LIST_ACTION+"/{integrationCode:[a-z0-9_]+}", method = RequestMethod.GET)
@@ -99,13 +127,17 @@ extends GenericSearchableController<T, SQ> implements ListConstants
              Model model,
             @RequestParam(required = false) Integer page,
             @RequestParam(required = false) String NPpage,
-            @RequestParam(required = false) Integer pageSize, Locale locale) {
+            @RequestParam(required = false) Integer pageSize,
+            @RequestParam(required = false) String sortColumn,
+            @RequestParam(required = false) boolean sortAsc,
+            
+            Locale locale) {
 
         
       
         putListModel(model, locale);
 
-        return processPagination(request, model, page, NPpage, pageSize,new SourceCallback<T>() {
+        return processPagination(request, model, page, NPpage, pageSize,sortColumn,sortAsc,new SourceCallback<T>() {
 
         @Override
         public PagedListHolder<T> invokeCreate() {

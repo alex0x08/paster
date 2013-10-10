@@ -9,6 +9,11 @@
     
 <ul class="dropdown-menu">
 
+     <li role="presentation" class="dropdown-header">
+         <c:out value="${currentUser.relatedProject.description}"/>
+     </li>
+      <li role="presentation" class="divider"></li>
+        
   
     <sec:authorize ifAnyGranted="ROLE_ADMIN,ROLE_USER">
         <li>
@@ -22,6 +27,7 @@
     </li>
 
     <sec:authorize ifAnyGranted="ROLE_ADMIN"> 
+
         <li class="nav-header"><fmt:message key="users.title"/></li>
 
         <li class="">

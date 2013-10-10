@@ -105,7 +105,10 @@ public class SharedFileListController
              Model model,
             @RequestParam(required = false) Integer page,
             @RequestParam(required = false) String NPpage,
-            @RequestParam(required = false) Integer pageSize, Locale locale) {
+            @RequestParam(required = false) Integer pageSize,
+            @RequestParam(required = false) String sortColumn,
+            @RequestParam(required = false) boolean sortAsc,            
+            Locale locale) {
 
         
         SharedFile smodel = new SharedFile();
@@ -114,7 +117,7 @@ public class SharedFileListController
         
          model.addAttribute(GenericEditController.MODEL_KEY, smodel);
     
-        return super.listIntegrated(integrationCode, request, session, model, page, NPpage, pageSize, locale);
+        return super.listIntegrated(integrationCode, request, session, model, page, NPpage, pageSize,sortColumn,sortAsc, locale);
     }
 
     

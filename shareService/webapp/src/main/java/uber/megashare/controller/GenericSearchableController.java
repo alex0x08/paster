@@ -66,11 +66,12 @@ public abstract class GenericSearchableController<T extends Struct, SQ extends S
             final @ModelAttribute(QUERY_MODEL) SQ query,
             @RequestParam(required = false) Integer page,
             @RequestParam(required = false) String NPpage,
-            @RequestParam(required = false) Integer pageSize) throws ParseException {
+            @RequestParam(required = false) Integer pageSize
+            ) throws ParseException {
      
         putListModel(model, locale);
 
-        return processPagination(request, model, page, NPpage, pageSize, new SourceCallback<T>() {
+        return processPagination(request, model, page, NPpage, pageSize,null, false,new SourceCallback<T>() {
 
             @Override
             public PagedListHolder<T> invokeCreate() {

@@ -61,7 +61,7 @@ public abstract class AbstractController extends LoggedClass {
             MSG_ACTION_CANCELLED = "action.cancelled",
             MSG_ACTION_SUCCESS = "action.success";
     
-    protected final String page404 = "404",
+    protected final String page404 = "404",page500 = "500",
             page403 = "403";
     
     @Autowired
@@ -86,7 +86,13 @@ public abstract class AbstractController extends LoggedClass {
 
     @Resource(name = "messageSource")
     protected MessageSource messageSource;
-    
+
+    @Value("${resources.gavatar.enabled}")
+    protected boolean gavatarEnabled;
+
+    @Value("${gavatar.url}")
+    protected String gavatarUrl;
+
     private final static List<Locale> availableLocales = new ArrayList<>();
 
     static {
@@ -118,7 +124,16 @@ public abstract class AbstractController extends LoggedClass {
     public boolean isCDNEnabled() {
         return cdnEnabled;
     }
+    
+    @ModelAttribute("gavatarEnabled")
+    public boolean isGavatarEnabled() {
+        return gavatarEnabled;
+    }
 
+    @ModelAttribute("gavatarlUrl")
+    public String getGavatarUrl() {
+        return gavatarUrl;
+    }
     
     @ModelAttribute("externalUrl")
     public String getExternalUrl() {

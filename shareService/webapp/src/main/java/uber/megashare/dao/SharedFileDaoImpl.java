@@ -133,39 +133,23 @@ public class SharedFileDaoImpl extends GenericSearchableDaoImpl<SharedFile> impl
      */
     @Override
     public List<SharedFile> getFilesForUser(Long userId, Long projectId, AccessLevel[] levels) {
-        System.out.println("_getFiles for user "+userId+" proj="+projectId);
+       // System.out.println("_getFiles for user "+userId+" proj="+projectId);
         List<BooleanExpression> out = new ArrayList<>();
         
-        if (projectId!=null) {
-        
+        if (projectId!=null) {        
             out.add(QSharedFile.sharedFile.relatedProjects.contains(new Project(projectId)));
         
-            if (userId!=null) {
-            
+            if (userId!=null) {            
                  out.add(BooleanExpression.anyOf(
                          QSharedFile.sharedFile.owner.id.eq(userId),
                          QSharedFile.sharedFile.accessLevel.in(AccessLevel.PROJECT)
                 ));
-                
-            
             }
         
         } else {
-        
-            if (userId!=null) { 
-            
-                out.add(QSharedFile.sharedFile.owner.id.eq(userId));
-                
-            } else {
-            
-                out.add( QSharedFile.sharedFile.accessLevel.in(AccessLevel.ALL));
-                
-            }
-        
+                out.add(userId!=null ? QSharedFile.sharedFile.owner.id.eq(userId) :
+                        QSharedFile.sharedFile.accessLevel.in(AccessLevel.ALL));                
         }
-        
-        
-       
         return findAll(BooleanExpression.allOf(out.toArray(new BooleanExpression[out.size()])), 
                 QSharedFile.sharedFile.lastModified.desc());
     }
@@ -193,8 +177,6 @@ public class SharedFileDaoImpl extends GenericSearchableDaoImpl<SharedFile> impl
           out.add(projectId!=null ? 
                 QSharedFile.sharedFile.relatedProjects.contains(new Project(projectId)):
                 QSharedFile.sharedFile.accessLevel.in(AccessLevel.ALL));
-        
-        
         
         out.add(QSharedFile.sharedFile.accessLevel.in(levels));
         

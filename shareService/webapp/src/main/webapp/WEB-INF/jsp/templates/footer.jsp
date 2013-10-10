@@ -7,7 +7,7 @@
         <c:forEach var="user" items="${usersOnline}">
 
             <img  src="<c:out value='http://www.gravatar.com/avatar/${user.avatarHash}?s=16'/>"/>
-            <span>${user.name}</span>
+            <span><c:out value="${user.name}"/></span>
 
         </c:forEach>
     </div>
@@ -16,7 +16,7 @@
 
 <blockquote class="pull-right">
     <p>
-        ${currentUser.relatedProject.name}
+        <c:out value="${currentUser.relatedProject.name}"/> : <c:out value="${currentUser.relatedProject.description}"/>
     </p>  
     
   <p title="<c:out value="${currentSettings.appVersion.implVersionFull}"/>">

@@ -80,20 +80,15 @@ public class UserEditController extends GenericEditController<User> {
          binder.registerCustomEditor(Project.class,"relatedProject", new PropertyEditorSupport() {
         @Override
         public void setAsText(String text) {
-            System.out.println("set project from "+text);
+         //   System.out.println("set project from "+text);
             setValue(new Project(Long.valueOf(text)));
         
         }
         
              @Override
              public String getAsText() {
-                 System.out.println("_get as text "+getValue());
-                 if (getValue() == null) {
-                     return "";
-                 } else {
-                     return ((Project) getValue()).getId().toString();
-                 }
-             }    
+                 return getValue() == null ? "" : ((Project) getValue()).getId().toString();
+             }
         
     });
     }
@@ -178,7 +173,7 @@ public class UserEditController extends GenericEditController<User> {
             
             b = current;
             
-            System.out.println("_saving pass "+b.getPassword());
+          //  System.out.println("_saving pass "+b.getPassword());
             
         } else {
 

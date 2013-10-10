@@ -15,15 +15,21 @@
  */
 package uber.megashare.controller;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import org.springframework.beans.support.MutableSortDefinition;
 import org.springframework.beans.support.PagedListHolder;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import scala.actors.threadpool.Arrays;
+import static uber.megashare.controller.GenericController.NODE_LIST_MODEL;
+import static uber.megashare.controller.ListConstants.LIST_ACTION;
+import uber.megashare.model.SortColumn;
 import uber.megashare.model.Struct;
 import uber.megashare.service.StructManager;
 
@@ -53,16 +59,44 @@ public abstract class GenericListController<T extends Struct> extends GenericCon
     protected abstract List<T> getModels();
 
     protected abstract void putListModel(Model model, Locale locale);
+ 
+    protected static final List<SortColumn> defaultSortColumns = Arrays.asList(
+            new SortColumn[] {new SortColumn("id","struct.id"),
+                              new SortColumn("name","struct.name"),
+                              new SortColumn("lastModified","struct.lastModified")});
     
-  /*  protected final SourceCallback<T> defaultListCallback = new SourceCallback<T>() {
-
-        @Override
-        public PagedListHolder<T> invokeCreate() {
-              session.removeAttribute("queryString");
-            return new PagedListHolder<>(getModels());
-        }
-    };*/
-
+    @ModelAttribute("availableSortColumns")
+    public List<SortColumn> getAvailableSortColumns() {
+        return defaultSortColumns;
+    }
+    
+    @RequestMapping(value = {LIST_ACTION + "/sort/{sortColumn:[a-z0-9A-Z]+}",
+                             LIST_ACTION + "/sort/{sortColumn:[a-z0-9A-Z]+}/up"}, method = RequestMethod.GET)
+    public @ModelAttribute(NODE_LIST_MODEL)
+    Collection<T> listWithSort(@PathVariable("sortColumn") String sortColumn,
+            HttpServletRequest request,
+            final HttpSession session,
+            Model model,
+            Locale locale) {
+        
+            /*if (sortColumn!=null && !getAvailableSortColumns().contains(new SortColumn(sortColumn,null))) {
+                sortColumn=null;
+            }*/
+        
+        return list(request,session, model, null, null,null, sortColumn,false, locale);
+    }
+    
+    @RequestMapping(value = LIST_ACTION + "/sort/{sortColumn:[a-z0-9A-Z]+}/down", method = RequestMethod.GET)
+    public @ModelAttribute(NODE_LIST_MODEL)
+    Collection<T> listWithSortDown(@PathVariable("sortColumn") String sortColumn,
+            HttpServletRequest request,
+            final HttpSession session,
+            Model model,
+            Locale locale) {
+        return list(request,session, model, null, null,null, sortColumn,true, locale);
+    }
+    
+    
     @RequestMapping(value = LIST_ACTION + "/{page:[0-9]+}", method = RequestMethod.GET)
     public @ModelAttribute(NODE_LIST_MODEL)
     Collection<T> listByPath(@PathVariable("page") Integer page,
@@ -70,7 +104,7 @@ public abstract class GenericListController<T extends Struct> extends GenericCon
             final HttpSession session,
             Model model,
             Locale locale) {
-        return list(request,session, model, page, null, null, locale);
+        return list(request,session, model, page, null, null,null,false, locale);
     }
 
     @RequestMapping(value = LIST_ACTION + "/limit/{pageSize:[0-9]+}", method = RequestMethod.GET)
@@ -80,7 +114,7 @@ public abstract class GenericListController<T extends Struct> extends GenericCon
             final HttpSession session,
             Model model,
             Locale locale) {
-        return list(request,session, model, null, null, pageSize, locale);
+        return list(request,session, model, null, null, pageSize,null,false, locale);
     }
 
     @RequestMapping(value = LIST_ACTION + "/next", method = RequestMethod.GET)
@@ -90,7 +124,7 @@ public abstract class GenericListController<T extends Struct> extends GenericCon
             final HttpSession session,
             Model model,
             Locale locale) {
-        return list(request,session, model, null, NEXT_PARAM, null, locale);
+        return list(request,session, model, null, NEXT_PARAM, null,null,false, locale);
     }
 
     @RequestMapping(value = LIST_ACTION + "/prev", method = RequestMethod.GET)
@@ -100,7 +134,7 @@ public abstract class GenericListController<T extends Struct> extends GenericCon
             final HttpSession session,
             Model model,
             Locale locale) {
-        return list(request,session, model, null, "prev", null, locale);
+        return list(request,session, model, null, "prev", null, null,false, locale);
     }
 
     @RequestMapping(value = LIST_ACTION, method = RequestMethod.GET)
@@ -110,36 +144,58 @@ public abstract class GenericListController<T extends Struct> extends GenericCon
             Model model,
             @RequestParam(required = false) Integer page,
             @RequestParam(required = false) String NPpage,
-            @RequestParam(required = false) Integer pageSize, Locale locale) {
+            @RequestParam(required = false) Integer pageSize,
+            @RequestParam(required = false) String sortColumn,
+            @RequestParam(required = false) boolean sortAsc,
+            Locale locale) {
 
     
         putListModel(model, locale);
 
-        return processPagination(request, model, page, NPpage, pageSize,new SourceCallback<T>() {
+        return processPagination(request, model, page, NPpage, pageSize,sortColumn,sortAsc,new SourceCallback<T>() {
 
         @Override
         public PagedListHolder<T> invokeCreate() {
             List<T> result = getModels();
-            
                     session.removeAttribute("queryString");
                     return new PagedListHolder<>(result!=null ? result : Collections.EMPTY_LIST);
-            
-        }
-    });
+            }
+        });
     }
 
     protected Collection<T> processPagination(HttpServletRequest request,
-            Model model, Integer page, String NPpage, Integer pageSize,
+            Model model, Integer page, String NPpage, Integer pageSize,String sortColumn,boolean sortAsc,
             SourceCallback<T> createCall) {
 
+      
         @SuppressWarnings("unchecked")
         PagedListHolder<T> pagedListHolder = (PagedListHolder<T>) request.getSession().getAttribute(NODE_LIST_MODEL_PAGE);
 
-        if (pagedListHolder == null || (page == null && NPpage == null && pageSize == null)  ) {
+        if (pagedListHolder == null || (page == null && NPpage == null && pageSize == null && sortColumn == null )  ) {
             pagedListHolder = createCall.invokeCreate();
+            
+            MutableSortDefinition sort =(MutableSortDefinition) pagedListHolder.getSort();
+            
+                /**
+                 * default sort
+                 */
+                sort.setProperty("lastModified");
+		sort.setIgnoreCase(false);
+                sort.setAscending(false);
+             
             getLogger().debug("pagedListHolder created ");
         } else {
 
+            if (sortColumn!=null) {
+                 MutableSortDefinition sort =(MutableSortDefinition) pagedListHolder.getSort();
+            
+                sort.setProperty(sortColumn);
+		sort.setIgnoreCase(false);
+                sort.setAscending(sortAsc);
+                
+                pagedListHolder.resort();
+            }
+            
             if (pageSize != null) {
                 pagedListHolder.setPageSize(pageSize);
             } else if (NPpage != null) {

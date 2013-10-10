@@ -76,6 +76,7 @@ public abstract class BaseDBObject extends BaseObject implements Serializable, I
      * Получить уникальный ключ объекта
      * @return
      */
+        @Override
     public Long getId() {
         return id;
     }
@@ -100,10 +101,9 @@ public abstract class BaseDBObject extends BaseObject implements Serializable, I
     @Override
     public boolean equals(Object from) {
 
-        if (!(from instanceof BaseDBObject)) {
-            return false;
-        }
-        return getId() != null && ((BaseDBObject) from).getId().equals(id);
+        return from instanceof BaseDBObject 
+                && id != null 
+                && id.equals(((BaseDBObject) from).id);
     }
 
     @Override

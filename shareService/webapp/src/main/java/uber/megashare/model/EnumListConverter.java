@@ -34,7 +34,7 @@ public class EnumListConverter implements Converter {
     public void marshal(Object source, HierarchicalStreamWriter writer,
             MarshallingContext context) {
         
-        System.out.println("_marshall class="+source.getClass().getCanonicalName());
+     //   System.out.println("_marshall class="+source.getClass().getCanonicalName());
         Set<Enum> list = (Set<Enum>) source;
         
     //    writer.addAttribute("roles", String.valueOf(StringUtils.join(list, ",")));
