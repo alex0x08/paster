@@ -31,11 +31,11 @@ import uber.megashare.model.User;
 public class UserDaoImpl extends GenericSearchableDaoImpl<User> implements UserDao {
 
     /**
-	 * 
-	 */
-	private static final long serialVersionUID = -5893883405835538321L;
+     *
+     */
+    private static final long serialVersionUID = -5893883405835538321L;
 
-	public UserDaoImpl() {
+    public UserDaoImpl() {
         super(User.class);
     }
 

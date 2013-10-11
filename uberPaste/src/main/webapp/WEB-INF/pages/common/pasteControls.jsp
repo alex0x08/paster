@@ -53,13 +53,13 @@
     <div class="column grid-4 right">
 
         <c:if test="${prev}">
-            <a href="<c:url value="/main/paste/${model.id-1}"/>" target="${target}" title="Previous paste">&#8592;</a>
+            <a href="<c:url value="/${model.id-1}"/>" target="${target}" title="Previous paste">&#8592;</a>
         </c:if>
 
         <span class="f-h4">${model.id}</span>
 
         <c:if test="${next}">
-            <a href="<c:url value="/main/paste/${model.id+1}"/>" target="${target}" title="Next paste">&#8594;</a>
+            <a href="<c:url value="/${model.id+1}"/>" target="${target}" title="Next paste">&#8594;</a>
         </c:if>
 
 

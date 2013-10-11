@@ -40,15 +40,21 @@ class SearchResult extends KeyValue{
    */
   private var itemsModel:String=null
 
-  def this(code:String,desc:String,itemsModel:String) = {
+  //private var resultCount:Int =0 
+  
+  def this(code:String,desc:String,itemsModel:String
+           //,totalFound:Int
+  ) = {
     this()
     setCode(code)
     setName(desc)
     this.itemsModel=itemsModel
+   // this.resultCount=totalFound
   }
 
   def getItemsModel():String = itemsModel
   def getCodeLowerCase() = super.getCode().toLowerCase
+ // def getResultCount() = resultCount
 }
 
 

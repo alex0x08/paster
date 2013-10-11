@@ -15,18 +15,25 @@
  */
 package uber.megashare.model;
 
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
+import com.thoughtworks.xstream.annotations.XStreamOmitField;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlTransient;
 import org.apache.commons.io.FileUtils;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.hibernate.annotations.Cache;
@@ -51,7 +58,8 @@ import uber.megashare.base.LoggedClass;
 @Table(name = "s_files")
 @Audited
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class SharedFile extends Node {
+@XStreamAlias("sharedFile")
+public class SharedFile extends Node  {
 
     public static final String PASTER_PREFIX= "paste_";
     
@@ -65,11 +73,13 @@ public class SharedFile extends Node {
     
     @NotNull(message = "{validator.not-null}")
     @Size(min = 3, max = 1024, message = "{validator.not-null}")
+    @XmlTransient
     private String url;
     
     @NotNull(message = "{validator.not-null}")
     @Column(nullable = false, unique = true, length = 255)
     @Field(index = Index.YES, store = Store.YES, termVector = TermVector.NO)
+    @XStreamAsAttribute
     private String uuid = UUID.randomUUID().toString();
     
     @Enumerated(EnumType.STRING)
@@ -77,26 +87,57 @@ public class SharedFile extends Node {
     @Field(index = Index.YES, store = Store.YES, termVector = TermVector.NO)
     private FileType type = FileType.BINARY;
     
-    @Field(index = Index.YES, store = Store.YES, termVector = TermVector.NO)
-    private String integrationCode;
     
     @Column(nullable = false)
     @Field(index = Index.YES, store = Store.YES, termVector = TermVector.NO)
+    @XStreamAsAttribute
     private String mime;
     
     @Field(index = Index.YES, store = Store.YES, termVector = TermVector.YES)
+    @XmlTransient
+    @XStreamOmitField
     private String nameContents;
     
     
+    @XStreamOmitField
     private String previewUrl;
     
+    @XStreamAsAttribute
     private long fileSize;
     
+    @XStreamAsAttribute
     private int previewWidth, previewHeight;
 
     @Temporal(javax.persistence.TemporalType.DATE)
+    @XStreamAsAttribute
     private Date removeAfter;
+    
+    @Field(index = Index.YES, store = Store.YES, termVector = TermVector.NO)
+    @XStreamAsAttribute
+    String integrationCode;
+    
+    @ManyToMany(fetch = FetchType.EAGER)
+    //@ContainedIn
+    @IndexedEmbedded(depth = 1, prefix = "relatedProjects_")
+    private Set<Project> relatedProjects = new HashSet<>();
 
+    public Set<Project> getRelatedProjects() {
+        return relatedProjects;
+    }
+
+    public void setRelatedProjects(Set<Project> relatedProjects) {
+        this.relatedProjects = relatedProjects;
+    }   
+    
+    
+    public String getIntegrationCode() {
+        return integrationCode;
+    }
+
+    public void setIntegrationCode(String integrationCode) {
+        this.integrationCode = integrationCode;
+    }
+    
     @JsonIgnore
     public String getNameContents() {
         return nameContents;
@@ -121,7 +162,8 @@ public class SharedFile extends Node {
         }
         
         DateTime start = new DateTime(this.removeAfter),
-                 end = new DateTime(DateBuilder.getInstance().setTimeFromBegin().getDate().getTime());
+                 end = new DateTime(DateBuilder.getInstance()
+                .setTimeFromBegin().getDate().getTime());
         
         return Days.daysBetween(start, end).getDays();
      }
@@ -155,13 +197,7 @@ public class SharedFile extends Node {
         this.previewWidth = previewWidth;
     }
 
-    public String getIntegrationCode() {
-        return integrationCode;
-    }
-
-    public void setIntegrationCode(String integrationCode) {
-        this.integrationCode = integrationCode;
-    }
+   
 
     public String getUuid() {
         return uuid;
@@ -270,8 +306,8 @@ public class SharedFile extends Node {
                 .append("uuid", uuid)
                 .append("owner", getOwner())
                 .append("accessLevel", getAccessLevel())
-                .append("integrationCode", integrationCode)
                 .append("fileType", type)
+                .append("integrationCode", integrationCode)
                 .append("previewUrl", previewUrl)
                 .append("mime", mime)
                 .append("fileSize", fileSize).toString() + super.toString();

@@ -98,7 +98,6 @@ public class AttachedFile extends Struct implements Serializable {
 
     @Override
     public void loadFull() {
-
         getData();
         getIcon();
 

@@ -3,12 +3,28 @@
 <h1><fmt:message key="users.title"/></h1>
 
 <c:url var="url" value='/main/user/list' />
-<div id="notice"></div>
-<div>
+
+
+
+<div class="row" style="margin: 0; padding: 0;">                
+
+<jsp:include
+    page="/WEB-INF/jsp/templates/common/pagination.jsp">
+    <jsp:param name="modelName" value="user" />
+</jsp:include>
+
+<jsp:include
+    page="/WEB-INF/jsp/templates/common/page-size.jsp">
+    <jsp:param name="modelName" value="user" />
+</jsp:include>
+    
+</div>
+
+<div class="row">
     
     <table class="table table-striped table-bordered" >
     <tr style="">
-        <th style="width:5%" >ID</th>
+        <th style="width:5%" ><button type="button" class="btn btn-default">ID  <span class="glyphicon glyphicon-arrow-down"></span></button> </th>
         <th style="width:10%" ><fmt:message key="user.login"/></th>
         <th style="width:20%;"><fmt:message key="user.name"/></th>
         <th style="width:10%;"><fmt:message key="user.roles"/></th>

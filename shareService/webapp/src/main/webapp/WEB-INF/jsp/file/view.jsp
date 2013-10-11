@@ -8,15 +8,13 @@
 </jsp:include>
 
 <div class="row">  
-    <div class="span16">
+    <div class="col-xs-4 col-md-10">
 
         <c:if test="${not empty statusMessageKey}">
             <p><fmt:message key="${statusMessageKey}"/></p>
         </c:if>
 
-            
-            
- <c:url value="/act/download" var="downloadUrl">
+            <c:url value="/act/download" var="downloadUrl">
 
                 <c:choose>
                     <c:when test="${not empty param.revision}">          
@@ -25,13 +23,10 @@
                     </c:when>
                     <c:otherwise>
                         <c:param name="id" value="${model.uuid}"/>
-
                     </c:otherwise>
                 </c:choose>
-
             </c:url>
 
-       
 
         <div class="form-row pull-left">
             <label for="file"><fmt:message key="file.file.uploaded"/>:</label>
@@ -45,18 +40,15 @@
 
          <c:if test="${!model.blank and not empty availableRevisions}">
 
-         <div class="form-row pull-left">
-         
+         <div class="form-row pull-left">         
              <label for="file"><fmt:message key="struct.versions"/>:</label>
-
              <span class="input" style="padding-left:1em;">
                       <jsp:include
                         page="/WEB-INF/jsp/templates/common/revisions.jsp">
                         <jsp:param name="modelName" value="file" />
                     </jsp:include>
-            </span>
-             
-         </div>   
+            </span>             
+         </div>  
 
          </c:if>
 
@@ -65,25 +57,18 @@
          <c:if test="${!model.blank and pasteIntegrationEnabled and model.pasterIntegrated}">
 
          <div class="form-row pull-left">
-         
              <label for="file">Integrated with paste :</label>
-
-             <span class="input" style="padding-left:1em;">
-          
+               <span class="input" style="padding-left:1em;">
                    <iframe  src="${pasteUrl}/main/paste/integrated/preview/${model.pasterId}"
                      scrolling="auto" frameborder="0"
                      style="width:630px;height: 400px;"  allowTransparency="true"   >
                     </iframe>  
-          
-                 
             </span>
              
          </div>   
 
          </c:if>
-
-             
-            
+     
             
         <div class="form-buttons pull-left">
 
@@ -92,7 +77,7 @@
             </c:if>
 
             <a class="btn btn-primary btn-large" href="<c:out value='${downloadUrl}'/>">
-                <img style="display: inline;" src="<c:url value='/images/download.png'/>"/>
+                <img style="display: inline;" src="<c:url value='/main/static/${appVersion}/images/download.png'/>"/>
                 <fmt:message key="file.download"/></a>
 
             <c:if test="${not empty availableNext}">

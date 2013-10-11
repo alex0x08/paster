@@ -15,7 +15,9 @@
  */
 package uber.megashare.dao;
 
-import org.springframework.transaction.annotation.Transactional;
+import java.util.Collections;
+import java.util.List;
+import javax.persistence.Query;
 import uber.megashare.model.Struct;
 
 /**
@@ -33,4 +35,17 @@ public abstract class StructDaoImpl<T extends Struct> extends GenericDSLDaoImpl<
     protected StructDaoImpl(Class<T> clazz) {
         super(clazz);
     }
+    
+    @Override
+    public List<T> getObjectsForIntegration(String integrationCode) {
+
+        CriteriaSet cr = new CriteriaSet();
+
+        Query query = getEntityManager().createQuery(
+                cr.cr.where(cr.cb.equal(cr.r.get("integrationCode"), integrationCode))
+                .orderBy(cr.cb.desc(cr.r.get("lastModified"))));
+        return query.getResultList().isEmpty() ? Collections.EMPTY_LIST : query.getResultList();
+
+    }
+
 }

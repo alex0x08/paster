@@ -135,7 +135,7 @@ public class UserManagerImpl extends GenericSearchableManagerImpl<User, UserSear
     public User save(User object) {
         getLogger().debug("___UserManagerImpl.save obj=" + object);
 
-         object = changePassword(object, object.getPassword());
+         //object = changePassword(object, object.getPassword());
 
         object=dao.saveObject(object);
        
@@ -167,7 +167,8 @@ public class UserManagerImpl extends GenericSearchableManagerImpl<User, UserSear
 
                     // If password was changed (or new user), encrypt it
                     if (passwordChanged) {
-                        user.setPassword(passwordEncoder.encodePassword(newPassword, null));
+                        user.setPassword(passwordEncoder.encodePassword(newPassword,null));
+                       // user.setPassword(passwordEncoder.encode(newPassword));
                         log.append("__password was encrypted");
                     }
 

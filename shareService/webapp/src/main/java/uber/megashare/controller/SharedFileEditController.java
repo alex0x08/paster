@@ -15,6 +15,7 @@
  */
 package uber.megashare.controller;
 
+import java.beans.PropertyEditorSupport;
 import java.io.File;
 import java.io.FileInputStream;
 import java.text.SimpleDateFormat;
@@ -49,6 +50,7 @@ import static uber.megashare.controller.GenericEditController.SAVE_ACTION;
 import static uber.megashare.controller.ListConstants.LIST_ACTION;
 import static uber.megashare.controller.SharedFileConstants.FILE_PREFIX;
 import uber.megashare.model.AccessLevel;
+import uber.megashare.model.Project;
 import uber.megashare.model.SharedFile;
 import uber.megashare.model.SharedFileSearchQuery;
 import uber.megashare.service.SharedFileManager;
@@ -86,7 +88,8 @@ public class SharedFileEditController extends GenericCommentController<SharedFil
     }
     
     @InitBinder
-    private void dateBinder(WebDataBinder binder,Locale locale) {
+    protected void initBinder(WebDataBinder binder,Locale locale) {
+       
         
         //The date format to parse or output your dates
         SimpleDateFormat dateFormat = new SimpleDateFormat(messageSource.getMessage("date.format", null, locale));
@@ -94,6 +97,8 @@ public class SharedFileEditController extends GenericCommentController<SharedFil
         CustomDateEditor editor = new CustomDateEditor(dateFormat, true);
         //Register it as custom editor for the Date type
         binder.registerCustomEditor(Date.class, editor);
+        
+       
     }
 
     @RequestMapping(value = RAW_PREFIX+"/comments", method = RequestMethod.GET)
@@ -138,13 +143,23 @@ public class SharedFileEditController extends GenericCommentController<SharedFil
         if (obj.getAccessLevel().equals(AccessLevel.ALL)) {
             return true;
         }
-        /**
+        
+         /**
          * if user is admin
          */
         if (isCurrentUserAdmin()) {
             return true;
         }
-
+        
+        if (obj.getAccessLevel().equals(AccessLevel.PROJECT) ) {
+            
+            if (!isCurrentUserLoggedIn()) {
+                return false;
+            }
+            
+            return obj.getRelatedProjects().contains(getCurrentUser().getRelatedProject());
+        }
+      
         /**
          * if current user is file owner
          */
@@ -166,6 +181,7 @@ public class SharedFileEditController extends GenericCommentController<SharedFil
 
                 log.append("uploadSave starting ,currentUser=" + getCurrentUser() + " file=" + input);
 
+                
                 SharedFile old;
 
                 if (!input.isBlank()) {
@@ -180,6 +196,7 @@ public class SharedFileEditController extends GenericCommentController<SharedFil
                     input.setUuid(old.getUuid());
                     input.setName(old.getName());
                     input.setIntegrationCode(old.getIntegrationCode());
+                    input.setRelatedProjects(old.getRelatedProjects());
                     
                     /**
                      * allow upload and replace exist pulic file for all logged in users
@@ -201,6 +218,7 @@ public class SharedFileEditController extends GenericCommentController<SharedFil
                      * always will be an user
                      */
                     input.setOwner(getCurrentUser());
+                    input.getRelatedProjects().add(getCurrentUser().getRelatedProject());
                 }
 
                 //SharedFile out = new SharedFile();
@@ -264,7 +282,7 @@ public class SharedFileEditController extends GenericCommentController<SharedFil
                             .getUploadDir(),calcPath);
                     fullUploadPath.mkdirs();
                     
-                    input.setUrl(calcPath +File.separator+System.currentTimeMillis() +"."+ ext);
+                    input.setUrl(calcPath +File.separator+input.getUuid() +"."+ ext);
 
                 
                     File fout = new File(settingsManager.getCurrentSettings()
@@ -290,7 +308,7 @@ public class SharedFileEditController extends GenericCommentController<SharedFil
                         input.setPreviewWidth(builder.getImageInfo().getWidth());
                         
                         
-                        input.setPreviewUrl(calcPath +File.separator+System.currentTimeMillis() + "_preview.png");
+                        input.setPreviewUrl(calcPath +File.separator+input.getUuid()+ "_preview.png");
                         
                         FileUtils.writeByteArrayToFile(
                                 new File(settingsManager.getCurrentSettings().getUploadDir(), input.getPreviewUrl()), img);
@@ -492,6 +510,7 @@ public class SharedFileEditController extends GenericCommentController<SharedFil
          if (file!=null) {
             manager.remove(id);
             resetPagingList(request);
+            
          }
              
          model.asMap().clear();

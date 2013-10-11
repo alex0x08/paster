@@ -15,6 +15,7 @@
  */
 package uber.megashare.model;
 
+import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import java.util.Calendar;
 import java.util.Date;
 import javax.persistence.Column;
@@ -69,6 +70,7 @@ public abstract class Struct extends BaseDBObject {
     @Column(name = "s_name", nullable = false)
     @Field(index = Index.YES, store = Store.YES, termVector = TermVector.YES, boost=@Boost(2f))
     //   @Analyzer(definition = "customanalyzer")
+    @XStreamAsAttribute
     private String name;
     
     @Column(name = "last_modified", columnDefinition = "timestamp")
@@ -76,6 +78,7 @@ public abstract class Struct extends BaseDBObject {
     @Field(index = Index.YES)
     @DateBridge(resolution = Resolution.DAY)
     @NotAudited
+    @XStreamAsAttribute
     Date lastModified = Calendar.getInstance().getTime();
 
     

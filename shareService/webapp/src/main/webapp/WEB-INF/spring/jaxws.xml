@@ -12,7 +12,7 @@ http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd">
                     address="/share">
     <jaxws:properties>
       <entry key="mtom-enabled" value="true"/>
-         <entry key="attachment-directory" value="${app.home}/uploads/"/>
+         <entry key="attachment-directory" value="${share.app.home}/uploads/"/>
         <entry key="attachment-memory-threshold" value="4000000"/>
    
     </jaxws:properties>

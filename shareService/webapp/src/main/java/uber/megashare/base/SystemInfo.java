@@ -25,6 +25,7 @@ import uber.megashare.model.AppVersion;
  */
 public class SystemInfo {
 
+    
     private AppVersion runtimeVersion;
     
     private Date dateStart = Calendar.getInstance().getTime();
@@ -41,7 +42,6 @@ public class SystemInfo {
         return dateStart;
     }
 
-  
     
     private static final SystemInfo instance = new SystemInfo();
     

@@ -16,6 +16,7 @@
 package uber.megashare.model;
 
 import com.jcabi.manifests.Manifests;
+import java.io.Serializable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.persistence.Embeddable;
@@ -30,12 +31,12 @@ import uber.megashare.base.LoggedClass;
 
 
 @Embeddable
-public class AppVersion{
+public class AppVersion implements Serializable{
 
     public static final String UNDEFINED = "UNDEFINED",
-            MF_IMPLEMENTATION_VERSION="Implementation-Version",
-            MF_IMPLEMENTATION_BUILD="Implementation-Build",
-            MF_IMPLEMENTATION_BUILD_DATE="Implementation-Build-Time";
+            MF_IMPLEMENTATION_VERSION="Share-Implementation-Version",
+            MF_IMPLEMENTATION_BUILD="Share-Implementation-Build",
+            MF_IMPLEMENTATION_BUILD_DATE="Share-Implementation-Build-Time";
     
     private String implVer, //app version
                    implBuildNum, // build number
@@ -47,6 +48,7 @@ public class AppVersion{
     
     public AppVersion fillFromManifest() {
     
+       
         
         implVer = getManifestValue(MF_IMPLEMENTATION_VERSION);
 

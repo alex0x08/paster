@@ -48,12 +48,12 @@ public class IndexController extends GenericSearchableController<SharedFile, Sha
         
     }
 
-    @RequestMapping(value = "/**/*")
+   /* @RequestMapping(value = "/**\/*")
     public String defaultPage(Model model) {
         
         model.asMap().clear();
         return "redirect:/main/welcome";
-    }
+    }*/
 
     @RequestMapping("/login")
     public void login() {

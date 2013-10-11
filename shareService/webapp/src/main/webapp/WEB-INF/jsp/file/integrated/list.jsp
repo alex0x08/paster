@@ -1,8 +1,26 @@
 <%@ include file="/WEB-INF/jsp/templates/common/taglibs.jsp"%>
 
 
-<div id="notice"></div>
 
+
+
+<script src="<c:url value='/main/assets/${appVersion}/jquery-ui/1.10.2/ui/minified/jquery.ui.widget.min.js'/>"></script>
+
+<link href="<c:url value='/main/assets/${appVersion}/jquery-file-upload/8.4.2/css/jquery.fileupload-ui.css'/>" rel="stylesheet"/>
+
+ <script type="text/javascript">
+                      
+                      
+                       $(document).ready(function() {
+                              
+                              $('#fileSelectBtn').bind('change', function() {
+                                  
+                                  $('#fileSelectLabel').text($(this).val());
+                              });
+                       
+                    });
+                      
+                  </script>
 
 <c:url var="url" value='/main/file/integrated/list' />
 
@@ -11,34 +29,10 @@
 <div class="row-fluid">
     <div class="span6">
 
-        <div class="btn-group pull-left">
-            <a class="btn dropdown-toggle " data-toggle="dropdown" href="#">
-                <img style="display: inline; vertical-align:middle;" 
-                     title="<fmt:message key="locale.${pageContext.response.locale.language}"/>" 
-                     src="<c:url value='/images/flags/flag_${pageContext.response.locale.language}.png'/>"/>
-                <span class="caret"></span>
-            </a>
-            <ul class="dropdown-menu">
-
-                <c:forTokens items="ru,en" delims="," var="locale" >
-                    <c:if test="${pageContext.response.locale.language ne locale}">
-
-                        <li>
-                            <a href="<c:url value="${request.requestURL}">
-                                   <c:param name="locale" value="${locale}" /></c:url>">
-                                   <img style="display: inline; vertical-align:middle;" 
-                                        title="<fmt:message key="locale.${locale}"/>" 
-                                   src="<c:url value='/images/flags/flag_${locale}.png'/>"/>
-                               <fmt:message key="locale.${locale}"/>
-                            </a>
-                        </li>
-
-                    </c:if>
-
-                </c:forTokens>   
-            </ul>
-        </div>        
-        <sec:authorize ifAnyGranted="ROLE_USER,ROLE_ADMIN">
+              <jsp:include page="/WEB-INF/jsp/templates/common/lang-select.jsp"/>
+           
+        
+       <sec:authorize ifAnyGranted="ROLE_USER,ROLE_ADMIN">
 
             <form:form action="${uploadUrl}" modelAttribute="model" 
                        method="POST" id="file_upload" cssClass="form-vertical"
@@ -54,16 +48,30 @@
                     <form:hidden path="integrationCode" />
                     <form:hidden path="accessLevel" />
 
+                    
                     <div class="control-group">
+                            <form:label cssClass="control-label" path="file">
+                                <fmt:message key="file.file.new"/>:</form:label>
+                                <div class="controls">
+                                    
+                                     <div class="fileupload fileupload-new" data-provides="fileupload">
 
-                        <form:label cssClass="control-label" path="file"><fmt:message key="file.file.new"/>:</form:label>
+                                        <span class="btn btn-success fileinput-button">
+                                            <i class="glyphicon glyphicon-repeat"></i>
+                                            
+                                            <span id="fileSelectLabel">Select file</span>
+                                            <form:input id="fileSelectBtn" path="file" name="file"   
+                                                        type="file" /> 
+                                        </span>
+                                    </div>
+                                    
+                                    
+                                <form:errors path="file" cssClass="error" />
+                            </div>      
+                        </div>
 
-                            <div class="controls">
-                            <form:input path="file" name="file" cssClass="input-file"
-                                        type="file" /> 
-                            <form:errors path="file" cssClass="error" />
-                        </div>      
-                    </div>
+                    
+                   
                     <div class="form-actions">
                         <fmt:message var="submit_button_text" key="button.upload" />
                         <input name="submit" class="btn btn-primary" type="submit" value="${submit_button_text}" />
@@ -109,6 +117,10 @@
                 </ul>
             </div>
 
+                       
+                            
+                               
+                            
             <script type="text/javascript">
                 $('#auth-dropdown').click(function(event){
                     event.stopPropagation();

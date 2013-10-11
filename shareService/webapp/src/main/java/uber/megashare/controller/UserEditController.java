@@ -15,21 +15,30 @@
  */
 package uber.megashare.controller;
 
+import java.beans.PropertyEditorSupport;
+import java.io.FileWriter;
+import java.io.Writer;
+import java.util.List;
+import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import uber.megashare.model.Project;
 import uber.megashare.model.Role;
 import uber.megashare.model.User;
+import uber.megashare.service.ProjectManager;
 import uber.megashare.service.UserManager;
 
 /**
@@ -46,10 +55,13 @@ public class UserEditController extends GenericEditController<User> {
      */
     private static final long serialVersionUID = 9012983327522416777L;
 
+    private ProjectManager projectManager;
+    
     @Autowired
-    public UserEditController(UserManager userManager) {
+    public UserEditController(UserManager userManager,ProjectManager projectManager) {
         super(userManager);
         //   this.userManager = userManager;
+        this.projectManager = projectManager;
         setListPage("redirect:list");
         setEditPage("user/edit");
         setViewPage("user/view");
@@ -62,6 +74,25 @@ public class UserEditController extends GenericEditController<User> {
     }
    
 
+    @InitBinder
+    protected void initBinder(WebDataBinder binder,Locale locale) {
+    
+         binder.registerCustomEditor(Project.class,"relatedProject", new PropertyEditorSupport() {
+        @Override
+        public void setAsText(String text) {
+         //   System.out.println("set project from "+text);
+            setValue(new Project(Long.valueOf(text)));
+        
+        }
+        
+             @Override
+             public String getAsText() {
+                 return getValue() == null ? "" : ((Project) getValue()).getId().toString();
+             }
+        
+    });
+    }
+    
     @Override
     public User getNewModelInstance() {
         return new User();
@@ -70,6 +101,11 @@ public class UserEditController extends GenericEditController<User> {
     @ModelAttribute("availableRoles")
     public Role[] getAvailableRoles() {
         return Role.values();
+    }
+    
+    @ModelAttribute("availableProjects")
+    public List<Project> getAvailableProjects() {
+        return projectManager.getAll();
     }
     
     @RequestMapping(value = {SAVE_ACTION}, method = RequestMethod.POST)
@@ -100,16 +136,33 @@ public class UserEditController extends GenericEditController<User> {
             }
             return editPage;
         }
+        
+        
+        if (b.getRoles() == null || b.getRoles().isEmpty()) {
+            result.addError(new ObjectError("user.roles", "Roles not set."));
+            return editPage;
+        }
 
         if (!b.isBlank()) {
+            
             User current = userManager.getFull(b.getId());
             current.setEmail(b.getEmail());
             current.setDefaultFileAccessLevel(b.getDefaultFileAccessLevel());
             current.setName(b.getName());
-         
-            if (b.getNewPassword()!=null) {
             
-                if (!b.getNewPassword().equals(b.getRepeatPassword())) {
+            Project p  =projectManager.get(b.getRelatedProject().getId());
+            
+            if (p==null) {
+                    result.addError(new ObjectError("relatedProject","Project does not exist."));
+                    return editPage; 
+            }
+            
+            current.setRelatedProject(p);
+            current.setRoles(b.getRoles());
+            
+            if (!StringUtils.isBlank(b.getNewPassword())) {
+                
+               if (!b.getNewPassword().equals(b.getRepeatPassword())) {
            
                     result.addError(new ObjectError("newPassword","Password must match."));
                     return editPage; 
@@ -119,21 +172,18 @@ public class UserEditController extends GenericEditController<User> {
             }
             
             b = current;
+            
+          //  System.out.println("_saving pass "+b.getPassword());
+            
         } else {
-        
-            if (b.getRoles()==null ||b.getRoles().isEmpty()) {
-                    result.addError(new ObjectError("user.roles","Roles not set."));
-                    return editPage; 
-            }
 
-           if (b.getNewPassword()!=null && !b.getNewPassword().equals(b.getRepeatPassword())) {
+           if (!StringUtils.isBlank(b.getNewPassword()) && !b.getNewPassword().equals(b.getRepeatPassword())) {
                     result.addError(new ObjectError("newPassword","Password must match."));
                     return editPage; 
                 }
+           
                 b= userManager.changePassword(b, b.getNewPassword());
-            }
-        
-        
+       }
         
         User r = manager.save(b);
 

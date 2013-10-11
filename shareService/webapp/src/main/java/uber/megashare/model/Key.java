@@ -15,6 +15,7 @@
  */
 package uber.megashare.model;
 
+import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
@@ -30,6 +31,7 @@ public abstract class Key extends Struct {
 
     @NotNull
     @Column(nullable = false, length = 50, unique = true)
+    @XStreamAsAttribute
     private String code;
 
     public Key() {

@@ -15,12 +15,16 @@
  */
 package uber.megashare.model;
 
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+import org.apache.commons.lang.StringUtils;
+
 /**
  * Enum with abstact file types
  * 
  * 
  * @author alex
  */
+@XStreamAlias("fileType")
 public enum FileType {
         IMAGE("type.image","image.gif"),
         BINARY("type.binary","binary.gif"),
@@ -50,7 +54,7 @@ public enum FileType {
     
     public static FileType lookup(String code) {
         
-        if (code==null || code.trim().length()==0) {
+        if (StringUtils.isBlank(code)) {
             return BINARY;
         }
         

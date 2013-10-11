@@ -4,110 +4,98 @@
 
 <div class="row">
 
-    <div class="span2 ">
+    <div class="col-md-3" style="text-align:right;">
         <img src="<c:out value='http://www.gravatar.com/avatar/${user.avatarHash}?s=128'/>"/>
 
+          <div class="form-group">
+                    
+                 <c:out value="${user.login}"/> ,      
+                            <c:forEach items="${user.roles}" var="role"  >
+                                <fmt:message key="${role.desc}"/>
+                            </c:forEach> 
+                            <p>
+                                  <c:out value="${user.relatedProject.name}"/>
+                            </p>    
+                </div>                            
+                           
     </div>
 
-    <div class="span6"> 
-
-
+    <div class="col-md-4"> 
 
         <c:url var="url" value='/main/profile/save' />
-        <form:form action="${url}" cssClass="form-horizontal"
+
+        <form:form action="${url}"  cssClass="form-horizontal"
                    modelAttribute="user" 
                    method="POST" enctype="multipart/form-data">
             <fieldset>
-                <form:errors  cssClass="alert alert-error" element="div" />
-                <form:hidden path="id" />    
+                
+                <legend>
+                    <c:out value="${user.name}"/>                     
+                </legend>
 
+                <form:errors  cssClass="alert alert-danger" element="div" />
+                <form:hidden path="id" />   
 
+              
+                  
 
-                <div class="control-group">
-                    <form:label cssClass="control-label" path="name">
-                        <fmt:message key="user.name"/>:</form:label>
+                <div class="form-group">
+                 
+                    <div class="input-group">
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
+                            <form:input cssErrorClass="form-control alert alert-danger" cssClass="form-control" path="name" />
+                    </div>                    
+                    <form:errors path="name" cssClass="help-block alert alert-danger" />                         
+                </div>
+
+                
+                   <div class="form-group ">
+                  
                         <div class="controls">
-
-
-                        <form:input cssErrorClass="alert alert-error" cssClass="input-xlarge" path="name"/>
-                        <form:errors path="name" cssClass="alert alert-error" /> 
-
-                    </div>
-                </div>
-                <div class="control-group">
-                    <form:label cssClass="control-label" path="login">
-                        <fmt:message key="user.login"/>:</form:label>
-                        <div class="controls">
-                            <span class="input">
-                            <c:out value="${user.login}"/>
-                        </span>
-
-                    </div> 
-                </div>
-                <div class="control-group">
-
-                    <form:label cssClass="control-label" path="password">
-                        <fmt:message key="user.pass"/>:</form:label>
-                    <div class="controls">
-                        <span class="input">
-
-                            <form:password path="newPassword"/>
-                            <form:errors path="newPassword" cssClass="alert alert-error" /> 
-
-                        </span>
-
-                    </div>
-
-                </div>    
-
-
-                <div class="control-group">
-
-                    <form:label cssClass="control-label" path="password">
-                        <fmt:message key="user.pass.repeat"/>:</form:label>
-                    <div class="controls">
-                        <span class="input">
-
-                             <form:password path="repeatPassword"/>
-                            <form:errors path="repeatPassword" cssClass="error" /> 
-
-                        </span>
-
-                    </div>
-
-                </div>    
-
-
-                <div class="control-group">
-                    <form:label cssClass="control-label" path="roles">
-                        <fmt:message key="user.roles"/>:</form:label>
-                        <div class="controls">
-                            <span class="input">                    
-                            <c:forEach items="${user.roles}" var="role">
-                               <fmt:message key="${role.desc}"/>
-                            </c:forEach>               
-                        </span>
-
-                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span></span>
+                            <form:input cssErrorClass="form-control alert alert-danger" cssClass="form-control" path="email" />
+                    </div>                    
+                    <form:errors path="email" cssClass="help-block alert alert-danger" />                         
+                            
+                        </div>
                 </div>
 
-                <div class="control-group">
-                    <form:label cssClass="control-label" path="email">
-                        <fmt:message key="user.email"/>:</form:label>
-                        <div class="controls">
-                        <form:input path="email" cssClass="input" cssErrorClass="alert alert-error"/>
-                        <form:errors path="email" cssClass="alert alert-error" /> 
-                    </div>
-                </div>
+              
+                     <div class="form-group ">
 
-                <div class="form-actions">
-                    <input class="btn btn-primary" name="submit" type="submit" 
-                           value="<fmt:message key="button.save"/>" />
-                    <a href="<c:url value='/main/file/list'/>"><fmt:message key="button.cancel"/></a>
-                </div>
+                        <form:label cssClass="control-label" path="password">
+                            <fmt:message key="user.pass"/>:</form:label>
 
+                            <div class="input-group input-group-sm">
+                                <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
+                                <form:password path="newPassword" cssStyle="width:10em;" 
+                                               cssErrorClass="form-control alert alert-danger" 
+                                               cssClass="form-control"/>
+                                
+                                 <span class="input-group-addon">Repeat</span>
+                        <form:password path="repeatPassword" cssStyle="width:10em;" 
+                                               cssErrorClass="form-control alert alert-danger" 
+                                               cssClass="form-control"/>
+                        </div>                    
+                        <form:errors path="newPassword" cssClass="help-block alert alert-danger" /> 
+                    </div>  
+                    
+
+
+
+                  
+
+                        <div class="form-group">
+                            <input class="btn btn-primary" name="submit" type="submit" 
+                                   value="<fmt:message key="button.save"/>" />
+                            <a class="btn btn-default" href="<c:url value='/main/file/list'/>"><fmt:message key="button.cancel"/></a>
+                        </div>       
+                                    
             </fieldset>
-
+                    
+                                
+                        
         </form:form>
 
     </div>

@@ -77,7 +77,7 @@ public class QNode extends EntityPathBase<Node> {
 
     public QNode(Class<? extends Node> type, PathMetadata<?> metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.owner = inits.isInitialized("owner") ? new QUser(forProperty("owner")) : null;
+        this.owner = inits.isInitialized("owner") ? new QUser(forProperty("owner"), inits.get("owner")) : null;
     }
 
 }

@@ -15,6 +15,7 @@
  */
 package uber.megashare.model;
 
+import com.thoughtworks.xstream.annotations.XStreamAlias;
 import org.springframework.security.core.GrantedAuthority;
 
 /**
@@ -22,6 +23,7 @@ import org.springframework.security.core.GrantedAuthority;
  * 
  * @author alex
  */
+@XStreamAlias("role")
 public enum Role implements GrantedAuthority {
 
     ROLE_ADMIN("role.admin"),

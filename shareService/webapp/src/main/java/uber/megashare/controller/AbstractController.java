@@ -46,7 +46,10 @@ public abstract class AbstractController extends LoggedClass {
 
     interface ActionListener {
 
-        void invokeAction(Model model, HttpServletRequest request, HttpServletResponse response, Locale locale);
+        void invokeAction(Model model, 
+                HttpServletRequest request, 
+                HttpServletResponse response, 
+                Locale locale);
     }
     /**
      *
@@ -58,7 +61,7 @@ public abstract class AbstractController extends LoggedClass {
             MSG_ACTION_CANCELLED = "action.cancelled",
             MSG_ACTION_SUCCESS = "action.success";
     
-    protected final String page404 = "404",
+    protected final String page404 = "404",page500 = "500",
             page403 = "403";
     
     @Autowired
@@ -83,10 +86,28 @@ public abstract class AbstractController extends LoggedClass {
 
     @Resource(name = "messageSource")
     protected MessageSource messageSource;
+
+    @Value("${resources.gavatar.enabled}")
+    protected boolean gavatarEnabled;
+
+    @Value("${gavatar.url}")
+    protected String gavatarUrl;
+
+    private final static List<Locale> availableLocales = new ArrayList<>();
+
+    static {
+        availableLocales.add(Locale.ENGLISH);
+        availableLocales.add(new Locale("ru", "RU"));
+    }
     
     @ModelAttribute("currentSettings")
     public SystemProperties getCurrentSettings() {
         return settingsManager.getCurrentSettings();
+    }
+    
+    @ModelAttribute("appVersion")
+    public String getAppVersion() {
+        return settingsManager.getCurrentSettings().getAppVersion().getImplBuildNum();
     }
     
     @ModelAttribute("pasteIntegrationEnabled")
@@ -103,7 +124,16 @@ public abstract class AbstractController extends LoggedClass {
     public boolean isCDNEnabled() {
         return cdnEnabled;
     }
+    
+    @ModelAttribute("gavatarEnabled")
+    public boolean isGavatarEnabled() {
+        return gavatarEnabled;
+    }
 
+    @ModelAttribute("gavatarlUrl")
+    public String getGavatarUrl() {
+        return gavatarUrl;
+    }
     
     @ModelAttribute("externalUrl")
     public String getExternalUrl() {
@@ -114,6 +144,8 @@ public abstract class AbstractController extends LoggedClass {
     public String getPasterUrl() {
         return pasterUrl;
     }
+    
+    
 
     /**
      * handles error throwed from spring dao level
@@ -126,12 +158,7 @@ public abstract class AbstractController extends LoggedClass {
         getLogger().error("Object not found: " + ex.getLocalizedMessage(), ex);
         return page404;
     }
-    private final static List<Locale> availableLocales = new ArrayList<>();
-
-    static {
-        availableLocales.add(Locale.ENGLISH);
-        availableLocales.add(new Locale("ru", "RU"));
-    }
+    
 
     @ModelAttribute("availableLocales")
     public List<Locale> getAvailableLocales() {

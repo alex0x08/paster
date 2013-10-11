@@ -49,10 +49,8 @@
                     </c:when>
                     <c:otherwise>
                         <c:param name="id" value="${model.uuid}"/>
-
                     </c:otherwise>
                 </c:choose>
-
             </c:url>
 
 <c:choose>
@@ -61,7 +59,6 @@
         <c:if test="${param.downloadLink eq 'download'}">
 
             <c:url value="/act/download" var="detailUrl">
-
                 <c:choose>
                     <c:when test="${not empty param.revision}">          
                         <c:param name="id" value="${model.id}"/>
@@ -69,18 +66,12 @@
                     </c:when>
                     <c:otherwise>
                         <c:param name="id" value="${model.uuid}"/>
-
                     </c:otherwise>
                 </c:choose>
-
             </c:url>
-
-
         </c:if>
         <c:if test="${param.downloadLink eq 'edit'}">
-
             <c:url value="/main/file/edit/${model.id}" var="detailUrl"/>
-
         </c:if>
 
 
@@ -111,30 +102,39 @@
 
             <c:choose>
                 <c:when test="${model.willBeRemoved}">
-                    <c:set var="boxClass" value="alert-error"/>
+                    <c:set var="boxClass" value="panel-danger"/>
                 </c:when>
                  <c:when test="${model.accessLevel == 'OWNER'}">
-                    <c:set var="boxClass" value="alert-info"/>
+                    <c:set var="boxClass" value="panel-success"/>
+                </c:when>
+                 <c:when test="${model.accessLevel == 'PROJECT'}">
+                    <c:set var="boxClass" value="panel-info"/>
                 </c:when>
                 <c:otherwise>
-                    <c:set var="boxClass" value=""/>
+                    <c:set var="boxClass" value="panel-default"/>
                     
                 </c:otherwise>
             </c:choose>          
+          
             
-         
-            
-<div class="box well ${boxClass} " >
+<div class="box panel ${boxClass}" >
  
-    <ul class="nav nav-tabs" >
-                <li><a href="#file_${model.id}" data-toggle="tab" ><fmt:message key="file.tab.file"/></a></li>
-                <li><a href="#comments_${model.id}" data-toggle="tab" class="commentsBtn" modelId="${model.id}">
-                        <fmt:message key="file.tab.comments"/>
+    <div class="panel-heading" style="margin:0;padding:0;border:0;">   <ul class="nav nav-tabs" >
+            <li class="active">
+                    <a href="#file_${model.id}" data-toggle="tab" >
+                        <span class="glyphicon glyphicon-file"></span> <fmt:message key="file.tab.file"/></a></li>
+                <li>                        
+        
+                    <a href="#comments_${model.id}" data-toggle="tab" class="commentsBtn" modelId="${model.id}">
+                        <span class="glyphicon glyphicon-comment"></span> <fmt:message key="file.tab.comments"/>
                         <c:if test="${model.commentsCount>0}">
                           (  <c:out value="${model.commentsCount}"/> )
                         </c:if>
                     </a>
                 </li>
+                <li><a href="#api_${model.id}" data-toggle="tab" >
+                        <span class="glyphicon glyphicon-cog"></span> 
+                        <fmt:message key="file.api.file"/></a></li>
                 
                  <div class="pull-right">
 
@@ -147,13 +147,11 @@
                     <ul class="dropdown-menu">
 
                         <sec:authorize ifAnyGranted="ROLE_ADMIN,ROLE_MANAGER,ROLE_USER">
-
                                 
                             <li>
                                 <a title="<fmt:message key="button.edit"/>" target="${menuTarget}" 
                                    href="<c:url value="/main/file/edit/${model.id}"/>">
-                                    <img style="display: inline;" 
-                                         src="<c:url value='/images/edit.png'/>"/>
+                                    <span class="glyphicon glyphicon-edit"></span>
                                     <fmt:message key="button.edit"/></a>    
                             </li>
 
@@ -161,13 +159,14 @@
 
                                 <li>
                                     <a class="fileDeleteBtn"
-                                       targetIcon="<c:url value='/images/mime/${model.icon}'/>"
+                                       targetIcon="<c:url value='/main/static/${appVersion}/images/mime/${model.icon}'/>"
                                        targetTitle="${model.name} &nbsp; ${model.formattedFileSize} &nbsp; ${modelLastModified}  &nbsp; ${model.owner.name}"
                                        title="<fmt:message key="button.delete"/>"  
                                        deleteLink="<c:url value="/main/file/delete">
                                            <c:param name="id" value="${model.id}"/>
-                                       </c:url>"><img style="display: inline;"
-                                           src="<c:url value='/images/delete.png'/>"/> <fmt:message key="button.delete"/></a>    
+                                       </c:url>">
+                                             <span class="glyphicon glyphicon-remove"></span>
+                                <fmt:message key="button.delete"/></a>    
                                 </li>
 
                             </c:if>
@@ -182,13 +181,13 @@
                                       <c:when test="${empty param.integrationMode}">
                                           
                                           <a class="pastePreviewBtn"
-                                       targetIcon="<c:url value='/images/mime/${model.icon}'/>"
+                                       targetIcon="<c:url value='/main/static/${appVersion}/images/mime/${model.icon}'/>"
                                        targetTitle="${model.name} &nbsp; ${model.formattedFileSize} &nbsp; ${modelLastModified}  &nbsp; ${model.owner.name}"
                                        targetId="${model.uuid}"
                                        title="<fmt:message key="paste.preview.title"/>"  
                                        >
                                         <img style="display: inline;"
-                                           src="<c:url value='/images/ninja.png'/>"/>
+                                           src="<c:url value='/main/static/${appVersion}/images/ninja.png'/>"/>
                                         <fmt:message key="paste.preview.title"/></a>    
                                           
                                       </c:when>
@@ -198,7 +197,7 @@
                                             target="_blank" class="btn"
                                              title="<fmt:message key="paste.preview.title"/>" >
                                         <img style="display: inline;"
-                                           src="<c:url value='/images/ninja.png'/>"/>
+                                           src="<c:url value='/main/static/${appVersion}/images/ninja.png'/>"/>
                                         <fmt:message key="paste.preview.title"/></a>    
                                           
                                       </c:otherwise>
@@ -220,7 +219,7 @@
                                    class="btn" data-toggle="modal"
                                    >
                                     <img style="display: inline;" 
-                                         src="<c:url value='/images/mime/${model.icon}'/>"/> 
+                                         src="<c:url value='/main/static/${appVersion}/images/mime/${model.icon}'/>"/> 
                                     <fmt:message key="file.gdocs.preview"/></a>    
                                          
                                      </c:when>
@@ -236,7 +235,7 @@
                                             class="btn" 
                                             >
                                              <img style="display: inline;" 
-                                                  src="<c:url value='/images/mime/${model.icon}'/>"/> 
+                                                  src="<c:url value='/main/static/${appVersion}/images/mime/${model.icon}'/>"/> 
                                              <fmt:message key="file.gdocs.preview"/></a>    
                                          
                                      </c:otherwise>
@@ -256,7 +255,7 @@
                                             class="btn" data-toggle="modal"
                                             >
                                              <img style="display: inline;" 
-                                                  src="<c:url value='/images/mime/pdf.gif'/>"/> 
+                                                  src="<c:url value='/main/static/${appVersion}/images/mime/pdf.gif'/>"/> 
                                              <fmt:message key="file.pdf.preview"/></a>    
                                          
                                      </c:when>
@@ -268,7 +267,7 @@
                                             href="<c:url value='/main/file/raw/pdfview'><c:param name='id' value='${model.id}'/></c:url>"
                                                 >
                                                 <img style="display: inline;" 
-                                                     src="<c:url value='/images/mime/pdf.gif'/>"/> 
+                                                     src="<c:url value='/main/static/${appVersion}/images/mime/pdf.gif'/>"/> 
                                             <fmt:message key="file.pdf.preview"/>
                                          </a>    
                                          
@@ -283,8 +282,7 @@
                         <li>
                             <a title="<fmt:message key="button.download"/>" 
                                target="${menuTarget}" href="<c:out value='${fullDownloadUrl}'/>">
-
-                                <img style="display: inline;" src="<c:url value='/images/download.png'/>"/>
+                                <span class="glyphicon glyphicon-download"></span>
                                 <fmt:message key="file.download"/></a>    
                         </li>
                     </ul>
@@ -293,16 +291,19 @@
 
         </div>
                 
-            </ul>
-            
-                <div  class="tab-content">
+            </ul></div>
+    
+    <div class="panel-body" style="margin:0;padding:0;border:0;">
+   
+        <div  class="tab-content" style="padding:1em;">
                 <div class="tab-pane active" id="file_${model.id}">
                     
                        <div class="caption" style="vertical-align: top;" >
         
         
         <a href="<c:url value='/main/file/list/search?query=type:${model.type}'/>" target="${not empty param.integrationMode ? "_blank" : target}">
-            <img style="text-align: left; display: inline; " src="<c:url value='/images/mime/${model.icon}'/>"/>
+            <img style="text-align: left; display: inline; " src="<c:url value='/main/static/${appVersion}/images/mime/${model.icon}'/>"/>
+            
         </a>
         
         <a href="<c:out value='${detailUrl}'/>" target="${target}">${model.name}</a>
@@ -319,10 +320,30 @@
             &nbsp;  
             <span style="display: block;font-size:smaller;"> 
             
+                <c:choose>
+                    <c:when test="${model.accessLevel eq 'PROJECT'}">
+                        
+                          <c:forEach var="proj" items="${model.relatedProjects}" >
+
+                              <a href="<c:url value='/main/file/list/search?query=relatedProjects_name:${proj.name}'/>" 
+                                 target="${not empty param.integrationMode ? "_blank" : target}">
+                                  <c:out value="${proj.name}"/>
+                              </a>   
+                              
+
+                           </c:forEach>
+                       
+                        
+                    </c:when>
+                    <c:otherwise>
                 <a href="<c:url value='/main/file/list/search?query=accessLevel:${model.accessLevel.code}'/>" 
                    target="${not empty param.integrationMode ? "_blank" : target}">
                     <fmt:message key="${model.accessLevel.desc}"/>
-                </a>
+                </a>         
+                    </c:otherwise>
+                </c:choose>
+               
+               
                 
             </span> 
                 
@@ -391,7 +412,7 @@
 
             
             
-            <a title="<fmt:message key="button.edit"/>" class="${previewClass}" target="${not empty param.integrationMode ? "_blank" : target}" href="<c:out value='${fullImgUrl}'/>">
+            <a title="${model.name}" class="${previewClass}" target="${not empty param.integrationMode ? "_blank" : target}" href="<c:out value='${fullImgUrl}'/>">
                 <img style="border: none;"   src="<c:url value='/act/download'>
                          <c:choose>
                              <c:when test="${not empty param.revision}">          
@@ -421,8 +442,62 @@
                 </div>
                     <div class="tab-pane" id="comments_${model.id}" >
                 </div>
+                
+                
+                   <div class="tab-pane" id="api_${model.id}" >
+                    
+                       <c:choose>
+                           <c:when test="${not empty param.revision}">          
+                               <c:url value="/main/file.json" var="jsonUrl">
+                                   <c:param name="id" value="${model.id}"/>
+                                   <c:param name="revision" value="${param.revision}"/>          
+                               </c:url>
+                               <c:url value="/main/file.xml" var="xmlUrl">
+                                   <c:param name="id" value="${model.id}"/>
+                                   <c:param name="revision" value="${param.revision}"/>          
+                               </c:url>
+
+                           </c:when>
+                           <c:otherwise>
+                               <c:url value="/main/file/${model.id}.xml" var="xmlUrl"/>
+                               <c:url value="/main/file/${model.id}.json" var="jsonUrl"/>
+                               
+                           </c:otherwise>
+                       </c:choose>
+                       
+                       <P>
+                           ID: ${model.id}
+                           <br/>
+                           UUID: ${model.uuid}
+                           <br/>
+                          
+                           <c:forEach var="proj" items="${model.relatedProjects}" >
+
+                               <c:out value="${proj.name}"/>
+
+                           </c:forEach>
+                           
+                       </P>
+                       
+                       <p>
+
+                           <a title="<fmt:message key="model.view.json"/>" target="_blank" 
+                              href="<c:out value='${jsonUrl}'/>">
+                               <img style="display: inline;" src="<c:url value='/main/static/${appVersion}/images/mime/json.png'/>"/>
+                           </a>    
+
+                           <a title="<fmt:message key="model.view.xml"/>" target="_blank" 
+                              href="<c:out value='${xmlUrl}'/>">
+                               <img style="display: inline;" src="<c:url value='/main/static/${appVersion}/images/mime/xml.gif'/>"/>
+                           </a>    
+                       </p>
+                       <textarea  class="form-control" cols="40" rows="6" disabled="true"  ><iframe src="${externalUrl}/main/file/integrated/view?id=${model.id}" width="400" height="400" frameborder="0"></iframe>
+                       </textarea>
+                       
+                </div>
 
             </div>
+  </div>
     
 </div>
 
@@ -433,7 +508,7 @@
             <div id="gdocsPreviewModal_${model.id}" class="modal hide fade" tabindex="-1" style="width:650px;"
          role="dialog" aria-labelledby="googledocModalLabel" aria-hidden="true">
         <div class="modal-header">
-            <img style="text-align: left; display: inline; " src="<c:url value='/images/mime/${model.icon}'/>"/>
+            <img style="text-align: left; display: inline; " src="<c:url value='/main/static/${appVersion}/images/mime/${model.icon}'/>"/>
             <a href="<c:out value='${detailUrl}'/>" target="${target}">${model.name}</a>
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
         </div>
@@ -461,19 +536,33 @@
 
 <c:if test="${model.type eq 'PDF' and empty param.integrationMode}">
 
-    <div id="pdfPreviewModal_${model.id}" class="modal hide fade" tabindex="-1" style="width:680px;"
-         role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-header">
-            <img style="text-align: left; display: inline; " src="<c:url value='/images/mime/${model.icon}'/>"/>
+    
+           <div id="pdfPreviewModal_${model.id}" class="modal fade" >
+
+                <div class="modal-dialog">
+                    <div class="modal-content" style="width:690px;">
+
+                        <div class="modal-header">
+                            <div>
+                                       <img style="text-align: left; display: inline; " src="<c:url value='/main/static/${appVersion}/images/mime/${model.icon}'/>"/>
             <a href="<c:out value='${detailUrl}'/>" target="${target}">${model.name}</a>
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        </div>
-        <div class="modal-body" style="height:460px;overflow: hidden;" >
-            <iframe  src="<c:url value='/main/file/raw/pdfview'><c:param name='id' value='${model.id}'/></c:url>"
+     
+                               
+                            </div>
+                        </div>
+                        <div class="modal-body">
+                            <div class="paddingT15 paddingB15" id="modal_text">    
+
+                                 <iframe  src="<c:url value='/main/file/raw/pdfview'><c:param name='id' value='${model.id}'/></c:url>"
                      scrolling="auto" frameborder="0"
                      style="width:660px;height: 400px;"  allowTransparency="true"   >
-                </iframe>     
+                </iframe>  
+                            </div>
+                        </div>
+                    </div></div>
             </div>
-        </div>
+
+    
 
 </c:if>

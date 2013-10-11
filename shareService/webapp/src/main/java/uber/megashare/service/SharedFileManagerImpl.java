@@ -43,6 +43,7 @@ public class SharedFileManagerImpl extends GenericSearchableManagerImpl<SharedFi
      */
     private static final long serialVersionUID = -7991981586910555468L;
     private SharedFileDao shareDao;
+    
     private SettingsManager settings;
     
     @Resource(name = "mimeIconsSource")
@@ -71,14 +72,12 @@ public class SharedFileManagerImpl extends GenericSearchableManagerImpl<SharedFi
                     throw new IllegalStateException("Cannot delete file " + preview.getAbsolutePath());
                 }
             }
-
         }
 
         File f = new File(settings.getCurrentSettings().getUploadDir(), obj.getUrl());
         if (f.exists() && f.isFile()) {
             if (!f.delete()) {
                 throw new IllegalStateException("Cannot delete file " + f.getAbsolutePath());
-
             }
         }
 
@@ -97,22 +96,17 @@ public class SharedFileManagerImpl extends GenericSearchableManagerImpl<SharedFi
 
     @Override
     public List<SharedFile> search(SharedFileSearchQuery query) throws ParseException {
-        return shareDao.search(query.getQuery(), query.getUserId(), query.getLevels());
+        return shareDao.search(query.getQuery(), query.getUserId(), query.getProjectId(), query.getLevels());
     }
 
     @Override
-    public List<SharedFile> getFiles(AccessLevel[] levels) {
-        return shareDao.getFiles(levels);
-    }
+    public List<SharedFile> getFiles(Long projectId,AccessLevel[] levels) {
+        return shareDao.getFiles(projectId,levels);
+    }  
 
     @Override
-    public List<SharedFile> getFilesForIntegration(String intergationCode) {
-        return shareDao.getFilesForIntegration(intergationCode);
-    }
-
-    @Override
-    public List<SharedFile> getFilesForUser(Long id, AccessLevel[] levels) {
-        return shareDao.getFilesForUser(id, levels);
+    public List<SharedFile> getFilesForUser(Long id, Long projectId, AccessLevel[] levels) {
+        return shareDao.getFilesForUser(id, projectId, levels);
     }
 
     @Override

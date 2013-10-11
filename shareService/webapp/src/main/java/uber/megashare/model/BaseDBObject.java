@@ -15,11 +15,14 @@
  */
 package uber.megashare.model;
 
+import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import java.io.Serializable;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
+import org.hibernate.envers.NotAudited;
 import uber.megashare.base.LoggedClass;
 
 /**
@@ -36,10 +39,13 @@ public abstract class BaseDBObject extends BaseObject implements Serializable, I
 	
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @XStreamAsAttribute
     private Long id;
     
     private boolean disabled;
 
+    
+    
     /**
      * является ли объект отключенным
      *
@@ -70,6 +76,7 @@ public abstract class BaseDBObject extends BaseObject implements Serializable, I
      * Получить уникальный ключ объекта
      * @return
      */
+        @Override
     public Long getId() {
         return id;
     }
@@ -94,10 +101,9 @@ public abstract class BaseDBObject extends BaseObject implements Serializable, I
     @Override
     public boolean equals(Object from) {
 
-        if (!(from instanceof BaseDBObject)) {
-            return false;
-        }
-        return getId() != null && ((BaseDBObject) from).getId().equals(id);
+        return from instanceof BaseDBObject 
+                && id != null 
+                && id.equals(((BaseDBObject) from).id);
     }
 
     @Override

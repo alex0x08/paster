@@ -22,11 +22,21 @@ package uber.megashare.model;
 public class UserSearchQuery extends SearchQuery {
 
     /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1665332063216034083L;
-	
-	private Long userId;
+     *
+     */
+    private static final long serialVersionUID = 1665332063216034083L;
+    
+    private Long userId;
+    
+    private Long projectId;
+
+    public Long getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(Long projectId) {
+        this.projectId = projectId;
+    }
 
     public Long getUserId() {
         return userId;

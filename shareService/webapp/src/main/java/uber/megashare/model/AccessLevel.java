@@ -16,12 +16,12 @@
 package uber.megashare.model;
 
 /**
- *
+ * Уровень доступа
  * @author alex
  */
 public enum AccessLevel {
     ALL("level.all"),
-    //GROUP("level.group"),
+    PROJECT("level.project"),
     OWNER("level.owner");
     
     private final String desc;

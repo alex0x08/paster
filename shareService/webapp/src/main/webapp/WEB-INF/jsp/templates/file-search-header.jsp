@@ -2,35 +2,41 @@
 
 <c:url var="url" value='/main/file/list/search' />
 
-<div class="btn-group pull-left" style="min-width: 5em;">
+<div class="btn-group box" style="min-width: 5em;">
 
     <form:form action="${url}" commandName="query" 
-               class="navbar-form"  
+               class="form-inline"  
                method="POST" >
         <form:errors path="*" cssClass="errorblock" element="span"/>
 
-        <div class="input-append">
+        <div class="form-group">
 
             <fmt:message var="searchPlaceholder" key='search.placeholder.default'/>
 
-            <form:input path="query" type="text" placeholder="${searchPlaceholder}" />
+            <form:input path="query" type="text" placeholder="${searchPlaceholder}" cssClass="form-control" cssStyle="width:25em;"   />
+        </div>
+        
 
             <sec:authorize ifAnyGranted="ROLE_ADMIN">
-                <form:select path="userId" cssClass="btn" >
-                    <form:options  items="${availableUsers}" itemValue="id" itemLabel="name"  />
-                </form:select>
-            </sec:authorize>
+                <div class="form-group">
 
-            <button type="submit" class="btn">
-                <i class="icon-search" title="<fmt:message key="button.search"/>"></i>
+                    <form:select path="userId" cssClass="btn chosen_select_box" >
+                        <form:options  items="${availableUsers}" itemValue="id" itemLabel="name"  />
+                    </form:select>
+                </div>
+            </sec:authorize>
+                  
+
+            <button type="submit" class="btn btn-sm btn-info">
+                <span class="glyphicon glyphicon-search" title="<fmt:message key="button.search"/>"></span>
             </button>
-        </div>
+        
 
     </form:form>     
 </div>
 <div class="btn-group" style="min-width: 5em;">
 
-    <div class="alert" style="font-size: 11px;margin: 0.0em;padding:0.0em;padding-left: 0.5em;padding-top:0.2em;line-height: 1.8em;">
+    <div  style="font-size: 11px;margin: 0.0em;padding:0.0em;padding-left: 0.5em;line-height: 1.8em;">
 
         <fmt:message key="search.query.samples"/>:
 

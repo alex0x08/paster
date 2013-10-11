@@ -22,7 +22,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.tiles.TilesContainer;
-import org.apache.tiles.servlet.context.ServletUtil;
+import org.apache.tiles.access.TilesAccess;
+import org.apache.tiles.request.servlet.ServletUtil;
 import org.springframework.web.servlet.view.AbstractUrlBasedView;
 
 /**
@@ -87,12 +88,13 @@ public class DynamicTilesView extends AbstractUrlBasedView {
 	 * Renders output using Tiles.
 	 */
 	@SuppressWarnings("unchecked")
+        @Override
 	protected void renderMergedOutputModel(@SuppressWarnings("rawtypes") Map model,
 	                                       HttpServletRequest request, HttpServletResponse response)
 	       throws Exception {
 
         ServletContext servletContext = getServletContext();
-        TilesContainer container = ServletUtil.getContainer(servletContext);
+        TilesContainer container = TilesAccess.getContainer(ServletUtil.getApplicationContext(servletContext));
         if (container == null) {
             throw new ServletException("Tiles container is not initialized. " + 
                                        "Have you added a TilesConfigurer to your web application context?");

@@ -37,12 +37,16 @@
               p:paramName="locale" />
     </mvc:interceptors>
     
+    <mvc:resources mapping="/assets/${share.app.version}/**" location="classpath:/META-INF/resources/webjars/"/>
+    <mvc:resources mapping="/static/${share.app.version}/**" location="/WEB-INF/static/"/>
+  
+    
     <bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver" />
 
     <!-- tiles-->    
     
 
-    <bean id="tilesConfigurer" class="org.springframework.web.servlet.view.tiles2.TilesConfigurer">
+    <bean id="tilesConfigurer" class="org.springframework.web.servlet.view.tiles3.TilesConfigurer">
         <property name="definitions">
             <list>
                 <value>/WEB-INF/tiles-defs/templates.xml</value>
@@ -85,14 +89,25 @@
             <list>
                 <bean class="org.springframework.web.servlet.view.json.MappingJacksonJsonView" >
                     <property name="contentType" value="application/json" />
+                    <property name="prettyPrint" value="true" />
+                     
+                    <property name="modelKeys">
+                        <set>
+                            <value>model</value>
+                            <value>items</value>
+                        </set>
+                    </property>
+                     
                 </bean>
-                <bean class="org.springframework.web.servlet.view.xml.MarshallingView">
+                <bean class="uber.megashare.web.ConfigurableMarshallingView">
                     <constructor-arg>
                         <bean class="org.springframework.oxm.xstream.XStreamMarshaller"
-                              p:autodetectAnnotations="true" />
+                              p:autodetectAnnotations="true" p:encoding="UTF-8" />
                     </constructor-arg>
                     <property name="contentType" value="application/xml" />
-                </bean>
+                    <property name="modelKeys" value="model,items" />
+                    
+                 </bean>
             
             </list>
         </property>

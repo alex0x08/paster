@@ -26,7 +26,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.querydsl.SimpleEntityPathResolver;
-import org.springframework.transaction.annotation.Transactional;
+import static uber.megashare.dao.GenericDaoImpl.MAX_RESULTS;
 import uber.megashare.model.BaseDBObject;
 
 /**
@@ -39,7 +39,8 @@ import uber.megashare.model.BaseDBObject;
  * @since 1.0
  */
 //@Transactional(readOnly = true,value= "transactionManager")
-public abstract class GenericDSLDaoImpl<T extends BaseDBObject, PK extends Serializable> extends GenericDaoImpl<T, PK> implements GenericDSLDao<T, PK> {
+public abstract class GenericDSLDaoImpl<T extends BaseDBObject, PK extends Serializable> 
+            extends GenericDaoImpl<T, PK> implements GenericDSLDao<T, PK> {
 
     protected final EntityPath<T> path;
     
@@ -71,15 +72,11 @@ public abstract class GenericDSLDaoImpl<T extends BaseDBObject, PK extends Seria
      * {@inheritDoc}
      */
     protected JPQLQuery applyPagination(JPQLQuery query, Pageable pageable) {
-
-        if (pageable == null) {
-            return query;
-        }
-
-        query.offset(pageable.getOffset());
-        query.limit(pageable.getPageSize() > MAX_RESULTS ? MAX_RESULTS : pageable.getPageSize());
-
-        return applySorting(query, pageable.getSort());
+        
+        return pageable == null ? query : applySorting(
+                query.offset(pageable.getOffset())
+                .limit(pageable.getPageSize() > MAX_RESULTS ? MAX_RESULTS : pageable.getPageSize()),
+                pageable.getSort());
     }
 
     /**
@@ -101,12 +98,9 @@ public abstract class GenericDSLDaoImpl<T extends BaseDBObject, PK extends Seria
      * {@inheritDoc}
      */
     protected OrderSpecifier<?> toOrder(Sort.Order order) {
-
-        Expression<Object> property = builder.get(order.getProperty());
-
-        return new OrderSpecifier(
+     return new OrderSpecifier(
                 order.isAscending() ? com.mysema.query.types.Order.ASC
-                        : com.mysema.query.types.Order.DESC, property);
+                        : com.mysema.query.types.Order.DESC, builder.get(order.getProperty()));
     }
 
     /**
@@ -143,11 +137,8 @@ public abstract class GenericDSLDaoImpl<T extends BaseDBObject, PK extends Seria
      */
     @Override
     public Page<T> findAll(Predicate prdct, Pageable pgbl) {
-
-        JPQLQuery countQuery = createQuery(prdct);
-        JPQLQuery query = applyPagination(createQuery(prdct), pgbl);
-
-        return new PageImpl<>(query.list(path), pgbl, countQuery.count());
+        return new PageImpl<>(applyPagination(createQuery(prdct), pgbl).list(path),
+                pgbl, applyPagination(createQuery(prdct), pgbl).count());
     }
 
     /**

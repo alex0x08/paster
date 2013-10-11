@@ -81,6 +81,8 @@ public class QSharedFile extends EntityPathBase<SharedFile> {
 
     public final NumberPath<Integer> previewWidth = createNumber("previewWidth", Integer.class);
 
+    public final SetPath<Project, QProject> relatedProjects = this.<Project, QProject>createSet("relatedProjects", Project.class, QProject.class);
+
     public final DateTimePath<java.util.Date> removeAfter = createDateTime("removeAfter", java.util.Date.class);
 
     public final EnumPath<FileType> type = createEnum("type", FileType.class);

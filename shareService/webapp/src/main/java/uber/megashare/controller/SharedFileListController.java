@@ -47,7 +47,9 @@ import uber.megashare.service.tree.FolderService;
  */
 @Controller
 @RequestMapping(FILE_PREFIX)
-public class SharedFileListController extends GenericSearchableController<SharedFile, SharedFileSearchQuery> implements SharedFileConstants,EditConstants {
+public class SharedFileListController 
+    extends GenericListIntegratedController<SharedFile, SharedFileSearchQuery> 
+    implements SharedFileConstants,EditConstants {
 
     /**
      *
@@ -86,61 +88,16 @@ public class SharedFileListController extends GenericSearchableController<Shared
          * if the method was called by authorized user - show only his own
          * files, else - only public files
          */
-            return !isCurrentUserLoggedIn()? fileManager.getFiles(new AccessLevel[]{AccessLevel.ALL}):
-                    fileManager.getFilesForUser(getCurrentUser().getId(),
+            return !isCurrentUserLoggedIn()? fileManager.getFiles(null,new AccessLevel[]{AccessLevel.ALL}):
+                    fileManager.getFilesForUser(getCurrentUser().getId(),getCurrentUser().getRelatedProject().getId(),
                     AccessLevel.values());
     }
-    
    
-    
-     @RequestMapping(value = INTEGRATED_PREFIX+LIST_ACTION+"/{integrationCode:[a-z0-9_]+}/{page:[0-9]+}", method = RequestMethod.GET)
-    public @ModelAttribute(NODE_LIST_MODEL)
-    Collection<SharedFile> listByPathIntegrated(
-            @PathVariable("integrationCode") String integrationCode,
-             @PathVariable("page") Integer page,
-            HttpServletRequest request,
-             final HttpSession session,
-            Model model,
-            Locale locale) {
-        return listIntegrated(integrationCode,request, session, model, page, null, null, locale);
-    }
-
-    @RequestMapping(value =INTEGRATED_PREFIX+LIST_ACTION+"/{integrationCode:[a-z0-9_]+}/limit/{pageSize:[0-9]+}", method = RequestMethod.GET)
-    public @ModelAttribute(NODE_LIST_MODEL)
-    Collection<SharedFile> listByPathSizeIntegrated(
-             @PathVariable("integrationCode") String integrationCode,
-             @PathVariable("pageSize") Integer pageSize,
-            HttpServletRequest request,
-             final HttpSession session,
-            Model model,
-            Locale locale) {
-        return listIntegrated(integrationCode,request, session, model, null, null, pageSize, locale);
-    }
-
-    @RequestMapping(value = INTEGRATED_PREFIX+LIST_ACTION+"/{integrationCode:[a-z0-9_]+}/next", method = RequestMethod.GET)
-    public @ModelAttribute(NODE_LIST_MODEL)
-    Collection<SharedFile> listByPathNextIntegrated(
-             @PathVariable("integrationCode") String integrationCode,
-            HttpServletRequest request,
-             final HttpSession session,
-            Model model,
-            Locale locale) {
-        return listIntegrated(integrationCode,request, session, model, null, NEXT_PARAM, null, locale);
-    }
-
-    @RequestMapping(value = INTEGRATED_PREFIX+LIST_ACTION+"/{integrationCode:[a-z0-9_]+}/prev", method = RequestMethod.GET)
-    public @ModelAttribute(NODE_LIST_MODEL)
-    Collection<SharedFile> listByPathPrevIntegrated(
-             @PathVariable("integrationCode") String integrationCode,
-             HttpServletRequest request,
-              final HttpSession session,
-            Model model,
-            Locale locale) {
-        return listIntegrated(integrationCode,request, session, model, null, "prev", null, locale);
-    }
+   
 
     @RequestMapping(value = INTEGRATED_PREFIX+LIST_ACTION+"/{integrationCode:[a-z0-9_]+}", method = RequestMethod.GET)
     public @ModelAttribute(NODE_LIST_MODEL)
+    @Override
     Collection<SharedFile> listIntegrated(
             final @PathVariable("integrationCode") String integrationCode,
             HttpServletRequest request,
@@ -148,7 +105,10 @@ public class SharedFileListController extends GenericSearchableController<Shared
              Model model,
             @RequestParam(required = false) Integer page,
             @RequestParam(required = false) String NPpage,
-            @RequestParam(required = false) Integer pageSize, Locale locale) {
+            @RequestParam(required = false) Integer pageSize,
+            @RequestParam(required = false) String sortColumn,
+            @RequestParam(required = false) boolean sortAsc,            
+            Locale locale) {
 
         
         SharedFile smodel = new SharedFile();
@@ -157,15 +117,7 @@ public class SharedFileListController extends GenericSearchableController<Shared
         
          model.addAttribute(GenericEditController.MODEL_KEY, smodel);
     
-        putListModel(model, locale);
-
-        return processPagination(request, model, page, NPpage, pageSize,new SourceCallback<SharedFile>() {
-
-        @Override
-        public PagedListHolder<SharedFile> invokeCreate() {
-            return new PagedListHolder<>(fileManager.getFilesForIntegration(integrationCode));
-        }
-    });
+        return super.listIntegrated(integrationCode, request, session, model, page, NPpage, pageSize,sortColumn,sortAsc, locale);
     }
 
     
@@ -178,8 +130,7 @@ public class SharedFileListController extends GenericSearchableController<Shared
         if (isCurrentUserAdmin()) {
             model.addAttribute("availableUsers", userManager.getAll());
         }
-        
-        
+     
     }
 
     /**

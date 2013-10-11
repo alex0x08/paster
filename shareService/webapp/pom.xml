@@ -30,8 +30,8 @@
 
     <properties>
 
-        <spring.version>3.1.1.RELEASE</spring.version>
-        <spring.security.version>3.1.1.RELEASE</spring.security.version>
+        <spring.version>3.2.4.RELEASE</spring.version>
+        <spring.security.version>3.1.4.RELEASE</spring.security.version>
 
         <spring.webflow.version>2.3.0.RELEASE</spring.webflow.version>
 
@@ -40,24 +40,22 @@
 
         <jstl.version>1.1.2</jstl.version>
 
-        <tiles.version>2.1.3</tiles.version>
+        <tiles.version>3.0.1</tiles.version>
         
-         <hibernate.search.version>4.1.1.Final</hibernate.search.version>
-        <hibernate.version>4.1.3.Final</hibernate.version>
+         <hibernate.search.version>4.3.0.Final</hibernate.search.version>
+        <hibernate.version>4.2.5.Final</hibernate.version>
        
          <jpa.version>2.0-cr-1</jpa.version>
        
-        <slf4j.version>1.6.1</slf4j.version>
+        <slf4j.version>1.7.5</slf4j.version>
         <querydsl.version>2.6.0</querydsl.version>
 
-        <logback.version>0.9.28</logback.version>
-
-        <junit.version>4.7.0</junit.version>
+       
         <netbeans.hint.deploy.server>Tomcat</netbeans.hint.deploy.server>
 
         <jdbc.groupId>com.h2database</jdbc.groupId>
         <jdbc.artifactId>h2</jdbc.artifactId>
-        <jdbc.version>1.2.132</jdbc.version>
+        <jdbc.version>1.3.173</jdbc.version>
 
         <hibernate.dialect>org.hibernate.dialect.H2Dialect</hibernate.dialect>
         <jdbc.driverClassName>org.h2.Driver</jdbc.driverClassName>
@@ -68,7 +66,7 @@
         <db.name>filesdb</db.name>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-         <maven.build.timestamp.format>dd.MM.yyyy HH:mm</maven.build.timestamp.format>
+        <maven.build.timestamp.format>dd.MM.yyyy HH:mm</maven.build.timestamp.format>
 
 
         <!-- sonar setup for my environment -->
@@ -104,49 +102,19 @@
 
     <dependencies>
 
-         <dependency>
-            <groupId>org.tuckey</groupId>
-            <artifactId>urlrewritefilter</artifactId>
-            <version>4.0.4</version>
-        </dependency>
 
-
-        <dependency>
-            <groupId>org.subethamail</groupId>
-            <artifactId>subethasmtp</artifactId>
-            <version>3.1.6</version>
-        </dependency>
-
-
-		<!-- google collections -->
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>r07</version>
-        </dependency>
-
-		<!-- Apache Commons Upload -->
-
-        <dependency>
-            <groupId>commons-fileupload</groupId>
-            <artifactId>commons-fileupload</artifactId>
-            <version>1.2.2</version>
-        </dependency>
-
-
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>1.3.2</version>
-        </dependency>
-
-        <dependency>
-            <groupId>commons-lang</groupId>
-            <artifactId>commons-lang</artifactId>
-            <version>2.6</version>
-        </dependency>
-
-
+    <dependency>
+        <groupId>uber.markup</groupId>
+        <artifactId>uni-markup-parser</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </dependency>
+            
+    <dependency>
+        <groupId>de.tutorials</groupId>
+        <artifactId>de.tutorials.app.module2</artifactId>
+        <version>3.0.0-SNAPSHOT</version>
+    </dependency>
+      
 		<!-- jdbc driver -->
         <dependency>
             <groupId>${jdbc.groupId}</groupId>
@@ -162,15 +130,9 @@
         </dependency>
 
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>log4j-over-slf4j</artifactId>
-            <version>${slf4j.version}</version>
-        </dependency>
-
-        <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>${logback.version}</version>
+            <version>1.0.13</version>
         </dependency>
 
 		<!-- spring -->
@@ -268,24 +230,16 @@
         </dependency>
 
         <dependency>
-            <groupId>javax.annotation</groupId>
-            <artifactId>jsr250-api</artifactId>
-            <version>1.0</version>
-        </dependency>
-            
-
-        <dependency>
             <groupId>com.thoughtworks.xstream</groupId>
             <artifactId>xstream</artifactId>
-            <version>1.3.1</version>
+            <version>1.4.4</version>
         </dependency>
 
         <dependency>
             <groupId>org.codehaus.jackson</groupId>
             <artifactId>jackson-mapper-asl</artifactId>
-            <version>1.2.1</version>
+            <version>1.9.13</version>
         </dependency>
-
 
 
         <dependency>
@@ -302,10 +256,15 @@
                     <groupId>org.slf4j</groupId>
                     <artifactId>jcl-over-slf4j</artifactId>
                 </exclusion>
-
             </exclusions>
         </dependency>
 
+        <dependency>
+            <groupId>org.apache.tiles</groupId>
+            <artifactId>tiles-servlet</artifactId>
+            <version>${tiles.version}</version>
+        </dependency>
+            
 
                 <dependency>
                     <groupId>com.mysema.querydsl</groupId>
@@ -324,22 +283,58 @@
                     <version>1.1.1.RELEASE</version>
                     <exclusions>
                         <exclusion>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-orm</artifactId>
+                            <groupId>org.springframework</groupId>
+                            <artifactId>spring-orm</artifactId>
                         </exclusion>
                     </exclusions>
                 </dependency>
 
        
-<dependency>
-    <groupId>javax.servlet</groupId>
-    <artifactId>jstl</artifactId>
-    <version>1.2</version>
-</dependency>
+                <dependency>
+                    <groupId>javax.servlet</groupId>
+                    <artifactId>jstl</artifactId>
+                    <version>1.2</version>
+                </dependency>
 
 
 
-		<!-- Hibernate -->
+                <dependency>
+                    <groupId>org.tuckey</groupId>
+                    <artifactId>urlrewritefilter</artifactId>
+                    <version>4.0.4</version>
+                </dependency>
+
+
+
+                <!-- google collections -->
+                <dependency>
+                    <groupId>com.google.guava</groupId>
+                    <artifactId>guava</artifactId>
+                    <version>r09</version>
+                </dependency>
+
+                <!-- Apache Commons Upload -->
+
+                <dependency>
+                    <groupId>commons-fileupload</groupId>
+                    <artifactId>commons-fileupload</artifactId>
+                    <version>1.3</version>
+                </dependency>
+
+
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.4</version>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>2.6</version>
+        </dependency>
+
+        <!-- Hibernate -->
         
          <dependency>
             <groupId>org.hibernate</groupId>
@@ -372,20 +367,12 @@
             <artifactId>jpa-api</artifactId>
             <version>${jpa.version}</version>
         </dependency>
-       
               
-        <!--dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-annotations</artifactId>
-            <version>${hibernate.version}</version>
-        </dependency-->
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-entitymanager</artifactId>
             <version>${hibernate.version}</version>
         </dependency>
-
-      
 
          <dependency>
             <groupId>org.hibernate</groupId>
@@ -393,7 +380,7 @@
             <version>${hibernate.version}</version>
         </dependency>
 
- <dependency>
+        <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-c3p0</artifactId>
             <version>${hibernate.version}</version>
@@ -402,12 +389,13 @@
         <dependency>
             <groupId>javax.validation</groupId>
             <artifactId>validation-api</artifactId>
-            <version>1.0.0.GA</version>
+            <version>1.1.0.Final</version>
         </dependency>
+        
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-validator</artifactId>
-            <version>4.2.0.Final</version>
+            <version>4.3.1.Final</version>
         </dependency>
 
 
@@ -418,40 +406,24 @@
 
         </dependency>
 
-
         <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
-            <version>2.5</version>
+            <groupId>javax</groupId>
+            <artifactId>javaee-web-api</artifactId>
+            <version>6.0</version>
             <scope>provided</scope>
         </dependency>
 
-        <dependency>
-            <groupId>javax.servlet.jsp</groupId>
-            <artifactId>jsp-api</artifactId>
-            <version>2.1</version>
-            <scope>provided</scope>
-        </dependency>
-<!-- 
-        <dependency>
-            <groupId>javax.servlet.jsp</groupId>
-            <artifactId>jsp-api</artifactId>
-            <version>2.1.2</version>
-            <scope>provided</scope>
-        </dependency>
--->
-     
-     
+
       <dependency>
             <groupId>com.jcabi</groupId>
             <artifactId>jcabi-manifests</artifactId>
-            <version>0.7.6</version>
+            <version>0.7.22</version>
         </dependency>
 
        <dependency>
             <groupId>org.ocpsoft.prettytime</groupId>
             <artifactId>prettytime</artifactId>
-            <version>2.1.1.Final</version>
+            <version>2.1.3.Final</version>
         </dependency>
 
         <dependency>
@@ -470,36 +442,118 @@
     <dependency>
         <groupId>org.springframework.data</groupId>
         <artifactId>spring-data-neo4j</artifactId>
-        <version>2.2.1.RELEASE</version>
+        <version>2.2.2.RELEASE</version>
     </dependency>
     <dependency>
         <groupId>org.springframework.data</groupId>
         <artifactId>spring-data-neo4j-rest</artifactId>
-        <version>2.2.1.RELEASE</version>
+        <version>2.2.2.RELEASE</version>
     </dependency>
     <dependency>
         <groupId>org.springframework.data</groupId>
         <artifactId>spring-data-neo4j-cross-store</artifactId>
-        <version>2.2.1.RELEASE</version>
+        <version>2.2.2.RELEASE</version>
     </dependency>
     <dependency>
         <groupId>org.codehaus.janino</groupId>
         <artifactId>janino</artifactId>
-        <version>2.5.15</version>
+        <version>2.6.1</version>
     </dependency>
 
     <dependency>
-        <groupId>quartz</groupId>
+        <groupId>org.opensymphony.quartz</groupId>
         <artifactId>quartz</artifactId>
-        <version>1.5.2</version>
+        <version>1.6.5</version>
     </dependency>
-
+    
     <dependency>
         <groupId>joda-time</groupId>
         <artifactId>joda-time</artifactId>
-        <version>1.6</version>
+        <version>1.6.2</version>
     </dependency>
 
+    <dependency>
+      <groupId>javax.mail</groupId>
+      <artifactId>mail</artifactId>
+      <version>1.4.7</version>
+    </dependency>
+
+
+    <dependency>
+        <groupId>org.webjars</groupId>
+        <artifactId>bootstrap</artifactId>
+        <version>3.0.0</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.webjars</groupId>
+        <artifactId>bootstrap-datepicker</artifactId>
+        <version>1.1.3</version>
+        <exclusions>
+            <exclusion>
+                 <groupId>org.webjars</groupId>
+        <artifactId>bootstrap</artifactId>
+            </exclusion>
+        </exclusions>
+    </dependency>
+                
+    <dependency>
+	<groupId>org.webjars</groupId>
+	<artifactId>jquery-file-upload</artifactId>
+	<version>8.4.2</version>
+</dependency>
+            
+   <dependency>
+	<groupId>org.webjars</groupId>
+	<artifactId>jquery</artifactId>
+	<version>2.0.3</version>
+</dependency>
+
+<dependency>
+    <groupId>org.webjars</groupId>
+    <artifactId>jquery-ui</artifactId>
+    <version>1.10.2-1</version>
+</dependency>
+                  
+
+<dependency>
+    <groupId>org.webjars</groupId>
+    <artifactId>pdf-js</artifactId>
+    <version>0.5.5</version>
+</dependency>                              
+
+
+<dependency>
+    <groupId>org.webjars</groupId>
+    <artifactId>stacktrace</artifactId>
+    <version>0.5.0</version>
+</dependency>      
+
+
+<dependency>
+    <groupId>org.webjars</groupId>
+    <artifactId>prettify</artifactId>
+    <version>4-Mar-2013</version>
+</dependency>      
+
+
+<dependency>
+	<groupId>org.webjars</groupId>
+	<artifactId>jquery-knob</artifactId>
+	<version>1.2.2</version>
+</dependency>
+            
+<dependency>
+	<groupId>org.webjars</groupId>
+	<artifactId>jquery-easing</artifactId>
+	<version>1.3-1</version>
+</dependency>
+    
+<dependency>
+    <groupId>org.webjars</groupId>
+    <artifactId>chosen</artifactId>
+    <version>0.9.12</version>
+</dependency>
 
     </dependencies>
 
@@ -527,83 +581,28 @@
         </license>
     </licenses>
 
-<!--
-
-   <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>jstl</artifactId>
-            <version>${jstl.version}</version>
-        </dependency>
-
-
-        <dependency>
-            <groupId>taglibs</groupId>
-            <artifactId>standard</artifactId>
-            <version>${jstl.version}</version>
-        </dependency>
-
-
-    -->
 
     <profiles>
         <profile>
-            <id>jetty6-embedded</id>
-        
-            <dependencies>
-       
-                <dependency>
-                    <groupId>org.apache.tomcat</groupId>
-                    <artifactId>jasper-el</artifactId>
-                    <version>6.0.33</version>
-                </dependency>
-                <dependency>
-                    <groupId>javax.servlet</groupId>
-                    <artifactId>jstl</artifactId>
-                    <version>${jstl.version}</version>
-                </dependency>
-
-
-                <dependency>
-                    <groupId>taglibs</groupId>
-                    <artifactId>standard</artifactId>
-                    <version>${jstl.version}</version>
-                </dependency>
-
-            </dependencies>
-       
-        </profile>
-        
-        <profile>
-            <id>jetty6</id>
+            <id>jetty9</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
-            <dependencies>
-                <dependency>
-                    <groupId>org.apache.tomcat</groupId>
-                    <artifactId>jasper-el</artifactId>
-                    <version>6.0.33</version>
-                </dependency>
-
-            </dependencies>
+            
+            <properties>
+                <container.profile>jetty9</container.profile>
+            </properties>
         </profile>
-        
-        
          <profile>
             <id>tomcat7</id>
-            <dependencies>
-           
-            </dependencies>
+            <properties>
+              <container.profile>tomcat7</container.profile>
+            </properties>
         </profile>
-
-        <!--profile> <id>vista-lucifer</id> <properties> <app.home>C:/Users/${user.name}</app.home> 
-        </properties> </profile -->
-
-
     </profiles>
 
     <build>
-        <finalName>uberShareApp-${project.version}</finalName>
+        <finalName>uberShareApp-${container.profile}-${project.version}-${build.buildNumber}</finalName>
 
         <pluginManagement>
             <plugins>
@@ -645,15 +644,11 @@
 
 
         <plugins>
-            
               <plugin>
-
                 <groupId>org.apache.tomcat.maven</groupId>
                 <artifactId>tomcat7-maven-plugin</artifactId>
                 <version>2.0</version>
                 <configuration>
-
-
                     <path>/${project.artifactId}</path>
                     <!--contextFile>${tomcatConf}</contextFile-->
                     <!--tomcatLoggingFile>src/main/tomcat/conf/logging.properties</tomcatLoggingFile -->
@@ -673,20 +668,14 @@
                             -verbose:gc"
                         </JAVA_OPTS>
                     </systemProperties>
-
                 </configuration>
 
-
                 <dependencies>
-
                     <dependency>
                         <groupId>org.apache.tomcat</groupId>
                         <artifactId>tomcat-juli</artifactId>
                         <version>7.0.33</version>
                     </dependency>
-
-
-
                 </dependencies>
 
             </plugin>
@@ -744,32 +733,30 @@
                 <artifactId>maven-war-plugin</artifactId>
                 <version>2.1.1</version>
                 <configuration>
-
-                    <failOnMissingWebXml>false</failOnMissingWebXml>
-                    
-                    <archive>
-                    
+                    <attachClasses>true</attachClasses>
+                    <classesClassifier>classes</classesClassifier>
+                    <failOnMissingWebXml>false</failOnMissingWebXml>                    
+                    <archive>                    
                         <manifest>
                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-                        </manifest>
-                            
+                        </manifest>                            
                         <manifestEntries>
-                            <Implementation-Build>${build.buildNumber}</Implementation-Build>
-                            <Implementation-Build-Time>${maven.build.timestamp}</Implementation-Build-Time>
+                            <Share-Implementation-Version>${project.version}</Share-Implementation-Version>
+                            <Share-Implementation-Build>${build.buildNumber}</Share-Implementation-Build>
+                            <Share-Implementation-Build-Time>${maven.build.timestamp}</Share-Implementation-Build-Time>
                         </manifestEntries>
                     </archive>
                 </configuration>
             </plugin>
 
             <plugin>
-                <groupId>org.mortbay.jetty</groupId>
-                <artifactId>maven-jetty-plugin</artifactId>
-                <version>6.1.26</version>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-maven-plugin</artifactId>
+                <version>9.0.0.RC2</version>
                 <configuration>
                     <scanIntervalSeconds>10</scanIntervalSeconds>
                     <contextPath>/share</contextPath>
                     <webDefaultXml>src/container/jetty/webdefault.xml</webDefaultXml>
-
                 </configuration>
 
             </plugin>
@@ -836,42 +823,15 @@
                 <configuration>
                     <doCheck>false</doCheck>
                     <doUpdate>false</doUpdate>
-                    
-                    <!-- 
-                            This ensures that even if we are not connected to scm than also
-                            take the version from local .svn file 
-                    -->
                     <revisionOnScmFailure />
-
-                    
-                    <!--
-                            Generate sequence build number based on:
-                            build number and timestamp						
-                    
-                    <format>Build: #{0} ({1,date})</format>
-                    <items>
-                        <item>buildNumber\d*</item>
-                        <item>timestamp</item>
-                    </items>                   
-                    -->                    
-                    <!--useLastCommittedRevision>true</useLastCommittedRevision-->
                     <buildNumberPropertyName>build.buildNumber</buildNumberPropertyName>                    
-                   
                     <providerImplementations>
                         <svn>git</svn>
                     </providerImplementations>
                     <shortRevisionLength>5</shortRevisionLength>
                 </configuration>
                 
-                
-                <!--dependencies>
-                    <dependency>
-                        <groupId>org.apache.maven.scm</groupId>
-                        <artifactId>maven-scm-provider-gitexe</artifactId>
-                        <version>2.4</version>        
-                    </dependency>
-				
-				</dependencies-->
+              
             </plugin>
 
 
@@ -908,9 +868,13 @@
     </build>
 
     <repositories>
-    
-        
-        
+      
+        <repository>
+            <id>jboss-thirdparty</id>
+            <name>jboss-thirdparty</name>
+            <url>http://repository.jboss.org/nexus/content/repositories/thirdparty-releases</url>
+        </repository>
+          
         <repository>
             <id>maven1</id>
             <name>maven1</name>
@@ -924,12 +888,12 @@
         </repository>
 		
         <repository>
-            <id>download</id>
-            <name>download</name>
-            <url>http://download.java.net/maven/2</url>
+            <id>ibiblio</id>
+            <name>ibiblio</name>
+            <url>http://mirrors.ibiblio.org/maven2</url>
         </repository>
 		
-          <repository>
+        <repository>
             <id>appfuse-snapshots</id>
             <url>http://oss.sonatype.org/content/repositories/appfuse-snapshots</url>
             <releases>
@@ -945,13 +909,7 @@
             <name>Lucene Russian Morphology Repository for Maven</name>
             <url>http://russianmorphology.googlecode.com/svn/repo/releases/</url>
         </repository>
-        
-        <!--  >repository>
-            <id>Alexs Artifacts</id>
-            <name>Alexs Artifacts-releases</name>
-            <url>http://0x08.tk/artifactory/remote-repos</url>
-        </repository-->
-
+       
     </repositories>
     <!--
 <prerequisites>
