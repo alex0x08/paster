@@ -22,7 +22,6 @@ import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.support.PagedListHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -37,7 +36,7 @@ import uber.megashare.model.SharedFileSearchQuery;
 import uber.megashare.service.SharedFileManager;
 
 import static uber.megashare.controller.SharedFileConstants.FILE_PREFIX;
-import uber.megashare.service.tree.FolderService;
+import uber.megashare.service.FolderManager;
 
 
 /**
@@ -59,12 +58,12 @@ public class SharedFileListController
       
     private final SharedFileManager fileManager;
    
-    private FolderService folderManager;
+    private FolderManager folderManager;
 
     @Autowired
     public SharedFileListController(
             SharedFileManager fileManager,
-            FolderService folderManager
+            FolderManager folderManager
            ) {
         super(fileManager);
         this.fileManager = fileManager;

@@ -24,7 +24,9 @@
     
     <table class="table table-striped table-bordered" >
     <tr style="">
-        <th style="width:5%" ><button type="button" class="btn btn-default">ID  <span class="glyphicon glyphicon-arrow-down"></span></button> </th>
+        <th style="width:5%" >
+            <button type="button" class="btn btn-default sortColumnKey">ID  <span class="glyphicon glyphicon-arrow-down"></span></button>
+        </th>
         <th style="width:10%" ><fmt:message key="user.login"/></th>
         <th style="width:20%;"><fmt:message key="user.name"/></th>
         <th style="width:10%;"><fmt:message key="user.roles"/></th>
@@ -71,3 +73,18 @@
 </table>
         
         </div>
+
+         <script type="text/javascript">
+             
+             var currentSort = '${pageItems.sort.property}';
+             
+                       $(document).ready(function() {
+                           
+                           
+                           
+                              $('.sortColumnKey').each(function(index, value) {
+                                     alert( index + ": " + value );
+                              });
+                    });
+                      
+                  </script>

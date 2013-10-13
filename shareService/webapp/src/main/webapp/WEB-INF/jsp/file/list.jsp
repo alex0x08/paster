@@ -1,7 +1,7 @@
 <%@ include file="/WEB-INF/jsp/templates/common/taglibs.jsp"%>
 
 
-
+<c:if test="${pageItems.nrOfElements > 0}">
 <div class="row" style="margin: 0; padding: 0;">                
 
 <jsp:include
@@ -20,6 +20,8 @@
 </jsp:include>
     
 </div>
+    
+</c:if>
 
 <div class="row">
     <div id="gallery" class="col-md-12">      

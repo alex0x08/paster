@@ -13,10 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package uber.megashare.dao;
 
-import uber.megashare.model.Folder;
+package uber.megashare.dao.tree;
 
-public interface FolderDao extends GenericSearchableDao<Folder>{
+import org.springframework.data.neo4j.repository.GraphRepository;
+import uber.megashare.model.tree.RelatedProject;
 
+/**
+ *
+ * @author aachernyshev
+ */
+public interface RelatedProjectDao extends GraphRepository<RelatedProject>{
+    
 }

@@ -19,14 +19,19 @@
  */
 package uber.megashare.model.tree;
 
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 import org.neo4j.graphdb.Direction;
-import org.neo4j.graphdb.RelationshipType;
+import org.springframework.data.neo4j.annotation.Fetch;
 
 import org.springframework.data.neo4j.annotation.GraphId;
 import org.springframework.data.neo4j.annotation.Indexed;
 import org.springframework.data.neo4j.annotation.NodeEntity;
 import org.springframework.data.neo4j.annotation.RelatedTo;
+import org.springframework.data.neo4j.annotation.RelatedToVia;
+import org.springframework.data.neo4j.support.index.IndexType;
+import uber.megashare.model.SharedFile;
 
 
 /**
@@ -42,9 +47,13 @@ public class FolderNode {
     @GraphId
     private Long id;
     
-    @Indexed
+    @Indexed(indexType = IndexType.FULLTEXT, indexName = "folder_name")
     private String name;
 
+    @Indexed(indexType = IndexType.FULLTEXT, indexName = "owner_name")
+    private String ownerName;
+
+    
     @RelatedTo(direction = Direction.INCOMING, type = "CHILD")
     private FolderNode parent;
 
@@ -52,14 +61,34 @@ public class FolderNode {
     private Set<FolderNode> children;
 
     @Indexed
-    private NodeType type = NodeType.FOLDER;
+    private NodeType nodeType = NodeType.FOLDER;
 
-    public NodeType getType() {
-        return type;
+    //@Fetch
+    //@RelatedToVia(type="RELATED_TO_PROJECTS")
+    //private Set<RelatedProject> relatedProjects = new HashSet<>();
+
+    public String getOwnerName() {
+        return ownerName;
     }
 
-    public void setType(NodeType type) {
-        this.type = type;
+    public void setOwnerName(String ownerName) {
+        this.ownerName = ownerName;
+    }
+
+    /*public Set<RelatedProject> getRelatedProjects() {
+        return relatedProjects;
+    }
+
+    public void setRelatedProjects(Set<RelatedProject> relatedProjects) {
+        this.relatedProjects = relatedProjects;
+    }*/
+    
+    public NodeType getNodeType() {
+        return nodeType;
+    }
+
+    public void setNodeType(NodeType type) {
+        this.nodeType = type;
     }
     
     
@@ -91,6 +120,18 @@ public class FolderNode {
         this.name = name;
     }
     
-    
+    public SharedFile toSharedFile() {
+        SharedFile out = new SharedFile();
+        out.setNodeType(nodeType);
+        out.setId(id);
+        out.setName(name);
+        out.setOwnerName(ownerName);
+        
+        /*for (RelatedProject rp:relatedProjects) {
+            out.getRelatedProjects().add(rp.toProject());
+        }*/
+        
+       return out;
+    }
  
 }

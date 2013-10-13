@@ -75,7 +75,10 @@
                                               <ul class="dropdown-menu ">
                                                   <li>
                                                       <a class="profile" href="<c:url value="/main/profile"/>">
-                                                          <span class="glyphicon glyphicon-user"></span> <fmt:message key="profile.title"/></a> 
+                                                          <span class="glyphicon glyphicon-user"></span>
+                                                          <c:out value="${currentUser.name}"/>
+                                                          
+                                                      </a> 
                                                   </li>
 
                                                   <li>

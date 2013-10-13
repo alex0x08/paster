@@ -45,7 +45,9 @@ import uber.megashare.model.SystemProperties;
 import uber.megashare.model.tree.FolderNode;
 import uber.megashare.model.tree.NodeType;
 import uber.megashare.model.tree.Rels;
-import uber.megashare.service.tree.FolderService;
+import uber.megashare.dao.tree.FolderDao;
+import uber.megashare.dao.tree.RelatedProjectDao;
+import uber.megashare.model.tree.RelatedProject;
 /**
  * <p>StartupListener class used to initialize and database settings and
  * populate any application-wide drop-downs.
@@ -181,11 +183,18 @@ public class StartupListener extends LoggedClass implements ServletContextListen
                 }
             }
 
+              FolderDao folderManager = (FolderDao)ctx.getBean("folderDao");
+              RelatedProjectDao rProjDao = (RelatedProjectDao)ctx.getBean("relatedProjectDao");
+              
+            
             Project test_p = new Project();
             test_p.setDescription("Sample project description");
             test_p.setName("Sample Project");
             
             test_p = projectDao.saveObject(test_p);
+            //folderManager.getRelatedProjectDao()
+            RelatedProject rtest_p=rProjDao.save(new RelatedProject().fromProject(test_p));
+            
             
              Project test_p2 = new Project();
             test_p2.setDescription("Sample project2 description");
@@ -229,24 +238,23 @@ public class StartupListener extends LoggedClass implements ServletContextListen
                 }
                 
                 
-               FolderService folderManager = (FolderService)ctx.getBean("folderService");
-               
+              
                FolderNode defaultParent = new FolderNode();
                           defaultParent.setName("Default parent");
-                          defaultParent.setType(NodeType.PARENT);
+                          defaultParent.setNodeType(NodeType.PARENT);
                           
                         defaultParent =  folderManager.save(defaultParent);
                 
-                        System.out.println("_parent id: "+defaultParent.getId()+" type "+defaultParent.getType());
+                        System.out.println("_parent id: "+defaultParent.getId()+" type "+defaultParent.getNodeType());
                         
                          FolderNode sub1 = new FolderNode();
                           sub1.setName("Sub 1");
-                          sub1.setType(NodeType.FOLDER);
-                          
+                          sub1.setNodeType(NodeType.FOLDER);
+                        //  sub1.getRelatedProjects().add(rtest_p);
                           
                         FolderNode sub2 = new FolderNode();
                           sub2.setName("Sub 2");
-                         sub2.setType(NodeType.FOLDER);
+                         sub2.setNodeType(NodeType.FOLDER);
                           
                           sub1.setParent(defaultParent);
                           
@@ -264,7 +272,7 @@ public class StartupListener extends LoggedClass implements ServletContextListen
                           sub2 =  folderManager.save(sub2);
 
                           
-                        System.out.println("_sub1 id: "+sub1.getId()+" type "+sub1.getType()+" sub2 id: "+sub2.getId()+" sub2 parent "+sub2.getParent().getId());
+                        System.out.println("_sub1 id: "+sub1.getId()+" type "+sub1.getNodeType()+" sub2 id: "+sub2.getId()+" sub2 parent "+sub2.getParent().getId());
                     
             
           final TraversalDescription FRIENDS_TRAVERSAL = Traversal.description()
@@ -273,13 +281,26 @@ public class StartupListener extends LoggedClass implements ServletContextListen
          .evaluator(Evaluators.includingDepths(1, 2))
         .uniqueness( Uniqueness.RELATIONSHIP_GLOBAL );
                
+           for (FolderNode friend : folderManager.findAllByTraversal(sub1, FRIENDS_TRAVERSAL)) {
+    
+              System.out.println("node from parent: " + friend.getId()+" name="+friend.getName());
+
+          }
+           
+          FolderNode fparent = folderManager.findByPropertyValue("nodeType", NodeType.PARENT);
+           
+          System.out.println("found parent "+fparent.getName());
+          
+         // shareDao.index(fparent);
+          
+          /*
           for (FolderNode friend : folderManager.findAllByQuery("START a=node(1)\n" +
 "MATCH a-[:CHILD*1..3]->x\n" +
 "RETURN a,x", uf)) {
     
               System.out.println("node from parent: " + friend.getId());
 
-          }
+          }*/
           
           
           /* for (FolderNode friend : folderManager.findAllByTraversal(sub1,FRIENDS_TRAVERSAL)) {

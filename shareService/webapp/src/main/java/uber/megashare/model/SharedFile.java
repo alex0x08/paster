@@ -24,6 +24,7 @@ import java.util.Set;
 import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
@@ -59,7 +60,8 @@ import uber.megashare.base.LoggedClass;
 @Audited
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @XStreamAlias("sharedFile")
-public class SharedFile extends Node  {
+@EntityListeners({CreateUUIDListener.class})
+public class SharedFile extends Node {
 
     public static final String PASTER_PREFIX= "paste_";
     
@@ -80,7 +82,7 @@ public class SharedFile extends Node  {
     @Column(nullable = false, unique = true, length = 255)
     @Field(index = Index.YES, store = Store.YES, termVector = TermVector.NO)
     @XStreamAsAttribute
-    private String uuid = UUID.randomUUID().toString();
+    String uuid;// = UUID.randomUUID().toString();
     
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -313,4 +315,7 @@ public class SharedFile extends Node  {
                 .append("fileSize", fileSize).toString() + super.toString();
 
     }
+
+   
+   
 }

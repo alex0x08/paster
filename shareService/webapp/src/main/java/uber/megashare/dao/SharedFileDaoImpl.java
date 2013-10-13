@@ -15,9 +15,7 @@
  */
 package uber.megashare.dao;
 
-import com.mysema.query.types.Expression;
 import com.mysema.query.types.expr.BooleanExpression;
-import com.mysema.query.types.expr.CaseBuilder;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -30,6 +28,8 @@ import org.apache.lucene.util.Version;
 import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.jpa.FullTextQuery;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import uber.megashare.base.logging.LoggedCall;
 import uber.megashare.model.AccessLevel;
@@ -57,8 +57,6 @@ public class SharedFileDaoImpl extends GenericSearchableDaoImpl<SharedFile> impl
         super(SharedFile.class);
     }
 
- 
-    
     /**
      * {@inheritDoc}
      */
@@ -69,6 +67,7 @@ public class SharedFileDaoImpl extends GenericSearchableDaoImpl<SharedFile> impl
     /**
      * {@inheritDoc}
      */
+    @Transactional(readOnly = true, propagation = Propagation.REQUIRED,value= "transactionManager",rollbackFor = Exception.class)
     public List<SharedFile> search(final String query,
             final Long userId,final Long projectId,
             final List<AccessLevel> levels) throws ParseException {

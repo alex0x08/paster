@@ -13,30 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+package uber.megashare.model;
 
-package uber.megashare.service;
-
-import java.util.List;
-import org.apache.lucene.queryParser.ParseException;
-import org.springframework.transaction.annotation.Transactional;
-import uber.megashare.model.SearchQuery;
-import uber.megashare.model.Struct;
+import uber.megashare.model.tree.NodeType;
 
 /**
  *
- * @author alex
+ * @author aachernyshev
  */
-//@Transactional(readOnly = true)
-public interface GenericSearchableManager<T extends Struct,SQ extends SearchQuery> extends GenericVersioningManager<T> {
-
+public interface NodeObject {
     
-    public void indexAll();
-
-    public List<T> search(SQ query) throws ParseException;
-
-  
+    Long getId();
+    
+    String getName();
+    
+    NodeType getNodeType();
 }

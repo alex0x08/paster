@@ -152,6 +152,7 @@ public abstract class GenericDaoImpl<T extends BaseDBObject, PK extends Serializ
     /**
      * {@inheritDoc}
      */
+    @Override
     public void fill(T obj) {
     
         getLogger().debug("filling object="+obj);
@@ -171,6 +172,7 @@ public abstract class GenericDaoImpl<T extends BaseDBObject, PK extends Serializ
     /**
      * {@inheritDoc}
      */
+    @Transactional(readOnly = true, propagation = Propagation.REQUIRED,value= "transactionManager",rollbackFor = Exception.class)
     public T getFull(T u) {
        fill(u);
        return u;
@@ -179,6 +181,7 @@ public abstract class GenericDaoImpl<T extends BaseDBObject, PK extends Serializ
     /**
      * {@inheritDoc}
      */
+    @Transactional(readOnly = true, propagation = Propagation.REQUIRED,value= "transactionManager",rollbackFor = Exception.class)
     public T getFull(PK id) {
         T u = get(id);
         if (u == null) {

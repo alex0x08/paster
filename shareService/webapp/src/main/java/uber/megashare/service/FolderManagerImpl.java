@@ -15,6 +15,58 @@
  */
 package uber.megashare.service;
 
-public class FolderManagerImpl {
+import org.neo4j.graphdb.traversal.Evaluators;
+import org.neo4j.graphdb.traversal.TraversalDescription;
+import org.neo4j.kernel.Traversal;
+import org.neo4j.kernel.Uniqueness;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import uber.megashare.base.LoggedClass;
+import uber.megashare.dao.tree.FolderDao;
+import uber.megashare.model.tree.FolderNode;
+import uber.megashare.model.tree.NodeType;
+import uber.megashare.model.tree.Rels;
 
+/**
+ *
+ * @author aachernyshev
+ */
+@Service("folderManager")
+public class FolderManagerImpl extends LoggedClass implements FolderManager{
+
+    private FolderDao folderDao;
+    
+    protected static final TraversalDescription FRIENDS_TRAVERSAL = Traversal.description()
+        .depthFirst()
+        .relationships( Rels.CHILD )
+         .evaluator(Evaluators.includingDepths(1, 2))
+        .uniqueness( Uniqueness.RELATIONSHIP_GLOBAL );
+    
+   @Autowired 
+   public FolderManagerImpl(FolderDao dao) {
+       this.folderDao = dao;
+   } 
+   
+   public FolderNode getParentFolder() {
+    return  folderDao.findByPropertyValue("nodeType", NodeType.PARENT);
+   }
+   
+   public FolderNode save(FolderNode node) {
+       return folderDao.save(node);
+   }
+   
+   public boolean exists(Long id) {
+       return folderDao.exists(id);
+   }
+   
+   public FolderNode getFolder(Long id) {
+       return folderDao.findOne(id);
+   }
+   
+    public Iterable<FolderNode> getChildren(Long parentId) {
+
+        FolderNode node = folderDao.findOne(parentId);
+        return folderDao.findAllByTraversal(node, FRIENDS_TRAVERSAL);
+
+    }
 }

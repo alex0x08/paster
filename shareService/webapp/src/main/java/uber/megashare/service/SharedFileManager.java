@@ -16,7 +16,6 @@
 package uber.megashare.service;
 
 import java.util.List;
-import java.util.Locale;
 import uber.megashare.model.AccessLevel;
 import uber.megashare.model.FileType;
 import uber.megashare.model.SharedFile;

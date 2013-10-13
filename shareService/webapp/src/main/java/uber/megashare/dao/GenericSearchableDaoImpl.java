@@ -29,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 import uber.megashare.model.Struct;
 import org.apache.lucene.morphology.russian.RussianAnalyzer;
 import org.apache.lucene.queryParser.MultiFieldQueryParser;
+import org.hibernate.CacheMode;
 
 /**
  *
@@ -62,18 +63,31 @@ public abstract class GenericSearchableDaoImpl<T extends Struct> extends Generic
         return Search.getFullTextEntityManager(getEntityManager());
     }
 
+    
     /**
      * {@inheritDoc}
      */
     @Transactional(readOnly = true, rollbackFor = Exception.class,value= "transactionManager")
-    public void indexAll() {
+    public void indexAll()  {
         FullTextEntityManager fsession = getFullTextEntityManager();
-        /**
-         * not a best ever re-index implementation, but enough for demo
-         */
-        for (T t : getAll()) {
-            fsession.index(t);
+        try {
+            fsession.createIndexer(persistentClass)
+                    .batchSizeToLoadObjects(25)
+                    .cacheMode(CacheMode.NORMAL)
+                    .threadsToLoadObjects(1)
+                    .threadsForSubsequentFetching(2)
+                    .startAndWait();
+
+            /**
+             * not a best ever re-index implementation, but enough for demo
+             */
+            /*for (T t : getAll()) {
+                fsession.index(t);
+            }*/
+        } catch (InterruptedException ex) {
+            throw new RuntimeException(ex);
         }
+
     }
 
     /**
