@@ -15,13 +15,14 @@
  */
 package uber.megashare.controller;
 
-import java.beans.PropertyEditorSupport;
 import java.io.File;
 import java.io.FileInputStream;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -29,6 +30,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomCollectionEditor;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -45,14 +47,15 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import uber.megashare.base.logging.LoggedCall;
 import static uber.megashare.controller.EditConstants.VIEW_ACTION;
-import static uber.megashare.controller.GenericEditController.DELETE_ACTION;
-import static uber.megashare.controller.GenericEditController.SAVE_ACTION;
+import static uber.megashare.controller.AbstractEditController.DELETE_ACTION;
+import static uber.megashare.controller.AbstractEditController.SAVE_ACTION;
 import static uber.megashare.controller.ListConstants.LIST_ACTION;
 import static uber.megashare.controller.SharedFileConstants.FILE_PREFIX;
 import uber.megashare.model.AccessLevel;
 import uber.megashare.model.Project;
 import uber.megashare.model.SharedFile;
 import uber.megashare.model.SharedFileSearchQuery;
+import uber.megashare.service.ProjectManager;
 import uber.megashare.service.SharedFileManager;
 import uber.megashare.service.image.ImageBuilder;
 
@@ -64,7 +67,7 @@ import uber.megashare.service.image.ImageBuilder;
  */
 @Controller
 @RequestMapping(FILE_PREFIX)
-public class SharedFileEditController extends GenericCommentController<SharedFile> implements SharedFileConstants,ListConstants  {
+public class SharedFileEditController extends AbstractCommentController<SharedFile> implements SharedFileConstants,ListConstants  {
 
     /**
      *
@@ -73,11 +76,13 @@ public class SharedFileEditController extends GenericCommentController<SharedFil
 
     private SharedFileManager fileManager;
     
+    private ProjectManager projectManager;
+    
     @Autowired
-    public SharedFileEditController(SharedFileManager fileManager) {
+    public SharedFileEditController(SharedFileManager fileManager,ProjectManager projectManager) {
         super(fileManager);
         this.fileManager=fileManager;
-
+        this.projectManager=projectManager;
         setListPage("redirect:list");
         /**
          * no redirect here due to field validation issues
@@ -97,8 +102,15 @@ public class SharedFileEditController extends GenericCommentController<SharedFil
         CustomDateEditor editor = new CustomDateEditor(dateFormat, true);
         //Register it as custom editor for the Date type
         binder.registerCustomEditor(Date.class, editor);
-        
-       
+     
+       binder.registerCustomEditor(Set.class, new ProjectCollectionCustomEditor(Set.class));
+     // binder.registerCustomEditor(Set.class, new CustomCollectionEditor(Set.class));  
+    }
+    
+    
+    @ModelAttribute("availableProjects")
+    public List<Project> getAvailableProjects() {
+        return projectManager.getAll();
     }
 
     @RequestMapping(value = RAW_PREFIX+"/comments", method = RequestMethod.GET)
@@ -138,18 +150,12 @@ public class SharedFileEditController extends GenericCommentController<SharedFil
     protected boolean checkAccess(SharedFile obj, Model model) {
 
         /**
-         * if file is viewable for all
+         * if file is viewable for all or  if user is admin
          */
-        if (obj.getAccessLevel().equals(AccessLevel.ALL)) {
+        if (obj.getAccessLevel().equals(AccessLevel.ALL) ||isCurrentUserAdmin()) {
             return true;
         }
-        
-         /**
-         * if user is admin
-         */
-        if (isCurrentUserAdmin()) {
-            return true;
-        }
+      
         
         if (obj.getAccessLevel().equals(AccessLevel.PROJECT) ) {
             
@@ -218,7 +224,15 @@ public class SharedFileEditController extends GenericCommentController<SharedFil
                      * always will be an user
                      */
                     input.setOwner(getCurrentUser());
+                    
+                    if (input.getRelatedProjects().isEmpty()) {
                     input.getRelatedProjects().add(getCurrentUser().getRelatedProject());
+                    }
+                    
+               /*     for (Project p:input.getRelatedProjects()) {
+                        System.out.println("_related proj "+p.getName());
+                    }*/
+                        
                 }
 
                 //SharedFile out = new SharedFile();
@@ -372,12 +386,7 @@ public class SharedFileEditController extends GenericCommentController<SharedFil
         if (b.isBlank() && b.getFile().isEmpty()) {
             return createJsonError("no-file-selected");
         }
-        
-      //  System.out.println("_input mime "+b.getFile().getContentType());
-        
-
-        /*if (b.isBlank()) {*/
-
+     
         /**
          * perform actual file save & thumbnail generation
          */
@@ -390,14 +399,7 @@ public class SharedFileEditController extends GenericCommentController<SharedFil
         resetPagingList(request);
          
         return out;
-        /*
-         } else {
-            
-         // SharedFile out = uploadSave(b.getFile(), b);
-         return createJsonError("not supported");
-
-         }
-         */
+       
     }
 
     private String createJsonError(String msg) {
@@ -462,13 +464,7 @@ public class SharedFileEditController extends GenericCommentController<SharedFil
 
         }
 
-        /*if (b.isBlank()) {
-
-         getLogger().debug(
-         "save new file mime=" + b.getFile().getContentType());
-         uploadSave(b.getFile(), b);
-         } else {
-         */
+        
         getLogger().debug("update file=" + b);
 
         SharedFile f = uploadSave(b.getFile(), b);
@@ -477,16 +473,12 @@ public class SharedFileEditController extends GenericCommentController<SharedFil
         if (b.isBlank()) {
             b.setId(f.getId());
         }
-        //      }
-
-
-
+     
         resetPagingList(request);
 
         addMessageSuccess(redirectAttributes);
 
-        model.asMap().clear();
-   
+        model.asMap().clear();   
         
         if (f.getIntegrationCode()!=null) {
             return "redirect:/main"+FILE_PREFIX+INTEGRATED_PREFIX+LIST_ACTION+"/"+f.getIntegrationCode();
@@ -538,5 +530,25 @@ public class SharedFileEditController extends GenericCommentController<SharedFil
             query.setLevels(Arrays.asList(AccessLevel.ALL));
         }
         return query;
+    }
+    
+    
+    class ProjectCollectionCustomEditor extends CustomCollectionEditor {
+   
+        public  ProjectCollectionCustomEditor(Class collectionType) {
+            super(collectionType);
+        }
+        
+    @Override
+    protected Object convertElement(Object element) {
+        System.out.println("getSting : " + element.toString()+" element class="+element.getClass().getName());
+        if (element instanceof Project) {
+            return element;
+        }
+        
+        Project p  = new Project();
+        p.setId(Long.valueOf(element.toString()));
+        return p;
+    }
     }
 }

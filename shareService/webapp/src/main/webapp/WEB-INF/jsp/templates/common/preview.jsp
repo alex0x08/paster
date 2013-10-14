@@ -327,6 +327,12 @@
 
                               <a href="<c:url value='/main/file/list/search?query=relatedProjects_name:${proj.name}'/>" 
                                  target="${not empty param.integrationMode ? "_blank" : target}">
+
+                                  <c:if test="${proj.avatarSet}">
+                                      <img src="data:image/png;base64,${proj.avatar.icon}" 
+                                           alt="<c:out value='${proj.name}'/>" />                
+                                  </c:if>
+
                                   <c:out value="${proj.name}"/>
                               </a>   
                               

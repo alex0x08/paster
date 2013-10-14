@@ -20,7 +20,7 @@ import uber.megashare.model.Struct;
 import uber.megashare.service.StructManager;
 
 /**
- * Generic MVC Controller
+ * Abstract Controller dedicated to specific generic object (T)
  *
  * @author alex
  */
@@ -36,7 +36,8 @@ public abstract class GenericController<T extends Struct> extends AbstractContro
     protected static final String NODE_LIST_MODEL = "items",
             NODE_LIST_MODEL_PAGE = "pageItems";
     
-    protected static final String INTEGRATED_PREFIX = "/integrated",RAW_PREFIX="/raw";
+    protected static final String INTEGRATED_PREFIX = "/integrated",
+                                  RAW_PREFIX="/raw";
  
     
     protected String listPage, //default list page for T object
@@ -44,7 +45,6 @@ public abstract class GenericController<T extends Struct> extends AbstractContro
             viewPage;
     
     protected static final String QUERY_MODEL = "query";
-
     
     protected final StructManager<T> manager;
 
@@ -53,9 +53,7 @@ public abstract class GenericController<T extends Struct> extends AbstractContro
     }
 
     protected void resetPagingList(HttpServletRequest request) {
-        // if (request.getSession().getAttribute(NODE_LIST_MODEL_PAGE) != null) {
         request.getSession().removeAttribute(NODE_LIST_MODEL_PAGE);
-        //}
     }
 
     public String getViewPage() {

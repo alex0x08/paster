@@ -130,8 +130,7 @@ public class SharedFile extends Node {
     public void setRelatedProjects(Set<Project> relatedProjects) {
         this.relatedProjects = relatedProjects;
     }   
-    
-    
+        
     public String getIntegrationCode() {
         return integrationCode;
     }

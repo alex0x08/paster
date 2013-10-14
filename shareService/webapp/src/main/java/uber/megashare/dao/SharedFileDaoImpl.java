@@ -42,17 +42,16 @@ import uber.megashare.model.SharedFile;
  * @author alex
  */
 @Repository("shareDao")
-//@Transactional(readOnly = true,value= "transactionManager")
+@Transactional(readOnly = true,value= "transactionManager", rollbackFor = Exception.class)
 public class SharedFileDaoImpl extends GenericSearchableDaoImpl<SharedFile> implements SharedFileDao {
 
     /**
      *
      */
     private static final long serialVersionUID = -4874510100464951022L;
-
-     protected static final String SHARE_START_FIELDS[] = {"name","nameContents","comments_message"};
-
     
+    protected static final String SHARE_START_FIELDS[] = {"name", "nameContents", "comments_message"};
+
     public SharedFileDaoImpl() {
         super(SharedFile.class);
     }
@@ -68,6 +67,7 @@ public class SharedFileDaoImpl extends GenericSearchableDaoImpl<SharedFile> impl
      * {@inheritDoc}
      */
     @Transactional(readOnly = true, propagation = Propagation.REQUIRED,value= "transactionManager",rollbackFor = Exception.class)
+    @Override
     public List<SharedFile> search(final String query,
             final Long userId,final Long projectId,
             final List<AccessLevel> levels) throws ParseException {

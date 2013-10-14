@@ -46,21 +46,21 @@ import uber.megashare.model.BaseDBObject;
  * @param <T> a type variable
  * @param <PK> the primary key for that type
  */
-//@Transactional(readOnly = true, rollbackFor = Exception.class,value= "transactionManager")
+@Transactional(readOnly = true, rollbackFor = Exception.class,value= "transactionManager")
 public abstract class GenericDaoImpl<T extends BaseDBObject, PK extends Serializable> extends LoggedClass implements GenericDao<T, PK> {
    
     /**
-	 * 
-	 */
-	private static final long serialVersionUID = -7455984245668865869L;
-
-	protected final Class<T> persistentClass;
+     *
+     */
+    private static final long serialVersionUID = -7455984245668865869L;
+    
+    protected final Class<T> persistentClass;
     
     private EntityManager em;
-
+    
     public static final int MAX_RESULTS = 10000; //не тянуть все, нужно больше 10к записей - юзай фильтры и поиск
 
-    
+
     protected class CriteriaSet {
     	
     	final CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
@@ -97,14 +97,14 @@ public abstract class GenericDaoImpl<T extends BaseDBObject, PK extends Serializ
      * {@inheritDoc}
      */
     @SuppressWarnings("unchecked")
+    @Override
     public List<T> getAll() {
     	
     	CriteriaSet cr = new CriteriaSet();
     	
         Query query = getEntityManager().createQuery(cr.cr.orderBy(cr.cb.desc(cr.r.get("lastModified"))));
         return query.getResultList().isEmpty() ? Collections.EMPTY_LIST : query.getResultList();
- 
-    }
+  }
 
     
 
@@ -144,7 +144,7 @@ public abstract class GenericDaoImpl<T extends BaseDBObject, PK extends Serializ
      * {@inheritDoc}
      */
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED,value= "transactionManager",rollbackFor = Exception.class)
-        @Override
+    @Override
     public void remove(PK id) {
         em.remove(get(id));
     }
@@ -160,11 +160,7 @@ public abstract class GenericDaoImpl<T extends BaseDBObject, PK extends Serializ
         if (obj==null) {
             return;
         }
-        
         obj.loadFull();
-        
-    //    fillImpl(obj);
-       
     }
     
    
@@ -172,7 +168,7 @@ public abstract class GenericDaoImpl<T extends BaseDBObject, PK extends Serializ
     /**
      * {@inheritDoc}
      */
-    @Transactional(readOnly = true, propagation = Propagation.REQUIRED,value= "transactionManager",rollbackFor = Exception.class)
+    @Override
     public T getFull(T u) {
        fill(u);
        return u;
@@ -181,7 +177,7 @@ public abstract class GenericDaoImpl<T extends BaseDBObject, PK extends Serializ
     /**
      * {@inheritDoc}
      */
-    @Transactional(readOnly = true, propagation = Propagation.REQUIRED,value= "transactionManager",rollbackFor = Exception.class)
+    @Override
     public T getFull(PK id) {
         T u = get(id);
         if (u == null) {

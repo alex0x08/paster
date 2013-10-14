@@ -51,9 +51,7 @@ public class ProfileController extends AbstractController {
     protected User newRequest(@RequestParam(required = false) Long id, Model model) {
         return (id != null ? userManager.getFull(id) : null);
     }
-    
-    
-
+  
     @RequestMapping(value = "/view", method = RequestMethod.GET)
     public String view(@RequestParam(required = false) Long id, Model model) {
         return edit(id, model);

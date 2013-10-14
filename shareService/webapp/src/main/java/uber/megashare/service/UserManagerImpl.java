@@ -101,20 +101,24 @@ public class UserManagerImpl extends GenericSearchableManagerImpl<User, UserSear
     }
     
     //@Override
+    @Override
     public User getUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.getUserByUsername(username);
 
     }
 
     //@Override
+    @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException, DataAccessException {
         return userRepository.loadUserByUsername(username);
     }
 
+    @Override
     public SavedSession createSession(Long userId) {
         return userRepository.createSession(userId);
     }
 
+    @Override
     public SavedSession getSavedSession(String sessionId) {
         return userRepository.getSavedSession(sessionId);
     }

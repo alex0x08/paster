@@ -18,13 +18,14 @@ package uber.megashare.dao;
 import java.util.Collections;
 import java.util.List;
 import javax.persistence.Query;
+import org.springframework.transaction.annotation.Transactional;
 import uber.megashare.model.Struct;
 
 /**
  *
  * @author alex
  */
-//@Transactional(readOnly = true,value= "transactionManager")
+@Transactional(readOnly = true,value= "transactionManager", rollbackFor = Exception.class)
 public abstract class StructDaoImpl<T extends Struct> extends GenericDSLDaoImpl<T, Long> implements StructDao<T> {
 
     /**

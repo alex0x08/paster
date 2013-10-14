@@ -18,9 +18,12 @@ package uber.megashare.model;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.Pattern;
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
@@ -30,6 +33,7 @@ import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.Store;
 import org.hibernate.search.annotations.TermVector;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
@@ -51,10 +55,38 @@ public class Project extends Struct{
     @XStreamAsAttribute
     private String description;
 
+    @Transient
+    private MultipartFile file;
+    
+    @Embedded
+    private Avatar avatar;
+    
     public Project() {}
     
     public Project(Long id) {
         this.setId(id);
+    }
+    
+    public boolean isAvatarSet() {
+        return avatar!=null && avatar.getIcon()!=null;
+    }
+
+    @JsonIgnore
+    public Avatar getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(Avatar avatar) {
+        this.avatar = avatar;
+    }
+    
+    @JsonIgnore
+    public MultipartFile getFile() {
+        return file;
+    }
+
+    public void setFile(MultipartFile file) {
+        this.file = file;
     }
     
     public String getDescription() {
@@ -63,8 +95,7 @@ public class Project extends Struct{
 
     public void setDescription(String description) {
         this.description = description;
-    }   
-    
+    }      
     
     @Override
     public void loadFull() {

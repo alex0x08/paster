@@ -7,7 +7,16 @@
 
 <div class="row">
 
-   
+            <div class="col-md-2">
+                
+                <c:if test="${model.avatarSet}">
+                    
+                    <img src="data:image/png;base64,${model.avatar.icon}" alt="Red dot" />
+                    
+                </c:if>
+                
+            </div>
+    
 
             <div class="col-md-4">
 
@@ -51,7 +60,20 @@
                 </div>    
 
                
-              
+              <div class="form-group ">
+
+                    <form:label cssClass="control-label" path="name">
+                        <fmt:message key="avatar.icon"/>:</form:label>
+
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
+                            <form:input path="file" type="file" cssStyle="width:10em;" 
+                                        cssErrorClass="form-control alert alert-danger" 
+                                        cssClass="form-control"/>
+                    </div>                    
+                    <form:errors path="name" cssClass="help-block alert alert-danger" /> 
+                </div>    
+
 
                
                 <div class="form-group">

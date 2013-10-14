@@ -27,7 +27,7 @@ import uber.megashare.model.SavedSession;
 import uber.megashare.model.User;
 
 @Repository("userDao")
-//@Transactional(readOnly = true,value= "transactionManager")
+@Transactional(readOnly = true,value= "transactionManager", rollbackFor = Exception.class)
 public class UserDaoImpl extends GenericSearchableDaoImpl<User> implements UserDao {
 
     /**

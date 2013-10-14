@@ -16,8 +16,6 @@
 package uber.megashare.controller;
 
 import java.beans.PropertyEditorSupport;
-import java.io.FileWriter;
-import java.io.Writer;
 import java.util.List;
 import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
@@ -47,7 +45,7 @@ import uber.megashare.service.UserManager;
  */
 @Controller
 @RequestMapping("/user")
-public class UserEditController extends GenericEditController<User> {
+public class UserEditController extends AbstractEditController<User> {
 
     // private UserManager userManager;
     /**
@@ -82,7 +80,6 @@ public class UserEditController extends GenericEditController<User> {
         public void setAsText(String text) {
          //   System.out.println("set project from "+text);
             setValue(new Project(Long.valueOf(text)));
-        
         }
         
              @Override

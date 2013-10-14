@@ -38,11 +38,18 @@
                 
                 <script type="text/javascript">
 
+                    function toggleProjects() {
+                        
+                        $('#selectProjectsBlock').toggle();
+                        
+                    };
+
+
                  // Helper function that formats the file sizes
-    function formatFileSize(bytes) {
-        if (typeof bytes !== 'number') {
-            return '';
-        }
+                function formatFileSize(bytes) {
+                    if (typeof bytes !== 'number') {
+                    return '';
+                }
 
         if (bytes >= 1000000000) {
             return (bytes / 1000000000).toFixed(2) + ' GB';
@@ -139,6 +146,22 @@
                                 showError(data.responseText); } catch (e) {showError(data);}
                             }
                         });              
+                   
+                   var currentLevel= $("#file_upload input[type='radio']:checked").val();
+                   if (currentLevel == 'PROJECT') {
+                       $('#selectProjectsBlock').toggle();
+                   }
+                   
+                    $('.accessLevelSwitch').change(function() {
+                        if ($(this).val() == 'PROJECT') {
+                            
+                           $('#selectProjectsBlock').toggle(true);
+                        } else {
+                            
+                           $('#selectProjectsBlock').toggle(false);
+                            
+                        }
+                });
                    
                      $('#enableRemovalSwitch').on('change', function (e) {
                            
@@ -239,7 +262,7 @@
                                                  <c:forEach items="${model.accessLevel.levels}" var="level">
                                                      <label class="btn btn-default" >
                                                          <fmt:message key="${level.desc}" />
-                                                         <form:radiobutton path="accessLevel" value="${level.code}"  />
+                                                         <form:radiobutton cssClass="accessLevelSwitch" path="accessLevel" value="${level.code}"  />
                                                      </label>
                                                  </c:forEach>
 
@@ -256,6 +279,24 @@
 
                                  </c:if>
                                  
+                                 
+                                 <div class="form-group" id="selectProjectsBlock" style="display:none;">
+                                     <form:label  path="relatedProjects">Select projects:</form:label>
+                                         <div class="controls">
+
+                                             
+                                         <form:select  path="relatedProjects" cssClass="chosen_select_box_multiple" cssStyle="width:15em;"   >
+                                             
+                                             <form:options  items="${availableProjects}" itemValue="id" itemLabel="name"  />
+                                         </form:select>
+
+                                         <form:errors path="relatedProjects" cssClass="error" />
+
+                                     </div>
+
+                                 </div>   
+                                 
+                                   
                                     <c:if test="${model.blank}">
 
                                      <div class="form-group">

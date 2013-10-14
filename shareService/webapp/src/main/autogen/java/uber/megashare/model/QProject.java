@@ -31,9 +31,13 @@ public class QProject extends EntityPathBase<Project> {
 
     private static final long serialVersionUID = -1566639681;
 
+    private static final PathInits INITS = PathInits.DIRECT;
+
     public static final QProject project = new QProject("project");
 
     public final QStruct _super = new QStruct(this);
+
+    public final QAvatar avatar;
 
     public final StringPath description = createString("description");
 
@@ -50,15 +54,20 @@ public class QProject extends EntityPathBase<Project> {
     public final StringPath name = _super.name;
 
     public QProject(String variable) {
-        super(Project.class, forVariable(variable));
-    }
-
-    public QProject(Path<? extends Project> entity) {
-        super(entity.getType(), entity.getMetadata());
+        this(Project.class, forVariable(variable), INITS);
     }
 
     public QProject(PathMetadata<?> metadata) {
-        super(Project.class, metadata);
+        this(metadata, metadata.isRoot() ? INITS : PathInits.DEFAULT);
+    }
+
+    public QProject(PathMetadata<?> metadata, PathInits inits) {
+        this(Project.class, metadata, inits);
+    }
+
+    public QProject(Class<? extends Project> type, PathMetadata<?> metadata, PathInits inits) {
+        super(type, metadata, inits);
+        this.avatar = inits.isInitialized("avatar") ? new QAvatar(forProperty("avatar")) : null;
     }
 
 }

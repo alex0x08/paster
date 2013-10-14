@@ -34,19 +34,20 @@ import uber.megashare.service.CommentManager;
 import uber.megashare.service.GenericVersioningManager;
 
 /**
- *
+ * Abstract controller for objects with comments
  * @author achernyshev
  */
-public abstract class GenericCommentController<T extends CommentedStruct> extends GenericVersioningController<T> {
+public abstract class AbstractCommentController<T extends CommentedStruct> extends GenericVersioningController<T> {
 
-    protected static final String ADD_COMMENT_ACTION = "/addComment",REMOVE_COMMENT_ACTION = "/deleteComment",
+    protected static final String ADD_COMMENT_ACTION = "/addComment",
+            REMOVE_COMMENT_ACTION = "/deleteComment",
             COMMENT_MODEL_KEY = "newComment";
 
     @Autowired
     private CommentManager commentManager;
     
     
-    public GenericCommentController(GenericVersioningManager<T> manager) {
+    public AbstractCommentController(GenericVersioningManager<T> manager) {
         super(manager);
     }
     
@@ -81,8 +82,7 @@ public abstract class GenericCommentController<T extends CommentedStruct> extend
         b.removeComment(toRemove);
 
         T r = manager.save(b);
-        
-
+      
         addMessageSuccess(redirectAttributes);
      
       return  "redirect:/main"+viewPage+"?id="+r.getId();

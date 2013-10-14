@@ -3,6 +3,7 @@
 <div class="btn-group box">
 
     <a class="btn dropdown-toggle btn-primary" data-toggle="dropdown" href="#">
+        
         <span class="glyphicon glyphicon-folder-close"></span>
         <span class="caret"></span>
     </a>
@@ -10,6 +11,11 @@
 <ul class="dropdown-menu">
 
      <li role="presentation" class="dropdown-header">
+            <c:if test="${currentUser.relatedProject.avatarSet}">
+                    <img src="data:image/png;base64,${currentUser.relatedProject.avatar.icon}" 
+                         alt="<c:out value='${currentUser.relatedProject.name}'/>" />                
+            </c:if>
+      
          <c:out value="${currentUser.relatedProject.description}"/>
      </li>
       <li role="presentation" class="divider"></li>

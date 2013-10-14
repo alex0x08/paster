@@ -61,11 +61,16 @@ public abstract class AbstractController extends LoggedClass {
             MSG_ACTION_CANCELLED = "action.cancelled",
             MSG_ACTION_SUCCESS = "action.success";
     
-    protected final String page404 = "404",page500 = "500",
+    /**
+     * Various system pages
+     */
+    protected final String page404 = "404",
+            page500 = "500",
             page403 = "403";
     
     @Autowired
     protected UserManager userManager;
+    
     @Autowired
     protected SettingsManager settingsManager;
     
@@ -156,7 +161,7 @@ public abstract class AbstractController extends LoggedClass {
     @ExceptionHandler(ObjectRetrievalFailureException.class)
     public String handleException(ObjectRetrievalFailureException ex) {
         getLogger().error("Object not found: " + ex.getLocalizedMessage(), ex);
-        return page404;
+        return page500;
     }
     
 
@@ -170,8 +175,6 @@ public abstract class AbstractController extends LoggedClass {
         return isCurrentUserAdmin() ? userManager.getAll() :Collections.EMPTY_LIST;
     }
 
-    
-    
     public boolean isCurrentUserLoggedIn() {
         return getCurrentUser() != null;
     }
@@ -193,6 +196,10 @@ public abstract class AbstractController extends LoggedClass {
         redirect.addFlashAttribute(STATUS_MESSAGE_KEY, MSG_ACTION_SUCCESS);
     }
 
+    /**
+     * 
+     * @return list all users online 
+     */
     @ModelAttribute("usersOnline")
     public List<User> getUsersOnline() {
         return getCurrentUser() != null

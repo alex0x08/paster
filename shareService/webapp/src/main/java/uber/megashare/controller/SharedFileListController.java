@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import static uber.megashare.controller.GenericListController.LIST_ACTION;
+import static uber.megashare.controller.AbstractListController.LIST_ACTION;
 import uber.megashare.model.AccessLevel;
 import uber.megashare.model.SharedFile;
 import uber.megashare.model.SharedFileSearchQuery;
@@ -47,7 +47,7 @@ import uber.megashare.service.FolderManager;
 @Controller
 @RequestMapping(FILE_PREFIX)
 public class SharedFileListController 
-    extends GenericListIntegratedController<SharedFile, SharedFileSearchQuery> 
+    extends AbstractListIntegratedController<SharedFile, SharedFileSearchQuery> 
     implements SharedFileConstants,EditConstants {
 
     /**
@@ -114,7 +114,7 @@ public class SharedFileListController
         smodel.setIntegrationCode(integrationCode);
         smodel.setAccessLevel(AccessLevel.ALL);
         
-         model.addAttribute(GenericEditController.MODEL_KEY, smodel);
+         model.addAttribute(AbstractEditController.MODEL_KEY, smodel);
     
         return super.listIntegrated(integrationCode, request, session, model, page, NPpage, pageSize,sortColumn,sortAsc, locale);
     }

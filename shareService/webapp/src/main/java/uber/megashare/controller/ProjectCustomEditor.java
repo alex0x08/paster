@@ -13,23 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package uber.megashare.dao;
 
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
+package uber.megashare.controller;
+
+import java.beans.PropertyEditorSupport;
 import uber.megashare.model.Project;
 
 /**
- *
- * @author aachernyshev
+ * 
+ * @author <a href="mailto:aachernyshev@it.ru">Alex Chernyshev</a>
  */
-@Repository("projectDao")
-@Transactional(readOnly = true, rollbackFor = Exception.class,value= "transactionManager")
-public class ProjectDaoImpl  extends GenericSearchableDaoImpl<Project> implements ProjectDao{
-    
-    public ProjectDaoImpl() {
-        super(Project.class);
+public class ProjectCustomEditor extends PropertyEditorSupport {
+
+    @Override
+    public void setAsText(String text) {
+        setValue(new Project(Long.valueOf(text)));
     }
-    
-    
+
+    @Override
+    public String getAsText() {
+        return getValue() == null ? "" : ((Project) getValue()).getId().toString();
+    }
 }
