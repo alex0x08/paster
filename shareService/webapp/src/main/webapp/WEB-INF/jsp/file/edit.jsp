@@ -17,7 +17,20 @@
 <link href="<c:url value='/main/assets/${appVersion}/bootstrap-datepicker/1.1.3/css/datepicker.css'/>" rel="stylesheet"/>
 <link href="<c:url value='/main/static/${appVersion}/libs/bootstrap-switch/stylesheets/bootstrap-switch.css'/>" rel="stylesheet"/>
 
- 
+ <script type="text/javascript">
+       $(document).ready(function() {
+           
+                   if ($("#file_upload input[type='radio']:checked").val() == 'PROJECT') {
+                       $('#selectProjectsBlock').toggle();
+                   }
+                   
+                    $('.accessLevelSwitch').change(function() {
+                           $('#selectProjectsBlock').toggle($(this).val() == 'PROJECT');
+                       
+                });
+           
+       });
+</script>
 
  <c:choose>
             <c:when test="${model.blank}">
@@ -38,14 +51,8 @@
                 
                 <script type="text/javascript">
 
-                    function toggleProjects() {
-                        
-                        $('#selectProjectsBlock').toggle();
-                        
-                    };
+                   
 
-
-                 // Helper function that formats the file sizes
                 function formatFileSize(bytes) {
                     if (typeof bytes !== 'number') {
                     return '';
@@ -60,7 +67,7 @@
         }
 
         return (bytes / 1000).toFixed(2) + ' KB';
-    }
+        }
    
 
 
@@ -147,21 +154,7 @@
                             }
                         });              
                    
-                   var currentLevel= $("#file_upload input[type='radio']:checked").val();
-                   if (currentLevel == 'PROJECT') {
-                       $('#selectProjectsBlock').toggle();
-                   }
                    
-                    $('.accessLevelSwitch').change(function() {
-                        if ($(this).val() == 'PROJECT') {
-                            
-                           $('#selectProjectsBlock').toggle(true);
-                        } else {
-                            
-                           $('#selectProjectsBlock').toggle(false);
-                            
-                        }
-                });
                    
                      $('#enableRemovalSwitch').on('change', function (e) {
                            
@@ -281,11 +274,12 @@
                                  
                                  
                                  <div class="form-group" id="selectProjectsBlock" style="display:none;">
-                                     <form:label  path="relatedProjects">Select projects:</form:label>
+                                     <form:label  path="relatedProjects"><fmt:message key="projects.title"/>:</form:label>
                                          <div class="controls">
 
                                              
-                                         <form:select  path="relatedProjects" cssClass="chosen_select_box_multiple" cssStyle="width:15em;"   >
+                                         <fmt:message key='placeholder.select.projects' var="placeholderSelectText"/>
+                                         <form:select  path="relatedProjects" cssClass="chosen_select_box_multiple" data-placeholder="${placeholderSelectText}" cssStyle="width:15em;"   >
                                              
                                              <form:options  items="${availableProjects}" itemValue="id" itemLabel="name"  />
                                          </form:select>

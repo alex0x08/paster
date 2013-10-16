@@ -45,16 +45,6 @@
       
     });
     </script>  
-
-  
-              
-
-    <div class="col-md-6 centered text-center"  >        
-        <c:if test="${pageItems.pageCount > 1}">       
+    
             <ul id="list-pagination" style="" ></ul>  
-        </c:if>   
-    </div>     
-    
-    
-    
-
+       

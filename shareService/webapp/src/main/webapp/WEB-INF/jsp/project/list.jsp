@@ -7,7 +7,7 @@
 
 
 
-<h1><fmt:message key="users.title"/></h1>
+<h1><fmt:message key="projects.title"/></h1>
 
 <c:url var="url" value='/main/project/list' />
 <div id="notice"></div>

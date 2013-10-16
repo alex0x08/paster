@@ -9,16 +9,12 @@
 
             <div class="col-md-2">
                 
-                <c:if test="${model.avatarSet}">
-                    
-                    <img src="data:image/png;base64,${model.avatar.icon}" alt="Red dot" />
-                    
-                </c:if>
+                
                 
             </div>
     
 
-            <div class="col-md-4">
+            <div class="col-md-6">
 
         <form:form action="${url}" cssClass="form-horizontal"
                    modelAttribute="model" 
@@ -29,7 +25,20 @@
             <form:hidden path="id" />
 
             <fieldset>
-                <legend><fmt:message key="login.title"/></legend>
+                <legend>
+                    <c:choose>
+                        <c:when test="${model.blank}">
+                                <fmt:message key="new.project"/>
+                        </c:when>
+                        <c:otherwise>
+                            <c:if test="${model.avatarSet}">
+                                <img src="data:image/png;base64,${model.avatar.icon}" alt="Red dot" />
+                            </c:if>
+                            <c:out value="${model.name} : ${model.description}"/>   
+                        </c:otherwise>
+                    </c:choose>
+                    
+                </legend>
 
                 <div class="form-group ">
 
@@ -37,7 +46,7 @@
                         <fmt:message key="struct.name"/>:</form:label>
 
                         <div class="input-group input-group-sm">
-                            <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-tag"></span></span>
                             <form:input path="name" cssStyle="width:10em;" 
                                         cssErrorClass="form-control alert alert-danger" 
                                         cssClass="form-control"/>
@@ -48,11 +57,10 @@
                 <div class="form-group ">
 
                     <form:label cssClass="control-label" path="description">
-                        <fmt:message key="user.login"/>:</form:label>
+                        <fmt:message key="struct.desc"/>:</form:label>
 
                         <div class="input-group input-group-sm">
-                            <span class="input-group-addon"><span class="glyphicon glyphicon-log-in"></span></span>
-                            <form:input path="description" cssStyle="width:10em;" 
+                           <form:input path="description" cssStyle="width:30em;" 
                                         cssErrorClass="form-control alert alert-danger" 
                                         cssClass="form-control"/>
                     </div>                    
@@ -66,8 +74,8 @@
                         <fmt:message key="avatar.icon"/>:</form:label>
 
                         <div class="input-group input-group-sm">
-                            <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
-                            <form:input path="file" type="file" cssStyle="width:10em;" 
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-picture"></span></span>
+                            <form:input path="file" type="file" cssStyle="width:20em;" 
                                         cssErrorClass="form-control alert alert-danger" 
                                         cssClass="form-control"/>
                     </div>                    

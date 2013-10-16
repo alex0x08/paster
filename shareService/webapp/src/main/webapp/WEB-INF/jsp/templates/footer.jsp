@@ -16,7 +16,11 @@
 
 <blockquote class="pull-right">
     <p>
-        <c:out value="${currentUser.relatedProject.name}"/> : <c:out value="${currentUser.relatedProject.description}"/>
+        <c:if test="${currentUser.relatedProject.avatarSet}">
+                    <img src="data:image/png;base64,${currentUser.relatedProject.avatar.icon}" 
+                         alt="<c:out value='${currentUser.relatedProject.name}'/>" title="<c:out value='${currentUser.relatedProject.description}'/>" />                
+            </c:if>
+         <c:out value="${currentUser.relatedProject.description}"/>
     </p>  
     
   <p title="<c:out value="${currentSettings.appVersion.implVersionFull}"/>">

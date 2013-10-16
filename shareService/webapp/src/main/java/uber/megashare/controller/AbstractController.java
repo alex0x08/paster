@@ -16,9 +16,14 @@
 package uber.megashare.controller;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -32,8 +37,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import uber.megashare.base.LoggedClass;
 import uber.megashare.listener.SessionSupport;
+import uber.megashare.model.Project;
 import uber.megashare.model.SystemProperties;
 import uber.megashare.model.User;
+import uber.megashare.service.ProjectManager;
 import uber.megashare.service.SettingsManager;
 import uber.megashare.service.UserManager;
 import uber.megashare.service.security.SecurityHelper;
@@ -70,6 +77,9 @@ public abstract class AbstractController extends LoggedClass {
     
     @Autowired
     protected UserManager userManager;
+    
+    @Autowired
+    protected ProjectManager projectManager;    
     
     @Autowired
     protected SettingsManager settingsManager;
@@ -169,6 +179,35 @@ public abstract class AbstractController extends LoggedClass {
     public List<Locale> getAvailableLocales() {
         return availableLocales;
     }
+    
+    @ModelAttribute("availableProjects")
+    public List<Project> getAvailableProjects() {
+        return  isCurrentUserAdmin() ? projectManager.getAll(): Collections.EMPTY_LIST;
+    }
+
+    
+    @ModelAttribute("availableProjectsWithUsers")
+    public Collection<ProjectUsers> getAvailableProjectsWithUsers() {
+        
+        if (!isCurrentUserAdmin()) {
+            return Collections.EMPTY_LIST;
+        }
+        
+        Map<Project,ProjectUsers> out = new HashMap<>();
+        
+        for (User user:userManager.getAll()) {
+          
+            ProjectUsers pu = out.containsKey(user.getRelatedProject()) ? 
+                    out.get(user.getRelatedProject()) : 
+                    new ProjectUsers(user.getRelatedProject());
+          
+                pu.getUsers().add(user);
+                out.put(pu.getProject(), pu);
+        }
+        
+        return out.values();
+        
+    }
 
     @ModelAttribute("availableUsers")
     public List<User> availableUsers() {        
@@ -210,5 +249,30 @@ public abstract class AbstractController extends LoggedClass {
     @ModelAttribute("currentUser")
     public User getCurrentUser() {
         return SecurityHelper.getInstance().getCurrentUser();
+    }
+    
+   public static class ProjectUsers {
+    
+        private Project project;
+        
+        private Set<User> users = new LinkedHashSet<>();
+
+        public ProjectUsers(Project p) {
+            this.project=p;
+        }
+        
+        public Project getProject() {
+            return project;
+        }
+
+        public void setProject(Project project) {
+            this.project = project;
+        }
+
+        public Set<User> getUsers() {
+            return users;
+        }    
+        
+        
     }
 }

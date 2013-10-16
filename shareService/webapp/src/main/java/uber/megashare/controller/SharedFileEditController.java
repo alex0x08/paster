@@ -76,13 +76,13 @@ public class SharedFileEditController extends AbstractCommentController<SharedFi
 
     private SharedFileManager fileManager;
     
-    private ProjectManager projectManager;
+    
     
     @Autowired
-    public SharedFileEditController(SharedFileManager fileManager,ProjectManager projectManager) {
+    public SharedFileEditController(SharedFileManager fileManager) {
         super(fileManager);
         this.fileManager=fileManager;
-        this.projectManager=projectManager;
+      
         setListPage("redirect:list");
         /**
          * no redirect here due to field validation issues
@@ -108,11 +108,7 @@ public class SharedFileEditController extends AbstractCommentController<SharedFi
     }
     
     
-    @ModelAttribute("availableProjects")
-    public List<Project> getAvailableProjects() {
-        return projectManager.getAll();
-    }
-
+   
     @RequestMapping(value = RAW_PREFIX+"/comments", method = RequestMethod.GET)
     public String viewRawComments(@RequestParam(required = true) Long id, Model model,Locale locale) {
 
@@ -158,12 +154,7 @@ public class SharedFileEditController extends AbstractCommentController<SharedFi
       
         
         if (obj.getAccessLevel().equals(AccessLevel.PROJECT) ) {
-            
-            if (!isCurrentUserLoggedIn()) {
-                return false;
-            }
-            
-            return obj.getRelatedProjects().contains(getCurrentUser().getRelatedProject());
+            return !isCurrentUserLoggedIn()? false : obj.getRelatedProjects().contains(getCurrentUser().getRelatedProject());
         }
       
         /**
@@ -202,7 +193,11 @@ public class SharedFileEditController extends AbstractCommentController<SharedFi
                     input.setUuid(old.getUuid());
                     input.setName(old.getName());
                     input.setIntegrationCode(old.getIntegrationCode());
-                    input.setRelatedProjects(old.getRelatedProjects());
+                    
+                     if (input.getRelatedProjects().isEmpty()) {
+                        input.setRelatedProjects(old.getRelatedProjects());
+                       // input.getRelatedProjects().add(getCurrentUser().getRelatedProject());
+                    }
                     
                     /**
                      * allow upload and replace exist pulic file for all logged in users

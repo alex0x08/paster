@@ -21,7 +21,15 @@
                 <div class="form-group">
 
                     <form:select  path="userId" cssClass="btn chosen_select_box" >
-                        <form:options  items="${availableUsers}" itemValue="id" itemLabel="name"  />
+
+                        <c:forEach items="${availableProjectsWithUsers}" var="projectUsers">
+
+                            <optgroup label="<c:out value='${projectUsers.project.name}'/>">
+                                <form:options  items="${projectUsers.users}" itemValue="id" itemLabel="name"  />
+                            </optgroup>
+
+                        </c:forEach>
+
                     </form:select>
                 </div>
             </sec:authorize>
