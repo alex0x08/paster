@@ -128,7 +128,9 @@ public class SharedFile extends Node {
     }
 
     public void setRelatedProjects(Set<Project> relatedProjects) {
-        this.relatedProjects = relatedProjects;
+        if (relatedProjects!=null) {
+            this.relatedProjects = relatedProjects;
+        }
     }   
         
     public String getIntegrationCode() {

@@ -219,15 +219,11 @@ public class SharedFileEditController extends AbstractCommentController<SharedFi
                      * always will be an user
                      */
                     input.setOwner(getCurrentUser());
-                    
+
                     if (input.getRelatedProjects().isEmpty()) {
-                    input.getRelatedProjects().add(getCurrentUser().getRelatedProject());
+                        input.getRelatedProjects().add(getCurrentUser().getRelatedProject());
                     }
-                    
-               /*     for (Project p:input.getRelatedProjects()) {
-                        System.out.println("_related proj "+p.getName());
-                    }*/
-                        
+
                 }
 
                 //SharedFile out = new SharedFile();
