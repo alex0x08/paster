@@ -306,7 +306,7 @@
             
         </a>
         
-        <a href="<c:out value='${detailUrl}'/>" target="${target}">${model.name}</a>
+        <a href="<c:out value='${detailUrl}'/>" target="${target}"><c:out value="${model.name}"/></a>
 
        
 

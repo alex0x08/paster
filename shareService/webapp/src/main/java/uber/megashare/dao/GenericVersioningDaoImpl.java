@@ -55,6 +55,7 @@ public abstract class GenericVersioningDaoImpl<T extends Struct> extends  Struct
     /**
      * {@inheritDoc}
      */
+    @Transactional(readOnly = true, propagation = Propagation.REQUIRED,value= "transactionManager",rollbackFor = Exception.class)
     public T getRevision(Long id, Number rev) {
         /**
          * fix stupid envers bug

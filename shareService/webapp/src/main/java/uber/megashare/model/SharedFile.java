@@ -311,10 +311,22 @@ public class SharedFile extends Node {
                 .append("integrationCode", integrationCode)
                 .append("previewUrl", previewUrl)
                 .append("mime", mime)
+                .append("relatedProjects", relatedProjects)                
                 .append("fileSize", fileSize).toString() + super.toString();
 
     }
 
    
+  @Override
+  public void loadFull() {
+        super.loadFull();
+        /**
+         * this is needed for envers
+         */
+        for (Project p:relatedProjects) {
+            p.loadFull();
+        }
+  }
    
+    
 }

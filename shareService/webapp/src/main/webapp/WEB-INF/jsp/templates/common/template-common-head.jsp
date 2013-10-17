@@ -14,6 +14,11 @@
         <link href="<c:url value='/main/assets/${appVersion}/bootstrap/3.0.0/css/bootstrap-theme.min.css'/>" rel="stylesheet"/>
         <style type="text/css">
            
+            .fileDeleteBtn{
+                
+                cursor: pointer; cursor: hand;
+            }
+            
             .chzn-container-single .chzn-single {
                 height: 2.5em !important;
             }

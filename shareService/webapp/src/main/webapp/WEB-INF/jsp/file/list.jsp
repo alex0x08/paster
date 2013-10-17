@@ -2,9 +2,9 @@
 
 
 <c:if test="${pageItems.nrOfElements > 0}">
-<div class="row" style="margin: 0; padding: 0;">                
-
-    <div class="col-md-6 centered text-center"  > 
+<div class="row" >                
+ 
+    <div class="col-md-6"  > 
         <c:if test="${pageItems.pageCount > 1}">  
             <jsp:include
                 page="/WEB-INF/jsp/templates/common/pagination.jsp">
@@ -12,19 +12,18 @@
             </jsp:include>
         </c:if>
     </div>
-    <div class="col-md-4" style="padding-top: 1em;"  >
+    <div class="col-md-4"   >
         <jsp:include
             page="/WEB-INF/jsp/templates/common/sort.jsp">
             <jsp:param name="modelName" value="file" />
         </jsp:include>
-    </div>
-    <div class="col-md-2 centered" style="padding-top: 1em;"  >
-
         <jsp:include
             page="/WEB-INF/jsp/templates/common/page-size.jsp">
             <jsp:param name="modelName" value="file" />
         </jsp:include>
     </div>
+   
+    
 </div>
     
 </c:if>

@@ -84,12 +84,20 @@
             </td>
 
             <td>
-                <a class="btn" title="<fmt:message key="button.delete"/>" href="<c:url value="/main/user/delete">
+                <a class="fileDeleteBtn"
+                   targetTitle="<c:out value='${user.name}'/>
+                   &nbsp;  
+                   <b><c:forEach items="${user.roles}" var="role">
+                       <fmt:message key="${role.desc}"/>
+                   </c:forEach>
+                   </b> &nbsp; 
+                   <fmt:formatDate value="${user.lastModified}" pattern="${dateTimePattern}"/>"
+                   title="<fmt:message key="button.delete"/>"  
+                   deleteLink="<c:url value="/main/user/delete">
                        <c:param name="id" value="${user.id}"/>
                    </c:url>">
-                    <span class="glyphicon glyphicon-remove"></span>
-                </a> 
-
+                    <span class="glyphicon glyphicon-remove" title="<fmt:message key="button.delete"/>"></span>
+                </a>   
             </td>
         </tr>
     </c:forEach>
@@ -97,30 +105,9 @@
         
         </div>
 
-         <script type="text/javascript">
-             
-             var currentSortColumn = '${pageItems.sort.property}';
-             var sortAsc = ${pageItems.sort.ascending};
-             
-             var direction = sortAsc ? 'down' : 'up';
-             
-                       $(document).ready(function() {
-                                                           
-                           
-                              $('.sortColumnKey').each(function(index, obj) {
-                                    if ( obj.getAttribute('sortColumn') == currentSortColumn) {
-                                   //alert( index + ": " + obj.getAttribute('sortColumn') );      
-                                       if (sortAsc) {
-                                        $(this).find("span").addClass('glyphicon-arrow-down').removeClass('glyphicon-arrow-up');
-                                       } else {
-                                        $(this).find("span").addClass('glyphicon-arrow-up').removeClass('glyphicon-arrow-down');
-                                       }
-                                    }
-                                   $(this).click(function() {
-                                       direction = sortAsc ? 'up' : 'down';
-                                        window.location = "<c:url value='/main/user/list/sort/'/>"+obj.getAttribute('sortColumn')+'/'+direction;
-                                    });
-                              });
-                    });
-                      
-                  </script>
+      <jsp:include
+            page="/WEB-INF/jsp/templates/common/sort-table.jsp">
+            <jsp:param name="modelName" value="user" />
+        </jsp:include>          
+                
+        

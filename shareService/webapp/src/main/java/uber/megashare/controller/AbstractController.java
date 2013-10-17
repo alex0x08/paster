@@ -182,7 +182,7 @@ public abstract class AbstractController extends LoggedClass {
     
     @ModelAttribute("availableProjects")
     public List<Project> getAvailableProjects() {
-        return  isCurrentUserAdmin() ? projectManager.getAll(): Collections.EMPTY_LIST;
+        return  isCurrentUserLoggedIn() ? projectManager.getAll(): Collections.EMPTY_LIST;
     }
 
     

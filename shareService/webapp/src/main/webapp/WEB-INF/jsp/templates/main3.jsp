@@ -115,8 +115,9 @@
                         </div>
                     </c:if>
                 </div>
+          </div>
                     <tiles:insertAttribute name="content" />
-               </div>
+               
             </div>
                     
         <hr>
