@@ -62,11 +62,12 @@ public class FolderManagerImpl extends LoggedClass implements FolderManager{
    public FolderNode getFolder(Long id) {
        return folderDao.findOne(id);
    }
-   
+       
     public Iterable<FolderNode> getChildren(Long parentId) {
+        return getChildren(folderDao.findOne(parentId));
+    }
 
-        FolderNode node = folderDao.findOne(parentId);
+    public Iterable<FolderNode> getChildren(FolderNode node) {
         return folderDao.findAllByTraversal(node, FRIENDS_TRAVERSAL);
-
     }
 }

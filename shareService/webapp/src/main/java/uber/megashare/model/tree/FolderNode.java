@@ -13,23 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package uber.megashare.model.tree;
 
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.Set;
 import org.neo4j.graphdb.Direction;
-import org.springframework.data.neo4j.annotation.Fetch;
-
 import org.springframework.data.neo4j.annotation.GraphId;
 import org.springframework.data.neo4j.annotation.Indexed;
 import org.springframework.data.neo4j.annotation.NodeEntity;
 import org.springframework.data.neo4j.annotation.RelatedTo;
-import org.springframework.data.neo4j.annotation.RelatedToVia;
 import org.springframework.data.neo4j.support.index.IndexType;
 import uber.megashare.model.SharedFile;
 
@@ -38,8 +30,6 @@ import uber.megashare.model.SharedFile;
  *
  * @author aachernyshev
  */
-
-
 @NodeEntity
 public class FolderNode {
     
@@ -89,8 +79,7 @@ public class FolderNode {
 
     public void setNodeType(NodeType type) {
         this.nodeType = type;
-    }
-    
+    }    
     
     public FolderNode getParent() {
         return parent;

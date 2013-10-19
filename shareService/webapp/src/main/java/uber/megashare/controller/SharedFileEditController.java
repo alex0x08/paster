@@ -20,7 +20,6 @@ import java.io.FileInputStream;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
@@ -55,7 +54,7 @@ import uber.megashare.model.AccessLevel;
 import uber.megashare.model.Project;
 import uber.megashare.model.SharedFile;
 import uber.megashare.model.SharedFileSearchQuery;
-import uber.megashare.service.ProjectManager;
+import uber.megashare.model.xml.XMLField;
 import uber.megashare.service.SharedFileManager;
 import uber.megashare.service.image.ImageBuilder;
 
@@ -382,6 +381,10 @@ public class SharedFileEditController extends AbstractCommentController<SharedFi
          * perform actual file save & thumbnail generation
          */
         
+        for(XMLField f:b.getXml().getFields()) {
+            System.out.println("field "+f.getName());
+        }
+        
         SharedFile out =uploadSave(b.getFile(), b);
 
         getLogger().debug(
@@ -480,7 +483,16 @@ public class SharedFileEditController extends AbstractCommentController<SharedFi
 
     @Override
     public SharedFile getNewModelInstance() {
-        return new SharedFile();
+        SharedFile out = new SharedFile();
+        out.getRelatedProjects().add(getCurrentUser().getRelatedProject());
+        
+        XMLField f = new XMLField();
+        
+        f.setName("Test key");
+        f.setValue("Test value");
+        
+        out.getXml().getFields().add(f);
+        return out;
     }
 
     

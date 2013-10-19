@@ -39,13 +39,18 @@ import org.apache.commons.io.FileUtils;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
 import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
 import org.hibernate.search.annotations.*;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.springframework.web.multipart.MultipartFile;
 import uber.megashare.base.DateBuilder;
 import uber.megashare.base.LoggedClass;
+import uber.megashare.model.xml.XMLBridge;
+import uber.megashare.model.xml.XMLObject;
 
 /**
  * Shared file entity
@@ -58,9 +63,10 @@ import uber.megashare.base.LoggedClass;
 @Indexed(index = "indexes/sharedfile")
 @Table(name = "s_files")
 @Audited
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+//@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @XStreamAlias("sharedFile")
 @EntityListeners({CreateUUIDListener.class})
+//@TypeDef(defaultForType = XMLObject.class,name = "xmlObject", typeClass = uber.megashare.model.xml.XMLObjectType.class)
 public class SharedFile extends Node {
 
     public static final String PASTER_PREFIX= "paste_";
@@ -123,6 +129,25 @@ public class SharedFile extends Node {
     @IndexedEmbedded(depth = 1, prefix = "relatedProjects_")
     private Set<Project> relatedProjects = new HashSet<>();
 
+    
+    @Type(type="uber.megashare.model.xml.XMLObjectType")
+    @Column(name = "xml_object")
+    @FieldBridge(impl= XMLBridge.class)
+    @Field 
+    @NotAudited
+    private XMLObject xml = new XMLObject();
+
+    public XMLObject getXml() {
+        return xml;
+    }
+
+    public void setXml(XMLObject xml) {
+            this.xml = xml;
+        /*if (xml!=null) {
+            this.xml = xml;
+        }*/
+    }    
+    
     public Set<Project> getRelatedProjects() {
         return relatedProjects;
     }

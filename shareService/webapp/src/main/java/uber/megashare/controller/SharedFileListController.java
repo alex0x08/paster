@@ -17,6 +17,7 @@ package uber.megashare.controller;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
@@ -87,6 +88,9 @@ public class SharedFileListController
          * if the method was called by authorized user - show only his own
          * files, else - only public files
          */
+      //  Collections.addAll(this, elements);
+      //  folderManager.getChildren(folderManager.getParentFolder())
+        
             return !isCurrentUserLoggedIn()? fileManager.getFiles(null,new AccessLevel[]{AccessLevel.ALL}):
                     fileManager.getFilesForUser(getCurrentUser().getId(),getCurrentUser().getRelatedProject().getId(),
                     AccessLevel.values());

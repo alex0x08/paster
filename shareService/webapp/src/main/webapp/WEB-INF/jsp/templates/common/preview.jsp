@@ -317,7 +317,19 @@
                 target="${not empty param.integrationMode ? "_blank" : target}">
                      <c:out value="${model.owner.name}"/>   
                 </a>
-            &nbsp;  
+            &nbsp; 
+            
+            <c:if test="${not empty model.xml.fields}">
+                
+                <c:forEach var="field" items="${model.xml.fields}">
+                    <c:out value="${field.name}"/> | <c:out value="${field.value}"/>
+                    
+                    
+                </c:forEach>
+                
+            </c:if>
+            
+            
             <span style="display: block;font-size:smaller;"> 
             
                 <c:choose>

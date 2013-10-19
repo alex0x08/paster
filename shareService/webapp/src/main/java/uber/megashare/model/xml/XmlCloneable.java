@@ -13,24 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package uber.megashare.service;
-
-import uber.megashare.model.tree.FolderNode;
+package uber.megashare.model.xml;
 
 /**
  *
  * @author aachernyshev
  */
-public interface FolderManager {
+public interface XmlCloneable<T> {
     
-    FolderNode getParentFolder();
-    
-    FolderNode save(FolderNode node);
-    
-    boolean exists(Long id);
-    
-    FolderNode getFolder(Long id);
-    
-    Iterable<FolderNode> getChildren(Long parentId);
-    Iterable<FolderNode> getChildren(FolderNode node);
+    public T clone();
 }
