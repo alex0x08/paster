@@ -29,7 +29,7 @@
 
 
     <properties>
-
+        <maven.version>3.0.5</maven.version>
         <spring.version>3.2.4.RELEASE</spring.version>
         <spring.security.version>3.1.4.RELEASE</spring.security.version>
 
@@ -109,11 +109,11 @@
         <version>1.0-SNAPSHOT</version>
     </dependency>
             
-    <dependency>
+    <!--dependency>
         <groupId>de.tutorials</groupId>
         <artifactId>de.tutorials.app.module2</artifactId>
         <version>3.0.0-SNAPSHOT</version>
-    </dependency>
+    </dependency-->
       
 		<!-- jdbc driver -->
         <dependency>
@@ -869,29 +869,52 @@
 
     <repositories>
       
+        <!-- Alfresco Community Maven Repositories -->
+        <repository>
+            <id>alfresco-public-snapshots</id>
+            <url>http://maven.alfresco.com/nexus/content/groups/public-snapshots</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>alfresco-public-releases</id>
+            <url>http://maven.alfresco.com/nexus/content/groups/public</url>
+        </repository>
+        
+        
         <repository>
             <id>jboss-thirdparty</id>
             <name>jboss-thirdparty</name>
             <url>http://repository.jboss.org/nexus/content/repositories/thirdparty-releases</url>
         </repository>
           
-        <repository>
+        <!--repository>
             <id>maven1</id>
             <name>maven1</name>
             <url>http://repo1.maven.org/maven2</url>
-        </repository>
+        </repository-->
     
         <repository>
             <id>neo4j</id>
             <name>neo4j</name>
             <url>http://m2.neo4j.org/content/repositories/releases</url>
+             <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
         </repository>
 		
-        <repository>
+        <!--repository>
             <id>ibiblio</id>
             <name>ibiblio</name>
             <url>http://mirrors.ibiblio.org/maven2</url>
-        </repository>
+        </repository-->
 		
         <repository>
             <id>appfuse-snapshots</id>
@@ -908,13 +931,40 @@
             <id>russian-morphology.lucene.apache.org</id>
             <name>Lucene Russian Morphology Repository for Maven</name>
             <url>http://russianmorphology.googlecode.com/svn/repo/releases/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+         <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
         </repository>
        
+       
+       
+       
     </repositories>
-    <!--
+    
+    <pluginRepositories>
+        <pluginRepository>
+            <id>alfresco-public-snapshots</id>
+            <url>http://maven.alfresco.com/nexus/content/groups/public-snapshots</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </pluginRepository>
+        <pluginRepository>
+            <id>alfresco-public-releases</id>
+            <url>http://maven.alfresco.com/nexus/content/groups/public</url>
+        </pluginRepository>
+    </pluginRepositories>
+
+    
 <prerequisites>
 <maven>${maven.version}</maven>
 </prerequisites>
-    -->
+    
 </project>
 

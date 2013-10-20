@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011 aachernyshev <alex@0x08.tk>
+ * Copyright (C) 2011 alex <alex@0x08.tk>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import java.io.Serializable;
 import javax.persistence.Embeddable;
 import javax.persistence.Lob;
 import javax.persistence.Transient;
-import org.apache.xml.security.utils.Base64;
+import org.apache.commons.codec.binary.Base64;
 import uber.megashare.service.image.ImageBuilder;
 
 /**
@@ -72,7 +72,7 @@ public class Avatar implements Serializable {
         try {
             Avatar a = new Avatar();
 
-            a.setIcon(Base64.encode(ImageBuilder.createInstance()
+            a.setIcon(Base64.encodeBase64String(ImageBuilder.createInstance()
                     .setSource(in)
                     .scaleToIcon()
                     .getScaledAsBytes()));
