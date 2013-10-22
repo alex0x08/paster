@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011 alex <alex@0x08.tk>
+ * Copyright (C) 2011 aachernyshev <alex@0x08.tk>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -111,7 +111,7 @@ public abstract class AbstractEditController<T extends Struct> extends GenericCo
         return editPage;
     }
 
-    @RequestMapping(value = NEW_ACTION, method = RequestMethod.GET)
+    @RequestMapping(value = NEW_ACTION, method = {RequestMethod.GET,RequestMethod.POST})
     public String createNew(Model model,
                             RedirectAttributes redirectAttributes) {
 

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011 alex <alex@0x08.tk>
+ * Copyright (C) 2011 aachernyshev <alex@0x08.tk>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -69,7 +69,7 @@ extends GenericSearchableController<T, SQ> implements ListConstants
     }
     
     
-    @RequestMapping(value = LIST_ACTION + "/{integrationCode:[a-z0-9_]+}/sort/{sortColumn:[a-zA-Z0-9]+}/down", 
+    @RequestMapping(value = INTEGRATED_PREFIX +LIST_ACTION + "/{integrationCode:[a-z0-9_]+}/sort/{sortColumn:[a-zA-Z0-9]+}/down", 
                     method = RequestMethod.GET)
     public @ModelAttribute(NODE_LIST_MODEL)
     Collection<T> listWithSortDownIntegrated(

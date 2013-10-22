@@ -5,6 +5,8 @@
 --%>
 <%@ include file="/WEB-INF/jsp/templates/common/taglibs.jsp"%>
         <meta charset="utf-8">
+        <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><![endif]-->
+
         <title><fmt:message key="site.title"/></title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="description" content="<fmt:message key="site.title"/>">

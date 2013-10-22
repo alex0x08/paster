@@ -11,8 +11,6 @@
 <c:url var="blockUrl" value='/main/file/raw/view' />
 
 
-<script src="<c:url value='/main/assets/${appVersion}/jquery-ui/1.10.2/ui/minified/jquery.ui.widget.min.js'/>"></script>
-
 <link href="<c:url value='/main/assets/${appVersion}/jquery-file-upload/8.4.2/css/jquery.fileupload-ui.css'/>" rel="stylesheet"/>
 <link href="<c:url value='/main/assets/${appVersion}/bootstrap-datepicker/1.1.3/css/datepicker.css'/>" rel="stylesheet"/>
 <link href="<c:url value='/main/static/${appVersion}/libs/bootstrap-switch/stylesheets/bootstrap-switch.css'/>" rel="stylesheet"/>
@@ -26,6 +24,7 @@
                    
                     $('.accessLevelSwitch').change(function() {
                            $('#selectProjectsBlock').toggle($(this).val() == 'PROJECT');
+                           $('#selectUsersBlock').toggle($(this).val() == 'USERS');
                        
                 });
            
@@ -76,6 +75,8 @@
         var ul = $('#upload_block');
                          
        $('#file_upload').fileupload({
+            
+                            url: '${url}',
                             dataType: 'json',
                             autoUpload: true,
                             dropZone: $('#dropzone'),                    
@@ -147,7 +148,7 @@
                  showError(e.message);
                           }
                             },
-          error: function(data) {
+                    error: function(data) {
                                 console.log(data);
                                 try {
                                 showError(data.responseText); } catch (e) {showError(data);}
@@ -204,7 +205,7 @@
  <div class="row">
      <div class="${mainBlockStyle} col-md-offset-1" >     
 
-                 <form:form action="${url}" modelAttribute="model" id="file_upload"
+                 <form:form action="${url}" modelAttribute="model" 
                    method="POST"  cssClass="form-horizontal"
                    enctype="multipart/form-data">
                     
@@ -218,20 +219,20 @@
                          </c:otherwise>
                      </c:choose>  
                      
-                     
+                    <c:if test="${not empty model.integrationCode}">
+                              
                      <div class="form-group">
                          <div class="controls">
                              <form:errors cssClass="errorblock" element="div"/>
 
-                             <c:if test="${not empty model.integrationCode}">
                                  <c:out value="Used integration code: ${model.integrationCode}" escapeXml="true" />
                                  <form:hidden path="integrationCode" />
-                             </c:if>
                          </div>
                      </div> 
+                                </c:if>
+                      
 
-
-                             <sec:authorize ifAnyGranted="ROLE_USER,ROLE_ADMIN">
+                             <sec:authorize ifAnyGranted="ROLE_USER,ROLE_ADMIN,ROLE_MANAGER">
 
                                  <c:if test="${model.blank or (model.owner eq currentUser or currentUser.admin)}">
 
@@ -288,7 +289,33 @@
 
                                      </div>
 
-                                 </div>                 
+                                 </div>         
+                                         
+                                         <div class="form-group" id="selectUsersBlock" style="display:none;">
+                                             <form:label  path="relatedUsers"><fmt:message key="users.title"/>:</form:label>
+                                                 <div class="controls">
+
+                                                 <fmt:message key='placeholder.select.users' var="placeholderSelectText"/>
+
+                                                 <form:select  path="relatedUsers" cssClass="btn chosen_select_box_multiple"
+                                                               data-placeholder="${placeholderSelectText}" cssStyle="width:15em;" >
+
+                                                     <c:forEach items="${availableProjectsWithUsers}" var="projectUsers">
+
+                                                         <optgroup label="<c:out value='${projectUsers.project.name}'/>">
+                                                             <form:options  items="${projectUsers.users}" itemValue="id" itemLabel="name"  />
+                                                         </optgroup>
+
+                                                     </c:forEach>
+
+                                                 </form:select>
+
+                                                 <form:errors path="relatedUsers" cssClass="error" />
+
+                                             </div>
+
+                                         </div>                         
+                                         
      </div>
                                          
       <c:if test="${model.blank}">
@@ -382,7 +409,7 @@
                                                          <span class="btn btn-success fileinput-button">
                                                              <i class="glyphicon glyphicon-plus"></i>
                                                              <span><fmt:message key="button.select-upload"/></span>
-                                                             <form:input path="file" name="file" multiple="true"
+                                                             <form:input path="file" name="file" multiple="true" id="file_upload"
                                                                          type="file" /> 
                                                          </span>
 
@@ -392,6 +419,11 @@
                                                              <!-- The file uploads will be shown here -->
                                                          </ul>
 
+                                                         <noscript>
+                                                                 <input name="submit" type="submit" class="btn btn-large btn-primary" value="Send" />
+                                                         
+                                                         </noscript>
+                                                         
                                                      </div>
 
 

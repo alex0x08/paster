@@ -353,6 +353,25 @@
                        
                         
                     </c:when>
+                    
+                    <c:when test="${model.accessLevel eq 'USERS'}">
+                        For users:
+                          <c:forEach var="user" items="${model.relatedUsers}" >
+
+                              <a href="<c:url value='/main/file/list/search?query=relatedUsers_name:${user.name}'/>" 
+                                 target="${not empty param.integrationMode ? "_blank" : target}">
+
+                              
+
+                                  <c:out value="${user.name}"/>
+                              </a>   
+                              
+
+                           </c:forEach>
+                       
+                        
+                    </c:when>
+                    
                     <c:otherwise>
                 <a href="<c:url value='/main/file/list/search?query=accessLevel:${model.accessLevel.code}'/>" 
                    target="${not empty param.integrationMode ? "_blank" : target}">

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011 alex <alex@0x08.tk>
+ * Copyright (C) 2011 aachernyshev <alex@0x08.tk>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -193,7 +193,7 @@ public class UserManagerImpl extends GenericSearchableManagerImpl<User, UserSear
         return userRepository.getUserByEmail(mail);
     }
 
-    @Secured("ROLE_ADMIN")
+    @Secured({"ROLE_ADMIN","ROLE_USER","ROLE_MANAGER"})
     @Override
     public List<User> getAll() {
         return super.getAll();

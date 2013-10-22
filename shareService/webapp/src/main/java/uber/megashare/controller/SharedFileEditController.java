@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011 alex <alex@0x08.tk>
+ * Copyright (C) 2011 aachernyshev <alex@0x08.tk>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,6 +54,8 @@ import uber.megashare.model.AccessLevel;
 import uber.megashare.model.Project;
 import uber.megashare.model.SharedFile;
 import uber.megashare.model.SharedFileSearchQuery;
+import uber.megashare.model.Struct;
+import uber.megashare.model.User;
 import uber.megashare.model.xml.XMLField;
 import uber.megashare.service.SharedFileManager;
 import uber.megashare.service.image.ImageBuilder;
@@ -102,7 +104,8 @@ public class SharedFileEditController extends AbstractCommentController<SharedFi
         //Register it as custom editor for the Date type
         binder.registerCustomEditor(Date.class, editor);
      
-       binder.registerCustomEditor(Set.class, new ProjectCollectionCustomEditor(Set.class));
+       binder.registerCustomEditor(Set.class,"relatedProjects", new ProjectCollectionEditor(Set.class));
+       binder.registerCustomEditor(Set.class,"relatedUsers", new UserCollectionEditor(Set.class));
      // binder.registerCustomEditor(Set.class, new CustomCollectionEditor(Set.class));  
     }
     
@@ -154,6 +157,12 @@ public class SharedFileEditController extends AbstractCommentController<SharedFi
         
         if (obj.getAccessLevel().equals(AccessLevel.PROJECT) ) {
             return !isCurrentUserLoggedIn()? false : obj.getRelatedProjects().contains(getCurrentUser().getRelatedProject());
+        }
+        
+          
+        if (obj.getAccessLevel().equals(AccessLevel.USERS) ) {
+            return !isCurrentUserLoggedIn()? false : obj.getRelatedUsers().contains(getCurrentUser()) 
+                    || getCurrentUser().equals(obj.getOwner());
         }
       
         /**
@@ -536,22 +545,47 @@ public class SharedFileEditController extends AbstractCommentController<SharedFi
     }
     
     
-    class ProjectCollectionCustomEditor extends CustomCollectionEditor {
-   
-        public  ProjectCollectionCustomEditor(Class collectionType) {
+    class UserCollectionEditor extends AbstractCollectionCustomEditor<User> {
+    
+        public UserCollectionEditor(Class collectionType) {
+            super(User.class,collectionType);
+        }
+    }
+    
+    class ProjectCollectionEditor extends AbstractCollectionCustomEditor<Project> {
+    
+        public ProjectCollectionEditor(Class collectionType) {
+            super(Project.class,collectionType);
+        }
+    }
+    
+    abstract class AbstractCollectionCustomEditor<T extends Struct> extends CustomCollectionEditor {
+        
+        private Class<T> modelClass;
+        
+        public  AbstractCollectionCustomEditor(Class<T> modelType, Class collectionType) {
             super(collectionType);
+            this.modelClass=modelType;
         }
         
     @Override
     protected Object convertElement(Object element) {
         System.out.println("getSting : " + element.toString()+" element class="+element.getClass().getName());
-        if (element instanceof Project) {
+        if (element.getClass().isAssignableFrom(modelClass)) {
             return element;
         }
         
-        Project p  = new Project();
-        p.setId(Long.valueOf(element.toString()));
-        return p;
+        
+            try {
+            
+                T p = modelClass.newInstance();
+                 p.setId(Long.valueOf(element.toString()));
+                return p;
+            
+            } catch (InstantiationException |IllegalAccessException ex) {
+               throw new IllegalStateException(ex);
+            }
     }
+    
     }
 }

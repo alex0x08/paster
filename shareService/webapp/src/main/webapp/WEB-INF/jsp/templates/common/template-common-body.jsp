@@ -122,9 +122,6 @@
           .hide()
           .filter(':checked').parent('.btn').addClass('active');
    
-         // showError('Fuck!');
-          
-         // setTimeout("showError('Die')",4000);
          
          			$.scrollUp({
 		        scrollName: 'scrollUp', // Element ID

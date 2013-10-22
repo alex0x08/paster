@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011 alex <alex@0x08.tk>
+ * Copyright (C) 2011 aachernyshev <alex@0x08.tk>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -82,6 +82,8 @@ public class QSharedFile extends EntityPathBase<SharedFile> {
     public final NumberPath<Integer> previewWidth = createNumber("previewWidth", Integer.class);
 
     public final SetPath<Project, QProject> relatedProjects = this.<Project, QProject>createSet("relatedProjects", Project.class, QProject.class);
+
+    public final SetPath<User, QUser> relatedUsers = this.<User, QUser>createSet("relatedUsers", User.class, QUser.class);
 
     public final DateTimePath<java.util.Date> removeAfter = createDateTime("removeAfter", java.util.Date.class);
 

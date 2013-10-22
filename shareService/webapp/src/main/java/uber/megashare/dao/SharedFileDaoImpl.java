@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011 alex <alex@0x08.tk>
+ * Copyright (C) 2011 aachernyshev <alex@0x08.tk>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,6 +36,7 @@ import uber.megashare.model.AccessLevel;
 import uber.megashare.model.Project;
 import uber.megashare.model.QSharedFile;
 import uber.megashare.model.SharedFile;
+import uber.megashare.model.User;
 
 /**
  *
@@ -141,12 +142,15 @@ public class SharedFileDaoImpl extends GenericSearchableDaoImpl<SharedFile> impl
             if (userId!=null) {            
                  out.add(BooleanExpression.anyOf(
                          QSharedFile.sharedFile.owner.id.eq(userId),
-                         QSharedFile.sharedFile.accessLevel.in(AccessLevel.PROJECT)
+                         QSharedFile.sharedFile.relatedUsers.contains(new User(userId)),
+                         QSharedFile.sharedFile.accessLevel.in(AccessLevel.PROJECT,AccessLevel.USERS)
                 ));
             }
         
         } else {
-                out.add(userId!=null ? QSharedFile.sharedFile.owner.id.eq(userId) :
+                out.add(userId!=null ? BooleanExpression.anyOf(QSharedFile.sharedFile.owner.id.eq(userId)
+                        ,QSharedFile.sharedFile.relatedUsers.contains(new User(userId))
+                        ) :
                         QSharedFile.sharedFile.accessLevel.in(AccessLevel.ALL));                
         }
         return findAll(BooleanExpression.allOf(out.toArray(new BooleanExpression[out.size()])), 

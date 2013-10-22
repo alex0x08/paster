@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011 alex <alex@0x08.tk>
+ * Copyright (C) 2011 aachernyshev <alex@0x08.tk>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -189,7 +189,7 @@ public abstract class AbstractController extends LoggedClass {
     @ModelAttribute("availableProjectsWithUsers")
     public Collection<ProjectUsers> getAvailableProjectsWithUsers() {
         
-        if (!isCurrentUserAdmin()) {
+        if (!isCurrentUserLoggedIn()) {
             return Collections.EMPTY_LIST;
         }
         
@@ -211,7 +211,7 @@ public abstract class AbstractController extends LoggedClass {
 
     @ModelAttribute("availableUsers")
     public List<User> availableUsers() {        
-        return isCurrentUserAdmin() ? userManager.getAll() :Collections.EMPTY_LIST;
+        return isCurrentUserLoggedIn() ? userManager.getAll() :Collections.EMPTY_LIST;
     }
 
     public boolean isCurrentUserLoggedIn() {

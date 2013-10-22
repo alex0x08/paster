@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011 alex <alex@0x08.tk>
+ * Copyright (C) 2011 aachernyshev <alex@0x08.tk>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -95,7 +95,6 @@ public class SharedFile extends Node {
     @Field(index = Index.YES, store = Store.YES, termVector = TermVector.NO)
     private FileType type = FileType.BINARY;
     
-    
     @Column(nullable = false)
     @Field(index = Index.YES, store = Store.YES, termVector = TermVector.NO)
     @XStreamAsAttribute
@@ -130,6 +129,14 @@ public class SharedFile extends Node {
     private Set<Project> relatedProjects = new HashSet<>();
 
     
+    @ManyToMany(fetch = FetchType.EAGER)
+    //@ContainedIn
+    @IndexedEmbedded(depth = 1, prefix = "relatedUsers_")
+    @NotAudited
+    //@Transient
+    private Set<User> relatedUsers = new HashSet<>();
+
+    
     @Type(type="uber.megashare.model.xml.XMLObjectType")
     @Column(name = "xml_object")
     @FieldBridge(impl= XMLBridge.class)
@@ -147,6 +154,18 @@ public class SharedFile extends Node {
             this.xml = xml;
         }*/
     }    
+
+    
+    public Set<User> getRelatedUsers() {
+        return relatedUsers;
+    }
+
+    public void setRelatedUsers(Set<User> relatedUsers) {
+        if(relatedUsers!=null) {
+            this.relatedUsers = relatedUsers;
+        }
+    }   
+    
     
     public Set<Project> getRelatedProjects() {
         return relatedProjects;
