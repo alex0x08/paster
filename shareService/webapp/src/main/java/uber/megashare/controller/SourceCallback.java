@@ -20,5 +20,5 @@ import uber.megashare.model.Struct;
 
 public interface SourceCallback<T extends Struct> {
 
-	public PagedListHolder<T> invokeCreate();
+	PagedListHolder<T> invokeCreate();
 }

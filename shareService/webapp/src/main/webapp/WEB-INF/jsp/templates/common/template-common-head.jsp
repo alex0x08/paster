@@ -5,6 +5,8 @@
 --%>
 <%@ include file="/WEB-INF/jsp/templates/common/taglibs.jsp"%>
         <meta charset="utf-8">
+        <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><![endif]-->
+
         <title><fmt:message key="site.title"/></title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="description" content="<fmt:message key="site.title"/>">
@@ -14,6 +16,17 @@
         <link href="<c:url value='/main/assets/${appVersion}/bootstrap/3.0.0/css/bootstrap-theme.min.css'/>" rel="stylesheet"/>
         <style type="text/css">
            
+            .fileDeleteBtn{
+                
+                cursor: pointer; cursor: hand;
+            }
+            
+            .chzn-container-single .chzn-single {
+                height: 2.5em !important;
+            }
+             .search-field input {
+                height: 2em !important;
+            }
             .sidebar-nav {
                 padding: 9px 0;
             }
@@ -41,30 +54,28 @@
             
             
             #upload_block {
-    list-style:none;
-}
+                list-style:none;
+            }
 
-#upload_block li{
+            #upload_block li{
+            }
 
-   
-}
+            #upload_block li input{
+                display: none;
+            }
 
-#upload_block li input{
-    display: none;
-}
-
-#upload_block li p{
-    overflow: hidden;
-    white-space: nowrap;
-}
+            #upload_block li p{
+                overflow: hidden;
+                white-space: nowrap;
+            }
 
 
-#upload_block li canvas{
-}
+            #upload_block li canvas{
+            }
 
-#upload_block li span{
-    cursor:pointer;
-}
+            #upload_block li span{
+                cursor:pointer;
+            }
 
 #upload_block li.working span{
     height: 16px;

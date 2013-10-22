@@ -11,13 +11,25 @@
 <c:url var="blockUrl" value='/main/file/raw/view' />
 
 
-<script src="<c:url value='/main/assets/${appVersion}/jquery-ui/1.10.2/ui/minified/jquery.ui.widget.min.js'/>"></script>
-
 <link href="<c:url value='/main/assets/${appVersion}/jquery-file-upload/8.4.2/css/jquery.fileupload-ui.css'/>" rel="stylesheet"/>
 <link href="<c:url value='/main/assets/${appVersion}/bootstrap-datepicker/1.1.3/css/datepicker.css'/>" rel="stylesheet"/>
 <link href="<c:url value='/main/static/${appVersion}/libs/bootstrap-switch/stylesheets/bootstrap-switch.css'/>" rel="stylesheet"/>
 
- 
+ <script type="text/javascript">
+       $(document).ready(function() {
+           
+                   if ($("#file_upload input[type='radio']:checked").val() == 'PROJECT') {
+                       $('#selectProjectsBlock').toggle();
+                   }
+                   
+                    $('.accessLevelSwitch').change(function() {
+                           $('#selectProjectsBlock').toggle($(this).val() == 'PROJECT');
+                           $('#selectUsersBlock').toggle($(this).val() == 'USERS');
+                       
+                });
+           
+       });
+</script>
 
  <c:choose>
             <c:when test="${model.blank}">
@@ -38,11 +50,12 @@
                 
                 <script type="text/javascript">
 
-                 // Helper function that formats the file sizes
-    function formatFileSize(bytes) {
-        if (typeof bytes !== 'number') {
-            return '';
-        }
+                   
+
+                function formatFileSize(bytes) {
+                    if (typeof bytes !== 'number') {
+                    return '';
+                }
 
         if (bytes >= 1000000000) {
             return (bytes / 1000000000).toFixed(2) + ' GB';
@@ -53,7 +66,7 @@
         }
 
         return (bytes / 1000).toFixed(2) + ' KB';
-    }
+        }
    
 
 
@@ -62,6 +75,8 @@
         var ul = $('#upload_block');
                          
        $('#file_upload').fileupload({
+            
+                            url: '${url}',
                             dataType: 'json',
                             autoUpload: true,
                             dropZone: $('#dropzone'),                    
@@ -133,12 +148,14 @@
                  showError(e.message);
                           }
                             },
-          error: function(data) {
+                    error: function(data) {
                                 console.log(data);
                                 try {
                                 showError(data.responseText); } catch (e) {showError(data);}
                             }
                         });              
+                   
+                   
                    
                      $('#enableRemovalSwitch').on('change', function (e) {
                            
@@ -186,9 +203,9 @@
         </c:choose>
 
  <div class="row">
-    <div class="${mainBlockStyle} col-md-offset-1">     
+     <div class="${mainBlockStyle} col-md-offset-1" >     
 
-                 <form:form action="${url}" modelAttribute="model" id="file_upload"
+                 <form:form action="${url}" modelAttribute="model" 
                    method="POST"  cssClass="form-horizontal"
                    enctype="multipart/form-data">
                     
@@ -202,20 +219,20 @@
                          </c:otherwise>
                      </c:choose>  
                      
-                     
+                    <c:if test="${not empty model.integrationCode}">
+                              
                      <div class="form-group">
                          <div class="controls">
                              <form:errors cssClass="errorblock" element="div"/>
 
-                             <c:if test="${not empty model.integrationCode}">
                                  <c:out value="Used integration code: ${model.integrationCode}" escapeXml="true" />
                                  <form:hidden path="integrationCode" />
-                             </c:if>
                          </div>
                      </div> 
+                                </c:if>
+                      
 
-
-                             <sec:authorize ifAnyGranted="ROLE_USER,ROLE_ADMIN">
+                             <sec:authorize ifAnyGranted="ROLE_USER,ROLE_ADMIN,ROLE_MANAGER">
 
                                  <c:if test="${model.blank or (model.owner eq currentUser or currentUser.admin)}">
 
@@ -239,7 +256,7 @@
                                                  <c:forEach items="${model.accessLevel.levels}" var="level">
                                                      <label class="btn btn-default" >
                                                          <fmt:message key="${level.desc}" />
-                                                         <form:radiobutton path="accessLevel" value="${level.code}"  />
+                                                         <form:radiobutton cssClass="accessLevelSwitch" path="accessLevel" value="${level.code}"  />
                                                      </label>
                                                  </c:forEach>
 
@@ -256,154 +273,252 @@
 
                                  </c:if>
                                  
-                                    <c:if test="${model.blank}">
-
-                                     <div class="form-group">
-                                         <form:label  path="file"><fmt:message key="file.removeAfter"/>:</form:label>
-                                             <div class="controls">
-                                                   
-                                             <div class="switch" >
-                                                 <input id='enableRemovalSwitch' type="checkbox"  >
-                                             </div>
-                                            
-                                                 <div id='inputRemovalDateBlock'  class="date" data-date="" data-date-format="${datePatternPicker}" 
-                                                  style="display:none;padding-top: 0.5em;max-width: 7em;">
-                                                 <form:input id="removeAfter" path="removeAfter" name="file" cssClass="form-control" size="10"  /> 
-                                                 <span class="add-on"><i class="icon-th"></i></span>
-                                             </div>      
-                           
-                                               <form:errors path="removeAfter" cssClass="error" />
-
-                                             </div>
-
-                                     </div>   
-                                             </c:if>
                                  
-                             </sec:authorize>  
-          
-                             
-                <c:choose>
-                    <c:when test="${model.blank}">
+                                 <div class="form-group" id="selectProjectsBlock" style="display:none;">
+                                     <form:label  path="relatedProjects"><fmt:message key="projects.title"/>:</form:label>
+                                         <div class="controls">
 
-                        <div class="form-group">
-                                
-                                 <!-- The fileinput-button span is used to style the file input field as button -->
-                                    <span class="btn btn-success fileinput-button">
-                                        <i class="glyphicon glyphicon-plus"></i>
-                                        <span><fmt:message key="button.select-upload"/></span>
-                                        <form:input path="file" name="file" multiple="true"
-                                                type="file" /> 
-                                </span>
+                                             
+                                         <fmt:message key='placeholder.select.projects' var="placeholderSelectText"/>
+                                         <form:select  path="relatedProjects" cssClass="chosen_select_box_multiple" data-placeholder="${placeholderSelectText}" cssStyle="width:15em;"   >
+                                             
+                                             <form:options  items="${availableProjects}" itemValue="id" itemLabel="name"  />
+                                         </form:select>
 
-                                <form:errors path="file" cssClass="error" />
-
-                                <ul id='upload_block'>
-				<!-- The file uploads will be shown here -->
-                                </ul>
-                             
-                            </div>
-                       
-
-
-                    </c:when>
-                    <c:otherwise>
-                        
-                        <div class="form-group">
-                            <div class="col-lg-10">
-                                <jsp:include
-                                    page="/WEB-INF/jsp/templates/common/preview.jsp">
-                                    <jsp:param name="detail" value="1" />
-                                    <jsp:param name="downloadLink" value="download" />
-                                </jsp:include>
-                            </div>
-                        </div>
-                        
-                            <div class="form-group">
-                                <div class="col-lg-10">
-
-                                    <div class="fileupload fileupload-new" data-provides="fileupload">
-
-                                        <span class="btn btn-success fileinput-button">
-                                            <i class="glyphicon glyphicon-repeat"></i>
-                                            
-                                            <span id="fileSelectLabel"><fmt:message key="button.change"/></span>
-                                            <form:input id="fileSelectBtn" path="file" name="file"   
-                                                        type="file" /> 
-                                        </span>
-                                    </div>
-                                    <form:errors path="file" cssClass="error" />
-                                </div>
-                            </div>
-                    </c:otherwise>
-                </c:choose>
-              
-                             
-                        <c:if test="${!model.blank and not empty availableRevisions}">
-
-                             <form:label cssClass="control-label" path="accessLevel">
-                                    <fmt:message key="struct.versions"/>:</form:label>
-                               
-                            <div class="form-group">
-                                    <div class="col-lg-10">
-
-                                    <jsp:include
-                                        page="/WEB-INF/jsp/templates/common/revisions.jsp">
-                                        <jsp:param name="modelName" value="file" />
-                                    </jsp:include>
-
-                                </div>
-                            </div>
-                        </c:if>      
-                             
-                     
-                             <c:if test="${!model.blank}">
-
-                                 <div class="form-group">
-                                     <div class="col-lg-10">
-                                         <c:choose>
-                                             <c:when test="${model.blank}">
-                                                 <fmt:message var="submit_button_text" key="button.upload" />
-                                                 <input name="submit" class="btn btn-primary" 
-                                                        type="submit" value="${submit_button_text}" />
-                                             </c:when>
-                                             <c:otherwise>
-                                                 <a href="<c:url value='/main/file/${model.id}'/>" class="btn" >&larr; <fmt:message key="button.back"/></a>
-
-                                                 <fmt:message var="submit_button_text" key="button.save" />
-
-
-                                                 <c:if test="${model.accessLevel eq 'OWNER' or model.owner eq currentUser or currentUser.admin}">
-
-                                                     <input name="delete" type="submit" class="btn btn-danger fileDeleteBtn"
-                                                            targetIcon="<c:url value='/images/mime/${model.icon}'/>"
-                                                            targetTitle="${model.name} &nbsp; ${model.formattedFileSize} &nbsp; ${modelLastModified}  &nbsp; ${model.owner.name}"
-
-                                                            deleteLink="<c:url value="/main/file/delete">
-                                                                <c:param name="id" value="${model.id}"/>
-                                                            </c:url>"
-                                                            value="<fmt:message key="button.delete"/>" />
-                                                 </c:if>
-
-                                                 <input name="submit" type="submit" class="btn btn-large btn-primary" value="${submit_button_text}" />
-                                             </c:otherwise>
-                                         </c:choose>
+                                         <form:errors path="relatedProjects" cssClass="error" />
 
                                      </div>
-                                 </div>
-                             </c:if>
-                     
-                 </form:form>
 
-    </div>
+                                 </div>         
+                                         
+                                         <div class="form-group" id="selectUsersBlock" style="display:none;">
+                                             <form:label  path="relatedUsers"><fmt:message key="users.title"/>:</form:label>
+                                                 <div class="controls">
 
-    <c:if test="${model.blank}">
-        <div class="col-lg-4">                                    
+                                                 <fmt:message key='placeholder.select.users' var="placeholderSelectText"/>
+
+                                                 <form:select  path="relatedUsers" cssClass="btn chosen_select_box_multiple"
+                                                               data-placeholder="${placeholderSelectText}" cssStyle="width:15em;" >
+
+                                                     <c:forEach items="${availableProjectsWithUsers}" var="projectUsers">
+
+                                                         <optgroup label="<c:out value='${projectUsers.project.name}'/>">
+                                                             <form:options  items="${projectUsers.users}" itemValue="id" itemLabel="name"  />
+                                                         </optgroup>
+
+                                                     </c:forEach>
+
+                                                 </form:select>
+
+                                                 <form:errors path="relatedUsers" cssClass="error" />
+
+                                             </div>
+
+                                         </div>                         
+                                         
+     </div>
+                                         
+      <c:if test="${model.blank}">
+        <div class="col-lg-6" >                                    
             <div id="dropzone" class="box well" style="width:30em;height:10em;border:1px solid black;"><fmt:message key='file.upload.dropzone'/></div>
-         </div>
-     
-    </c:if>
-        
-</div>
+         </div>     
+    </c:if>                                    
+                                         
+ </div>                                 
+      <div class="row">
+     <div class="col-md-10 col-md-offset-1" >     
+                              <div class="form-group">
+                                                     <form:label  path="file">Custom fields:</form:label>
+                                                         <div id="customFields" class="controls">
+
+
+                                                         <c:forEach items="${model.xml.fields}" var="field" varStatus="status">
+                                                             <div>
+
+                                                                 <span><input name="xml.fields[${status.index}].name" value="${field.name}"/></span>
+                                                                 <span><input name="xml.fields[${status.index}].value" value="${field.value}"/></span>
+                                                                 <span><a href="#" class="removeBtn">remove</a></span>
+                                                                 
+
+
+                                                             </div>
+
+
+                                                         </c:forEach>
+                                                             <a href="#" class="addBtn">add</a>
+
+                                                         <form:errors path="removeAfter" cssClass="error" />
+
+                                                     </div>
+                                                         
+                                                         <script type="text/javascript">
+                                                             
+                                                             
+                                                                $(document).ready(function() {
+                                    $("#customFields .removeBtn").bind('click', function(e) {
+                                    
+                                        alert('remove clicked');
+                              });
+                              
+                               $("#customFields .addBtn").bind('click', function(e) {
+                                    
+                                    
+                                        alert('add clicked');
+                              });
+                    });
+                                                             
+                                                         </script>     
+
+                                                 </div>       
+
+                                                 <c:if test="${model.blank}">
+
+
+
+
+                                                     <div class="form-group">
+                                                         <form:label  path="file"><fmt:message key="file.removeAfter"/>:</form:label>
+                                                             <div class="controls">
+
+                                                                 <div class="switch" >
+                                                                     <input id='enableRemovalSwitch' type="checkbox"  >
+                                                                 </div>
+
+                                                                 <div id='inputRemovalDateBlock'  class="date" data-date="" data-date-format="${datePatternPicker}" 
+                                                                  style="display:none;padding-top: 0.5em;max-width: 7em;">
+                                                                 <form:input id="removeAfter" path="removeAfter" name="file" cssClass="form-control" size="10"  /> 
+                                                                 <span class="add-on"><i class="icon-th"></i></span>
+                                                             </div>      
+
+                                                             <form:errors path="removeAfter" cssClass="error" />
+
+                                                         </div>
+
+                                                     </div>   
+                                                 </c:if>
+
+                                             </sec:authorize>  
+
+
+                                             <c:choose>
+                                                 <c:when test="${model.blank}">
+
+                                                     <div class="form-group">
+
+                                                         <!-- The fileinput-button span is used to style the file input field as button -->
+                                                         <span class="btn btn-success fileinput-button">
+                                                             <i class="glyphicon glyphicon-plus"></i>
+                                                             <span><fmt:message key="button.select-upload"/></span>
+                                                             <form:input path="file" name="file" multiple="true" id="file_upload"
+                                                                         type="file" /> 
+                                                         </span>
+
+                                                         <form:errors path="file" cssClass="error" />
+
+                                                         <ul id='upload_block'>
+                                                             <!-- The file uploads will be shown here -->
+                                                         </ul>
+
+                                                         <noscript>
+                                                                 <input name="submit" type="submit" class="btn btn-large btn-primary" value="Send" />
+                                                         
+                                                         </noscript>
+                                                         
+                                                     </div>
+
+
+
+                                                 </c:when>
+                                                 <c:otherwise>
+
+                                                     <div class="form-group">
+                                                         <div class="col-lg-10">
+                                                             <jsp:include
+                                                                 page="/WEB-INF/jsp/templates/common/preview.jsp">
+                                                                 <jsp:param name="detail" value="1" />
+                                                                 <jsp:param name="downloadLink" value="download" />
+                                                             </jsp:include>
+                                                         </div>
+                                                     </div>
+
+                                                     <div class="form-group">
+                                                         <div class="col-lg-10">
+
+                                                             <div class="fileupload fileupload-new" data-provides="fileupload">
+
+                                                                 <span class="btn btn-success fileinput-button">
+                                                                     <i class="glyphicon glyphicon-repeat"></i>
+
+                                                                     <span id="fileSelectLabel"><fmt:message key="button.change"/></span>
+                                                                     <form:input id="fileSelectBtn" path="file" name="file"   
+                                                                                 type="file" /> 
+                                                                 </span>
+                                                             </div>
+                                                             <form:errors path="file" cssClass="error" />
+                                                         </div>
+                                                     </div>
+                                                 </c:otherwise>
+                                             </c:choose>
+
+
+                                             <c:if test="${!model.blank and not empty availableRevisions}">
+
+                                                 <form:label cssClass="control-label" path="accessLevel">
+                                                     <fmt:message key="struct.versions"/>:</form:label>
+
+                                                     <div class="form-group">
+                                                         <div class="col-lg-10">
+
+                                                         <jsp:include
+                                                             page="/WEB-INF/jsp/templates/common/revisions.jsp">
+                                                             <jsp:param name="modelName" value="file" />
+                                                         </jsp:include>
+
+                                                     </div>
+                                                 </div>
+                                             </c:if>      
+
+
+                                             <c:if test="${!model.blank}">
+
+                                                 <div class="form-group">
+                                                     <div class="col-lg-10">
+                                                         <c:choose>
+                                                             <c:when test="${model.blank}">
+                                                                 <fmt:message var="submit_button_text" key="button.upload" />
+                                                                 <input name="submit" class="btn btn-primary" 
+                                                                        type="submit" value="${submit_button_text}" />
+                                                             </c:when>
+                                                             <c:otherwise>
+                                                                 <a href="<c:url value='/main/file/${model.id}'/>" class="btn" >&larr; <fmt:message key="button.back"/></a>
+
+                                                                 <fmt:message var="submit_button_text" key="button.save" />
+
+
+                                                                 <c:if test="${model.accessLevel eq 'OWNER' or model.owner eq currentUser or currentUser.admin}">
+
+                                                                     <input name="delete" type="submit" class="btn btn-danger fileDeleteBtn"
+                                                                            targetIcon="<c:url value='/images/mime/${model.icon}'/>"
+                                                                            targetTitle="${model.name} &nbsp; ${model.formattedFileSize} &nbsp; ${modelLastModified}  &nbsp; ${model.owner.name}"
+
+                                                                            deleteLink="<c:url value="/main/file/delete">
+                                                                                <c:param name="id" value="${model.id}"/>
+                                                                            </c:url>"
+                                                                            value="<fmt:message key="button.delete"/>" />
+                                                                 </c:if>
+
+                                                                 <input name="submit" type="submit" class="btn btn-large btn-primary" value="${submit_button_text}" />
+                                                             </c:otherwise>
+                                                         </c:choose>
+
+                                                     </div>
+                                                 </div>
+                                             </c:if>
+
+                                         </form:form>
+
+                             </div>
+             </div>
 
 <div class="row">
     <div id="messages"  class="col-xs-4 col-md-10 col-md-offset-1">

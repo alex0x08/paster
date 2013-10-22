@@ -27,9 +27,6 @@ import org.apache.tiles.TilesException;
 import org.apache.tiles.request.ApplicationContext;
 import org.apache.tiles.request.Request;
 import org.apache.tiles.request.servlet.ServletUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import org.springframework.web.servlet.support.JstlUtils;
 import org.springframework.web.servlet.support.RequestContext;
 import org.springframework.web.servlet.support.RequestContextUtils;
@@ -118,7 +115,8 @@ public class DynamicTilesViewProcessor extends LoggedClass {
                 beanName = beanName.substring(0,StringUtils.ordinalIndexOf(beanName, "/", 3) );
             }
        }
-        
+            getLogger().debug("end beanName="+beanName);
+      
                 JstlUtils.exposeLocalizationContext(new RequestContext(request, servletContext));       
         
     

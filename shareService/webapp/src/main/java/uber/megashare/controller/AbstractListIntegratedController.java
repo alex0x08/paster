@@ -33,18 +33,27 @@ import uber.megashare.model.Struct;
 import uber.megashare.service.GenericSearchableManager;
 
 /**
- *
+ * Abstract parent controller for list with integrated view
  * @author aachernyshev
  */
-public abstract class GenericListIntegratedController<T extends Struct, SQ extends SearchQuery> 
+public abstract class AbstractListIntegratedController<T extends Struct, SQ extends SearchQuery> 
 extends GenericSearchableController<T, SQ> implements ListConstants
     {
     
-     protected GenericListIntegratedController(GenericSearchableManager<T, SQ> manager) {
+     protected AbstractListIntegratedController(GenericSearchableManager<T, SQ> manager) {
         super(manager);
      }
     
-     
+    /**
+     * 
+     * @param integrationCode unique integration code
+     * @param sortColumn sort column    
+     * @param request http request object
+     * @param session http session
+     * @param model generic model
+     * @param locale http useragent locale
+     * @return collection of model objects 
+     */ 
     @RequestMapping(value = {INTEGRATED_PREFIX +LIST_ACTION + "/{integrationCode:[a-z0-9_]+}/sort/{sortColumn:[a-zA-Z0-9]+}",
                              INTEGRATED_PREFIX +LIST_ACTION + "/{integrationCode:[a-z0-9_]+}/sort/{sortColumn:[a-zA-Z0-9]+}/up"}, 
                              method = RequestMethod.GET)
@@ -59,7 +68,8 @@ extends GenericSearchableController<T, SQ> implements ListConstants
         return listIntegrated(integrationCode, request,session, model, null, null,null, sortColumn,false, locale);
     }
     
-    @RequestMapping(value = LIST_ACTION + "/{integrationCode:[a-z0-9_]+}/sort/{sortColumn:[a-zA-Z0-9]+}/down", 
+    
+    @RequestMapping(value = INTEGRATED_PREFIX +LIST_ACTION + "/{integrationCode:[a-z0-9_]+}/sort/{sortColumn:[a-zA-Z0-9]+}/down", 
                     method = RequestMethod.GET)
     public @ModelAttribute(NODE_LIST_MODEL)
     Collection<T> listWithSortDownIntegrated(
@@ -118,6 +128,20 @@ extends GenericSearchableController<T, SQ> implements ListConstants
         return listIntegrated(integrationCode,request, session, model, null, "prev", null,null,false, locale);
     }
 
+    /**
+     * Returns list of objects T related to integration code
+     * @param integrationCode provided integration code
+     * @param request http request object
+     * @param session http session object
+     * @param model model of type T
+     * @param page selected page
+     * @param NPpage scroll to next page
+     * @param pageSize objects per page
+     * @param sortColumn selected sort column
+     * @param sortAsc need to sort asc ?
+     * @param locale http useragent locale
+     * @return 
+     */
     @RequestMapping(value = INTEGRATED_PREFIX+LIST_ACTION+"/{integrationCode:[a-z0-9_]+}", method = RequestMethod.GET)
     public @ModelAttribute(NODE_LIST_MODEL)
     Collection<T> listIntegrated(
@@ -129,21 +153,17 @@ extends GenericSearchableController<T, SQ> implements ListConstants
             @RequestParam(required = false) String NPpage,
             @RequestParam(required = false) Integer pageSize,
             @RequestParam(required = false) String sortColumn,
-            @RequestParam(required = false) boolean sortAsc,
-            
-            Locale locale) {
-
-        
+            @RequestParam(required = false) boolean sortAsc,            
+            Locale locale) {       
       
         putListModel(model, locale);
 
-        return processPagination(request, model, page, NPpage, pageSize,sortColumn,sortAsc,new SourceCallback<T>() {
-
-        @Override
-        public PagedListHolder<T> invokeCreate() {
-            return new PagedListHolder<>(manager.getObjectsForIntegration(integrationCode));
-        }
-    });
+        return processPagination(request, model, page, NPpage, pageSize, sortColumn, sortAsc, new SourceCallback<T>() {
+            @Override
+            public PagedListHolder<T> invokeCreate() {
+                return new PagedListHolder<>(manager.getObjectsForIntegration(integrationCode));
+            }
+        });
     }
 
      

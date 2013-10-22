@@ -31,7 +31,6 @@ import javax.validation.constraints.Pattern;
 import javax.xml.bind.annotation.XmlTransient;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.hibernate.annotations.IndexColumn;
-import org.hibernate.envers.NotAudited;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Indexed;
 import org.springframework.security.core.GrantedAuthority;
@@ -93,6 +92,12 @@ public class User extends Struct implements Serializable, UserDetails {
     @ManyToOne(fetch = FetchType.EAGER)
     private Project relatedProject;
 
+    public User(Long userId) {
+        setId(userId);
+    }
+    
+    public User() {}
+    
     public Project getRelatedProject() {
         return relatedProject;
     }

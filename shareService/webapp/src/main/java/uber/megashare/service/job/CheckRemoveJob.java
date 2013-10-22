@@ -17,11 +17,7 @@ package uber.megashare.service.job;
 
 import java.util.Calendar;
 import org.quartz.JobExecutionContext;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
-import uber.megashare.model.Role;
 import uber.megashare.model.SharedFile;
-import uber.megashare.model.User;
 import uber.megashare.service.SharedFileManager;
 
 
@@ -34,8 +30,7 @@ public class CheckRemoveJob extends AbstractJob {
      private SharedFileManager fileManager;
     
     @Override
-    protected void executeInternal(JobExecutionContext executionContext) {
-        
+    protected void executeInternal(JobExecutionContext executionContext) {        
         
         
         for (SharedFile f:fileManager.getFilesToRemoval()) {

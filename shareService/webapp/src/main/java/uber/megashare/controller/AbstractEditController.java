@@ -35,14 +35,14 @@ import uber.megashare.service.StructManager;
  *
  * @author alex
  */
-public abstract class GenericEditController<T extends Struct> extends GenericController<T> implements EditConstants {
+public abstract class AbstractEditController<T extends Struct> extends GenericController<T> implements EditConstants {
 
     /**
      *
      */
     private static final long serialVersionUID = 3844308254206235808L;
 
-    protected GenericEditController(StructManager<T> manager) {
+    protected AbstractEditController(StructManager<T> manager) {
         super(manager);
     }
 
@@ -57,6 +57,7 @@ public abstract class GenericEditController<T extends Struct> extends GenericCon
     protected void putModel(T obj, Model model) {
 
         if (!obj.isBlank()) {
+            
             if (manager.exists(obj.getId() + 1)) {
                 model.addAttribute("availableNext", 1);
             }
@@ -110,7 +111,7 @@ public abstract class GenericEditController<T extends Struct> extends GenericCon
         return editPage;
     }
 
-    @RequestMapping(value = NEW_ACTION, method = RequestMethod.GET)
+    @RequestMapping(value = NEW_ACTION, method = {RequestMethod.GET,RequestMethod.POST})
     public String createNew(Model model,
                             RedirectAttributes redirectAttributes) {
 

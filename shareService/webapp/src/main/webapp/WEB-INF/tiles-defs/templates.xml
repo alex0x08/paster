@@ -79,5 +79,9 @@
         <put-attribute name="content" value="/WEB-INF/jsp/file/integrated/list.jsp" />
     </definition>
 
+    <definition name="/project/list" extends=".mainTemplate">
+        <put-attribute name="header" value="" />
+        <put-attribute name="content" value="/WEB-INF/jsp/project/list.jsp" />
+    </definition>
 
 </tiles-definitions>

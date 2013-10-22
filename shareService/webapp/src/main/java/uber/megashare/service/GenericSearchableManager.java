@@ -30,7 +30,7 @@ import uber.megashare.model.Struct;
  *
  * @author alex
  */
-@Transactional(readOnly = true)
+//@Transactional(readOnly = true)
 public interface GenericSearchableManager<T extends Struct,SQ extends SearchQuery> extends GenericVersioningManager<T> {
 
     

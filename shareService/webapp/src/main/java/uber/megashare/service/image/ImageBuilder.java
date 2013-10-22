@@ -199,8 +199,8 @@ public class ImageBuilder extends LoggedClass {
      */
     public ImageBuilder scaleToIcon() throws IOException {
 
-        min_height = 32;
-        min_width = 32;
+        min_height = 16;
+        min_width = 16;
 
         //    min_height=64;
         //  min_width=64;

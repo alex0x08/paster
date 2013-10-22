@@ -83,6 +83,8 @@ public class QSharedFile extends EntityPathBase<SharedFile> {
 
     public final SetPath<Project, QProject> relatedProjects = this.<Project, QProject>createSet("relatedProjects", Project.class, QProject.class);
 
+    public final SetPath<User, QUser> relatedUsers = this.<User, QUser>createSet("relatedUsers", User.class, QUser.class);
+
     public final DateTimePath<java.util.Date> removeAfter = createDateTime("removeAfter", java.util.Date.class);
 
     public final EnumPath<FileType> type = createEnum("type", FileType.class);
@@ -90,6 +92,8 @@ public class QSharedFile extends EntityPathBase<SharedFile> {
     public final StringPath url = createString("url");
 
     public final StringPath uuid = createString("uuid");
+
+    public final SimplePath<uber.megashare.model.xml.XMLObject> xml = createSimple("xml", uber.megashare.model.xml.XMLObject.class);
 
     public QSharedFile(String variable) {
         this(SharedFile.class, forVariable(variable), INITS);

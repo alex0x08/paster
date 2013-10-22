@@ -19,6 +19,7 @@ import java.util.List;
 import org.apache.lucene.queryParser.ParseException;
 import uber.megashare.model.AccessLevel;
 import uber.megashare.model.SharedFile;
+import uber.megashare.model.tree.FolderNode;
 
 /**
  * DAO related to shared files
@@ -64,4 +65,6 @@ public interface SharedFileDao extends GenericSearchableDao<SharedFile> {
      
     
      List<SharedFile> getFilesToRemoval();
+     
+     
 }

@@ -25,7 +25,7 @@ import uber.megashare.model.SystemProperties;
  * @author alex
  */
 @Repository("settingsDao")
-//@Transactional(readOnly = true, rollbackFor = Exception.class,value= "transactionManager")
+@Transactional(readOnly = true, rollbackFor = Exception.class,value= "transactionManager")
 public class SettingsDaoImpl extends GenericDaoImpl<SystemProperties, Long> implements SettingsDao {
 
     /**
@@ -41,6 +41,7 @@ public class SettingsDaoImpl extends GenericDaoImpl<SystemProperties, Long> impl
      *
      * @return текущие настройки
      */
+    @Override
     public SystemProperties getCurrentSettings() {
         return getEntityManager().find(SystemProperties.class, 1l);
     }

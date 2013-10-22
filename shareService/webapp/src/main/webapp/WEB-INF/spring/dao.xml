@@ -79,7 +79,7 @@
     
     <neo4j:config graphDatabaseService="graphDatabaseService" entityManagerFactory="entityManagerFactory"/>
 
-    <neo4j:repositories base-package="uber.megashare.service.tree"/>
+    <neo4j:repositories base-package="uber.megashare.dao.tree"/>
     
 
     <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"

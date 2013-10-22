@@ -26,6 +26,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.querydsl.SimpleEntityPathResolver;
+import org.springframework.transaction.annotation.Transactional;
 import static uber.megashare.dao.GenericDaoImpl.MAX_RESULTS;
 import uber.megashare.model.BaseDBObject;
 
@@ -38,7 +39,7 @@ import uber.megashare.model.BaseDBObject;
  * @author achernyshev
  * @since 1.0
  */
-//@Transactional(readOnly = true,value= "transactionManager")
+@Transactional(readOnly = true,value= "transactionManager", rollbackFor = Exception.class)
 public abstract class GenericDSLDaoImpl<T extends BaseDBObject, PK extends Serializable> 
             extends GenericDaoImpl<T, PK> implements GenericDSLDao<T, PK> {
 
@@ -56,6 +57,7 @@ public abstract class GenericDSLDaoImpl<T extends BaseDBObject, PK extends Seria
     /**
      * {@inheritDoc}
      */
+    @Override
     public JPQLQuery createQuery() {
         return new JPAQuery(getEntityManager()).limit(MAX_RESULTS);
     }

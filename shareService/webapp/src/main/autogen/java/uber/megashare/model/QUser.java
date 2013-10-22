@@ -77,7 +77,7 @@ public class QUser extends EntityPathBase<User> {
 
     public QUser(Class<? extends User> type, PathMetadata<?> metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.relatedProject = inits.isInitialized("relatedProject") ? new QProject(forProperty("relatedProject")) : null;
+        this.relatedProject = inits.isInitialized("relatedProject") ? new QProject(forProperty("relatedProject"), inits.get("relatedProject")) : null;
     }
 
 }

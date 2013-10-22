@@ -30,7 +30,7 @@ import uber.megashare.service.GenericVersioningManager;
  *
  * @author achernyshev
  */
-public abstract class GenericVersioningController<T extends Struct> extends GenericEditController<T> {
+public abstract class GenericVersioningController<T extends Struct> extends AbstractEditController<T> {
 
     protected static final String REVERT_ACTION = "/revert";
     /**

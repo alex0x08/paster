@@ -16,9 +16,14 @@
 package uber.megashare.controller;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -32,8 +37,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import uber.megashare.base.LoggedClass;
 import uber.megashare.listener.SessionSupport;
+import uber.megashare.model.Project;
 import uber.megashare.model.SystemProperties;
 import uber.megashare.model.User;
+import uber.megashare.service.ProjectManager;
 import uber.megashare.service.SettingsManager;
 import uber.megashare.service.UserManager;
 import uber.megashare.service.security.SecurityHelper;
@@ -61,11 +68,19 @@ public abstract class AbstractController extends LoggedClass {
             MSG_ACTION_CANCELLED = "action.cancelled",
             MSG_ACTION_SUCCESS = "action.success";
     
-    protected final String page404 = "404",page500 = "500",
+    /**
+     * Various system pages
+     */
+    protected final String page404 = "404",
+            page500 = "500",
             page403 = "403";
     
     @Autowired
     protected UserManager userManager;
+    
+    @Autowired
+    protected ProjectManager projectManager;    
+    
     @Autowired
     protected SettingsManager settingsManager;
     
@@ -156,7 +171,7 @@ public abstract class AbstractController extends LoggedClass {
     @ExceptionHandler(ObjectRetrievalFailureException.class)
     public String handleException(ObjectRetrievalFailureException ex) {
         getLogger().error("Object not found: " + ex.getLocalizedMessage(), ex);
-        return page404;
+        return page500;
     }
     
 
@@ -164,14 +179,41 @@ public abstract class AbstractController extends LoggedClass {
     public List<Locale> getAvailableLocales() {
         return availableLocales;
     }
-
-    @ModelAttribute("availableUsers")
-    public List<User> availableUsers() {        
-        return isCurrentUserAdmin() ? userManager.getAll() :Collections.EMPTY_LIST;
+    
+    @ModelAttribute("availableProjects")
+    public List<Project> getAvailableProjects() {
+        return  isCurrentUserLoggedIn() ? projectManager.getAll(): Collections.EMPTY_LIST;
     }
 
     
-    
+    @ModelAttribute("availableProjectsWithUsers")
+    public Collection<ProjectUsers> getAvailableProjectsWithUsers() {
+        
+        if (!isCurrentUserLoggedIn()) {
+            return Collections.EMPTY_LIST;
+        }
+        
+        Map<Project,ProjectUsers> out = new HashMap<>();
+        
+        for (User user:userManager.getAll()) {
+          
+            ProjectUsers pu = out.containsKey(user.getRelatedProject()) ? 
+                    out.get(user.getRelatedProject()) : 
+                    new ProjectUsers(user.getRelatedProject());
+          
+                pu.getUsers().add(user);
+                out.put(pu.getProject(), pu);
+        }
+        
+        return out.values();
+        
+    }
+
+    @ModelAttribute("availableUsers")
+    public List<User> availableUsers() {        
+        return isCurrentUserLoggedIn() ? userManager.getAll() :Collections.EMPTY_LIST;
+    }
+
     public boolean isCurrentUserLoggedIn() {
         return getCurrentUser() != null;
     }
@@ -193,6 +235,10 @@ public abstract class AbstractController extends LoggedClass {
         redirect.addFlashAttribute(STATUS_MESSAGE_KEY, MSG_ACTION_SUCCESS);
     }
 
+    /**
+     * 
+     * @return list all users online 
+     */
     @ModelAttribute("usersOnline")
     public List<User> getUsersOnline() {
         return getCurrentUser() != null
@@ -203,5 +249,30 @@ public abstract class AbstractController extends LoggedClass {
     @ModelAttribute("currentUser")
     public User getCurrentUser() {
         return SecurityHelper.getInstance().getCurrentUser();
+    }
+    
+   public static class ProjectUsers {
+    
+        private Project project;
+        
+        private Set<User> users = new LinkedHashSet<>();
+
+        public ProjectUsers(Project p) {
+            this.project=p;
+        }
+        
+        public Project getProject() {
+            return project;
+        }
+
+        public void setProject(Project project) {
+            this.project = project;
+        }
+
+        public Set<User> getUsers() {
+            return users;
+        }    
+        
+        
     }
 }

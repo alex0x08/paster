@@ -36,7 +36,7 @@ import uber.megashare.service.ProjectManager;
 @RequestMapping("/project")
 public class ProjectListController extends GenericSearchableController<Project, ProjectQuery>{
     
-      @Autowired
+    @Autowired
     public ProjectListController(ProjectManager projectManager) {
         super(projectManager);
        

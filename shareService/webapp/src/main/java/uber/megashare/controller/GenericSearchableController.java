@@ -33,10 +33,10 @@ import uber.megashare.model.Struct;
 import uber.megashare.service.GenericSearchableManager;
 
 /**
- *
+ * 
  * @author alex
  */
-public abstract class GenericSearchableController<T extends Struct, SQ extends SearchQuery> extends GenericListController<T> {
+public abstract class GenericSearchableController<T extends Struct, SQ extends SearchQuery> extends AbstractListController<T> {
 
     /**
      *

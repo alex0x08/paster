@@ -123,6 +123,14 @@
         <property name="ignoreAcceptHeader" value="true" />
     </bean>
 
-    
+    <!--bean id="customEditorConfigurer"  class="org.springframework.beans.factory.config.CustomEditorConfigurer">  
+  <property name="customEditors">  
+    <map>  
+      <entry key="uber.megashare.model.Project"> 
+        <bean class="uber.megashare.controller.ProjectCustomEditor"/>
+      </entry>  
+    </map>  
+  </property>  
+</bean-->  
 
 </beans>

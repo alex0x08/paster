@@ -24,6 +24,7 @@ import java.util.Set;
 import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
@@ -38,13 +39,18 @@ import org.apache.commons.io.FileUtils;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
 import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
 import org.hibernate.search.annotations.*;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.springframework.web.multipart.MultipartFile;
 import uber.megashare.base.DateBuilder;
 import uber.megashare.base.LoggedClass;
+import uber.megashare.model.xml.XMLBridge;
+import uber.megashare.model.xml.XMLObject;
 
 /**
  * Shared file entity
@@ -57,9 +63,11 @@ import uber.megashare.base.LoggedClass;
 @Indexed(index = "indexes/sharedfile")
 @Table(name = "s_files")
 @Audited
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+//@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @XStreamAlias("sharedFile")
-public class SharedFile extends Node  {
+@EntityListeners({CreateUUIDListener.class})
+//@TypeDef(defaultForType = XMLObject.class,name = "xmlObject", typeClass = uber.megashare.model.xml.XMLObjectType.class)
+public class SharedFile extends Node {
 
     public static final String PASTER_PREFIX= "paste_";
     
@@ -80,13 +88,12 @@ public class SharedFile extends Node  {
     @Column(nullable = false, unique = true, length = 255)
     @Field(index = Index.YES, store = Store.YES, termVector = TermVector.NO)
     @XStreamAsAttribute
-    private String uuid = UUID.randomUUID().toString();
+    String uuid;// = UUID.randomUUID().toString();
     
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     @Field(index = Index.YES, store = Store.YES, termVector = TermVector.NO)
     private FileType type = FileType.BINARY;
-    
     
     @Column(nullable = false)
     @Field(index = Index.YES, store = Store.YES, termVector = TermVector.NO)
@@ -121,15 +128,55 @@ public class SharedFile extends Node  {
     @IndexedEmbedded(depth = 1, prefix = "relatedProjects_")
     private Set<Project> relatedProjects = new HashSet<>();
 
+    
+    @ManyToMany(fetch = FetchType.EAGER)
+    //@ContainedIn
+    @IndexedEmbedded(depth = 1, prefix = "relatedUsers_")
+    @NotAudited
+    //@Transient
+    private Set<User> relatedUsers = new HashSet<>();
+
+    
+    @Type(type="uber.megashare.model.xml.XMLObjectType")
+    @Column(name = "xml_object")
+    @FieldBridge(impl= XMLBridge.class)
+    @Field 
+    @NotAudited
+    private XMLObject xml = new XMLObject();
+
+    public XMLObject getXml() {
+        return xml;
+    }
+
+    public void setXml(XMLObject xml) {
+            this.xml = xml;
+        /*if (xml!=null) {
+            this.xml = xml;
+        }*/
+    }    
+
+    
+    public Set<User> getRelatedUsers() {
+        return relatedUsers;
+    }
+
+    public void setRelatedUsers(Set<User> relatedUsers) {
+        if(relatedUsers!=null) {
+            this.relatedUsers = relatedUsers;
+        }
+    }   
+    
+    
     public Set<Project> getRelatedProjects() {
         return relatedProjects;
     }
 
     public void setRelatedProjects(Set<Project> relatedProjects) {
-        this.relatedProjects = relatedProjects;
+        if (relatedProjects!=null) {
+            this.relatedProjects = relatedProjects;
+        }
     }   
-    
-    
+        
     public String getIntegrationCode() {
         return integrationCode;
     }
@@ -310,7 +357,22 @@ public class SharedFile extends Node  {
                 .append("integrationCode", integrationCode)
                 .append("previewUrl", previewUrl)
                 .append("mime", mime)
+                .append("relatedProjects", relatedProjects)                
                 .append("fileSize", fileSize).toString() + super.toString();
 
     }
+
+   
+  @Override
+  public void loadFull() {
+        super.loadFull();
+        /**
+         * this is needed for envers
+         */
+        for (Project p:relatedProjects) {
+            p.loadFull();
+        }
+  }
+   
+    
 }

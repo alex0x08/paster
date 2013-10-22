@@ -38,7 +38,7 @@ import uber.megashare.service.StructManager;
  *
  * @author alex
  */
-public abstract class GenericListController<T extends Struct> extends GenericController<T> implements ListConstants {
+public abstract class AbstractListController<T extends Struct> extends GenericController<T> implements ListConstants {
 
     /**
      *
@@ -52,7 +52,7 @@ public abstract class GenericListController<T extends Struct> extends GenericCon
      *
      * @param manager
      */
-    protected GenericListController(StructManager<T> manager) {
+    protected AbstractListController(StructManager<T> manager) {
         super(manager);
     }
 

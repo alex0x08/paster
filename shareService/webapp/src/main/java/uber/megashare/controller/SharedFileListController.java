@@ -17,12 +17,12 @@ package uber.megashare.controller;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.support.PagedListHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -30,14 +30,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import static uber.megashare.controller.GenericListController.LIST_ACTION;
+import static uber.megashare.controller.AbstractListController.LIST_ACTION;
 import uber.megashare.model.AccessLevel;
 import uber.megashare.model.SharedFile;
 import uber.megashare.model.SharedFileSearchQuery;
 import uber.megashare.service.SharedFileManager;
 
 import static uber.megashare.controller.SharedFileConstants.FILE_PREFIX;
-import uber.megashare.service.tree.FolderService;
+import uber.megashare.service.FolderManager;
 
 
 /**
@@ -48,7 +48,7 @@ import uber.megashare.service.tree.FolderService;
 @Controller
 @RequestMapping(FILE_PREFIX)
 public class SharedFileListController 
-    extends GenericListIntegratedController<SharedFile, SharedFileSearchQuery> 
+    extends AbstractListIntegratedController<SharedFile, SharedFileSearchQuery> 
     implements SharedFileConstants,EditConstants {
 
     /**
@@ -59,12 +59,12 @@ public class SharedFileListController
       
     private final SharedFileManager fileManager;
    
-    private FolderService folderManager;
+    private FolderManager folderManager;
 
     @Autowired
     public SharedFileListController(
             SharedFileManager fileManager,
-            FolderService folderManager
+            FolderManager folderManager
            ) {
         super(fileManager);
         this.fileManager = fileManager;
@@ -88,6 +88,9 @@ public class SharedFileListController
          * if the method was called by authorized user - show only his own
          * files, else - only public files
          */
+      //  Collections.addAll(this, elements);
+      //  folderManager.getChildren(folderManager.getParentFolder())
+        
             return !isCurrentUserLoggedIn()? fileManager.getFiles(null,new AccessLevel[]{AccessLevel.ALL}):
                     fileManager.getFilesForUser(getCurrentUser().getId(),getCurrentUser().getRelatedProject().getId(),
                     AccessLevel.values());
@@ -115,7 +118,7 @@ public class SharedFileListController
         smodel.setIntegrationCode(integrationCode);
         smodel.setAccessLevel(AccessLevel.ALL);
         
-         model.addAttribute(GenericEditController.MODEL_KEY, smodel);
+         model.addAttribute(AbstractEditController.MODEL_KEY, smodel);
     
         return super.listIntegrated(integrationCode, request, session, model, page, NPpage, pageSize,sortColumn,sortAsc, locale);
     }
@@ -127,9 +130,9 @@ public class SharedFileListController
         /**
          * add list of users in systems to view from dropdown selectbox
          */
-        if (isCurrentUserAdmin()) {
+        /*if (isCurrentUserAdmin()) {
             model.addAttribute("availableUsers", userManager.getAll());
-        }
+        }*/
      
     }
 

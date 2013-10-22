@@ -29,12 +29,13 @@ import org.springframework.transaction.annotation.Transactional;
 import uber.megashare.model.Struct;
 import org.apache.lucene.morphology.russian.RussianAnalyzer;
 import org.apache.lucene.queryParser.MultiFieldQueryParser;
+import org.hibernate.CacheMode;
 
 /**
  *
  * @author alex
  */
-//@Transactional(readOnly = true, rollbackFor = Exception.class,value= "transactionManager")
+@Transactional(readOnly = true, rollbackFor = Exception.class,value= "transactionManager")
 public abstract class GenericSearchableDaoImpl<T extends Struct> extends GenericVersioningDaoImpl<T> {
 
     /**
@@ -46,6 +47,9 @@ public abstract class GenericSearchableDaoImpl<T extends Struct> extends Generic
         super(clazz);
     }
     
+    /**
+     * Set of default model fields to search
+     */
     protected static final String DEFAULT_START_FIELDS[] = {"name"};
 
 
@@ -62,25 +66,36 @@ public abstract class GenericSearchableDaoImpl<T extends Struct> extends Generic
         return Search.getFullTextEntityManager(getEntityManager());
     }
 
+    
     /**
      * {@inheritDoc}
      */
-    @Transactional(readOnly = true, rollbackFor = Exception.class,value= "transactionManager")
-    public void indexAll() {
+    public void indexAll()  {
         FullTextEntityManager fsession = getFullTextEntityManager();
-        /**
-         * not a best ever re-index implementation, but enough for demo
-         */
-        for (T t : getAll()) {
-            fsession.index(t);
+        try {
+            fsession.createIndexer(persistentClass)
+                    .batchSizeToLoadObjects(25)
+                    .cacheMode(CacheMode.NORMAL)
+                    .threadsToLoadObjects(1)
+                    .threadsForSubsequentFetching(2)
+                    .startAndWait();
+
+            /**
+             * not a best ever re-index implementation, but enough for demo
+             */
+            /*for (T t : getAll()) {
+                fsession.index(t);
+            }*/
+        } catch (InterruptedException ex) {
+            throw new RuntimeException(ex);
         }
+
     }
 
     /**
      * {@inheritDoc}
      */
     @SuppressWarnings("unchecked")
-    @Transactional(readOnly = true, rollbackFor = Exception.class,value= "transactionManager")
     public List<T> search(String query) throws ParseException {
 
         /**
@@ -119,7 +134,8 @@ public abstract class GenericSearchableDaoImpl<T extends Struct> extends Generic
     
 
     
-    protected static RussianAnalyzer an=null;
+    protected static RussianAnalyzer an;
+    
     static {
         try {
             an= new RussianAnalyzer();

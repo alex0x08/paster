@@ -15,9 +15,7 @@
  */
 package uber.megashare.dao;
 
-import com.mysema.query.types.Expression;
 import com.mysema.query.types.expr.BooleanExpression;
-import com.mysema.query.types.expr.CaseBuilder;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -30,35 +28,35 @@ import org.apache.lucene.util.Version;
 import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.jpa.FullTextQuery;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import uber.megashare.base.logging.LoggedCall;
 import uber.megashare.model.AccessLevel;
 import uber.megashare.model.Project;
 import uber.megashare.model.QSharedFile;
 import uber.megashare.model.SharedFile;
+import uber.megashare.model.User;
 
 /**
  *
  * @author alex
  */
 @Repository("shareDao")
-//@Transactional(readOnly = true,value= "transactionManager")
+@Transactional(readOnly = true,value= "transactionManager", rollbackFor = Exception.class)
 public class SharedFileDaoImpl extends GenericSearchableDaoImpl<SharedFile> implements SharedFileDao {
 
     /**
      *
      */
     private static final long serialVersionUID = -4874510100464951022L;
-
-     protected static final String SHARE_START_FIELDS[] = {"name","nameContents","comments_message"};
-
     
+    protected static final String SHARE_START_FIELDS[] = {"name", "nameContents", "comments_message"};
+
     public SharedFileDaoImpl() {
         super(SharedFile.class);
     }
 
- 
-    
     /**
      * {@inheritDoc}
      */
@@ -69,6 +67,8 @@ public class SharedFileDaoImpl extends GenericSearchableDaoImpl<SharedFile> impl
     /**
      * {@inheritDoc}
      */
+    @Transactional(readOnly = true, propagation = Propagation.REQUIRED,value= "transactionManager",rollbackFor = Exception.class)
+    @Override
     public List<SharedFile> search(final String query,
             final Long userId,final Long projectId,
             final List<AccessLevel> levels) throws ParseException {
@@ -142,12 +142,15 @@ public class SharedFileDaoImpl extends GenericSearchableDaoImpl<SharedFile> impl
             if (userId!=null) {            
                  out.add(BooleanExpression.anyOf(
                          QSharedFile.sharedFile.owner.id.eq(userId),
-                         QSharedFile.sharedFile.accessLevel.in(AccessLevel.PROJECT)
+                         QSharedFile.sharedFile.relatedUsers.contains(new User(userId)),
+                         QSharedFile.sharedFile.accessLevel.in(AccessLevel.PROJECT,AccessLevel.USERS)
                 ));
             }
         
         } else {
-                out.add(userId!=null ? QSharedFile.sharedFile.owner.id.eq(userId) :
+                out.add(userId!=null ? BooleanExpression.anyOf(QSharedFile.sharedFile.owner.id.eq(userId)
+                        ,QSharedFile.sharedFile.relatedUsers.contains(new User(userId))
+                        ) :
                         QSharedFile.sharedFile.accessLevel.in(AccessLevel.ALL));                
         }
         return findAll(BooleanExpression.allOf(out.toArray(new BooleanExpression[out.size()])), 

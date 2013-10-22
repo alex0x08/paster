@@ -306,7 +306,7 @@
             
         </a>
         
-        <a href="<c:out value='${detailUrl}'/>" target="${target}">${model.name}</a>
+        <a href="<c:out value='${detailUrl}'/>" target="${target}"><c:out value="${model.name}"/></a>
 
        
 
@@ -317,7 +317,19 @@
                 target="${not empty param.integrationMode ? "_blank" : target}">
                      <c:out value="${model.owner.name}"/>   
                 </a>
-            &nbsp;  
+            &nbsp; 
+            
+            <c:if test="${not empty model.xml.fields}">
+                
+                <c:forEach var="field" items="${model.xml.fields}">
+                    <c:out value="${field.name}"/> | <c:out value="${field.value}"/>
+                    
+                    
+                </c:forEach>
+                
+            </c:if>
+            
+            
             <span style="display: block;font-size:smaller;"> 
             
                 <c:choose>
@@ -327,6 +339,12 @@
 
                               <a href="<c:url value='/main/file/list/search?query=relatedProjects_name:${proj.name}'/>" 
                                  target="${not empty param.integrationMode ? "_blank" : target}">
+
+                                  <c:if test="${proj.avatarSet}">
+                                      <img src="data:image/png;base64,${proj.avatar.icon}" 
+                                           alt="<c:out value='${proj.name}'/>" />                
+                                  </c:if>
+
                                   <c:out value="${proj.name}"/>
                               </a>   
                               
@@ -335,6 +353,25 @@
                        
                         
                     </c:when>
+                    
+                    <c:when test="${model.accessLevel eq 'USERS'}">
+                        For users:
+                          <c:forEach var="user" items="${model.relatedUsers}" >
+
+                              <a href="<c:url value='/main/file/list/search?query=relatedUsers_name:${user.name}'/>" 
+                                 target="${not empty param.integrationMode ? "_blank" : target}">
+
+                              
+
+                                  <c:out value="${user.name}"/>
+                              </a>   
+                              
+
+                           </c:forEach>
+                       
+                        
+                    </c:when>
+                    
                     <c:otherwise>
                 <a href="<c:url value='/main/file/list/search?query=accessLevel:${model.accessLevel.code}'/>" 
                    target="${not empty param.integrationMode ? "_blank" : target}">

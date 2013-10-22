@@ -26,18 +26,14 @@ import javax.annotation.Generated;
 /**
  * QAvatar is a Querydsl query type for Avatar
  */
-@Generated("com.mysema.query.codegen.EntitySerializer")
-public class QAvatar extends EntityPathBase<Avatar> {
+@Generated("com.mysema.query.codegen.EmbeddableSerializer")
+public class QAvatar extends BeanPath<Avatar> {
 
     private static final long serialVersionUID = 216049139;
 
     public static final QAvatar avatar = new QAvatar("avatar");
 
-    public final ArrayPath<Byte> icon = createArray("icon", Byte[].class);
-
-    public final NumberPath<Long> id = createNumber("id", Long.class);
-
-    public final ArrayPath<Byte> picture = createArray("picture", Byte[].class);
+    public final StringPath icon = createString("icon");
 
     public QAvatar(String variable) {
         super(Avatar.class, forVariable(variable));

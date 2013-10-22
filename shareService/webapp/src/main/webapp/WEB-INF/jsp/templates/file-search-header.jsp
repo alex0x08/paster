@@ -10,6 +10,24 @@
         <form:errors path="*" cssClass="errorblock" element="span"/>
 
         <div class="form-group">
+            
+            <c:choose >
+                <c:when test="${param.filesBtn == 'LIST'}">
+                    <a class="btn btn-primary btn-large" href="<c:url value='/main/file/list' />">
+               <fmt:message key="files.title"/>
+           </a>
+                </c:when>
+                <c:otherwise>
+                    <a class="btn btn-primary btn-large" href="<c:url value='/main/file/list' />">
+                         <span class="glyphicon glyphicon-refresh" title="<fmt:message key='files.title'/>"></span>                       
+                    </a>
+                </c:otherwise>
+             </c:choose>
+           
+      
+        </div>
+        
+        <div class="form-group">
 
             <fmt:message var="searchPlaceholder" key='search.placeholder.default'/>
 
@@ -20,8 +38,16 @@
             <sec:authorize ifAnyGranted="ROLE_ADMIN">
                 <div class="form-group">
 
-                    <form:select path="userId" cssClass="btn chosen_select_box" >
-                        <form:options  items="${availableUsers}" itemValue="id" itemLabel="name"  />
+                    <form:select  path="userId" cssClass="btn chosen_select_box" >
+
+                        <c:forEach items="${availableProjectsWithUsers}" var="projectUsers">
+
+                            <optgroup label="<c:out value='${projectUsers.project.name}'/>">
+                                <form:options  items="${projectUsers.users}" itemValue="id" itemLabel="name"  />
+                            </optgroup>
+
+                        </c:forEach>
+
                     </form:select>
                 </div>
             </sec:authorize>

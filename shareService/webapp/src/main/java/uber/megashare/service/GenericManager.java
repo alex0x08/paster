@@ -30,7 +30,7 @@ import uber.megashare.model.BaseDBObject;
  * @param <T> a type variable
  * @param <PK> the primary key for that type
  */
-@Transactional(readOnly = true)
+//@Transactional(readOnly = true)
 public interface GenericManager<T extends BaseDBObject, PK extends Serializable> {
 
     /**
@@ -63,14 +63,14 @@ public interface GenericManager<T extends BaseDBObject, PK extends Serializable>
      * @param object the object to save
      * @return the updated object
      */
-    @Transactional(readOnly = false)
+    //@Transactional(readOnly = false)
     T save(T object);
 
     /**
      * Generic method to delete an object based on class and id
      * @param id the identifier (primary key) of the object to remove
      */
-    @Transactional(readOnly = false)
+    //@Transactional(readOnly = false)
     void remove(PK id);
     
     T getFull(PK id);

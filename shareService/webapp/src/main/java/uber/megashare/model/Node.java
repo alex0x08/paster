@@ -24,6 +24,7 @@ import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Store;
 import org.hibernate.search.annotations.TermVector;
+import uber.megashare.model.tree.NodeType;
 
 
 @MappedSuperclass
@@ -58,8 +59,23 @@ public abstract class Node extends CommentedStruct {
     @Field(index = Index.YES, store = Store.YES, termVector = TermVector.NO)
     private AccessLevel accessLevel = AccessLevel.PROJECT;
     
+    @Transient
+    private NodeType nodeType = NodeType.FILE;
+
+    public NodeType getNodeType() {
+        return nodeType;
+    }
+
+    public void setNodeType(NodeType nodeType) {
+        this.nodeType = nodeType;
+    }
+    
     public String getOwnerName() {
         return ownerName;
+    }
+    
+    public void setOwnerName(String name) {
+        this.ownerName=name;
     }
     
     @JsonIgnore

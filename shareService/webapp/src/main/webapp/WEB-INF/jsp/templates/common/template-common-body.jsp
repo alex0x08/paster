@@ -122,9 +122,6 @@
           .hide()
           .filter(':checked').parent('.btn').addClass('active');
    
-         // showError('Fuck!');
-          
-         // setTimeout("showError('Die')",4000);
          
          			$.scrollUp({
 		        scrollName: 'scrollUp', // Element ID
@@ -146,7 +143,11 @@
                         $('.chosen_select_box').chosen({
                             disable_search_threshold: 10,
                             no_results_text: "Oops, nothing found!",
+                            allow_single_deselect: true,
                             width: "95%"
+                        });
+                        
+                        $('.chosen_select_box_multiple').chosen({
                         });
         
         });

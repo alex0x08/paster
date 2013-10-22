@@ -16,6 +16,7 @@
 package uber.megashare.dao;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import uber.megashare.model.Project;
 
 /**
@@ -23,6 +24,7 @@ import uber.megashare.model.Project;
  * @author aachernyshev
  */
 @Repository("projectDao")
+@Transactional(readOnly = true, rollbackFor = Exception.class,value= "transactionManager")
 public class ProjectDaoImpl  extends GenericSearchableDaoImpl<Project> implements ProjectDao{
     
     public ProjectDaoImpl() {

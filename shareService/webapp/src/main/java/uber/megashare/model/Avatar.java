@@ -21,15 +21,10 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.Embeddable;
 import javax.persistence.Lob;
-import javax.persistence.Table;
 import javax.persistence.Transient;
-import org.hibernate.envers.Audited;
+import org.apache.commons.codec.binary.Base64;
 import uber.megashare.service.image.ImageBuilder;
 
 /**
@@ -37,59 +32,29 @@ import uber.megashare.service.image.ImageBuilder;
  * @author alex
  * @since 3.0
  */
-//@Embeddable кладет хер на lazy fetch почти во всех субд, увы
-@Entity
-@Table(name = "AVATARS")
-@Audited
-public class Avatar implements Serializable,IdentifiedObject {
+@Embeddable
+public class Avatar implements Serializable {
 
     /**
-	 * 
-	 */
-	private static final long serialVersionUID = 4355488621046032004L;
-
-	@Transient
+     *
+     */
+    private static final long serialVersionUID = 4355488621046032004L;
+    
+    @Transient
     public static final String ICON_TYPE = "image/png";//все генерируемые изображния в PNG-формате
-
-     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+    
+    //@Column(length=1024)
     @Lob
-    @Column(length=Integer.MAX_VALUE)
-    private byte[] picture;
+    private String icon;
 
-    @Lob
-    @Column(length=Integer.MAX_VALUE)
-    private byte[] icon;
-
-    public Long getId() {
-        return id;
-    }
-
-    public byte[] getIcon() {
+    public String getIcon() {
         return icon;
     }
 
-    public void setIcon(byte[] icon) {
-        this.icon = icon.clone();
-    }
-
-    public byte[] getPicture() {      
-        return picture;
-    }
-
-    public void setPicture(byte[] picture) {
-        this.picture = picture.clone();
-    }
-
-    public void loadFull() {
-        getPicture();
-        getIcon();
+    public void setIcon(String icon) {
+        this.icon = icon;
     }
     
-    public static final Avatar EMPTY= fromResource("images/user_male.png");
-
     
     public static Avatar fromFile(File f) {
         try {
@@ -99,34 +64,19 @@ public class Avatar implements Serializable,IdentifiedObject {
         }
     }
 
-    public static Avatar fromResource(String res) {
-
-        InputStream in = Avatar.class.getClassLoader().getResourceAsStream(res);
-
-        if (in == null) {
-            /**
-             * если поток = Null это значит что ресурс не был найден = косяк при сборке системы
-             */
-            throw new RuntimeException("Resource not found " + res);
-            
-        }
-        return fromStream(in);
-    }
+   
 
     public static Avatar fromStream(InputStream in) {
 
-        Avatar a = new Avatar();
-
-
+        
         try {
-            a.setPicture(ImageBuilder.createInstance()
+            Avatar a = new Avatar();
+
+            a.setIcon(Base64.encodeBase64String(ImageBuilder.createInstance()
                     .setSource(in)
-                    .scaleToProfile().getScaledAsBytes());
-            a.setIcon(ImageBuilder.createInstance()
-                    .setSource(
-                    a.getPicture())
-                    .scaleToIcon().getScaledAsBytes());
-            
+                    .scaleToIcon()
+                    .getScaledAsBytes()));
+            return a;
         } catch (IOException ex) {
             /*
             нет никакого смысла объявлять это исключение (throws IOException) в заголовке функции , тк
@@ -147,7 +97,9 @@ public class Avatar implements Serializable,IdentifiedObject {
             }
             
        }
-     return a;
+  
 
     }    
+
+  
 }

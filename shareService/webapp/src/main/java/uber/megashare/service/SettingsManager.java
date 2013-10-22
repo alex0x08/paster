@@ -15,7 +15,6 @@
  */
 package uber.megashare.service;
 
-import java.io.File;
 import java.util.Date;
 import uber.megashare.model.SystemProperties;
 

@@ -1,7 +1,6 @@
 <%@ include file="/WEB-INF/jsp/templates/common/taglibs.jsp"%>
 
 
-    <div class="col-md-4" style="padding-top: 1em;"  >
         
             <div class="btn-group" data-toggle="buttons">
 
