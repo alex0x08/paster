@@ -311,6 +311,19 @@ function open(){
         opacity:1
     };
 
+    if (css.top < 50) {        
+        css.top = 55;
+    }
+    
+    if (css.width<300 || css.height<50) {        
+        css.width = css.width*3;
+        css.height = css.height*3;
+        
+    }
+    
+
+   // alert('w='+css.width+',h='+css.height);
+
     // Trigger the change event
     $('#zoombox').trigger('change',css); 
 
@@ -429,6 +442,9 @@ function setContent(){
             height = windowH() - 50;
         }
     }
+    
+   // alert('width='+width+'|height='+height);
+    
     var url = link;
     type = 'multimedia';
     if(filtreImg.test(url)){

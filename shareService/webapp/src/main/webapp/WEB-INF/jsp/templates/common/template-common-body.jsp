@@ -11,6 +11,9 @@
         
         var commentsUrl = '<c:url value="/main/file/raw/comments"/>';
 
+       
+
+
         function showError(message) {
             
          console.log('js error: ' + message);
@@ -28,22 +31,38 @@
                 duration    : 800,              // Animation duration
                 animation   : true,             // Do we have to animate the box ?
                 width       : 1024,              // Default width
-                height      : 768,              // Default height
+                height      : 668,              // Default height
                 gallery     : true,             // Allow gallery thumb view
                 autoplay : true,                // Autoplay for video
-                overflow: true
+                overflow: false
             });   
         }
         
         function initFlowPlayer() {
       
         flowplayer("a.embedPlayer", "<c:url value='/main/static/${appVersion}/libs/flowplayer/flowplayer-3.2.16.swf'/>", {
-      clip:  {
-          autoPlay: false,
-          autoBuffering: true
-      }
+            clip:  {
+                autoPlay: false,
+                autoBuffering: true
+            }
            
-  });
+            });
+        }
+        
+        
+        function autoResize(parent_obj,obj){
+            var newheight;
+            var newwidth;
+
+            newheight=obj.height+5;
+            newwidth=obj.width+5;
+        
+
+       // alert('resize to '+newwidth+' x '+newheight+' parent='+parent_obj);
+
+        parent_obj.style.width=newwidth+'px';
+        parent_obj.style.height=newheight+'px';
+        
         }
         
         function initButtons() {
@@ -150,7 +169,20 @@
                         $('.chosen_select_box_multiple').chosen({
                         });
         
+        
+        $('.remoteModal').on('show.bs.modal', function () {
+        
+             $(this).find('#srcFrame').attr("src",$(this).attr('srcUrl'));
+            
+        
         });
-    </script>
-
+             
+                });        
+                 
+                
+                 
+                        
+                 
+                 </script>
+      
   

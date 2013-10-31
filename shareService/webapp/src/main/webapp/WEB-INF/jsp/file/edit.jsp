@@ -37,20 +37,14 @@
                 <script src="<c:url value='/main/assets/${appVersion}/jquery-file-upload/8.4.2/js/jquery.fileupload.js'/>"></script>
                 <script src="<c:url value='/main/assets/${appVersion}/jquery-file-upload/8.4.2/js/jquery.fileupload-process.js'/>"></script>
                 <script src="<c:url value='/main/assets/${appVersion}/jquery-file-upload/8.4.2/js/jquery.fileupload-ui.js'/>"></script>
-              
                 <script src="<c:url value='/main/static/${appVersion}/libs/bootstrap-switch/js/bootstrap-switch.js'/>"></script>
                 <script src="<c:url value='/main/assets/${appVersion}/bootstrap-datepicker/1.1.3/js/bootstrap-datepicker.js'/>"></script>
+                <script src="<c:url value='/main/assets/${appVersion}/jquery-knob/1.2.2/jquery.knob.js'/>"></script>
 
-                    <script src="<c:url value='/main/assets/${appVersion}/jquery-knob/1.2.2/jquery.knob.js'/>"></script>
-
-                
                 <c:url var="url" value='/main/file/upload-xdr' />
-
                 <c:set var="mainBlockStyle" value="col-md-3"/>
                 
                 <script type="text/javascript">
-
-                   
 
                 function formatFileSize(bytes) {
                     if (typeof bytes !== 'number') {

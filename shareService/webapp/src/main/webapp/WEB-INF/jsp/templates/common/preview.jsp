@@ -264,7 +264,7 @@
                                          <a title="<fmt:message key="file.pdf.preview"/>"
                                             target="_blank"
                                             class="btn" 
-                                            href="<c:url value='/main/file/raw/pdfview'><c:param name='id' value='${model.id}'/></c:url>"
+                                            href="<c:url value='/main/file/raw/pdfview'><c:param name='id' value='${model.id}'/><c:param name='viewMode' value='full'/></c:url>"
                                                 >
                                                 <img style="display: inline;" 
                                                      src="<c:url value='/main/static/${appVersion}/images/mime/pdf.gif'/>"/> 
@@ -360,12 +360,8 @@
 
                               <a href="<c:url value='/main/file/list/search?query=relatedUsers_name:${user.name}'/>" 
                                  target="${not empty param.integrationMode ? "_blank" : target}">
-
-                              
-
                                   <c:out value="${user.name}"/>
                               </a>   
-                              
 
                            </c:forEach>
                        
@@ -436,10 +432,8 @@
                 from ImageBuilder
                 
                 --%>
-
-               
-                
-                <c:when test="${empty param.integrationMode and  model.previewWidth >100 and model.previewHeight>300}">
+  
+                <c:when test="${empty param.integrationMode}">
                     <c:set var="previewClass" value="zoombox w${model.previewWidth} h${model.previewHeight} zgallery1"/>
                 </c:when>
                 <c:otherwise>
@@ -473,6 +467,21 @@
                 
                 </c:if>
         </c:if>
+          
+            <c:if test="${model.type eq 'PDF'}">
+           
+                 <iframe id="${model.id}_pdf_preview"  src="<c:url value='/main/file/raw/pdfview'><c:param name='id' value='${model.id}'/><c:param name='viewMode' value='preview'/></c:url>"
+                     scrolling="auto" frameborder="0"
+                      allowTransparency="true"   >
+                </iframe>    
+                
+                
+             
+                
+            </c:if>
+            
+            
+            
     </div>
 
                     
@@ -574,7 +583,9 @@
 <c:if test="${model.type eq 'PDF' and empty param.integrationMode}">
 
     
-           <div id="pdfPreviewModal_${model.id}" class="modal fade" >
+           <div id="pdfPreviewModal_${model.id}" class="modal fade remoteModal" srcUrl="<c:url value='/main/file/raw/pdfview'>
+                                             <c:param name='id' value='${model.id}'/>
+                                             <c:param name='viewMode' value='full'/></c:url>" >
 
                 <div class="modal-dialog">
                     <div class="modal-content" style="width:690px;">
@@ -591,15 +602,19 @@
                         <div class="modal-body">
                             <div class="paddingT15 paddingB15" id="modal_text">    
 
-                                 <iframe  src="<c:url value='/main/file/raw/pdfview'><c:param name='id' value='${model.id}'/></c:url>"
+                                 <iframe id="srcFrame"  src=""
                      scrolling="auto" frameborder="0"
                      style="width:660px;height: 400px;"  allowTransparency="true"   >
                 </iframe>  
                             </div>
                         </div>
                     </div></div>
+                     
+                       
+                     
+                     
             </div>
 
-    
+            
 
 </c:if>

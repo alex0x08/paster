@@ -17,7 +17,6 @@ package uber.megashare.controller;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
@@ -35,7 +34,6 @@ import uber.megashare.model.AccessLevel;
 import uber.megashare.model.SharedFile;
 import uber.megashare.model.SharedFileSearchQuery;
 import uber.megashare.service.SharedFileManager;
-
 import static uber.megashare.controller.SharedFileConstants.FILE_PREFIX;
 import uber.megashare.service.FolderManager;
 
