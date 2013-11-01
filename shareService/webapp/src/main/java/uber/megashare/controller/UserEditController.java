@@ -73,21 +73,20 @@ public class UserEditController extends AbstractEditController<User> {
    
 
     @InitBinder
-    protected void initBinder(WebDataBinder binder,Locale locale) {
-    
-         binder.registerCustomEditor(Project.class,"relatedProject", new PropertyEditorSupport() {
-        @Override
-        public void setAsText(String text) {
-         //   System.out.println("set project from "+text);
-            setValue(new Project(Long.valueOf(text)));
-        }
-        
-             @Override
-             public String getAsText() {
-                 return getValue() == null ? "" : ((Project) getValue()).getId().toString();
-             }
-        
-    });
+    protected void initBinder(WebDataBinder binder, Locale locale) {
+
+        binder.registerCustomEditor(Project.class, "relatedProject", new PropertyEditorSupport() {
+            @Override
+            public void setAsText(String text) {
+                //   System.out.println("set project from "+text);
+                setValue(new Project(Long.valueOf(text)));
+            }
+
+            @Override
+            public String getAsText() {
+                return getValue() == null ? "" : ((Project) getValue()).getId().toString();
+            }
+        });
     }
     
     @Override
@@ -100,10 +99,7 @@ public class UserEditController extends AbstractEditController<User> {
         return Role.values();
     }
     
-    @ModelAttribute("availableProjects")
-    public List<Project> getAvailableProjects() {
-        return projectManager.getAll();
-    }
+   
     
     @RequestMapping(value = {SAVE_ACTION}, method = RequestMethod.POST)
     @Override

@@ -1,5 +1,11 @@
 <%@ include file="/WEB-INF/jsp/templates/common/taglibs.jsp"%>
 
+<%--
+    Template with path to current page.
+
+    ex: /main/files/file
+--%>
+
 <ol class="breadcrumb">
     
     <li><a href="<c:url value='/main/welcome'/>"><fmt:message key="site.title"/></a> </li>

@@ -122,8 +122,7 @@
         
         if (viewMode == 'full'){
             $('#controlPanel').css('display','');
-        }
-      
+        }     
         
         });
       
@@ -131,9 +130,6 @@
         // alert('canvas h '+canvas.height);
          parent.autoResize(parent.document.getElementById('${model.id}_pdf_preview'),canvas);
         } 
-        
-         
-        
       });
 
       if (document.getElementById('page_num')) {
@@ -170,8 +166,7 @@
     //
     PDFJS.getDocument(url).then(function (pdf) {
       pdfDoc = pdf;
-      renderPage(pageNum);
-      
+      renderPage(pageNum);     
            
       });
     

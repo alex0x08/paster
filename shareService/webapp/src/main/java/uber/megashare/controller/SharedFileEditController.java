@@ -185,7 +185,6 @@ public class SharedFileEditController extends AbstractCommentController<SharedFi
             public SharedFile callImpl(ToStringBuilder log) throws Exception {
 
                 log.append("uploadSave starting ,currentUser=" + getCurrentUser() + " file=" + input);
-
                 
                 SharedFile old;
 
@@ -511,11 +510,12 @@ public class SharedFileEditController extends AbstractCommentController<SharedFi
             Model model, HttpServletRequest request) {
         
          SharedFile file = get(id);
-         if (file!=null) {
-            manager.remove(id);
-            resetPagingList(request);
-            
+         if (file==null) {
+             return page404;
          }
+         
+            manager.remove(id);
+            resetPagingList(request);            
              
          model.asMap().clear();
              

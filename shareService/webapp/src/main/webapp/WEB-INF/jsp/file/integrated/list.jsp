@@ -8,19 +8,13 @@
 
 <link href="<c:url value='/main/assets/${appVersion}/jquery-file-upload/8.4.2/css/jquery.fileupload-ui.css'/>" rel="stylesheet"/>
 
- <script type="text/javascript">
-                      
-                      
-                       $(document).ready(function() {
-                              
-                              $('#fileSelectBtn').bind('change', function() {
-                                  
-                                  $('#fileSelectLabel').text($(this).val());
-                              });
-                       
-                    });
-                      
-                  </script>
+<script type="text/javascript">
+      $(document).ready(function() {
+               $('#fileSelectBtn').bind('change', function() {
+                       $('#fileSelectLabel').text($(this).val());
+               });
+      });
+</script>
 
 <c:url var="url" value='/main/file/integrated/list' />
 
@@ -28,9 +22,7 @@
 
 <div class="row-fluid">
     <div class="span6">
-
-              <jsp:include page="/WEB-INF/jsp/templates/common/lang-select.jsp"/>
-           
+              <jsp:include page="/WEB-INF/jsp/templates/common/lang-select.jsp"/>          
         
        <sec:authorize ifAnyGranted="ROLE_USER,ROLE_ADMIN">
 
@@ -115,9 +107,7 @@
                         </form>
                     </li>
                 </ul>
-            </div>
-
-                       
+            </div>                   
                             
                                
                             

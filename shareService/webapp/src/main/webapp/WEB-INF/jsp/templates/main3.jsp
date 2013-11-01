@@ -24,75 +24,75 @@
                     
             </ul>   
             <ul class='nav navbar-nav navbar-right' >    
-                               <sec:authorize ifAnyGranted="ROLE_ANONYMOUS">
-                                   <li>
-                             <div class="btn-group box">
+                <sec:authorize ifAnyGranted="ROLE_ANONYMOUS">
+                    <li>
+                        <div class="btn-group box">
 
-                                <a class="btn dropdown-toggle btn-danger" data-toggle="dropdown" href="#">
-                                    <fmt:message key="login.title"/>
-                                    <span class="caret"></span>
-                                </a>
+                            <a class="btn dropdown-toggle btn-danger" data-toggle="dropdown" href="#">
+                                <fmt:message key="login.title"/>
+                                <span class="caret"></span>
+                            </a>
 
-                                <ul class="dropdown-menu" id="auth-dropdown" role='menu'>
+                            <ul class="dropdown-menu" id="auth-dropdown" role='menu'>
 
-                                    <li >
-                                        <div style="width:12em;" class='box'>
-                                       
-                                             <form  action="<c:url value='/j_spring_security_check' />" role='form'  method="POST" class="form-inline">
+                                <li >
+                                    <div style="width:12em;" class='box'>
+
+                                        <form  action="<c:url value='/j_spring_security_check' />" role='form'  method="POST" class="form-inline">
 
                                             <div class="input-group">
                                                 <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
                                                 <input class="form-control"  name="j_username" type="text" placeholder="Username">
                                             </div>
-                                                 <div class="input-group" style="padding-top:0.5em;padding-bottom: 0.5em;">
+                                            <div class="input-group" style="padding-top:0.5em;padding-bottom: 0.5em;">
                                                 <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
                                                 <input class="form-control"  name="j_password" type="password" placeholder="Password">
                                             </div>  
                                             <button type="submit" class="btn" ><fmt:message key="button.login"/></button>
                                         </form>
-                                            
-                                        </div>
-                                        
-                                       
+
+                                    </div>
+
+
+                                </li>
+                            </ul>
+                        </div>
+
+                    </li>
+                </sec:authorize>
+
+
+                    <sec:authorize ifAnyGranted="ROLE_USER,ROLE_ADMIN">
+                        <li>
+                            <div class="btn-group box">
+
+                                <a class="btn dropdown-toggle btn-default" data-toggle="dropdown" href="#">
+                                    <img  src="<c:out value='http://www.gravatar.com/avatar/${currentUser.avatarHash}?s=16'/>"/>
+                                    <sec:authentication property="principal.username" />
+                                    <span class="caret"></span>
+                                </a>
+
+                                <ul class="dropdown-menu ">
+                                    <li>
+                                        <a class="profile" href="<c:url value="/main/profile"/>">
+                                            <span class="glyphicon glyphicon-user"></span>
+                                            <c:out value="${currentUser.name}"/>
+
+                                        </a> 
                                     </li>
+
+                                    <li>
+                                        <a href="<c:url value="/act/doLogout"/>">
+                                            <span class="glyphicon glyphicon-log-out"></span>
+                                            <fmt:message key="button.logout"/></a>
+                                    </li>
+
                                 </ul>
-                            </div>
-           
-                                   </li>
-                                </sec:authorize>
-
-                            
-                                  <sec:authorize ifAnyGranted="ROLE_USER,ROLE_ADMIN">
-                                      <li>
-                                          <div class="btn-group box">
-
-                                              <a class="btn dropdown-toggle btn-default" data-toggle="dropdown" href="#">
-                                                  <img  src="<c:out value='http://www.gravatar.com/avatar/${currentUser.avatarHash}?s=16'/>"/>
-                                                  <sec:authentication property="principal.username" />
-                                                  <span class="caret"></span>
-                                              </a>
-
-                                              <ul class="dropdown-menu ">
-                                                  <li>
-                                                      <a class="profile" href="<c:url value="/main/profile"/>">
-                                                          <span class="glyphicon glyphicon-user"></span>
-                                                          <c:out value="${currentUser.name}"/>
-                                                          
-                                                      </a> 
-                                                  </li>
-
-                                                  <li>
-                                                      <a href="<c:url value="/act/doLogout"/>">
-                                                          <span class="glyphicon glyphicon-log-out"></span>
-                                                          <fmt:message key="button.logout"/></a>
-                                                  </li>
-                                                
-                                              </ul>
-                                          </div>                              
-                                      </li>
+                            </div>                              
+                        </li>
 
 
-                        </sec:authorize>
+                    </sec:authorize>
 
                              <li>
                  <jsp:include page="/WEB-INF/jsp/templates/common/lang-select.jsp"/>
@@ -102,23 +102,23 @@
 
         </div>
                        
-        <div class="container">
-      <div class="row">
-                  <div class="col-xs-12 col-md-12" >
-                     <div id="jsErrors"></div>
-                    <div id="notice"></div>
-                   
-                    <c:if test="${not empty statusMessageKey}">
-                        <div class="alert alert-block alert-warning" style="width:20em;">
-                            <a class="close" data-dismiss="alert" href="#">×</a>
-                            <p><fmt:message key="${statusMessageKey}"/></p>
-                        </div>
-                    </c:if>
-                </div>
-          </div>
-                    <tiles:insertAttribute name="content" />
-               
-            </div>
+                 <div class="container">
+                     <div class="row">
+                         <div class="col-xs-12 col-md-12" >
+                             <div id="jsErrors"></div>
+                             <div id="notice"></div>
+
+                             <c:if test="${not empty statusMessageKey}">
+                                 <div class="alert alert-block alert-warning" style="width:20em;">
+                                     <a class="close" data-dismiss="alert" href="#">×</a>
+                                     <p><fmt:message key="${statusMessageKey}"/></p>
+                                 </div>
+                             </c:if>
+                         </div>
+                     </div>
+                     <tiles:insertAttribute name="content" />
+
+                 </div>
                     
         <hr>
 
@@ -185,8 +185,6 @@
 
 
         <%@ include file="/WEB-INF/jsp/templates/common/template-common-body.jsp"%>
-
-
 
 </body>
 </html>

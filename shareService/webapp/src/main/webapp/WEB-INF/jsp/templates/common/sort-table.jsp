@@ -8,8 +8,7 @@
              
              var direction = sortAsc ? 'down' : 'up';
              
-                       $(document).ready(function() {
-                                                           
+                       $(document).ready(function() {                                                           
                            
                               $('.sortColumnKey').each(function(index, obj) {
                                     if ( obj.getAttribute('sortColumn') == currentSortColumn) {

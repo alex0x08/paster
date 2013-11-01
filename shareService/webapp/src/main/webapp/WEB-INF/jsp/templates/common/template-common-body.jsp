@@ -11,9 +11,6 @@
         
         var commentsUrl = '<c:url value="/main/file/raw/comments"/>';
 
-       
-
-
         function showError(message) {
             
          console.log('js error: ' + message);
@@ -71,7 +68,7 @@
   
                $(".commentsBtn").bind('click', function(e) {
                
-                 var thisTab = e.target; 
+                  var thisTab = e.target; 
                   var pageTarget = $(thisTab).attr('href');
                   
                   $(pageTarget).load(commentsUrl+'?id='+$(thisTab).attr('modelId'));
@@ -79,24 +76,19 @@
         
               
          $(".pastePreviewBtn").bind('click', function() {
-                var link=$(this);
-           
+                var link=$(this);           
            
                 $('#targetImg').attr('src',link.attr('targetIcon'));
                 $('#targetTitle').html(link.attr('targetTitle'));
            
-           
-                //${pasteUrl} ${externalUrl}
-            
                 var clink = '<iframe src="${pasteUrl}/main/paste/loadFrom?url=${externalUrl}/act/download?id=';
                 clink+= link.attr('targetId');
                 clink+= '" scrolling="auto" frameborder="0" style="width:640px;height:320px; "  allowTransparency="true" > </iframe>';
                 
                 $('#pasteContent').html(clink);
-               $('#paste_preview').modal({backdrop: false}, "show");
+                $('#paste_preview').modal({backdrop: false}, "show");
               
                 return false;
-
             });
    
    
@@ -112,8 +104,7 @@
                     $('#delete_confirmation').modal("hide");
                     e.preventDefault();
                     location.href=link.attr('deleteLink');
-                    return true;
-   
+                    return true;   
                 });
 
                 return false;
@@ -170,19 +161,10 @@
                         });
         
         
-        $('.remoteModal').on('show.bs.modal', function () {
-        
+        $('.remoteModal').on('show.bs.modal', function () {        
              $(this).find('#srcFrame').attr("src",$(this).attr('srcUrl'));
-            
-        
         });
              
-                });        
-                 
-                
-                 
-                        
-                 
-                 </script>
-      
+                }); 
+       </script>      
   
