@@ -28,6 +28,13 @@ import ch.qos.logback.core.rolling.RollingFileAppender;
 import ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy;
 import com.jcabi.manifests.Manifests;
 import java.io.IOException;
+import java.util.logging.Level;
+import javassist.CannotCompileException;
+import javassist.ClassClassPath;
+import javassist.ClassPool;
+import javassist.CtClass;
+import javassist.CtMethod;
+import javassist.NotFoundException;
 import uber.megashare.base.SystemInfo;
 import uber.megashare.model.AppVersion;
 
@@ -35,6 +42,10 @@ public class SystemPropertiesListener implements ServletContextListener {
 
     private static final String APP_BASE = ".apps",appName="share";
 
+    private File app_home;
+    
+    private Logger log;
+    
     @Override
     public void contextInitialized(ServletContextEvent event) {
 
@@ -43,11 +54,7 @@ public class SystemPropertiesListener implements ServletContextListener {
         } catch (IOException ex) {
             throw new IllegalStateException("Error reading manifest "+ex.getLocalizedMessage(),ex);
          }
-            
-        
-        File app_home;
-
-        
+              
         
         if (!System.getProperties().containsKey("share.app.home")) {
 
@@ -80,9 +87,30 @@ public class SystemPropertiesListener implements ServletContextListener {
         
         //getLogger().info("application home:"+System.getProperty("app.home"));
 
+        
+        setupLogger();
+        
+        fixH2();
+        
+        
+        
+        
+    }
+    
+     
+    
+
+    @Override
+    public void contextDestroyed(ServletContextEvent servletContextEvent) {
+    }
+    
+    
+    private void setupLogger() {
+    
+        
         LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
 
-        RollingFileAppender<ILoggingEvent> rfAppender = new RollingFileAppender<ILoggingEvent>();
+        RollingFileAppender<ILoggingEvent> rfAppender = new RollingFileAppender<>();
         rfAppender.setContext(loggerContext);
         rfAppender.setFile(new File(app_home, appName+".log").getAbsolutePath());
         FixedWindowRollingPolicy rollingPolicy = new FixedWindowRollingPolicy();
@@ -93,7 +121,7 @@ public class SystemPropertiesListener implements ServletContextListener {
         rollingPolicy.setFileNamePattern(appName+"_%i.log.zip");
         rollingPolicy.start();
 
-        SizeBasedTriggeringPolicy<ILoggingEvent> triggeringPolicy = new SizeBasedTriggeringPolicy<ILoggingEvent>();
+        SizeBasedTriggeringPolicy<ILoggingEvent> triggeringPolicy = new SizeBasedTriggeringPolicy<>();
         triggeringPolicy.setMaxFileSize("15MB");
         triggeringPolicy.start();
 
@@ -109,20 +137,67 @@ public class SystemPropertiesListener implements ServletContextListener {
         rfAppender.start();
 
         // attach the rolling file appender to the logger of your choice
-        Logger logbackLogger = loggerContext.getLogger("ROOT");
-        logbackLogger.addAppender(rfAppender);
+        log = loggerContext.getLogger("ROOT");
+        log.addAppender(rfAppender);
 
-        logbackLogger = loggerContext.getLogger("uber.megashare");
-        logbackLogger.addAppender(rfAppender);
+        log = loggerContext.getLogger("uber.megashare");
+        log.addAppender(rfAppender);
 
 
         // OPTIONAL: print logback internal status messages
         //StatusPrinter.print(loggerContext);
 
         // log something
-        logbackLogger.debug("application home:" + app_home.getAbsolutePath());
+        log.debug("application home:" + app_home.getAbsolutePath());
+        
+    
     }
+    
+    
+      private void fixH2()
+            {
+        try {
+            //Get the Class implementation byte code
+             ClassPool cpool =ClassPool.getDefault(); 
+            cpool.appendClassPath(new ClassClassPath(this.getClass()));
+              
+            CtClass ctClass = cpool.get("org.h2.server.web.WebServer");
+            
+            ctClass.stopPruning(true);
+            
+            //Get the method from the Class byte code
+            CtMethod method= ctClass.getDeclaredMethod("loadProperties");
 
-    public void contextDestroyed(ServletContextEvent servletContextEvent) {
-    }
+          
+            
+            StringBuilder content = new StringBuilder();
+            content.append("{\n java.util.Properties p = new java.util.Properties(); p.setProperty(\"0\",\"Local DB|org.h2.Driver|jdbc\\:h2\\:tcp\\://localhost:6666/filesdb;DB_CLOSE_ON_EXIT=TRUE|bo|bo\"); return p;  \n } ");    
+
+            /**
+             * Inserting the content
+             */
+            method.setBody(content.toString());
+                  
+        
+            method= ctClass.getDeclaredMethod("saveProperties");
+
+            method.setBody("{ System.out.println(\"NO\");}");
+           
+            
+             method= ctClass.getDeclaredMethod("startTranslate");
+
+              method.setBody("{ System.out.println(\"NO\"); return null;}");
+         
+            Class out =ctClass.toClass(this.getClass().getClassLoader(),this.getClass().getProtectionDomain());
+            
+            ctClass.stopPruning(false);
+            
+            out.newInstance();
+        } catch (NotFoundException | CannotCompileException | InstantiationException | IllegalAccessException ex) {
+            log.error(ex.getLocalizedMessage(),ex);
+        }
+   }
+
+   
+    
 }
