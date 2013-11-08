@@ -114,10 +114,10 @@ public abstract class GenericDaoImpl<T extends BaseDBObject, PK extends Serializ
     @Override
     public T get(PK id) {        
         T entity = em.find(this.persistentClass, id);
-        if (entity == null) {
+        /*if (entity == null) {
             getLogger().warn("Uh oh, '" + this.persistentClass + "' object with id '" + id + "' not found...");
             throw new ObjectRetrievalFailureException(this.persistentClass, id);
-        }
+        }*/
         return entity;
     }
 

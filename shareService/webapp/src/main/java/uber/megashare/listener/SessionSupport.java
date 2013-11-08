@@ -94,7 +94,7 @@ public class SessionSupport extends LoggedClass {
             remove(getSessionForLogin(user.getUsername()));
         }
         synchronized (lock) {
-            store.put(sessionID, user.getUsername());
+            store.forcePut(sessionID, user.getUsername());
             user_store.put(user.getUsername(), user);
         }
     }
@@ -108,6 +108,7 @@ public class SessionSupport extends LoggedClass {
         synchronized (lock) {
             user_store.remove(store.get(sessionID));
             store.remove(sessionID);
+           
         }
     }
 

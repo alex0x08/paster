@@ -320,7 +320,9 @@
 
                  </div>                                 
                  <div class="row">
-                     <div class="col-md-10 col-md-offset-1" >     
+                     <div class="col-md-10 col-md-offset-1" >    
+                         
+                         <%--
                          <div class="form-group">
                              <form:label  path="file">Custom fields:</form:label>
                                  <div id="customFields" class="controls">
@@ -355,7 +357,7 @@
                              </script>     
 
                          </div>       
-
+                         --%>
                          <c:if test="${model.blank}">
 
                              <div class="form-group">

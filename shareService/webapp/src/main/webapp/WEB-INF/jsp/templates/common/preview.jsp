@@ -355,7 +355,8 @@
                     </c:when>
                     
                     <c:when test="${model.accessLevel eq 'USERS'}">
-                        For users:
+                        
+                        <img src="<c:url value='/main/static/${appVersion}/images/users.png'/>" title="<fmt:message key='for-users.title'/>"/>
                           <c:forEach var="user" items="${model.relatedUsers}" >
 
                               <a href="<c:url value='/main/file/list/search?query=relatedUsers_name:${user.name}'/>" 
