@@ -111,7 +111,7 @@ public abstract class AbstractController extends LoggedClass {
     private final static List<Locale> availableLocales = new ArrayList<>();
 
     static {
-        availableLocales.add(Locale.ENGLISH);
+        availableLocales.add(Locale.US);
         availableLocales.add(new Locale("ru", "RU"));
     }
     

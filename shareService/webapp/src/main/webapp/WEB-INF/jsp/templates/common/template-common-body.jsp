@@ -159,6 +159,11 @@
                         
                         $('.chosen_select_box_multiple').chosen({
                         });
+                        
+  $(".chosen_image_selectbox").chosenImage({
+    disable_search_threshold: 10 
+  });
+
         
         
         $('.remoteModal').on('show.bs.modal', function () {        

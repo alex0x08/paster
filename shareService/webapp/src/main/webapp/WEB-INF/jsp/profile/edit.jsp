@@ -61,6 +61,27 @@
                         </div>
                 </div>
 
+                    
+                    <div class="form-group">
+                    <label cssClass="control-label" for="prefferedLocaleCode"><fmt:message key="user.prefferedLocale"/>:</label>
+                    <div class="controls">
+                        <span class="input">
+                            <form:select path="prefferedLocaleCode" cssErrorClass="form-control alert alert-danger" 
+                                         cssStyle="width:20em;" 
+                                         cssClass="chosen_image_selectbox form-control">
+                                <c:forEach items="${availableLocales}" var="locale">
+                                    <c:url var="imgUrl" value='/main/static/${appVersion}/images/flags/flag_${locale.language}_${locale.country}.png'/>
+                                    
+                                    <form:option value="${locale.language}_${locale.country}" data-img-src="${imgUrl}">
+                                        <c:out value="${locale.displayName}"/>
+                                    </form:option>
+                                </c:forEach>
+                            </form:select> 
+                            <form:errors path="prefferedLocaleCode" cssClass="help-block alert alert-danger" /> 
+                        </span>
+                    </div>
+                </div>      
+                    
               
                      <div class="form-group ">
 

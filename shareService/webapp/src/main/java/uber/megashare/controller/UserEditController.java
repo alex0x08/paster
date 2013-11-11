@@ -142,6 +142,7 @@ public class UserEditController extends AbstractEditController<User> {
             current.setEmail(b.getEmail());
             current.setDefaultFileAccessLevel(b.getDefaultFileAccessLevel());
             current.setName(b.getName());
+            current.setPrefferedLocaleCode(b.getPrefferedLocaleCode());
             
             Project p  =projectManager.get(b.getRelatedProject().getId());
             

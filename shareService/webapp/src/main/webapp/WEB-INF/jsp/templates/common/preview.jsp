@@ -476,17 +476,9 @@
                       allowTransparency="true"   >
                 </iframe>    
                 
-                
-             
-                
             </c:if>
-            
-            
-            
-    </div>
-
-                    
-                </div>
+   </div>
+        </div>
                     <div class="tab-pane" id="comments_${model.id}" >
                 </div>
                 

@@ -149,6 +149,9 @@ public class ProfileController extends AbstractController {
         current.setDefaultFileAccessLevel(b.getDefaultFileAccessLevel());
         current.setName(b.getName());
 
+        current.setPrefferedLocaleCode(b.getPrefferedLocaleCode());
+            
+        
         if (!StringUtils.isBlank(b.getNewPassword())) {
             
             if (!b.getNewPassword().equals(b.getRepeatPassword())) {

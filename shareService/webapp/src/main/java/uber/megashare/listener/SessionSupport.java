@@ -76,6 +76,8 @@ public class SessionSupport extends LoggedClass {
 
         String sessionID = getSessionForLogin(u.getUsername());
 
+       // u.setCurrentLocale(u.getPrefferedLocale());
+        
         add(sessionID, u);
 
     }

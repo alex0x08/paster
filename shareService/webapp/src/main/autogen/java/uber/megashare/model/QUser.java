@@ -57,6 +57,8 @@ public class QUser extends EntityPathBase<User> {
 
     public final StringPath password = createString("password");
 
+    public final StringPath prefferedLocaleCode = createString("prefferedLocaleCode");
+
     public final QProject relatedProject;
 
     public final SetPath<Role, EnumPath<Role>> roles = this.<Role, EnumPath<Role>>createSet("roles", Role.class, EnumPath.class);

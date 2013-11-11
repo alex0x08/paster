@@ -112,7 +112,7 @@ public class AbstractXmlObjectType<T extends XmlCloneable> extends LoggedClass i
      */
     @Override
     public boolean equals(Object x, Object y) throws HibernateException {
-        return x.equals(y);
+        return x!=null && x.equals(y);
     }
 
     /**

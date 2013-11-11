@@ -24,11 +24,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.xml.bind.annotation.XmlTransient;
+import org.apache.commons.lang3.LocaleUtils;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.hibernate.annotations.IndexColumn;
 import org.hibernate.search.annotations.Field;
@@ -92,11 +94,38 @@ public class User extends Struct implements Serializable, UserDetails {
     @ManyToOne(fetch = FetchType.EAGER)
     private Project relatedProject;
 
+    private String prefferedLocaleCode = Locale.getDefault().getLanguage()+"_"+Locale.getDefault().getCountry();
+   
+    @Transient
+    @XmlTransient
+    @XStreamOmitField
+    private Locale currentLocale;
+    
     public User(Long userId) {
         setId(userId);
     }
     
     public User() {}
+
+    public Locale getCurrentLocale() {
+        return currentLocale;
+    }
+
+    public void setCurrentLocale(Locale currentLocale) {
+        this.currentLocale = currentLocale;
+    }
+    
+    public String getPrefferedLocaleCode() {
+        return prefferedLocaleCode;
+    }
+
+    public void setPrefferedLocaleCode(String prefferedLocaleCode) {
+        this.prefferedLocaleCode = prefferedLocaleCode;
+    }
+    
+    public Locale getPrefferedLocale() {
+        return LocaleUtils.toLocale(prefferedLocaleCode);
+    }
     
     public Project getRelatedProject() {
         return relatedProject;

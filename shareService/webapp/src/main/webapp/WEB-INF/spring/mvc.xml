@@ -33,7 +33,7 @@
     
     <!-- i18n -->
     <mvc:interceptors>    
-        <bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor"
+        <bean class="uber.megashare.web.ShareLocaleChangeInterceptor"
               p:paramName="locale" />
     </mvc:interceptors>
     
