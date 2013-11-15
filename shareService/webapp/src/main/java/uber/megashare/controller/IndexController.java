@@ -27,7 +27,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import uber.megashare.model.SharedFile;
 import uber.megashare.model.SharedFileSearchQuery;
 import uber.megashare.service.SharedFileManager;
-import uber.megashare.service.UserManager;
 
 /**
  *
