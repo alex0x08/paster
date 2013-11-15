@@ -328,10 +328,10 @@ public class SharedFileEditController extends AbstractCommentController<SharedFi
 
                         log.append("image preview generation is not supported for file " + fout.getName());
                     }
-
+                    
                 }
                 SharedFile out = manager.save(input);
-
+   
                 log.append("saved file " + out);
 
                 return out;

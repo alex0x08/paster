@@ -1,7 +1,7 @@
 /*! ============================================================
- * bootstrapSwitch v1.6 by Larentis Mattia @SpiritualGuru
+ * bootstrapSwitch v1.8 by Larentis Mattia @SpiritualGuru
  * http://www.larentis.eu/
- * 
+ *
  * Enhanced for radiobuttons by Stein, Peter @BdMdesigN
  * http://www.bdmdesign.org/
  *
@@ -32,7 +32,8 @@
               , moving
               , onLabel = "ON"
               , offLabel = "OFF"
-              , icon = false;
+              , icon = false
+              , textLabel = false;
 
             $.each(['switch-mini', 'switch-small', 'switch-large'], function (i, el) {
               if (classes.indexOf(el) >= 0)
@@ -50,14 +51,17 @@
             if ($element.data('off-label') !== undefined)
               offLabel = $element.data('off-label');
 
-            if ($element.data('icon') !== undefined)
-              icon = $element.data('icon');
+            if ($element.data('label-icon') !== undefined)
+              icon = $element.data('label-icon');
+
+            if ($element.data('text-label') !== undefined)
+              textLabel = $element.data('text-label');
 
             $switchLeft = $('<span>')
               .addClass("switch-left")
               .addClass(myClasses)
               .addClass(color)
-              .html(onLabel);
+              .html('' + onLabel + '');
 
             color = '';
             if ($element.data('off') !== undefined)
@@ -67,7 +71,7 @@
               .addClass("switch-right")
               .addClass(myClasses)
               .addClass(color)
-              .html(offLabel);
+              .html('' + offLabel + '');
 
             $label = $('<label>')
               .html("&nbsp;")
@@ -75,7 +79,11 @@
               .attr('for', $element.find(inputSelector).attr('id'));
 
             if (icon) {
-              $label.html('<i class="icon icon-' + icon + '"></i>');
+              $label.html('<i class="icon ' + icon + '"></i>');
+            }
+
+            if (textLabel) {
+              $label.html('' + textLabel + '');
             }
 
             $div = $element.find(inputSelector).wrap($('<div>')).parent().data('animated', false);
@@ -96,7 +104,11 @@
               $(this).addClass('deactivate');
 
             var changeStatus = function ($this) {
-              $this.siblings('label').trigger('mousedown').trigger('mouseup').trigger('click');
+              if ($element.parent('label').is('.label-change-switch')) {
+
+              } else {
+                $this.siblings('label').trigger('mousedown').trigger('mouseup').trigger('click');
+              }
             };
 
             $element.on('keydown', function (e) {
@@ -152,11 +164,11 @@
 
               if ($this.closest('.has-switch').is('.deactivate')) {
                 $this.unbind('click');
-              } else if ( $this.closest('.switch-on').parent().is('.radio-no-uncheck') ) {
+              } else if ($this.closest('.switch-on').parent().is('.radio-no-uncheck')) {
                 $this.unbind('click');
               } else {
                 $this.on('mousemove touchmove', function (e) {
-                  var $element = $(this).closest('.switch')
+                  var $element = $(this).closest('.make-switch')
                     , relativeX = (e.pageX || e.originalEvent.targetTouches[0].pageX) - $element.offset().left
                     , percent = (relativeX / $element.width()) * 100
                     , left = 25
@@ -174,8 +186,7 @@
 
                 $this.on('click touchend', function (e) {
                   var $this = $(this)
-                    , $target = $(e.target)
-                    , $myRadioCheckBox = $target.siblings('input');
+                    , $myInputBox = $this.siblings('input');
 
                   e.stopImmediatePropagation();
                   e.preventDefault();
@@ -183,12 +194,12 @@
                   $this.unbind('mouseleave');
 
                   if (moving)
-                    $myRadioCheckBox.prop('checked', !(parseInt($this.parent().css('left')) < -25));
+                    $myInputBox.prop('checked', !(parseInt($this.parent().css('left')) < -25));
                   else
-                    $myRadioCheckBox.prop("checked", !$myRadioCheckBox.is(":checked"));
+                    $myInputBox.prop("checked", !$myInputBox.is(":checked"));
 
                   moving = false;
-                  $myRadioCheckBox.trigger('change');
+                  $myInputBox.trigger('change');
                 });
 
                 $this.on('mouseleave', function (e) {
@@ -198,7 +209,7 @@
                   e.preventDefault();
                   e.stopImmediatePropagation();
 
-                  $this.unbind('mouseleave');
+                  $this.unbind('mouseleave mousemove');
                   $this.trigger('mouseup');
 
                   $myInputBox.prop('checked', !(parseInt($this.parent().css('left')) < -25)).trigger('change');
@@ -208,7 +219,7 @@
                   e.stopImmediatePropagation();
                   e.preventDefault();
 
-                  $(this).unbind('mousemove');
+                  $(this).trigger('mouseleave');
                 });
               }
             });
@@ -216,7 +227,7 @@
             if ($form.data('bootstrapSwitch') !== 'injected') {
               $form.bind('reset', function () {
                 setTimeout(function () {
-                  $form.find('.switch').each(function () {
+                  $form.find('.make-switch').each(function () {
                     var $input = $(this).find(inputSelector);
 
                     $input.prop('checked', $input.is(':checked')).trigger('change');
@@ -255,7 +266,7 @@
       },
       toggleRadioState: function (skipOnChange) {
         var $radioinput = $(this).find(':radio');
-          $radioinput.not(':checked').prop('checked', !$radioinput.is(':checked')).trigger('change', skipOnChange);
+        $radioinput.not(':checked').prop('checked', !$radioinput.is(':checked')).trigger('change', skipOnChange);
       },
       toggleRadioStateAllowUncheck: function (uncheck, skipOnChange) {
         var $radioinput = $(this).find(':radio');
@@ -269,6 +280,67 @@
       setState: function (value, skipOnChange) {
         $(this).find(inputSelector).prop('checked', value).trigger('change', skipOnChange);
       },
+      setOnLabel: function (value) {
+        var $switchLeft = $(this).find(".switch-left");
+        $switchLeft.html(value);
+      },
+      setOffLabel: function (value) {
+        var $switchRight = $(this).find(".switch-right");
+        $switchRight.html(value);
+      },
+      setOnClass: function (value) {
+        var $switchLeft = $(this).find(".switch-left");
+        var color = '';
+        if (value !== undefined) {
+          if ($(this).attr('data-on') !== undefined) {
+            color = "switch-" + $(this).attr('data-on')
+          }
+          $switchLeft.removeClass(color);
+          color = "switch-" + value;
+          $switchLeft.addClass(color);
+        }
+      },
+      setOffClass: function (value) {
+        var $switchRight = $(this).find(".switch-right");
+        var color = '';
+        if (value !== undefined) {
+          if ($(this).attr('data-off') !== undefined) {
+            color = "switch-" + $(this).attr('data-off')
+          }
+          $switchRight.removeClass(color);
+          color = "switch-" + value;
+          $switchRight.addClass(color);
+        }
+      },
+      setAnimated: function (value) {
+        var $element = $(this).find(inputSelector).parent();
+        if (value === undefined) value = false;
+        $element.data('animated', value);
+        $element.attr('data-animated', value);
+
+        if ($element.data('animated') !== false) {
+          $element.addClass("switch-animate");
+        } else {
+          $element.removeClass("switch-animate");
+        }
+      },
+      setSizeClass: function (value) {
+        var $element = $(this);
+        var $switchLeft = $element.find(".switch-left");
+        var $switchRight = $element.find(".switch-right");
+        var $label = $element.find("label");
+        $.each(['switch-mini', 'switch-small', 'switch-large'], function (i, el) {
+          if (el !== value) {
+            $switchLeft.removeClass(el);
+            $switchRight.removeClass(el);
+            $label.removeClass(el);
+          } else {
+            $switchLeft.addClass(el);
+            $switchRight.addClass(el);
+            $label.addClass(el);
+          }
+        });
+      },
       status: function () {
         return $(this).find(inputSelector).is(':checked');
       },
@@ -278,7 +350,7 @@
           , $form = $element.closest('form')
           , $inputbox;
 
-        $div.find(':not(input[type!="hidden"])').remove();
+        $div.find(':not(input)').remove();
 
         $inputbox = $div.children();
         $inputbox.unwrap().unwrap();
@@ -303,8 +375,8 @@
   };
 }(jQuery);
 
-(function($) {  // creates scope for $ sign assigned to jQuery
-    $(function () { // on dom ready
-        $('.switch')['bootstrapSwitch'](); // attach bootstrapswitch
-    });
+(function ($) {
+  $(function () {
+    $('.make-switch')['bootstrapSwitch']();
+  });
 })(jQuery);

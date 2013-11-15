@@ -105,7 +105,11 @@
                  <div class="container">
                      <div class="row">
                          <div class="col-xs-12 col-md-12" >
-                             <div id="jsErrors"></div>
+                             <div id="jsErrors">
+                                 <!--[if IE]>
+                                 This will not work in your browser. Please upgrade.
+                                 <![endif]-->
+                             </div>
                              <div id="notice"></div>
 
                              <c:if test="${not empty statusMessageKey}">

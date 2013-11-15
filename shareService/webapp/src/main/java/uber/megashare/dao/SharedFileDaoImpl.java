@@ -136,23 +136,34 @@ public class SharedFileDaoImpl extends GenericSearchableDaoImpl<SharedFile> impl
        // System.out.println("_getFiles for user "+userId+" proj="+projectId);
         List<BooleanExpression> out = new ArrayList<>();
         
-        if (projectId!=null) {        
-            out.add(QSharedFile.sharedFile.relatedProjects.contains(new Project(projectId)));
+        if (projectId!=null) {    
+            
+            List<BooleanExpression> pout = new ArrayList<>();
+        
+            
+        //     pout.add(QSharedFile.sharedFile.accessLevel.in(AccessLevel.ALL));
+             pout.add(QSharedFile.sharedFile.relatedProjects.contains(new Project(projectId)));
         
             if (userId!=null) {            
-                 out.add(BooleanExpression.anyOf(
+                 pout.add(BooleanExpression.anyOf(
                          QSharedFile.sharedFile.owner.id.eq(userId),
                          QSharedFile.sharedFile.relatedUsers.contains(new User(userId)),
                          QSharedFile.sharedFile.accessLevel.in(AccessLevel.PROJECT,AccessLevel.USERS)
                 ));
             }
+           
         
+             out.add(BooleanExpression.anyOf(QSharedFile.sharedFile.accessLevel.in(AccessLevel.ALL),
+                     BooleanExpression.allOf(pout.toArray(new BooleanExpression[pout.size()]))));
+            
         } else {
                 out.add(userId!=null ? BooleanExpression.anyOf(QSharedFile.sharedFile.owner.id.eq(userId)
                         ,QSharedFile.sharedFile.relatedUsers.contains(new User(userId))
                         ) :
                         QSharedFile.sharedFile.accessLevel.in(AccessLevel.ALL));                
         }
+        
+        
         return findAll(BooleanExpression.allOf(out.toArray(new BooleanExpression[out.size()])), 
                 QSharedFile.sharedFile.lastModified.desc());
     }

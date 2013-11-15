@@ -18,8 +18,8 @@
  <script type="text/javascript">
        $(document).ready(function() {
            
-                   if ($("#file_upload input[type='radio']:checked").val() == 'PROJECT') {
-                       $('#selectProjectsBlock').toggle();
+                   if ($("#form_file_upload input[type='radio']:checked").val() == 'PROJECT') {
+                      $('#selectProjectsBlock').toggle();
                    }
                    
                     $('.accessLevelSwitch').change(function() {
@@ -42,7 +42,7 @@
                 <script src="<c:url value='/main/assets/${appVersion}/jquery-knob/1.2.2/jquery.knob.js'/>"></script>
 
                 <c:url var="url" value='/main/file/upload-xdr' />
-                <c:set var="mainBlockStyle" value="col-md-3"/>
+                <c:set var="mainBlockStyle" value="col-md-4"/>
                 
                 <script type="text/javascript">
 
@@ -104,15 +104,7 @@
         progress: function(e, data){
 
             var progress = parseInt(data.loaded / data.total * 100, 10);
-
-            data.context.find('input').val(progress).change();
-
-            if(progress == 100){
-                data.context.removeClass('working');
-                data.context.fadeOut(function(){
-                   data.context.remove();
-                });
-            }
+            data.context.find('input').val(progress).change();            
         },
 
         fail:function(e, data){
@@ -121,6 +113,14 @@
         done: function(e, data) {
              
          try {
+             
+             
+                data.context.removeClass('working');
+                data.context.fadeOut(function(){
+                   data.context.remove();
+                });
+            
+         
                                     
             if (typeof data.result['error'] == "undefined") {
          
@@ -199,7 +199,7 @@
  <div class="row">
      <div class="${mainBlockStyle} col-md-offset-1" >     
 
-                 <form:form action="${url}" modelAttribute="model" 
+                 <form:form action="${url}" modelAttribute="model" id="form_file_upload"
                    method="POST"  cssClass="form-horizontal"
                    enctype="multipart/form-data">
                     
@@ -363,7 +363,9 @@
                              <div class="form-group">
                                  <form:label  path="file"><fmt:message key="file.removeAfter"/>:</form:label>
                                      <div class="controls">
-                                         <div class="switch" >
+                                         
+                                         <div class="make-switch" data-on-label="<i class='glyphicon glyphicon-ok'></i>" 
+                                              data-off-label="<i class='glyphicon glyphicon-minus'></i>">
                                              <input id='enableRemovalSwitch' type="checkbox"  >
                                          </div>
 

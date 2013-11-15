@@ -35,7 +35,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.math.NumberUtils;
-import uber.megashare.model.AccessLevel;
 import uber.megashare.model.SharedFile;
 import uber.megashare.model.User;
 import uber.megashare.service.SettingsManager;
