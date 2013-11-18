@@ -9,4 +9,3 @@
 *.iml
 */.project/*
 /shareService/webapp/target/
-/shareService/client/target/
