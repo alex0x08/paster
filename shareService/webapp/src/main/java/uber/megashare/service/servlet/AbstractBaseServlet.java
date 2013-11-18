@@ -24,7 +24,7 @@ import org.slf4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 import uber.megashare.base.LoggedClass;
-import uber.megashare.listener.SessionSupport;
+import uber.megashare.listener.SessionHelper;
 import uber.megashare.model.User;
 import uber.megashare.service.UserManager;
 
@@ -63,7 +63,7 @@ public abstract class AbstractBaseServlet extends HttpServlet {
     public User getCurrentUser(HttpServletRequest request) {
 
         return request.getUserPrincipal() != null
-                ? SessionSupport.getInstance().getUserForLogin(request.getUserPrincipal().getName())
+                ? SessionHelper.getInstance().getUserForLogin(request.getUserPrincipal().getName())
                 : null;
     }
 

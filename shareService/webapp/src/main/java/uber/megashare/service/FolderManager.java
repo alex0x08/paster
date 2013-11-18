@@ -16,6 +16,7 @@
 package uber.megashare.service;
 
 import uber.megashare.model.tree.FolderNode;
+import uber.megashare.model.tree.RelatedProject;
 
 /**
  *
@@ -26,6 +27,8 @@ public interface FolderManager {
     FolderNode getParentFolder();
     
     FolderNode save(FolderNode node);
+    
+    RelatedProject save(RelatedProject rp);
     
     boolean exists(Long id);
     

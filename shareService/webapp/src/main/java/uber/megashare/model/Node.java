@@ -16,6 +16,8 @@
 package uber.megashare.model;
 
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.*;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.hibernate.envers.Audited;
@@ -62,6 +64,17 @@ public abstract class Node extends CommentedStruct {
     @Transient
     private NodeType nodeType = NodeType.FILE;
 
+    @Transient
+    private List<SharedFile> children = new ArrayList<>(); 
+
+    public List<SharedFile> getChildren() {
+        return children;
+    }
+
+    public void setChildren(List<SharedFile> children) {
+        this.children = children;
+    }
+    
     public NodeType getNodeType() {
         return nodeType;
     }

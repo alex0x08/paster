@@ -148,7 +148,9 @@ public class ProfileController extends AbstractController {
         current.setEmail(b.getEmail());
         current.setDefaultFileAccessLevel(b.getDefaultFileAccessLevel());
         current.setName(b.getName());
-
+        current.setSkype(b.getSkype());
+        current.setPhone(b.getPhone());
+     
         current.setPrefferedLocaleCode(b.getPrefferedLocaleCode());
             
         

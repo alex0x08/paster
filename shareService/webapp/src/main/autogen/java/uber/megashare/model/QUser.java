@@ -57,6 +57,8 @@ public class QUser extends EntityPathBase<User> {
 
     public final StringPath password = createString("password");
 
+    public final StringPath phone = createString("phone");
+
     public final StringPath prefferedLocaleCode = createString("prefferedLocaleCode");
 
     public final QProject relatedProject;
@@ -64,6 +66,8 @@ public class QUser extends EntityPathBase<User> {
     public final SetPath<Role, EnumPath<Role>> roles = this.<Role, EnumPath<Role>>createSet("roles", Role.class, EnumPath.class);
 
     public final ListPath<SavedSession, QSavedSession> savedSessions = this.<SavedSession, QSavedSession>createList("savedSessions", SavedSession.class, QSavedSession.class);
+
+    public final StringPath skype = createString("skype");
 
     public QUser(String variable) {
         this(User.class, forVariable(variable), INITS);

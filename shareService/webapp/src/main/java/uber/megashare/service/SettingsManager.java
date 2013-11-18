@@ -38,7 +38,7 @@ public interface SettingsManager extends GenericManager<SystemProperties, Long> 
      */
     SystemProperties merge(SystemProperties t);
 
-    String getCalculatedFileDir(Date date,Long version);
+    String getCalculatedFileDir(Date date,String uuid,Long version);
    
    
 }

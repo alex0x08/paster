@@ -62,7 +62,7 @@ import uber.megashare.model.xml.XMLObject;
 @Audited
 //@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @XStreamAlias("sharedFile")
-@EntityListeners({CreateUUIDListener.class})
+//@EntityListeners({CreateUUIDListener.class})
 //@TypeDef(defaultForType = XMLObject.class,name = "xmlObject", typeClass = uber.megashare.model.xml.XMLObjectType.class)
 public class SharedFile extends Node {
 
@@ -85,7 +85,7 @@ public class SharedFile extends Node {
     @Column(nullable = false, unique = true, length = 255)
     @Field(index = Index.YES, store = Store.YES, termVector = TermVector.NO)
     @XStreamAsAttribute
-    String uuid;// = UUID.randomUUID().toString();
+    String uuid = UUID.randomUUID().toString();
     
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -340,7 +340,7 @@ public class SharedFile extends Node {
         previewUrl = null;
         mime = null;
         fileSize = 0;
-        uuid = UUID.randomUUID().toString();
+       // uuid = UUID.randomUUID().toString();
     }
 
     @Override

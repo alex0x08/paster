@@ -15,36 +15,41 @@
  */
 package uber.megashare.model.tree;
 
+import org.springframework.data.neo4j.annotation.GraphId;
 import org.springframework.data.neo4j.annotation.Indexed;
-import org.springframework.data.neo4j.annotation.NodeEntity;
 import org.springframework.data.neo4j.support.index.IndexType;
-import uber.megashare.model.Project;
 
 /**
  *
- * @author aachernyshev
+ * @author <a href="mailto:aachernyshev@it.ru">Alex Chernyshev</a>
  */
-@NodeEntity
-public class RelatedProject extends BaseTreeObject{
+public abstract class BaseTreeObject {
 
-   
-    @Indexed(indexType = IndexType.FULLTEXT,indexName="project_name")
-    @Override
+    @GraphId
+    private Long id;
+    
+    private String name;
+    
+    private Long externalId;
+
+    public Long getId() {
+        return id;
+    }
+
+    public Long getExternalId() {
+        return externalId;
+    }
+
+    public void setExternalId(Long externalId) {
+        this.externalId = externalId;
+    }
+
+    @Indexed(indexType = IndexType.FULLTEXT,indexName="obj_name")
     public String getName() {
-        return super.getName();
+        return name;
     }
-    
-    public RelatedProject fromProject(Project p) {
-        
-        setName(p.getName());
-        setExternalId(p.getId());
-        return this;
-    }
-    
-    public Project toProject() {
-        Project out = new Project();
-        out.setId(getExternalId());
-        out.setName(getName());        
-        return out;
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

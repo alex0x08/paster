@@ -15,13 +15,14 @@
  */
 package uber.megashare.model.tree;
 
+import java.util.HashSet;
 import java.util.Set;
 import org.neo4j.graphdb.Direction;
-import org.springframework.data.neo4j.annotation.GraphId;
 import org.springframework.data.neo4j.annotation.Indexed;
 import org.springframework.data.neo4j.annotation.NodeEntity;
 import org.springframework.data.neo4j.annotation.RelatedTo;
 import org.springframework.data.neo4j.support.index.IndexType;
+import uber.megashare.model.AccessLevel;
 import uber.megashare.model.SharedFile;
 
 
@@ -30,28 +31,34 @@ import uber.megashare.model.SharedFile;
  * @author aachernyshev
  */
 @NodeEntity
-public class FolderNode {
+public class FolderNode extends BaseTreeObject {
     
     
-    @GraphId
-    private Long id;
-    
-    @Indexed(indexType = IndexType.FULLTEXT, indexName = "folder_name")
-    private String name;
-
+   
     @Indexed(indexType = IndexType.FULLTEXT, indexName = "owner_name")
     private String ownerName;
 
     
-    @RelatedTo(direction = Direction.INCOMING, type = "CHILD")
+    @RelatedTo(direction = Direction.INCOMING, type = "FOLDER_CHILD")
     private FolderNode parent;
 
-    @RelatedTo(direction = Direction.OUTGOING, type = "CHILD")
-    private Set<FolderNode> children;
+    @RelatedTo(direction = Direction.OUTGOING, type = "FOLDER_CHILD")
+    private Set<FolderNode> children = new HashSet<>();
 
     @Indexed
     private NodeType nodeType = NodeType.FOLDER;
 
+    @Indexed
+    private AccessLevel accessLevel = AccessLevel.PROJECT;
+    
+    
+    @RelatedTo(direction = Direction.OUTGOING, type = "PROJECT_CHILD")
+    private Set<RelatedProject> relatedProjects = new HashSet<>();
+
+    @RelatedTo(direction = Direction.OUTGOING, type = "USER_CHILD")
+    private Set<RelatedUser> relatedUsers = new HashSet<>();
+
+    
     //@Fetch
     //@RelatedToVia(type="RELATED_TO_PROJECTS")
     //private Set<RelatedProject> relatedProjects = new HashSet<>();
@@ -64,13 +71,30 @@ public class FolderNode {
         this.ownerName = ownerName;
     }
 
-    /*public Set<RelatedProject> getRelatedProjects() {
+    public AccessLevel getAccessLevel() {
+        return accessLevel;
+    }
+
+    public void setAccessLevel(AccessLevel accessLevel) {
+        this.accessLevel = accessLevel;
+    }
+    
+    public Set<RelatedUser> getRelatedUsers() {
+        return relatedUsers;
+    }
+
+    public void setRelatedUsers(Set<RelatedUser> relatedUsers) {
+        this.relatedUsers = relatedUsers;
+    }
+   
+    
+    public Set<RelatedProject> getRelatedProjects() {
         return relatedProjects;
     }
 
     public void setRelatedProjects(Set<RelatedProject> relatedProjects) {
         this.relatedProjects = relatedProjects;
-    }*/
+    }
     
     public NodeType getNodeType() {
         return nodeType;
@@ -96,28 +120,22 @@ public class FolderNode {
         this.children = children;
     }
     
-    public Long getId() {
-        return id;
-    }
-    
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
+   
     
     public SharedFile toSharedFile() {
         SharedFile out = new SharedFile();
         out.setNodeType(nodeType);
-        out.setId(id);
-        out.setName(name);
+        out.setId(getId());
+        out.setName(getName());
         out.setOwnerName(ownerName);
         
-        /*for (RelatedProject rp:relatedProjects) {
+        for (RelatedProject rp:relatedProjects) {
             out.getRelatedProjects().add(rp.toProject());
-        }*/
+        }
+        
+        for (RelatedUser rp:relatedUsers) {
+            out.getRelatedUsers().add(rp.toUser());
+        }
         
        return out;
     }

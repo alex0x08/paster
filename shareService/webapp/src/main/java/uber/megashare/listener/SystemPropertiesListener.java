@@ -90,7 +90,7 @@ public class SystemPropertiesListener implements ServletContextListener {
         
         setupLogger();
         
-        fixH2();
+     //   fixH2();
         
         
         

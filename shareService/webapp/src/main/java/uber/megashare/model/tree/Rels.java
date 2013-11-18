@@ -27,6 +27,6 @@ import org.neo4j.graphdb.RelationshipType;
  */
 public enum Rels implements RelationshipType
 {
-    CHILD
+    FOLDER_CHILD,USER_CHILD,PROJECT_CHILD
 }
 

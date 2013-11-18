@@ -26,7 +26,7 @@ import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.support.RequestContextUtils;
 import uber.megashare.base.LoggedClass;
-import uber.megashare.listener.SessionSupport;
+import uber.megashare.listener.SessionHelper;
 import uber.megashare.model.User;
 import uber.megashare.service.security.SecurityHelper;
 
@@ -74,7 +74,7 @@ public class ShareLocaleChangeInterceptor extends LocaleChangeInterceptor {
                 
                 try {
                 currentUser.setCurrentLocale(LocaleUtils.toLocale(newLocale));
-                SessionSupport.getInstance().updateUser(currentUser);
+                SessionHelper.getInstance().updateUser(currentUser);
                 } catch (java.lang.IllegalArgumentException e) {
                     log.error(e.getLocalizedMessage(),e);
                 }

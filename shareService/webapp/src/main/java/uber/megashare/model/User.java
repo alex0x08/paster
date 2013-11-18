@@ -73,6 +73,15 @@ public class User extends Struct implements Serializable, UserDetails {
     @XStreamAsAttribute
     private String email;
     
+    @Field
+    @XStreamAsAttribute
+    private String skype;
+    
+    @Field
+    @XStreamAsAttribute
+    private String phone;
+    
+    
     @XStreamAsAttribute
     private AccessLevel defaultFileAccessLevel = AccessLevel.OWNER;
     /**
@@ -107,6 +116,23 @@ public class User extends Struct implements Serializable, UserDetails {
     
     public User() {}
 
+    public String getSkype() {
+        return skype;
+    }
+
+    public void setSkype(String skype) {
+        this.skype = skype;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    
     public Locale getCurrentLocale() {
         return currentLocale;
     }

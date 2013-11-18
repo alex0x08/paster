@@ -80,7 +80,7 @@ public class UserSessionListener implements ServletContextListener, HttpSessionA
             if (securityContext!=null && securityContext.getAuthentication()!=null && securityContext.getAuthentication().getPrincipal() instanceof User) {
                     User currentUser = ((User) securityContext.getAuthentication().getPrincipal());
                    // currentUser.setCurrentLocale(currentUser.getPrefferedLocale());
-                  SessionSupport.getInstance().add(event.getSession().getId(), currentUser);
+                  SessionHelper.getInstance().add(event.getSession().getId(), currentUser);
 
             }
         }
@@ -107,7 +107,7 @@ public class UserSessionListener implements ServletContextListener, HttpSessionA
            // SecurityContext securityContext = (SecurityContext) event.getValue();
            // Authentication auth = securityContext.getAuthentication();
            // if (auth != null && (auth.getPrincipal() instanceof User)) {
-                  SessionSupport.getInstance().remove(event.getSession().getId());
+                  SessionHelper.getInstance().remove(event.getSession().getId());
            // }
         }
     }
@@ -126,8 +126,8 @@ public class UserSessionListener implements ServletContextListener, HttpSessionA
                     && securityContext.getAuthentication().getPrincipal() instanceof User) {
                 final User user = (User) securityContext.getAuthentication().getPrincipal();
               
-                SessionSupport.getInstance().remove(event.getSession().getId());
-                SessionSupport.getInstance().add(event.getSession().getId(), user);
+                SessionHelper.getInstance().remove(event.getSession().getId());
+                SessionHelper.getInstance().add(event.getSession().getId(), user);
                
             }
         }

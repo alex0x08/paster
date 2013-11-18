@@ -23,8 +23,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uber.megashare.base.LoggedClass;
 import uber.megashare.dao.tree.FolderDao;
+import uber.megashare.dao.tree.RelatedProjectDao;
 import uber.megashare.model.tree.FolderNode;
 import uber.megashare.model.tree.NodeType;
+import uber.megashare.model.tree.RelatedProject;
 import uber.megashare.model.tree.Rels;
 
 /**
@@ -36,23 +38,30 @@ public class FolderManagerImpl extends LoggedClass implements FolderManager{
 
     private FolderDao folderDao;
     
+    private RelatedProjectDao projDao;
+    
     protected static final TraversalDescription FRIENDS_TRAVERSAL = Traversal.description()
         .depthFirst()
-        .relationships( Rels.CHILD )
+        .relationships( Rels.FOLDER_CHILD )
          .evaluator(Evaluators.includingDepths(1, 2))
         .uniqueness( Uniqueness.RELATIONSHIP_GLOBAL );
     
    @Autowired 
-   public FolderManagerImpl(FolderDao dao) {
+   public FolderManagerImpl(FolderDao dao,RelatedProjectDao projDao) {
        this.folderDao = dao;
+       this.projDao = projDao;
    } 
    
+     
    public FolderNode getParentFolder() {
     return  folderDao.findByPropertyValue("nodeType", NodeType.PARENT);
    }
    
    public FolderNode save(FolderNode node) {
        return folderDao.save(node);
+   }
+   public RelatedProject save(RelatedProject rp) {
+       return projDao.save(rp);
    }
    
    public boolean exists(Long id) {

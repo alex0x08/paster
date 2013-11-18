@@ -18,7 +18,7 @@ package uber.megashare.service.security;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import uber.megashare.base.LoggedClass;
-import uber.megashare.listener.SessionSupport;
+import uber.megashare.listener.SessionHelper;
 import uber.megashare.model.User;
 
 /**
@@ -42,7 +42,7 @@ public class SecurityHelper extends LoggedClass{
              * this unsual logic is needed to handle properly self profile
              * change
              */
-            return SessionSupport.getInstance().getUserForLogin(((User) auth.getPrincipal()).getLogin());
+            return SessionHelper.getInstance().getUserForLogin(((User) auth.getPrincipal()).getLogin());
         } else {
             /**
              * this almost all time means that we got anonymous user

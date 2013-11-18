@@ -129,18 +129,20 @@ public class SharedFileEditController extends AbstractCommentController<SharedFi
     }
 
      @RequestMapping(value = RAW_PREFIX+"/pdfview", method = RequestMethod.GET)
-    public String viewPdf(@RequestParam(required = true) Long id, Model model,Locale locale) {
+    public String viewPdf(@RequestParam(required = true) Long id,
+    @RequestParam(required = false) Long revision, Model model,Locale locale) {
 
-        String sp = super.view(id, model,locale);
+        String sp = super.view(id,revision, model,locale);
 
         return !sp.equals(viewPage)? sp : FILE_PREFIX +RAW_PREFIX+"/pdfview";
     }
 
     
     @RequestMapping(value = INTEGRATED_PREFIX+VIEW_ACTION, method = RequestMethod.GET)
-    public String viewIntegrated(@RequestParam(required = true) Long id, Model model,Locale locale) {
+    public String viewIntegrated(@RequestParam(required = true) Long id,
+                                 @RequestParam(required = false) Long revision, Model model,Locale locale) {
 
-        String sp = super.view(id, model,locale);
+        String sp = super.view(id,revision, model,locale);
         return !sp.equals(viewPage) ? sp : FILE_PREFIX +INTEGRATED_PREFIX+"/view";
     }
 
@@ -189,7 +191,11 @@ public class SharedFileEditController extends AbstractCommentController<SharedFi
                 SharedFile old;
 
                 if (!input.isBlank()) {
+                    
                     old = manager.getFull(input.getId());
+                    
+                    
+                    
                     input.setComments(old.getComments());
                     input.setOwner(old.getOwner());
                     input.setFileSize(old.getFileSize());
@@ -286,7 +292,8 @@ public class SharedFileEditController extends AbstractCommentController<SharedFi
                      *
                      */
                     
-                    String calcPath = settingsManager.getCalculatedFileDir(input.getLastModified(), 
+                    String calcPath = settingsManager.getCalculatedFileDir(input.getLastModified(),
+                            input.getUuid(),
                             input.isBlank() ? 0 : 
                             smanager.getCurrentRevisionNumber(input.getId()).longValue()+1);
                     

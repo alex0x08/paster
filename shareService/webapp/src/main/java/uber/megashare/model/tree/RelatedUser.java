@@ -13,36 +13,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package uber.megashare.model.tree;
 
 import org.springframework.data.neo4j.annotation.Indexed;
 import org.springframework.data.neo4j.annotation.NodeEntity;
 import org.springframework.data.neo4j.support.index.IndexType;
 import uber.megashare.model.Project;
+import uber.megashare.model.User;
 
 /**
- *
- * @author aachernyshev
+ * 
+ * @author <a href="mailto:aachernyshev@it.ru">Alex Chernyshev</a>
  */
 @NodeEntity
-public class RelatedProject extends BaseTreeObject{
+public class RelatedUser extends BaseTreeObject{
 
-   
-    @Indexed(indexType = IndexType.FULLTEXT,indexName="project_name")
+    @Indexed(indexType = IndexType.FULLTEXT,indexName="user_name")
     @Override
     public String getName() {
         return super.getName();
     }
     
-    public RelatedProject fromProject(Project p) {
+      public RelatedUser fromUser(User u) {
         
-        setName(p.getName());
-        setExternalId(p.getId());
+        setName(u.getName());
+        setExternalId(u.getId());
         return this;
     }
     
-    public Project toProject() {
-        Project out = new Project();
+    public User toUser() {
+        User out = new User();
         out.setId(getExternalId());
         out.setName(getName());        
         return out;

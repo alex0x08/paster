@@ -31,7 +31,7 @@ import com.google.common.collect.HashBiMap;
  *
  * @author alex
  */
-public class SessionSupport extends LoggedClass {
+public class SessionHelper extends LoggedClass {
 
     /**
      *
@@ -162,9 +162,9 @@ public class SessionSupport extends LoggedClass {
     public String getSessionForLogin(String login) {
         return !isSessionForUser(login) ? null :store.inverse().get(login);
     }
-    private static final SessionSupport INSTANCE = new SessionSupport();
+    private static final SessionHelper INSTANCE = new SessionHelper();
 
-    public static SessionSupport getInstance() {
+    public static SessionHelper getInstance() {
         return INSTANCE;
     }
 }

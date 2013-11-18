@@ -36,7 +36,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import uber.megashare.base.LoggedClass;
-import uber.megashare.listener.SessionSupport;
+import uber.megashare.listener.SessionHelper;
 import uber.megashare.model.Project;
 import uber.megashare.model.SystemProperties;
 import uber.megashare.model.User;
@@ -242,8 +242,8 @@ public abstract class AbstractController extends LoggedClass {
     @ModelAttribute("usersOnline")
     public List<User> getUsersOnline() {
         return getCurrentUser() != null
-                ? SessionSupport.getInstance().getSessions(getCurrentUser().getUsername())
-                : SessionSupport.getInstance().getSessions();
+                ? SessionHelper.getInstance().getSessions(getCurrentUser().getUsername())
+                : SessionHelper.getInstance().getSessions();
     }
 
     @ModelAttribute("currentUser")
