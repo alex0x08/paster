@@ -7,4 +7,15 @@
                 <goal>tomcat7:run</goal>
             </goals>
         </action>
+        <action>
+            <actionName>CUSTOM-jetty-run</actionName>
+            <displayName>jetty-run</displayName>
+            <goals>
+                <goal>jetty:run</goal>
+            </goals>
+            <activatedProfiles>
+                <activatedProfile>h2</activatedProfile>
+                <activatedProfile>jetty6</activatedProfile>
+            </activatedProfiles>
+        </action>
     </actions>
