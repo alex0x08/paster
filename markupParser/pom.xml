@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>uber.markup</groupId>
     <artifactId>uni-markup-parser</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0-PRE</version>
     
    <name>Universal Markup parser</name>
 
