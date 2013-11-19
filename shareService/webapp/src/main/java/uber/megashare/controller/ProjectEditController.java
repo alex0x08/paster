@@ -93,7 +93,7 @@ public class ProjectEditController  extends AbstractEditController<Project>{
         
          if (b.getFile()!=null && !b.getFile().isEmpty()) {
              try {
-                 b.setAvatar(Avatar.fromStream(b.getFile().getInputStream()));
+                 b.setAvatar(Avatar.fromStream(b.getFile().getInputStream(),false));
              } catch (IOException ex) {
                  getLogger().error(ex.getLocalizedMessage(),ex);
                  return page500;

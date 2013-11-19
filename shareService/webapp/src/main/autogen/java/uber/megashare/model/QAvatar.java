@@ -35,6 +35,8 @@ public class QAvatar extends BeanPath<Avatar> {
 
     public final StringPath icon = createString("icon");
 
+    public final StringPath picture = createString("picture");
+
     public QAvatar(String variable) {
         super(Avatar.class, forVariable(variable));
     }

@@ -3,7 +3,7 @@
 
 <jsp:include
     page="/WEB-INF/jsp/templates/common/breadcrumb.jsp">
-    <jsp:param name="model" value="${model}" />
+    
     <jsp:param name="modelName" value="file" />
 </jsp:include>
 

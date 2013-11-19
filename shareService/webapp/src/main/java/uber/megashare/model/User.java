@@ -30,11 +30,15 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.xml.bind.annotation.XmlTransient;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.LocaleUtils;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.hibernate.annotations.IndexColumn;
 import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.Store;
+import org.hibernate.search.annotations.TermVector;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import uber.megashare.base.MD5Util;
@@ -47,7 +51,7 @@ import uber.megashare.base.MD5Util;
 //@Audited
 @Indexed(index = "indexes/user")
 @XStreamAlias("user")
-public class User extends Struct implements Serializable, UserDetails {
+public class User extends AvatarStruct implements Serializable, UserDetails {
 
     /**
      *
@@ -69,7 +73,7 @@ public class User extends Struct implements Serializable, UserDetails {
     private transient String newPassword,repeatPassword;
     
     @Field
-    @Column(unique = true)
+    //@Column(unique = true)
     @XStreamAsAttribute
     private String email;
     
@@ -110,12 +114,25 @@ public class User extends Struct implements Serializable, UserDetails {
     @XStreamOmitField
     private Locale currentLocale;
     
+    @Enumerated(EnumType.STRING)
+    @Field(index = Index.YES, store = Store.YES, termVector = TermVector.NO)
+    private AvatarType avatarType = AvatarType.GAVATAR;
+    
+   
     public User(Long userId) {
         setId(userId);
     }
     
     public User() {}
 
+    public AvatarType getAvatarType() {
+        return avatarType;
+    }
+
+    public void setAvatarType(AvatarType avatarType) {
+        this.avatarType = avatarType;
+    }
+    
     public String getSkype() {
         return skype;
     }
@@ -132,6 +149,16 @@ public class User extends Struct implements Serializable, UserDetails {
         this.phone = phone;
     }
 
+    public boolean isSkypeSet() {
+        return !StringUtils.isBlank(skype);
+    }
+    
+    public boolean isEmailSet() {
+        return !StringUtils.isBlank(email);
+    }
+    public boolean isPhoneSet() {
+        return !StringUtils.isBlank(phone);
+    }
     
     public Locale getCurrentLocale() {
         return currentLocale;

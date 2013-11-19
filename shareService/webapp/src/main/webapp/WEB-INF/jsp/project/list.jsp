@@ -48,6 +48,12 @@
                 </td> 
 
                 <td>
+                    
+                    <c:if test="${project.avatarSet}">
+                        <img src="data:image/png;base64,${project.avatar.icon}" 
+                             alt="<c:out value='${project.name}'/>" />                
+                    </c:if>
+                    
                     <a href="<c:out value='${editUrl}'/>">${project.name}</a> 
                 </td> 
 

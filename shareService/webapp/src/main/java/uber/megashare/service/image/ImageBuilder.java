@@ -220,8 +220,8 @@ public class ImageBuilder extends LoggedClass {
      */
     public ImageBuilder scaleToProfile() throws IOException {
 
-        min_height = 300;
-        min_width = 100;
+        min_height = 64;
+        min_width = 64;
         scale_rate = 2;
 
         scale();

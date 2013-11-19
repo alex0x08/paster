@@ -67,7 +67,13 @@
                             <div class="btn-group box">
 
                                 <a class="btn dropdown-toggle btn-default" data-toggle="dropdown" href="#">
-                                    <img  src="<c:out value='http://www.gravatar.com/avatar/${currentUser.avatarHash}?s=16'/>"/>
+                                    
+                                      <c:set var="model" value="${currentUser}" scope="request"></c:set>
+        <jsp:include page="/WEB-INF/jsp/templates/common/user-avatar.jsp" >
+            <jsp:param name="size" value="small" />
+        </jsp:include>
+
+                                    
                                     <sec:authentication property="principal.username" />
                                     <span class="caret"></span>
                                 </a>

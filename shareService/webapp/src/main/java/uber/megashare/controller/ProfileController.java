@@ -15,6 +15,7 @@
  */
 package uber.megashare.controller;
 
+import java.io.IOException;
 import javax.validation.Valid;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Controller;
@@ -26,6 +27,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import uber.megashare.model.Avatar;
+import uber.megashare.model.AvatarType;
 import uber.megashare.model.User;
 
 /**
@@ -150,6 +153,12 @@ public class ProfileController extends AbstractController {
         current.setName(b.getName());
         current.setSkype(b.getSkype());
         current.setPhone(b.getPhone());
+        
+        if (current.getAvatarType()!=b.getAvatarType()) {
+            current.setAvatar(null);
+        }
+        
+        current.setAvatarType(b.getAvatarType());
      
         current.setPrefferedLocaleCode(b.getPrefferedLocaleCode());
             
@@ -164,7 +173,16 @@ public class ProfileController extends AbstractController {
                 
                 current= userManager.changePassword(current, b.getNewPassword());
             }
-        } 
+        }
+        
+          if (b.getAvatarType() == AvatarType.FILE && b.getFile()!=null && !b.getFile().isEmpty()) {
+             try {
+                 current.setAvatar(Avatar.fromStream(b.getFile().getInputStream(),true));
+             } catch (IOException ex) {
+                 getLogger().error(ex.getLocalizedMessage(),ex);
+                 return page500;
+             }
+         } 
         
         
         current=userManager.save(current);

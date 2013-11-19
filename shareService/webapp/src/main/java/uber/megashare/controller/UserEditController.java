@@ -16,6 +16,7 @@
 package uber.megashare.controller;
 
 import java.beans.PropertyEditorSupport;
+import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
@@ -33,6 +34,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import uber.megashare.model.Avatar;
 import uber.megashare.model.Project;
 import uber.megashare.model.Role;
 import uber.megashare.model.User;
@@ -144,6 +146,7 @@ public class UserEditController extends AbstractEditController<User> {
             current.setName(b.getName());
             current.setSkype(b.getSkype());
             current.setPhone(b.getPhone());
+            current.setAvatarType(b.getAvatarType());
      
             current.setPrefferedLocaleCode(b.getPrefferedLocaleCode());
             
@@ -181,6 +184,15 @@ public class UserEditController extends AbstractEditController<User> {
            
                 b= userManager.changePassword(b, b.getNewPassword());
        }
+        
+          if (b.getFile()!=null && !b.getFile().isEmpty()) {
+             try {
+                 b.setAvatar(Avatar.fromStream(b.getFile().getInputStream(),false));
+             } catch (IOException ex) {
+                 getLogger().error(ex.getLocalizedMessage(),ex);
+                 return page500;
+             }
+         } 
         
         User r = manager.save(b);
 

@@ -112,16 +112,11 @@
         },
         done: function(e, data) {
              
-         try {
-             
-             
-                data.context.removeClass('working');
+         try {  data.context.removeClass('working');
                 data.context.fadeOut(function(){
                    data.context.remove();
                 });
-            
-         
-                                    
+                                                
             if (typeof data.result['error'] == "undefined") {
          
                 $.get("${blockUrl}?id=" + data.result['id'], function(data) {
@@ -147,11 +142,9 @@
                                 try {
                                 showError(data.responseText); } catch (e) {showError(data);}
                             }
-                        });              
-                   
-                   
-                   
-                     $('#enableRemovalSwitch').on('change', function (e) {
+                        });  
+                        
+        $('#enableRemovalSwitch').on('change', function (e) {
                            
                            if (this.checked) {
                                 $('#inputRemovalDateBlock').css('display','');
@@ -246,7 +239,7 @@
                                      </c:choose>
 
                                      <div class="btn-group" data-toggle="buttons">
-
+                
                                          <c:forEach items="${model.accessLevel.levels}" var="level">
                                              <label class="btn btn-default" >
                                                  <fmt:message key="${level.desc}" />

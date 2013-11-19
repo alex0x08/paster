@@ -47,18 +47,32 @@ public class Avatar implements Serializable {
     @Lob
     private String icon;
 
+    @Lob
+    private String picture;
+
+    public boolean isFullPictureSet() {
+        return picture!=null;
+    }
+    
+    public String getPicture() {
+        return picture;
+    }
+
+    public void setPicture(String picture) {
+        this.picture = picture;
+    }
+    
     public String getIcon() {
         return icon;
     }
 
     public void setIcon(String icon) {
         this.icon = icon;
-    }
+    }    
     
-    
-    public static Avatar fromFile(File f) {
+    public static Avatar fromFile(File f,boolean saveBig) {
         try {
-            return fromStream(new FileInputStream(f));
+            return fromStream(new FileInputStream(f),saveBig);
         } catch (FileNotFoundException ex) {
             throw new RuntimeException(ex);
         }
@@ -66,16 +80,32 @@ public class Avatar implements Serializable {
 
    
 
-    public static Avatar fromStream(InputStream in) {
+    public static Avatar fromStream(InputStream in,boolean saveBig) {
 
         
         try {
             Avatar a = new Avatar();
 
-            a.setIcon(Base64.encodeBase64String(ImageBuilder.createInstance()
+            if (saveBig) {
+             
+                byte[] arr = ImageBuilder.createInstance()
+                    .setSource(in)
+                    .scaleToProfile()
+                    .getScaledAsBytes();
+                a.setPicture(Base64.encodeBase64String(arr));
+                
+                 a.setIcon(Base64.encodeBase64String(ImageBuilder.createInstance()
+                    .setSource(arr)
+                    .scaleToIcon()
+                    .getScaledAsBytes()));
+            } else {
+            
+                 a.setIcon(Base64.encodeBase64String(ImageBuilder.createInstance()
                     .setSource(in)
                     .scaleToIcon()
                     .getScaledAsBytes()));
+            }
+            
             return a;
         } catch (IOException ex) {
             /*

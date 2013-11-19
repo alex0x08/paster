@@ -37,6 +37,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import uber.megashare.base.LoggedClass;
 import uber.megashare.listener.SessionHelper;
+import uber.megashare.model.AvatarType;
 import uber.megashare.model.Project;
 import uber.megashare.model.SystemProperties;
 import uber.megashare.model.User;
@@ -185,6 +186,10 @@ public abstract class AbstractController extends LoggedClass {
         return  isCurrentUserLoggedIn() ? projectManager.getAll(): Collections.EMPTY_LIST;
     }
 
+    @ModelAttribute("availableAvatarTypes")
+    public AvatarType[] getAvailableAvatarTypes() {
+        return AvatarType.values();
+    }
     
     @ModelAttribute("availableProjectsWithUsers")
     public Collection<ProjectUsers> getAvailableProjectsWithUsers() {
