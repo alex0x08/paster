@@ -137,10 +137,8 @@ public class ProfileController extends AbstractController {
                     continue;
                 }
                 getLogger().debug("field=" + f.getField() + ",rejected value=" + f.getRejectedValue() + ",message=" + f.getDefaultMessage());
-
                 return editPage;
             }
-
         }
 
 
@@ -165,12 +163,10 @@ public class ProfileController extends AbstractController {
         
         if (!StringUtils.isBlank(b.getNewPassword())) {
             
-            if (!b.getNewPassword().equals(b.getRepeatPassword())) {
-           
+            if (!b.getNewPassword().equals(b.getRepeatPassword())) {           
                 result.addError(new ObjectError("newPassword","Password must match."));
                 return editPage; 
-            } else {
-                
+            } else {                
                 current= userManager.changePassword(current, b.getNewPassword());
             }
         }

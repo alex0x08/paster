@@ -35,6 +35,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import uber.megashare.model.Avatar;
+import uber.megashare.model.AvatarType;
 import uber.megashare.model.Project;
 import uber.megashare.model.Role;
 import uber.megashare.model.User;
@@ -132,6 +133,7 @@ public class UserEditController extends AbstractEditController<User> {
             return editPage;
         }
         
+        User toSave;
         
         if (b.getRoles() == null || b.getRoles().isEmpty()) {
             result.addError(new ObjectError("user.roles", "Roles not set."));
@@ -146,8 +148,14 @@ public class UserEditController extends AbstractEditController<User> {
             current.setName(b.getName());
             current.setSkype(b.getSkype());
             current.setPhone(b.getPhone());
-            current.setAvatarType(b.getAvatarType());
+            
+             if (current.getAvatarType()!=b.getAvatarType()) {
+                current.setAvatar(null);
+            }
+            
+             current.setAvatarType(b.getAvatarType());
      
+             
             current.setPrefferedLocaleCode(b.getPrefferedLocaleCode());
             
             Project p  =projectManager.get(b.getRelatedProject().getId());
@@ -171,30 +179,30 @@ public class UserEditController extends AbstractEditController<User> {
                 current = userManager.changePassword(current, b.getNewPassword());
             }
             
-            b = current;
+            toSave = current;
             
           //  System.out.println("_saving pass "+b.getPassword());
             
         } else {
 
-           if (!StringUtils.isBlank(b.getNewPassword()) && !b.getNewPassword().equals(b.getRepeatPassword())) {
-                    result.addError(new ObjectError("newPassword","Password must match."));
-                    return editPage; 
-                }
-           
-                b= userManager.changePassword(b, b.getNewPassword());
-       }
-        
-          if (b.getFile()!=null && !b.getFile().isEmpty()) {
+            if (!StringUtils.isBlank(b.getNewPassword()) && !b.getNewPassword().equals(b.getRepeatPassword())) {
+                result.addError(new ObjectError("newPassword", "Password must match."));
+                return editPage;
+            }
+
+            toSave = userManager.changePassword(b, b.getNewPassword());
+        }
+
+          if (b.getAvatarType() == AvatarType.FILE && b.getFile()!=null && !b.getFile().isEmpty()) {
              try {
-                 b.setAvatar(Avatar.fromStream(b.getFile().getInputStream(),false));
+                 toSave.setAvatar(Avatar.fromStream(b.getFile().getInputStream(),true));
              } catch (IOException ex) {
                  getLogger().error(ex.getLocalizedMessage(),ex);
                  return page500;
              }
          } 
         
-        User r = manager.save(b);
+        User r = manager.save(toSave);
 
 
         /**

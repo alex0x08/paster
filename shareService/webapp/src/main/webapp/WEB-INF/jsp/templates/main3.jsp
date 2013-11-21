@@ -64,40 +64,11 @@
 
                     <sec:authorize ifAnyGranted="ROLE_USER,ROLE_ADMIN">
                         <li>
-                            <div class="btn-group box">
-
-                                <a class="btn dropdown-toggle btn-default" data-toggle="dropdown" href="#">
-                                    
-                                      <c:set var="model" value="${currentUser}" scope="request"></c:set>
-        <jsp:include page="/WEB-INF/jsp/templates/common/user-avatar.jsp" >
-            <jsp:param name="size" value="small" />
-        </jsp:include>
-
-                                    
-                                    <sec:authentication property="principal.username" />
-                                    <span class="caret"></span>
-                                </a>
-
-                                <ul class="dropdown-menu ">
-                                    <li>
-                                        <a class="profile" href="<c:url value="/main/profile"/>">
-                                            <span class="glyphicon glyphicon-user"></span>
-                                            <c:out value="${currentUser.name}"/>
-
-                                        </a> 
-                                    </li>
-
-                                    <li>
-                                        <a href="<c:url value="/act/doLogout"/>">
-                                            <span class="glyphicon glyphicon-log-out"></span>
-                                            <fmt:message key="button.logout"/></a>
-                                    </li>
-
-                                </ul>
-                            </div>                              
+                   <c:set var="usermodel" value="${currentUser}" scope="request"></c:set>
+                   <jsp:include page="/WEB-INF/jsp/templates/common/user-dropdown.jsp" >
+                       <jsp:param name="mode" value="PROFILE"/>
+                   </jsp:include>
                         </li>
-
-
                     </sec:authorize>
 
                              <li>

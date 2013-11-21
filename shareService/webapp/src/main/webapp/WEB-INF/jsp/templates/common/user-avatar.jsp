@@ -2,17 +2,17 @@
 
 
 <c:choose>
-    <c:when test="${model.avatarType eq 'FILE'}">
+    <c:when test="${usermodel.avatarType eq 'FILE'}">
 
-        <img src="data:image/png;base64,${param.size eq 'full' ? model.avatar.picture : model.avatar.icon}" 
-             alt="<c:out value='${model.name}'/>" />  
+        <img src="data:image/png;base64,${param.size eq 'full' ? usermodel.avatar.picture : usermodel.avatar.icon}" 
+             alt="<c:out value='${usermodel.name}'/>" />  
     </c:when>
-    <c:when test="${model.avatarType eq 'GAVATAR'}">
+    <c:when test="${usermodel.avatarType eq 'GAVATAR'}">
 
         <c:choose>
 
             <c:when test="${gavatarEnabled}">
-                <img src="<c:out value='${gavatarlUrl}/${model.avatarHash}'/>?s=${param.size eq 'full' ? 128 : 16}"/>
+                <img src="<c:out value='${gavatarlUrl}/${usermodel.avatarHash}'/>?s=${param.size eq 'full' ? 128 : 16}"/>
 
             </c:when>
             <c:otherwise>

@@ -324,10 +324,12 @@
         <div style="padding-left:10px;" >${model.formattedFileSize} 
             &nbsp; ${modelLastModified} 
             
-             <a href="<c:url value='/main/file/list/search?query=ownerName:${model.owner.name}'/>"
-                target="${not empty param.integrationMode ? "_blank" : target}">
-                     <c:out value="${model.owner.name}"/>   
-                </a>
+                    <c:set var="usermodel" value="${model.owner}" scope="request"></c:set>
+                   <jsp:include page="/WEB-INF/jsp/templates/common/user-dropdown.jsp" >
+                       <jsp:param name="mode" value="USER"/>
+                   </jsp:include>
+            
+          
             &nbsp; 
             
             <c:if test="${not empty model.xml.fields}">

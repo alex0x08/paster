@@ -6,7 +6,7 @@
 
     <div class="col-md-3" style="text-align:right;">
      
-        <c:set var="model" value="${user}" scope="request"></c:set>
+        <c:set var="usermodel" value="${user}" scope="request"></c:set>
         <jsp:include page="/WEB-INF/jsp/templates/common/user-avatar.jsp" >
             <jsp:param name="size" value="full" />
         </jsp:include>
@@ -68,131 +68,33 @@
 
                           
                             <div class="form-group ">
-
                                 <div class="controls">
                                     <div class="input-group">
                                         <span class="input-group-addon"><img src="<c:url value='/main/static/${appVersion}/images/skype.png'/>"/></span>
                                             <form:input cssErrorClass="form-control alert alert-danger" cssClass="form-control" 
                                                         path="skype" cssStyle="width:10em;" />
                                     </div>                    
-                                    <form:errors path="skype" cssClass="help-block alert alert-danger" />                         
-
-                                </div>
+                                    <form:errors path="skype" cssClass="help-block alert alert-danger" />                        
+                                   </div>
                             </div>          
-                                  
-                               
-                                    
+                                     
                              <div class="form-group ">
-
                                 <div class="controls">
                                     <div class="input-group">
                                         <span class="input-group-addon"><span class="glyphicon glyphicon-earphone"></span></span>
                                             <form:input cssErrorClass="form-control alert alert-danger" cssStyle="width:12em;" cssClass="form-control" 
                                                         path="phone" />
                                     </div>                    
-                                    <form:errors path="phone" cssClass="help-block alert alert-danger" />                         
-
-                                </div>
+                                    <form:errors path="phone" cssClass="help-block alert alert-danger" />                        
+                               </div>
                             </div>                  
                                     
-                                    
-                              <div class="form-group ">
-
-                    <form:label cssClass="control-label" path="name">
-                        <fmt:message key="avatar.icon"/>:</form:label>
-
-                        
-                        <div class="btn-group" data-toggle="buttons" style="padding-bottom: 1em;padding-top:1em;">
+                                <c:set var="usermodel" value="${currentUser}" scope="request"></c:set>
+        <jsp:include page="/WEB-INF/jsp/templates/common/select-avatar.jsp" >
+            <jsp:param name="formId" value="editProfileForm" />
+        </jsp:include>
 
                             
-                           
-                                         <c:forEach items="${availableAvatarTypes}" var="type">
-                                         
-                                             <c:choose>
-                                                 <c:when test="${type eq 'GAVATAR'}">
-
-                                                     
-                                                      <c:choose>
-                                                 <c:when test="${gavatarEnabled}">
-                                                     <label class="btn btn-default" >
-                                                         <fmt:message key="${type.desc}" />
-                                                         <form:radiobutton cssClass="avatarTypeSwitch" path="avatarType" value="${type.code}"    />
-                                                     </label>
-
-                                                 </c:when>
-                                                          <c:otherwise>
-                                                 
-                                                              Gavatar is disabled
-                                                              
-                                                          </c:otherwise>
-                                                      </c:choose>
-                                                     
-                                                 
-
-                                                 </c:when>
-                                                 <c:otherwise>
-
-                                                     <label class="btn btn-default" >
-                                                         <fmt:message key="${type.desc}" />
-                                                         <form:radiobutton cssClass="avatarTypeSwitch" path="avatarType" value="${type.code}"  />
-                                                     </label>
-
-
-                                                 </c:otherwise>
-                                             </c:choose>
-
-                                         
-                                         </c:forEach>
-
-                                     </div>    
-                        
-                        <div id="selectAvatarFileBlock" style="display:none;" class="input-group input-group-sm">
-                            <span class="input-group-addon">
-
-                                <c:choose>
-                                    <c:when test="${user.avatarSet}">
-                                        <img src="data:image/png;base64,${user.avatar.picture}" 
-                                             alt="<c:out value='${user.name}'/>" />              
-                                    </c:when>
-                                    <c:otherwise>
-                                        <span class="glyphicon glyphicon-picture"></span>
-                                    </c:otherwise>
-                                </c:choose>
-                               
-                                
-                            </span>
-                            <form:input path="file" type="file" cssStyle="width:20em;" 
-                                        cssErrorClass="form-control alert alert-danger" 
-                                        cssClass="form-control"/>
-                             <form:errors path="file" cssClass="help-block alert alert-danger" /> 
-                        </div>
-                       
-                        
-                         <div id="previewGavatarBlock" style="display:none;" class="input-group input-group-sm">
-                            
-
-                                <c:choose>
-                                    <c:when test="${user.emailSet}">
-                                        <img  src="<c:out value='${gavatarlUrl}/${currentUser.avatarHash}?s=16'/>"/>
-                                        
-                                        <img  src="<c:out value='${gavatarlUrl}/${currentUser.avatarHash}?s=48'/>"/>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <span class="glyphicon glyphicon-picture"></span>
-                                        Please set & save email first 
-                                    </c:otherwise>
-                                </c:choose>
-                               
-                                
-                           
-                            
-                        </div>
-                       
-                        
-                </div>    
-
-        
-                                           
                                     
                             <div class="form-group">
                                 <label cssClass="control-label" for="prefferedLocaleCode"><fmt:message key="user.prefferedLocale"/>:</label>
@@ -250,19 +152,3 @@
 
 </div>
 
-
-<script type="text/javascript">
-       $(document).ready(function() {
-           
-                   if ($("#editProfileForm input[type='radio']:checked").val() == 'FILE') {
-                      $('#selectAvatarFileBlock').toggle();
-                   }
-                   
-                    $('.avatarTypeSwitch').change(function() {
-                           $('#selectAvatarFileBlock').toggle($(this).val() == 'FILE');
-                           $('#previewGavatarBlock').toggle($(this).val() == 'GAVATAR');
-                       
-                });
-           
-       });
-</script>
