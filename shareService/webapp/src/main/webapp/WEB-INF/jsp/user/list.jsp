@@ -12,7 +12,7 @@
         <c:if test="${pageItems.pageCount > 1}">  
             <jsp:include
                 page="/WEB-INF/jsp/templates/common/pagination.jsp">
-                <jsp:param name="modelName" value="file" />
+                <jsp:param name="modelName" value="user" />
             </jsp:include>
         </c:if>
     </div>
