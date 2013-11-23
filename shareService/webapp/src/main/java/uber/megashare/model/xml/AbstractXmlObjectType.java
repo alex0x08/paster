@@ -93,7 +93,7 @@ public class AbstractXmlObjectType<T extends XmlCloneable> extends LoggedClass i
     @Override
     public Serializable disassemble(Object value) throws HibernateException {
         
-        System.out.println("_dissasemble "+value);
+       // System.out.println("_dissasemble "+value);
         if (value==null) {
             return null;
         }
@@ -112,7 +112,7 @@ public class AbstractXmlObjectType<T extends XmlCloneable> extends LoggedClass i
      */
     @Override
     public boolean equals(Object x, Object y) throws HibernateException {
-        return x.equals(y);
+        return x!=null && x.equals(y);
     }
 
     /**
@@ -139,7 +139,7 @@ public class AbstractXmlObjectType<T extends XmlCloneable> extends LoggedClass i
     public Object nullSafeGet(ResultSet rs, String[] names,SessionImplementor si,  @SuppressWarnings("unused") Object owner)
             throws HibernateException, SQLException {
         
-        System.out.println("_nullSafeGet ");
+        //System.out.println("_nullSafeGet ");
         
         if (rs.wasNull()) {
         return null;
@@ -169,7 +169,7 @@ public class AbstractXmlObjectType<T extends XmlCloneable> extends LoggedClass i
             throws HibernateException, SQLException {
         
         
-        System.out.println("_nullSafeSet ");
+       // System.out.println("_nullSafeSet ");
         
             if (value == null) {
                 stmt.setNull(index, Types.CLOB);
@@ -183,7 +183,7 @@ public class AbstractXmlObjectType<T extends XmlCloneable> extends LoggedClass i
             String xml;
             try {
                 xml = marshall((T) value);
-                System.out.println("xml="+xml);
+               // System.out.println("xml="+xml);
             } catch (JAXBException ex) {
                 throw new UnsupportedOperationException(ex);
             }
@@ -247,10 +247,8 @@ public class AbstractXmlObjectType<T extends XmlCloneable> extends LoggedClass i
      * @throws JAXBException
      */
     public T unmarshall(Reader in) throws JAXBException, IOException {
-        synchronized(lockU) {
-            
-            return (T) unmarshaller.unmarshal(in);
-       
+        synchronized(lockU) {            
+            return (T) unmarshaller.unmarshal(in);       
         }
     }
    

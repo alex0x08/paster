@@ -12,7 +12,7 @@
         <c:if test="${pageItems.pageCount > 1}">  
             <jsp:include
                 page="/WEB-INF/jsp/templates/common/pagination.jsp">
-                <jsp:param name="modelName" value="file" />
+                <jsp:param name="modelName" value="user" />
             </jsp:include>
         </c:if>
     </div>
@@ -69,6 +69,12 @@
             </td> 
 
             <td>
+                
+                    <c:set var="usermodel" value="${user}" scope="request"></c:set>
+        <jsp:include page="/WEB-INF/jsp/templates/common/user-avatar.jsp" >
+            <jsp:param name="size" value="small" />
+        </jsp:include>
+                
                 <a href="<c:url value="/main/user/edit">
                        <c:param name="id" value="${user.id}"/>
                    </c:url>">${user.name}</a> 

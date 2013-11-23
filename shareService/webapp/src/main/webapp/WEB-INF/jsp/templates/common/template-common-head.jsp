@@ -5,7 +5,7 @@
 --%>
 <%@ include file="/WEB-INF/jsp/templates/common/taglibs.jsp"%>
         <meta charset="utf-8">
-        <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><![endif]-->
+        
 
         <title><fmt:message key="site.title"/></title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -123,6 +123,7 @@
        <link rel="stylesheet" type="text/css" media="all" href="<c:url value='/main/static/${appVersion}/css/main.css'/>" />
        <link href="<c:url value='/main/static/${appVersion}/libs/zoombox/zoombox.css'/>" rel="stylesheet" type="text/css" media="screen" />
        <link href="<c:url value='/main/assets/${appVersion}/chosen/0.9.12/chosen/chosen.css'/>" rel="stylesheet" type="text/css" media="screen" />
+    <link href="<c:url value='/main/static/${appVersion}/libs/chosen-image/chosenImage.css'/>" rel="stylesheet" type="text/css" media="screen" />
 
        <link rel="shortcut icon" href="<c:url value='/favicon.png'/>">
 
@@ -134,6 +135,7 @@
 
        <script src="<c:url value='/main/assets/${appVersion}/jquery-easing/1.3/jquery.easing.min.js'/>"></script>
        <script src="<c:url value='/main/assets/${appVersion}/chosen/0.9.12/chosen/chosen.jquery.min.js'/>"></script>
+    <script src="<c:url value='/main/static/${appVersion}/libs/chosen-image/chosenImage.jquery.js'/>"></script>
    
        <script src="<c:url value='/main/static/${appVersion}/libs/jquery-scrollup/jquery.scrollUp.min.js'/>"></script>
 

@@ -35,23 +35,24 @@ public class QProject extends EntityPathBase<Project> {
 
     public static final QProject project = new QProject("project");
 
-    public final QStruct _super = new QStruct(this);
+    public final QAvatarStruct _super;
 
+    // inherited
     public final QAvatar avatar;
 
     public final StringPath description = createString("description");
 
     //inherited
-    public final BooleanPath disabled = _super.disabled;
+    public final BooleanPath disabled;
 
     //inherited
-    public final NumberPath<Long> id = _super.id;
+    public final NumberPath<Long> id;
 
     //inherited
-    public final DateTimePath<java.util.Date> lastModified = _super.lastModified;
+    public final DateTimePath<java.util.Date> lastModified;
 
     //inherited
-    public final StringPath name = _super.name;
+    public final StringPath name;
 
     public QProject(String variable) {
         this(Project.class, forVariable(variable), INITS);
@@ -67,7 +68,12 @@ public class QProject extends EntityPathBase<Project> {
 
     public QProject(Class<? extends Project> type, PathMetadata<?> metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.avatar = inits.isInitialized("avatar") ? new QAvatar(forProperty("avatar")) : null;
+        this._super = new QAvatarStruct(type, metadata, inits);
+        this.avatar = _super.avatar;
+        this.disabled = _super.disabled;
+        this.id = _super.id;
+        this.lastModified = _super.lastModified;
+        this.name = _super.name;
     }
 
 }

@@ -49,6 +49,7 @@ public class ImageBuilder extends LoggedClass {
             scaled; //результат преобразований / scaled image
     private int min_width, //минимальная ширина изображения для преобразования // minimum width to start scaling
             min_height, //минимальная высота изображения // minimum height to ..
+            max_height=1600,max_width=1600,
             scale_rate; // TODO: describe it
     /**
      * byte array with scaled image
@@ -99,7 +100,7 @@ public class ImageBuilder extends LoggedClass {
         //this is dirty hack to avoid creating new stream
         try {
             ii_instance.setInput(iin);
-            if (!ii_instance.check()) {
+            if (!ii_instance.check() || ii_instance.getWidth()>max_width || ii_instance.getHeight() > max_height ) {
                 unsupported = true;
                 return this;
             }
@@ -219,8 +220,8 @@ public class ImageBuilder extends LoggedClass {
      */
     public ImageBuilder scaleToProfile() throws IOException {
 
-        min_height = 300;
-        min_width = 100;
+        min_height = 64;
+        min_width = 64;
         scale_rate = 2;
 
         scale();
@@ -236,6 +237,7 @@ public class ImageBuilder extends LoggedClass {
      */
     public ImageBuilder scale() throws IOException {
 
+                
 
         if (min_width >= ii_instance.getWidth() && min_height >= ii_instance.getHeight()) {
             scaled = source;

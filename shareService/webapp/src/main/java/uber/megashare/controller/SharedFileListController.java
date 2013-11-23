@@ -15,9 +15,9 @@
  */
 package uber.megashare.controller;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
@@ -35,8 +35,8 @@ import uber.megashare.model.AccessLevel;
 import uber.megashare.model.SharedFile;
 import uber.megashare.model.SharedFileSearchQuery;
 import uber.megashare.service.SharedFileManager;
-
 import static uber.megashare.controller.SharedFileConstants.FILE_PREFIX;
+import uber.megashare.model.tree.FolderNode;
 import uber.megashare.service.FolderManager;
 
 
@@ -91,9 +91,15 @@ public class SharedFileListController
       //  Collections.addAll(this, elements);
       //  folderManager.getChildren(folderManager.getParentFolder())
         
-            return !isCurrentUserLoggedIn()? fileManager.getFiles(null,new AccessLevel[]{AccessLevel.ALL}):
+          List<SharedFile> out = new ArrayList<>();
+          /*for(FolderNode f:folderManager.getChildren(folderManager.getParentFolder())) {
+              out.add(f.toSharedFile());
+          }*/
+          
+           out.addAll(!isCurrentUserLoggedIn()? fileManager.getFiles(null,new AccessLevel[]{AccessLevel.ALL}):
                     fileManager.getFilesForUser(getCurrentUser().getId(),getCurrentUser().getRelatedProject().getId(),
-                    AccessLevel.values());
+                    AccessLevel.values()));
+           return out;
     }
    
    

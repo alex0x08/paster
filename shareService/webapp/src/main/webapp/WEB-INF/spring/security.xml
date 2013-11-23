@@ -51,6 +51,7 @@
  
         <intercept-url pattern="/main/user/*" access="hasRole('ROLE_ADMIN')"/>
         <intercept-url pattern="/main/project/*" access="hasRole('ROLE_ADMIN')"/>
+        <intercept-url pattern="/dbconsole/*" access="hasRole('ROLE_ADMIN')"/>
         
         <intercept-url pattern="/main/*" access="permitAll()"/>
         <intercept-url pattern="/act/*" access="permitAll()"/>

@@ -60,6 +60,7 @@ public class SharedFileDaoImpl extends GenericSearchableDaoImpl<SharedFile> impl
     /**
      * {@inheritDoc}
      */
+    @Override
     public SharedFile getFileFromUUID(String uuid) {
         return findOne(QSharedFile.sharedFile.uuid.eq(uuid));
     }
@@ -74,6 +75,7 @@ public class SharedFileDaoImpl extends GenericSearchableDaoImpl<SharedFile> impl
             final List<AccessLevel> levels) throws ParseException {
 
         return new LoggedCall<List<SharedFile>>() {
+            @Override
             public List<SharedFile> callImpl(ToStringBuilder log) throws Exception {
 
                 log.append("search for {" + query + "} with userId=" + userId + " and levels=" + StringUtils.collectionToCommaDelimitedString(levels));
@@ -136,8 +138,13 @@ public class SharedFileDaoImpl extends GenericSearchableDaoImpl<SharedFile> impl
        // System.out.println("_getFiles for user "+userId+" proj="+projectId);
         List<BooleanExpression> out = new ArrayList<>();
         
-        if (projectId!=null) {        
-            out.add(QSharedFile.sharedFile.relatedProjects.contains(new Project(projectId)));
+        if (projectId!=null) {    
+            
+            //List<BooleanExpression> pout = new ArrayList<>();
+        
+            
+        //     pout.add(QSharedFile.sharedFile.accessLevel.in(AccessLevel.ALL));
+             out.add(QSharedFile.sharedFile.relatedProjects.contains(new Project(projectId)));
         
             if (userId!=null) {            
                  out.add(BooleanExpression.anyOf(
@@ -145,15 +152,22 @@ public class SharedFileDaoImpl extends GenericSearchableDaoImpl<SharedFile> impl
                          QSharedFile.sharedFile.relatedUsers.contains(new User(userId)),
                          QSharedFile.sharedFile.accessLevel.in(AccessLevel.PROJECT,AccessLevel.USERS)
                 ));
-            }
+            } 
+           
         
+             //out.add(BooleanExpression.anyOf(QSharedFile.sharedFile.accessLevel.in(AccessLevel.ALL),
+              //       BooleanExpression.allOf(pout.toArray(new BooleanExpression[pout.size()]))));
+            
         } else {
-                out.add(userId!=null ? BooleanExpression.anyOf(QSharedFile.sharedFile.owner.id.eq(userId)
-                        ,QSharedFile.sharedFile.relatedUsers.contains(new User(userId))
-                        ) :
-                        QSharedFile.sharedFile.accessLevel.in(AccessLevel.ALL));                
+            if (userId != null) {
+                out.add(BooleanExpression.anyOf(QSharedFile.sharedFile.owner.id.eq(userId), 
+                        QSharedFile.sharedFile.relatedUsers.contains(new User(userId))));
+            }
         }
-        return findAll(BooleanExpression.allOf(out.toArray(new BooleanExpression[out.size()])), 
+        
+        
+        return findAll(BooleanExpression.anyOf(QSharedFile.sharedFile.accessLevel.in(AccessLevel.ALL),
+                BooleanExpression.allOf(out.toArray(new BooleanExpression[out.size()]))), 
                 QSharedFile.sharedFile.lastModified.desc());
     }
 

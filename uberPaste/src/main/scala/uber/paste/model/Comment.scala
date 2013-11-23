@@ -2,19 +2,12 @@ package uber.paste.model
 
 import org.compass.annotations.{SearchableProperty, Searchable}
 import javax.xml.bind.annotation.{XmlTransient, XmlRootElement}
-import javax.persistence.{Entity,JoinColumn, FetchType, ManyToOne, Lob}
+import javax.persistence.{Entity,JoinColumn, FetchType, ManyToOne, Lob,CascadeType}
 import javax.validation.constraints.{Size, NotNull}
 import org.codehaus.jackson.annotate.JsonIgnore
 import uber.paste.base.Loggered
 import org.compass.core.CompassHighlighter
 
-/**
- * Created with IntelliJ IDEA.
- * User: Alex
- * Date: 10.02.13
- * Time: 4:20
- * To change this template use File | Settings | File Templates.
- */
 
 object Comment extends Struct {
 
@@ -33,13 +26,13 @@ class Comment extends Struct  with java.io.Serializable{
   @Size(min=3, message = "{struct.name.validator}")
   private var text: String = null
 
-  @ManyToOne(fetch = FetchType.EAGER)
+  @ManyToOne(fetch = FetchType.EAGER,cascade= Array(CascadeType.PERSIST,CascadeType.MERGE))
   @JoinColumn(name = "owner_id")
   private var owner:User = null
 
-  private var lineNumber:java.lang.Long = null;
+  private var lineNumber:java.lang.Long = null
 
-  private var parentId:java.lang.Long = null;
+  private var parentId:java.lang.Long = null
 
 
   {

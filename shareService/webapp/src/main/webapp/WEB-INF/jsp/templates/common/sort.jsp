@@ -29,17 +29,17 @@
         </div>
                              
                              
-      <script type="text/javascript">
-    $(document).ready(function() {
+        <script type="text/javascript">
+            $(document).ready(function() {
              
-      $('.sortColumnKey').change(function() {
-            window.location = "<c:url value='/main/${param.modelName}/list/sort/'/>"+$(this).val();
-      });
+                $('.sortColumnKey').change(function() {
+                    window.location = "<c:url value='/main/${param.modelName}/list/sort/'/>"+$(this).val();
+                });
       
-       $('.sortColumnAsc').change(function() {
-            window.location = "<c:url value='/main/${param.modelName}/list/sort/${pageItems.sort.property}'/>/"+$(this).val();
-      });
+                $('.sortColumnAsc').change(function() {
+                    window.location = "<c:url value='/main/${param.modelName}/list/sort/${pageItems.sort.property}'/>/"+$(this).val();
+                });
             
-    });
-    </script>  
+            });
+        </script>  
                         

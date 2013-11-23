@@ -11,16 +11,26 @@
     </head>
     
 <body>
-  <div>
-    <button id="prev" class="btn" onclick="goPrevious()">&larr;<fmt:message key="button.prev"/></button>
-    <button id="next" class="btn" onclick="goNext()"><fmt:message key="button.next"/> &rarr;</button>
-    &nbsp; &nbsp;
     
-    <span><fmt:message key="list.page"/>: <span id="page_num"></span> / <span id="page_count"></span></span>
-  </div>
+    <c:if test="${param.viewMode eq 'full'}">
   
+        <div id="controlPanel" style="display:none;">
+            <button id="prev" class="btn" onclick="goPrevious()">&larr;<fmt:message key="button.prev"/></button>
+            <button id="next" class="btn" onclick="goNext()"><fmt:message key="button.next"/> &rarr;</button>
+            &nbsp; &nbsp;
+
+            <span><fmt:message key="list.page"/>: <span id="page_num"></span> / <span id="page_count"></span></span>
+        </div>
+
+        
+    </c:if>
+    
+    <div id="loadingPanel">
+        <img src="<c:url value='/main/static/${appVersion}/images/icon-loader.gif'/>"/>
+        <fmt:message key="action.loading"/>
+    </div>
   <div>
-    <canvas id="the-canvas" style="border:1px solid black"></canvas>
+    <canvas id="pdf-canvas" style="border:1px solid black;display:none;"></canvas>
   </div>
 
   <script src="<c:url value='/main/assets/${appVersion}/jquery/2.0.3/jquery.js'/>"></script>
@@ -52,7 +62,16 @@
     <script type="text/javascript" src="<c:url value='/main/assets/${appVersion}/pdf-js/0.5.5/src/bidi.js'/>"></script>
     <script type="text/javascript">PDFJS.workerSrc = '<c:url value='/main/assets/${appVersion}/pdf-js/0.5.5/src/worker_loader.js'/>';</script>
 
-  
+    <c:choose>
+        <c:when test="${param.viewMode eq 'full'}">
+            <c:set var="scaleRate" value="1.0"/>
+        </c:when>
+        <c:otherwise>
+            <c:set var="scaleRate" value="0.3"/>
+            
+        </c:otherwise>
+    </c:choose>
+    
   
   <script type="text/javascript">
     //
@@ -65,6 +84,8 @@
     
             //'http://cdn.mozilla.net/pdfjs/tracemonkey.pdf';
 
+    var viewMode = '<c:out value="${param.viewMode}"/>';        
+
     //
     // Disable workers to avoid yet another cross-origin issue (workers need the URL of
     // the script to be loaded, and currently do not allow cross-origin scripts)
@@ -73,8 +94,8 @@
 
     var pdfDoc = null,
         pageNum = 1,
-        scale = 1.0,
-        canvas = document.getElementById('the-canvas'),
+        scale = ${scaleRate},
+        canvas = document.getElementById('pdf-canvas'),
         ctx = canvas.getContext('2d');
 
     //
@@ -87,17 +108,35 @@
         canvas.height = viewport.height;
         canvas.width = viewport.width;
 
+      
         // Render PDF page into canvas context
         var renderContext = {
           canvasContext: ctx,
           viewport: viewport
         };
-        page.render(renderContext);
+        page.render(renderContext).then(function() {
+         
+        $('#loadingPanel').css('display','none');
+        
+            $('#pdf-canvas').css('display','');
+        
+        if (viewMode == 'full'){
+            $('#controlPanel').css('display','');
+        }     
+        
+        });
+      
+        if (viewMode == 'preview'){
+        // alert('canvas h '+canvas.height);
+         parent.autoResize(parent.document.getElementById('${model.id}_pdf_preview'),canvas);
+        } 
       });
 
+      if (document.getElementById('page_num')) {
       // Update page counters
       document.getElementById('page_num').textContent = pageNum;
       document.getElementById('page_count').textContent = pdfDoc.numPages;
+      }
     }
 
     //
@@ -127,10 +166,14 @@
     //
     PDFJS.getDocument(url).then(function (pdf) {
       pdfDoc = pdf;
-      renderPage(pageNum);
-    });
+      renderPage(pageNum);     
+           
+      });
     
      });
-  </script>  
+  </script>
+  
+    
+  
 </body>
 </html>

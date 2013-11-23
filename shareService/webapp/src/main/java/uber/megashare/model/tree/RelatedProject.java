@@ -15,7 +15,6 @@
  */
 package uber.megashare.model.tree;
 
-import org.springframework.data.neo4j.annotation.GraphId;
 import org.springframework.data.neo4j.annotation.Indexed;
 import org.springframework.data.neo4j.annotation.NodeEntity;
 import org.springframework.data.neo4j.support.index.IndexType;
@@ -26,41 +25,26 @@ import uber.megashare.model.Project;
  * @author aachernyshev
  */
 @NodeEntity
-public class RelatedProject {
+public class RelatedProject extends BaseTreeObject{
 
-     @GraphId
-    private Long id;
-    
-    @Indexed(indexType = IndexType.FULLTEXT, indexName = "project_name")
-    private String name;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
+   
+    @Indexed(indexType = IndexType.FULLTEXT,indexName="project_name")
+    @Override
     public String getName() {
-        return name;
+        return super.getName();
     }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
+    
     public RelatedProject fromProject(Project p) {
         
-        this.name=p.getName();
-        
+        setName(p.getName());
+        setExternalId(p.getId());
         return this;
     }
     
     public Project toProject() {
         Project out = new Project();
-        out.setId(id);
-        out.setName(name);        
+        out.setId(getExternalId());
+        out.setName(getName());        
         return out;
     }
 }

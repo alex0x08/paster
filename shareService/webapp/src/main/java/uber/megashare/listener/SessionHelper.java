@@ -31,7 +31,7 @@ import com.google.common.collect.HashBiMap;
  *
  * @author alex
  */
-public class SessionSupport extends LoggedClass {
+public class SessionHelper extends LoggedClass {
 
     /**
      *
@@ -76,6 +76,8 @@ public class SessionSupport extends LoggedClass {
 
         String sessionID = getSessionForLogin(u.getUsername());
 
+       // u.setCurrentLocale(u.getPrefferedLocale());
+        
         add(sessionID, u);
 
     }
@@ -94,7 +96,7 @@ public class SessionSupport extends LoggedClass {
             remove(getSessionForLogin(user.getUsername()));
         }
         synchronized (lock) {
-            store.put(sessionID, user.getUsername());
+            store.forcePut(sessionID, user.getUsername());
             user_store.put(user.getUsername(), user);
         }
     }
@@ -108,6 +110,7 @@ public class SessionSupport extends LoggedClass {
         synchronized (lock) {
             user_store.remove(store.get(sessionID));
             store.remove(sessionID);
+           
         }
     }
 
@@ -159,9 +162,9 @@ public class SessionSupport extends LoggedClass {
     public String getSessionForLogin(String login) {
         return !isSessionForUser(login) ? null :store.inverse().get(login);
     }
-    private static final SessionSupport INSTANCE = new SessionSupport();
+    private static final SessionHelper INSTANCE = new SessionHelper();
 
-    public static SessionSupport getInstance() {
+    public static SessionHelper getInstance() {
         return INSTANCE;
     }
 }

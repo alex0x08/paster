@@ -28,22 +28,38 @@
                 duration    : 800,              // Animation duration
                 animation   : true,             // Do we have to animate the box ?
                 width       : 1024,              // Default width
-                height      : 768,              // Default height
+                height      : 668,              // Default height
                 gallery     : true,             // Allow gallery thumb view
                 autoplay : true,                // Autoplay for video
-                overflow: true
+                overflow: false
             });   
         }
         
         function initFlowPlayer() {
       
         flowplayer("a.embedPlayer", "<c:url value='/main/static/${appVersion}/libs/flowplayer/flowplayer-3.2.16.swf'/>", {
-      clip:  {
-          autoPlay: false,
-          autoBuffering: true
-      }
+            clip:  {
+                autoPlay: false,
+                autoBuffering: true
+            }
            
-  });
+            });
+        }
+        
+        
+        function autoResize(parent_obj,obj){
+            var newheight;
+            var newwidth;
+
+            newheight=obj.height+5;
+            newwidth=obj.width+5;
+        
+
+       // alert('resize to '+newwidth+' x '+newheight+' parent='+parent_obj);
+
+        parent_obj.style.width=newwidth+'px';
+        parent_obj.style.height=newheight+'px';
+        
         }
         
         function initButtons() {
@@ -52,7 +68,7 @@
   
                $(".commentsBtn").bind('click', function(e) {
                
-                 var thisTab = e.target; 
+                  var thisTab = e.target; 
                   var pageTarget = $(thisTab).attr('href');
                   
                   $(pageTarget).load(commentsUrl+'?id='+$(thisTab).attr('modelId'));
@@ -60,24 +76,19 @@
         
               
          $(".pastePreviewBtn").bind('click', function() {
-                var link=$(this);
-           
+                var link=$(this);           
            
                 $('#targetImg').attr('src',link.attr('targetIcon'));
                 $('#targetTitle').html(link.attr('targetTitle'));
            
-           
-                //${pasteUrl} ${externalUrl}
-            
                 var clink = '<iframe src="${pasteUrl}/main/paste/loadFrom?url=${externalUrl}/act/download?id=';
                 clink+= link.attr('targetId');
                 clink+= '" scrolling="auto" frameborder="0" style="width:640px;height:320px; "  allowTransparency="true" > </iframe>';
                 
                 $('#pasteContent').html(clink);
-               $('#paste_preview').modal({backdrop: false}, "show");
+                $('#paste_preview').modal({backdrop: false}, "show");
               
                 return false;
-
             });
    
    
@@ -93,8 +104,7 @@
                     $('#delete_confirmation').modal("hide");
                     e.preventDefault();
                     location.href=link.attr('deleteLink');
-                    return true;
-   
+                    return true;   
                 });
 
                 return false;
@@ -149,8 +159,17 @@
                         
                         $('.chosen_select_box_multiple').chosen({
                         });
-        
-        });
-    </script>
+                        
+  $(".chosen_image_selectbox").chosenImage({
+    disable_search_threshold: 10 
+  });
 
+        
+        
+        $('.remoteModal').on('show.bs.modal', function () {        
+             $(this).find('#srcFrame').attr("src",$(this).attr('srcUrl'));
+        });
+             
+                }); 
+       </script>      
   

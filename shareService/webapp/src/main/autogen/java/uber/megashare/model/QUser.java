@@ -35,33 +35,44 @@ public class QUser extends EntityPathBase<User> {
 
     public static final QUser user = new QUser("user");
 
-    public final QStruct _super = new QStruct(this);
+    public final QAvatarStruct _super;
+
+    // inherited
+    public final QAvatar avatar;
+
+    public final EnumPath<AvatarType> avatarType = createEnum("avatarType", AvatarType.class);
 
     public final EnumPath<AccessLevel> defaultFileAccessLevel = createEnum("defaultFileAccessLevel", AccessLevel.class);
 
     //inherited
-    public final BooleanPath disabled = _super.disabled;
+    public final BooleanPath disabled;
 
     public final StringPath email = createString("email");
 
     //inherited
-    public final NumberPath<Long> id = _super.id;
+    public final NumberPath<Long> id;
 
     //inherited
-    public final DateTimePath<java.util.Date> lastModified = _super.lastModified;
+    public final DateTimePath<java.util.Date> lastModified;
 
     public final StringPath login = createString("login");
 
     //inherited
-    public final StringPath name = _super.name;
+    public final StringPath name;
 
     public final StringPath password = createString("password");
+
+    public final StringPath phone = createString("phone");
+
+    public final StringPath prefferedLocaleCode = createString("prefferedLocaleCode");
 
     public final QProject relatedProject;
 
     public final SetPath<Role, EnumPath<Role>> roles = this.<Role, EnumPath<Role>>createSet("roles", Role.class, EnumPath.class);
 
     public final ListPath<SavedSession, QSavedSession> savedSessions = this.<SavedSession, QSavedSession>createList("savedSessions", SavedSession.class, QSavedSession.class);
+
+    public final StringPath skype = createString("skype");
 
     public QUser(String variable) {
         this(User.class, forVariable(variable), INITS);
@@ -77,6 +88,12 @@ public class QUser extends EntityPathBase<User> {
 
     public QUser(Class<? extends User> type, PathMetadata<?> metadata, PathInits inits) {
         super(type, metadata, inits);
+        this._super = new QAvatarStruct(type, metadata, inits);
+        this.avatar = _super.avatar;
+        this.disabled = _super.disabled;
+        this.id = _super.id;
+        this.lastModified = _super.lastModified;
+        this.name = _super.name;
         this.relatedProject = inits.isInitialized("relatedProject") ? new QProject(forProperty("relatedProject"), inits.get("relatedProject")) : null;
     }
 

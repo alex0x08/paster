@@ -36,7 +36,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import uber.megashare.base.LoggedClass;
-import uber.megashare.listener.SessionSupport;
+import uber.megashare.listener.SessionHelper;
+import uber.megashare.model.AvatarType;
 import uber.megashare.model.Project;
 import uber.megashare.model.SystemProperties;
 import uber.megashare.model.User;
@@ -111,7 +112,7 @@ public abstract class AbstractController extends LoggedClass {
     private final static List<Locale> availableLocales = new ArrayList<>();
 
     static {
-        availableLocales.add(Locale.ENGLISH);
+        availableLocales.add(Locale.US);
         availableLocales.add(new Locale("ru", "RU"));
     }
     
@@ -185,6 +186,10 @@ public abstract class AbstractController extends LoggedClass {
         return  isCurrentUserLoggedIn() ? projectManager.getAll(): Collections.EMPTY_LIST;
     }
 
+    @ModelAttribute("availableAvatarTypes")
+    public AvatarType[] getAvailableAvatarTypes() {
+        return AvatarType.values();
+    }
     
     @ModelAttribute("availableProjectsWithUsers")
     public Collection<ProjectUsers> getAvailableProjectsWithUsers() {
@@ -242,8 +247,8 @@ public abstract class AbstractController extends LoggedClass {
     @ModelAttribute("usersOnline")
     public List<User> getUsersOnline() {
         return getCurrentUser() != null
-                ? SessionSupport.getInstance().getSessions(getCurrentUser().getUsername())
-                : SessionSupport.getInstance().getSessions();
+                ? SessionHelper.getInstance().getSessions(getCurrentUser().getUsername())
+                : SessionHelper.getInstance().getSessions();
     }
 
     @ModelAttribute("currentUser")

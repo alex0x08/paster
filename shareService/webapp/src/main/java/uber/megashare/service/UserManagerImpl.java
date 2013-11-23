@@ -32,7 +32,7 @@ import org.springframework.security.crypto.codec.Base64;
 import org.springframework.stereotype.Service;
 import uber.megashare.base.logging.LoggedCall;
 import uber.megashare.dao.UserDao;
-import uber.megashare.listener.SessionSupport;
+import uber.megashare.listener.SessionHelper;
 import uber.megashare.model.SavedSession;
 import uber.megashare.model.User;
 import uber.megashare.model.UserSearchQuery;
@@ -143,7 +143,7 @@ public class UserManagerImpl extends GenericSearchableManagerImpl<User, UserSear
 
         object=dao.saveObject(object);
        
-        SessionSupport.getInstance().updateUser(object);
+        SessionHelper.getInstance().updateUser(object);
 
        
         return object;

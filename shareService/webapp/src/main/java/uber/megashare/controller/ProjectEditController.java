@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import static uber.megashare.controller.EditConstants.MODEL_KEY;
 import static uber.megashare.controller.EditConstants.SAVE_ACTION;
-import uber.megashare.listener.SessionSupport;
+import uber.megashare.listener.SessionHelper;
 import uber.megashare.model.Avatar;
 import uber.megashare.model.Project;
 import uber.megashare.model.User;
@@ -93,7 +93,7 @@ public class ProjectEditController  extends AbstractEditController<Project>{
         
          if (b.getFile()!=null && !b.getFile().isEmpty()) {
              try {
-                 b.setAvatar(Avatar.fromStream(b.getFile().getInputStream()));
+                 b.setAvatar(Avatar.fromStream(b.getFile().getInputStream(),false));
              } catch (IOException ex) {
                  getLogger().error(ex.getLocalizedMessage(),ex);
                  return page500;
@@ -109,7 +109,7 @@ public class ProjectEditController  extends AbstractEditController<Project>{
             for (User u:getUsersOnline()) {
                 if (u.getRelatedProject().equals(b)) {
                     u.setRelatedProject(b);
-                    SessionSupport.getInstance().updateUser(u);
+                    SessionHelper.getInstance().updateUser(u);
                 }
             }
          }

@@ -16,6 +16,7 @@
 package uber.megashare.controller;
 
 import java.beans.PropertyEditorSupport;
+import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
@@ -33,6 +34,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import uber.megashare.model.Avatar;
+import uber.megashare.model.AvatarType;
 import uber.megashare.model.Project;
 import uber.megashare.model.Role;
 import uber.megashare.model.User;
@@ -73,21 +76,20 @@ public class UserEditController extends AbstractEditController<User> {
    
 
     @InitBinder
-    protected void initBinder(WebDataBinder binder,Locale locale) {
-    
-         binder.registerCustomEditor(Project.class,"relatedProject", new PropertyEditorSupport() {
-        @Override
-        public void setAsText(String text) {
-         //   System.out.println("set project from "+text);
-            setValue(new Project(Long.valueOf(text)));
-        }
-        
-             @Override
-             public String getAsText() {
-                 return getValue() == null ? "" : ((Project) getValue()).getId().toString();
-             }
-        
-    });
+    protected void initBinder(WebDataBinder binder, Locale locale) {
+
+        binder.registerCustomEditor(Project.class, "relatedProject", new PropertyEditorSupport() {
+            @Override
+            public void setAsText(String text) {
+                //   System.out.println("set project from "+text);
+                setValue(new Project(Long.valueOf(text)));
+            }
+
+            @Override
+            public String getAsText() {
+                return getValue() == null ? "" : ((Project) getValue()).getId().toString();
+            }
+        });
     }
     
     @Override
@@ -100,10 +102,7 @@ public class UserEditController extends AbstractEditController<User> {
         return Role.values();
     }
     
-    @ModelAttribute("availableProjects")
-    public List<Project> getAvailableProjects() {
-        return projectManager.getAll();
-    }
+   
     
     @RequestMapping(value = {SAVE_ACTION}, method = RequestMethod.POST)
     @Override
@@ -134,6 +133,7 @@ public class UserEditController extends AbstractEditController<User> {
             return editPage;
         }
         
+        User toSave;
         
         if (b.getRoles() == null || b.getRoles().isEmpty()) {
             result.addError(new ObjectError("user.roles", "Roles not set."));
@@ -146,6 +146,17 @@ public class UserEditController extends AbstractEditController<User> {
             current.setEmail(b.getEmail());
             current.setDefaultFileAccessLevel(b.getDefaultFileAccessLevel());
             current.setName(b.getName());
+            current.setSkype(b.getSkype());
+            current.setPhone(b.getPhone());
+            
+             if (current.getAvatarType()!=b.getAvatarType()) {
+                current.setAvatar(null);
+            }
+            
+             current.setAvatarType(b.getAvatarType());
+     
+             
+            current.setPrefferedLocaleCode(b.getPrefferedLocaleCode());
             
             Project p  =projectManager.get(b.getRelatedProject().getId());
             
@@ -168,21 +179,30 @@ public class UserEditController extends AbstractEditController<User> {
                 current = userManager.changePassword(current, b.getNewPassword());
             }
             
-            b = current;
+            toSave = current;
             
           //  System.out.println("_saving pass "+b.getPassword());
             
         } else {
 
-           if (!StringUtils.isBlank(b.getNewPassword()) && !b.getNewPassword().equals(b.getRepeatPassword())) {
-                    result.addError(new ObjectError("newPassword","Password must match."));
-                    return editPage; 
-                }
-           
-                b= userManager.changePassword(b, b.getNewPassword());
-       }
+            if (!StringUtils.isBlank(b.getNewPassword()) && !b.getNewPassword().equals(b.getRepeatPassword())) {
+                result.addError(new ObjectError("newPassword", "Password must match."));
+                return editPage;
+            }
+
+            toSave = userManager.changePassword(b, b.getNewPassword());
+        }
+
+          if (b.getAvatarType() == AvatarType.FILE && b.getFile()!=null && !b.getFile().isEmpty()) {
+             try {
+                 toSave.setAvatar(Avatar.fromStream(b.getFile().getInputStream(),true));
+             } catch (IOException ex) {
+                 getLogger().error(ex.getLocalizedMessage(),ex);
+                 return page500;
+             }
+         } 
         
-        User r = manager.save(b);
+        User r = manager.save(toSave);
 
 
         /**

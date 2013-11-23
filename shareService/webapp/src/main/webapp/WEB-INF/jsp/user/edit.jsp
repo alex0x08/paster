@@ -8,8 +8,12 @@
 <div class="row">
 
     <div class="col-md-3" style="text-align:right;">
-        <img src="<c:out value='http://www.gravatar.com/avatar/${model.avatarHash}?s=128'/>"/>
-
+        <c:set var="usermodel" value="${model}" scope="request"></c:set>
+        <jsp:include page="/WEB-INF/jsp/templates/common/user-avatar.jsp" >
+            <jsp:param name="size" value="full" />
+        </jsp:include>
+        
+     
         <div class="form-group">
 
             <c:out value="${model.login}"/> ,      
@@ -24,7 +28,7 @@
 
             <div class="col-md-4">
 
-        <form:form action="${url}" cssClass="form-horizontal"
+        <form:form action="${url}" cssClass="form-horizontal" id="editUserForm"
                    modelAttribute="model" 
                    method="POST" enctype="multipart/form-data">
 
@@ -89,11 +93,23 @@
                         <span class="input">
                             <form:select path="roles" multiple="true"  cssErrorClass="form-control alert alert-danger" 
                                          cssStyle="width:10em;" 
-                                         cssClass="form-control">
+                                         cssClass="form-control ">
                                 <c:forEach items="${availableRoles}" var="role">
-                                    <form:option value="${role.code}" >
+                                    <c:choose>
+                                        <c:when test="${role eq 'ROLE_MANAGER'}">
+
+                                                <form:option cssClass="disabled" disabled="true"  value="${role.code}"  >
+                                                    <fmt:message key="${role.desc}"/>
+                                            </form:option>
+                                            
+                                        </c:when>
+                                        <c:otherwise>
+                                            <form:option  value="${role.code}"  >
                                         <fmt:message key="${role.desc}"/>
                                     </form:option>
+                                        </c:otherwise>
+                                    </c:choose>
+                                    
                                 </c:forEach>
                             </form:select> 
                             <form:errors path="roles" cssClass="help-block alert alert-danger" /> 
@@ -101,6 +117,34 @@
                     </div>
                 </div>
                         
+                        
+                <div class="form-group">
+                    <label cssClass="control-label" for="roles"><fmt:message key="user.prefferedLocale"/>:</label>
+                    <div class="controls">
+                        <span class="input">
+                            <form:select path="prefferedLocale" cssErrorClass="form-control alert alert-danger" 
+                                         cssStyle="width:20em;" 
+                                         cssClass="chosen_image_selectbox form-control">
+                                <c:forEach items="${availableLocales}" var="locale">
+                                    
+                                    <c:url var="imgUrl" value='/main/static/${appVersion}/images/flags/flag_${locale.language}_${locale.country}.png'/>
+                                    
+                                    <form:option value="${locale.language}_${locale.country}" 
+                                                 data-img-src="${imgUrl}">
+                                        <c:out value="${locale.displayName}"/>
+                                    </form:option>
+                                </c:forEach>
+                            </form:select> 
+                            <form:errors path="prefferedLocale" cssClass="help-block alert alert-danger" /> 
+                        </span>
+                    </div>
+                </div>        
+                        
+                        
+                   <c:set var="usermodel" value="${model}" scope="request"></c:set>
+        <jsp:include page="/WEB-INF/jsp/templates/common/select-avatar.jsp" >
+            <jsp:param name="formId" value="editUserForm" />
+        </jsp:include>       
                         
                  <div class="form-group">
                     <label cssClass="control-label" for="projects"><fmt:message key="user.relatedProject"/>:</label>
@@ -134,6 +178,32 @@
                     </div>                    
                     <form:errors path="email" cssClass="help-block alert alert-danger" /> 
                 </div>    
+                
+                  <div class="form-group ">
+                                <div class="controls">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <img src="<c:url value='/main/static/${appVersion}/images/skype.png'/>"/></span>
+                                            <form:input cssErrorClass="form-control alert alert-danger" cssClass="form-control" 
+                                                        path="skype" cssStyle="width:10em;" />
+                                    </div>                    
+                                    <form:errors path="skype" cssClass="help-block alert alert-danger" />                        
+                                   </div>
+                            </div>          
+                                  
+                
+                    <div class="form-group ">
+                                <div class="controls">
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><span class="glyphicon glyphicon-earphone"></span></span>
+                                            <form:input cssErrorClass="form-control alert alert-danger" cssStyle="width:12em;" cssClass="form-control" 
+                                                        path="phone" />
+                                    </div>                    
+                                    <form:errors path="phone" cssClass="help-block alert alert-danger" />                        
+                               </div>
+                            </div>                  
+                                                    
+                                   
                 <div class="form-group">
                     <input name="submit" type="submit" class="btn btn-primary" value="<fmt:message key="button.save"/>" />
 

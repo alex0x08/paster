@@ -8,9 +8,7 @@
 <div class="row">
 
             <div class="col-md-2">
-                
-                
-                
+               
             </div>
     
 
@@ -74,7 +72,20 @@
                         <fmt:message key="avatar.icon"/>:</form:label>
 
                         <div class="input-group input-group-sm">
-                            <span class="input-group-addon"><span class="glyphicon glyphicon-picture"></span></span>
+                            <span class="input-group-addon">
+
+                                <c:choose>
+                                    <c:when test="${model.avatarSet}">
+                                        <img src="data:image/png;base64,${model.avatar.icon}" 
+                                             alt="<c:out value='${model.name}'/>" />              
+                                    </c:when>
+                                    <c:otherwise>
+                                        <span class="glyphicon glyphicon-picture"></span>
+                                    </c:otherwise>
+                                </c:choose>
+                               
+                                
+                            </span>
                             <form:input path="file" type="file" cssStyle="width:20em;" 
                                         cssErrorClass="form-control alert alert-danger" 
                                         cssClass="form-control"/>

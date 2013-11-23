@@ -30,8 +30,10 @@
 
                     <a href="<c:url value='/main/${param.modelName}/view'>
                            <c:param name='id' value='${model.id}'/>
+                    <c:if test="${rev ne lastRevision}">
                            <c:param name='revision' value='${rev}'/>
-                       </c:url>">${rev}</a>
+                    </c:if>
+                    </c:url>">${rev}</a>
 
                     <c:if test="${rev eq lastRevision}">
                         &nbsp; <fmt:message key="struct.verion.last"/>

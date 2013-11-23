@@ -44,7 +44,7 @@ public class SettingsManagerImpl extends GenericManagerImpl<SystemProperties, Lo
     }
 
     @Override
-    public String getCalculatedFileDir(Date date, Long version) {
+    public String getCalculatedFileDir(Date date,String uuid, Long version) {
 
         Calendar c = Calendar.getInstance();
         c.setTime(date);
@@ -57,6 +57,8 @@ public class SettingsManagerImpl extends GenericManagerImpl<SystemProperties, Lo
                 .append(c.get(Calendar.MONTH))
                 .append(File.separator)
                 .append(c.get(Calendar.DAY_OF_MONTH))
+                .append(File.separator)
+                .append(uuid)
                 .append(File.separator)
                 .append(version)
                 .toString();

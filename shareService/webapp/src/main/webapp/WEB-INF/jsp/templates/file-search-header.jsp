@@ -38,11 +38,11 @@
             <sec:authorize ifAnyGranted="ROLE_ADMIN">
                 <div class="form-group">
 
-                    <form:select  path="userId" cssClass="btn chosen_select_box" >
+                    <form:select  path="userId" cssClass="btn chosen_image_selectbox" >
 
                         <c:forEach items="${availableProjectsWithUsers}" var="projectUsers">
 
-                            <optgroup label="<c:out value='${projectUsers.project.name}'/>">
+                            <optgroup label="<c:out value='${projectUsers.project.name}'/>" data-img-src="data:image/png;base64,${projectUsers.project.avatar.icon}">
                                 <form:options  items="${projectUsers.users}" itemValue="id" itemLabel="name"  />
                             </optgroup>
 

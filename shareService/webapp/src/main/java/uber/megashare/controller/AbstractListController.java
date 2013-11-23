@@ -15,7 +15,6 @@
  */
 package uber.megashare.controller;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -44,7 +43,7 @@ public abstract class AbstractListController<T extends Struct> extends GenericCo
      *
      */
     private static final long serialVersionUID = -4801670188232326655L;
-    
+
   
 
     /**
@@ -169,7 +168,7 @@ public abstract class AbstractListController<T extends Struct> extends GenericCo
 
       
         @SuppressWarnings("unchecked")
-        PagedListHolder<T> pagedListHolder = (PagedListHolder<T>) request.getSession().getAttribute(NODE_LIST_MODEL_PAGE);
+        PagedListHolder<T> pagedListHolder = (PagedListHolder<T>) request.getSession().getAttribute(getClass().getName()+"_"+NODE_LIST_MODEL_PAGE);
 
         if (pagedListHolder == null || (page == null && NPpage == null && pageSize == null && sortColumn == null )  ) {
             pagedListHolder = createCall.invokeCreate();
@@ -222,7 +221,7 @@ public abstract class AbstractListController<T extends Struct> extends GenericCo
 
         
 
-        request.getSession().setAttribute(NODE_LIST_MODEL_PAGE, pagedListHolder);
+        request.getSession().setAttribute(getClass().getName()+"_"+NODE_LIST_MODEL_PAGE, pagedListHolder);
 
         model.addAttribute(NODE_LIST_MODEL_PAGE, pagedListHolder);
 
