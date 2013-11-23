@@ -99,6 +99,7 @@ class Paste extends Struct with java.io.Serializable{
 
   @Lob
   //@NotNull
+  //@Column(length=1024,name="thumb_img")
   @XmlTransient
   //@NotAudited
   @SearchableProperty(store=Store.YES,index=Index.NO)
@@ -113,7 +114,7 @@ class Paste extends Struct with java.io.Serializable{
   @NotAudited
   private var title: String = null
 
-  @ManyToOne(fetch = FetchType.EAGER,cascade= Array(CascadeType.ALL))
+  @ManyToOne(fetch = FetchType.EAGER,cascade= Array(CascadeType.PERSIST,CascadeType.MERGE))
   @JoinColumn(name = "owner_id")
   @NotAudited
   private var owner:User = null

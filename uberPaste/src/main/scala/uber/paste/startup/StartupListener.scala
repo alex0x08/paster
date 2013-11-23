@@ -107,23 +107,28 @@ class StartupListener extends ServletContextListener with Loggered{
       reindex(ctx,props)
 
 
+      if (props.getProperty("config.load.data.enabled").equals("1")) {
 
-     /* new Thread(new Runnable() {
+        logger.info("Data loading enabled..")
+
+        var dirs = props.getProperty("config.load.data.folders").split(",")
+        
+        
+         for (f<-dirs) {
+            logger.info("Start loading for "+f)
+
+             new Thread(new Runnable() {
         def run() {
-          Files.walkFileTree(Paths.get("c:/Users/achernyshev/Dropbox/"), new WalkFileTree(pasteDao))
-
-
+          Files.walkFileTree(Paths.get(f), new WalkFileTree(pasteDao))
         }
       }).start()
 
-
-      new Thread(new Runnable() {
-        def run() {
-          Files.walkFileTree(Paths.get("c:/work/"), new WalkFileTree(pasteDao))
-
         }
-      }).start()
-       */
+      }
+ 
+      
+      
+      
       startSmtpServer(ctx,props)
 
      PasteManager.Stats.totalPastas.addAndGet(pasteDao.countAll().toInt)

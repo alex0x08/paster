@@ -74,8 +74,6 @@
 
 
             <c:if test="${!model.blank}">
-
-
                 <tiles:insertDefinition name="/common/deleteLink" >
                     <tiles:putAttribute name="model" value="${model}"/>
                     <tiles:putAttribute name="modelName" value="paste"/>
@@ -97,7 +95,7 @@
         <div class="column grid-7">
 
         <form:label path="tagsAsString"><span  class="i" >T</span><fmt:message key="paste.tags"/>:</form:label>
-    <form:input path="tagsAsString" maxlength="155" cssStyle="width:97%;" autocomplete="true" placeholder="enter space-separated tags here"  />
+    <form:input id="ptags" path="tagsAsString" maxlength="155" cssStyle="width:97%;" autocomplete="true" placeholder="enter space-separated tags here"  />
     <form:errors path="tagsAsString" cssClass="error" />
 
         </div>
@@ -281,11 +279,14 @@
         });
     }
 
+   
     var max_length= 100;
 
     window.addEvent('paste', function(e){
         if (e.event.clipboardData) {
-            console.log(e.event.clipboardData);
+            
+            /*console.log(e.event.clipboardData);*/
+            
             var text = e.event.clipboardData.getData('text/plain');
 
             var block = '';
@@ -296,8 +297,12 @@
              block  = text.substring(0, max_length-2)+'..';
              }
 
-             document.getElementById("pname").set('value',block);
-
+             var ptitle = $("pname"),ptags = $("");
+             
+             if (ptitle.get('value') == '') {
+                 ptitle.set('value',block);
+             }
+          
             //e.stop();
         }
     });

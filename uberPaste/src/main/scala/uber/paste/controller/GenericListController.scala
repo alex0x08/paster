@@ -92,7 +92,7 @@ abstract class GenericListController[T <: Struct ] extends StructController[T] {
                                       pageHolderName:String,createDefaultItemModel:Boolean = true):java.util.List[T] = {
 
       var pagedListHolder:PagedListHolder[T] = request.getSession()
-            .getAttribute(pageHolderName)
+            .getAttribute(getClass().getName()+"_"+pageHolderName)
             .asInstanceOf[PagedListHolder[T]]
 
     /**
@@ -139,7 +139,7 @@ abstract class GenericListController[T <: Struct ] extends StructController[T] {
       pagedListHolder.setPageSize(pageSize)
     }
 
-    request.getSession().setAttribute(pageHolderName, pagedListHolder)
+    request.getSession().setAttribute(getClass().getName()+"_"+pageHolderName, pagedListHolder)
     model.addAttribute(pageHolderName, pagedListHolder)
 
 
