@@ -19,9 +19,8 @@ package uber.paste.manager
 import uber.paste.model._
 import uber.paste.dao.PasteDao
 import org.springframework.stereotype.Service
+import java.util.concurrent.atomic.AtomicInteger
 import org.springframework.beans.factory.annotation.Autowired
-import actors.threadpool.AtomicInteger
-import java.util.Collections
 import org.springframework.security.access.annotation.Secured
 
 object PasteManager {
