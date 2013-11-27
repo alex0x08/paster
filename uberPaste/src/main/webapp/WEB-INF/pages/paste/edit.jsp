@@ -60,7 +60,7 @@
 
         <div class="column grid-4 right">
 
-            <button id="addCommentBtn" class="submitBtn" name="submit_btn" type="submit">
+            <button id="addCommentBtn" class="p-btn-save submitBtn" name="submit_btn" type="submit">
                 <img id="btnIcon" style="display:none;" src="<c:url value='/main/static/${appVersion}/images/gear_sml.gif'/>"/>
                      <span class="i">S</span>
                     <span id="btnCaption"><c:out value='${submit_button_text}'/></span>
@@ -179,9 +179,8 @@
     <form:textarea path="text" cssErrorClass="error" cssClass="notice" cssStyle="display:none;"
                    name="text" id="ptext" placeHolder="paste text"
                    cols="120" rows="10" />
-            <pre id="editor" style="height: 50em;">
-
-            </pre>
+            <div id="editor" style="height: 50em;">
+            </div>
 
     <form:errors path="text" cssClass="error" />
 
@@ -191,7 +190,7 @@
 
                 <button
                         name="submit_btn"
-                        class="submitBtn" type="submit">
+                        class="p-btn-save submitBtn" type="submit">
 
                 <img id="btnIcon" style="display:none;" src="<c:url value='/main/static/${appVersion}/images/gear_sml.gif'/>"/>
                      <span class="i">S</span>
@@ -309,7 +308,7 @@
         var counter = new WordCount('wordCount');
 
         var editor = ace.edit("editor");
-        editor.setTheme("ace/theme/crimson_editor");
+        editor.setTheme("ace/theme/chrome");
         editor.getSession().setMode("ace/mode/${model.codeType.editType}");
 
         var textarea = document.getElementById("ptext");
@@ -430,13 +429,10 @@
 
     function cleanTitle() {
             $('pname').set('value','');
-
     }
 
 
     window.addEvent('domready', function(){
-
-
 
         $$('.submitBtn').addEvent('click',function(){
             this.getElementById('btnCaption').set('text','Submitting...').disabled = true;
@@ -451,74 +447,3 @@
 
 </script>
 
-
-<%--
-
-<div  class="row" style=" ">
-    <div id="pastePreview" class="column grid-12" >
-        <pre id="pasteText" class="brush: plain;toolbar: false; auto-links:false;" style=" overflow-y: hidden;" > </pre>
-
-    </div>
-</div>
-
-<div  id="lineNumber"/>
-
-
-<script type="text/javascript">
-
-     SyntaxHighlighter.config.tagName = "pre";
-
-
-     window.addEvent('domready', function(){
-
-
-     SyntaxHighlighter.autoloader.apply(null, path(
-             'applescript            @shBrushAppleScript.js',
-             'actionscript3 as3      @shBrushAS3.js',
-             'bash shell             @shBrushBash.js',
-             'coldfusion cf          @shBrushColdFusion.js',
-             'cpp c                  @shBrushCpp.js',
-             'c# c-sharp csharp      @shBrushCSharp.js',
-             'css                    @shBrushCss.js',
-             'delphi pascal          @shBrushDelphi.js',
-             'diff patch pas         @shBrushDiff.js',
-             'erl erlang             @shBrushErlang.js',
-             'groovy                 @shBrushGroovy.js',
-             'java                   @shBrushJava.js',
-             'jfx javafx             @shBrushJavaFX.js',
-             'js jscript javascript  @shBrushJScript.js',
-             'perl pl                @shBrushPerl.js',
-             'php                    @shBrushPhp.js',
-             'text plain             @shBrushPlain.js',
-             'py python              @shBrushPython.js',
-             'ruby rails ror rb      @shBrushRuby.js',
-             'sass scss              @shBrushSass.js',
-             'scala                  @shBrushScala.js',
-             'sql                    @shBrushSql.js',
-             'vb vbnet               @shBrushVb.js',
-             'xml xhtml xslt html    @shBrushXml.js'
-     ));
-
-
-     });
-
-
-     function path()
-{
-var args = arguments,
-result = [];
-
-
-for(var i = 0; i < args.length; i++)
-    result.push(args[i].replace('@', '<c:url value="/libs/syntax-highlight/scripts/"/>'));
-
-//alert(result);
-return result
-};
-
-
-
-</script>
-
-
-      --%>
