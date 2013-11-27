@@ -871,16 +871,6 @@
       
         <!-- Alfresco Community Maven Repositories -->
         <repository>
-            <id>alfresco-public-snapshots</id>
-            <url>http://maven.alfresco.com/nexus/content/groups/public-snapshots</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-        <repository>
             <id>alfresco-public-releases</id>
             <url>http://maven.alfresco.com/nexus/content/groups/public</url>
         </repository>
@@ -916,16 +906,6 @@
             <url>http://mirrors.ibiblio.org/maven2</url>
         </repository-->
 		
-        <repository>
-            <id>appfuse-snapshots</id>
-            <url>http://oss.sonatype.org/content/repositories/appfuse-snapshots</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-            </snapshots>
-        </repository>
-       
         
         <repository>
             <id>russian-morphology.lucene.apache.org</id>
@@ -945,16 +925,6 @@
     </repositories>
     
     <pluginRepositories>
-        <pluginRepository>
-            <id>alfresco-public-snapshots</id>
-            <url>http://maven.alfresco.com/nexus/content/groups/public-snapshots</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </pluginRepository>
         <pluginRepository>
             <id>alfresco-public-releases</id>
             <url>http://maven.alfresco.com/nexus/content/groups/public</url>
