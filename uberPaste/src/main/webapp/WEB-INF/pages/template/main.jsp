@@ -87,9 +87,9 @@
                            </c:forEach>
 
                        </c:url>">
-                        <small>
-                       [<c:out value='${locale.displayLanguage}'/>]
-                        </small>
+                        <div style="font-size: small;" title="<c:out value='${locale.displayLanguage}'/>">
+                            <c:out value="${locale.language}"/>
+                        </div>
                     </a>
                 
 

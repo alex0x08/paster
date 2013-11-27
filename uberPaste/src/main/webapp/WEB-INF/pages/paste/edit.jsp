@@ -62,7 +62,8 @@
 
             <button id="addCommentBtn" class="submitBtn" name="submit_btn" type="submit">
                 <img id="btnIcon" style="display:none;" src="<c:url value='/main/static/${appVersion}/images/gear_sml.gif'/>"/>
-                <span id="btnCaption"><c:out value='${submit_button_text}'/></span>
+                     <span class="i">S</span>
+                    <span id="btnCaption"><c:out value='${submit_button_text}'/></span>
             </button>
 
 
@@ -193,6 +194,7 @@
                         class="submitBtn" type="submit">
 
                 <img id="btnIcon" style="display:none;" src="<c:url value='/main/static/${appVersion}/images/gear_sml.gif'/>"/>
+                     <span class="i">S</span>
                 <span id="btnCaption"><c:out value='${submit_button_text}'/></span>
             </button>
 

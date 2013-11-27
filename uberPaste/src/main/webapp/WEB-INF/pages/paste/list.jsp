@@ -12,7 +12,8 @@
 
 <div class="row">
     <div class="column grid-10">
-       from
+   
+             <a  href="<c:url value='/main/paste/list/${sourceType}'/>"><span class="i" style="font-size: 1.5em;">P</span></a>
     <c:forEach var="source" items="${availableSourceTypes}" varStatus="loopStatus">
 
         <c:choose>
@@ -26,7 +27,7 @@
 
         <c:if test="${!loopStatus.last}"> | </c:if>
     </c:forEach>
-
+   
     </div>
     <div class="column grid-2">
         <a href="<c:url value="/main/paste/list/body.xml"/>">

@@ -9,13 +9,14 @@
     <div class="column grid-9" style="padding-top: 0.5em;margin-right: 0;">
         <form:input path="query" name="query" id="pquery" placeholder="Enter search string.." cssStyle="width:97%;margin-right:0.5em;min-width: 5em;" autocomplete="true"  />
      </div>
-    <div class="column grid-3" style="">
+    <div class="column grid-4" style="">
         
-        <button id="doSearchBtn" type="submit">
+        <button class="btn" id="doSearchBtn" type="submit">
                  <img id="btnIcon" style="display:none;" src="<c:url value='/main/static/${appVersion}/images/gear_sml.gif'/>"/>
+                 <span class="i" >r</span>
                  <span id="btnCaption"><fmt:message key="button.search"/></span>
              </button>
-
+       
         <!--
         <input name="submit" type="submit" value="Search" style="text-align:left;min-width: 5em;max-width: 5em;"  />-->
         <form:errors path="query" cssClass="error" element="div"/>
