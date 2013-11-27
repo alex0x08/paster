@@ -14,7 +14,6 @@
     <context:annotation-config />
 
 
-
     <bean id="staticAppContext" class="uber.paste.base.SpringAppContext"/>
 
 

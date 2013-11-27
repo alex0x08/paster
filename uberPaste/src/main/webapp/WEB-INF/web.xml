@@ -30,6 +30,10 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
         <param-value>classpath:/spring/app-main.xml</param-value>
     </context-param>
 
+<context-param>
+    <param-name>javax.servlet.jsp.jstl.fmt.localizationContext</param-name>
+    <param-value>messages</param-value>
+</context-param>
 
     <filter>
         <filter-name>securityFilter</filter-name>
