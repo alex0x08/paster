@@ -32,10 +32,10 @@
     <div class="column grid-4">
 
         <a href="<c:url value="/main/paste/xml/${model.id}"/>" target="${target}" title="View as XML">
-            <img src="<c:url value='/images/xml.png'/>" title="xml" alt="xml"/>
+            <img src="<c:url value='/main/static/${appVersion}/images/xml.png'/>" title="xml" alt="xml"/>
         </a> |
         <a href="<c:url value="/main/paste/${model.id}.json"/>" target="${target}" title="View as JSON">
-            <img src="<c:url value='/images/json.png'/>" title="json" alt="json"/>
+            <img src="<c:url value='/main/static/${appVersion}/images/json.png'/>" title="json" alt="json"/>
         </a> |
         <a href="<c:url value="/main/paste/plain/${model.id}"/>" target="${target}" title="View as plain text">
             <span style="font-size: larger;" class="i">k</span>
@@ -44,7 +44,7 @@
 
         <c:if test="${mode ne 'icon'}">
             <a id="ctrlc_link" data-clipboard-target="pasteTextPlain" href="javascript:void(0);"
-               title="Copy to clipboard" ><img src="<c:url value='/images/ctrlc.png'/>"/></a>
+               title="Copy to clipboard" ><img src="<c:url value='/main/static/${appVersion}/images/ctrlc.png'/>"/></a>
         </c:if>
 
 

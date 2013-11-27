@@ -76,18 +76,18 @@
     <!-- tiles-->
 
 
-    <bean id="tilesConfigurer" class="org.springframework.web.servlet.view.tiles2.TilesConfigurer">
+    <bean id="tilesConfigurer" class="org.springframework.web.servlet.view.tiles3.TilesConfigurer">
         <property name="definitions">
             <list>
                 <value>/WEB-INF/tiles-defs/tilesConfig.xml</value>
             </list>
         </property>
-        <property name="tilesProperties">
+        <!--property name="tilesProperties">
 
         <props>
             <prop key="org.apache.tiles.evaluator.AttributeEvaluator">org.apache.tiles.evaluator.el.ELAttributeEvaluator</prop>
         </props>
-    </property>
+    </property-->
     </bean>
 
      <!-- file upload -->

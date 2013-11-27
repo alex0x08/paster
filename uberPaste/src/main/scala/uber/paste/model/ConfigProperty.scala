@@ -18,12 +18,14 @@ package uber.paste.model
 
 import javax.persistence._
 import javax.validation.constraints.NotNull
+import uber.paste.base.SystemInfo
 
 object ConfigProperty {
   
   val IS_INSTALLED = new ConfigProperty("config.property.is-installed","IS_INSTALLED","1")
   val UPLOADS_DIR = new ConfigProperty("config.property.upload-dir","UPLOAD_DIR","upload")
   val EXTERNAL_SITE_URL = new ConfigProperty("config.property.external-site-url","EXTERNAL_SITE_URL","http://localhost")
+  val APP_VERSION = new ConfigProperty("config.property.app-version","APP_VERSION","UNDEFINED")
 
 
 }
@@ -32,10 +34,16 @@ object ConfigProperty {
 @Table(name = "CONFIG")
 class ConfigProperty extends KeyValue with java.io.Serializable {
 
+  
+  
 def this(name:String,code:String,value:String) = {
     this()
     setName(name)
     setCode(code)
     setValue(value)
   }
+  
+    
+  
+  
 }

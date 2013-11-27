@@ -96,20 +96,17 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
 
  <!-- Mapping -->
 
-    <filter-mapping>
+    <!--filter-mapping>
         <filter-name>crossSecurityFilter</filter-name>
         <url-pattern>/*</url-pattern>
-        <!--url-pattern>*.json</url-pattern-->
-        <!--url-pattern>*.css</url-pattern-->
-    </filter-mapping>
+    </filter-mapping-->
 
 
-    <filter-mapping>
+    <!--filter-mapping>
    <filter-name>responseCacheFilter</filter-name>
    <url-pattern>*.js</url-pattern>
-   <!--url-pattern>*.json</url-pattern-->
    <url-pattern>*.css</url-pattern>
- </filter-mapping>
+ </filter-mapping-->
  
  <!--filter-mapping>
    <filter-name>compressionFilter</filter-name>
@@ -235,19 +232,18 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
 
 
     <!-- Mapping -->
-    <servlet-mapping>
+    <!--servlet-mapping>
         <servlet-name>JSCSSMergeServet</servlet-name>
         <url-pattern>*.js</url-pattern>
-        <!--url-pattern>*.json</url-pattern-->
         <url-pattern>*.css</url-pattern>
         <url-pattern>*.png</url-pattern>
         <url-pattern>*.jpg</url-pattern>
         <url-pattern>*.gif</url-pattern>
-    </servlet-mapping>
+    </servlet-mapping-->
  
  
     <session-config>
-        <session-timeout>20</session-timeout>
+        <session-timeout>120</session-timeout>
     </session-config>
     
     <welcome-file-list>

@@ -1,8 +1,4 @@
 <%@ include file="/WEB-INF/pages/common/taglibs.jsp"%>
-
-
-
-
 <h1>
 
  <c:choose>

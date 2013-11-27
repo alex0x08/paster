@@ -17,7 +17,7 @@
 
         <c:choose>
             <c:when test="${source.codeLowerCase eq sourceType}">
-                <span style="font-size: 14px; "><c:out value="${source.code}"/> </span>
+                <span style="font-size: 14px; font-weight: bold; "><fmt:message key="${source.name}"/> </span>
             </c:when>
             <c:otherwise>
                 <a href="<c:url value="/main/paste/list/${source.codeLowerCase}"/>"><fmt:message key="${source.name}"/></a>
@@ -30,13 +30,13 @@
     </div>
     <div class="column grid-2">
         <a href="<c:url value="/main/paste/list/body.xml"/>">
-            <img src="<c:url value='/images/xml.png'/>" title="xml" alt="xml"/></a> |
+            <img src="<c:url value='/main/static/${appVersion}/images/xml.png'/>" title="xml" alt="xml"/></a> |
         <a href="<c:url value="/main/paste/list/body.json"/>">
-            <img src="<c:url value='/images/json.png'/>" title="json" alt="json"/></a> |
-        <a href="<c:url value="/main/paste/list.rss"/>"><img src="<c:url value='/images/rss.png'/>" title="rss" alt="rss"/></a> |
-        <a href="<c:url value="/main/paste/list.atom"/>"><img src="<c:url value='/images/atom.png'/>" title="atom" alt="atom"/></a> |
-        <a href="<c:url value="/main/paste/list.xls"/>"><img src="<c:url value='/images/xls.gif'/>" title="xls" alt="xls"/></a> |
-        <a href="<c:url value="/ws/paste?wsdl"/>"><img src="<c:url value='/images/wsdl_icon.png'/>" title="wsdl" alt="wsdl"/></a>
+            <img src="<c:url value='/main/static/${appVersion}/images/json.png'/>" title="json" alt="json"/></a> |
+        <a href="<c:url value="/main/paste/list.rss"/>"><img src="<c:url value='/main/static/${appVersion}/images/rss.png'/>" title="rss" alt="rss"/></a> |
+        <a href="<c:url value="/main/paste/list.atom"/>"><img src="<c:url value='/main/static/${appVersion}/images/atom.png'/>" title="atom" alt="atom"/></a> |
+        <a href="<c:url value="/main/paste/list.xls"/>"><img src="<c:url value='/main/static/${appVersion}/images/xls.gif'/>" title="xls" alt="xls"/></a> |
+        <a href="<c:url value="/ws/paste?wsdl"/>"><img src="<c:url value='/main/static/${appVersion}/images/wsdl_icon.png'/>" title="wsdl" alt="wsdl"/></a>
 
     </div>
  </div>
@@ -139,7 +139,7 @@
 
                            </c:when>
                            <c:otherwise>
-                               <img src="<c:url value='/images/nodata.png'/>" />
+                               <img src="<c:url value='/main/static/${appVersion}/images/nodata.png'/>" />
                            </c:otherwise>
                        </c:choose>
                     </a>
@@ -264,8 +264,8 @@
 </div>
 
 
-<script src="<c:url value='/libs/lightface/Source/LightFace.js'/>" type="text/javascript" charset="utf-8"></script>
-<script src="<c:url value='/libs/lightface/Source/LightFace.IFrame.js'/>" type="text/javascript" charset="utf-8"></script>
+<script src="<c:url value='/main/static/${appVersion}/libs/lightface/Source/LightFace.js'/>" type="text/javascript" charset="utf-8"></script>
+<script src="<c:url value='/main/static/${appVersion}/libs/lightface/Source/LightFace.IFrame.js'/>" type="text/javascript" charset="utf-8"></script>
 
 
 <script type="text/javascript">

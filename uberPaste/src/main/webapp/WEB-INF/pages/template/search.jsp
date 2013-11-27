@@ -12,8 +12,8 @@
     <div class="column grid-3" style="">
         
         <button id="doSearchBtn" type="submit">
-                 <img id="btnIcon" style="display:none;" src="<c:url value='/images/gear_sml.gif'/>"/>
-                <span id="btnCaption">Search</span>
+                 <img id="btnIcon" style="display:none;" src="<c:url value='/main/static/${appVersion}/images/gear_sml.gif'/>"/>
+                 <span id="btnCaption"><fmt:message key="button.search"/></span>
              </button>
 
         <!--

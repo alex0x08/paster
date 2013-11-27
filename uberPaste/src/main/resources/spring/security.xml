@@ -23,6 +23,8 @@
     <http pattern="/errors/*" security="none"/>
     <http pattern="/libs/**" security="none"/>
 
+    <http pattern="/main/assets/${paste.app.version}/**" security="none"/>
+    <http pattern="/main/static/${paste.app.version}/**" security="none"/>
 
     <http realm="Paster Realm" auto-config="false" use-expressions="true" entry-point-ref="authenticationEntryPoint"
           disable-url-rewriting="true">

@@ -58,13 +58,10 @@
             <form:checkbox id="normalized" path="normalized" style="display:inline;" title="Normalize paste"/>
     </div>
 
-
-
-        <div class="column grid-3 right">
-
+        <div class="column grid-4 right">
 
             <button id="addCommentBtn" class="submitBtn" name="submit_btn" type="submit">
-                <img id="btnIcon" style="display:none;" src="<c:url value='/images/gear_sml.gif'/>"/>
+                <img id="btnIcon" style="display:none;" src="<c:url value='/main/static/${appVersion}/images/gear_sml.gif'/>"/>
                 <span id="btnCaption"><c:out value='${submit_button_text}'/></span>
             </button>
 
@@ -82,17 +79,12 @@
 
             </c:if>
 
-
         </div>
-
 
     </div>
 
-
-
-
     <div class="row">
-        <div class="column grid-7">
+        <div class="column grid-5">
 
         <form:label path="tagsAsString"><span  class="i" >T</span><fmt:message key="paste.tags"/>:</form:label>
     <form:input id="ptags" path="tagsAsString" maxlength="155" cssStyle="width:97%;" autocomplete="true" placeholder="enter space-separated tags here"  />
@@ -158,7 +150,7 @@
 
         </div>
 
-        <div class="column grid-2" style="float:right;">
+        <div class="column grid-3" style="float:right;">
 
 
 
@@ -200,7 +192,7 @@
                         name="submit_btn"
                         class="submitBtn" type="submit">
 
-                <img id="btnIcon" style="display:none;" src="<c:url value='/images/gear_sml.gif'/>"/>
+                <img id="btnIcon" style="display:none;" src="<c:url value='/main/static/${appVersion}/images/gear_sml.gif'/>"/>
                 <span id="btnCaption"><c:out value='${submit_button_text}'/></span>
             </button>
 
@@ -239,15 +231,18 @@
         </form:form>
     </fieldset>
 
-<script type="text/javascript" src="<c:url value="/libs/word-count.js"/>"></script>
-<script src="<c:url value='/libs/ace/src-noconflict/ace.js'/>" type="text/javascript" charset="utf-8"></script>
-<script src="<c:url value='/libs/html2canvas.js'/>" type="text/javascript" charset="utf-8"></script>
-<script src="<c:url value='/libs/canvas-to-blob.js'/>" type="text/javascript" charset="utf-8"></script>
-<script src="<c:url value='/libs/base64.js'/>" type="text/javascript" charset="utf-8"></script>
-<script src="<c:url value='/libs/canvas2image.js'/>" type="text/javascript" charset="utf-8"></script>
-<script src="<c:url value='/libs/pixastic/pixastic.core.js'/>" type="text/javascript" charset="utf-8"></script>
-<script src="<c:url value='/libs/pixastic/actions/crop.js'/>" type="text/javascript" charset="utf-8"></script>
-<script src="<c:url value='/libs/pixastic/actions/blurfast.js'/>" type="text/javascript" charset="utf-8"></script>
+
+<script type="text/javascript" src="<c:url value="/main/static/${appVersion}/libs/word-count.js"/>"></script>
+
+<script src="<c:url value='/main/assets/${appVersion}/ace/07.31.2013/src-noconflict/ace.js'/>" type="text/javascript" charset="utf-8"></script>
+
+<script src="<c:url value='/main/static/${appVersion}/libs/html2canvas.js'/>" type="text/javascript" charset="utf-8"></script>
+<script src="<c:url value='/main/static/${appVersion}/libs/canvas-to-blob.js'/>" type="text/javascript" charset="utf-8"></script>
+<script src="<c:url value='/main/static/${appVersion}/libs/base64.js'/>" type="text/javascript" charset="utf-8"></script>
+<script src="<c:url value='/main/static/${appVersion}/libs/canvas2image.js'/>" type="text/javascript" charset="utf-8"></script>
+<script src="<c:url value='/main/static/${appVersion}/libs/pixastic/pixastic.core.js'/>" type="text/javascript" charset="utf-8"></script>
+<script src="<c:url value='/main/static/${appVersion}/libs/pixastic/actions/crop.js'/>" type="text/javascript" charset="utf-8"></script>
+<script src="<c:url value='/main/static/${appVersion}/libs/pixastic/actions/blurfast.js'/>" type="text/javascript" charset="utf-8"></script>
 
 <script type="text/javascript">
 

@@ -218,8 +218,11 @@ object UserManager extends Loggered{
   }
 
   def  getCurrentUser():User = {
-
-    return SecurityContextHolder.getContext().getAuthentication().getPrincipal() match {
+      return if (SecurityContextHolder.getContext().getAuthentication() ==null) {
+          null
+        } else {
+    
+      SecurityContextHolder.getContext().getAuthentication().getPrincipal() match {
       case u:User => {
         SessionStore.instance.getUserForLogin(
           (SecurityContextHolder.getContext().getAuthentication().getPrincipal()).asInstanceOf[User].getUsername())
@@ -234,6 +237,10 @@ object UserManager extends Loggered{
       }
     }
 
+      
+    }
+    
+    
   }
 
   def getCookieValue(request:HttpServletRequest, cookieName:String):String =

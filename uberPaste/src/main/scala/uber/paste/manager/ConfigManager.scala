@@ -23,6 +23,9 @@ import org.springframework.beans.factory.annotation.Autowired
 
 trait ConfigManager extends StructManager[ConfigProperty]{
 
+   def getProperty(code:String)
+
+  def isPropertySet(code:String,value:String)
 }
 
 @Service("configManager")
@@ -33,4 +36,10 @@ class ConfigManagerImpl extends StructManagerImpl[ConfigProperty] with ConfigMan
 
   protected override def getDao:ConfigDao = configDao
 
+  def getProperty(code:String) = configDao.getProperty(code)
+  
+
+  def isPropertySet(code:String,value:String) = configDao.isPropertySet(code, value)
+ 
+  
 }

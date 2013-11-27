@@ -16,12 +16,13 @@
 
 package uber.paste.controller
 
-import uber.paste.base.Loggered
+import uber.paste.base.{Loggered,SystemInfo}
 import org.springframework.orm.ObjectRetrievalFailureException
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.annotation.ExceptionHandler
-import uber.paste.model.{Struct, User}
+import uber.paste.model.{Struct, User,ConfigProperty}
 import uber.paste.base.SessionStore
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.MessageSource
 import javax.annotation.Resource
 import java.util.Locale
@@ -29,6 +30,12 @@ import scala.collection.JavaConversions._
 import uber.paste.manager.UserManager
 import org.codehaus.jackson.annotate.JsonIgnore
 import org.springframework.web.bind.annotation._
+import uber.paste.manager.ConfigManager
+
+object LocaleConstants {
+  
+  val availableLocales = Array(Locale.US,new Locale("ru","RU")).toList
+}
 
 abstract class AbstractController extends Loggered{
 
@@ -42,6 +49,11 @@ abstract class AbstractController extends Loggered{
   @Resource(name = "messageSource")
    protected val messageSource:MessageSource = null
 
+  
+  @Autowired
+  val configManager:ConfigManager = null
+
+  
   def getResource(key:String,locale:Locale):String = messageSource.getMessage(key,new Array[java.lang.Object](0),locale)
 
   def getResource(key:String,args:Array[Any],locale:Locale):String = messageSource.getMessage(key,args.asInstanceOf[Array[java.lang.Object]],locale)
@@ -68,6 +80,16 @@ abstract class AbstractController extends Loggered{
     return page500
   }
 
+  
+    @ModelAttribute("appVersion")
+    def getAppVersion() = SystemInfo.instance.getRuntimeVersion().getImplBuildNum()
+   
+   @ModelAttribute("systemInfo")
+   def getSystemInfo() = SystemInfo.instance
+   
+   @ModelAttribute("availableLocales")
+   def getAvailableLocales():java.util.List[Locale] = LocaleConstants.availableLocales
+  
   @JsonIgnore
   @ModelAttribute("currentUser")
   def getCurrentUser():User = UserManager.getCurrentUser()

@@ -216,7 +216,7 @@
 
 <span id="pasteLineCopyBtn" style="display:none; white-space: normal;">
     <a id="ctrlc_line" data-clipboard-target="pasteLineToCopy" href="javascript:void(0);" style="float:left;" title="Copy to clipboard" >
-        <img src="<c:url value='/images/ctrlc.png'/>"/></a>
+        <img src="<c:url value='/main/static/${appVersion}/images/ctrlc.png'/>"/></a>
 </span>
 
 <span id="pasteLineToCopy" style="display:none;">
@@ -253,7 +253,7 @@
          <div class="column grid-16" >
 
              <button id="addCommentBtn" type="submit">
-                 <img id="btnIcon" style="display:none;" src="<c:url value='/images/gear_sml.gif'/>"/>
+                 <img id="btnIcon" style="display:none;" src="<c:url value='/main/static/${appVersion}/images/gear_sml.gif'/>"/>
                 <span id="btnCaption">Add comment</span>
              </button>
 
@@ -293,7 +293,7 @@
 
 <img style="border: 2px saddlebrown;" src="${model.thumbImage}"/>
 
-<script type="text/javascript" src="<c:url value='/libs/zeroclipboard/ZeroClipboard.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/main/static/${appVersion}/libs/zeroclipboard/ZeroClipboard.js'/>"></script>
 
 <c:if test="${shareIntegration}">
 
@@ -350,7 +350,7 @@
                                        if (event.key == 's' && event.control) alert('Document saved.'); //executes if the user presses Ctr+S.
                                    });
                                  */
-    ZeroClipboard.setDefaults( { moviePath: "<c:url value='/libs/zeroclipboard/ZeroClipboard.swf'/>" } );
+    ZeroClipboard.setDefaults( { moviePath: "<c:url value='/main/static/${appVersion}/libs/zeroclipboard/ZeroClipboard.swf'/>" } );
 
     var clip = new ZeroClipboard(document.id("ctrlc_link"));
 
@@ -404,7 +404,7 @@
                 result = [];
 
                 for(var i = 0; i < args.length; i++)
-                    result.push(args[i].replace('@', '<c:url value="/libs/syntax-highlight/scripts/"/>'));
+                    result.push(args[i].replace('@', '<c:url value="/main/static/${appVersion}/libs/syntax-highlight/scripts/"/>'));
                 return result
             };
 

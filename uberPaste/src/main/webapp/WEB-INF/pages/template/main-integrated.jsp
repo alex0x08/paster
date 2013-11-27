@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 
-    <link rel="icon" href="<c:url value='/images/ninja.png'/>"/>
+    <link rel="icon" href="<c:url value='/main/static/${appVersion}/images/ninja.png'/>"/>
 
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
@@ -21,31 +21,31 @@ establishes your preferences and calls me. You will write all your
 code (or most of it) here, all the time.
     -->
 
-    <link href="<c:url value='/css/app-integrated.less'/>" media="all" rel="stylesheet/less" />
+    <link href="<c:url value='/main/static/${appVersion}/css/app-integrated.less'/>" media="all" rel="stylesheet/less" />
 
-    <link href="<c:url value='/libs/moodialog/css/MooDialog.css'/>" rel="stylesheet" type="text/css">
-    <link href="<c:url value='/libs/growler/growler.css'/>" rel="stylesheet" type="text/css">
+    <link href="<c:url value='/main/static/${appVersion}/libs/moodialog/css/MooDialog.css'/>" rel="stylesheet" type="text/css">
+    <link href="<c:url value='/main/static/${appVersion}/libs/growler/growler.css'/>" rel="stylesheet" type="text/css">
 
 
     <!--
       I am based in LESS.js to render stylesheets. More information can
       be found at {http://www.lesscss.org/}.
     -->
-    <script src="<c:url value='/js/less-1.1.3.min.js'/>"></script>
-    <script src="<c:url value='/js/mootools-core-1.4.5-full-compat.js'/>"></script>
-    <script src="<c:url value='/js/mootools-more-1.4.0.1.js'/>"></script>
-    <script src="<c:url value='/libs/moodialog/js/Overlay.js'/>"></script>
-    <script src="<c:url value='/libs/moodialog/js/MooDialog.js'/>"></script>
+    <script src="<c:url value='/main/static/${appVersion}/js/less-1.1.3.min.js'/>"></script>
+    <script src="<c:url value='/main/static/${appVersion}/js/mootools-core-1.4.5-full-compat.js'/>"></script>
+    <script src="<c:url value='/main/static/${appVersion}/js/mootools-more-1.4.0.1.js'/>"></script>
+    <script src="<c:url value='/main/static/${appVersion}/libs/moodialog/js/Overlay.js'/>"></script>
+    <script src="<c:url value='/main/static/${appVersion}/libs/moodialog/js/MooDialog.js'/>"></script>
 
-    <script src="<c:url value='/libs/moodialog/js/MooDialog.Fx.js'/>"></script>
-    <script src="<c:url value='/libs/moodialog/js/MooDialog.Alert.js'/>"></script>
-    <script src="<c:url value='/libs/moodialog/js/MooDialog.Confirm.js'/>"></script>
-    <script src="<c:url value='/libs/moodialog/js/MooDialog.Error.js'/>"></script>
-    <script src="<c:url value='/libs/moodialog/js/MooDialog.Prompt.js'/>"></script>
-    <script src="<c:url value='/libs/moodialog/js/MooDialog.IFrame.js'/>"></script>
-    <script src="<c:url value='/libs/moodialog/js/MooDialog.Request.js'/>"></script>
+    <script src="<c:url value='/main/static/${appVersion}/libs/moodialog/js/MooDialog.Fx.js'/>"></script>
+    <script src="<c:url value='/main/static/${appVersion}/libs/moodialog/js/MooDialog.Alert.js'/>"></script>
+    <script src="<c:url value='/main/static/${appVersion}/libs/moodialog/js/MooDialog.Confirm.js'/>"></script>
+    <script src="<c:url value='/main/static/${appVersion}/libs/moodialog/js/MooDialog.Error.js'/>"></script>
+    <script src="<c:url value='/main/static/${appVersion}/libs/moodialog/js/MooDialog.Prompt.js'/>"></script>
+    <script src="<c:url value='/main/static/${appVersion}/libs/moodialog/js/MooDialog.IFrame.js'/>"></script>
+    <script src="<c:url value='/main/static/${appVersion}/libs/moodialog/js/MooDialog.Request.js'/>"></script>
 
-    <script src="<c:url value='/libs/growler/growler.js'/>"></script>
+    <script src="<c:url value='/main/static/${appVersion}/libs/growler/growler.js'/>"></script>
 
     <script type="text/javascript">
 
@@ -76,13 +76,13 @@ code (or most of it) here, all the time.
 
 
 
-    <script type="text/javascript" src="<c:url value='/libs/syntax-highlight/scripts/xregexp.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/main/static/${appVersion}/libs/syntax-highlight/scripts/xregexp.js'/>"></script>
 
-    <script type="text/javascript" src="<c:url value='/libs/syntax-highlight/scripts/shCore.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/main/static/${appVersion}/libs/syntax-highlight/scripts/shCore.js'/>"></script>
 
-    <script type="text/javascript" src="<c:url value='/libs/syntax-highlight/scripts/shAutoloader.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/main/static/${appVersion}/libs/syntax-highlight/scripts/shAutoloader.js'/>"></script>
 
-    <link type="text/css" rel="stylesheet" href="<c:url value='/libs/syntax-highlight/styles/shCoreDefault.css'/>"/>
+    <link type="text/css" rel="stylesheet" href="<c:url value='/main/static/${appVersion}/libs/syntax-highlight/styles/shCoreDefault.css'/>"/>
 
     </head>
             <body>

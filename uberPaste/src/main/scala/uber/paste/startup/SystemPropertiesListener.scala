@@ -6,6 +6,8 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import com.jcabi.manifests.Manifests
 import java.io.{IOException, File}
+import uber.paste.base.SystemInfo
+import uber.paste.model.AppVersion
 
 /**
  * Created with IntelliJ IDEA.
@@ -18,6 +20,7 @@ import java.io.{IOException, File}
 object SystemConstants {
   
   val APP_BASE:String = ".apps"
+  val APP_NAME = "paste"
 }
 
 class SystemPropertiesListener extends ServletContextListener with Loggered {
@@ -27,26 +30,26 @@ class SystemPropertiesListener extends ServletContextListener with Loggered {
   override def contextInitialized(event:ServletContextEvent) {
     try {
 
-      Manifests.append(event.getServletContext());
+      Manifests.append(event.getServletContext())
 
       
-      if (!System.getProperties().containsKey("app.home")) {
+      if (!System.getProperties().containsKey("paste.app.home")) {
   
-        val appName:String = Manifests.read("AppName")
+        /*val appName:String = Manifests.read("AppName")
      
         if (appName == null) {
           throw new IllegalStateException("Cannot find application name property in META-INF/MANIFEST.MF. This is build bug.")
-        }
+        }*/
 
         val user_home:String = System.getProperty("user.home")
         appHome = new File(user_home, SystemConstants.APP_BASE)
 
-        appHome = new File(appHome,appName)
+        appHome = new File(appHome,SystemConstants.APP_NAME)
 
         
-        System.setProperty("app.home", appHome.getAbsolutePath())
+        System.setProperty("paste.app.home", appHome.getAbsolutePath())
       } else {
-        appHome = new File(System.getProperty("app.home"))
+        appHome = new File(System.getProperty("paste.app.home"))
       }
 
       
@@ -58,7 +61,16 @@ class SystemPropertiesListener extends ServletContextListener with Loggered {
         }
       }
 
-      logger.info("application home:" + System.getProperty("app.home"))
+      logger.info("application home:" + System.getProperty("paste.app.home"))
+ 
+    
+      val  mf_version = new AppVersion().fillFromManifest()
+                
+        SystemInfo.instance.setRuntimeVersion(mf_version)
+        
+        System.setProperty("paste.app.version", mf_version.getImplBuildNum())
+        
+    
     } catch {
      case e:IOException => {
       logger.error(e.getLocalizedMessage,e)

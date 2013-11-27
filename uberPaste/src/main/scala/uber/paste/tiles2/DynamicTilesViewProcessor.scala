@@ -16,6 +16,7 @@
 
 package uber.paste.tiles2
 
+import java.util.Locale
 import javax.servlet.ServletContext
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
@@ -23,9 +24,13 @@ import org.apache.tiles.Attribute
 import org.apache.tiles.AttributeContext
 import org.apache.tiles.TilesContainer
 import org.apache.tiles.TilesException
+import org.apache.tiles.request.ApplicationContext
+import org.apache.tiles.request.Request
+import org.apache.tiles.request.servlet.ServletUtil
 import org.springframework.util.StringUtils
 import org.springframework.web.servlet.support.JstlUtils
 import org.springframework.web.servlet.support.RequestContext
+import org.springframework.web.servlet.support.RequestContextUtils
 import org.springframework.web.util.WebUtils
 import uber.paste.base.Loggered
 
@@ -92,6 +97,9 @@ class DynamicTilesViewProcessor extends Loggered {
              container:TilesContainer)
              {
 
+    val tilesRequest = createTilesRequest(ServletUtil.getApplicationContext(servletContext),request, response);
+	
+    
                var beanName:String = bName.replaceAll("//","/")
 
                if (!beanName.startsWith("/")) {
@@ -126,13 +134,13 @@ class DynamicTilesViewProcessor extends Loggered {
 
         JstlUtils.exposeLocalizationContext(new RequestContext(request, servletContext));
 
-        val definitionName:String = startDynamicDefinition(beanName, url, request, response, container);
+        val definitionName:String = startDynamicDefinition(beanName, url, tilesRequest, container);
 
         logger.debug("bName "+bName+" beanName "+beanName+" definition Name "+definitionName)
 
-        container.render(definitionName, request, response);
+        container.render(definitionName, tilesRequest)
 
-        endDynamicDefinition(definitionName, beanName, request, response, container);
+        endDynamicDefinition(definitionName, beanName, tilesRequest, container)
     }
 
 
@@ -151,22 +159,20 @@ class DynamicTilesViewProcessor extends Loggered {
     @throws(classOf[TilesException])
     protected def startDynamicDefinition(beanName:String, 
                                          url:String,
-                                         request:HttpServletRequest,  
-                                         response:HttpServletResponse,
+                                         tilesRequest:Request,
                                          container:TilesContainer):String =
             {
         
       val definitionName:String = processTilesDefinitionName(beanName, container,
-                request, response);
+                tilesRequest)
 
         // create a temporary context and render using the incoming url as the
         // body attribute
         if (!definitionName.equals(beanName)) {
            
-            val attributeContext:AttributeContext = container.startContext(request, response)
+            val attributeContext:AttributeContext = container.startContext(tilesRequest)
             attributeContext.putAttribute(tilesBodyAttributeName, 
-                                          new Attribute(tilesBodyAttributeName,
-                                                        url.asInstanceOf[java.lang.Object]))
+                                          new Attribute(url))
 
             logger.debug("URL used for Tiles body.  url='" + url + "'.")
         }
@@ -179,11 +185,10 @@ class DynamicTilesViewProcessor extends Loggered {
      */
     protected def endDynamicDefinition(definitionName:String,
                                        beanName:String,
-                                       request:HttpServletRequest,
-                                       response:HttpServletResponse,
+                                       tilesRequest:Request,
                                         container:TilesContainer) {
         if (!definitionName.equals(beanName)) {
-            container.endContext(request, response)
+            container.endContext(tilesRequest)
         }
     }
 
@@ -198,15 +203,14 @@ class DynamicTilesViewProcessor extends Loggered {
     @throws(classOf[TilesException])
     protected def processTilesDefinitionName(beanName:String,
              container:TilesContainer,
-             request:HttpServletRequest,
-             response:HttpServletResponse):String =
+             tilesRequest:Request):String =
              {
         // if definition already derived use it, otherwise 
         // check if url (bean name) is a template definition, then 
         // check for main template
         return if (derivedDefinitionName != null) {
             derivedDefinitionName
-        } else if (container.isValidDefinition(beanName, request, response)) {
+        } else if (container.isValidDefinition(beanName, tilesRequest)) {
 
             derivedDefinitionName = beanName
 
@@ -245,7 +249,7 @@ class DynamicTilesViewProcessor extends Loggered {
 
             sb.append(tilesDefinitionName);
 
-            if (container.isValidDefinition(sb.toString(), request, response)) {
+            if (container.isValidDefinition(sb.toString(), tilesRequest)) {
                 result = sb.toString()
 
             } else if (!rootDefinition) {
@@ -260,7 +264,7 @@ class DynamicTilesViewProcessor extends Loggered {
 
              // System.out.println("_final "+root)
 
-                if (container.isValidDefinition(root, request, response)) {
+                if (container.isValidDefinition(root, tilesRequest)) {
                     result = root
                 } else {
                     throw new TilesException("No defintion of found for "
@@ -275,4 +279,15 @@ class DynamicTilesViewProcessor extends Loggered {
         }
     }
 
+  
+    protected def createTilesRequest(applicationContext:ApplicationContext,
+                                     request:HttpServletRequest, response:HttpServletResponse):Request = {
+		return new org.apache.tiles.request.servlet.ServletRequest(applicationContext, request, response) {
+			override def getRequestLocale():Locale = {
+				return RequestContextUtils.getLocale(request)
+			}
+		};
+	}
+
+  
 }

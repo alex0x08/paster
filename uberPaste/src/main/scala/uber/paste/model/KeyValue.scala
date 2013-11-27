@@ -22,7 +22,7 @@ import javax.validation.constraints.NotNull
 import javax.validation.constraints.Pattern
 import org.hibernate.validator.constraints.Length
 import org.compass.annotations._
-import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang.builder.ToStringBuilder
 import org.apache.commons.lang.builder.ToStringStyle
 import java.util.{HashMap, Collection}
 import uber.paste.base.Loggered

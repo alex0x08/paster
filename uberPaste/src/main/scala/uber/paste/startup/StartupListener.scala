@@ -30,7 +30,7 @@ import uber.paste.build._
 import org.compass.gps.CompassGps;
 import java.io.IOException
 import uber.paste.dao.UserExistsException
-import uber.paste.base.{MergedPropertyConfigurer, Loggered}
+import uber.paste.base.{MergedPropertyConfigurer, Loggered, SystemInfo}
 import uber.paste.build._
 import uber.paste.mail.EmbeddedSMTPServer
 import java.nio.file._
@@ -42,6 +42,7 @@ import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer
 //import org.hibernate.event.LoadEventListener.LoadType
 //import org.hibernate.impl.SessionFactoryImpl
 //import org.hibernate.event.`def`.{DefaultPostLoadEventListener, DefaultLoadEventListener}
+import scala.annotation.switch
 import scala.collection.JavaConversions._
 import org.hibernate.SessionFactory
 
@@ -102,6 +103,45 @@ class StartupListener extends ServletContextListener with Loggered{
 
 
     if (configDao.isPropertySet(ConfigProperty.IS_INSTALLED.getCode, "1")) {
+      
+      val dbVersion = new AppVersion().fillFromConfigProperty(
+        configDao.getProperty(ConfigProperty.APP_VERSION.getCode))
+      
+           
+            if (dbVersion != null) {
+      
+        logger.debug("__currentSettings:" + dbVersion.getFull)
+                
+                val check =  SystemInfo.instance.getRuntimeVersion().compareTo(dbVersion)
+                
+                check match {
+           
+                    case 0 => {
+                        logger.info("Application and db versions match.")
+                      }
+                    case 1 => {
+                        logger.warn("DB version is older than application: "
+                                +dbVersion.getFull()+" | "+SystemInfo.instance.getRuntimeVersion().getFull()+". You can get problems.")
+                    }
+                    case -1 =>   {
+                        logger.warn("Application version is older than database: "
+                                +dbVersion.getFull()+" | "+SystemInfo.instance.getRuntimeVersion().getFull()+". You can get problems.")
+                    }
+                     
+                    case _ => {
+                    logger.error("Uncomparable db and application versios: "
+                             +dbVersion.getFull()+" | "+SystemInfo.instance.getRuntimeVersion().getFull()+". Cannot continue.")
+                    }    
+                        
+                }
+                                
+                
+                 logger.info("Loading application ver. "+SystemInfo.instance.getRuntimeVersion().getFull()
+                             +" db ver. "+dbVersion.getFull())
+               
+            }
+      
+      
       logger.info("Database already created. skipping db generation stage..")
 
       reindex(ctx,props)
@@ -133,7 +173,7 @@ class StartupListener extends ServletContextListener with Loggered{
 
      PasteManager.Stats.totalPastas.addAndGet(pasteDao.countAll().toInt)
 
-      return;
+      return
     }
 
 
@@ -177,8 +217,12 @@ class StartupListener extends ServletContextListener with Loggered{
 
       configDao.persist(ConfigProperty.IS_INSTALLED)
       configDao.persist(ConfigProperty.UPLOADS_DIR)
+      
+      
+      ConfigProperty.APP_VERSION.setValue(SystemInfo.instance.getRuntimeVersion.toDbString)
+      configDao.persist(ConfigProperty.APP_VERSION)
 
-
+      logger.debug("saved version "+ConfigProperty.APP_VERSION.getValue)
 
       reindex(ctx,props)
 

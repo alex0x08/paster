@@ -1,7 +1,6 @@
 <%@ include file="/WEB-INF/pages/common/taglibs.jsp"%>
 
 
-
 <h1><fmt:message key="login.title"/></h1>
 
 <div style="width: 300px;margin-left: auto; margin-right: auto;" >
