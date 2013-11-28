@@ -7,15 +7,16 @@
            method="POST" >
 <div class="row">
     <div class="column grid-9" style="padding-top: 0.5em;margin-right: 0;">
-        <form:input path="query" name="query" id="pquery" placeholder="Enter search string.." cssStyle="width:97%;margin-right:0.5em;min-width: 5em;" autocomplete="true"  />
+        <fmt:message key='paste.search.placeholder' var="searchPlaceHolder"/>
+        <form:input path="query" name="query" id="pquery" placeholder="${searchPlaceHolder}" cssStyle="width:97%;margin-right:0.5em;min-width: 5em;" autocomplete="true"  />
      </div>
     <div class="column grid-4" style="">
         
         <button class="btn" id="doSearchBtn" type="submit">
-                 <img id="btnIcon" style="display:none;" src="<c:url value='/main/static/${appVersion}/images/gear_sml.gif'/>"/>
                  <span class="i" >r</span>
                  <span id="btnCaption"><fmt:message key="button.search"/></span>
-             </button>
+             <img id="btnIcon" style="display:none;" src="<c:url value='/main/static/${appVersion}/images/gear_sml.gif'/>"/>
+                 </button>
        
         <!--
         <input name="submit" type="submit" value="Search" style="text-align:left;min-width: 5em;max-width: 5em;"  />-->

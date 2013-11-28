@@ -42,10 +42,10 @@
     </div>
  </div>
 
-<div class="row">
-    <div class="column grid-12"  >
 
       <c:if test="${listMode eq 'search' }">
+<div class="row">
+    <div class="column grid-12"  >
 
           <div class="paging" style="margin: auto; text-align: center;float: left;" >
               Found
@@ -63,7 +63,12 @@
 
           </div>
 
+    </div></div>
+        
       </c:if>
+
+        <div class="row">
+    <div class="column grid-12"  >
 
         <%-- processing page list --%>
 
@@ -91,13 +96,8 @@
 
     <c:forEach var="paste" items="${pageItems.pageList}" varStatus="status">
 
-        
-
-     
-
         <c:choose>
             <c:when test="${paste['class'].name eq 'uber.paste.model.Paste'}">
-
                 
                  <c:if test="${not paste.sticked}">
  
@@ -131,25 +131,26 @@
 
         <div class="row" >
 
-                <div class="column grid-4" >
                     <a class="pastePreviewLink" href="<c:url value="/${paste.id}"></c:url>" pasteId="${paste.id}" title="Click to view paste vol. ${paste.id}">
 
                        <c:choose>
                            <c:when test="${not empty paste.thumbImage}">
+                <div class="column grid-4" >
                                <img src="${paste.thumbImage}" />
+                    </div>
 
+                               <c:set var="currentRowSize" value="12"/>
                            </c:when>
                            <c:otherwise>
-                               <img src="<c:url value='/main/static/${appVersion}/images/nodata.png'/>" />
+                             <c:set var="currentRowSize" value="16"/>
                            </c:otherwise>
                        </c:choose>
                     </a>
 
 
 
-                </div>
-
-                <div class="column grid-12" >
+                
+                <div class="column grid-${currentRowSize}" >
 
                     <div class="row">
 
