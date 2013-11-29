@@ -16,6 +16,11 @@
         <put-attribute name="pageTitle"  expression="${requestScope.title}" />
         <put-attribute name="content" value="" />
     </definition>
+    
+     <definition name=".rawTemplate" template="/WEB-INF/pages/template/raw.jsp">
+        <put-attribute name="pageTitle"  expression="" />
+        <put-attribute name="content" value="" />
+    </definition>
 
 
     <definition name="/paste/integrated/view" extends=".integratedTemplate">
@@ -28,6 +33,10 @@
 
     <definition name="/paste/integrated/list" extends=".integratedTemplate">
         <put-attribute name="content" value="/WEB-INF/pages/paste/integrated/list.jsp" />
+    </definition>
+   
+    <definition name="/paste/raw/list" extends=".rawTemplate">
+        <put-attribute name="content" value="/WEB-INF/pages/paste/raw/list.jsp" />
     </definition>
 
     <definition name="/paste/list" extends=".mainTemplate">

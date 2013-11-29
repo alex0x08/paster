@@ -26,6 +26,8 @@ import java.util.Locale
 object GenericListController {
 
   final val INTEGRATED = "/integrated"
+  
+  final val RAW = "/raw"  
 
   final val LIST_ACTION = "/list"
 

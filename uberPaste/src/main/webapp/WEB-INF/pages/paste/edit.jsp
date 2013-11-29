@@ -4,6 +4,11 @@
 
 <c:url var="url" value='/main/paste/save' />
 
+
+ <div class="row">
+        <div class="column grid-14"  >
+
+            
 <fieldset class="perk">
     <legend><span class="i" style="font-size:2em;">/</span>
         ${requestScope.title}
@@ -231,6 +236,11 @@
 
         </form:form>
     </fieldset>
+            
+        </div>
+     </div>
+
+
 
 
 <script type="text/javascript" src="<c:url value="/main/static/${appVersion}/libs/word-count.js"/>"></script>

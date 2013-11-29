@@ -102,15 +102,16 @@
             
         </div>
 
-    <div class="row">
-        <div class="column grid-2">
-        </div>
-        <div class="column grid-14"  >
-          
-            <tiles:insertAttribute name="content" />
-        </div>
-     </div>
-
+            <div class="row">
+                <div column grid-16>
+                    
+              <tiles:insertAttribute name="content" />
+                
+                </div>
+            </div>
+              
+            
+   
         <div class="row">
             <div column grid-14>
                  <p title="<c:out value="${systemInfo.runtimeVersion.full}"/>">

@@ -9,6 +9,67 @@
 </c:if>
 
 
+<%-- processing elements per page and sort setup --%>
+
+<div class="paging"  >
+    <c:choose>
+        <c:when test="${listMode eq 'search' }">
+
+            <c:forEach var="page" items="${pageSet}" varStatus="loopStatus">
+
+                <c:choose>
+                    <c:when test="${pageItems.pageSize eq page}">
+                        <span style="font-size: larger; "><c:out value="${page}"/> </span>
+                    </c:when>
+                    <c:otherwise>
+                        <a href="<c:url value="/main/paste/list/search/${result}/limit/${page}"/>">${page}</a>
+                    </c:otherwise>
+                </c:choose>
+
+                <c:if test="${!loopStatus.last}"> | </c:if>
+            </c:forEach>
+
+
+        </c:when>
+        <c:when test="${listMode eq 'list' }">
+
+            <c:forEach var="page" items="${pageSet}" varStatus="loopStatus">
+
+                <c:choose>
+                    <c:when test="${pageItems.pageSize eq page}">
+                        <span style="font-size: larger; "><c:out value="${page}"/> </span>
+                    </c:when>
+                    <c:otherwise>
+                        <a href="<c:url value="/main/paste/list/${sourceType}/limit/${page}"/>">${page}</a>
+                    </c:otherwise>
+                </c:choose>
+
+                <c:if test="${!loopStatus.last}"> | </c:if>
+            </c:forEach>
+
+                    <span style="padding-left: 1em;">
+            <c:choose>
+                <c:when test="${sortDesc}">
+                    <span style="font-size: larger; "> &#x2191; </span>
+                    <a href="<c:url value="/main/paste/list/${sourceType}/older"/>"> &#8595;</a>
+                </c:when>
+                <c:otherwise>
+                    <span style="font-size: larger; "> &#8595; </span>
+                    <a href="<c:url value="/main/paste/list/${sourceType}/earlier"/>">&#x2191; </a>
+                </c:otherwise>
+            </c:choose>
+        </span>
+
+
+        </c:when>
+
+    </c:choose>
+
+
+</div>
+
+
+
 <%-- processing page list --%>
 <div class="paging" style="margin: auto; text-align: center;" >
 
@@ -72,65 +133,6 @@
         </c:when>
     </c:choose>
 
-
-
-</div>
-
-<%-- processing elements per page and sort setup --%>
-
-<div class="paging" style="margin: auto; text-align: center;float:right;  " >
-    <c:choose>
-        <c:when test="${listMode eq 'search' }">
-
-            <c:forEach var="page" items="${pageSet}" varStatus="loopStatus">
-
-                <c:choose>
-                    <c:when test="${pageItems.pageSize eq page}">
-                        <span style="font-size: larger; "><c:out value="${page}"/> </span>
-                    </c:when>
-                    <c:otherwise>
-                        <a href="<c:url value="/main/paste/list/search/${result}/limit/${page}"/>">${page}</a>
-                    </c:otherwise>
-                </c:choose>
-
-                <c:if test="${!loopStatus.last}"> | </c:if>
-            </c:forEach>
-
-
-        </c:when>
-        <c:when test="${listMode eq 'list' }">
-
-            <c:forEach var="page" items="${pageSet}" varStatus="loopStatus">
-
-                <c:choose>
-                    <c:when test="${pageItems.pageSize eq page}">
-                        <span style="font-size: larger; "><c:out value="${page}"/> </span>
-                    </c:when>
-                    <c:otherwise>
-                        <a href="<c:url value="/main/paste/list/${sourceType}/limit/${page}"/>">${page}</a>
-                    </c:otherwise>
-                </c:choose>
-
-                <c:if test="${!loopStatus.last}"> | </c:if>
-            </c:forEach>
-
-                    <span style="padding-left: 3em;">
-            <c:choose>
-                <c:when test="${sortDesc}">
-                    <span style="font-size: larger; "> &#x2191; </span>
-                    <a href="<c:url value="/main/paste/list/${sourceType}/older"/>"> &#8595;</a>
-                </c:when>
-                <c:otherwise>
-                    <span style="font-size: larger; "> &#8595; </span>
-                    <a href="<c:url value="/main/paste/list/${sourceType}/earlier"/>">&#x2191; </a>
-                </c:otherwise>
-            </c:choose>
-        </span>
-
-
-        </c:when>
-
-    </c:choose>
 
 
 </div>

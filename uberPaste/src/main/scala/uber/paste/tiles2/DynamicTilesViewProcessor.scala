@@ -33,17 +33,41 @@ import org.springframework.web.servlet.support.RequestContext
 import org.springframework.web.servlet.support.RequestContextUtils
 import org.springframework.web.util.WebUtils
 import uber.paste.base.Loggered
+import uber.paste.model.KeyValue
+import uber.paste.model.KeyValueObj
 
-/**
- * <p>Used for rendering and processing a dynamic tiles view.</p>
- * 
- * @author David Winterfeldt
- */
-object TilesIntegrationConstants {
+object PrefixType extends KeyValueObj[PrefixType] {
+  
+  val MAIN = new PrefixType("MAIN","Main site template","mainTemplate","/")
+  val INTEGRATED = new PrefixType("INTEGRATED","Integrated usage site template","integratedTemplate","/integrated")
+  val RAW = new PrefixType("RAW","Raw site template","rawTemplate","/raw") 
 
-  final val DEFAULT_TEMPLATE:String = "mainTemplate"
-  final val  THIRD_LEVELS:Array[String] = Array[String]("/raw","/integrated")
+  val THIRD_LEVELS:Array[PrefixType] = Array[PrefixType](PrefixType.RAW,
+                                                        PrefixType.INTEGRATED)
+   
+  add(MAIN)
+  add(INTEGRATED)
+  add(RAW) 
+  
+  
+   def lookupLevelPrefixType(beanName:String):PrefixType = {
+    for (s <-PrefixType.THIRD_LEVELS) {
+      if (beanName.contains(s.getUrlPrefix)) {
+        return s
+      }
+    }
+    return null
+  }
+ }
 
+
+class PrefixType(code:String,desc:String,templateName:String,urlPrefix:String) extends KeyValue(code,desc){
+
+  def getCodeLowerCase() = super.getCode().toLowerCase
+   
+  def getTemplateName() = templateName
+  
+  def getUrlPrefix() = urlPrefix
 }
 
 
@@ -53,7 +77,9 @@ class DynamicTilesViewProcessor extends Loggered {
      * Keeps Tiles definition to use once derived.
      */
     private var derivedDefinitionName:String =null
-    private var tilesDefinitionName =  TilesIntegrationConstants.DEFAULT_TEMPLATE
+    
+    private var tilesDefinitionName =  PrefixType.MAIN.getTemplateName
+    
     private var tilesBodyAttributeName = "content"
     private var tilesDefinitionDelimiter = "."
 
@@ -63,7 +89,7 @@ class DynamicTilesViewProcessor extends Loggered {
      * @param 	tilesDefinitionName		Main template name used to lookup definitions.
      */
     def setTilesDefinitionName(tilesDefinitionName:String) {
-        this.tilesDefinitionName = tilesDefinitionName;
+        this.tilesDefinitionName = tilesDefinitionName
     }
 
     /**
@@ -108,33 +134,30 @@ class DynamicTilesViewProcessor extends Loggered {
 
                logger.debug("initial beanName "+beanName)
 
-              beanName = if (org.springframework.util.StringUtils.countOccurrencesOf(beanName, "/")>2) {
+               var pType = PrefixType.MAIN
+    
+             if (org.springframework.util.StringUtils.countOccurrencesOf(beanName, "/")>2) {
 
-                if (contains3rdLevel(beanName)) {
-
-                  if (org.springframework.util.StringUtils.countOccurrencesOf(beanName, "/")>3) {
-
-                    logger.debug("found 3rd level, calc beanName="+beanName)
-                    beanName.substring(0,org.apache.commons.lang.StringUtils.ordinalIndexOf(beanName, "/", 4) )
-
-                  } else {
-                    beanName
+              pType = PrefixType.lookupLevelPrefixType(beanName)
+      
+                //contains3rdLevel(beanName)
+                if (pType!=null) {               
+          
+                 if (org.springframework.util.StringUtils.countOccurrencesOf(beanName, "/")>3) {
+                    logger.debug("found 3rd level")
+                    beanName = beanName.substring(0,org.apache.commons.lang.StringUtils.ordinalIndexOf(beanName, "/", 4) )                 
                   }
-
-
                 }  else {
-                    beanName.substring(0,org.apache.commons.lang.StringUtils.ordinalIndexOf(beanName, "/", 3) )
-
+                    beanName =beanName.substring(0,org.apache.commons.lang.StringUtils.ordinalIndexOf(beanName, "/", 3) )
                 }
+               }  
 
-               }  else {
-
-                beanName
-              }
-
+     logger.debug("final beanName="+beanName)
+                   
+    
         JstlUtils.exposeLocalizationContext(new RequestContext(request, servletContext));
 
-        val definitionName:String = startDynamicDefinition(beanName, url, tilesRequest, container);
+        val definitionName:String = startDynamicDefinition(beanName, url, tilesRequest, container,pType)
 
         logger.debug("bName "+bName+" beanName "+beanName+" definition Name "+definitionName)
 
@@ -144,14 +167,7 @@ class DynamicTilesViewProcessor extends Loggered {
     }
 
 
-  private def contains3rdLevel(beanName:String):Boolean = {
-    for (s <-TilesIntegrationConstants.THIRD_LEVELS) {
-      if (beanName.contains(s)) {
-        return true
-      }
-    }
-    return false
-  }
+ 
 
     /**
      * Starts processing the dynamic Tiles definition by creating a temporary definition for rendering.
@@ -160,12 +176,11 @@ class DynamicTilesViewProcessor extends Loggered {
     protected def startDynamicDefinition(beanName:String, 
                                          url:String,
                                          tilesRequest:Request,
-                                         container:TilesContainer):String =
+                                         container:TilesContainer,pType:PrefixType):String =
             {
         
       val definitionName:String = processTilesDefinitionName(beanName, container,
-                tilesRequest)
-
+                tilesRequest,pType)
         // create a temporary context and render using the incoming url as the
         // body attribute
         if (!definitionName.equals(beanName)) {
@@ -203,7 +218,7 @@ class DynamicTilesViewProcessor extends Loggered {
     @throws(classOf[TilesException])
     protected def processTilesDefinitionName(beanName:String,
              container:TilesContainer,
-             tilesRequest:Request):String =
+             tilesRequest:Request,pType:PrefixType):String =
              {
         // if definition already derived use it, otherwise 
         // check if url (bean name) is a template definition, then 
@@ -247,7 +262,7 @@ class DynamicTilesViewProcessor extends Loggered {
                 }
             }
 
-            sb.append(tilesDefinitionName);
+      sb.append(pType.getTemplateName)
 
             if (container.isValidDefinition(sb.toString(), tilesRequest)) {
                 result = sb.toString()
@@ -257,12 +272,12 @@ class DynamicTilesViewProcessor extends Loggered {
                 var root:String = null
 
                 if (StringUtils.hasLength(tilesDefinitionDelimiter)) {
-                    root = tilesDefinitionDelimiter;
+                    root = tilesDefinitionDelimiter
                 }
 
-                root += tilesDefinitionName;
+                root += pType.getTemplateName
 
-             // System.out.println("_final "+root)
+              System.out.println("_final "+root)
 
                 if (container.isValidDefinition(root, tilesRequest)) {
                     result = root

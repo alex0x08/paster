@@ -67,33 +67,13 @@
         
       </c:if>
 
-        <div class="row">
-    <div class="column grid-12"  >
-
-        <%-- processing page list --%>
-
-        <tiles:insertDefinition name="/common/pageList" >
-            <tiles:putAttribute name="listMode" value="${listMode}"/>
-            <tiles:putAttribute name="pageItems" value="${pageItems}"/>
-            <tiles:putAttribute name="sortDesc" value="${sortDesc}"/>
-
-            <c:if test="${listMode eq 'search'}">
-                <tiles:putAttribute name="result" value="${result}"/>
-            </c:if>
-        </tiles:insertDefinition>
-
-
-    </div>
-</div>
-
+       
 
 <div class="row">
-    <div class="column grid-16" >
-
+    <div class="column grid-12" >
 
     <div id="pastas">
-
-
+        
     <c:forEach var="paste" items="${pageItems.pageList}" varStatus="status">
 
         <c:choose>
@@ -242,19 +222,11 @@
 
     </c:forEach>
 
-<c:if test="${pageItems.nrOfElements > 5}">
+          </div>
+        
 
-<tiles:insertDefinition name="/common/pageList" >
-            <tiles:putAttribute name="listMode" value="${listMode}"/>
-            <tiles:putAttribute name="pageItems" value="${pageItems}"/>
-
-            <c:if test="${listMode eq 'search'}">
-                <tiles:putAttribute name="result" value="${result}"/>
-            </c:if>
-        </tiles:insertDefinition>
-</c:if>
-
-    </div>
+        
+         
 
 <c:if test="${pageItems.nrOfElements == 0}">
     <center>
@@ -263,8 +235,58 @@
 </c:if>
 
     </div>
+    
+       <div class="column grid-3">
+        
+        
+<tiles:insertDefinition name="/common/pageList" >
+            <tiles:putAttribute name="listMode" value="${listMode}"/>
+            <tiles:putAttribute name="pageItems" value="${pageItems}"/>
+
+            <c:if test="${listMode eq 'search'}">
+                <tiles:putAttribute name="result" value="${result}"/>
+            </c:if>
+        </tiles:insertDefinition>
+    
+        
+    </div> 
+    
 </div>
 
+<c:if test="${pageItems.nrOfElements > 5 and pageItems.page < pageItems.pageCount-1}">
+
+    <script src="<c:url value='/main/static/${appVersion}/libs/LazyPagination.js'/>" type="text/javascript" charset="utf-8"></script>
+
+    
+    <script type="text/javascript">
+
+        var pageUrl = '<c:url value="/main/paste/raw/list/form"/>';
+
+window.addEvent('domready',function(){
+	var lazy = new LazyPagination(document,{
+		url: pageUrl,
+		method: 'get',
+		maxRequests: ${pageItems.pageCount-(pageItems.page+1)},
+		buffer: 1000,
+		pageDataIndex: 'page',
+		data: {
+			page: ${pageItems.page}+2
+		},
+		inject: {
+			element: 'morePages',
+			where: 'before'
+		}
+	});
+});
+
+    </script>
+    
+        <div id="morePages"></div>
+ 
+    
+</c:if>
+        
+        
 
 <script src="<c:url value='/main/static/${appVersion}/libs/lightface/Source/LightFace.js'/>" type="text/javascript" charset="utf-8"></script>
 <script src="<c:url value='/main/static/${appVersion}/libs/lightface/Source/LightFace.IFrame.js'/>" type="text/javascript" charset="utf-8"></script>
