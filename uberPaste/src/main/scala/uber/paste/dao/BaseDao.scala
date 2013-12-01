@@ -58,7 +58,7 @@ abstract class BaseDaoImpl[T <: java.io.Serializable,PK ](model:Class[T]) extend
   @PersistenceContext
   protected val em:EntityManager = null
 
-
+  protected def getModel() = model
 
   @Transactional(readOnly = false)
   def save(obj:T):T = {

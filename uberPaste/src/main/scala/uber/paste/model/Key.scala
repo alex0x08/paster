@@ -17,6 +17,8 @@
 package uber.paste.model
 
 
+import java.util.Collection
+import java.util.HashMap
 import javax.persistence._
 import org.hibernate.validator._
 import javax.validation.constraints.NotNull
@@ -30,6 +32,25 @@ import uber.paste.base.Loggered
 /**
  * Key structure. The struct which has special uniqie text key
  */
+
+class KeyObj[T <: Key] {
+
+  val map = new HashMap[String,T]
+
+   def add(c:T):Unit = {
+    map.put(c.getCode,c)
+  }
+
+   def getList:Collection[T] = list 
+  
+  def list:Collection[T] = {
+    return map.values
+  }
+  def valueOf(key:String):T = {
+    return if (map.containsKey(key)) map.get(key) else null.asInstanceOf[T]
+  }
+}
+
 
 @MappedSuperclass
 class Key extends Struct with java.io.Serializable{

@@ -22,25 +22,31 @@ import org.springframework.stereotype.Service
 import java.util.concurrent.atomic.AtomicInteger
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.access.annotation.Secured
+import scala.collection.JavaConversions._
 
 object PasteManager {
-    object Stats {
-      var totalPastas = new AtomicInteger
-
-      def getTotal():Int = totalPastas.get()
-     // def getPriorStats():java.util.Collection[PriorStat] = Collections.unmodifiableCollection(totalByType)
-
+    object Stats extends KeyObj[PriorStat]{
+      
+      
+    for (s<-Priority.list) {
+      add(new PriorStat(s))
+    }
+    
     }
 
 }
 
-class PriorStat extends Key{
+class PriorStat(p:Priority) extends Key(p.getCode){
 
      private val counter = new AtomicInteger
 
-     def getCounter():Int = counter.get()
-     def increment() = {counter.incrementAndGet()}
-
+     def getPriority() = p
+  
+     def getCounter():Int = counter.get
+     def increment() = counter.incrementAndGet
+     def decrease() = counter.decrementAndGet
+     def increment(i:Int) = counter.addAndGet(i)
+ 
 }
 
 trait PasteManager extends GenericSearchManager[Paste]{
@@ -75,8 +81,14 @@ class PasteManagerImpl extends GenericSearchManagerImpl[Paste] with PasteManager
   }
 
   @Secured(Array("ROLE_ADMIN"))
-  override def remove(id:Long) = super.remove(id)
-
+  override def remove(id:Long) = {
+    
+    val obj = get(id)
+    if (obj!=null) {
+      super.remove(id)
+      PasteManager.Stats.valueOf(obj.getPriority.getCode)
+      }
+    }
   def getListIntegrated(code:String):java.util.List[Paste] = pasteDao.getListIntegrated(code)
 
 
@@ -90,7 +102,7 @@ class PasteManagerImpl extends GenericSearchManagerImpl[Paste] with PasteManager
 
       } finally {
         if (wasNew) {
-          PasteManager.Stats.totalPastas.addAndGet(1)
+          PasteManager.Stats.valueOf(obj.getPriority.getCode).increment
         }
       }
 

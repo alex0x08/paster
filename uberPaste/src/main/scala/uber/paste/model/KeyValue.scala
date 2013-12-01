@@ -51,20 +51,9 @@ class KeyValueEditor[T <: KeyValue](vobj:KeyValueObj[T]) extends PropertyEditorS
 }
 
 
-class KeyValueObj[T <: KeyValue] {
+class KeyValueObj[T <: KeyValue] extends KeyObj[T]{
 
-  val map = new HashMap[String,T]
-
-   def add(c:T):Unit = {
-    map.put(c.getCode,c)
-  }
-
-  def list:Collection[T] = {
-    return map.values
-  }
-  def valueOf(key:String):T = {
-    return if (map.containsKey(key)) map.get(key) else null.asInstanceOf[T]
-  }
+  
 }
 
 @MappedSuperclass

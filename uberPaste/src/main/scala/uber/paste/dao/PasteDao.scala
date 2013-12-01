@@ -16,7 +16,8 @@
 
 package uber.paste.dao
 
-import uber.paste.model.{PasteSource, Paste, User}
+import uber.paste.model.{PasteSource, Paste, User,Priority}
+import javax.persistence.criteria.CriteriaQuery
 import org.springframework.stereotype.Repository
 import javax.persistence.Query
 import org.springframework.transaction.annotation.Transactional
@@ -30,6 +31,8 @@ trait PasteDao extends SearchableDao[Paste]{
   def getListIntegrated(code:String):java.util.List[Paste]
 
   def getByRemoteUrl(url:String) : Paste
+
+  def countAll(p:Priority):java.lang.Long
 
 
   }
@@ -103,6 +106,24 @@ class PasteDaoImpl extends SearchableDaoImpl[Paste](classOf[Paste]) with PasteDa
         ,cr.cb.desc(cr.r.get("lastModified"))))
         .setMaxResults(BaseDaoImpl.MAX_RESULTS)
     return query.getResultList().asInstanceOf[java.util.List[Paste]]
+  }
+
+    def countAll(p:Priority):java.lang.Long = {
+
+    //val cr = new CriteriaSet
+     val cb = em.getCriteriaBuilder
+   // val cr = cb.createQuery(model)
+    val cq:CriteriaQuery[java.lang.Long] = cb.createQuery(classOf[java.lang.Long])
+  
+      val r = cq.from(getModel)
+  
+    cq.select(cb.count(r))
+    //cq.from(getModel)  
+    cq.where(Array(cb.equal(r.get("priority"), p.getCode)):_*)
+    
+    return em.createQuery(cq)
+      .getSingleResult().asInstanceOf[java.lang.Long]
+
   }
 
 
