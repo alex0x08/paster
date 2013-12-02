@@ -149,7 +149,17 @@
                                 <a href="<c:url value='/main/paste/list/search?query=codeType:${paste.codeType.code}'/>">
                                     <fmt:message key='${paste.codeType.name}'/></a>                               
                                  
-                                
+                                    (
+                                    <c:if test="${not empty paste.wordsCount}">
+                                        <c:out value="${paste.wordsCount} "/> 
+                                        <fmt:message key="paste.edit.word.counter.wordText"/>
+                                    </c:if>
+                                    ,
+                                      <c:if test="${not empty paste.symbolsCount}">
+                                        <c:out value="${paste.symbolsCount} "/> 
+                                        <fmt:message key="paste.edit.word.counter.charText"/>
+                                    </c:if>
+                                    )
                                 ,<kc:prettyTime date="${paste.lastModified}" locale="${pageContext.response.locale}"/>
                             </small>
 

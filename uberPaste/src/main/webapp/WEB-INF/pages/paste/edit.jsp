@@ -32,6 +32,8 @@
     <div class="row">
         <div class="column grid-6">
 
+            <form:input id="thumbImg" path="thumbImage" cssStyle="display:none;"  />
+
             <form:input id="wordsCount" path="wordsCount" cssStyle="display:none;"  />
             <form:input id="symbolsCount" path="symbolsCount" cssStyle="display:none;"  />
 
