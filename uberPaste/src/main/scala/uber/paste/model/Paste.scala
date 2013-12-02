@@ -20,6 +20,7 @@ import javax.persistence._
 import javax.validation.constraints.{Size, NotNull}
 import org.compass.core.CompassHighlighter
 import org.compass.annotations._
+import org.apache.commons.lang.StringUtils
 import org.codehaus.jackson.annotate.JsonIgnore
 import javax.persistence.FetchType
 import javax.xml.bind.annotation._
@@ -112,6 +113,7 @@ class Paste extends Struct with java.io.Serializable{
   @Column(length=256)
   @Size(min=3,max=256, message = "{struct.name.validator}")
   @NotAudited
+  @SearchableProperty
   private var title: String = null
 
   @ManyToOne(fetch = FetchType.EAGER,cascade= Array(CascadeType.PERSIST,CascadeType.MERGE))
@@ -120,6 +122,7 @@ class Paste extends Struct with java.io.Serializable{
   private var owner:User = null
   
   @NotNull
+  @SearchableProperty
   private var codeType:String = CodeType.Plain.getCode
 
   private var integrationCode:String = null
@@ -155,6 +158,11 @@ class Paste extends Struct with java.io.Serializable{
   @NotAudited
   private[model] var commentsCount:java.lang.Integer = null
 
+  private var symbolsCount:java.lang.Integer = null
+  
+  private var wordsCount:java.lang.Integer = null
+  
+  
   override def terms():List[String] = Paste.terms
   
   /**
@@ -164,10 +172,17 @@ class Paste extends Struct with java.io.Serializable{
   override def fillFromHits(ch:CompassHighlighter)  {
       super.fillFromHits(ch)
     val t = ch.fragment("text")
-      if (t!=null) {
+      if (!StringUtils.isBlank(t)) {
         setTitle(t)
       }
   }
+  
+  def getSymbolsCount() = symbolsCount
+  def setSymbolsCount(c:java.lang.Integer) { this.symbolsCount = c}
+  
+  def getWordsCount() = wordsCount
+  def setWordsCount(c:java.lang.Integer) { this.wordsCount = c}
+  
   
   /**
    *  paste's owner

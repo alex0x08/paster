@@ -32,7 +32,8 @@
     <div class="row">
         <div class="column grid-6">
 
-            <form:input id="thumbImg" path="thumbImage" cssStyle="display:none;"  />
+            <form:input id="wordsCount" path="wordsCount" cssStyle="display:none;"  />
+            <form:input id="symbolsCount" path="symbolsCount" cssStyle="display:none;"  />
 
             <c:choose>
         <c:when test="${model.blank}">
@@ -42,33 +43,36 @@
             <form:hidden path="id"  />
         </c:otherwise>
     </c:choose>
-            <form:label path="name"><fmt:message key="paste.title"/>
-                <a id="cleanTitleBtn" onclick="cleanTitle();" href="javascript:void(0);" title="Clean title">
+            
+            <fmt:message var="pasteTitle" key="paste.title"/>
+            
+            <form:label path="name"><c:out value="${pasteTitle}"/>
+                <a id="cleanTitleBtn" onclick="cleanTitle();" href="javascript:void(0);" title="<fmt:message key='button.clear'/>">
                 <span class="i">d</span>
-                </a>  : </form:label>
+                </a> </form:label>
+                 <fmt:message key="paste.edit.title.placeholder" var="titlePlaceHolder"/>
                 <form:input  cssClass="notice" cssErrorClass="error" path="name" name="title"
-                            id="pname" cssStyle="width:97%;" maxlength="255" title="Paste title" placeholder="enter paste title"  />
-
+                            id="pname" cssStyle="width:97%;" maxlength="255" title="${pasteTitle}" placeholder="${titlePlaceHolder}"  />
                 <form:errors path="name" cssClass="error" />
-
     </div>
 
     <div class="column grid-1" >
-            <form:label path="sticked" ><span class="i" >]</span></form:label>
-            <form:checkbox path="sticked" style="display:inline;" title="Stick paste"/>
+            <form:label path="sticked" ><span class="i" >]</span></form:label>            
+            <fmt:message var="titleStick" key='paste.stick'/>            
+            <form:checkbox path="sticked" style="display:inline;" title="${titleStick}"/>
     </div>
 
     <div class="column grid-2" >
-           <form:label path="normalized" >Normalize</form:label>
-            <form:checkbox id="normalized" path="normalized" style="display:inline;" title="Normalize paste"/>
+        <form:label path="normalized" ><fmt:message key="paste.normalize"/></form:label>
+            <form:checkbox id="normalized" path="normalized" style="display:inline;" title="<fmt:message key='paste.normalize'/>"/>
     </div>
 
         <div class="column grid-4 right">
 
             <button id="addCommentBtn" class="p-btn-save submitBtn" name="submit_btn" type="submit">
-                <img id="btnIcon" style="display:none;" src="<c:url value='/main/static/${appVersion}/images/gear_sml.gif'/>"/>
                      <span class="i">S</span>
                     <span id="btnCaption"><c:out value='${submit_button_text}'/></span>
+                <img id="btnIcon" style="display:none;" src="<c:url value='/main/static/${appVersion}/images/gear_sml.gif'/>"/>
             </button>
 
 
@@ -92,17 +96,16 @@
     <div class="row">
         <div class="column grid-5">
 
-        <form:label path="tagsAsString"><span  class="i" >T</span><fmt:message key="paste.tags"/>:</form:label>
-    <form:input id="ptags" path="tagsAsString" maxlength="155" cssStyle="width:97%;" autocomplete="true" placeholder="enter space-separated tags here"  />
+        <form:label path="tagsAsString"><span  class="i" >T</span><fmt:message key="paste.tags"/></form:label>
+        <fmt:message key="paste.edit.tags.placeholder" var="tagsPlaceHolder"/>
+    <form:input id="ptags" path="tagsAsString" maxlength="155" cssStyle="width:97%;" 
+                autocomplete="true" placeholder="${tagsPlaceHolder}"  />
     <form:errors path="tagsAsString" cssClass="error" />
 
         </div>
         <div class="column grid-3">
-
-
-        <form:label path="codeType">Hightlight like:</form:label>
-        <form:select path="codeType" multiple="false" id="ptype">
-                    
+            <form:label path="codeType"><fmt:message key="paste.syntax.title"/></form:label>
+        <form:select path="codeType" multiple="false" id="ptype">                    
                     <c:forEach items="${availableCodeTypes}" var="codeType">
 				    <form:option value="${codeType.code}" editCode="${codeType.editType}" >
                                     <fmt:message key="${codeType.name}"/>
@@ -116,7 +119,7 @@
 
         <div class="column grid-4">
 
-            <label for="theme">Theme</label>
+            <label for="theme"><fmt:message key="paste.editor.theme.title"/></label>
             <select id="theme" size="1">
                 <optgroup label="Bright">
                     <option value="ace/theme/chrome">Chrome</option>
@@ -315,8 +318,19 @@
 
     window.addEvent('domready', function(){
 
-        var counter = new WordCount('wordCount');
-
+        var counter = new WordCount('wordCount', {
+                countWordsTo: $('wordsCount'),
+                countSymbolsTo: $('symbolsCount'),            
+		inputName: null,				//The input name from which text should be retrieved, defaults null
+		countWords: true,				//Whether or not to count words
+		countChars: true,				//Whether or not to count characters
+		charText: '<fmt:message key="paste.edit.word.counter.charText"/>',			//The text that follows the number of characters
+		wordText: '<fmt:message key="paste.edit.word.counter.wordText"/>',				//The text that follows the number of words
+		separator: ', ',				//The text that separates the number of words and the number of characters
+		liveCount: false,				//Whether or not to use the event trigger, set false if you'd like to call the getCount function separately
+		eventTrigger: 'keyup'			//The event that triggers the count update
+	});
+            
         var editor = ace.edit("editor");
         editor.setTheme("ace/theme/chrome");
         editor.getSession().setMode("ace/mode/${model.codeType.editType}");
@@ -425,7 +439,7 @@
 
                 //img =Pixastic.process(img, "blurfast", {amount:0.5});
 
-                img = Canvas2Image.saveAsPNG(img, true, 300, 200);
+                img = Canvas2Image.saveAsJPEG(img, true, 300, 200);
 
                 document.body.appendChild(img);
 

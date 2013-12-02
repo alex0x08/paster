@@ -4,8 +4,8 @@
      <a class="i ${stat.priority.cssClass}" style="font-size:2em;"
                    title="<fmt:message key="${stat.priority.name}"/>. Click to search with same priority."
                    href="<c:url value='/main/paste/list/search?query=priority:${stat.priority.code}'/>">/</a>
-                   x <c:out value="${stat.counter}"/>
-                   ,
+                   <span style="font-size: small;">x <c:out value="${stat.counter}"/>&nbsp;</span>
+                   
 
 </c:forEach>
                    

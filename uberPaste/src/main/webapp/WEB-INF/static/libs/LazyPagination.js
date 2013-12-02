@@ -25,12 +25,13 @@ provides: [LazyPagination]
 var LazyPagination = new Class({
 	
 	Extends: Request.HTML,
-
 		options: {
 			buffer: 1000,
 			maxRequests: 5,
 			pageDataIndex: 'page',
-			data: { page: 2},
+			data: { page: 2},   
+                        afterAppend: {},
+                        beforeLoad: {},                        
 			navigation: false,
 			inject: false // {element: 'foo', where: 'before'}
 		},
@@ -52,7 +53,7 @@ var LazyPagination = new Class({
 		this.attach();
 		this.measure();
 	},
-	
+                
 	measure: function(){
 		var scrollHeight = this.element.getScrollSize().y, 
 			height = this.element.getSize().y,
@@ -62,7 +63,10 @@ var LazyPagination = new Class({
 	},
 	
 	send: function(){
-		if(this.check && this.requests != this.options.maxRequests ) this.parent();
+		if(this.check && this.requests != this.options.maxRequests ) {
+                    this.options.beforeLoad(); 
+                    this.parent();
+                }
 	},
 	
 	increment: function(){
@@ -86,12 +90,15 @@ var LazyPagination = new Class({
 	adopt: function(html){
 		(this.element === document || this.element === window) ? 
 			$(document.body).adopt(html) : this.element.adopt(html);
+                        
+                this.options.afterAppend(html);        
 		return this;
 	},
 	
 	inject: function(html){
 		html.inject(this.options.inject.element, this.options.inject.where);
-		return this;
+		this.options.afterAppend(html);
+                return this;
 	}
 
 });

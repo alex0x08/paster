@@ -239,8 +239,26 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
   }
 
 
+  @RequestMapping(value = Array(SearchController.SEARCH_ACTION + "/{result:[a-z]+}/{page:[0-9]+}",
+    GenericListController.RAW+SearchController.SEARCH_ACTION + "/{result:[a-z]+}/{page:[0-9]+}"), method = Array(RequestMethod.GET))
+  @ModelAttribute(GenericController.NODE_LIST_MODEL)
+  override def searchByPath(@PathVariable("page") page:java.lang.Integer,
+                   @PathVariable("result") result:String,
+                 request:HttpServletRequest,
+                 model:Model,
+                 locale:Locale) =  listImpl(request,locale, model, page, null, null, result)
+
+@RequestMapping(value = Array(
+    GenericListController.RAW+SearchController.SEARCH_ACTION + "/{result:[a-z]+}"), method = Array(RequestMethod.GET))
+  @ModelAttribute(GenericController.NODE_LIST_MODEL)
+  def searchByPathParam(@RequestParam(required = false) page:java.lang.Integer,
+                   @PathVariable("result") result:String,
+                 request:HttpServletRequest,
+                 model:Model,
+                 locale:Locale) =  listImpl(request,locale, model, page, null, null, result)
 
 
+  
   @RequestMapping(value = Array(GenericListController.LIST_ACTION + "/{source:[a-zA-Z0-9]+}/{page:[0-9]+}",
     GenericListController.RAW+GenericListController.LIST_ACTION + "/{source:[a-zA-Z0-9]+}/{page:[0-9]+}"), 
                   method = Array(RequestMethod.GET))

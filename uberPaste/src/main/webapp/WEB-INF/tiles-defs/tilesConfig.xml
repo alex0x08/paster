@@ -39,6 +39,10 @@
         <put-attribute name="content" value="/WEB-INF/pages/paste/raw/list.jsp" />
     </definition>
 
+    <definition name="/paste/raw/search" extends=".rawTemplate">
+        <put-attribute name="content" value="/WEB-INF/pages/paste/raw/list.jsp" />
+    </definition>
+
     <definition name="/paste/list" extends=".mainTemplate">
         <put-attribute name="content" value="/WEB-INF/pages/paste/list.jsp" />
     </definition>

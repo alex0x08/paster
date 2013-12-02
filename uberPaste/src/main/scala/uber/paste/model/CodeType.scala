@@ -76,11 +76,14 @@ object CodeType {
 
   val map = new java.util.LinkedHashMap[String,CodeType]
 
+  add(Plain)
   add(Java)
   add(JavaScript)
   add(Xml)
   add(CSS)
-  add(Scala)
+  add(Sql)
+  add(Php)
+ add(Scala)
   add(ActionScript)
   add(Bash)
   add(ColdFusion)
@@ -92,14 +95,11 @@ object CodeType {
   add(Groovy)
   add(JavaFX)
   add(Perl)
-  add(Php)
   add(PowerShell)
   add(Python)
   add(Ruby)
-  add(Sql)
   add(VisualBasic)
-  add(Plain)
-
+  
   private def add(c:CodeType):Unit = {
     map.put(c.getCode,c)
   }

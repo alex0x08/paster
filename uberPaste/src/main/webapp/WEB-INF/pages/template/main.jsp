@@ -18,6 +18,14 @@
 
         <link href="<c:url value="/main/static/${appVersion}/libs/lightface/Assets/LightFace.css"/>" rel="stylesheet" type="text/css">
 
+        
+        <script  type="text/javascript">
+            
+             var transmitText = '<fmt:message key="action.sending"/>';
+      
+            
+        </script>
+        
         <!-- 
           I am based in LESS.js to render stylesheets. More information can
           be found at {http://www.lesscss.org/}.

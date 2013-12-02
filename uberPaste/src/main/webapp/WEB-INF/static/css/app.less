@@ -139,7 +139,14 @@ pre {
 }
 
 .p-btn-save {
-  #gradient > .h(#69B9DA, #007BAD, url(../images/cross.png));
+  #gradient > .v(#69B9DA,#007BAD);
   .radius();
   color: @white;
-}
+ cursor: pointer;
+ }
+.p-btn-save:hover {
+  #gradient > .v(#007BAD,#69B9DA);
+ .radius();
+  color: @white;
+ cursor: pointer;
+ }

@@ -12,14 +12,14 @@
      </div>
     <div class="column grid-4" style="">
         
-        <button class="btn" id="doSearchBtn" type="submit">
+        <button class="p-btn-save" id="doSearchBtn" type="submit">
                  <span class="i" >r</span>
                  <span id="btnCaption"><fmt:message key="button.search"/></span>
              <img id="btnIcon" style="display:none;" src="<c:url value='/main/static/${appVersion}/images/gear_sml.gif'/>"/>
                  </button>
        
-        <!--
-        <input name="submit" type="submit" value="Search" style="text-align:left;min-width: 5em;max-width: 5em;"  />-->
+        <%--
+        <input name="submit" type="submit" value="Search" style="text-align:left;min-width: 5em;max-width: 5em;"  />--%>
         <form:errors path="query" cssClass="error" element="div"/>
     </div>
 </div>
@@ -27,7 +27,7 @@
     <div class="column grid-10">
 
             <span style="font-size: 12px;display:block;padding-bottom: 10px;" >
-            Query samples:
+            <fmt:message key="search.query.samples"/>:
          "<a href="<c:url value='/main/paste/list/search?query=id:1'/>">id:1</a>",
          "<a href="<c:url value='/main/paste/list/search?query=name:test'/>">name:test</a>" ,
 
@@ -50,13 +50,10 @@
     window.addEvent('domready', function() {
     
           $('doSearchBtn').addEvent('click',function(){
-                                   this.getElementById('btnCaption').set('text','Submitting...').disabled = true;
+                                   this.getElementById('btnCaption').set('text',transmitText).disabled = true;
                                    this.getElementById('btnIcon').setStyle('display','');
                                    $("searchForm").submit();
-
-                               });
-
-        
+                               });       
         
     });
     

@@ -48,8 +48,8 @@
 
 
                 <span style="font-size: 9px;">
+                    <fmt:message key="${model.codeType.name}"/>    
                 ,<kc:prettyTime date="${model.lastModified}" locale="${pageContext.response.locale}"/>
-
                 </span>
 
 
@@ -76,13 +76,10 @@
     &nbsp;
         <c:if test="${not empty model.commentCount and model.commentCount>0}">
 
-            <span style="vertical-align: top;font-size: larger;" class="i" title="Comments">C</span>
-            <a id="toggleCommentsCtl" href="javascript:void(0);" onclick="SyntaxHighlighter.toggleComments(this);" title="hide comments">
+            <span style="vertical-align: top;font-size: larger;" class="i" title="<fmt:message key="comments.title"/>">C</span>
+                <a id="toggleCommentsCtl" href="javascript:void(0);" onclick="SyntaxHighlighter.toggleComments(this);" title="<fmt:message key="button.hide"/>">
                 <span  class="i" >-</span>
             </a>
-
-
-
         </c:if>
         <c:if test="${!model.blank and not empty availableRevisions}">
             <jsp:include
@@ -116,7 +113,13 @@
     </c:choose>
 
     <div id="centerPanel" class="column ${centerGridSize}" style="min-width:650px;">
-    <pre id="pasteText" class="brush: ${model.codeType.code};toolbar: false; auto-links:false;" style=" overflow-y: hidden;" >
+    
+      <div id="pasteLoadSpinner" style="">
+             <img src="<c:url value='/main/static/${appVersion}/images/gear_sml.gif'/>"/>  
+                      <fmt:message key="action.loading"/>   
+          </div>    
+        
+    <pre id="pasteText" class="brush: ${model.codeType.code};toolbar: false; auto-links:false;" style="display:none; overflow-y: hidden;" >
         <c:out value="${model.text}" escapeXml="true" /></pre>
     <code id="pasteTextPlain" style="display:none;"><c:out value="${model.text}" escapeXml="true" /></code>
 
@@ -174,7 +177,7 @@
                         <a href="#comment_l${comment.id}" title="<c:out value="${comment.id}"/>">#${model.id}.${comment.id}</a>
                     
                           <c:if test="${comment.parentId==null}">
-                            <a  href="javascript:void(0);" class="linkLine" title="Comment this"
+                              <a  href="javascript:void(0);" class="linkLine" title="<fmt:message key="comments.sub"/>"
                                 onclick="SyntaxHighlighter.insertEditForm(${comment.lineNumber},${comment.id});"><span class="i">C</span></a>
                         </c:if>
                         <sec:authorize access="${currentUser !=null and (currentUser.admin or ( comment.hasOwner  and comment.owner eq currentUser)) }">
@@ -232,18 +235,16 @@
 
      <div class="row" >
          <div class="column grid-15"  >
-
-
                  <input type="hidden" name="pasteId" value="${model.id}"/>
                  <form:hidden path="lineNumber" id="lineNumber"/>
                  <form:hidden path="parentId" id="commentParentId"/>
-
                  <form:textarea path="text" id="commentText" cssErrorClass="error"  />
-
          </div>
-         <div style="margin:0.5em;padding-right:0.5em;float:right;" >
-           <a class="btn sbtn" title="Cancel" href="javascript:void(0);" onclick="SyntaxHighlighter.hideEditForm();">
-               X
+         <div class="column grid-1" style="float:right;" >
+             
+             <a class="" title="<fmt:message key="button.cancel"/>" 
+                href="javascript:void(0);" onclick="SyntaxHighlighter.hideEditForm();">
+               <span class="i" style="font-size:1.5em;">d</span>
            </a>
 
          </div>
@@ -252,13 +253,17 @@
          <div class="row">
          <div class="column grid-16" >
 
-             <button id="addCommentBtn" type="submit">
+             <button id="addCommentBtn" class='p-btn-save' type="submit">
+                 <span class="i" style="font-size:larger;">S</span>
+                <span id="btnCaption"><fmt:message key="button.save"/></span>
                  <img id="btnIcon" style="display:none;" src="<c:url value='/main/static/${appVersion}/images/gear_sml.gif'/>"/>
-                <span id="btnCaption">Add comment</span>
              </button>
 
-             to line <span id="pageNum"></span>
-
+             
+                 <fmt:message key="comments.line">
+                     <fmt:param value="<span id='pageNum'></span>"/>
+                 </fmt:message>
+          
              <sec:authorize ifAnyGranted="ROLE_USER,ROLE_ADMIN">
                  
               <span class="right"  style="padding-top: 0.5em;" >
@@ -269,23 +274,17 @@
                   <a href="http://ru.gravatar.com/site/check/${currentUser.username}" title="GAvatar">
                         <img style="vertical-align: top;padding-bottom: 2px;" src="<c:out value='http://www.gravatar.com/avatar/${currentUser.avatarHash}?s=32&d=monsterid'/>"/>
                    </a>
-
                </span>
 
              </sec:authorize>
-
          </div>
              </div>
 
          <div class="row">
              <div class="column grid-16" >
-
                  <form:errors path="text" cssClass="error"    />
-
              </div>
          </div>
-
-
 
      </form:form>
 
@@ -315,8 +314,6 @@
             rightPanel.setStyle('display','');
             rightPanelCtrl.getElement('span').set('text','-');
          }
-
-
     }
 
         window.addEvent('domready', function() {
@@ -331,10 +328,11 @@
 </c:if>
 
    <script type="text/javascript">
+       
                            window.addEvent('domready', function() {
 
                                $('addCommentBtn').addEvent('click',function(){
-                                   this.getElementById('btnCaption').set('text','Submitting...').disabled = true;
+                                   this.getElementById('btnCaption').set('text',transmitText).disabled = true;
                                    this.getElementById('btnIcon').setStyle('display','');
                                    $("addCommentForm").submit();
 
@@ -396,6 +394,8 @@
     ));
 
     SyntaxHighlighter.all();
+    
+        $('pasteLoadSpinner').setStyle('display','none');
 
     });
             function path()

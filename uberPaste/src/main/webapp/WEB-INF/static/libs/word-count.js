@@ -19,6 +19,8 @@ var WordCount = new Class ({
 	Implements: [Events, Options],
 
 	options: {
+                countWordsTo: null,
+                countSymbolsTo: null,                
 		inputName: null,				//The input name from which text should be retrieved, defaults null
 		countWords: true,				//Whether or not to count words
 		countChars: true,				//Whether or not to count characters
@@ -44,6 +46,15 @@ var WordCount = new Class ({
 	getCount: function(text){
 		var numChars = text.length;
 		var numWords = (numChars != 0) ? text.clean().split(' ').length : 0;
+                
+                if (this.options.countWordsTo!=null) {
+                    this.options.countWordsTo.set('value',numWords);
+                }
+                
+                 if (this.options.countSymbolsTo!=null) {
+                    this.options.countSymbolsTo.set('value',numChars);
+                }
+                
 		if ((this.options.countWords) && (this.options.countChars)) {
 			var insertText = numWords + ' ' + this.options.wordText + this.options.separator + numChars + ' ' + this.options.charText;
 		} else {
