@@ -37,8 +37,8 @@
               p:paramName="locale" />
     </mvc:interceptors>
     
-    <mvc:resources mapping="/assets/${paste.app.version}/**" location="classpath:/META-INF/resources/webjars/"/>
-    <mvc:resources mapping="/static/${paste.app.version}/**" location="/WEB-INF/static/"/>
+    <mvc:resources mapping="/assets/${share.app.version}/**" location="classpath:/META-INF/resources/webjars/"/>
+    <mvc:resources mapping="/static/${share.app.version}/**" location="/WEB-INF/static/"/>
   
     
     <bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver" />

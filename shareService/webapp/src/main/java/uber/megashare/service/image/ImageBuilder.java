@@ -49,7 +49,7 @@ public class ImageBuilder extends LoggedClass {
             scaled; //результат преобразований / scaled image
     private int min_width, //минимальная ширина изображения для преобразования // minimum width to start scaling
             min_height, //минимальная высота изображения // minimum height to ..
-            max_height=1600,max_width=1600,
+            max_height=3000,max_width=3000,
             scale_rate; // TODO: describe it
     /**
      * byte array with scaled image
