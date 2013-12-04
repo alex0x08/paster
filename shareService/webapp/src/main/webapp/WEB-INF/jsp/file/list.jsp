@@ -3,7 +3,6 @@
 
 <c:if test="${pageItems.nrOfElements > 0}">
 <div class="row" >                
- 
     <div class="col-md-6"  > 
         <c:if test="${pageItems.pageCount > 1}">  
             <jsp:include
@@ -22,8 +21,6 @@
             <jsp:param name="modelName" value="file" />
         </jsp:include>
     </div>
-   
-    
 </div>
     
 </c:if>

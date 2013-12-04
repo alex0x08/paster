@@ -5,23 +5,29 @@
         <a class="close" data-dismiss="alert" href="#">×</a>
         <h4 class="alert-heading">Online:</h4>
         <c:forEach var="user" items="${usersOnline}">
-
-            <img  src="<c:out value='http://www.gravatar.com/avatar/${user.avatarHash}?s=16'/>"/>
-            <span><c:out value="${user.name}"/></span>
-
+            
+             <c:set var="usermodel" value="${user}" scope="request"></c:set>
+                   <jsp:include page="/WEB-INF/jsp/templates/common/user-dropdown.jsp" >
+                       <jsp:param name="mode" value="USER"/>
+                   </jsp:include>
+           
         </c:forEach>
     </div>
 </c:if>
 
 
 <blockquote class="pull-right">
+    
+    <sec:authorize access="isAuthenticated()">
+        
     <p>
         <c:if test="${currentUser.relatedProject.avatarSet}">
                     <img src="data:image/png;base64,${currentUser.relatedProject.avatar.icon}" 
                          alt="<c:out value='${currentUser.relatedProject.name}'/>" title="<c:out value='${currentUser.relatedProject.description}'/>" />                
             </c:if>
          <c:out value="${currentUser.relatedProject.description}"/>
-    </p>  
+    </p>
+    </sec:authorize>
     
   <p title="<c:out value="${currentSettings.appVersion.implVersionFull}"/>">
     <c:out value="${currentSettings.appVersion.implVersion}"/>

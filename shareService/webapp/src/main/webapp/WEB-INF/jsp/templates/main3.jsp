@@ -24,45 +24,13 @@
                     
             </ul>   
             <ul class='nav navbar-nav navbar-right' >    
-                <sec:authorize ifAnyGranted="ROLE_ANONYMOUS">
+                <sec:authorize access="isAnonymous()">
                     <li>
-                        <div class="btn-group box">
-
-                            <a class="btn dropdown-toggle btn-danger" data-toggle="dropdown" href="#">
-                                <fmt:message key="login.title"/>
-                                <span class="caret"></span>
-                            </a>
-
-                            <ul class="dropdown-menu" id="auth-dropdown" role='menu'>
-
-                                <li >
-                                    <div style="width:12em;" class='box'>
-
-                                        <form  action="<c:url value='/j_spring_security_check' />" role='form'  method="POST" class="form-inline">
-
-                                            <div class="input-group">
-                                                <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
-                                                <input class="form-control"  name="j_username" type="text" placeholder="Username">
-                                            </div>
-                                            <div class="input-group" style="padding-top:0.5em;padding-bottom: 0.5em;">
-                                                <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
-                                                <input class="form-control"  name="j_password" type="password" placeholder="Password">
-                                            </div>  
-                                            <button type="submit" class="btn" ><fmt:message key="button.login"/></button>
-                                        </form>
-
-                                    </div>
-
-
-                                </li>
-                            </ul>
-                        </div>
-
+                        <jsp:include page="/WEB-INF/jsp/templates/common/auth-dropdown.jsp" />
                     </li>
                 </sec:authorize>
-
-
-                    <sec:authorize ifAnyGranted="ROLE_USER,ROLE_ADMIN">
+                    
+                    <sec:authorize access="isAuthenticated()">
                         <li>
                    <c:set var="usermodel" value="${currentUser}" scope="request"></c:set>
                    <jsp:include page="/WEB-INF/jsp/templates/common/user-dropdown.jsp" >
@@ -70,7 +38,6 @@
                    </jsp:include>
                         </li>
                     </sec:authorize>
-
                              <li>
                  <jsp:include page="/WEB-INF/jsp/templates/common/lang-select.jsp"/>
                     </li>
@@ -98,23 +65,18 @@
                          </div>
                      </div>
                      <tiles:insertAttribute name="content" />
-
-                 </div>
-                    
+                 </div>                    
         <hr>
 
         <footer>
             <tiles:insertAttribute name="footer" />
         </footer>
  
-
-
     <!-- Boostrap modal dialog -->
     <div id="delete_confirmation" class="modal fade" >
         
         <div class="modal-dialog">
-            <div class="modal-content">
-                
+            <div class="modal-content">               
          
         <div class="modal-header">
             <a href="#" class="close" data-dismiss="modal">x</a>
@@ -141,21 +103,18 @@
     </div>
         
             <div id="paste_preview" class="modal fade" >
-
                 <div class="modal-dialog">
                     <div class="modal-content">
-
                         <div class="modal-header">
                             <a href="#" class="close" data-dismiss="modal">x</a>
                             <div>
                                 <img id="targetImg" src="<c:url value='/main/static/${appVersion}/images/file.png'/>" />
                                 <span id="targetTitle">
-
                                 </span>
                             </div>
                         </div>
                         <div class="modal-body">
-                            <div class="paddingT15 paddingB15" id="modal_text">    
+                            <div class="paddingT15 paddingB15" id="modal_text">   
 
                                 <div id="pasteContent" >
                                 </div>

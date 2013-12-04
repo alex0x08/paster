@@ -393,9 +393,13 @@
 
                                      <form:errors path="file" cssClass="error" />
 
+                                     <div style="padding-top:1em;">
+                                        
                                      <ul id='upload_block'>
                                          <!-- The file uploads will be shown here -->
-                                     </ul>
+                                     </ul>    
+                                     </div>
+                                     
 
                                      <noscript>
                                      <input name="submit" type="submit" class="btn btn-large btn-primary" value="Send" />

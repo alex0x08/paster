@@ -5,7 +5,12 @@
         <%@ include file="/WEB-INF/jsp/templates/common/template-common-head.jsp"%>
     </head>
     <body>
+          <div class="container">
+               
         <tiles:insertAttribute name="content" />
+        
+          </div>
+        
         <%@ include file="/WEB-INF/jsp/templates/common/template-common-body.jsp"%>
     </body>
 </html>

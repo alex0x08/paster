@@ -15,7 +15,7 @@
 </c:choose>
 
 <div class="row">  
-    <div class="span12 offset1" >
+    <div class="col-md-4" >
 
 
         <c:if test="${viewMode eq 'integrated'}">

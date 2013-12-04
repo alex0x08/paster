@@ -8,18 +8,24 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <title>Integration tests</title>
     </head>
     <body>
-        <h1>Hello World!</h1>
+        <h1>Integration tests</h1>
         
         
          <iframe id="shareFrame" src="${ctx}/main/file/integrated/list/test_integrated"
-                scrolling="auto" frameborder="0"
-                style="width:380px; height: 600px;"  allowTransparency="true"   >
+                 frameborder="0" scrolling="auto"
+                style="width:320px; height: 800px;"  allowTransparency="true"   >
 
         </iframe>
 
+         <iframe id="shareFrame" src="${ctx}/main/file/integrated/view?id=284"
+                scrolling="no" frameborder="1"
+                style="width:390px; height: 250px;"  allowTransparency="true"   >
+
+        </iframe>
+        
         
     </body>
 </html>

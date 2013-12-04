@@ -10,7 +10,12 @@
     
 <ul class="dropdown-menu">
 
-     <li role="presentation" class="dropdown-header">
+        
+  
+    <sec:authorize access="isAuthenticated()">
+        
+        
+             <li role="presentation" class="dropdown-header">
             <c:if test="${currentUser.relatedProject.avatarSet}">
                     <img src="data:image/png;base64,${currentUser.relatedProject.avatar.icon}" 
                          alt="<c:out value='${currentUser.relatedProject.name}'/>" title="<c:out value='${currentUser.relatedProject.description}'/>" />                
@@ -19,9 +24,8 @@
                     <span title="<c:out value='${currentUser.relatedProject.description}'/>"> <c:out value="${currentUser.relatedProject.name}"/> </span>
      </li>
       <li role="presentation" class="divider"></li>
+
         
-  
-    <sec:authorize ifAnyGranted="ROLE_ADMIN,ROLE_USER">
         <li>
             <a  href="<c:url value="/main/file/new"/>">
                 <span class="glyphicon glyphicon-upload"></span> <fmt:message key="file.upload.title"/></a> 

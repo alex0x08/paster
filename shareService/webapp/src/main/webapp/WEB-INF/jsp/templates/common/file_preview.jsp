@@ -146,16 +146,13 @@
                         <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu">
-
-                        <sec:authorize ifAnyGranted="ROLE_ADMIN,ROLE_MANAGER,ROLE_USER">
-                                
+                        <sec:authorize ifAnyGranted="ROLE_ADMIN,ROLE_MANAGER,ROLE_USER">                                
                             <li>
                                 <a title="<fmt:message key="button.edit"/>" target="${menuTarget}" 
                                    href="<c:url value="/main/file/edit/${model.id}"/>">
                                     <span class="glyphicon glyphicon-edit"></span>
-                                    <fmt:message key="button.edit"/></a>    
+                                    <fmt:message key="button.edit"/></a>   
                             </li>
-
                             <c:if test="${empty param.integrationMode and ( model.owner eq currentUser or currentUser.admin )}">
 
                                 <li>
@@ -174,13 +171,10 @@
 
                         </sec:authorize>
 
-                        <c:if test="${pasteEnable}">
-                        
-                              <li>
-                                  
+                        <c:if test="${pasteEnable}">                        
+                              <li>                                  
                                   <c:choose>
-                                      <c:when test="${empty param.integrationMode}">
-                                          
+                                      <c:when test="${empty param.integrationMode}">                                          
                                           <a class="pastePreviewBtn"
                                        targetIcon="<c:url value='/main/static/${appVersion}/images/mime/${model.icon}'/>"
                                        targetTitle="${model.name} &nbsp; ${model.formattedFileSize} &nbsp; ${modelLastModified}  &nbsp; ${model.owner.name}"
@@ -192,36 +186,28 @@
                                         <fmt:message key="paste.preview.title"/></a>    
                                           
                                       </c:when>
-                                      <c:otherwise>
-                                          
+                                      <c:otherwise>                                          
                                           <a href="${pasteUrl}/main/paste/loadFrom?url=${selfExternalUrl}"
                                             target="_blank" class="btn"
                                              title="<fmt:message key="paste.preview.title"/>" >
                                         <img style="display: inline;"
                                            src="<c:url value='/main/static/${appVersion}/images/ninja.png'/>"/>
-                                        <fmt:message key="paste.preview.title"/></a>    
-                                          
+                                        <fmt:message key="paste.preview.title"/></a>  
                                       </c:otherwise>
-                                  </c:choose>
-                                  
-                                    
+                                  </c:choose>                               
                                 </li>
                         </c:if>
-                                
                         <c:if test="${gdocsEnable}">
-
-                            <li>
-                                
+                             <li>
                                  <c:choose>
-                                     <c:when test="${empty param.integrationMode}">
-                                
+                                     <c:when test="${empty param.integrationMode}">                                
                                          <a title="<fmt:message key="file.gdocs.preview"/>"
                                    data-target="#gdocsPreviewModal_${model.id}" 
                                    class="btn" data-toggle="modal"
                                    >
                                     <img style="display: inline;" 
                                          src="<c:url value='/main/static/${appVersion}/images/mime/${model.icon}'/>"/> 
-                                    <fmt:message key="file.gdocs.preview"/></a>    
+                                    <fmt:message key="file.gdocs.preview"/></a>   
                                          
                                      </c:when>
                                      <c:otherwise>
@@ -521,8 +507,7 @@
                            </c:when>
                            <c:otherwise>
                                <c:url value="/main/file/${model.id}.xml" var="xmlUrl"/>
-                               <c:url value="/main/file/${model.id}.json" var="jsonUrl"/>
-                               
+                               <c:url value="/main/file/${model.id}.json" var="jsonUrl"/>                               
                            </c:otherwise>
                        </c:choose>
                        

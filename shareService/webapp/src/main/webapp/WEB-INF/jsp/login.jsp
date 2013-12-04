@@ -9,7 +9,7 @@
     
     <legend><fmt:message key="login.title"/></legend>
     
-     <c:if test="${param.authfailed}">
+     <c:if test="${param.authfailed ne null}">
         <div class="alert alert-block alert-danger" style="width:20em;">
             <a class="close" data-dismiss="alert" href="#">×</a>
             <h4 class="alert-heading"><fmt:message key="login.msg.failure"/></h4>

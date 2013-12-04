@@ -106,14 +106,10 @@
                     location.href=link.attr('deleteLink');
                     return true;   
                 });
-
                 return false;
-
             });
-
             
-        }
-        
+        }       
         
            $('#auth-dropdown').click(function(event){
                 event.stopPropagation();

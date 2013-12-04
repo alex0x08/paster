@@ -1,7 +1,15 @@
 <%@ include file="/WEB-INF/jsp/templates/common/taglibs.jsp"%>
 
 
-<c:url var="listUrl" value="/main/${param.modelName}/list/" />
+<c:choose>
+    <c:when test="${param.integrationCode ne null}">
+        <c:url var="listUrl" value="/main/${param.modelName}/integrated/list/${param.integrationCode}/" />
+    </c:when>
+    <c:otherwise>
+        <c:url var="listUrl" value="/main/${param.modelName}/list/" />
+    </c:otherwise>
+</c:choose>
+
 
 <script src="<c:url value='/main/static/${appVersion}/libs/bootstrap-paginator/bootstrap-paginator.min.js'/>"></script>
 
@@ -37,7 +45,7 @@
                 placement: 'bottom'
             },  size:'normal'
                 
-        }
+        };
 
         $('#list-pagination').bootstrapPaginator(options);
       
