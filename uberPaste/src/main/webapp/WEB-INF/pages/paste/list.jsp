@@ -235,13 +235,17 @@
     <c:choose>
         <c:when test="${listMode eq 'search'}">
             <c:url var="rawPageUrl" value="/main/paste/raw/list/search/${result}"/>
+            <c:url var="userPageUrl" value="/main/paste/list/search/${result}"/>
         </c:when>
         <c:otherwise>
             <c:url var="rawPageUrl" value="/main/paste/raw/list/form"/>
+            <c:url var="userPageUrl" value="/main/paste/list/form"/>
         </c:otherwise>
     </c:choose>
     
     <script type="text/javascript">
+
+        var userPageUrl = '${userPageUrl}';
 
         var pageUrl = '${rawPageUrl}';
 
@@ -260,10 +264,14 @@
 			where: 'before'
                 },beforeLoad: function() {
                     $('pageLoadSpinner').setStyle('display','');
-                },afterAppend: function(block) {
+                },afterAppend: function(block,page) {
+                   // alert(page);
+                    try {
+                        history.pushState({page: page}, "Page "+page, userPageUrl+"/"+page);
+                    } catch (e) {}
+                    
                      $('pageLoadSpinner').setStyle('display','none');
-		   // alert(block);
-                    parseSearchResults(block);
+		    parseSearchResults(block);
                 }
 	
             });

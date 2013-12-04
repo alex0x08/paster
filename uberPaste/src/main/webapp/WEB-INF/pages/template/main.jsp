@@ -9,7 +9,7 @@
 
         <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE9" />
 
-        <title><tiles:insertAttribute name="pageTitle" /></title>
+        <title><tiles:insertAttribute name="pageTitle" ignore="true"/></title>
 
         <link href="<c:url value="/main/static/${appVersion}/css/app.less"/>" media="all" rel="stylesheet/less" />
 

@@ -5,8 +5,8 @@
 <tiles-definitions>
 
 	<!-- Default Main Template -->
-    <definition name=".mainTemplate" template="/WEB-INF/pages/template/main.jsp" preparer="uber.paste.tiles2.ELViewPreparer">
-         <put-attribute name="pageTitle"  expression="${requestScope.title}" />
+    <definition name=".mainTemplate" template="/WEB-INF/pages/template/main.jsp">
+         <put-attribute name="pageTitle"  expression="${requestScope.title}"  />
 		 <put-attribute name="menu" value="/WEB-INF/pages/template/menu.jsp" />
 		<put-attribute name="content" value="" />
                 

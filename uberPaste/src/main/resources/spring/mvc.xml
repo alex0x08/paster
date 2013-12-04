@@ -81,12 +81,13 @@
                 <value>/WEB-INF/tiles-defs/tilesConfig.xml</value>
             </list>
         </property>
+        
         <!--property name="tilesProperties">
 
         <props>
-            <prop key="org.apache.tiles.evaluator.AttributeEvaluator">org.apache.tiles.evaluator.el.ELAttributeEvaluator</prop>
+            <prop key="org.apache.tiles.evaluator.AttributeEvaluator">org.apache.tiles.el.ELAttributeEvaluator</prop>
         </props>
-    </property-->
+    </property!-->
     </bean>
 
      <!-- file upload -->

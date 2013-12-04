@@ -9,7 +9,7 @@
 
     <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE9" />
 
-    <title><tiles:insertAttribute name="pageTitle" /></title>
+    <title><tiles:insertAttribute name="pageTitle" ignore="true"/></title>
     <!--
        <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold" rel="stylesheet" type="text/css">
        <link href="http://fonts.googleapis.com/css?family=PT+Sans+Narrow:regular,bold" rel="stylesheet" type="text/css">

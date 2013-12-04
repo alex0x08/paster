@@ -91,13 +91,13 @@ var LazyPagination = new Class({
 		(this.element === document || this.element === window) ? 
 			$(document.body).adopt(html) : this.element.adopt(html);
                         
-                this.options.afterAppend(html);        
+                this.options.afterAppend(html,this.options.data[this.options.pageDataIndex]);        
 		return this;
 	},
 	
 	inject: function(html){
 		html.inject(this.options.inject.element, this.options.inject.where);
-		this.options.afterAppend(html);
+		this.options.afterAppend(html,this.options.data[this.options.pageDataIndex]);
                 return this;
 	}
 
