@@ -31,8 +31,8 @@
           be found at {http://www.lesscss.org/}.
         -->
         <script src="<c:url value='/main/static/${appVersion}/js/less-1.1.3.min.js'/>"></script>
-        <script src="<c:url value='/main/static/${appVersion}/js/mootools-core-1.4.5-full-compat.js'/>"></script>
-        <script src="<c:url value='/main/static/${appVersion}/js/mootools-more-1.4.0.1.js'/>"></script>
+        <script src="<c:url value='/main/static/${appVersion}/js/mootools-core-1.4.5-full-nocompat.js'/>"></script>
+        <script src="<c:url value='/main/static/${appVersion}/js/mootools-more-1.4.0.1-nc.js'/>"></script>
         <script src="<c:url value='/main/static/${appVersion}/libs/tinycon.min.js'/>" type="text/javascript" charset="utf-8"></script>
 
 
@@ -133,7 +133,6 @@
             
         </div>
 
-    <script src="<c:url value='/main/static/${appVersion}/js/mootools-more-1.4.0.1.js'/>"></script>
     <script src="<c:url value="/main/static/${appVersion}/libs/growler/growler.js"/>"></script>
 
 
