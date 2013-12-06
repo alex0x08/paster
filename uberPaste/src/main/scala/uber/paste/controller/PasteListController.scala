@@ -117,6 +117,7 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
     }
   }
 
+  
 
   @ModelAttribute("query")
    def newQuery():OwnerQuery = {
@@ -127,6 +128,9 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
     return out
   }
 
+  
+  
+  
   protected override def fillListModel(model:Model,locale:Locale) {
     super.fillListModel(model,locale)
     model.addAttribute("title","Pastas")
@@ -338,6 +342,14 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
     return listImpl(request,locale,model,page,NPpage,pageSize,PasteSource.FORM.getCode(),true,null)
   }
 
+  @RequestMapping(value = Array( GenericListController.COUNT_ACTION+ "/{source:[a-zA-Z0-9]+}/{since:[0-9]+}"), 
+                  method = Array(RequestMethod.GET),produces =Array("application/json")) 
+  @ModelAttribute(GenericController.NODE_COUNT_KEY)
+   def countAllSince(@PathVariable("source") source:String, 
+                    @PathVariable("since")dateFrom:java.lang.Long):java.lang.Long = {
+     return pasteManager.countAllSince(PasteSource.valueOf(source.toUpperCase),dateFrom)
+  }
+  
 
   def listImpl( request:HttpServletRequest, locale:Locale,  model:Model,
                      page:java.lang.Integer,

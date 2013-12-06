@@ -17,6 +17,7 @@
 package uber.paste.dao
 
 import uber.paste.model.{PasteSource, Paste, User,Priority}
+import javax.persistence.TemporalType
 import javax.persistence.criteria.CriteriaQuery
 import org.springframework.stereotype.Repository
 import javax.persistence.Query
@@ -33,6 +34,8 @@ trait PasteDao extends SearchableDao[Paste]{
   def getByRemoteUrl(url:String) : Paste
 
   def countAll(p:Priority):java.lang.Long
+
+  def countAllSince(source:PasteSource,dateFrom:java.lang.Long):java.lang.Long
 
 
   }
@@ -126,5 +129,28 @@ class PasteDaoImpl extends SearchableDaoImpl[Paste](classOf[Paste]) with PasteDa
 
   }
 
+  
+   def countAllSince(source:PasteSource,dateFrom:java.lang.Long):java.lang.Long = {
+
+    //val cr = new CriteriaSet
+     val cb = em.getCriteriaBuilder
+   // val cr = cb.createQuery(model)
+    val cq:CriteriaQuery[java.lang.Long] = cb.createQuery(classOf[java.lang.Long])
+  
+      val r = cq.from(getModel)
+  
+    cq.select(cb.count(r))
+    //cq.from(getModel)  
+    
+    val dateFromParam = cb.parameter(classOf[java.util.Date])
+    
+    cq.where(Array(
+        cb.greaterThan(r.get("lastModified").as(classOf[java.util.Date]), new java.util.Date(dateFrom)),
+        cb.equal(r.get("pasteSource"), source.getCode)):_*)
+    //.setParameter(dateFromParam, new java.util.Date(dateFrom), TemporalType.DATE)
+    return em.createQuery(cq)
+      .getSingleResult().asInstanceOf[java.lang.Long]
+
+  }
 
 }

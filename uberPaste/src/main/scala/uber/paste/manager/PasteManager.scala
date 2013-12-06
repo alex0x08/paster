@@ -59,6 +59,9 @@ trait PasteManager extends GenericSearchManager[Paste]{
 
   def getByRemoteUrl(url:String) : Paste
 
+  def countAllSince(source:PasteSource,dateFrom:java.lang.Long):java.lang.Long
+
+  
   }
 
 @Service("pasteManager")
@@ -90,6 +93,8 @@ class PasteManagerImpl extends GenericSearchManagerImpl[Paste] with PasteManager
       }
     }
   def getListIntegrated(code:String):java.util.List[Paste] = pasteDao.getListIntegrated(code)
+
+  def countAllSince(source:PasteSource,dateFrom:java.lang.Long):java.lang.Long = pasteDao.countAllSince(source,dateFrom)
 
 
   override def save(obj:Paste):Paste = {

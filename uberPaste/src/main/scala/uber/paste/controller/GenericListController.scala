@@ -31,6 +31,8 @@ object GenericListController {
 
   final val LIST_ACTION = "/list"
 
+  final val COUNT_ACTION = "/count"
+
   final val NEXT_PARAM = "next"
 
   final val PAGE_SET = "pageSet"
@@ -154,6 +156,7 @@ abstract class GenericListController[T <: Struct ] extends StructController[T] {
     return pagedListHolder.getPageList()
   }
 
+  
 
   @RequestMapping(value = Array(GenericListController.LIST_ACTION + "/{page:[0-9]+}"), method = Array(RequestMethod.GET))
   @ModelAttribute(GenericController.NODE_LIST_MODEL)

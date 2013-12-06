@@ -1,5 +1,9 @@
 <%@ include file="/WEB-INF/pages/common/taglibs.jsp"%>
 
+
+  <jsp:include page="/WEB-INF/pages/common/paste-update-poll.jsp"/>
+
+
 <fmt:message var="submit_button_text" key="button.save"/>
 
 <c:url var="url" value='/main/paste/save' />

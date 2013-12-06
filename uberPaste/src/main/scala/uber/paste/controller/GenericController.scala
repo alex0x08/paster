@@ -26,9 +26,11 @@ import org.codehaus.jackson.annotate.JsonIgnore
 object GenericController {
   
    final val NODE_LIST_MODEL = "items"
+   
    final val NODE_LIST_MODEL_PAGE = "pageItems"
    final val MODEL_KEY= "model"
-
+   final val NODE_COUNT_KEY = "count"
+   
 }
 
 abstract class GenericController[T <: DBObject ] extends AbstractController {
