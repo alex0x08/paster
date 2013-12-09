@@ -3,8 +3,12 @@
 <html lang="en">
     <head>
 
+        
+        
+        <link rel="icon" href="<c:url value='/snowfall2/ninja-ng.png'/>"/>
+        <!--
         <link rel="icon" href="<c:url value='/main/static/${appVersion}/images/ninja.png'/>"/>
-
+        -->
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
         <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE9" />
@@ -19,12 +23,6 @@
         <link href="<c:url value="/main/static/${appVersion}/libs/lightface/Assets/LightFace.css"/>" rel="stylesheet" type="text/css">
 
         
-        <script  type="text/javascript">
-            
-             var transmitText = '<fmt:message key="action.sending"/>';
-      
-            
-        </script>
         
         <!-- 
           I am based in LESS.js to render stylesheets. More information can
@@ -35,6 +33,29 @@
         <script src="<c:url value='/main/static/${appVersion}/js/mootools-more-1.4.0.1-nc.js'/>"></script>
         <script src="<c:url value='/main/static/${appVersion}/libs/tinycon.min.js'/>" type="text/javascript" charset="utf-8"></script>
 
+         <script src="<c:url value='/snowfall2/js/jquery-latest.min.js'/>"></script>
+         <script src="<c:url value='/snowfall2/js/snowfall.jquery.js'/>"></script>
+       
+           <script  type="text/javascript">
+            
+             var transmitText = '<fmt:message key="action.sending"/>';
+      
+            $.noConflict();
+    jQuery( document ).ready(function( $ ) {
+        
+        
+     
+        
+    $(document).snowfall({
+        deviceorientation : true,flakeColor : '#d1d1d1',
+				
+        round : true, minSize: 1, maxSize:8,  flakeCount : 250});
+
+  // Code that uses jQuery's $ can follow here.
+});
+// Code that uses other library's $ can follow here.
+        </script>
+      
 
 
         <link type="text/css" rel="stylesheet" href="<c:url value="/main/static/${appVersion}/libs/syntax-highlight/styles/shCoreDefault.css"/>"/>
