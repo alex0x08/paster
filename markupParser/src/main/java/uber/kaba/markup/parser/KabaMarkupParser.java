@@ -79,7 +79,10 @@ public class KabaMarkupParser {
         ve.setProperty(RuntimeConstants.RESOURCE_LOADER, "classpath"); 
         ve.setProperty("classpath.resource.loader.class", ClasspathResourceLoader.class.getName());
 
-        ve.setProperty(Velocity.RUNTIME_LOG_LOGSYSTEM, "org.apache.velocity.slf4j.Slf4jLogChute" );
+        ve.setProperty( RuntimeConstants.RUNTIME_LOG_LOGSYSTEM_CLASS,
+  "org.apache.velocity.runtime.log.Log4JLogChute" );
+        
+        //ve.setProperty(Velocity.RUNTIME_LOG_LOGSYSTEM, "org.apache.velocity.slf4j.Slf4jLogChute" );
         
         try {
         
