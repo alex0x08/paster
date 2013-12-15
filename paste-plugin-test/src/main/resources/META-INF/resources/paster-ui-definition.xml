@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+ <plugin-ui>
+  <section   code="paster-global">
+    <element  code="default-body">
+      <extension  code="sample-binding">
+        <jspUrl>/jsp/hello.jsp</jspUrl>
+      </extension>
+    </element>
+  </section>
+</plugin-ui>
