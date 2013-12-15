@@ -28,6 +28,9 @@ import javax.servlet.http.HttpServletResponse
 import uber.paste.dao.ConfigDao
 import uber.paste.manager.{CommentManager, PasteManager}
 import org.springframework.ui.Model
+import uber.kaba.markup.parser.AppMode
+import uber.kaba.markup.parser.KabaMarkupParser
+import uber.kaba.markup.parser.KabaMarkupParser
 import uber.paste.base.{SessionStore, Loggered}
 import scala.util.control.Breaks._
 import org.springframework.validation.BindingResult
@@ -115,7 +118,15 @@ class PasteController extends VersionController[Paste]   {
     model.addAttribute("availableCodeTypes", CodeType.list)
     model.addAttribute("availablePriorities", Priority.list)
 
-
+    if (!obj.getComments.isEmpty) {
+      val commentLines = new util.ArrayList[Long]
+      for (c<-obj.getComments) {
+        commentLines.add(c.getLineNumber)
+      }
+      
+      model.addAttribute("commentedLinesList", StringUtils.join(commentLines,","))
+    }
+  
     if (!obj.isBlank()) {
 
       model.addAttribute("availableNext",manager.exists(obj.getId()+1))
@@ -220,6 +231,13 @@ class PasteController extends VersionController[Paste]   {
     if (b.getOwner()!=null) {
       b.getOwner().increaseTotalComments()
     }
+    
+    b.setText(
+      KabaMarkupParser.getInstance().setSource(b.getText).setMode(AppMode.PASTE)
+      .setShareUrl(shareUrl)
+                .parseAll().get());
+    
+    
       p.getComments().add(b)
 
       manager.save(p)

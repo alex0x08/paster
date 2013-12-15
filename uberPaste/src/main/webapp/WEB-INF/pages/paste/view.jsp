@@ -123,7 +123,7 @@
                       <fmt:message key="action.loading"/>   
           </div>    
         
-    <pre id="pasteText" class="brush: ${model.codeType.code};toolbar: false; auto-links:false;" style="display:none; overflow-y: hidden;" >
+    <pre id="pasteText" class="brush: ${model.codeType.code};toolbar: false; auto-links:false;highlight: [${commentedLinesList}]; " style="display:none; overflow-y: hidden;" >
         <c:out value="${model.text}" escapeXml="true" /></pre>
     <code id="pasteTextPlain" style="display:none;"><c:out value="${model.text}" escapeXml="true" /></code>
 
@@ -202,7 +202,7 @@
                 <div class="row">
                    
                     <div class="column grid-16">
-                            <c:out value=" ${comment.text}" escapeXml="true"/>
+                            <c:out value=" ${comment.text}" escapeXml="false"/>
                     </div>
 
 

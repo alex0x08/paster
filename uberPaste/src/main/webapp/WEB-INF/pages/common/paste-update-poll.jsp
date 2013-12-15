@@ -21,8 +21,8 @@
     method: 'GET',
     url: '${ctx}/main/paste/count/form/'+new Date().getTime()+'.json',
     initialDelay: 1000,
-    delay: 5000,
-    limit: 15000,
+    delay: 15000,
+    limit: 60000,
     onSuccess: function(responseText){
         var obj = JSON.decode(responseText, true);
         

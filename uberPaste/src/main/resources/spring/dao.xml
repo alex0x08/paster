@@ -60,6 +60,7 @@
             <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter" />
 
         </property>
+    <!--property name="packagesToScan" value="uber.paste.model" /-->
 
 
     </bean>

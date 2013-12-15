@@ -26,4 +26,11 @@
                 <goal>install</goal>
             </goals>
         </action>
+        <action>
+            <actionName>CUSTOM-dep-tree</actionName>
+            <displayName>dep-tree</displayName>
+            <goals>
+                <goal>dependency:tree</goal>
+            </goals>
+        </action>
     </actions>

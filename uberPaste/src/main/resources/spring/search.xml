@@ -17,6 +17,10 @@
 
     <!-- Compass Search Section -->
 
+    <bean id="annotationConfiguration"
+          class="org.compass.annotations.config.CompassAnnotationsConfiguration">
+    </bean>
+
     <!-- Compass Bean, automatically scanning for searchable classes within the model -->
     <!-- Hooks into Spring transaction management and stores the index on the file system -->
     <bean id="compass" class="org.compass.spring.LocalCompassBean">
@@ -29,6 +33,7 @@
             </list>
         </property>
 
+        <property name="compassConfiguration" ref="annotationConfiguration"/>
 
         <property name="transactionManager" ref="transactionManager" />
         <property name="settings">

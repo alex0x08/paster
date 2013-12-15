@@ -365,6 +365,7 @@ var sh = {
 
                 sh.insertComment(el,0,index);
                 roots.push(el);
+                
             });
 
             Array.each(roots, function(el, index){
@@ -423,17 +424,24 @@ var sh = {
         var lineNumber =  cl.getAttribute('lineNumber'),
                 id =  cl.getAttribute('commentId');
    
-            $('cl_'+lineNumber).adopt(cl);
+            $('cl_'+lineNumber).grab(cl,"after");
  
-    cl.setStyle("display","");
-
-    var space = $("numSpace_l"+id);
     
-  //  alert(cl.getStyle("height"));
-    space.setStyle("height",cl.getStyle("height"));
+      var space = $("numSpace_l"+id);
+    
+    var calc_size = cl.getComputedSize()["totalHeight"];
+    //cl.getStyle("height")+$('cl_'+lineNumber).getStyle("height");
+    //alert(calc_size);
+    space.setStyle("height",calc_size);
 
-    $('ln_'+lineNumber).adopt(space);
+    $('ln_'+lineNumber).grab(space,"after");
+
+    cl.setStyle("display","");
+    
+/*
+$('cl_lineHtml_'+lineNumber).setStyle('background-color','yellow');
   
+    */
     },  hideEditForm: function() {
 
         $('commentForm').setStyle("display","none");
@@ -446,45 +454,31 @@ var sh = {
 
 
     },  insertEditForm: function(lineNumber,parentId) {
-       // alert(lineNumber);
 
+            var cForm = $('commentForm'),
+                    nspace = $("numSpace");
+            
         $('pageNum').set("text",lineNumber);
         $('lineNumber').set("value",lineNumber);
 
-        $('commentForm').setStyle("display","");
+        cForm.setStyle("display","");
         $("numSpace").setStyle("display","");
 
-      //  $("commentForm").setStyle("position","absolute");
+       $('commentText').set("value","");
 
-
-
-        $('commentText').set("value","");
-
-        /*if (parentId>0) {
-
-            $('commentParentId').set("value",parentId);
-            $('comment_l'+parentId).adopt($("commentForm"));
-
-            $('commentForm').setStyle("top","3.5em");
-            $('commentForm').setStyle("position","absolute");
-
-
-        } else {*/
-
-            $('commentForm').setStyle("position","relative");
+           cForm.setStyle("position","relative");
 
 
             if (sh.vars.currentEditLine != null) {
                 $('cl_lineHtml_'+sh.vars.currentEditLine).setStyle("display","");
                 $('cl_linePlain_'+sh.vars.currentEditLine).setStyle("display","none");
-            }
+            } else {
 
             $('cl_lineHtml_'+lineNumber).setStyle("display","none");
             $('cl_linePlain_'+lineNumber).setStyle("display","");
 
-
             sh.vars.currentEditLine = lineNumber;
-
+            }
             $("pasteLineCopyBtn").setStyle("display","inline-block");
                                       //cl_linePlainCode_
             $('pasteLineToCopy').set('html',$('cl_linePlainCode_'+lineNumber).get("html"));
@@ -492,15 +486,11 @@ var sh = {
             $('cl_linePlain_'+lineNumber).grab($("pasteLineCopyBtn"),'top');
 
 
-if (parentId>0) {
-            
-                    $('comment_l'+parentId).adopt($("commentForm"));
-
-
-} else {
-            $('cl_'+lineNumber).adopt($("commentForm"));
-    
-}
+        if (parentId>0) {
+           $('comment_l'+parentId).grab($("commentForm"),"after");
+        } else {
+            $('cl_'+lineNumber).grab($("commentForm"),"after");
+        }
         
     $$('div.commentCurrent').each(function(el){
                                el.removeClass('commentCurrent');
@@ -516,10 +506,12 @@ if (parentId>0) {
 
         //}
 
-        $("commentForm").set("zIndex",9000);
+        
+           var calc_size = cForm.getComputedSize()["totalHeight"];
+ 
+           nspace.setStyle("height",calc_size);
 
-
-        $('ln_'+lineNumber).adopt($("numSpace"));
+        $('ln_'+lineNumber).grab(nspace,"after");
 
         setTimeout(function() { document.getElementById("commentText").focus(); }, 1);
 
