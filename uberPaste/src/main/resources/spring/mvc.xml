@@ -78,16 +78,19 @@
     <bean id="tilesConfigurer" class="org.springframework.web.servlet.view.tiles3.TilesConfigurer">
         <property name="definitions">
             <list>
-                <value>/WEB-INF/tiles-defs/tilesConfig.xml</value>
+                <value>/WEB-INF/tiles-defs/*.xml</value>
+                <value>classpath:/META-INF/resources/tiles-defs/*.xml</value>
             </list>
         </property>
+    
+                <!--prop key="org.apache.tiles.evaluator.AttributeEvaluator">org.apache.tiles.el.ELAttributeEvaluator</prop-->
         
         <!--property name="tilesProperties">
 
         <props>
-            <prop key="org.apache.tiles.evaluator.AttributeEvaluator">org.apache.tiles.el.ELAttributeEvaluator</prop>
+            <prop key="org.apache.tiles.context.AbstractTilesApplicationContextFactory">org.apache.tiles.servlet.context.wildcard.WildcardServletTilesApplicationContextFactory</prop>
         </props>
-    </property!-->
+    </property-->
     </bean>
 
      <!-- file upload -->

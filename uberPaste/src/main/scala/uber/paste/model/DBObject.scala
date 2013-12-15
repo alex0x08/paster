@@ -16,6 +16,7 @@
 
 package uber.paste.model
 
+import com.thoughtworks.xstream.annotations.XStreamAsAttribute
 import java.io.Serializable;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -36,8 +37,10 @@ abstract class DBObject extends java.io.Serializable {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @SearchableId(name="id")
   //@Index(name="ddesc_index",columnNames = Array("id desc"))
+  @XStreamAsAttribute
   private var id:java.lang.Long = null
     
+  @XStreamAsAttribute
   private var disabled:Boolean = _
 
   

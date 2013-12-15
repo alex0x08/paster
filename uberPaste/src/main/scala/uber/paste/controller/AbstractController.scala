@@ -16,6 +16,7 @@
 
 package uber.paste.controller
 
+import uber.paste.base.plugins.PluginUI
 import uber.paste.base.{Loggered,SystemInfo}
 import org.springframework.orm.ObjectRetrievalFailureException
 import org.springframework.security.core.context.SecurityContextHolder
@@ -80,6 +81,9 @@ abstract class AbstractController extends Loggered{
     return page500
   }
 
+  @ModelAttribute("pluginUI")
+  def getPluginUI() = PluginUI.getInstance
+   
   
     @ModelAttribute("appVersion")
     def getAppVersion() = SystemInfo.instance.getRuntimeVersion().getImplBuildNum()

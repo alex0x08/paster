@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Copyright 2013 Ubersoft, LLC.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+
+<plugin-ui>
+    <!-- globals -->
+  <section disabled="false" name="Pastas global" code="paster-global">
+    <element disabled="false" name="Append to all pages head" code="default-head">
+    </element>
+    <element disabled="false" name="Append to all pages body" code="default-body">
+    </element>
+  </section>  
+    
+    <!-- pastas ui -->
+  <section disabled="false" name="Pastas list" code="paste-list">
+    <element disabled="false" name="top panel" code="top-panel">
+    </element>
+    
+     <element disabled="false" name="paging navigation" code="navigation-panel">
+    </element>
+    
+     <element disabled="false" name="Each element in list" code="each-element">
+    </element>
+  </section>
+  
+   
+  <section disabled="false" name="Pastas view" code="paste-view">
+    <element disabled="false" name="top panel" code="top-panel">
+    </element>
+  </section>
+  
+</plugin-ui>

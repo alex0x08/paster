@@ -17,6 +17,7 @@
 package uber.paste.model
 
 
+import com.thoughtworks.xstream.annotations.XStreamAsAttribute
 import java.util.Collection
 import java.util.HashMap
 import javax.persistence._
@@ -57,6 +58,7 @@ class Key extends Struct with java.io.Serializable{
   
   @NotNull
   @Column(nullable = false, length = 50,unique=true)
+  @XStreamAsAttribute
   private var code: String = null  
   
   def this(code:String) = {

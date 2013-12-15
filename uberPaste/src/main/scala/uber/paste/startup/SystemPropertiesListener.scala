@@ -2,12 +2,19 @@ package uber.paste.startup
 
 import uber.paste.base.Loggered
 import javax.servlet.ServletContextListener
+import java.util.Collections
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import com.jcabi.manifests.Manifests
+import com.thoughtworks.xstream.XStream
 import java.io.{IOException, File}
 import uber.paste.base.SystemInfo
+import uber.paste.base.plugins.PluginUI
+import uber.paste.base.plugins.UIElement
+import uber.paste.base.plugins.UIExtension
+import uber.paste.base.plugins.UISection
 import uber.paste.model.AppVersion
+import scala.collection.JavaConversions._
 
 /**
  * Created with IntelliJ IDEA.
@@ -70,7 +77,21 @@ class SystemPropertiesListener extends ServletContextListener with Loggered {
         
         System.setProperty("paste.app.version", mf_version.getImplBuildNum())
         
-    
+      PluginUI.load(getClass().getResourceAsStream("/paster-ui-definitions.xml"))
+      
+      val pluginDefs=  Collections.list(
+        event.getServletContext.getClassLoader.getResources("META-INF/resources/paster-ui-definition.xml"))
+      
+      if (pluginDefs!=null && !pluginDefs.isEmpty) {
+        logger.info(String.format("Found %s plugin definitions",pluginDefs.size+""))
+         for (d<-pluginDefs) {
+            PluginUI.append(d)
+         }
+      }
+      
+      logger.debug(PluginUI.getXml)
+      
+      
     } catch {
      case e:IOException => {
       logger.error(e.getLocalizedMessage,e)

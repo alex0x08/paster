@@ -35,6 +35,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
     <param-value>messages</param-value>
 </context-param>
 
+
     <filter>
         <filter-name>securityFilter</filter-name>
         <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>

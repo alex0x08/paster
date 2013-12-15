@@ -28,6 +28,7 @@ import java.util.Date;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle
 import org.compass.core.CompassHighlighter
+import com.thoughtworks.xstream.annotations.XStreamAsAttribute
 import java.text.SimpleDateFormat
 import uber.paste.base.Loggered
 import org.hibernate.envers.Audited
@@ -50,11 +51,13 @@ abstract class Struct extends DBObject with SearchObject with  java.io.Serializa
   @Column(length=256)
   //@Pattern(regexp = "(.+)", message = "{struct.name.validator}")
   @Size(min=3, message = "{struct.name.validator}")
+  @XStreamAsAttribute
   private var name: String = null
 
   @Column(name = "last_modified", columnDefinition = "timestamp")
   @Temporal(javax.persistence.TemporalType.TIMESTAMP)
   @SearchableProperty(format = Struct.DB_DATE_FORMAT_FULL)
+  @XStreamAsAttribute
   private var lastModified:java.util.Date = null
 
   @PreUpdate
