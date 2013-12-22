@@ -56,6 +56,10 @@
     </definition>
 
 
+    <definition name="/paste/raw/view"  extends=".rawTemplate">
+        <put-attribute name="content" value="/WEB-INF/pages/paste/raw/view.jsp" />
+    </definition>
+
     <definition name="/user/list"  extends=".mainTemplate">
         <put-attribute name="content" value="/WEB-INF/pages/user/list.jsp" />
     </definition>

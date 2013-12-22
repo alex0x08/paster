@@ -20,7 +20,7 @@ import uber.paste.base.Loggered
 import uber.paste.dao.BaseDao
 
 
-trait GenericManager[T <: java.io.Serializable, PK ] {
+trait GenericManager[T <: java.io.Serializable, PK <:Long ] {
 
   /**
      * Generic method used to get all objects of a particular type. This
@@ -61,10 +61,12 @@ trait GenericManager[T <: java.io.Serializable, PK ] {
     def remove(id:PK)
     
    
+    def getIdList(from:PK):java.util.List[PK]
+  
   
 }
 
-abstract class GenericManagerImpl[T <: java.io.Serializable, PK ] extends Loggered with GenericManager[T,PK]{
+abstract class GenericManagerImpl[T <: java.io.Serializable, PK <:Long ] extends Loggered with GenericManager[T,PK]{
 
   protected def getDao:BaseDao[T, PK]
 
@@ -106,6 +108,10 @@ abstract class GenericManagerImpl[T <: java.io.Serializable, PK ] extends Logger
     getDao.remove(id)
   }
 
+   def getIdList(from:PK):java.util.List[PK] = {
+      return getDao.getIdList(from)
+   }
+  
 
 
 }

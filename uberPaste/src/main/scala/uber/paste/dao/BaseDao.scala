@@ -18,11 +18,13 @@ package uber.paste.dao
 
 import org.springframework.transaction.annotation.Transactional
 import uber.paste.base.Loggered
-import javax.persistence.{Query, EntityManager, PersistenceContext}
+import javax.persistence.{Query, EntityManager, PersistenceContext, Tuple}
+import java.util.ArrayList
 import javax.persistence.criteria.CriteriaQuery
+import scala.collection.JavaConversions._
 
 
-abstract trait BaseDao[T <: java.io.Serializable,PK] {
+abstract trait BaseDao[T <: java.io.Serializable,PK <:Long] {
 
   def save(obj:T):T
 
@@ -39,6 +41,9 @@ abstract trait BaseDao[T <: java.io.Serializable,PK] {
   def countAll():java.lang.Long
 
   def exists(id:PK):Boolean
+
+  def getIdList(from:PK):java.util.List[PK]
+  
 }
 
 object BaseDaoImpl {
@@ -46,7 +51,7 @@ object BaseDaoImpl {
 }
 
 @Transactional(readOnly = true)
-abstract class BaseDaoImpl[T <: java.io.Serializable,PK ](model:Class[T]) extends Loggered with BaseDao[T,PK]{
+abstract class BaseDaoImpl[T <: java.io.Serializable,PK <:Long ](model:Class[T]) extends Loggered with BaseDao[T,PK]{
 
 
   protected class CriteriaSet {
@@ -107,7 +112,38 @@ abstract class BaseDaoImpl[T <: java.io.Serializable,PK ](model:Class[T]) extend
 
     val cr = new CriteriaSet
 
-    val query:Query = em.createQuery(cr.cr.orderBy(cr.cb.desc(cr.r.get("id")))).setMaxResults(2000)
+    val query:Query = em.createQuery(cr.cr.orderBy(cr.cb.desc(cr.r.get("id")))).setMaxResults(BaseDaoImpl.MAX_RESULTS)
     return query.getResultList().asInstanceOf[java.util.List[T]]
   }
+  
+  
+  def getIdList(from:PK):java.util.List[PK] = {
+    
+    val out = new ArrayList[PK]
+    
+   // val cr = new CriteriaSet
+
+    
+     val cb = em.getCriteriaBuilder
+    
+     val cr = cb.createTupleQuery()
+ 
+    val r = cr.from(model)
+ 
+    
+    cr.multiselect(r.get("id"))
+    
+    if (from >0) {
+      cr.where(Array(cb.lt(r.get("id"), from)):_*)
+    }
+    
+    val tupleResult:java.util.List[Tuple] = em.createQuery(cr)
+          .setMaxResults(BaseDaoImpl.MAX_RESULTS).getResultList()
+    
+    for (t<-tupleResult) {
+      out.add(t.get(0).asInstanceOf[PK])
+    }
+    return out
+  }
+  
 }

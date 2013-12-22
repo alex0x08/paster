@@ -131,6 +131,11 @@ class PasteController extends VersionController[Paste]   {
 
       model.addAttribute("availableNext",manager.exists(obj.getId()+1))
       model.addAttribute("availablePrev",manager.exists(obj.getId()-1))
+      
+      model.addAttribute("availablePrevList",new IdList(manager.getIdList(obj.getId())))
+      
+      
+      
     } else {
       model.addAttribute("availableNext",false)
       model.addAttribute("availablePrev",false)
@@ -504,6 +509,19 @@ class PasteController extends VersionController[Paste]   {
 
   }
 
+  
+  @RequestMapping(value = Array(GenericListController.RAW+"/view"), method = Array(RequestMethod.GET))
+  def getByPathRaw(@RequestParam(required = true) id:java.lang.Long,model:Model,locale:Locale):String = {
+    val r = getByPath(id,model,locale)
+    return if (!r.equals(viewPage))
+      r
+    else
+      "/paste/raw/view"
+
+  }
+
+  
+  
 
   @RequestMapping(value = Array("/{id:[0-9]+}"), method = Array(RequestMethod.GET))
   override def getByPath(@PathVariable("id") id:java.lang.Long,model:Model,locale:Locale):String = {
@@ -559,4 +577,14 @@ class PasteController extends VersionController[Paste]   {
     return out
   }
 
+}
+
+class IdList(list:java.util.List[Long]) {
+  
+  def getCount() = list.size
+  
+  def getItems() = list
+  
+  def getItemsAsString = StringUtils.join(list,",")
+  
 }

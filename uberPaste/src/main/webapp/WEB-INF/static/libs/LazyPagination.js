@@ -29,9 +29,12 @@ var LazyPagination = new Class({
 			buffer: 1000,
 			maxRequests: 5,
 			pageDataIndex: 'page',
+                        idKey: 'id',
 			data: { page: 2},   
                         afterAppend: {},
-                        beforeLoad: {},                        
+                        beforeLoad: {}, 
+                        idSet: new Array(),
+                        idMode: false,
 			navigation: false,
 			inject: false // {element: 'foo', where: 'before'}
 		},
@@ -64,7 +67,14 @@ var LazyPagination = new Class({
 	
 	send: function(){
 		if(this.check && this.requests != this.options.maxRequests ) {
-                    this.options.beforeLoad(); 
+                    this.options.beforeLoad();
+                    
+                    if (this.options.idMode) {
+                        this.options.data[this.options.idKey] = this.options.idSet[this.options.data[this.options.pageDataIndex]];
+                    }
+                    
+                   //
+                   //  alert( this.options.data[this.options.idKey]);
                     this.parent();
                 }
 	},
@@ -91,7 +101,10 @@ var LazyPagination = new Class({
 		(this.element === document || this.element === window) ? 
 			$(document.body).adopt(html) : this.element.adopt(html);
                         
-                this.options.afterAppend(html,this.options.data[this.options.pageDataIndex]);        
+                      
+                        
+                this.options.afterAppend(html, this.options.idMode ? 
+                this.options.idSet[this.options.pageDataIndex] : this.options.data[this.options.pageDataIndex]);        
 		return this;
 	},
 	
