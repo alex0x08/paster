@@ -1,45 +1,52 @@
 <%@ include file="/WEB-INF/pages/common/taglibs.jsp"%>
 
 
-  <jsp:include page="/WEB-INF/pages/common/paste-update-poll.jsp"/>
 
+<jsp:include page="/WEB-INF/pages/common/paste-update-poll.jsp"/>
 
 <fmt:message var="submit_button_text" key="button.save"/>
 
 <c:url var="url" value='/main/paste/save' />
 
-
  <div class="row">
         <div class="column grid-14"  >
-
             
-<fieldset class="perk">
-    <legend><span class="i" style="font-size:2em;">/</span>
-        ${requestScope.title}
-        <c:if test="${not empty model.integrationCode}">
-             (integrated with <c:out value="${model.integrationCode}"/>)
-        </c:if>
-    </legend>
-
-
 
 <form:form id="editForm" action="${url}" cssClass="perk"
            modelAttribute="model"
            method="POST" >
 
-    <div class="row">
-        <div class="column grid-14">
-            <form:errors  cssClass="errorblock" element="div" />
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="column grid-6">
-
-            <form:input id="thumbImg" path="thumbImage" cssStyle="display:none;"  />
+                <form:input id="thumbImg" path="thumbImage" cssStyle="display:none;"  />
 
             <form:input id="wordsCount" path="wordsCount" cssStyle="display:none;"  />
             <form:input id="symbolsCount" path="symbolsCount" cssStyle="display:none;"  />
+
+                                
+    <div class="row">
+        <div class="column grid-12" >
+        
+            <div class="new_tabs_head"  >
+                <ul class="new_tabs">
+                    <li>
+                        <c:choose>
+                            <c:when test="${model.blank}">
+                                <fmt:message key="paste.new"/>
+                            </c:when>
+                            <c:otherwise>
+                               <span style="font-size:1.5em;">#<c:out value="${model.id}"/></span>
+                            </c:otherwise>
+                        </c:choose>
+
+                    </li>
+                    <li><fmt:message key="paste.editor.title"/></li>
+                </ul>
+            </div>
+            <div class="new_tabs_frame">
+                <div class="tabdata">
+                   
+                      <div class="row">
+                          
+                            <div class="column grid-8">
 
             <c:choose>
         <c:when test="${model.blank}">
@@ -62,54 +69,63 @@
                 <form:errors path="name" cssClass="error" />
     </div>
 
-    <div class="column grid-1" >
+    <div class="column grid-3" style="float:right;">
+
+
+
+            <form:label path="priority">
+                <fmt:message key="paste.priority"/>:
+            </form:label>
+               <form:select cssStyle="display:inline;" path="priority" multiple="false" id="pprior">
+                   <c:forEach items="${availablePriorities}" var="prior">
+                       <form:option value="${prior.code}" cssClass="${prior.cssClass}" x-css-class-name="${prior.cssClass}">
+                           <fmt:message key="${prior.name}"/>
+                       </form:option>
+                   </c:forEach>
+               </form:select>
+               <span id="priorPreview" class="i priority_normal" style="font-size:1.5em;">/</span>
+
+            <form:errors path="priority" cssClass="error" />
+
+        </div>
+    
+   
+                 
+                      </div>
+    
+      <div class="row">
+                          
+        <div class="column grid-6">
+
+        <form:label path="tagsAsString"><span  class="i" >T</span><fmt:message key="paste.tags"/></form:label>
+        <fmt:message key="paste.edit.tags.placeholder" var="tagsPlaceHolder"/>
+    <form:input id="ptags" path="tagsAsString" maxlength="155" cssStyle="width:95%;" 
+                autocomplete="true" placeholder="${tagsPlaceHolder}"  />
+    <form:errors path="tagsAsString" cssClass="error" />
+
+        </div>
+    
+     <div class="column grid-1" >
             <form:label path="sticked" ><span class="i" >]</span></form:label>            
             <fmt:message var="titleStick" key='paste.stick'/>            
             <form:checkbox path="sticked" style="display:inline;" title="${titleStick}"/>
     </div>
 
-    <div class="column grid-2" >
+    <div class="column grid-3" >
         <form:label path="normalized" ><fmt:message key="paste.normalize"/></form:label>
-            <form:checkbox id="normalized" path="normalized" style="display:inline;" title="<fmt:message key='paste.normalize'/>"/>
+        <fmt:message key='paste.normalize' var="labelNormalize"/>
+            <form:checkbox id="normalized" path="normalized" style="display:inline;" title="${labelNormalize}"/>
     </div>
-
-        <div class="column grid-4 right">
-
-            <button id="addCommentBtn" class="p-btn-save submitBtn" name="submit_btn" type="submit">
-                     <span class="i">S</span>
-                    <span id="btnCaption"><c:out value='${submit_button_text}'/></span>
-                <img id="btnIcon" style="display:none;" src="<c:url value='/main/static/${appVersion}/images/gear_sml.gif'/>"/>
-            </button>
-
-
-            <a href="<c:url value="/main/paste/list"/>">
-                <fmt:message key='button.cancel'/></a>
-
-
-            <c:if test="${!model.blank}">
-                <tiles:insertDefinition name="/common/deleteLink" >
-                    <tiles:putAttribute name="model" value="${model}"/>
-                    <tiles:putAttribute name="modelName" value="paste"/>
-                    <tiles:putAttribute name="currentUser" value="${currentUser}"/>
-                </tiles:insertDefinition>
-
-            </c:if>
-
-        </div>
-
+        
     </div>
-
-    <div class="row">
-        <div class="column grid-5">
-
-        <form:label path="tagsAsString"><span  class="i" >T</span><fmt:message key="paste.tags"/></form:label>
-        <fmt:message key="paste.edit.tags.placeholder" var="tagsPlaceHolder"/>
-    <form:input id="ptags" path="tagsAsString" maxlength="155" cssStyle="width:97%;" 
-                autocomplete="true" placeholder="${tagsPlaceHolder}"  />
-    <form:errors path="tagsAsString" cssClass="error" />
-
-        </div>
-        <div class="column grid-3">
+                    
+                </div>
+                <div class="tabdata">
+                  
+                    
+                    <div class="row">
+                       
+                         <div class="column grid-4">
             <form:label path="codeType"><fmt:message key="paste.syntax.title"/></form:label>
         <form:select path="codeType" multiple="false" id="ptype">                    
                     <c:forEach items="${availableCodeTypes}" var="codeType">
@@ -123,7 +139,7 @@
         </div>
 
 
-        <div class="column grid-4">
+        <div class="column grid-5">
 
             <label for="theme"><fmt:message key="paste.editor.theme.title"/></label>
             <select id="theme" size="1">
@@ -165,26 +181,46 @@
 
         </div>
 
-        <div class="column grid-3" style="float:right;">
+                        
+                    </div>
+                    
+                </div>
+            </div>
+        
+        </div>
+    
+            <div class="column grid-4 right" style="margin-top: 3em;">
+
+            <button id="addCommentBtn" class="p-btn-save submitBtn" name="submit_btn" type="submit">
+                     <span class="i">S</span>
+                    <span id="btnCaption"><c:out value='${submit_button_text}'/></span>
+                <img id="btnIcon" style="display:none;" src="<c:url value='/main/static/${appVersion}/images/gear_sml.gif'/>"/>
+            </button>
 
 
+            <a href="<c:url value="/main/paste/list"/>">
+                <fmt:message key='button.cancel'/></a>
 
-            <form:label path="priority">
-                <fmt:message key="paste.priority"/>:
-            </form:label>
-               <form:select cssStyle="display:inline;" path="priority" multiple="false" id="pprior">
-                   <c:forEach items="${availablePriorities}" var="prior">
-                       <form:option value="${prior.code}" cssClass="${prior.cssClass}" x-css-class-name="${prior.cssClass}">
-                           <fmt:message key="${prior.name}"/>
-                       </form:option>
-                   </c:forEach>
-               </form:select>
-               <span id="priorPreview" class="i priority_normal" style="font-size:1.5em;">/</span>
 
-            <form:errors path="priority" cssClass="error" />
+            <c:if test="${!model.blank}">
+                <tiles:insertDefinition name="/common/deleteLink" >
+                    <tiles:putAttribute name="model" value="${model}"/>
+                    <tiles:putAttribute name="modelName" value="paste"/>
+                    <tiles:putAttribute name="currentUser" value="${currentUser}"/>
+                </tiles:insertDefinition>
+
+            </c:if>
 
         </div>
+
     </div>
+                
+               
+
+                
+                
+                
+  
 
     <div  class="row">
         <div class="column grid-16">
@@ -244,7 +280,6 @@
         </div>
 
         </form:form>
-    </fieldset>
             
         </div>
      </div>
@@ -263,6 +298,9 @@
 <script src="<c:url value='/main/static/${appVersion}/libs/pixastic/pixastic.core.js'/>" type="text/javascript" charset="utf-8"></script>
 <script src="<c:url value='/main/static/${appVersion}/libs/pixastic/actions/crop.js'/>" type="text/javascript" charset="utf-8"></script>
 <script src="<c:url value='/main/static/${appVersion}/libs/pixastic/actions/blurfast.js'/>" type="text/javascript" charset="utf-8"></script>
+
+<script type="text/javascript" src="<c:url value="/main/static/${appVersion}/libs/dv_tabs/dv_tabs.js"/>"></script>
+
 
 <script type="text/javascript">
 

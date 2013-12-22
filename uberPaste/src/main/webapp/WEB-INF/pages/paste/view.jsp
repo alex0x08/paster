@@ -17,7 +17,8 @@
     <div class="column grid-16">
         <c:set var="priorTitle"><fmt:message key="${model.priority.name}"/></c:set>
 
-        <h4 class="f-h4" style="padding-top: 0;margin-top:0;"><span class="i ${model.priority.cssClass}" style="font-size:2em;" title="${priorTitle}" >/</span>
+        <h4 class="f-h4" style="padding-top: 0;margin-top:0;">
+            <span class="i ${model.priority.cssClass}" style="font-size:2em;" title="${priorTitle}" >/</span>
             <c:if test="${model.sticked}">
                 <span class="i">]</span>
             </c:if>
@@ -56,21 +57,15 @@
                 ,<kc:prettyTime date="${model.lastModified}" locale="${pageContext.response.locale}"/>
                 </span>
 
-
            </span>
         </h4>
 
 
-
         <tiles:insertDefinition name="/common/pasteControls" >
             <tiles:putAttribute name="model" value="${model}"/>
-
             <tiles:putAttribute name="next" value="${availableNext}"/>
             <tiles:putAttribute name="prev" value="${availablePrev}"/>
-
         </tiles:insertDefinition>
-
-
 
     </div>
 </div>
@@ -170,11 +165,8 @@
                         <tiles:insertDefinition name="/common/owner" >
                             <tiles:putAttribute name="model" value="${comment}"/>
                             <tiles:putAttribute name="modelName" value="comment"/>
-                        </tiles:insertDefinition>
-
-                      
+                        </tiles:insertDefinition>                      
                         , <kc:prettyTime date="${comment.lastModified}" locale="${pageContext.response.locale}"/>
-
                     </div>
                         
                         <div class="column grid-3 right">
@@ -409,7 +401,7 @@
 
                 for(var i = 0; i < args.length; i++)
                     result.push(args[i].replace('@', '<c:url value="/main/static/${appVersion}/libs/syntax-highlight/scripts/"/>'));
-                return result
+                return result;
             };
 
         </script>

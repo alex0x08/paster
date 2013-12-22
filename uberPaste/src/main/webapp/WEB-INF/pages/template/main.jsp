@@ -22,7 +22,8 @@
 
         <link href="<c:url value="/main/static/${appVersion}/libs/lightface/Assets/LightFace.css"/>" rel="stylesheet" type="text/css">
 
-        
+           <link href="<c:url value='/main/static/${appVersion}/libs/dv_tabs/dv_tabs.css'/>" rel="stylesheet" type="text/css">
+
         
         <!-- 
           I am based in LESS.js to render stylesheets. More information can
