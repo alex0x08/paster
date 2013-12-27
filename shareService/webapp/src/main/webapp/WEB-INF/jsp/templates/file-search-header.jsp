@@ -53,7 +53,7 @@
             </sec:authorize>
                   
 
-            <button type="submit" class="btn btn-sm btn-info">
+            <button type="submit" class="btn btn-sm btn-primary">
                 <span class="glyphicon glyphicon-search" title="<fmt:message key="button.search"/>"></span>
             </button>
         

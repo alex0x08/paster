@@ -11,7 +11,7 @@
             </jsp:include>
         </c:if>
     </div>
-    <div class="col-md-4"   >
+    <div class="col-md-6"   >
         <jsp:include
             page="/WEB-INF/jsp/templates/common/sort.jsp">
             <jsp:param name="modelName" value="file" />

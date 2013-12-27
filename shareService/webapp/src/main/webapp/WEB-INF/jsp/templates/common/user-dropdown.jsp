@@ -3,7 +3,7 @@
 
 
   <div class="btn-group box">
-      <a class="btn dropdown-toggle btn-default" data-toggle="dropdown" href="#">
+      <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
         <jsp:include page="/WEB-INF/jsp/templates/common/user-avatar.jsp" >
             <jsp:param name="size" value="small" />
         </jsp:include>

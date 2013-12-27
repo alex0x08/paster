@@ -11,8 +11,8 @@
 </c:choose>
 
 <div class="btn-group">
-    <button type="button" class="btn btn-danger"><c:out value="${pageItems.pageSize}"/></button>
-    <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown">
+    <button type="button" class="btn btn-primary"><c:out value="${pageItems.pageSize}"/></button>
+    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
         <span class="caret"></span>
     </button>
     <ul class="dropdown-menu" role="menu">
