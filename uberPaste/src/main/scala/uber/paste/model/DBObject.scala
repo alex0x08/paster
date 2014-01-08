@@ -17,17 +17,10 @@
 package uber.paste.model
 
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute
-import java.io.Serializable;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
-import org.compass.annotations.{SearchableProperty, SearchableId}
-
-import org.apache.commons.lang.builder.ToStringBuilder;
-import org.apache.commons.lang.builder.ToStringStyle
+import java.io.Serializable
+import javax.persistence._
+import org.compass.annotations.{SearchableId}
 import uber.paste.base.Loggered
-import org.hibernate.annotations.Index
 
 
 @MappedSuperclass

@@ -5,7 +5,6 @@ package uber.paste.model
  * User: achernyshev
  * Date: 09.02.13
  * Time: 21:41
- * To change this template use File | Settings | File Templates.
  */
 
 object PasteSource extends KeyValueObj[PasteSource] {

@@ -31,7 +31,6 @@ object ConfigProperty {
 }
 
 @Entity
-@Table(name = "CONFIG")
 class ConfigProperty extends KeyValue with java.io.Serializable {
 
   

@@ -22,14 +22,11 @@ import org.compass.core.CompassHighlighter
 import org.compass.annotations._
 import org.apache.commons.lang.StringUtils
 import org.codehaus.jackson.annotate.JsonIgnore
-import javax.persistence.FetchType
 import javax.xml.bind.annotation._
 import uber.paste.base.Loggered
 import java.util.{Set,HashSet,ArrayList}
 import scala.collection.JavaConversions._
-import org.compass.core.lucene.LuceneEnvironment.Analyzer
-import org.hibernate.envers.{RelationTargetAuditMode, NotAudited, Audited}
-import org.springframework.web.multipart.MultipartFile
+import org.hibernate.envers.{NotAudited, Audited}
 
 /**
  * 

@@ -16,22 +16,15 @@
 
 package uber.paste.model
 
-import java.util.Calendar
 import javax.persistence._
 import org.hibernate.validator._
-import javax.validation.constraints.{Size, NotNull, Pattern}
-import org.hibernate.validator.constraints.Length
+import javax.validation.constraints.{Size, NotNull}
 import org.compass.annotations._
-import org.codehaus.jackson.annotate.JsonIgnore
-import java.util.Calendar;
-import java.util.Date;
-import org.apache.commons.lang.builder.ToStringBuilder;
-import org.apache.commons.lang.builder.ToStringStyle
+import java.util.{Calendar,Date}
 import org.compass.core.CompassHighlighter
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute
 import java.text.SimpleDateFormat
 import uber.paste.base.Loggered
-import org.hibernate.envers.Audited
 
 object Struct {
   
@@ -54,7 +47,7 @@ abstract class Struct extends DBObject with SearchObject with  java.io.Serializa
   @XStreamAsAttribute
   private var name: String = null
 
-  @Column(name = "last_modified", columnDefinition = "timestamp")
+  @Column(name = "last_modified", columnDefinition = "datetime")
   @Temporal(javax.persistence.TemporalType.TIMESTAMP)
   @SearchableProperty(format = Struct.DB_DATE_FORMAT_FULL)
   @XStreamAsAttribute

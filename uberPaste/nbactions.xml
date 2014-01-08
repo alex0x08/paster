@@ -33,4 +33,18 @@
                 <goal>dependency:tree</goal>
             </goals>
         </action>
+        <action>
+            <actionName>CUSTOM-tomcat7-oracle-xe</actionName>
+            <displayName>tomcat7-oracle-xe</displayName>
+            <goals>
+                <goal>tomcat7:run</goal>
+            </goals>
+            <properties>
+                <user.region>US</user.region>
+            </properties>
+            <activatedProfiles>
+                <activatedProfile>oracle-xe</activatedProfile>
+                <activatedProfile>tomcat7</activatedProfile>
+            </activatedProfiles>
+        </action>
     </actions>

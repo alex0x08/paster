@@ -114,7 +114,6 @@ object CodeType {
 
 
 @Entity
-@Table(name = "codeTypes")
 class CodeType extends Key with java.io.Serializable{
 
   private var editType:String = null

@@ -16,16 +16,8 @@
 
 package uber.paste.model
 
-import javax.persistence.Entity
-import org.compass.annotations.Searchable
-import javax.validation.constraints.NotNull
 import org.compass.annotations._
-import javax.persistence.Column
-import java.util.HashMap
-import java.util.Collection
 import org.springframework.security.core.GrantedAuthority
-import org.apache.commons.lang.builder.ToStringBuilder;
-import org.apache.commons.lang.builder.ToStringStyle
 
 object Role extends KeyValueObj[Role]{
 

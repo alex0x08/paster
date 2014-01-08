@@ -6,14 +6,14 @@
       <property name="hibernate.dialect" value="${hibernate.dialect}"/>
       <property name="hibernate.hbm2ddl.auto" value="update"/>
       <property name="hibernate.show_sql" value="${jdbc.show-sql}"/>
-      <property name="hibernate.ejb.naming_strategy" value="org.hibernate.cfg.ImprovedNamingStrategy"/>
+      <property name="hibernate.ejb.naming_strategy" value="uber.paste.base.PasterNamingStrategy"/>
       <property name="hibernate.connection.charSet" value="UTF-8"/>
       <property name="hibernate.connection.useUnicode" value="true"/>
       <property name="hibernate.connection.characterEncoding" value="UTF-8" />
 
        <property name="org.hibernate.envers.revisionOnCollectionChange" value="true" />
 
-        <property name="org.hibernate.envers.auditTablePrefix" value="AUD_" />
+        <property name="org.hibernate.envers.auditTablePrefix" value="P_AUD_" />
        
         <property name="org.hibernate.envers.auditTableSuffix" value=""/>
         <property name="org.hibernate.envers.storeDataAtDelete" value="true"/>

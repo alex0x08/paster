@@ -9,7 +9,6 @@ import javax.xml.bind.annotation.XmlRootElement
  * User: achernyshev
  * Date: 09.02.13
  * Time: 20:02
- * To change this template use File | Settings | File Templates.
  */
 @Entity
 @Searchable

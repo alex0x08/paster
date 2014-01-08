@@ -5,7 +5,6 @@ package uber.paste.model
  * User: Alex
  * Date: 11.02.13
  * Time: 22:41
- * To change this template use File | Settings | File Templates.
  */
 
 object Priority extends KeyValueObj[Priority]{

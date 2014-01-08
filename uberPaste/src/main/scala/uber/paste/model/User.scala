@@ -29,14 +29,11 @@ import org.compass.annotations.SearchableProperty;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import scala.collection.JavaConversions._
 import uber.paste.base.Loggered
 import uber.paste.openid.MD5Util
 import org.apache.commons.lang.StringUtils
 import java.util
-import org.hibernate.annotations.IndexColumn
-import org.hibernate.envers.Audited
 import javax.xml.bind.annotation.XmlTransient
 
 @Entity
@@ -58,14 +55,21 @@ class User extends Struct with UserDetails with java.io.Serializable{
   /**
    *  набор ролей
    */
-  @ElementCollection(fetch = FetchType.EAGER)
-  private var roles:Set[String] = new HashSet[String]()
+   @ElementCollection(fetch = FetchType.EAGER)
+   @CollectionTable(name="S_USER_ROLES", joinColumns=Array(new JoinColumn(name="USER_ID")))
+   @Column(name="ROLE")
+   private var roles:Set[String] = new HashSet[String]()
 
   @XmlTransient
   private var openID:String  =null
 
 
   @OneToMany(fetch = FetchType.EAGER,cascade = Array(CascadeType.PERSIST,CascadeType.MERGE,CascadeType.REMOVE))
+  @JoinTable(
+            name="S_USER_SESSIONS",
+            joinColumns = Array(new JoinColumn( name="USER_ID")),
+            inverseJoinColumns = Array(new JoinColumn( name="SESSION_ID"))
+    )
   @XmlTransient
   private var savedSessions:java.util.List[SavedSession] = new ArrayList[SavedSession]()
 

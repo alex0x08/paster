@@ -88,11 +88,30 @@
         </dependency>
 
         <!-- jdbc driver -->
-        <dependency>
+        <!--dependency>
             <groupId>${jdbc.groupId}</groupId>
             <artifactId>${jdbc.artifactId}</artifactId>
             <version>${jdbc.version}</version>
+        </dependency-->
+
+        <dependency>
+            <groupId>net.sourceforge.jtds</groupId>
+            <artifactId>jtds</artifactId>
+            <version>1.3.1</version>
         </dependency>
+        
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>5.1.27</version>
+        </dependency>
+            
+        <dependency>
+              <groupId>com.h2database</groupId>
+                <artifactId>h2</artifactId>
+                <version>1.3.170</version>
+        </dependency>
+
 
 
         <dependency>
@@ -643,7 +662,91 @@
             </dependencies>
         </profile>
 
+
         <profile>
+                <id>all-plugins</id>
+<dependencies>
+    <dependency>
+        <groupId>uber.paste.plugins</groupId>
+        <artifactId>plugin-hello</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </dependency>
+
+</dependencies>
+
+        </profile>
+
+        <profile>
+            <id>mysql</id>
+            <properties>
+                <hibernate.dialect>org.hibernate.dialect.MySQL5InnoDBDialect</hibernate.dialect>
+                <jdbc.driverClassName>com.mysql.jdbc.Driver</jdbc.driverClassName>
+                <jdbc.url>jdbc:mysql://localhost:3306/paster?createDatabaseIfNotExist=true&amp;amp;useUnicode=true&amp;amp;characterEncoding=utf-8</jdbc.url>
+                <jdbc.username>root</jdbc.username>
+                <jdbc.password>qwerty</jdbc.password>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>sqlserver</id>
+            <properties>
+                <hibernate.dialect>org.hibernate.dialect.SQLServerDialect</hibernate.dialect>
+                <jdbc.driverClassName>net.sourceforge.jtds.jdbc.Driver</jdbc.driverClassName>
+                <jdbc.url>jdbc:jtds:sqlserver://localhost:1433/paster</jdbc.url>
+                <jdbc.username>paster</jdbc.username>
+                <jdbc.password>paster</jdbc.password>
+            </properties>
+        </profile>
+
+        
+        <profile>
+            <id>oracle-xe</id>
+            <properties>
+                <hibernate.dialect>org.hibernate.dialect.Oracle10gDialect</hibernate.dialect>
+                
+                
+                <jdbc.driverClassName>oracle.jdbc.OracleDriver</jdbc.driverClassName>
+                <jdbc.url>jdbc:oracle:thin:@localhost:1521:XE</jdbc.url>
+                <jdbc.username>system</jdbc.username>
+                <jdbc.password>qwerty</jdbc.password>
+            </properties>
+            <dependencies>
+                <dependency>
+                    <groupId>com.oracle</groupId>
+                    <artifactId>ojdbc6</artifactId>
+                    <version>12.1.0.1</version>
+                </dependency>
+                <dependency>
+                    <groupId>com.oracle</groupId>
+                    <artifactId>orai18n</artifactId>
+                    <version>12.1.0.1</version>
+                </dependency>
+            </dependencies>
+        </profile>
+
+
+        <profile>
+            <id>h2</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+
+
+            <properties>
+
+                <hibernate.dialect>org.hibernate.dialect.H2Dialect</hibernate.dialect>
+                <jdbc.driverClassName>org.h2.Driver</jdbc.driverClassName>
+                <jdbc.url>jdbc:h2:file:${paste.app.home}/pastedb;DB_CLOSE_ON_EXIT=TRUE;LOCK_TIMEOUT=10000</jdbc.url>
+                <jdbc.username>bo</jdbc.username>
+                <jdbc.password>bo</jdbc.password>
+                <jdbc.show-sql>false</jdbc.show-sql>
+                <db.name>pastedb</db.name>
+
+             
+            </properties>
+        </profile>
+
+                <profile>
             <id>mysql-openshift</id>
 
 
@@ -667,38 +770,14 @@
         </profile>
 
 
-        <profile>
-            <id>mysql</id>
-
-
-            <properties>
-
-                <jdbc.groupId>mysql</jdbc.groupId>
-                <jdbc.artifactId>mysql-connector-java</jdbc.artifactId>
-                <jdbc.version>5.1.13</jdbc.version>
-
-                <hibernate.dialect>org.hibernate.dialect.MySQL5InnoDBDialect</hibernate.dialect>
-                <jdbc.driverClassName>com.mysql.jdbc.Driver</jdbc.driverClassName>
-
-                <jdbc.url>jdbc:mysql://localhost:3306/paste?characterEncoding=utf8</jdbc.url>
-                <jdbc.username>root</jdbc.username>
-                <jdbc.password>qwerty</jdbc.password>
-                <jdbc.show-sql>true</jdbc.show-sql>
-
-                <db.name>appdb</db.name>
-
-            </properties>
-        </profile>
 
         <profile>
+
             <id>db2</id>
 
 
             <properties>
 
-                <jdbc.groupId>mysql</jdbc.groupId>
-                <jdbc.artifactId>mysql-connector-java</jdbc.artifactId>
-                <jdbc.version>5.1.13</jdbc.version>
 
                 <hibernate.dialect>org.hibernate.dialect.DB2Dialect</hibernate.dialect>
                 <jdbc.driverClassName>com.ibm.db2.jcc.DB2Driver</jdbc.driverClassName>
@@ -708,44 +787,6 @@
                 <jdbc.password>bpmadmin</jdbc.password>
                 <jdbc.show-sql>true</jdbc.show-sql>
 
-                <db.name>appdb</db.name>
-
-            </properties>
-        </profile>
-
-        <profile>
-                <id>all-plugins</id>
-<dependencies>
-    <dependency>
-        <groupId>uber.paste.plugins</groupId>
-        <artifactId>plugin-hello</artifactId>
-        <version>1.0-SNAPSHOT</version>
-    </dependency>
-
-</dependencies>
-
-        </profile>
-
-        <profile>
-            <id>h2</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-
-
-            <properties>
-
-                <hibernate.dialect>org.hibernate.dialect.H2Dialect</hibernate.dialect>
-                <jdbc.driverClassName>org.h2.Driver</jdbc.driverClassName>
-                <jdbc.url>jdbc:h2:file:${paste.app.home}/pastedb;DB_CLOSE_ON_EXIT=TRUE;LOCK_TIMEOUT=10000</jdbc.url>
-                <jdbc.username>bo</jdbc.username>
-                <jdbc.password>bo</jdbc.password>
-                <jdbc.show-sql>false</jdbc.show-sql>
-                <db.name>pastedb</db.name>
-
-                <jdbc.groupId>com.h2database</jdbc.groupId>
-                <jdbc.artifactId>h2</jdbc.artifactId>
-                <jdbc.version>1.3.170</jdbc.version>
 
             </properties>
         </profile>
