@@ -3,6 +3,7 @@ package uber.paste.startup
 import uber.paste.base.Loggered
 import javax.servlet.ServletContextListener
 import java.util.Collections
+import java.util.Locale
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import com.jcabi.manifests.Manifests
@@ -91,6 +92,9 @@ class SystemPropertiesListener extends ServletContextListener with Loggered {
       
       logger.debug(PluginUI.getXml)
       
+      System.out.println("current locale: "+Locale.getDefault)
+      
+      Locale.setDefault(Locale.ENGLISH)
       
     } catch {
      case e:IOException => {

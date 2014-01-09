@@ -40,7 +40,10 @@
                 <goal>tomcat7:run</goal>
             </goals>
             <properties>
+                <user.language>en</user.language>
                 <user.region>US</user.region>
+                
+                
             </properties>
             <activatedProfiles>
                 <activatedProfile>oracle-xe</activatedProfile>

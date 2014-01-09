@@ -47,7 +47,7 @@ abstract class Struct extends DBObject with SearchObject with  java.io.Serializa
   @XStreamAsAttribute
   private var name: String = null
 
-  @Column(name = "last_modified", columnDefinition = "datetime")
+  @Column(name = "last_modified") //, columnDefinition = "datetime"
   @Temporal(javax.persistence.TemporalType.TIMESTAMP)
   @SearchableProperty(format = Struct.DB_DATE_FORMAT_FULL)
   @XStreamAsAttribute

@@ -20,6 +20,7 @@ import com.thoughtworks.xstream.annotations.XStreamAsAttribute
 import java.io.Serializable
 import javax.persistence._
 import org.compass.annotations.{SearchableId}
+import org.hibernate.annotations.GenericGenerator
 import uber.paste.base.Loggered
 
 
@@ -27,7 +28,11 @@ import uber.paste.base.Loggered
 abstract class DBObject extends java.io.Serializable {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @GeneratedValue(generator = "AllSequenceStyleGenerator")
+  @GenericGenerator(name = "AllSequenceStyleGenerator", 
+                   strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator"
+ )
+  //@GeneratedValue(strategy = GenerationType.IDENTITY)
   @SearchableId(name="id")
   //@Index(name="ddesc_index",columnNames = Array("id desc"))
   @XStreamAsAttribute

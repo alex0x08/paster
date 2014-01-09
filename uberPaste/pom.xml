@@ -94,6 +94,13 @@
             <version>${jdbc.version}</version>
         </dependency-->
 
+
+        <dependency>
+            <groupId>postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>8.4-702.jdbc4</version>
+        </dependency>
+
         <dependency>
             <groupId>net.sourceforge.jtds</groupId>
             <artifactId>jtds</artifactId>
@@ -690,7 +697,8 @@
         <profile>
             <id>sqlserver</id>
             <properties>
-                <hibernate.dialect>org.hibernate.dialect.SQLServerDialect</hibernate.dialect>
+                <!--hibernate.dialect>org.hibernate.dialect.SQLServerDialect</hibernate.dialect-->
+                <hibernate.dialect>uber.paste.base.ExtendedMSSQLDialect</hibernate.dialect>
                 <jdbc.driverClassName>net.sourceforge.jtds.jdbc.Driver</jdbc.driverClassName>
                 <jdbc.url>jdbc:jtds:sqlserver://localhost:1433/paster</jdbc.url>
                 <jdbc.username>paster</jdbc.username>
@@ -702,7 +710,8 @@
         <profile>
             <id>oracle-xe</id>
             <properties>
-                <hibernate.dialect>org.hibernate.dialect.Oracle10gDialect</hibernate.dialect>
+                <hibernate.dialect>uber.paste.base.ExtendedOracle10gDialect</hibernate.dialect>
+                <!--hibernate.dialect>org.hibernate.dialect.Oracle10gDialect</hibernate.dialect-->
                 
                 
                 <jdbc.driverClassName>oracle.jdbc.OracleDriver</jdbc.driverClassName>
@@ -770,6 +779,16 @@
         </profile>
 
 
+         <profile>
+            <id>postgresql</id>
+            <properties>
+                <hibernate.dialect>org.hibernate.dialect.PostgreSQLDialect</hibernate.dialect>
+                <jdbc.driverClassName>org.postgresql.Driver</jdbc.driverClassName>
+                <jdbc.url>jdbc:postgresql://localhost/paster</jdbc.url>
+                <jdbc.username>postgres</jdbc.username>
+                <jdbc.password>qwerty</jdbc.password>
+            </properties>
+        </profile>
 
         <profile>
 
@@ -948,13 +967,16 @@
                     <!--update>true</update -->
                     <uriEncoding>UTF-8</uriEncoding>
                     <systemProperties>
+                         <user.language>en</user.language>
+                         <user.region>US</user.region>
                         <!--com.sun.management.jmxremote>true</com.sun.management.jmxremote>
                         <com.sun.management.jmxremote.port>8050</com.sun.management.jmxremote.port>
                         <com.sun.management.jmxremote.ssl>false</com.sun.management.jmxremote.ssl>
                         <com.sun.management.jmxremote.authenticate>false</com.sun.management.jmxremote.authenticate>
                         <logback.ContextSelector>JNDI</logback.ContextSelector -->
                         <app.home>${user.home}/.${project.artifactId}</app.home>
-                        <JAVA_OPTS>-Xms256m -Xmx1024m -XX:MaxPermSize=512m -XX:NewRatio=6
+                        <JAVA_OPTS>
+                            -Xms256m -Xmx1024m -XX:MaxPermSize=512m -XX:NewRatio=6
                             -XX:+CMSClassUnloadingEnabled -XX:+CMSPermGenSweepingEnabled
                             -verbose:gc"
                         </JAVA_OPTS>
