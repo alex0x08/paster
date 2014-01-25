@@ -2,12 +2,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>uber.megashare</groupId>
-    <artifactId>uberShareApp</artifactId>
+    <artifactId>share-app</artifactId>
     <version>1.5-SNAPSHOT</version>
     <packaging>war</packaging>
     <name>UberShareApp</name>
     <description>
-        App for sharing images
+        App for sharing files
     </description>
 
 
@@ -32,24 +32,16 @@
         <maven.version>3.0.5</maven.version>
         <spring.version>3.2.4.RELEASE</spring.version>
         <spring.security.version>3.1.4.RELEASE</spring.security.version>
-
         <spring.webflow.version>2.3.0.RELEASE</spring.webflow.version>
-
         <commons.beanutils.version>1.8.0</commons.beanutils.version>
         <commons.collections.version>3.1</commons.collections.version>
-
         <jstl.version>1.1.2</jstl.version>
-
         <tiles.version>3.0.1</tiles.version>
-        
          <hibernate.search.version>4.3.0.Final</hibernate.search.version>
         <hibernate.version>4.2.5.Final</hibernate.version>
-       
          <jpa.version>2.0-cr-1</jpa.version>
-       
         <slf4j.version>1.7.5</slf4j.version>
         <querydsl.version>2.6.0</querydsl.version>
-
        
         <netbeans.hint.deploy.server>Tomcat</netbeans.hint.deploy.server>
 
@@ -599,10 +591,21 @@
               <container.profile>tomcat7</container.profile>
             </properties>
         </profile>
+        
+        
+         <profile>
+            <id>build-dist</id>
+            <properties>
+              <container.profile>dist</container.profile>
+           <!--         <finalName>uberShareApp-${container.profile}-${project.version}-${build.buildNumber}</finalName>
+ -->
+            </properties>
+        </profile>
+        
     </profiles>
 
     <build>
-        <finalName>uberShareApp-${container.profile}-${project.version}-${build.buildNumber}</finalName>
+        <finalName>uberShareApp-${container.profile}-${project.version}</finalName>
 
         <pluginManagement>
             <plugins>
@@ -644,42 +647,7 @@
 
 
         <plugins>
-              <plugin>
-                <groupId>org.apache.tomcat.maven</groupId>
-                <artifactId>tomcat7-maven-plugin</artifactId>
-                <version>2.0</version>
-                <configuration>
-                    <path>/${project.artifactId}</path>
-                    <!--contextFile>${tomcatConf}</contextFile-->
-                    <!--tomcatLoggingFile>src/main/tomcat/conf/logging.properties</tomcatLoggingFile -->
-                    <addContextWarDependencies>true</addContextWarDependencies>
-                    <charset>UTF-8</charset>
-                    <!--update>true</update -->
-                    <uriEncoding>UTF-8</uriEncoding>
-                    <systemProperties>
-                        <!--com.sun.management.jmxremote>true</com.sun.management.jmxremote>
-                        <com.sun.management.jmxremote.port>8050</com.sun.management.jmxremote.port>
-                        <com.sun.management.jmxremote.ssl>false</com.sun.management.jmxremote.ssl>
-                        <com.sun.management.jmxremote.authenticate>false</com.sun.management.jmxremote.authenticate>
-                        <logback.ContextSelector>JNDI</logback.ContextSelector -->
-                        <app.home>${user.home}/.${project.artifactId}</app.home>
-                        <JAVA_OPTS>-Xms256m -Xmx1024m -XX:MaxPermSize=512m -XX:NewRatio=6
-                            -XX:+CMSClassUnloadingEnabled -XX:+CMSPermGenSweepingEnabled
-                            -verbose:gc"
-                        </JAVA_OPTS>
-                    </systemProperties>
-                </configuration>
-
-                <dependencies>
-                    <dependency>
-                        <groupId>org.apache.tomcat</groupId>
-                        <artifactId>tomcat-juli</artifactId>
-                        <version>7.0.33</version>
-                    </dependency>
-                </dependencies>
-
-            </plugin>
-
+             
             
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -727,41 +695,6 @@
                 </configuration>
             </plugin>
 
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
-                <version>2.1.1</version>
-                <configuration>
-                    <attachClasses>true</attachClasses>
-                    <classesClassifier>classes</classesClassifier>
-                    <failOnMissingWebXml>false</failOnMissingWebXml>                    
-                    <archive>                    
-                        <manifest>
-                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-                        </manifest>                            
-                        <manifestEntries>
-                            <Share-Implementation-Version>${project.version}</Share-Implementation-Version>
-                            <Share-Implementation-Build>${build.buildNumber}</Share-Implementation-Build>
-                            <Share-Implementation-Build-Time>${maven.build.timestamp}</Share-Implementation-Build-Time>
-                        </manifestEntries>
-                    </archive>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-maven-plugin</artifactId>
-                <version>9.1.0.RC2</version>
-                <configuration>
-                    <scanIntervalSeconds>10</scanIntervalSeconds>
-                    <webApp>
-                    <contextPath>/share</contextPath>
-                    </webApp>
-                    <!--webDefaultXml>src/container/jetty/webdefault.xml</webDefaultXml-->
-                </configuration>
-
-            </plugin>
 
             <plugin>
                 <groupId>com.mycila.maven-license-plugin</groupId>
@@ -837,10 +770,163 @@
             </plugin>
 
 
+
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.6</version>
+                <executions>
+                    <execution>
+                        <id>default-copy-resources</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <overwrite>true</overwrite>
+                            <outputDirectory>${project.build.directory}/${project.build.finalName}/WEB-INF/lib</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${project.build.directory}/../../dist/target-plugins</directory>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+                  
+
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>2.1.1</version>
+                <configuration>
+                    <attachClasses>true</attachClasses>
+                    <classesClassifier>classes</classesClassifier>
+                    <failOnMissingWebXml>false</failOnMissingWebXml>  
+                    
+                    <!--webResources> 
+                        <resource> 
+                            <directory>${basedir}/../dist/target-plugins</directory> 
+                            <targetPath>WEB-INF/lib</targetPath> 
+                        </resource> 
+                    </webResources--> 
+                                                                          
+                    <archive>                    
+                        <manifest>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                        </manifest>                            
+                        <manifestEntries>
+                            <Share-Implementation-Version>${project.version}</Share-Implementation-Version>
+                            <Share-Implementation-Build>${build.buildNumber}</Share-Implementation-Build>
+                            <Share-Implementation-Build-Time>${maven.build.timestamp}</Share-Implementation-Build-Time>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+
+          
+
+            
             <plugin>
                 <artifactId>maven-release-plugin</artifactId>
-                <version>2.4.1</version>      
+                <version>2.4.2</version>      
             </plugin>
+
+
+              <plugin>                                                                         
+            <groupId>org.apache.maven.plugins</groupId>                                  
+            <artifactId>maven-javadoc-plugin</artifactId>                                
+            <version>2.9.1</version>                                                       
+            <configuration>  
+                <aggregate>true</aggregate>
+                <show>private</show>                
+                <doclet>org.umlgraph.doclet.UmlGraphDoc</doclet>                         
+                <docletArtifact>                                                         
+                    <groupId>org.umlgraph</groupId>                                      
+                    <artifactId>umlgraph</artifactId>                                    
+                    <version>5.6.6</version>                                               
+                </docletArtifact>                                                        
+                <additionalparam>-all -constructors</additionalparam>                           
+                <useStandardDocletOptions>false</useStandardDocletOptions>                
+            </configuration>   
+            
+            
+            
+            <executions>
+                <execution>
+                    <goals>
+                        <goal>javadoc</goal>
+                        <goal>test-javadoc</goal>
+                    </goals>
+                    <phase>site</phase>
+            
+                </execution>                                                           
+            </executions>    
+           
+                                                                                                                                                                         
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+        </plugin>   
+            
+        <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-project-info-reports-plugin</artifactId>
+            <version>2.7</version>
+            <configuration>
+                <dependencyLocationsEnabled>false</dependencyLocationsEnabled>
+            </configuration>
+        </plugin>   
+            
+            
+              <plugin>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-maven-plugin</artifactId>
+                <version>9.1.0.RC2</version>
+                <configuration>
+                    <scanIntervalSeconds>10</scanIntervalSeconds>
+                    <webApp>
+                    <contextPath>/${project.artifactId}</contextPath>
+                    </webApp>
+                    <!--webDefaultXml>src/container/jetty/webdefault.xml</webDefaultXml-->
+                </configuration>
+
+            </plugin>
+
+
+             <plugin>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <version>2.2</version>
+                <configuration>
+                    <path>/${project.artifactId}</path>
+                    <!--contextFile>${tomcatConf}</contextFile-->
+                    <!--tomcatLoggingFile>src/main/tomcat/conf/logging.properties</tomcatLoggingFile -->
+                    <addContextWarDependencies>true</addContextWarDependencies>
+                    <!--additionalClasspathDirs>
+                        <additionalClasspathDir>${project.build.directory}/../../dist/target-plugins</additionalClasspathDir>
+                        </additionalClasspathDirs--> 
+                    <charset>UTF-8</charset>
+                    <!--update>true</update -->
+                    <uriEncoding>UTF-8</uriEncoding>
+                    <systemProperties>
+                       
+                        <app.home>${user.home}/.${project.artifactId}</app.home>
+                        
+                    </systemProperties>
+                </configuration>
+
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.tomcat</groupId>
+                        <artifactId>tomcat-juli</artifactId>
+                        <version>7.0.33</version>
+                    </dependency>
+                </dependencies>
+
+            </plugin>
+
 
         </plugins>
 
@@ -884,11 +970,7 @@
             <url>http://repository.jboss.org/nexus/content/repositories/thirdparty-releases</url>
         </repository>
           
-        <!--repository>
-            <id>maven1</id>
-            <name>maven1</name>
-            <url>http://repo1.maven.org/maven2</url>
-        </repository-->
+        
     
         <repository>
             <id>neo4j</id>

@@ -1,0 +1,210 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>uber.megashare.plugins</groupId>
+    <artifactId>plugin-cleanup-old-versions</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+    <name>Share Cleanup Old Versions Plugin</name>
+    
+    <properties>
+        <querydsl.version>2.6.0</querydsl.version>
+       
+    </properties>
+    
+    <dependencies>
+        <dependency>
+            <groupId>uber.megashare</groupId>
+            <artifactId>share-app</artifactId>
+            <version>1.5-SNAPSHOT</version>
+            <classifier>classes</classifier>
+            <scope>provided</scope>
+        </dependency>
+        
+                     <dependency>
+                    <groupId>com.mysema.querydsl</groupId>
+                    <artifactId>querydsl-apt</artifactId>
+                    <version>${querydsl.version}</version>
+                  <scope>provided</scope>
+                     </dependency>
+                <dependency>
+                    <groupId>com.mysema.querydsl</groupId>
+                    <artifactId>querydsl-jpa</artifactId>
+                    <version>${querydsl.version}</version>
+                  <scope>provided</scope>
+                </dependency>
+              
+    </dependencies>
+        
+    <build>
+        
+        <plugins>
+            
+             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                    <encoding>UTF-8</encoding>
+                    <showDeprecation>true</showDeprecation>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>com.mysema.maven</groupId>
+                <artifactId>maven-apt-plugin</artifactId>
+                <version>1.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>process</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>src/main/autogen/java</outputDirectory>
+                            <processor>com.mysema.query.apt.jpa.JPAAnnotationProcessor</processor>
+                            
+                        </configuration>
+                        
+                    </execution>
+                    
+                </executions>
+               
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>1.7</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <sources>
+                        <source>src/main/autogen/java</source>
+                    </sources>
+                </configuration>
+            </plugin>
+
+            
+            <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>2.3</version>
+        <executions>
+          <execution>
+            <id>copy-target</id>
+            <phase>package</phase>
+            <goals>
+              <goal>copy</goal>
+            </goals>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>${project.groupId}</groupId>
+                  <artifactId>${project.artifactId}</artifactId>
+                  <version>${project.version}</version>
+                  <type>jar</type>
+                </artifactItem>
+              </artifactItems>
+              <outputDirectory>${project.build.directory}/../../dist/target-plugins</outputDirectory>
+              
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+                
+                                
+             <plugin>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <version>2.2</version>
+                <configuration>
+                    <path>/${project.artifactId}</path>
+                    <!--contextFile>${tomcatConf}</contextFile-->
+                    <!--tomcatLoggingFile>src/main/tomcat/conf/logging.properties</tomcatLoggingFile -->
+                    <addContextWarDependencies>true</addContextWarDependencies>
+                    <!--additionalClasspathDirs>
+                        <additionalClasspathDir>${project.build.directory}/../../dist/target-plugins</additionalClasspathDir>
+                        </additionalClasspathDirs--> 
+                    <charset>UTF-8</charset>
+                    <!--update>true</update -->
+                    <uriEncoding>UTF-8</uriEncoding>
+                    <systemProperties>
+                       
+                        <app.home>${user.home}/.${project.artifactId}</app.home>
+                        
+                    </systemProperties>
+                    <warDirectory>${basedir}/../webapp/target/uberShareApp-tomcat7-1.5-SNAPSHOT</warDirectory>
+                </configuration>
+
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.tomcat</groupId>
+                        <artifactId>tomcat-juli</artifactId>
+                        <version>7.0.33</version>
+                    </dependency>
+                    
+                    
+                </dependencies>
+
+            </plugin>
+                                    		
+            
+        </plugins>
+        
+    </build>
+        
+    <profiles>
+        <profile>
+            <id>run-local</id>
+            <build>
+                
+                <plugins>
+                    
+                         <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>2.3</version>
+        <executions>
+          <execution>
+            <id>copy-target</id>
+            <phase>package</phase>
+            <goals>
+              <goal>copy</goal>
+            </goals>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>${project.groupId}</groupId>
+                  <artifactId>${project.artifactId}</artifactId>
+                  <version>${project.version}</version>
+                  <type>jar</type>
+                </artifactItem>
+              </artifactItems>
+              <outputDirectory>${basedir}/../webapp/target/uberShareApp-tomcat7-1.5-SNAPSHOT/WEB-INF/lib</outputDirectory>
+              
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+                    
+                </plugins>
+                
+            </build>
+        </profile>
+    </profiles>
+        
+      <repositories>
+
+         
+        
+      </repositories>
+   
+        
+</project>

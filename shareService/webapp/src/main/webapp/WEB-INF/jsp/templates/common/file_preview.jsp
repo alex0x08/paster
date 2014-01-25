@@ -393,9 +393,11 @@
         <div >
   
             <c:if test="${model.type eq 'VIDEO' and model.mime eq 'video/x-flv'}">
-              
+           
+                
                 <a class="embedPlayer" 
 			 href="<c:out value='${fullDownloadUrl}'/>"> 
+                    click to play
 		</a> 
                
             </c:if>

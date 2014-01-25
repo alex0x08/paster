@@ -45,4 +45,14 @@
                 <goal>release:perform</goal>
             </goals>
         </action>
+        <action>
+            <actionName>CUSTOM-tomcat7-run-war</actionName>
+            <displayName>tomcat7-run-war</displayName>
+            <goals>
+                <goal>tomcat7:run-war-only</goal>
+            </goals>
+            <activatedProfiles>
+                <activatedProfile>h2,tomcat7</activatedProfile>
+            </activatedProfiles>
+        </action>
     </actions>

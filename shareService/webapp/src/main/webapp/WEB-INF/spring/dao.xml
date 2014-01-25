@@ -105,10 +105,10 @@
     <bean id="entityManagerFactory" 
           class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
           p:dataSource-ref="dataSource" 
-          p:packagesToScan="uber.megashare.model"
+          p:packagesToScan="uber.megashare.model,uber.megashare.plugin.model"
           p:persistenceUnitName="shareJPA"
           p:persistenceProviderClass="org.hibernate.ejb.HibernatePersistence"
-      	  >     
+          >     
         
         <property name="jpaVendorAdapter">
             <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter" >

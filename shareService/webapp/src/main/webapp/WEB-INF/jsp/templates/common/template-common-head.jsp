@@ -133,6 +133,9 @@
        <script src="<c:url value='/main/assets/${appVersion}/jquery/2.0.3/jquery.js'/>"></script>
        <script src="<c:url value='/main/assets/${appVersion}/jquery-ui/1.10.2/ui/minified/jquery-ui.min.js'/>"></script>
 
+              <script src="<c:url value='/main/static/${appVersion}/libs/jquery.tools.min.js'/>"></script>
+
+       
        <script src="<c:url value='/main/assets/${appVersion}/jquery-easing/1.3/jquery.easing.min.js'/>"></script>
        <script src="<c:url value='/main/assets/${appVersion}/chosen/0.9.12/chosen/chosen.jquery.min.js'/>"></script>
     <script src="<c:url value='/main/static/${appVersion}/libs/chosen-image/chosenImage.jquery.js'/>"></script>
@@ -142,3 +145,4 @@
        <script src="<c:url value='/main/assets/${appVersion}/bootstrap/3.0.0/js/bootstrap.min.js'/>"></script>
        <script src="<c:url value='/main/static/${appVersion}/libs/zoombox/zoombox.js'/>"></script>
        <script src="<c:url value='/main/assets/${appVersion}/prettify/4-Mar-2013/run_prettify.js'/>"></script> 
+       
