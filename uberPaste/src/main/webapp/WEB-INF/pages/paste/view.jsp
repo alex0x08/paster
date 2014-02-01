@@ -65,8 +65,13 @@
 
         <tiles:insertDefinition name="/common/pasteControls" >
             <tiles:putAttribute name="model" value="${model}"/>
-            <tiles:putAttribute name="next" value="${availableNext}"/>
-            <tiles:putAttribute name="prev" value="${availablePrev}"/>
+            
+            <c:if test="${not empty availableNext}">
+              <tiles:putAttribute name="next" value="${availableNext}" />
+            </c:if>
+            <c:if test="${availablePrev!=null}">
+                <tiles:putAttribute name="prev" value="${availablePrev}"  />
+            </c:if>
         </tiles:insertDefinition>
 
     </div>
@@ -93,7 +98,7 @@
 
     <div class="column grid-3">
         <c:if test="${shareIntegration}">
-            <a id="rightPanelCtrl" href="javascript:void(0);" onclick="toggleRight();" title="toggle right panel">
+            <a id="${model.id}_rightPanelCtrl" href="javascript:void(0);" onclick="toggleRight(${model.id});" title="toggle right panel">
                 <span class="i">-</span>
             </a>
         </c:if>
@@ -113,11 +118,13 @@
     </c:otherwise>
     </c:choose>
 
-    <div id="centerPanel" class="column ${centerGridSize}" style="min-width:650px;">
+    <div id="${model.id}_centerPanel" class="column ${centerGridSize}" style="min-width:650px;">
     
       <div id="pasteLoadSpinner" style="">
              <img src="<c:url value='/main/static/${appVersion}/images/gear_sml.gif'/>"/>  
                       <fmt:message key="action.loading"/>   
+                      <img style="border: 2px saddlebrown;" src="${model.thumbImage}"/>
+
           </div>    
         
     <pre id="pasteText" class="brush: ${model.codeType.code};toolbar: false; auto-links:false;highlight: [${commentedLinesList}]; " style="display:none; overflow-y: hidden;" >
@@ -129,7 +136,7 @@
 
     <c:if test="${shareIntegration}">
 
-        <div id="rightPanel" class="column grid-4" style="min-width:150px;" >
+        <div id="${model.id}_rightPanel" class="column grid-4" style="min-width:150px;" >
 
         <iframe id="shareFrame" src="${shareUrl}/main/file/integrated/list/paste_${model.id}"
                 scrolling="auto" frameborder="0"
@@ -149,14 +156,14 @@
 </div>
   --%>
 
-    <div id="commentsList" style="display:none;">
+    <div id="${model.id}_commentsList" style="display:none;">
 
         <c:forEach var="comment" items="${model.comments}" varStatus="loopStatus">
 
-            <div id="numSpace_l${comment.id}" class="listSpace" >
+            <div id="${model.id}_numSpace_l${comment.id}" class="listSpace" >
             </div>
 
-            <div id="comment_l${comment.id}" commentId="${comment.id}"
+            <div id="${model.id}_comment_l${comment.id}" commentId="${comment.id}"
                  lineNumber="${comment.lineNumber}"  parentCommentId="${comment.parentId}" class=" commentBlock" >
                 <div id="innerBlock" class="commentInner p-comment">
 
@@ -199,7 +206,6 @@
                             <c:out value=" ${comment.text}" escapeXml="false"/>
                     </div>
 
-
                 </div>
 
                </div>
@@ -224,12 +230,11 @@
                               NONE
 </span>
 
- <div id="commentForm" class="editForm p-comment"  style="display:none;" >
+ <div id="${model.id}_commentForm" class="editForm p-comment"  style="display:none;" >
 
      <form:form action="${url}" id="addCommentForm"
                 modelAttribute="comment"
                 method="POST" >
-
 
      <div class="row" >
          <div class="column grid-15"  >
@@ -241,7 +246,7 @@
          <div class="column grid-1" style="float:right;" >
              
              <a class="" title="<fmt:message key="button.cancel"/>" 
-                href="javascript:void(0);" onclick="SyntaxHighlighter.hideEditForm();">
+                href="javascript:void(0);" onclick="SyntaxHighlighter.hideEditForm(${model.id});">
                <span class="i" style="font-size:1.5em;">d</span>
            </a>
 
@@ -251,7 +256,7 @@
          <div class="row">
          <div class="column grid-16" >
 
-             <button id="addCommentBtn" class='p-btn-save' type="submit">
+             <button id="${model.id}_addCommentBtn" class='p-btn-save' type="submit">
                  <span class="i" style="font-size:larger;">S</span>
                 <span id="btnCaption"><fmt:message key="button.save"/></span>
                  <img id="btnIcon" style="display:none;" src="<c:url value='/main/static/${appVersion}/images/gear_sml.gif'/>"/>
@@ -288,7 +293,6 @@
 
      </div>
 
-<img style="border: 2px saddlebrown;" src="${model.thumbImage}"/>
 
 <script type="text/javascript" src="<c:url value='/main/static/${appVersion}/libs/zeroclipboard/ZeroClipboard.js'/>"></script>
 
@@ -296,11 +300,11 @@
 
 <script type="text/javascript">
 
-    function toggleRight() {
+    function toggleRight(modelId) {
 
-        var rightPanel = document.getElementById('rightPanel');
-        var centerPanel = document.getElementById('centerPanel');
-        var rightPanelCtrl = document.getElementById('rightPanelCtrl');
+        var rightPanel = document.getElementById(modelId+'_rightPanel');
+        var centerPanel = document.getElementById(modelId+'_centerPanel');
+        var rightPanelCtrl = document.getElementById(modelId+'_rightPanelCtrl');
 
        // alert(rightPanel.getStyle('display'));
         if (rightPanel.getStyle('display') != 'none') {
@@ -329,10 +333,10 @@
        
                            window.addEvent('domready', function() {
 
-                               $('addCommentBtn').addEvent('click',function(){
+                               $(${model.id}+'_addCommentBtn').addEvent('click',function(){
                                    this.getElementById('btnCaption').set('text',transmitText).disabled = true;
                                    this.getElementById('btnIcon').setStyle('display','');
-                                   $("addCommentForm").submit();
+                                   $(${model.id}+"_addCommentForm").submit();
 
                                });
 
@@ -391,9 +395,14 @@
             'xml xhtml xslt html    @shBrushXml.js'
     ));
 
-    SyntaxHighlighter.all();
+    SyntaxHighlighter.all(${model.id});
     
         $('pasteLoadSpinner').setStyle('display','none');
+
+        <c:if test="${availablePrevList.count > 1}">
+            initLazy();
+        </c:if>
+        
 
     });
             function path()
@@ -423,12 +432,12 @@
 
         var pageUrl = '${rawPageUrl}';
 
-          window.addEvent('domready',function(){
+        function initLazy(){
                 var lazy = new LazyPagination(document,{
 		url: pageUrl,
 		method: 'get',
 		maxRequests: ${availablePrevList.count},
-		buffer: 1000,
+		buffer: 100,
 		pageDataIndex: 'page',
                 idMode: true,
 		data: {
@@ -442,7 +451,23 @@
                 },beforeLoad: function() {
                     $('pageLoadSpinner').setStyle('display','');
                 },afterAppend: function(block,page) {
-                   // alert(page);
+    
+                
+                var ptext = document.getElementById(page+'_pasteText');
+                
+                //alert(page+",text="+ptext);
+                SyntaxHighlighter.highlight(page,null,ptext);
+    
+               ptext.setStyle('display','none');
+    
+    
+                  $(page+'_addCommentBtn').addEvent('click',function(){
+                                   this.getElementById('btnCaption').set('text',transmitText).disabled = true;
+                                   this.getElementById('btnIcon').setStyle('display','');
+                                   $(page+"_addCommentForm").submit();
+
+                               });
+    
                     try {
                         history.pushState({id: page}, "Page "+page, userPageUrl+"/"+page);
                     } catch (e) {}
@@ -452,7 +477,7 @@
                 }
 	
             });
-    });
+    };
 
     </script>
     <div id="pageLoadSpinner" style="display:none;">

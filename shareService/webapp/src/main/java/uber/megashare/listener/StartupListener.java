@@ -18,6 +18,7 @@ package uber.megashare.listener;
 import java.io.File;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -35,6 +36,7 @@ import uber.megashare.model.User;
 import uber.megashare.service.SettingsManager;
 import uber.megashare.service.UserManager;
 import uber.megashare.base.SystemInfo;
+import uber.megashare.base.plugins.RunOnAppStart;
 import uber.megashare.dao.ProjectDao;
 import uber.megashare.model.AccessLevel;
 import uber.megashare.model.Project;
@@ -82,6 +84,18 @@ public class StartupListener extends LoggedClass implements ServletContextListen
         setupContext(context);
     }
 
+    private void fireStartupEvent( ApplicationContext ctx) {
+    
+          Map<String,RunOnAppStart> startBeans = ctx.getBeansOfType(RunOnAppStart.class);
+            if (startBeans!=null) {
+            
+                for (RunOnAppStart bean:startBeans.values()) {
+                    bean.onStart();
+                }
+            }
+        
+    }
+    
     /**
      * This method uses the LookupManager to lookup available roles from the
      * data layer.
@@ -113,6 +127,8 @@ public class StartupListener extends LoggedClass implements ServletContextListen
             shareDao = (SharedFileDao) ctx.getBean("shareDao");
             projectDao = (ProjectDao) ctx.getBean("projectDao");
             
+            
+          
 
     //        UserCustomExtendedRepository repo = (UserCustomExtendedRepository) ctx.getBean("userCustomExtendedRepository");
 
@@ -157,6 +173,8 @@ public class StartupListener extends LoggedClass implements ServletContextListen
 
                 getLogger().info("Database already set. Aborting creation..");
 
+                fireStartupEvent(ctx);
+                
                 return;
             }
 
@@ -319,6 +337,8 @@ public class StartupListener extends LoggedClass implements ServletContextListen
    
                 getLogger().info("__done creation");
    
+                fireStartupEvent(ctx);
+                
             } catch (ParseException ex) {
                 getLogger().error(ex.getLocalizedMessage(), ex);
          

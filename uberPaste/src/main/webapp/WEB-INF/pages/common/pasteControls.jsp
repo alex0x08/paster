@@ -3,8 +3,8 @@
 
 <tiles:importAttribute name="model" />
 <tiles:importAttribute name="mode" />
-<tiles:importAttribute name="next" />
-<tiles:importAttribute name="prev" />
+<tiles:importAttribute name="next" ignore="true" />
+<tiles:importAttribute name="prev" ignore="true" />
 
  <c:choose>
      <c:when test="${mode eq 'widget' or mode eq 'icon'}">
@@ -52,14 +52,14 @@
 
     <div class="column grid-4 right">
 
-        <c:if test="${prev}">
-            <a href="<c:url value="/${model.id-1}"/>" target="${target}" title="<fmt:message key="button.prev"/>">&#8592;</a>
+        <c:if test="${not empty prev}">
+            <a href="<c:url value="/${prev.id}"/>" target="${target}" title="<fmt:message key="button.prev"/>">&#8592;</a>
         </c:if>
 
         <span class="f-h4">${model.id}</span>
 
-        <c:if test="${next}">
-            <a href="<c:url value="/${model.id+1}"/>" target="${target}" title="<fmt:message key="button.next"/>">&#8594;</a>
+        <c:if test="${not empty next}">
+            <a href="<c:url value="/${next.id}"/>" target="${target}" title="<fmt:message key="button.next"/>">&#8594;</a>
         </c:if>
 
 

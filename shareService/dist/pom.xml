@@ -1,0 +1,34 @@
+<project
+  xmlns="http://maven.apache.org/POM/4.0.0" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+
+   <groupId>uber.megashare</groupId>
+    <artifactId>share-dist</artifactId>
+    <version>1.5-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>UberShare Dist</name>
+    <description>
+       UberShare distribution
+    </description>
+
+  <url>http://maven.apache.org</url>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <modules>
+    <module>../plugin-flash-preview</module>
+    <module>../plugin-cleanup-old-versions</module>
+    <module>../webapp</module>
+  </modules>
+
+  <build>
+  </build>
+
+
+</project>
+

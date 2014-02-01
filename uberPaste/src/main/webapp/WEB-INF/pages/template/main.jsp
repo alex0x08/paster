@@ -5,10 +5,10 @@
 
         
         
-        <link rel="icon" href="<c:url value='/snowfall2/ninja-ng.png'/>"/>
-        <!--
+        <!--link rel="icon" href="<c:url value='/snowfall2/ninja-ng.png'/>"/-->
+       
         <link rel="icon" href="<c:url value='/main/static/${appVersion}/images/ninja.png'/>"/>
-        -->
+        
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
         <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE9" />
@@ -34,16 +34,20 @@
         <script src="<c:url value='/main/static/${appVersion}/js/mootools-more-1.4.0.1-nc.js'/>"></script>
         <script src="<c:url value='/main/static/${appVersion}/libs/tinycon.min.js'/>" type="text/javascript" charset="utf-8"></script>
 
+          <script  type="text/javascript">
+              var transmitText = '<fmt:message key="action.sending"/>';
+        
+          </script>
+        
+        <%--
          <script src="<c:url value='/snowfall2/js/jquery-latest.min.js'/>"></script>
          <script src="<c:url value='/snowfall2/js/snowfall.jquery.js'/>"></script>
        
            <script  type="text/javascript">
             
-             var transmitText = '<fmt:message key="action.sending"/>';
-      
+           
             $.noConflict();
-    jQuery( document ).ready(function( $ ) {
-        
+    jQuery( document ).ready(function( $ ) {       
         
      
         
@@ -57,7 +61,7 @@
 // Code that uses other library's $ can follow here.
         </script>
       
-
+--%>
 
         <link type="text/css" rel="stylesheet" href="<c:url value="/main/static/${appVersion}/libs/syntax-highlight/styles/shCoreDefault.css"/>"/>
 
@@ -66,36 +70,25 @@
 
     <div class="row">
         <div class="column grid-10">
-
             <tiles:insertAttribute name="menu" />
-
             <c:if test="${not empty statusMessageKey}">
                 <p><fmt:message key="${statusMessageKey}"/></p>
             </c:if>
-
         </div>
-            
-            
-            
         <div class="column grid-4">
-
         <sec:authorize access="!isAuthenticated()" >
-
-
-           <a href="<c:url value='/main/login'/>"><span style="font-size: 1em;vertical-align: middle;" class="i" title="Login here">x</span></a>
+           <a href="<c:url value='/main/login'/>">
+               <span style="font-size: 1em;vertical-align: middle;" class="i" title="Login here">x</span></a>
 
             <c:forEach var="server" items="${availableServers}">
                 <a href="<c:url value='/act/openid-login?openid_identifier=${server.code}'/>">
-
                     <img src="<c:url value='/main/static/${appVersion}/images/openid/${server.icon}'/>" alt="${server.name}" title="${server.name}" border="0" style=" vertical-align: middle; " />
                 </a>
             </c:forEach>
-
         </sec:authorize>
 
 
             <sec:authorize ifAnyGranted="ROLE_USER,ROLE_ADMIN">
-
                 <jsp:include
                         page="/WEB-INF/pages/common/currentUser.jsp">
                 <jsp:param name="currentUser" value="${currentUser}" />
@@ -108,8 +101,6 @@
             <div class="column grid-2">
                         <c:forEach items="${availableLocales}" var="locale" >
             <c:if test="${pageContext.response.locale ne locale}">
-
-                                                           
                     <a href="<c:url value="${request.requestURL}">
                            <c:param name="locale" value="${locale.language}_${locale.country}" />
                            <c:forEach items="${param}" var="currentParam">
@@ -123,52 +114,35 @@
                             <c:out value="${locale.language}"/>
                         </div>
                     </a>
-                
-
             </c:if>
-
-        </c:forEach>   
-
-            </div>    
-            
-            
+        </c:forEach> 
+            </div>   
         </div>
 
             <div class="row">
                 <div column grid-16>
-                    
               <tiles:insertAttribute name="content" />
-                
                 </div>
             </div>
-              
-            
-   
-        <div class="row">
-            <div column grid-14>
-                 <p title="<c:out value="${systemInfo.runtimeVersion.full}"/>">
-    <c:out value="${systemInfo.runtimeVersion.implVersion}"/>
-  </p>
-  <small>2013. (c) Alex</small>
-
-            </div>
-            
-        </div>
+        
+              <div class="row">
+                  <div column grid-14>
+                      <p title="<c:out value="${systemInfo.runtimeVersion.full}"/>">
+                          <c:out value="${systemInfo.runtimeVersion.implVersion}"/>
+                      </p>
+                      <small>2014. (c) Alex</small>
+                  </div>
+              </div>
 
     <script src="<c:url value="/main/static/${appVersion}/libs/growler/growler.js"/>"></script>
 
-
     <script type="text/javascript">
-
         var growl= null;
-
         window.addEvent('domready',function() {
             growl = new Growler.init();
 
         });
     </script>
-
-
 
     <script type="text/javascript" src="<c:url value="/main/static/${appVersion}/libs/syntax-highlight/scripts/xregexp.js"/>"></script>
 
@@ -176,6 +150,7 @@
 
     <script type="text/javascript" src="<c:url value="/main/static/${appVersion}/libs/syntax-highlight/scripts/shAutoloader.js"/>"></script>
 
+    <%--
     <!--
   Under development, this section allows you to preview your changes
   immediately after saving them on the {app.less} file. However, you
@@ -186,9 +161,7 @@
         //less.env = "development";
         //less.watch();
     </script>
-
-
-
+--%>
     </body>
 
 </html>

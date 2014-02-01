@@ -46,4 +46,8 @@
     <import resource="scheduler.xml" />
     <import resource="mvc.xml" />
    
+    <import resource="classpath*:/plugin-spring-config.xml" />
+    
+  
+    
 </beans>
