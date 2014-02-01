@@ -46,6 +46,8 @@ var LazyPagination = new Class({
 		this.requests = 0;
 		
 		this.addEvent('onComplete',function(response,html){
+                        //alert("event!");
+                    
 			(this.options.inject) ? this.inject(html[0]) : this.adopt(html[0]);
 			this.increment();
 			this.measure();
@@ -61,6 +63,8 @@ var LazyPagination = new Class({
 		var scrollHeight = this.element.getScrollSize().y, 
 			height = this.element.getSize().y,
 			scroll = this.element.getScroll().y;
+               // alert("scrollHeight="+scrollHeight+" height="+height+" scroll="+scroll+" calc="+(scrollHeight-height - this.options.buffer));
+                
 		if(scrollHeight-height - this.options.buffer <= scroll) this.send();
 		return this;
 	},
@@ -101,16 +105,20 @@ var LazyPagination = new Class({
 		(this.element === document || this.element === window) ? 
 			$(document.body).adopt(html) : this.element.adopt(html);
                         
-                      
+                      //alert( this.options.idSet[this.options.pageDataIndex]);
                         
                 this.options.afterAppend(html, this.options.idMode ? 
-                this.options.idSet[this.options.pageDataIndex] : this.options.data[this.options.pageDataIndex]);        
+                this.options.idSet[this.options.data[this.options.pageDataIndex]] : this.options.data[this.options.pageDataIndex]);        
 		return this;
 	},
 	
 	inject: function(html){
 		html.inject(this.options.inject.element, this.options.inject.where);
-		this.options.afterAppend(html,this.options.data[this.options.pageDataIndex]);
+	
+        
+                           this.options.afterAppend(html, this.options.idMode ? 
+                this.options.idSet[this.options.data[this.options.pageDataIndex]] : this.options.data[this.options.pageDataIndex]);        
+	
                 return this;
 	}
 

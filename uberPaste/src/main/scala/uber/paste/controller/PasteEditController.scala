@@ -16,53 +16,41 @@
 
 package uber.paste.controller
 
+import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.WebDataBinder
 import org.springframework.web.bind.annotation._
-import org.springframework.web.multipart.MultipartFile
-import org.springframework.web.servlet.ModelAndView
 import uber.paste.model._
 import org.springframework.beans.factory.annotation.{Value, Autowired}
-import java.io.{ByteArrayOutputStream, FileNotFoundException, IOException, File}
-import javax.servlet.http.HttpServletResponse
-import uber.paste.dao.ConfigDao
+import java.io.ByteArrayOutputStream
 import uber.paste.manager.{CommentManager, PasteManager}
 import org.springframework.ui.Model
 import uber.kaba.markup.parser.AppMode
 import uber.kaba.markup.parser.KabaMarkupParser
 import uber.kaba.markup.parser.KabaMarkupParser
-import uber.paste.base.{SessionStore, Loggered}
+import uber.paste.base.SessionStore
 import scala.util.control.Breaks._
 import org.springframework.validation.BindingResult
 import javax.validation.Valid
-import java.util.HashMap
 import java.util.Locale
 import scala.collection.JavaConversions._
 import org.codehaus.jackson.annotate.JsonIgnore
-import javax.xml.bind.annotation.XmlTransient
 import org.apache.commons.lang.{StringEscapeUtils, WordUtils, StringUtils}
 import scala.Array
 import com.google.gson.{JsonParser, GsonBuilder}
-import org.codehaus.jackson.map.ObjectMapper
-import org.springframework.http.{HttpStatus}
-import java.net.{URL, UnknownHostException}
+import java.net.URL
 import com.google.gson.stream.MalformedJsonException
 import org.apache.http.impl.client.DefaultHttpClient
-import org.apache.http.client.HttpClient
 import org.apache.http.client.methods.HttpGet
 import javax.annotation.Resource
 import org.springframework.context.MessageSource
 import java.util
 import org.apache.commons.io.FilenameUtils
-import org.springframework.security.web.util.UrlUtils
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
-import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.ssl.SSLSocketFactory;
@@ -129,16 +117,16 @@ class PasteController extends VersionController[Paste]   {
   
     if (!obj.isBlank()) {
 
-      model.addAttribute("availableNext",manager.exists(obj.getId()+1))
-      model.addAttribute("availablePrev",manager.exists(obj.getId()-1))
+      val pnext = manager.getNextPaste(obj)
+      val pprev = manager.getPreviousPaste(obj)
       
-      model.addAttribute("availablePrevList",new IdList(manager.getIdList(obj.getId())))
-      
-      
+      model.addAttribute("availableNext",pnext)
+      model.addAttribute("availablePrev",pprev)      
+      model.addAttribute("availablePrevList",new IdList(manager.getPreviousPastasIdList(obj)))
       
     } else {
-      model.addAttribute("availableNext",false)
-      model.addAttribute("availablePrev",false)
+      model.addAttribute("availableNext",null)
+      model.addAttribute("availablePrev",null)
 
     }
 

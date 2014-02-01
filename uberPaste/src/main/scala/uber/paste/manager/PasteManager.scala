@@ -61,6 +61,11 @@ trait PasteManager extends GenericSearchManager[Paste]{
 
   def countAllSince(source:PasteSource,dateFrom:java.lang.Long):java.lang.Long
 
+  def getPreviousPastasIdList(paste:Paste):java.util.List[Long]
+  
+  def getNextPaste(paste:Paste): Paste
+  
+  def getPreviousPaste(paste:Paste): Paste
   
   }
 
@@ -83,6 +88,13 @@ class PasteManagerImpl extends GenericSearchManagerImpl[Paste] with PasteManager
     return pasteDao.getBySourceType(sourceType,desc)
   }
 
+  def getNextPaste(paste:Paste): Paste = pasteDao.getNextPaste(paste)
+  
+  def getPreviousPaste(paste:Paste): Paste = pasteDao.getPreviousPaste(paste)
+  
+  def getPreviousPastasIdList(paste:Paste):java.util.List[Long] = pasteDao.getPreviousPastasIdList(paste)
+   
+  
   @Secured(Array("ROLE_ADMIN"))
   override def remove(id:Long) = {
     

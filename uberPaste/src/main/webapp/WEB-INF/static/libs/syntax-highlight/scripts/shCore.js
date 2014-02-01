@@ -107,6 +107,7 @@ var sh = {
 	vars : {
 		discoveredBrushes : null,
 		highlighters : {},
+                modelId: null,
         lineNumbers : {},
         currentEditLine: null,
         showComments: true
@@ -301,8 +302,14 @@ var sh = {
 	 * 							provided, all elements in the current document 
 	 * 							are highlighted.
 	 */ 
-	highlight: function(globalParams, element)
+	highlight: function(modelId,globalParams, element)
 	{
+            
+           // alert(modelId);
+
+            
+            sh.vars.modelId = modelId;
+            
 		var elements = this.findElements(globalParams, element),
 			propertyName = 'innerHTML', 
 			highlighter = null,
@@ -361,7 +368,7 @@ var sh = {
 			target.parentNode.replaceChild(element, target);
 
             var roots = []
-            $$('div.commentBlock').each(function(el,index){
+            $(sh.vars.modelId+ '_commentsList').getElements('div.commentBlock').each(function(el,index){
 
                 sh.insertComment(el,0,index);
                 roots.push(el);
@@ -376,28 +383,30 @@ var sh = {
             if (!ln || 0 === ln.length ) {
 
                 var loc = window.location.hash.replace("#","");
+                
+                alert(loc);
                 if (loc != "") {
                     new Fx.Scroll(window).toElement(loc);
                 }
 
             } else {
               //  alert(ln);
-                sh.insertEditForm(ln);
+                sh.insertEditForm(sh.vars.modelId,ln);
             }
 
 		}
 	},
-
+         
 	/**
 	 * Main entry point for the SyntaxHighlighter.
 	 * @param {Object} params Optional params to apply to all highlighted elements.
 	 */
-	all: function(params)
+	all: function(modelId,params)
 	{
 		attachEvent(
 			window,
 			'load',
-			function() { sh.highlight(params); }
+			function() { sh.highlight(modelId,params); }
 		);
     },  toggleComments: function(ctrl) {
 
@@ -405,10 +414,10 @@ var sh = {
 
         ctrl.getElement('span').set('text', sh.vars.showComments ? '-' : '+');
 
-        $$('div.commentBlock').each(function(el){
+        $(sh.vars.modelId+ '_commentsList').getElements('div.commentBlock').each(function(el){
             el.setStyle('display', sh.vars.showComments === false ? 'none' : '');
         });
-        $$('div.listSpace').each(function(el){
+        $(sh.vars.modelId+ '_commentsList').getElements('div.listSpace').each(function(el){
             el.setStyle('display', sh.vars.showComments === false ? 'none' : '');
         });
     },  recurseCommentReply: function(roots) {
@@ -419,22 +428,20 @@ var sh = {
         });
 
     },  insertComment: function(cl,mode,count) {
-
     
         var lineNumber =  cl.getAttribute('lineNumber'),
                 id =  cl.getAttribute('commentId');
-   
-            $('cl_'+lineNumber).grab(cl,"after");
+            $(sh.vars.modelId+'_cl_'+lineNumber).grab(cl,"after");
  
     
-      var space = $("numSpace_l"+id);
+      var space = $(sh.vars.modelId+"_numSpace_l"+id);
     
     var calc_size = cl.getComputedSize()["totalHeight"];
     //cl.getStyle("height")+$('cl_'+lineNumber).getStyle("height");
     //alert(calc_size);
     space.setStyle("height",calc_size);
 
-    $('ln_'+lineNumber).grab(space,"after");
+    $(sh.vars.modelId+'_ln_'+lineNumber).grab(space,"after");
 
     cl.setStyle("display","");
     
@@ -442,65 +449,66 @@ var sh = {
 $('cl_lineHtml_'+lineNumber).setStyle('background-color','yellow');
   
     */
-    },  hideEditForm: function() {
+    },  hideEditForm: function(modelId) {
 
-        $('commentForm').setStyle("display","none");
+        $(modelId+'_commentForm').setStyle("display","none");
         $("numSpace").setStyle("display","none");
 
         if (sh.vars.currentEditLine != null) {
-            $('cl_lineHtml_'+sh.vars.currentEditLine).setStyle("display","");
-            $('cl_linePlain_'+sh.vars.currentEditLine).setStyle("display","none");
+            $(modelId+'cl_lineHtml_'+sh.vars.currentEditLine).setStyle("display","");
+            $(modelId+'cl_linePlain_'+sh.vars.currentEditLine).setStyle("display","none");
         }
 
 
-    },  insertEditForm: function(lineNumber,parentId) {
+    },  insertEditForm: function(modelId,lineNumber,parentId) {
 
-            var cForm = $('commentForm'),
+    
+            var cForm = $(modelId+'_commentForm'),
                     nspace = $("numSpace");
             
-        $('pageNum').set("text",lineNumber);
-        $('lineNumber').set("value",lineNumber);
+        cForm.getElementById('pageNum').set("text",lineNumber);
+        cForm.getElementById('lineNumber').set("value",lineNumber);
 
         cForm.setStyle("display","");
         $("numSpace").setStyle("display","");
 
-       $('commentText').set("value","");
+        cForm.getElementById('commentText').set("value","");
 
            cForm.setStyle("position","relative");
 
 
             if (sh.vars.currentEditLine != null) {
-                $('cl_lineHtml_'+sh.vars.currentEditLine).setStyle("display","");
-                $('cl_linePlain_'+sh.vars.currentEditLine).setStyle("display","none");
+                $(modelId+'_cl_lineHtml_'+sh.vars.currentEditLine).setStyle("display","");
+                $(modelId+'_cl_linePlain_'+sh.vars.currentEditLine).setStyle("display","none");
             } else {
 
-            $('cl_lineHtml_'+lineNumber).setStyle("display","none");
-            $('cl_linePlain_'+lineNumber).setStyle("display","");
+            $(modelId+'_cl_lineHtml_'+lineNumber).setStyle("display","none");
+            $(modelId+'_cl_linePlain_'+lineNumber).setStyle("display","");
 
             sh.vars.currentEditLine = lineNumber;
             }
             $("pasteLineCopyBtn").setStyle("display","inline-block");
                                       //cl_linePlainCode_
-            $('pasteLineToCopy').set('html',$('cl_linePlainCode_'+lineNumber).get("html"));
+            $('pasteLineToCopy').set('html',$(modelId+'_cl_linePlainCode_'+lineNumber).get("html"));
 
-            $('cl_linePlain_'+lineNumber).grab($("pasteLineCopyBtn"),'top');
+            $(modelId+'_cl_linePlain_'+lineNumber).grab($("pasteLineCopyBtn"),'top');
 
 
         if (parentId>0) {
-           $('comment_l'+parentId).grab($("commentForm"),"after");
+           $(modelId+'_comment_l'+parentId).grab(cForm,"after");
         } else {
-            $('cl_'+lineNumber).grab($("commentForm"),"after");
+            $(modelId+'_cl_'+lineNumber).grab(cForm,"after");
         }
         
-    $$('div.commentCurrent').each(function(el){
+        $$('div.commentCurrent').each(function(el){
                                el.removeClass('commentCurrent');
                                 el.addClass('commentInner');
                });
       
   
             if (parentId>0) {
-                $('comment_l'+parentId).getElementById('innerBlock').removeClass('commentInner');
-                $('comment_l'+parentId).getElementById('innerBlock').addClass('commentCurrent');
+                $(modelId+'comment_l'+parentId).getElementById('innerBlock').removeClass('commentInner');
+                $(modelId+'comment_l'+parentId).getElementById('innerBlock').addClass('commentCurrent');
            }
           
 
@@ -511,9 +519,9 @@ $('cl_lineHtml_'+lineNumber).setStyle('background-color','yellow');
  
            nspace.setStyle("height",calc_size);
 
-        $('ln_'+lineNumber).grab(nspace,"after");
+        $(modelId+'_ln_'+lineNumber).grab(nspace,"after");
 
-        setTimeout(function() { document.getElementById("commentText").focus(); }, 1);
+        setTimeout(function() { cForm.getElementById('commentText').focus(); }, 1);
 
     }
 }; // end of sh
@@ -1520,15 +1528,15 @@ sh.Highlighter.prototype = {
 
         var out = '';
          if (mode == 1) {
-             out+='<div id="ln_'+lineNumber+'" class="' + classes.join(' ') + '">';
+             out+='<div id="'+sh.vars.modelId+'_ln_'+lineNumber+'" class="' + classes.join(' ') + '">';
 
-             out+='<a id="line_'+lineNumber+'" name="line_'+lineNumber+'" href="#line_'+lineNumber+'" >'+code+'</a>';
+             out+='<a id="'+sh.vars.modelId+'_line_'+lineNumber+'" name="line_'+lineNumber+'" href="#line_'+lineNumber+'" >'+code+'</a>';
          } else {
-             out+='<div id="cl_'+lineNumber+'" class="' + classes.join(' ') + '">';
+             out+='<div id="'+sh.vars.modelId+'_cl_'+lineNumber+'" class="' + classes.join(' ') + '">';
 
-             out+='<span id="cl_lineHtml_'+lineNumber+'"><a  href="javascript:void(0);"  class="linkLine" title="Comment line '+lineNumber+'" onclick="SyntaxHighlighter.insertEditForm('+lineNumber+',0);">' + code + '</a></span>';
-             out+='<span style="display:none;"  id="cl_linePlain_'+lineNumber+'">';
-             out+='<span style="background-color: yellow;"  id="cl_linePlainCode_'+lineNumber+'">' + code + '</span></span>';
+             out+='<span id="'+sh.vars.modelId+'_cl_lineHtml_'+lineNumber+'"><a  href="javascript:void(0);"  class="linkLine" title="Comment line '+lineNumber+'" onclick="SyntaxHighlighter.insertEditForm('+sh.vars.modelId+','+lineNumber+',0);">' + code + '</a></span>';
+             out+='<span style="display:none;"  id="'+sh.vars.modelId+'_cl_linePlain_'+lineNumber+'">';
+             out+='<span style="background-color: yellow;"  id="'+sh.vars.modelId+'_cl_linePlainCode_'+lineNumber+'">' + code + '</span></span>';
 
          }
         return out+='</div>';

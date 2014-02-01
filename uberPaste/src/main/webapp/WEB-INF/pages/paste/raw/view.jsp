@@ -1,6 +1,9 @@
 <%@ include file="/WEB-INF/pages/common/taglibs.jsp"%>
 
-
+<div id="${model.id}_pagedPaste">
+    
+    
+    
 <div class="row">
     <div class="column grid-16">
         <c:set var="priorTitle"><fmt:message key="${model.priority.name}"/></c:set>
@@ -79,7 +82,7 @@
 
     <div class="column grid-3">
         <c:if test="${shareIntegration}">
-            <a id="rightPanelCtrl" href="javascript:void(0);" onclick="toggleRight();" title="toggle right panel">
+            <a id="${model.id}_rightPanelCtrl" href="javascript:void(0);" onclick="toggleRight(${model.id});" title="toggle right panel">
                 <span class="i">-</span>
             </a>
         </c:if>
@@ -99,27 +102,23 @@
     </c:otherwise>
     </c:choose>
 
-    <div id="centerPanel" class="column ${centerGridSize}" style="min-width:650px;">
+    <div id="${model.id}_centerPanel" class="column ${centerGridSize}" style="min-width:650px;">
     
-      <div id="pasteLoadSpinner" style="">
-             <img src="<c:url value='/main/static/${appVersion}/images/gear_sml.gif'/>"/>  
-                      <fmt:message key="action.loading"/>   
-          </div>    
-        
-    <pre id="pasteText" class="brush: ${model.codeType.code};toolbar: false; auto-links:false;highlight: [${commentedLinesList}]; " style="display:none; overflow-y: hidden;" >
+      
+    <pre id="${model.id}_pasteText" class="brush: ${model.codeType.code};toolbar: false; auto-links:false;highlight: [${commentedLinesList}]; " style="display:none; overflow-y: hidden;" >
         <c:out value="${model.text}" escapeXml="true" /></pre>
-    <code id="pasteTextPlain" style="display:none;"><c:out value="${model.text}" escapeXml="true" /></code>
+    <code id="${model.id}_pasteTextPlain" style="display:none;"><c:out value="${model.text}" escapeXml="true" /></code>
 
     </div>
 
 
     <c:if test="${shareIntegration}">
 
-        <div id="rightPanel" class="column grid-4" style="min-width:150px;" >
+        <div id="${model.id}_rightPanel" class="column grid-4" style="min-width:150px;" >
 
-        <iframe id="shareFrame" src="${shareUrl}/main/file/integrated/list/paste_${model.id}"
+        <iframe id="${model.id}_shareFrame" src="${shareUrl}/main/file/integrated/list/paste_${model.id}"
                 scrolling="auto" frameborder="0"
-                style="width:340px; "  allowTransparency="true"   >
+                style="width:340px;height:1000px; "  allowTransparency="true"   >
 
         </iframe>
 
@@ -135,14 +134,14 @@
 </div>
   --%>
 
-    <div id="commentsList" style="display:none;">
+    <div id="${model.id}_commentsList" style="display:none;">
 
         <c:forEach var="comment" items="${model.comments}" varStatus="loopStatus">
 
-            <div id="numSpace_l${comment.id}" class="listSpace" >
+            <div id="${model.id}_numSpace_l${comment.id}" class="listSpace" >
             </div>
 
-            <div id="comment_l${comment.id}" commentId="${comment.id}"
+            <div id="${model.id}_comment_l${comment.id}" commentId="${comment.id}"
                  lineNumber="${comment.lineNumber}"  parentCommentId="${comment.parentId}" class=" commentBlock" >
                 <div id="innerBlock" class="commentInner p-comment">
 
@@ -162,7 +161,7 @@
                     
                           <c:if test="${comment.parentId==null}">
                               <a  href="javascript:void(0);" class="linkLine" title="<fmt:message key="comments.sub"/>"
-                                onclick="SyntaxHighlighter.insertEditForm(${comment.lineNumber},${comment.id});"><span class="i">C</span></a>
+                                onclick="SyntaxHighlighter.insertEditForm(${model.id},${comment.lineNumber},${comment.id});"><span class="i">C</span></a>
                         </c:if>
                         <sec:authorize access="${currentUser !=null and (currentUser.admin or ( comment.hasOwner  and comment.owner eq currentUser)) }">
                             <a href="<c:url value='/main/paste/removeComment'>
@@ -198,19 +197,8 @@
 
 <c:url var="url" value='/main/paste/saveComment' />
 
-<div id="numSpace" class="listEditSpace" >
-</div>
 
-<span id="pasteLineCopyBtn" style="display:none; white-space: normal;">
-    <a id="ctrlc_line" data-clipboard-target="pasteLineToCopy" href="javascript:void(0);" style="float:left;" title="Copy to clipboard" >
-        <img src="<c:url value='/main/static/${appVersion}/images/ctrlc.png'/>"/></a>
-</span>
-
-<span id="pasteLineToCopy" style="display:none;">
-                              NONE
-</span>
-
- <div id="commentForm" class="editForm p-comment"  style="display:none;" >
+ <div id="${model.id}_commentForm" class="editForm p-comment"  style="display:none;" >
 
      <form:form action="${url}" id="addCommentForm"
                 modelAttribute="comment"
@@ -227,7 +215,7 @@
          <div class="column grid-1" style="float:right;" >
              
              <a class="" title="<fmt:message key="button.cancel"/>" 
-                href="javascript:void(0);" onclick="SyntaxHighlighter.hideEditForm();">
+                href="javascript:void(0);" onclick="SyntaxHighlighter.hideEditForm(${model.id});">
                <span class="i" style="font-size:1.5em;">d</span>
            </a>
 
@@ -237,7 +225,7 @@
          <div class="row">
          <div class="column grid-16" >
 
-             <button id="addCommentBtn" class='p-btn-save' type="submit">
+             <button id="${model.id}_addCommentBtn" class='p-btn-save' type="submit">
                  <span class="i" style="font-size:larger;">S</span>
                 <span id="btnCaption"><fmt:message key="button.save"/></span>
                  <img id="btnIcon" style="display:none;" src="<c:url value='/main/static/${appVersion}/images/gear_sml.gif'/>"/>
@@ -274,6 +262,7 @@
 
      </div>
 
-<img style="border: 2px saddlebrown;" src="${model.thumbImage}"/>
 
 
+    
+</div>

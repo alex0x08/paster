@@ -254,7 +254,7 @@
 		url: pageUrl,
 		method: 'get',
 		maxRequests: ${pageItems.pageCount-(pageItems.page+1)},
-		buffer: 1000,
+		buffer: 250,
 		pageDataIndex: 'page',
 		data: {
 			page: ${pageItems.page}+2
