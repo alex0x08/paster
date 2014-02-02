@@ -36,11 +36,11 @@ public class XMLField implements Serializable,Cloneable{
         this.secure = secure;
     }
     
-    public String getUid() {
+    public String getUuid() {
         return uid;
     }
     
-    public void setUid(String uid) {
+    public void setUuid(String uid) {
         this.uid=uid;
     }
     

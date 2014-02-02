@@ -315,13 +315,14 @@
                  <div class="row">
                      <div class="col-md-10 col-md-offset-1" >    
                          
-                         <%--
+                         
                          <div class="form-group">
                              <form:label  path="file">Custom fields:</form:label>
                                  <div id="customFields" class="controls">
 
                                  <c:forEach items="${model.xml.fields}" var="field" varStatus="status">
                                      <div>
+                                         <form:hidden path="xml.fields[${status.index}].uuid" />
                                          <span><input name="xml.fields[${status.index}].name" value="${field.name}"/></span>
                                          <span><input name="xml.fields[${status.index}].value" value="${field.value}"/></span>
                                          <span><a href="#" class="removeBtn">remove</a></span>
@@ -350,7 +351,7 @@
                              </script>     
 
                          </div>       
-                         --%>
+                         
                          <c:if test="${model.blank}">
 
                              <div class="form-group">
