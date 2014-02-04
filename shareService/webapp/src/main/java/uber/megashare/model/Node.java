@@ -115,4 +115,15 @@ public abstract class Node extends CommentedStruct {
     public void setCode(String code) {
         this.code = code;
     }
+    
+      public void fillFrom(Node source) {
+        super.fillFrom(source);
+        this.accessLevel=source.accessLevel;
+        this.code=source.code;
+        this.children.clear();
+        this.children.addAll(source.getChildren());
+        this.nodeType=source.nodeType;
+        this.owner=source.owner;
+        this.ownerName=source.ownerName;
+      }
 }

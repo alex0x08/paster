@@ -65,9 +65,13 @@ public abstract class GenericVersioningDaoImpl<T extends Struct> extends  Struct
         }
 
         T out = (T) getReader().find(persistentClass, id, rev);
-
-        getLogger().debug("getRevision id=" + id + ",rev=" + rev + ",found=" + out);
-
+        
+        out.setLastModified(getReader().getRevisionDate(rev));
+        out.setVersionsCount(getRevisions(id).size());
+        
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("getRevision id=" + id + ",rev=" + rev + ",found=" + out);
+        }
         return getFull(out);
     }
 

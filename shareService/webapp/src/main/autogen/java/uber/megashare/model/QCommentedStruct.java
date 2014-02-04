@@ -40,6 +40,9 @@ public class QCommentedStruct extends EntityPathBase<CommentedStruct> {
     public final NumberPath<Integer> commentsCount = createNumber("commentsCount", Integer.class);
 
     //inherited
+    public final DateTimePath<java.util.Date> created = _super.created;
+
+    //inherited
     public final BooleanPath disabled = _super.disabled;
 
     //inherited
@@ -50,6 +53,9 @@ public class QCommentedStruct extends EntityPathBase<CommentedStruct> {
 
     //inherited
     public final StringPath name = _super.name;
+
+    //inherited
+    public final NumberPath<Integer> versionsCount = _super.versionsCount;
 
     public QCommentedStruct(String variable) {
         super(CommentedStruct.class, forVariable(variable));

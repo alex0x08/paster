@@ -35,6 +35,9 @@ public class QAttachedFile extends EntityPathBase<AttachedFile> {
 
     public final QStruct _super = new QStruct(this);
 
+    //inherited
+    public final DateTimePath<java.util.Date> created = _super.created;
+
     public final ArrayPath<Byte> data = createArray("data", Byte[].class);
 
     //inherited
@@ -52,6 +55,9 @@ public class QAttachedFile extends EntityPathBase<AttachedFile> {
 
     //inherited
     public final StringPath name = _super.name;
+
+    //inherited
+    public final NumberPath<Integer> versionsCount = _super.versionsCount;
 
     public QAttachedFile(String variable) {
         super(AttachedFile.class, forVariable(variable));

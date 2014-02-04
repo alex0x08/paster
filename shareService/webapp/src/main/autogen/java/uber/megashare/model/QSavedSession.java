@@ -39,6 +39,9 @@ public class QSavedSession extends EntityPathBase<SavedSession> {
     public final StringPath code = _super.code;
 
     //inherited
+    public final DateTimePath<java.util.Date> created = _super.created;
+
+    //inherited
     public final BooleanPath disabled = _super.disabled;
 
     //inherited
@@ -49,6 +52,9 @@ public class QSavedSession extends EntityPathBase<SavedSession> {
 
     //inherited
     public final StringPath name = _super.name;
+
+    //inherited
+    public final NumberPath<Integer> versionsCount = _super.versionsCount;
 
     public QSavedSession(String variable) {
         super(SavedSession.class, forVariable(variable));

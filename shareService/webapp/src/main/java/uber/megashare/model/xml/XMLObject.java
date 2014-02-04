@@ -17,6 +17,8 @@ package uber.megashare.model.xml;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -29,6 +31,8 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement(name = "form")
 public class XMLObject implements XmlCloneable {
 
+    @NotNull
+    @Valid
     private List<XMLField> fields = new ArrayList<>();
 
     @XmlTransient
@@ -60,7 +64,17 @@ public class XMLObject implements XmlCloneable {
     }
 
     public void setFields(List<XMLField> fields) {
-        this.fields = fields;
+        
+       /* this.fields.clear();
+        
+        for (XMLField f:fields) {
+            if (f.isEmpty()) {
+                continue;
+            }
+            this.fields.add(f);
+        }*/
+        
+        //this.fields = fields;
     }
 
     @Override
@@ -69,6 +83,9 @@ public class XMLObject implements XmlCloneable {
         XMLObject out = new XMLObject();
 
         for (XMLField f : fields) {
+            if (f.isEmpty()) {
+                continue;
+            }
             out.fields.add(f.clone());
         }
 

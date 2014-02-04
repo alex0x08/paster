@@ -40,6 +40,9 @@ public class QAvatarStruct extends EntityPathBase<AvatarStruct> {
     public final QAvatar avatar;
 
     //inherited
+    public final DateTimePath<java.util.Date> created = _super.created;
+
+    //inherited
     public final BooleanPath disabled = _super.disabled;
 
     //inherited
@@ -50,6 +53,9 @@ public class QAvatarStruct extends EntityPathBase<AvatarStruct> {
 
     //inherited
     public final StringPath name = _super.name;
+
+    //inherited
+    public final NumberPath<Integer> versionsCount = _super.versionsCount;
 
     public QAvatarStruct(String variable) {
         this(AvatarStruct.class, forVariable(variable), INITS);

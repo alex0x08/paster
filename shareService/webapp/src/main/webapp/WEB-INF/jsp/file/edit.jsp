@@ -318,16 +318,30 @@
                          
                          <div class="form-group">
                              <form:label  path="file">Custom fields:</form:label>
+                             
+                         
+                             
                                  <div id="customFields" class="controls">
-
+      
                                  <c:forEach items="${model.xml.fields}" var="field" varStatus="status">
                                      <div>
                                          <form:hidden path="xml.fields[${status.index}].uuid" />
-                                         <span><input name="xml.fields[${status.index}].name" value="${field.name}"/></span>
-                                         <span><input name="xml.fields[${status.index}].value" value="${field.value}"/></span>
+                                         <span>
+                                             <form:input path="xml.fields[${status.index}].name"/>
+                                             <form:errors path="xml.fields[${status.index}].name" cssClass="alert alert-danger"   />
+                                         </span>
+                                         =
+                                         <span>
+                                             <form:input path="xml.fields[${status.index}].value"/>
+                                             <form:errors path="xml.fields[${status.index}].value" cssClass="alert alert-danger"  />
+                                         </span>
                                          <span><a href="#" class="removeBtn">remove</a></span>
                                     </div>
 
+                                         <input name="xml.fields[100].name" value="xxx"/>
+                               
+                                        <input name="xml.fields[100].value" value="yyy"/>
+                                                    
 
                                  </c:forEach>
                                  <a href="#" class="addBtn">add</a>
@@ -416,6 +430,8 @@
                                              page="/WEB-INF/jsp/templates/common/preview.jsp">
                                              <jsp:param name="detail" value="1" />
                                              <jsp:param name="downloadLink" value="download" />
+                                             <jsp:param name="model" value="${model}" />
+                                             
                                          </jsp:include>
                                      </div>
                                  </div>

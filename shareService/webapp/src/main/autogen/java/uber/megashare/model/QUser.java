@@ -42,6 +42,9 @@ public class QUser extends EntityPathBase<User> {
 
     public final EnumPath<AvatarType> avatarType = createEnum("avatarType", AvatarType.class);
 
+    //inherited
+    public final DateTimePath<java.util.Date> created;
+
     public final EnumPath<AccessLevel> defaultFileAccessLevel = createEnum("defaultFileAccessLevel", AccessLevel.class);
 
     //inherited
@@ -74,6 +77,9 @@ public class QUser extends EntityPathBase<User> {
 
     public final StringPath skype = createString("skype");
 
+    //inherited
+    public final NumberPath<Integer> versionsCount;
+
     public QUser(String variable) {
         this(User.class, forVariable(variable), INITS);
     }
@@ -90,11 +96,13 @@ public class QUser extends EntityPathBase<User> {
         super(type, metadata, inits);
         this._super = new QAvatarStruct(type, metadata, inits);
         this.avatar = _super.avatar;
+        this.created = _super.created;
         this.disabled = _super.disabled;
         this.id = _super.id;
         this.lastModified = _super.lastModified;
         this.name = _super.name;
         this.relatedProject = inits.isInitialized("relatedProject") ? new QProject(forProperty("relatedProject"), inits.get("relatedProject")) : null;
+        this.versionsCount = _super.versionsCount;
     }
 
 }

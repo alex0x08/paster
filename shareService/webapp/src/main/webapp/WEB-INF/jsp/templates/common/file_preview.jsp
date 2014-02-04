@@ -95,6 +95,11 @@
 
 
 <kc:prettyTime var="modelLastModified" date="${model.lastModified}" locale="${pageContext.response.locale}"/>
+<fmt:formatDate var="modelLastModifiedFull" value="${model.lastModified}" pattern="${dateTimePattern}"/>
+
+<kc:prettyTime var="modelCreated" date="${model.created}" locale="${pageContext.response.locale}"/>
+<fmt:formatDate var="modelCreatedFull" value="${model.created}" pattern="${dateTimePattern}"/>
+
 
  <c:url value="${externalUrl}/act/download" var="selfExternalUrl">
             <!--${model.uuid} -->
@@ -133,9 +138,12 @@
                         </c:if>
                     </a>
                 </li>
-                <li><a href="#api_${model.id}" data-toggle="tab" >
+                <li>
+                    <a href="#api_${model.id}" data-toggle="tab" >
                         <span class="glyphicon glyphicon-cog"></span> 
-                        <fmt:message key="file.api.file"/></a></li>
+                        <fmt:message key="file.api.file"/></a>
+                </li>
+
                 
                  <div class="pull-right">
 
@@ -306,9 +314,18 @@
         <a href="<c:out value='${detailUrl}'/>" target="${target}"><c:out value="${model.name}"/></a>
 
        
+        <c:if test="${model.versionsCount>0}">
+            <span class="glyphicon glyphicon-random" title="<fmt:message key="struct.versions"/>"></span>
+                        : <c:out value="${model.versionsCount}"/> 
+                    </c:if>
+       
 
         <div style="padding-left:10px;" >${model.formattedFileSize} 
-            &nbsp; ${modelLastModified} 
+            &nbsp; <span title="${modelLastModifiedFull}">${modelLastModified}</span>  
+            
+            <c:if test="${model.everModified}">
+                |<span title="${modelCreatedFull}">${modelCreated}</span>
+            </c:if>
             
                     <c:set var="usermodel" value="${model.owner}" scope="request"></c:set>
                    <jsp:include page="/WEB-INF/jsp/templates/common/user-dropdown.jsp" >
@@ -317,16 +334,6 @@
             
           
             &nbsp; 
-            
-            <c:if test="${not empty model.xml.fields}">
-                
-                <c:forEach var="field" items="${model.xml.fields}">
-                    <c:out value="${field.name}"/> | <c:out value="${field.value}"/>
-                    
-                    
-                </c:forEach>
-                
-            </c:if>
             
             
             <span style="display: block;font-size:smaller;"> 
@@ -390,6 +397,22 @@
                 
         </div>
     </div>
+                   
+                   <div>
+                       
+                       <c:if test="${not empty model.xml.fields}">
+                
+                <c:forEach var="field" items="${model.xml.fields}">
+                    <c:out value="${field.name}"/> = <c:out value="${field.value}"/>
+                    
+                    
+                </c:forEach>
+                
+            </c:if>
+                       
+                   </div>            
+                   
+                   
         <div >
   
             <c:if test="${model.type eq 'VIDEO' and model.mime eq 'video/x-flv'}">
@@ -490,6 +513,9 @@
    </div>
         </div>
                     <div class="tab-pane" id="comments_${model.id}" >
+                </div>
+                
+                  <div class="tab-pane" id="versions_${model.id}" >
                 </div>
                 
                 

@@ -113,6 +113,7 @@ public class Comment extends BaseDBObject implements Serializable {
         return "comment, id=" + getId();
     }
 
+    @Override
     public void loadFull() {
 
         author.loadFull();
