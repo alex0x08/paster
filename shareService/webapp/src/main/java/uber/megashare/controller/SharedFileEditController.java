@@ -189,9 +189,12 @@ public class SharedFileEditController extends AbstractCommentController<SharedFi
 
                 log.append("uploadSave starting ,currentUser=" + getCurrentUser() + " file=" + input);
                 
-                   for(XMLField f:input.getXml().getFields()) {
-            System.out.println("field "+input.getName());
-        }
+                input.getXml().rebuildFields();
+                
+                   for(XMLField f:input.getXml().getFields().values()) {
+            
+                       System.out.println("field "+input.getName());
+                    }
      
                 
                 SharedFile old;
@@ -480,6 +483,8 @@ public class SharedFileEditController extends AbstractCommentController<SharedFi
                     
                 XMLObject ox = b.getXml();
                
+                ox.rebuildFields();
+                
                 b.fillFrom(old);
                 b.setXml(ox);
                 
@@ -520,10 +525,10 @@ public class SharedFileEditController extends AbstractCommentController<SharedFi
         
         XMLField f = new XMLField();
         
-        f.setName("Test key");
+        f.setName("xxxKey");
         f.setValue("Test value");
         
-        out.getXml().getFields().add(f);
+        out.getXml().getFields().put(f.getUuid(),f);
         return out;
     }
 

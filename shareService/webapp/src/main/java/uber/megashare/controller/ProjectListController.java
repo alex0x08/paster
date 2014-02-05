@@ -42,7 +42,6 @@ public class ProjectListController extends GenericSearchableController<Project, 
        
         setListPage("redirect:list");
         setEditPage("project/edit");
-
     }
 
     @Override

@@ -36,7 +36,6 @@ import uber.megashare.model.SharedFile;
 import uber.megashare.model.SharedFileSearchQuery;
 import uber.megashare.service.SharedFileManager;
 import static uber.megashare.controller.SharedFileConstants.FILE_PREFIX;
-import uber.megashare.model.tree.FolderNode;
 import uber.megashare.service.FolderManager;
 
 

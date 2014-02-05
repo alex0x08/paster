@@ -34,7 +34,7 @@ public class XMLBridge implements FieldBridge {
         }
         XMLObject obj = (XMLObject) value;
 
-        for (XMLField f : obj.getFields()) {
+        for (XMLField f : obj.getFields().values()) {
 
             Field field = new Field(f.getName(), f.getValue(),
                     luceneOptions.getStore(), luceneOptions.getIndex(),

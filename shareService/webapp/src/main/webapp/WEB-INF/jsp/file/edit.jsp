@@ -24,10 +24,8 @@
                    
                     $('.accessLevelSwitch').change(function() {
                            $('#selectProjectsBlock').toggle($(this).val() == 'PROJECT');
-                           $('#selectUsersBlock').toggle($(this).val() == 'USERS');
-                       
-                });
-           
+                           $('#selectUsersBlock').toggle($(this).val() == 'USERS');                       
+                });           
        });
 </script>
 
@@ -145,19 +143,16 @@
                         });  
                         
         $('#enableRemovalSwitch').on('change', function (e) {
-                           
-                           if (this.checked) {
-                                $('#inputRemovalDateBlock').css('display','');
-                           } else {
-                                $('#inputRemovalDateBlock').css('display','none'); 
-                                $('#removeAfter').val('');
-                            }                             
-                            
-                        });
+               if (this.checked) {
+                      $('#inputRemovalDateBlock').css('display','');
+                } else {
+                      $('#inputRemovalDateBlock').css('display','none'); 
+                      $('#removeAfter').val('');
+                        } 
+                 });
 
-
-                        var nowTemp = new Date();
-                        var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0);
+            var nowTemp = new Date();
+                       var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0);
 
                         var removalPicker =$('#inputRemovalDateBlock').datepicker({
                           
@@ -182,8 +177,7 @@
                               $('#fileSelectBtn').bind('change', function() {
                                   $('#fileSelectLabel').text($(this).val());
                               });
-                    });
-                      
+                    });                      
                   </script>
                 
             </c:otherwise>
@@ -206,28 +200,24 @@
                          </c:otherwise>
                      </c:choose>  
                      
-                    <c:if test="${not empty model.integrationCode}">
-                              
-                     <div class="form-group">
-                         <div class="controls">
-                             <form:errors cssClass="errorblock" element="div"/>
-
+                     <c:if test="${not empty model.integrationCode}">
+                         <div class="form-group">
+                             <div class="controls">
+                                 <form:errors cssClass="errorblock" element="div"/>
                                  <c:out value="Used integration code: ${model.integrationCode}" escapeXml="true" />
                                  <form:hidden path="integrationCode" />
-                         </div>
-                     </div> 
-                                </c:if>
-                      
+                             </div>
+                         </div> 
+                     </c:if>
+
 
                      <sec:authorize ifAnyGranted="ROLE_USER,ROLE_ADMIN,ROLE_MANAGER">
 
                          <c:if test="${model.blank or (model.owner eq currentUser or currentUser.admin)}">
 
-
                              <div class="form-group">
                                  <form:label  path="accessLevel"><fmt:message key="file.accessLevel"/>:</form:label>
                                      <div >
-
                                      <c:choose>
                                          <c:when test="${not empty model.integrationCode}">
                                              <c:set var="accessLevelDisabled" value="true"/>
@@ -235,18 +225,15 @@
                                          <c:otherwise>
                                              <c:set var="accessLevelDisabled" value="false"/>                                    
                                          </c:otherwise>
-
                                      </c:choose>
 
-                                     <div class="btn-group" data-toggle="buttons">
-                
+                                     <div class="btn-group" data-toggle="buttons">                
                                          <c:forEach items="${model.accessLevel.levels}" var="level">
                                              <label class="btn btn-default" >
                                                  <fmt:message key="${level.desc}" />
                                                  <form:radiobutton cssClass="accessLevelSwitch" path="accessLevel" value="${level.code}"  />
                                              </label>
                                          </c:forEach>
-
                                      </div>    
 
                                      <c:if test="${not empty model.integrationCode}">
@@ -254,10 +241,8 @@
                                      </c:if>
 
                                      <form:errors path="accessLevel" cssClass="error" />
-
                                  </div>
                              </div>
-
                          </c:if>
 
 
@@ -265,17 +250,12 @@
                              <form:label  path="relatedProjects"><fmt:message key="projects.title"/>:</form:label>
                                  <div class="controls">
 
-
                                  <fmt:message key='placeholder.select.projects' var="placeholderSelectText"/>
                                  <form:select  path="relatedProjects" cssClass="chosen_select_box_multiple" data-placeholder="${placeholderSelectText}" cssStyle="width:15em;"   >
-
                                      <form:options  items="${availableProjects}" itemValue="id" itemLabel="name"  />
                                  </form:select>
-
                                  <form:errors path="relatedProjects" cssClass="error" />
-
                              </div>
-
                          </div>         
 
                          <div class="form-group" id="selectUsersBlock" style="display:none;">
@@ -320,30 +300,48 @@
                              <form:label  path="file">Custom fields:</form:label>
                              
                          
+                             <div class="col-lg-8">
+    <div class="input-group">
+      <span class="input-group-addon">
+        <input type="radio">
+      </span>
+      <input type="text" class="form-control">
+      
+       <span class="input-group-addon">.00</span>
+      <input type="text" class="form-control">
+      
+    </div><!-- /input-group -->
+  </div><!-- /.col-lg-6 -->
+                             
+                             
                              
                                  <div id="customFields" class="controls">
       
                                  <c:forEach items="${model.xml.fields}" var="field" varStatus="status">
                                      <div>
-                                         <form:hidden path="xml.fields[${status.index}].uuid" />
+                                         <form:hidden path="xml.fields[${field.key}].uuid" />
                                          <span>
-                                             <form:input path="xml.fields[${status.index}].name"/>
-                                             <form:errors path="xml.fields[${status.index}].name" cssClass="alert alert-danger"   />
+                                             <form:input path="xml.fields[${field.key}].name"/>
+                                             <form:errors path="xml.fields[${field.key}].name" cssClass="alert alert-danger"   />
                                          </span>
                                          =
                                          <span>
-                                             <form:input path="xml.fields[${status.index}].value"/>
-                                             <form:errors path="xml.fields[${status.index}].value" cssClass="alert alert-danger"  />
+                                             <form:input path="xml.fields[${field.key}].value"/>
+                                             <form:errors path="xml.fields[${field.key}].value" cssClass="alert alert-danger"  />
                                          </span>
                                          <span><a href="#" class="removeBtn">remove</a></span>
                                     </div>
 
-                                         <input name="xml.fields[100].name" value="xxx"/>
+                                         
+                                       
+
+                                 </c:forEach>
+                                     
+                                       <input name="xml.fields[100].name" value="xxx"/>
                                
                                         <input name="xml.fields[100].value" value="yyy"/>
                                                     
-
-                                 </c:forEach>
+                                     
                                  <a href="#" class="addBtn">add</a>
 
                                  <form:errors path="removeAfter" cssClass="error" />

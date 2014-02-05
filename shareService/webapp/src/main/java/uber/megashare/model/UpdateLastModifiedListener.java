@@ -35,7 +35,5 @@ public class UpdateLastModifiedListener extends LoggedClass {
        
         s.lastModified = s.lastModified == null ?  s.created : Calendar.getInstance().getTime();
         
-        s.versionsCount=  s.versionsCount!=null ? ++s.versionsCount :  1;
-        
     }
 }
