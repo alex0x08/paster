@@ -8,6 +8,8 @@
         
     </c:when>
     
+       
+        
     <c:when test="${model.nodeType eq 'FILE'}">
       <jsp:include page="/WEB-INF/jsp/templates/common/file_preview.jsp" />
     </c:when>

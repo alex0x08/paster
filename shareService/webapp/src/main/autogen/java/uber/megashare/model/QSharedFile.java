@@ -50,6 +50,9 @@ public class QSharedFile extends EntityPathBase<SharedFile> {
     public final NumberPath<Integer> commentsCount;
 
     //inherited
+    public final DateTimePath<java.util.Date> created;
+
+    //inherited
     public final BooleanPath disabled;
 
     public final NumberPath<Long> fileSize = createNumber("fileSize", Long.class);
@@ -93,6 +96,9 @@ public class QSharedFile extends EntityPathBase<SharedFile> {
 
     public final StringPath uuid = createString("uuid");
 
+    //inherited
+    public final NumberPath<Integer> versionsCount;
+
     public final SimplePath<uber.megashare.model.xml.XMLObject> xml = createSimple("xml", uber.megashare.model.xml.XMLObject.class);
 
     public QSharedFile(String variable) {
@@ -114,12 +120,14 @@ public class QSharedFile extends EntityPathBase<SharedFile> {
         this.code = _super.code;
         this.comments = _super.comments;
         this.commentsCount = _super.commentsCount;
+        this.created = _super.created;
         this.disabled = _super.disabled;
         this.id = _super.id;
         this.lastModified = _super.lastModified;
         this.name = _super.name;
         this.owner = _super.owner;
         this.ownerName = _super.ownerName;
+        this.versionsCount = _super.versionsCount;
     }
 
 }

@@ -32,6 +32,8 @@ public class UpdateLastModifiedListener extends LoggedClass {
     @PreUpdate
     @PrePersist
     public void updateTimeStamps(Struct s) {
-        s.lastModified = Calendar.getInstance().getTime();
+       
+        s.lastModified = s.lastModified == null ?  s.created : Calendar.getInstance().getTime();
+        
     }
 }

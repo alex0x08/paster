@@ -48,6 +48,9 @@ public class QNode extends EntityPathBase<Node> {
     public final NumberPath<Integer> commentsCount = _super.commentsCount;
 
     //inherited
+    public final DateTimePath<java.util.Date> created = _super.created;
+
+    //inherited
     public final BooleanPath disabled = _super.disabled;
 
     //inherited
@@ -62,6 +65,9 @@ public class QNode extends EntityPathBase<Node> {
     public final QUser owner;
 
     public final StringPath ownerName = createString("ownerName");
+
+    //inherited
+    public final NumberPath<Integer> versionsCount = _super.versionsCount;
 
     public QNode(String variable) {
         this(Node.class, forVariable(variable), INITS);

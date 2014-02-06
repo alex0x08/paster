@@ -17,6 +17,7 @@ package uber.megashare.model.xml;
 
 import java.io.Serializable;
 import java.util.UUID;
+import javax.validation.constraints.Pattern;
 
 /**
  *
@@ -24,10 +25,22 @@ import java.util.UUID;
  */
 public class XMLField implements Serializable,Cloneable{
     
-    private String id="",name,value,uid = UUID.randomUUID().toString();
+    private String id="";
+    
+    @Pattern(regexp = "^[a-zA-Z_\\-.0-9]{1,30}$", message = "{struct.name.validator}")
+    private String name;
+    
+    @Pattern(regexp = "(.+)", message = "{struct.name.validator}")
+    private String value;
+    
+    private String uid = UUID.randomUUID().toString();
 
     private boolean secure;
 
+    public boolean isEmpty() {
+        return name==null || value==null;
+    }
+    
     public boolean isSecure() {
         return secure;
     }
@@ -36,11 +49,11 @@ public class XMLField implements Serializable,Cloneable{
         this.secure = secure;
     }
     
-    public String getUid() {
+    public String getUuid() {
         return uid;
     }
     
-    public void setUid(String uid) {
+    public void setUuid(String uid) {
         this.uid=uid;
     }
     

@@ -24,7 +24,6 @@ import java.util.Set;
 import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
@@ -32,6 +31,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.Transient;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlTransient;
@@ -139,6 +139,8 @@ public class SharedFile extends Node {
     @FieldBridge(impl= XMLBridge.class)
     @Field 
     @NotAudited
+    @NotNull
+    @Valid
     private XMLObject xml = new XMLObject();
 
     public XMLObject getXml() {
@@ -360,6 +362,27 @@ public class SharedFile extends Node {
 
     }
 
+      public void fillFrom(SharedFile source) {
+        super.fillFrom(source);
+        
+        this.fileSize=source.fileSize;
+        this.integrationCode=source.integrationCode;
+        this.mime=source.mime;
+        this.nameContents=source.nameContents;
+        this.previewHeight=source.previewHeight;
+        this.previewWidth=source.previewWidth;
+        this.previewUrl=source.previewUrl;
+        this.relatedProjects.clear();
+        this.relatedProjects.addAll(source.getRelatedProjects());
+        this.relatedUsers.clear();
+        this.relatedUsers.addAll(source.relatedUsers);
+        this.removeAfter=source.removeAfter;
+        this.type=source.type;
+        this.url=source.url;
+        this.uuid=source.uuid;
+        this.xml=source.xml;
+        
+      }
    
   @Override
   public void loadFull() {

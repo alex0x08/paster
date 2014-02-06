@@ -42,6 +42,7 @@ public class SharedFileManagerImpl extends GenericSearchableManagerImpl<SharedFi
      *
      */
     private static final long serialVersionUID = -7991981586910555468L;
+    
     private SharedFileDao shareDao;
     
     private SettingsManager settings;

@@ -61,6 +61,11 @@ public abstract class Key extends Struct {
         return hash;
     }
     
+    public void fillFrom(Key source) {
+        super.fillFrom(source);
+        this.code = source.code;
+    }
+
       @Override
     public String toString() {
         return LoggedClass.getStaticInstance().getNewProtocolBuilder()

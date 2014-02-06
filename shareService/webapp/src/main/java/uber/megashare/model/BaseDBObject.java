@@ -20,38 +20,32 @@ import java.io.Serializable;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
-import org.hibernate.envers.NotAudited;
 import uber.megashare.base.LoggedClass;
 
 /**
  * Базовый объект, сохраняемый в базе
+ *
  * @author alex
  */
 @MappedSuperclass
 public abstract class BaseDBObject extends BaseObject implements Serializable, IdentifiedObject {
 
     /**
-	 * 
-	 */
-	private static final long serialVersionUID = -7254989743482726486L;
-	
+     *
+     */
+    private static final long serialVersionUID = -7254989743482726486L;
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @XStreamAsAttribute
     private Long id;
-    
     private boolean disabled;
 
-    
-    
     /**
      * является ли объект отключенным
      *
-     * @return
-     *  true - да
-     *  false -нет
+     * @return true - да false -нет
      */
     public boolean isDisabled() {
         return disabled;
@@ -64,9 +58,7 @@ public abstract class BaseDBObject extends BaseObject implements Serializable, I
     /**
      * пустой ли объект (сохранен ли в базе)
      *
-     * @return
-     *  true - да
-     *  false - нет
+     * @return true - да false - нет
      */
     public boolean isBlank() {
         return id == null;
@@ -74,9 +66,10 @@ public abstract class BaseDBObject extends BaseObject implements Serializable, I
 
     /**
      * Получить уникальный ключ объекта
+     *
      * @return
      */
-        @Override
+    @Override
     public Long getId() {
         return id;
     }
@@ -93,16 +86,16 @@ public abstract class BaseDBObject extends BaseObject implements Serializable, I
     }
 
     /**
-     * Сравнение с другими объектами
-     * происходит сторого только по id
-     * @param from 
+     * Сравнение с другими объектами происходит сторого только по id
+     *
+     * @param from
      * @return
      */
     @Override
     public boolean equals(Object from) {
 
-        return from instanceof BaseDBObject 
-                && id != null 
+        return from instanceof BaseDBObject
+                && id != null
                 && id.equals(((BaseDBObject) from).id);
     }
 
@@ -112,6 +105,10 @@ public abstract class BaseDBObject extends BaseObject implements Serializable, I
                 .append("id", id)
                 .append("class", getClass().getCanonicalName()).toString();
     }
-    
+  
+    public void fillFrom(BaseDBObject source) {
+        this.id=source.getId();
+    }
+  
     public abstract void loadFull();
 }

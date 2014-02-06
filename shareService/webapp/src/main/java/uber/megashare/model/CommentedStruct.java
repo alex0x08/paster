@@ -80,6 +80,14 @@ public class CommentedStruct extends Struct implements Serializable {
         this.comments = comments;
     }
 
+    
+    public void fillFrom(CommentedStruct source) {
+        super.fillFrom(source);
+        this.comments.clear();
+        this.comments.addAll(source.getComments());
+        this.commentsCount=source.commentsCount;
+    }
+    
     @Override
     public void loadFull() {
         for (Comment c : comments) {

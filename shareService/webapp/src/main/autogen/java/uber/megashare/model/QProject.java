@@ -40,6 +40,9 @@ public class QProject extends EntityPathBase<Project> {
     // inherited
     public final QAvatar avatar;
 
+    //inherited
+    public final DateTimePath<java.util.Date> created;
+
     public final StringPath description = createString("description");
 
     //inherited
@@ -53,6 +56,9 @@ public class QProject extends EntityPathBase<Project> {
 
     //inherited
     public final StringPath name;
+
+    //inherited
+    public final NumberPath<Integer> versionsCount;
 
     public QProject(String variable) {
         this(Project.class, forVariable(variable), INITS);
@@ -70,10 +76,12 @@ public class QProject extends EntityPathBase<Project> {
         super(type, metadata, inits);
         this._super = new QAvatarStruct(type, metadata, inits);
         this.avatar = _super.avatar;
+        this.created = _super.created;
         this.disabled = _super.disabled;
         this.id = _super.id;
         this.lastModified = _super.lastModified;
         this.name = _super.name;
+        this.versionsCount = _super.versionsCount;
     }
 
 }

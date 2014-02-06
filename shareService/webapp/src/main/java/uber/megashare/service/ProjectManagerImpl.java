@@ -36,9 +36,7 @@ public class ProjectManagerImpl extends GenericSearchableManagerImpl<Project,Pro
     @Autowired
     public ProjectManagerImpl(ProjectDao projectRepo) {
         super(projectRepo);
-
-        this.projectDao = projectRepo;
-        
+        this.projectDao = projectRepo;        
     }
  
     @Secured(value={"ROLE_ADMIN","ROLE_USER"})

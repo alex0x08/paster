@@ -38,6 +38,9 @@ public class QKey extends EntityPathBase<Key> {
     public final StringPath code = createString("code");
 
     //inherited
+    public final DateTimePath<java.util.Date> created = _super.created;
+
+    //inherited
     public final BooleanPath disabled = _super.disabled;
 
     //inherited
@@ -48,6 +51,9 @@ public class QKey extends EntityPathBase<Key> {
 
     //inherited
     public final StringPath name = _super.name;
+
+    //inherited
+    public final NumberPath<Integer> versionsCount = _super.versionsCount;
 
     public QKey(String variable) {
         super(Key.class, forVariable(variable));

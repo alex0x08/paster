@@ -57,6 +57,7 @@ import uber.megashare.model.SharedFileSearchQuery;
 import uber.megashare.model.Struct;
 import uber.megashare.model.User;
 import uber.megashare.model.xml.XMLField;
+import uber.megashare.model.xml.XMLObject;
 import uber.megashare.service.SharedFileManager;
 import uber.megashare.service.image.ImageBuilder;
 
@@ -188,6 +189,14 @@ public class SharedFileEditController extends AbstractCommentController<SharedFi
 
                 log.append("uploadSave starting ,currentUser=" + getCurrentUser() + " file=" + input);
                 
+                input.getXml().rebuildFields();
+                
+                   for(XMLField f:input.getXml().getFields().values()) {
+            
+                       System.out.println("field "+input.getName());
+                    }
+     
+                
                 SharedFile old;
 
                 if (!input.isBlank()) {
@@ -292,7 +301,7 @@ public class SharedFileEditController extends AbstractCommentController<SharedFi
                      *
                      */
                     
-                    String calcPath = settingsManager.getCalculatedFileDir(input.getLastModified(),
+                    String calcPath = settingsManager.getCalculatedFileDir(input.getCreated(),
                             input.getUuid(),
                             input.isBlank() ? 0 : 
                             smanager.getCurrentRevisionNumber(input.getId()).longValue()+1);
@@ -396,9 +405,6 @@ public class SharedFileEditController extends AbstractCommentController<SharedFi
          * perform actual file save & thumbnail generation
          */
         
-        for(XMLField f:b.getXml().getFields()) {
-            System.out.println("field "+f.getName());
-        }
         
         SharedFile out =uploadSave(b.getFile(), b);
 
@@ -468,6 +474,22 @@ public class SharedFileEditController extends AbstractCommentController<SharedFi
                 getLogger().debug(
                         "field=" + f.getField() + ",rejected value="
                         + f.getRejectedValue());
+                
+                
+                /**
+                 * push back full object
+                 */
+                SharedFile old = manager.getFull(b.getId());
+                    
+                XMLObject ox = b.getXml();
+               
+                ox.rebuildFields();
+                
+                b.fillFrom(old);
+                b.setXml(ox);
+                
+                
+                //model.addAttribute(MODEL_KEY, old);
                 return  b.getIntegrationCode()!=null ? FILE_PREFIX+INTEGRATED_PREFIX+LIST_ACTION :  editPage;
             }
 
@@ -503,10 +525,10 @@ public class SharedFileEditController extends AbstractCommentController<SharedFi
         
         XMLField f = new XMLField();
         
-        f.setName("Test key");
+        f.setName("xxxKey");
         f.setValue("Test value");
         
-        out.getXml().getFields().add(f);
+        out.getXml().getFields().put(f.getUuid(),f);
         return out;
     }
 

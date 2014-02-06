@@ -15,8 +15,11 @@
  */
 package uber.megashare.model.xml;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -29,7 +32,9 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement(name = "form")
 public class XMLObject implements XmlCloneable {
 
-    private List<XMLField> fields = new ArrayList<>();
+    @NotNull
+    @Valid
+    private Map<String,XMLField> fields = new HashMap<>();
 
     @XmlTransient
     private boolean signed;
@@ -55,12 +60,23 @@ public class XMLObject implements XmlCloneable {
     
     @XmlElementWrapper(name = "fields")
     @XmlElement(name = "field")
-    public List<XMLField> getFields() {
+    public Map<String,XMLField> getFields() {
         return fields;
     }
 
-    public void setFields(List<XMLField> fields) {
-        this.fields = fields;
+    public void rebuildFields() {
+    
+        Map<String,XMLField> out = new HashMap<>();
+        for (XMLField f:fields.values()) {
+            out.put(f.getUuid(), f);
+        }
+        this.fields=out;
+    }
+    
+    public void setFields(Map<String,XMLField> fields) {
+      //  this.fields.clear();
+      //  this.fields.putAll(fields);
+     
     }
 
     @Override
@@ -68,10 +84,9 @@ public class XMLObject implements XmlCloneable {
 
         XMLObject out = new XMLObject();
 
-        for (XMLField f : fields) {
-            out.fields.add(f.clone());
+        for (Entry<String,XMLField> f : fields.entrySet()) {           
+            out.fields.put(f.getKey(),f.getValue().clone());
         }
-
         return out;
     }
 }

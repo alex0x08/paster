@@ -35,6 +35,8 @@ public class QStruct extends EntityPathBase<Struct> {
 
     public final QBaseDBObject _super = new QBaseDBObject(this);
 
+    public final DateTimePath<java.util.Date> created = createDateTime("created", java.util.Date.class);
+
     //inherited
     public final BooleanPath disabled = _super.disabled;
 
@@ -44,6 +46,8 @@ public class QStruct extends EntityPathBase<Struct> {
     public final DateTimePath<java.util.Date> lastModified = createDateTime("lastModified", java.util.Date.class);
 
     public final StringPath name = createString("name");
+
+    public final NumberPath<Integer> versionsCount = createNumber("versionsCount", Integer.class);
 
     public QStruct(String variable) {
         super(Struct.class, forVariable(variable));

@@ -50,8 +50,7 @@ public class Project extends AvatarStruct{
     //   @Analyzer(definition = "customanalyzer")
     @XStreamAsAttribute
     private String description;
-   
-    
+       
     public Project() {}
     
     public Project(Long id) {

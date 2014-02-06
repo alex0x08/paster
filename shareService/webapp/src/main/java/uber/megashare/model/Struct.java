@@ -79,10 +79,32 @@ public abstract class Struct extends BaseDBObject {
     @DateBridge(resolution = Resolution.DAY)
     @NotAudited
     @XStreamAsAttribute
-    Date lastModified = Calendar.getInstance().getTime();
+    Date lastModified;
+
+    @Column(updatable = false,name = "d_created", columnDefinition = "timestamp")
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
+    @Field(index = Index.YES)
+    @DateBridge(resolution = Resolution.DAY)    
+    @XStreamAsAttribute
+    Date created = Calendar.getInstance().getTime();
+
+    @XStreamAsAttribute
+    @NotAudited
+    protected Integer versionsCount;
+
+    public boolean isEverModified() {
+        return created!=null && lastModified!=null  && lastModified.compareTo(created) != 0;
+    }
+    
+    public Integer getVersionsCount() {
+        return versionsCount;
+    }
+
+    public void setVersionsCount(Integer versionsCount) {
+        this.versionsCount = versionsCount;
+    }
 
     
-
     /**
      * Дата последней модификации объекта
      *
@@ -91,6 +113,11 @@ public abstract class Struct extends BaseDBObject {
     public Date getLastModified() {
         return lastModified;
     }
+    
+    
+     public Date getCreated() {
+        return created;
+    }
 
     /**
      * данный метод не используется
@@ -98,6 +125,7 @@ public abstract class Struct extends BaseDBObject {
      * @param d
      */
     public void setLastModified(Date d) {
+        this.lastModified=d;
     }
 
     /**
@@ -113,6 +141,14 @@ public abstract class Struct extends BaseDBObject {
         this.name = name;
     }
 
+    public void fillFrom(Struct source) {
+        super.fillFrom(source);
+        this.created=source.created;
+        this.lastModified=source.lastModified;
+        this.name=source.name;
+        this.versionsCount=source.versionsCount;
+    }
+    
     @Override
     public String toString() {
         return LoggedClass.getStaticInstance()
