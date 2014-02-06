@@ -54,8 +54,7 @@
 
         <tiles:insertDefinition name="/common/pasteControls" >
             <tiles:putAttribute name="model" value="${model}"/>
-            <tiles:putAttribute name="next" value="${availableNext}"/>
-            <tiles:putAttribute name="prev" value="${availablePrev}"/>
+            <tiles:putAttribute name="mode" value="raw"/>
         </tiles:insertDefinition>
 
     </div>
@@ -67,7 +66,7 @@
         <c:if test="${not empty model.commentCount and model.commentCount>0}">
 
             <span style="vertical-align: top;font-size: larger;" class="i" title="<fmt:message key="comments.title"/>">C</span>
-                <a id="toggleCommentsCtl" href="javascript:void(0);" onclick="SyntaxHighlighter.toggleComments(this);" title="<fmt:message key="button.hide"/>">
+                <a id="toggleCommentsCtl" href="javascript:void(0);" onclick="SyntaxHighlighter.toggleComments(${model.id},this);" title="<fmt:message key="button.hide"/>">
                 <span  class="i" >-</span>
             </a>
         </c:if>

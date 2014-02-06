@@ -83,7 +83,7 @@
         <c:if test="${not empty model.commentCount and model.commentCount>0}">
 
             <span style="vertical-align: top;font-size: larger;" class="i" title="<fmt:message key="comments.title"/>">C</span>
-                <a id="toggleCommentsCtl" href="javascript:void(0);" onclick="SyntaxHighlighter.toggleComments(this);" title="<fmt:message key="button.hide"/>">
+                <a id="toggleCommentsCtl" href="javascript:void(0);" onclick="SyntaxHighlighter.toggleComments(${model.id},this);" title="<fmt:message key="button.hide"/>">
                 <span  class="i" >-</span>
             </a>
         </c:if>
@@ -331,6 +331,65 @@
 
    <script type="text/javascript">
        
+       
+       
+    var brushUrl = '<c:url value="/main/static/${appVersion}/libs/syntax-highlight/scripts/"/>';
+
+     var brushes = {
+         'applescript': brushUrl + 'shBrushAppleScript.js',
+         'actionscript3': brushUrl + 'shBrushAS3.js',
+         'as3': brushUrl + 'shBrushAS3.js',
+         'bash': brushUrl + 'shBrushBash.js',
+         'shell': brushUrl + 'shBrushBash.js',
+         'coldfusion': brushUrl + 'shBrushColdFusion.js',
+         'cf': brushUrl + 'shBrushColdFusion.js',
+         'cpp': brushUrl + 'shBrushCpp.js',
+         'c': brushUrl + 'shBrushCpp.js',
+         'c#': brushUrl + 'shBrushCSharp.js',
+         'c-sharp': brushUrl + 'shBrushCSharp.js',
+         'csharp': brushUrl + 'shBrushCSharp.js',
+         'css': brushUrl + 'shBrushCss.js',
+         'delphi': brushUrl + 'shBrushDelphi.js',
+         'pascal': brushUrl + 'shBrushDelphi.js',
+         'diff': brushUrl + 'shBrushDiff.js',
+         'patch': brushUrl + 'shBrushPatch.js',
+         'erl': brushUrl + 'shBrushErlang.js',
+         'erlang': brushUrl + 'shBrushErlang.js',
+         'groovy': brushUrl + 'shBrushGroovy.js',
+         'java': brushUrl + 'shBrushJava.js',
+         'jfx': brushUrl + 'shBrushJavaFX.js',
+         'javafx': brushUrl + 'shBrushJavaFX.js',
+         'js': brushUrl + 'shBrushJScript.js',
+         'jscript': brushUrl + 'shBrushJScript.js',
+         'javascript': brushUrl + 'shBrushJScript.js',
+         'perl': brushUrl + 'shBrushPerl.js',
+         'pl': brushUrl + 'shBrushPerl.js',
+         'php': brushUrl + 'shBrushPhp.js',
+         'text': brushUrl + 'shBrushPlain.js',
+         'plain': brushUrl + 'shBrushPlain.js',
+         'py': brushUrl + 'shBrushPython.js',
+         'python': brushUrl + 'shBrushPython.js',
+         'ruby': brushUrl + 'shBrushRuby.js',
+         'rails': brushUrl + 'shBrushRuby.js',
+         'ror': brushUrl + 'shBrushRuby.js',
+         'rb': brushUrl + 'shBrushRuby.js',
+         'sass':brushUrl + 'shBrushSass.js',
+         'scss':brushUrl + 'shBrushSass.js',
+         'scala':brushUrl + 'shBrushScala.js',
+         'sql':brushUrl + 'shBrushSql.js',
+         'vb':brushUrl + 'shBrushVb.js',
+         'vbnet':brushUrl + 'shBrushVb.js',
+         'xml':brushUrl + 'shBrushXml.js',
+         'xhtml':brushUrl + 'shBrushXml.js',
+       'xslt':brushUrl + 'shBrushXml.js',
+       'html':brushUrl + 'shBrushXml.js'       
+     };
+
+    SyntaxHighlighter.config.tagName = "pre";
+   SyntaxHighlighter.config.brushPaths = brushes;
+
+    Asset.javascript(scriptPath);
+       
                            window.addEvent('domready', function() {
 
                                $(${model.id}+'_addCommentBtn').addEvent('click',function(){
@@ -356,46 +415,15 @@
 
     clip.on( 'complete', function(client, args) {
         growl.notify(args.text.length+' symbols copied to clipboard.');
-
     } );
 
     var clipLine = new ZeroClipboard(document.id("ctrlc_line"));
 
     clipLine.on( 'complete', function(client, args) {
         growl.notify(args.text.length+' symbols copied to clipboard.');
-
     } );
 
-
-    SyntaxHighlighter.config.tagName = "pre";
-    SyntaxHighlighter.autoloader.apply(null, path(
-            'applescript            @shBrushAppleScript.js',
-            'actionscript3 as3      @shBrushAS3.js',
-            'bash shell             @shBrushBash.js',
-            'coldfusion cf          @shBrushColdFusion.js',
-            'cpp c                  @shBrushCpp.js',
-            'c# c-sharp csharp      @shBrushCSharp.js',
-            'css                    @shBrushCss.js',
-            'delphi pascal          @shBrushDelphi.js',
-            'diff patch pas         @shBrushDiff.js',
-            'erl erlang             @shBrushErlang.js',
-            'groovy                 @shBrushGroovy.js',
-            'java                   @shBrushJava.js',
-            'jfx javafx             @shBrushJavaFX.js',
-            'js jscript javascript  @shBrushJScript.js',
-            'perl pl                @shBrushPerl.js',
-            'php                    @shBrushPhp.js',
-            'text plain             @shBrushPlain.js',
-            'py python              @shBrushPython.js',
-            'ruby rails ror rb      @shBrushRuby.js',
-            'sass scss              @shBrushSass.js',
-            'scala                  @shBrushScala.js',
-            'sql                    @shBrushSql.js',
-            'vb vbnet               @shBrushVb.js',
-            'xml xhtml xslt html    @shBrushXml.js'
-    ));
-
-    SyntaxHighlighter.all(${model.id});
+   SyntaxHighlighter.highlight(${model.id});
     
         $('pasteLoadSpinner').setStyle('display','none');
 
@@ -405,16 +433,7 @@
         
 
     });
-            function path()
-            {
-                var args = arguments,
-                result = [];
-
-                for(var i = 0; i < args.length; i++)
-                    result.push(args[i].replace('@', '<c:url value="/main/static/${appVersion}/libs/syntax-highlight/scripts/"/>'));
-                return result;
-            };
-
+           
         </script>
         
 
@@ -456,7 +475,7 @@
                 var ptext = document.getElementById(page+'_pasteText');
                 
                 //alert(page+",text="+ptext);
-                SyntaxHighlighter.highlight(page,null,ptext);
+                SyntaxHighlighter.highlight(page,{},ptext);
     
                ptext.setStyle('display','none');
     

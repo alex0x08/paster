@@ -12,7 +12,7 @@
      </div>
     <div class="column grid-4" style="">
         
-        <button class="p-btn-save" id="doSearchBtn" type="submit">
+        <button class="p-btn-save btn " id="doSearchBtn" type="submit">
                  <span class="i" >r</span>
                  <span id="btnCaption"><fmt:message key="button.search"/></span>
              <img id="btnIcon" style="display:none;" src="<c:url value='/main/static/${appVersion}/images/gear_sml.gif'/>"/>

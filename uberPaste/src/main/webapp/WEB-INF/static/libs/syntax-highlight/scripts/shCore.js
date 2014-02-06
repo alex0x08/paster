@@ -90,7 +90,7 @@ var sh = {
 		
 		/** Name of the tag that SyntaxHighlighter will automatically look for. */
 		tagName : 'pre',
-		
+		brushPaths: {},
 		strings : {
 			expandSource : 'expand source',
 			help : '?',
@@ -106,11 +106,11 @@ var sh = {
 	/** Internal 'global' variables. */
 	vars : {
 		discoveredBrushes : null,
-		highlighters : {},
+		highlighters : {},                
                 modelId: null,
         lineNumbers : {},
-        currentEditLine: null,
-        showComments: true
+        currentEditLine: null, currentEditModel: null,
+        showComments: {}
 	},
 	
 	/** This object is populated by user included external brush files. */
@@ -310,6 +310,8 @@ var sh = {
             
             sh.vars.modelId = modelId;
             
+            sh.vars.showComments[modelId]=true;
+            
 		var elements = this.findElements(globalParams, element),
 			propertyName = 'innerHTML', 
 			highlighter = null,
@@ -384,7 +386,7 @@ var sh = {
 
                 var loc = window.location.hash.replace("#","");
                 
-                alert(loc);
+               // alert(loc);
                 if (loc != "") {
                     new Fx.Scroll(window).toElement(loc);
                 }
@@ -408,17 +410,18 @@ var sh = {
 			'load',
 			function() { sh.highlight(modelId,params); }
 		);
-    },  toggleComments: function(ctrl) {
+    },  toggleComments: function(modelId,ctrl) {
 
-        sh.vars.showComments = !sh.vars.showComments;
+    
+        sh.vars.showComments[modelId] = !sh.vars.showComments[modelId];
 
-        ctrl.getElement('span').set('text', sh.vars.showComments ? '-' : '+');
+        ctrl.getElement('span').set('text', sh.vars.showComments[modelId] ? '-' : '+');
 
-        $(sh.vars.modelId+ '_commentsList').getElements('div.commentBlock').each(function(el){
-            el.setStyle('display', sh.vars.showComments === false ? 'none' : '');
+        $(modelId+ '_commentsList').getElements('div.commentBlock').each(function(el){
+            el.setStyle('display', sh.vars.showComments[modelId] == false ? 'none' : '');
         });
-        $(sh.vars.modelId+ '_commentsList').getElements('div.listSpace').each(function(el){
-            el.setStyle('display', sh.vars.showComments === false ? 'none' : '');
+        $(modelId+ '_commentsList').getElements('div.listSpace').each(function(el){
+            el.setStyle('display', sh.vars.showComments[modelId] == false ? 'none' : '');
         });
     },  recurseCommentReply: function(roots) {
         var sroots = []
@@ -455,13 +458,14 @@ $('cl_lineHtml_'+lineNumber).setStyle('background-color','yellow');
         $("numSpace").setStyle("display","none");
 
         if (sh.vars.currentEditLine != null) {
-            $(modelId+'cl_lineHtml_'+sh.vars.currentEditLine).setStyle("display","");
-            $(modelId+'cl_linePlain_'+sh.vars.currentEditLine).setStyle("display","none");
+            $(modelId+'_cl_lineHtml_'+sh.vars.currentEditLine).setStyle("display","");
+            $(modelId+'_cl_linePlain_'+sh.vars.currentEditLine).setStyle("display","none");
         }
 
 
     },  insertEditForm: function(modelId,lineNumber,parentId) {
 
+   // alert('_model='+modelId+',lineNumber='+lineNumber);
     
             var cForm = $(modelId+'_commentForm'),
                     nspace = $("numSpace");
@@ -478,14 +482,16 @@ $('cl_lineHtml_'+lineNumber).setStyle('background-color','yellow');
 
 
             if (sh.vars.currentEditLine != null) {
-                $(modelId+'_cl_lineHtml_'+sh.vars.currentEditLine).setStyle("display","");
-                $(modelId+'_cl_linePlain_'+sh.vars.currentEditLine).setStyle("display","none");
+                $(sh.vars.currentEditModel+'_cl_lineHtml_'+sh.vars.currentEditLine).setStyle("display","");
+                $(sh.vars.currentEditModel+'_cl_linePlain_'+sh.vars.currentEditLine).setStyle("display","none");
             } else {
 
             $(modelId+'_cl_lineHtml_'+lineNumber).setStyle("display","none");
             $(modelId+'_cl_linePlain_'+lineNumber).setStyle("display","");
 
             sh.vars.currentEditLine = lineNumber;
+            sh.vars.currentEditModel = modelId;
+            
             }
             $("pasteLineCopyBtn").setStyle("display","inline-block");
                                       //cl_linePlainCode_
@@ -505,13 +511,11 @@ $('cl_lineHtml_'+lineNumber).setStyle('background-color','yellow');
                                 el.addClass('commentInner');
                });
       
-  
             if (parentId>0) {
-                $(modelId+'comment_l'+parentId).getElementById('innerBlock').removeClass('commentInner');
-                $(modelId+'comment_l'+parentId).getElementById('innerBlock').addClass('commentCurrent');
+                $(modelId+'_comment_l'+parentId).getElementById('innerBlock').removeClass('commentInner');
+                $(modelId+'_comment_l'+parentId).getElementById('innerBlock').addClass('commentCurrent');
            }
-          
-
+    
         //}
 
         
@@ -771,6 +775,8 @@ function popup(url, name, width, height, options)
  */
 function attachEvent(obj, type, func, scope)
 {
+    
+    //alert("_attachEvent "+obj+" type"+type);
 	function handler(e)
 	{
 		e = e || window.event;
@@ -813,7 +819,9 @@ function alert(str)
  * @param {Boolean} showAlert	Suppresses the alert if false.
  * @return {Brush}				Returns bursh constructor if found, null otherwise.
  */
-function findBrush(alias, showAlert)
+
+
+function findBrush(alias, showAlert,recurse)
 {
 	var brushes = sh.vars.discoveredBrushes,
 		result = null
@@ -843,7 +851,34 @@ function findBrush(alias, showAlert)
 		sh.vars.discoveredBrushes = brushes;
 	}
 	
+        console.log(sh.brushes);
+        
 	result = sh.brushes[brushes[alias]];
+
+       // alert('result='+result+",recurse="+recurse);
+
+        if (result == null) {
+            
+            if (recurse == null) {
+
+                var scriptPath = sh.config.brushPaths[alias];
+               // alert(alias+","+scriptPath);
+                if (scriptPath != null) {
+
+                    Asset.javascript(scriptPath);
+/*
+                    var myScript = Asset.javascript(scriptPath, {
+                        id: alias + '_syntax_js',
+                        onLoad: function() {
+                            alert(scriptPath + ' is loaded');
+                        }
+                    });
+  */                 
+
+                    return findBrush(alias, showAlert, false);
+                } 
+            }
+        }
 
 	if (result == null && showAlert != false)
 		alert(sh.config.strings.noBrush + alias);

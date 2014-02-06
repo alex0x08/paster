@@ -147,9 +147,9 @@
     <script type="text/javascript" src="<c:url value="/main/static/${appVersion}/libs/syntax-highlight/scripts/xregexp.js"/>"></script>
 
     <script type="text/javascript" src="<c:url value="/main/static/${appVersion}/libs/syntax-highlight/scripts/shCore.js"/>"></script>
-
+<%--
     <script type="text/javascript" src="<c:url value="/main/static/${appVersion}/libs/syntax-highlight/scripts/shAutoloader.js"/>"></script>
-
+--%>
     <%--
     <!--
   Under development, this section allows you to preview your changes
