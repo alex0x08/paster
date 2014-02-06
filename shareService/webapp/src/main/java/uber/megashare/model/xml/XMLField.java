@@ -18,6 +18,7 @@ package uber.megashare.model.xml;
 import java.io.Serializable;
 import java.util.UUID;
 import javax.validation.constraints.Pattern;
+import uber.megashare.base.LoggedClass;
 
 /**
  *
@@ -90,5 +91,17 @@ public class XMLField implements Serializable,Cloneable{
         out.value=value.toString();
         
         return out;
+    }
+    
+    @Override
+    public String toString() {
+    
+         return LoggedClass.getStaticInstance()
+                .getNewProtocolBuilder()
+                .append("uuid", uid)
+                .append("id", id)
+                .append("name", name)
+                .append("value", value)                
+                .toString() ;
     }
 }

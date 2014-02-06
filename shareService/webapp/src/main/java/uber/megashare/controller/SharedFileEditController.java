@@ -116,7 +116,6 @@ public class SharedFileEditController extends AbstractCommentController<SharedFi
     public String viewRawComments(@RequestParam(required = true) Long id, Model model,Locale locale) {
 
         String sp = super.view(id, model,locale);
-
         return !sp.equals(viewPage)? sp : FILE_PREFIX +RAW_PREFIX+"/comments";
     }
 
@@ -189,12 +188,14 @@ public class SharedFileEditController extends AbstractCommentController<SharedFi
 
                 log.append("uploadSave starting ,currentUser=" + getCurrentUser() + " file=" + input);
                 
+                 for(XMLField f:input.getXml().getFields().values()) {
+            
+                       System.out.println("field "+f);
+                    }
+                
                 input.getXml().rebuildFields();
                 
-                   for(XMLField f:input.getXml().getFields().values()) {
-            
-                       System.out.println("field "+input.getName());
-                    }
+                  
      
                 
                 SharedFile old;
@@ -202,8 +203,6 @@ public class SharedFileEditController extends AbstractCommentController<SharedFi
                 if (!input.isBlank()) {
                     
                     old = manager.getFull(input.getId());
-                    
-                    
                     
                     input.setComments(old.getComments());
                     input.setOwner(old.getOwner());
