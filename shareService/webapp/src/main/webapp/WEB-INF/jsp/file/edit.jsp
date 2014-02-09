@@ -293,72 +293,93 @@
 
                  </div>                                 
                  <div class="row">
-                     <div class="col-md-10 col-md-offset-1" >    
+                     <div class="col-md-8 col-md-offset-1" >    
+                      
                          
+                         <table class="table table-bordered table-hover" id="customFieldsTable">
+				<thead>
+					<tr  >
+						
+                                            <th class="text-center" style="width:20%;">
+							Name
+						</th>
+						<th class="text-center">
+							Value
+						</th>
+                                                <th style="width:5%;"> X </th>
+						
+					</tr>
+				</thead>
+				<tbody>
+                                    
+                                      <c:forEach items="${model.xml.fields}" var="field" varStatus="status">
+      <tr id="row_${status.index}">
+          <form:hidden path="xml.fields[${field.key}].uuid" />
+          <td>
+              <form:input path="xml.fields[${field.key}].name" cssClass="form-control" />
+              <form:errors path="xml.fields[${field.key}].name" cssClass="alert alert-danger"   />
+          </td>
+          
+          <td>
+              <form:input path="xml.fields[${field.key}].value" cssClass="form-control"/>
+              <form:errors path="xml.fields[${field.key}].value" cssClass="alert alert-danger"  />
+          </td>
+          <td><a href="#" class="removeBtn">remove</a></td>
+      </tr>
+      
+      <c:if test="${status.last}">
+          <tr id='row_${status.index+1}'></tr>
+          
+           <script type="text/javascript">
+               var totalRows = ${status.index+1};
+           </script>
+          
+           
+            
+           
+      </c:if>
+
+  </c:forEach>
+	
+				</tbody>
+			</table>
+               
+
+                        <input name="xml.fields[1].name" >
+
+  <input name="xml.fields[1].value" > 
+                         
+  <a href="#" id="addRow" class="addBtn">add</a>
+  <a href="#" id="deleteRow" class="addBtn">delete</a>
                          
                          <div class="form-group">
-                             <form:label  path="file">Custom fields:</form:label>
-                             
                          
-                             <div class="col-lg-8">
-    <div class="input-group">
-      <span class="input-group-addon">
-        <input type="radio">
-      </span>
-      <input type="text" class="form-control">
-      
-       <span class="input-group-addon">.00</span>
-      <input type="text" class="form-control">
-      
-    </div><!-- /input-group -->
-  </div><!-- /.col-lg-6 -->
+         
+
+  <form:errors path="removeAfter" cssClass="error" />
+
                              
-                             
-                             
-                                 <div id="customFields" class="controls">
-      
-                                 <c:forEach items="${model.xml.fields}" var="field" varStatus="status">
-                                     <div>
-                                         <form:hidden path="xml.fields[${field.key}].uuid" />
-                                         <span>
-                                             <form:input path="xml.fields[${field.key}].name"/>
-                                             <form:errors path="xml.fields[${field.key}].name" cssClass="alert alert-danger"   />
-                                         </span>
-                                         =
-                                         <span>
-                                             <form:input path="xml.fields[${field.key}].value"/>
-                                             <form:errors path="xml.fields[${field.key}].value" cssClass="alert alert-danger"  />
-                                         </span>
-                                         <span><a href="#" class="removeBtn">remove</a></span>
-                                    </div>
-
-                                         
-                                       
-
-                                 </c:forEach>
-                                     
-                                       <input name="xml.fields[100].name" value="xxx"/>
-                               
-                                        <input name="xml.fields[100].value" value="yyy"/>
-                                                    
-                                     
-                                 <a href="#" class="addBtn">add</a>
-
-                                 <form:errors path="removeAfter" cssClass="error" />
-
-                             </div>
-
                              <script type="text/javascript">
-                                                             
-                                    $(document).ready(function() {
-                                        $("#customFields .removeBtn").bind('click', function(e) {
-                                                    alert('remove clicked');
-                                        });
-                              
-                                        $("#customFields .addBtn").bind('click', function(e) {
-                                            alert('add clicked');
-                                        });
-                                    });
+                                         
+    
+     $(document).ready(function(){
+     
+        $("#addRow").click(function(){
+       
+                $('#row_'+totalRows).html('<td><input name="xml.fields['+totalRows+'].xname" value="" /> </td><td><input  name="xml.fields['+totalRows+'].xvalue" value="" /></td>');
+        alert($('#row_'+totalRows).html());
+      $('#customFieldsTable').append('<tr id="row_'+(totalRows+1)+'"></tr>');
+      totalRows++; 
+        });
+     $("#deleteRow").click(function(){
+    	 if(totalRows>1){
+		 $("#row_"+(totalRows-1)).html('');
+		 totalRows--;
+		 }
+	 });
+
+});
+    
                                                              
                              </script>     
 
