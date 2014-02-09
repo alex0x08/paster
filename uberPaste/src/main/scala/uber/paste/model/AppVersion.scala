@@ -57,7 +57,7 @@ class AppVersion {
         return null
       }
       
-    System.out.println("_parsing value "+ver.getValue)
+    //System.out.println("_parsing value "+ver.getValue)
     
       val parts =ver.getValue.split('|')
     
@@ -78,7 +78,6 @@ class AppVersion {
         implBuildNum = getManifestValue(AppVersion.MF_IMPLEMENTATION_BUILD)
 
         implBuildTime = getManifestValue(AppVersion.MF_IMPLEMENTATION_BUILD_DATE)
-
         
         return this;
     }

@@ -16,16 +16,14 @@
 
 package uber.paste.base
 
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import uber.paste.model.User;
+import com.google.common.collect.BiMap
+import com.google.common.collect.HashBiMap
+import java.util.ArrayList
+import java.util.Collections
+import java.util.HashMap
+import java.util.List
+import java.util.Map
+import uber.paste.model.User
 import scala.collection.JavaConversions._
 
 object SessionStore {
@@ -133,8 +131,7 @@ class SessionStore {
    */
   def getSessions(skipLogin:String):java.util.List[User] = {
 
-    val out = new ArrayList[User]
-        
+    val out = new ArrayList[User]        
 
     for (i <- user_store.entrySet()) {
      

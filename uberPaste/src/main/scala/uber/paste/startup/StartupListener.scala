@@ -18,12 +18,9 @@ package uber.paste.startup
 
 
 import javax.servlet.{ServletContextListener, ServletContext, ServletContextEvent}
-
-import org.springframework.beans.factory.NoSuchBeanDefinitionException
 import org.springframework.context.ApplicationContext
 import org.apache.commons.io.FileUtils
 import org.springframework.web.context.support.WebApplicationContextUtils
-import java.io.File
 import uber.paste.model._
 import uber.paste.dao._
 import uber.paste.build._
@@ -36,15 +33,7 @@ import uber.paste.mail.EmbeddedSMTPServer
 import java.nio.file._
 import java.nio.file.attribute.BasicFileAttributes
 import uber.paste.manager.PasteManager
-import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer
-
-//import org.hibernate.event.{PostLoadEvent, PostLoadEventListener, LoadEvent, LoadEventListener}
-//import org.hibernate.event.LoadEventListener.LoadType
-//import org.hibernate.impl.SessionFactoryImpl
-//import org.hibernate.event.`def`.{DefaultPostLoadEventListener, DefaultLoadEventListener}
-import scala.annotation.switch
 import scala.collection.JavaConversions._
-import org.hibernate.SessionFactory
 
 /*
 class AdvEventLoadListener extends DefaultPostLoadEventListener with Loggered{
@@ -100,6 +89,7 @@ class StartupListener extends ServletContextListener with Loggered{
 
     val configDao:ConfigDao = ctx.getBean("configDao").asInstanceOf[ConfigDao]
     val pasteDao:PasteDao = ctx.getBean("pasteDao").asInstanceOf[PasteDao]
+    val projectDao:ProjectDao = ctx.getBean("projectDao").asInstanceOf[ProjectDao]
 
 
     if (configDao.isPropertySet(ConfigProperty.IS_INSTALLED.getCode, "1")) {
@@ -144,6 +134,8 @@ class StartupListener extends ServletContextListener with Loggered{
       
       logger.info("Database already created. skipping db generation stage..")
 
+        SystemInfo.instance.setProject(projectDao.getLast)
+        
       reindex(ctx,props)
 
 
@@ -219,6 +211,12 @@ class StartupListener extends ServletContextListener with Loggered{
       pasteDao.save(p1)
       pasteDao.save(p2)
 
+      val project = new Project
+      project.setName("Sample project")
+      project.setDescription("Full project description")
+      
+      projectDao.persist(project)
+        
       configDao.persist(ConfigProperty.IS_INSTALLED)
       configDao.persist(ConfigProperty.UPLOADS_DIR)
       

@@ -302,7 +302,7 @@ var sh = {
 	 * 							provided, all elements in the current document 
 	 * 							are highlighted.
 	 */ 
-	highlight: function(modelId,globalParams, element)
+	highlight: function(modelId,globalParams, element, scrollToLine)
 	{
             
            // alert(modelId);
@@ -381,16 +381,19 @@ var sh = {
                 sh.insertComment(el,1,index);
             });
 
+            
             var ln = document.getElementById('lineNumber').value;
             if (!ln || 0 === ln.length ) {
+
+            if (scrollToLine) {
 
                 var loc = window.location.hash.replace("#","");
                 
                // alert(loc);
                 if (loc != "") {
-                    new Fx.Scroll(window).toElement(loc);
+                    new Fx.Scroll(window).toElement(sh.vars.modelId+'_'+loc);
                 }
-
+            } 
             } else {
               //  alert(ln);
                 sh.insertEditForm(sh.vars.modelId,ln);
@@ -412,15 +415,16 @@ var sh = {
 		);
     },  toggleComments: function(modelId,ctrl) {
 
-    
+     
         sh.vars.showComments[modelId] = !sh.vars.showComments[modelId];
-
+  
         ctrl.getElement('span').set('text', sh.vars.showComments[modelId] ? '-' : '+');
 
-        $(modelId+ '_commentsList').getElements('div.commentBlock').each(function(el){
+       
+        $('tb_'+modelId).getElements('div.commentBlock').each(function(el){
             el.setStyle('display', sh.vars.showComments[modelId] == false ? 'none' : '');
         });
-        $(modelId+ '_commentsList').getElements('div.listSpace').each(function(el){
+        $('tb_'+modelId).getElements('div.listSpace').each(function(el){
             el.setStyle('display', sh.vars.showComments[modelId] == false ? 'none' : '');
         });
     },  recurseCommentReply: function(roots) {
@@ -465,8 +469,7 @@ $('cl_lineHtml_'+lineNumber).setStyle('background-color','yellow');
 
     },  insertEditForm: function(modelId,lineNumber,parentId) {
 
-   // alert('_model='+modelId+',lineNumber='+lineNumber);
-    
+        alert(parentId);
             var cForm = $(modelId+'_commentForm'),
                     nspace = $("numSpace");
             
@@ -477,26 +480,22 @@ $('cl_lineHtml_'+lineNumber).setStyle('background-color','yellow');
         $("numSpace").setStyle("display","");
 
         cForm.getElementById('commentText').set("value","");
-
-           cForm.setStyle("position","relative");
-
+        cForm.setStyle("position","relative");
 
             if (sh.vars.currentEditLine != null) {
-                $(sh.vars.currentEditModel+'_cl_lineHtml_'+sh.vars.currentEditLine).setStyle("display","");
-                $(sh.vars.currentEditModel+'_cl_linePlain_'+sh.vars.currentEditLine).setStyle("display","none");
+                $(sh.vars.currentEditModel + '_cl_lineHtml_' + sh.vars.currentEditLine).setStyle("display", "");
+                $(sh.vars.currentEditModel + '_cl_linePlain_' + sh.vars.currentEditLine).setStyle("display", "none");
             } else {
 
-            $(modelId+'_cl_lineHtml_'+lineNumber).setStyle("display","none");
-            $(modelId+'_cl_linePlain_'+lineNumber).setStyle("display","");
+                $(modelId + '_cl_lineHtml_' + lineNumber).setStyle("display", "none");
+                $(modelId + '_cl_linePlain_' + lineNumber).setStyle("display", "");
 
-            sh.vars.currentEditLine = lineNumber;
-            sh.vars.currentEditModel = modelId;
-            
+                sh.vars.currentEditLine = lineNumber;
+                sh.vars.currentEditModel = modelId;
+
             }
-            $("pasteLineCopyBtn").setStyle("display","inline-block");
-                                      //cl_linePlainCode_
+            $("pasteLineCopyBtn").setStyle("display","inline-block");                                     
             $('pasteLineToCopy').set('html',$(modelId+'_cl_linePlainCode_'+lineNumber).get("html"));
-
             $(modelId+'_cl_linePlain_'+lineNumber).grab($("pasteLineCopyBtn"),'top');
 
 
@@ -506,12 +505,13 @@ $('cl_lineHtml_'+lineNumber).setStyle('background-color','yellow');
             $(modelId+'_cl_'+lineNumber).grab(cForm,"after");
         }
         
-        $$('div.commentCurrent').each(function(el){
+        $('div.commentCurrent').each(function(el){
                                el.removeClass('commentCurrent');
                                 el.addClass('commentInner');
                });
       
             if (parentId>0) {
+                
                 $(modelId+'_comment_l'+parentId).getElementById('innerBlock').removeClass('commentInner');
                 $(modelId+'_comment_l'+parentId).getElementById('innerBlock').addClass('commentCurrent');
            }
@@ -851,34 +851,11 @@ function findBrush(alias, showAlert,recurse)
 		sh.vars.discoveredBrushes = brushes;
 	}
 	
-        console.log(sh.brushes);
         
 	result = sh.brushes[brushes[alias]];
 
        // alert('result='+result+",recurse="+recurse);
 
-        if (result == null) {
-            
-            if (recurse == null) {
-
-                var scriptPath = sh.config.brushPaths[alias];
-               // alert(alias+","+scriptPath);
-                if (scriptPath != null) {
-
-                    Asset.javascript(scriptPath);
-/*
-                    var myScript = Asset.javascript(scriptPath, {
-                        id: alias + '_syntax_js',
-                        onLoad: function() {
-                            alert(scriptPath + ' is loaded');
-                        }
-                    });
-  */                 
-
-                    return findBrush(alias, showAlert, false);
-                } 
-            }
-        }
 
 	if (result == null && showAlert != false)
 		alert(sh.config.strings.noBrush + alias);
@@ -1565,7 +1542,7 @@ sh.Highlighter.prototype = {
          if (mode == 1) {
              out+='<div id="'+sh.vars.modelId+'_ln_'+lineNumber+'" class="' + classes.join(' ') + '">';
 
-             out+='<a id="'+sh.vars.modelId+'_line_'+lineNumber+'" name="line_'+lineNumber+'" href="#line_'+lineNumber+'" >'+code+'</a>';
+             out+='<a id="'+sh.vars.modelId+'_line_'+lineNumber+'" name="'+sh.vars.modelId+'_line_'+lineNumber+'" href="#'+sh.vars.modelId+'_line_'+lineNumber+'" >'+code+'</a>';
          } else {
              out+='<div id="'+sh.vars.modelId+'_cl_'+lineNumber+'" class="' + classes.join(' ') + '">';
 
@@ -1775,7 +1752,7 @@ sh.Highlighter.prototype = {
 		html = 
 			'<div id="' + getHighlighterId(this.id) + '" class="' + classes.join(' ') + '">'
 				+ (this.getParam('toolbar') ? sh.toolbar.getHtml(this) : '')
-				+ '<table border="0" cellpadding="0" cellspacing="0">'
+				+ '<table id="tb_'+sh.vars.modelId+'" border="0" cellpadding="0" cellspacing="0">'
 					+ this.getTitleHtml(this.getParam('title'))
 					+ '<tbody>'
 						+ '<tr>'

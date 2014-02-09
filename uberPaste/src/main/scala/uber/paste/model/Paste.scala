@@ -59,25 +59,8 @@ class PasteListener extends Loggered{
     obj.commentsCount = obj.getComments().size()
 
     logger.debug("_comments count= "+obj.commentsCount)
-
   }
-
-  /*@PostConstruct
-  def onPostLoad(obj:Paste) {
-
-    logger.debug("_on postLoad call")
-
-    obj.setTagsAsString({
-      val out =new StringBuilder
-      for (s<-obj.getTags()) {
-        out.append(s.getKey()).append(" ")
-      }
-      out.toString })
-  } */
-
 }
-
-
 
 @Entity
 @Searchable
@@ -144,7 +127,6 @@ class Paste extends Struct with java.io.Serializable{
     cascade = Array(CascadeType.PERSIST,CascadeType.MERGE,CascadeType.REMOVE),
     orphanRemoval = true)
   @NotAudited
-  //@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
   private var comments:java.util.List[Comment] = new ArrayList[Comment]()
 
   @SearchableProperty
@@ -158,8 +140,7 @@ class Paste extends Struct with java.io.Serializable{
   private var symbolsCount:java.lang.Integer = null
   
   private var wordsCount:java.lang.Integer = null
-  
-  
+    
   override def terms():List[String] = Paste.terms
   
   /**
@@ -193,12 +174,10 @@ class Paste extends Struct with java.io.Serializable{
 
   def isHasOwner() = owner!=null
 
-
   def getIntegrationCode(): String = integrationCode
   def setIntegrationCode(code:String) { integrationCode = code}
 
   def getTags(): Set[String] = tags
-
 
   def getPriority() : Priority = Priority.valueOf(priority)
 

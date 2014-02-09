@@ -2,18 +2,14 @@ package uber.paste.startup
 
 import uber.paste.base.Loggered
 import javax.servlet.ServletContextListener
+import java.nio.file.FileSystems
 import java.util.Collections
 import java.util.Locale
-import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import com.jcabi.manifests.Manifests
-import com.thoughtworks.xstream.XStream
 import java.io.{IOException, File}
 import uber.paste.base.SystemInfo
 import uber.paste.base.plugins.PluginUI
-import uber.paste.base.plugins.UIElement
-import uber.paste.base.plugins.UIExtension
-import uber.paste.base.plugins.UISection
 import uber.paste.model.AppVersion
 import scala.collection.JavaConversions._
 
@@ -22,7 +18,6 @@ import scala.collection.JavaConversions._
  * User: alex
  * Date: 3/4/13
  * Time: 12:52 AM
- * To change this template use File | Settings | File Templates.
  */
 
 object SystemConstants {
@@ -37,32 +32,20 @@ class SystemPropertiesListener extends ServletContextListener with Loggered {
 
   override def contextInitialized(event:ServletContextEvent) {
     try {
-
       Manifests.append(event.getServletContext())
-
       
       if (!System.getProperties().containsKey("paste.app.home")) {
   
-        /*val appName:String = Manifests.read("AppName")
-     
-        if (appName == null) {
-          throw new IllegalStateException("Cannot find application name property in META-INF/MANIFEST.MF. This is build bug.")
-        }*/
-
         val user_home:String = System.getProperty("user.home")
-        appHome = new File(user_home, SystemConstants.APP_BASE)
-
-        appHome = new File(appHome,SystemConstants.APP_NAME)
-
+        appHome = FileSystems.getDefault()
+        .getPath(user_home, SystemConstants.APP_BASE,SystemConstants.APP_NAME).toFile
         
         System.setProperty("paste.app.home", appHome.getAbsolutePath())
       } else {
         appHome = new File(System.getProperty("paste.app.home"))
       }
-
       
       if (!appHome.exists() || !appHome.isDirectory()) {
-
         if (!appHome.mkdirs()) {
           throw new IllegalStateException(
             "Cannot create application home directory " + appHome.getAbsolutePath())
@@ -70,8 +53,7 @@ class SystemPropertiesListener extends ServletContextListener with Loggered {
       }
 
       logger.info("application home:" + System.getProperty("paste.app.home"))
- 
-    
+     
       val  mf_version = new AppVersion().fillFromManifest()
                 
         SystemInfo.instance.setRuntimeVersion(mf_version)
@@ -90,17 +72,18 @@ class SystemPropertiesListener extends ServletContextListener with Loggered {
          }
       }
       
-      logger.debug(PluginUI.getXml)
+      if (logger.isDebugEnabled) {
+        logger.debug(PluginUI.getXml)
+      }
       
-      System.out.println("current locale: "+Locale.getDefault)
+      logger.info("current locale: "+Locale.getDefault)
       
       Locale.setDefault(Locale.ENGLISH)
       
     } catch {
      case e:IOException => {
       logger.error(e.getLocalizedMessage,e)
-
-    }
+            }
     }
 
   }

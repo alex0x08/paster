@@ -38,6 +38,7 @@
         <!--anonymous/-->
         <intercept-url pattern="/main/user*"  access="hasRole('ROLE_ADMIN')"/>
         <intercept-url pattern="/main/user/**" access="hasRole('ROLE_ADMIN')"/>
+        <intercept-url pattern="/main/admin/**" access="hasRole('ROLE_ADMIN')"/>
 
         <intercept-url pattern="/**" access="permitAll()"/>
 

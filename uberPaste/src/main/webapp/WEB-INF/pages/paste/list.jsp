@@ -216,7 +216,6 @@
     </div>    
        <div class="column grid-3">
         
-        
 <tiles:insertDefinition name="/common/pageList" >
             <tiles:putAttribute name="listMode" value="${listMode}"/>
             <tiles:putAttribute name="pageItems" value="${pageItems}"/>
@@ -302,16 +301,11 @@
 
         }); 
      } 
-
-
     
     window.addEvent('domready', function() {
 
         parseSearchResults($('pastas'));
-        
-       
-      
-        
+     
 
 /*
         var pastePreview = new LightFace.IFrame(

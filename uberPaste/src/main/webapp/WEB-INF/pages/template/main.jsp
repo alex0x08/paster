@@ -2,8 +2,6 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-
-        
         
         <!--link rel="icon" href="<c:url value='/snowfall2/ninja-ng.png'/>"/-->
        
@@ -33,6 +31,12 @@
         <script src="<c:url value='/main/static/${appVersion}/js/mootools-core-1.4.5-full-nocompat.js'/>"></script>
         <script src="<c:url value='/main/static/${appVersion}/js/mootools-more-1.4.0.1-nc.js'/>"></script>
         <script src="<c:url value='/main/static/${appVersion}/libs/tinycon.min.js'/>" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" src="<c:url value="/main/static/${appVersion}/libs/syntax-highlight/scripts/xregexp.js"/>"></script>
+
+    <script type="text/javascript" src="<c:url value="/main/static/${appVersion}/libs/syntax-highlight/scripts/shCore.js"/>"></script>
+<%--
+    <script type="text/javascript" src="<c:url value="/main/static/${appVersion}/libs/syntax-highlight/scripts/shAutoloader.js"/>"></script>
+--%>
 
           <script  type="text/javascript">
               var transmitText = '<fmt:message key="action.sending"/>';
@@ -144,12 +148,6 @@
         });
     </script>
 
-    <script type="text/javascript" src="<c:url value="/main/static/${appVersion}/libs/syntax-highlight/scripts/xregexp.js"/>"></script>
-
-    <script type="text/javascript" src="<c:url value="/main/static/${appVersion}/libs/syntax-highlight/scripts/shCore.js"/>"></script>
-<%--
-    <script type="text/javascript" src="<c:url value="/main/static/${appVersion}/libs/syntax-highlight/scripts/shAutoloader.js"/>"></script>
---%>
     <%--
     <!--
   Under development, this section allows you to preview your changes

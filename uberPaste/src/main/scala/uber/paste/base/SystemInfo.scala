@@ -18,19 +18,20 @@ package uber.paste.base
 
 import java.util.Calendar
 import uber.paste.model.AppVersion
+import uber.paste.model.Project
 
-object SystemInfo {
-  
+object SystemInfo {  
   val instance = new SystemInfo
 }
 
 class SystemInfo {
-
   
     private var runtimeVersion:AppVersion = null
     
     private val dateStart = Calendar.getInstance().getTime()
 
+    private var project:Project =null
+  
     def getRuntimeVersion() = runtimeVersion
 
     def setRuntimeVersion(runtimeVersion:AppVersion) {
@@ -39,5 +40,7 @@ class SystemInfo {
 
     def getDateStart() =  dateStart
 
+    def getProject() = project
+    def setProject(p:Project) {project = p}
   
 }

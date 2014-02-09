@@ -17,25 +17,15 @@
 package uber.paste.controller
 
 import org.springframework.stereotype.Controller
-import org.springframework.validation.BindingResult
 import org.springframework.web.bind.WebDataBinder
-import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestMethod
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.ResponseBody
-import org.springframework.web.multipart.MultipartFile
-import org.springframework.web.servlet.ModelAndView
 import uber.paste.model.User
-import uber.paste.model.CodeTypeEditor
 import org.springframework.beans.factory.annotation.Autowired
 import uber.paste.manager.UserManager
 import org.springframework.ui.Model
 import uber.paste.model.Role
 import uber.paste.model.RoleEditor
 import org.springframework.web.bind.annotation.InitBinder;
-import javax.validation.Valid
-import org.springframework.web.bind.annotation.ModelAttribute
 import java.util.Locale
 
 @Controller

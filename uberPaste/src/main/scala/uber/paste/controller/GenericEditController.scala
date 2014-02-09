@@ -16,11 +16,11 @@
 
 package uber.paste.controller
 
-import uber.paste.model.{Paste, Struct}
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
+import uber.paste.model.Struct
+import org.springframework.ui.Model
+import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation._
-import javax.validation.Valid;
+import javax.validation.Valid
 import java.util.Locale
 import scala.Array
 import org.springframework.http.HttpStatus

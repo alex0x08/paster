@@ -138,7 +138,7 @@
 
         <div id="${model.id}_rightPanel" class="column grid-4" style="min-width:150px;" >
 
-        <iframe id="shareFrame" src="${shareUrl}/main/file/integrated/list/paste_${model.id}"
+        <iframe id="${model.id}_shareFrame" src="${shareUrl}/main/file/integrated/list/paste_${model.id}"
                 scrolling="auto" frameborder="0"
                 style="width:340px; "  allowTransparency="true"   >
 
@@ -163,8 +163,8 @@
             <div id="${model.id}_numSpace_l${comment.id}" class="listSpace" >
             </div>
 
-            <div id="${model.id}_comment_l${comment.id}" commentId="${comment.id}"
-                 lineNumber="${comment.lineNumber}"  parentCommentId="${comment.parentId}" class=" commentBlock" >
+            <div id="${model.id}_comment_l${comment.id}" class=" commentBlock " commentId="${comment.id}"
+                 lineNumber="${comment.lineNumber}"  parentCommentId="${comment.parentId}"  >
                 <div id="innerBlock" class="commentInner p-comment">
 
                 <div class="row">
@@ -183,7 +183,7 @@
                     
                           <c:if test="${comment.parentId==null}">
                               <a  href="javascript:void(0);" class="linkLine" title="<fmt:message key="comments.sub"/>"
-                                onclick="SyntaxHighlighter.insertEditForm(${comment.lineNumber},${comment.id});"><span class="i">C</span></a>
+                                onclick="SyntaxHighlighter.insertEditForm(${model.id},${comment.lineNumber},${comment.id});"><span class="i">C</span></a>
                         </c:if>
                         <sec:authorize access="${currentUser !=null and (currentUser.admin or ( comment.hasOwner  and comment.owner eq currentUser)) }">
                             <a href="<c:url value='/main/paste/removeComment'>
@@ -321,75 +321,23 @@
         window.addEvent('domready', function() {
         var sch = document.body.scrollHeight;
         if (sch < 1024)  {
-            $('shareFrame').setStyle('height','1024px');
+            $(${model.id}+'_shareFrame').setStyle('height','1024px');
         } else {
-            $('shareFrame').setStyle('height', document.body.scrollHeight+'px');
+            $(${model.id}+'_shareFrame').setStyle('height', document.body.scrollHeight+'px');
         }
     } );
     </script>
 </c:if>
 
+    
+        <script type="text/javascript" src="<c:url value="/main/static/${appVersion}/libs/syntax-highlight/scripts/shUber.js"/>"></script>
+        
+        
    <script type="text/javascript">
        
        
-       
-    var brushUrl = '<c:url value="/main/static/${appVersion}/libs/syntax-highlight/scripts/"/>';
-
-     var brushes = {
-         'applescript': brushUrl + 'shBrushAppleScript.js',
-         'actionscript3': brushUrl + 'shBrushAS3.js',
-         'as3': brushUrl + 'shBrushAS3.js',
-         'bash': brushUrl + 'shBrushBash.js',
-         'shell': brushUrl + 'shBrushBash.js',
-         'coldfusion': brushUrl + 'shBrushColdFusion.js',
-         'cf': brushUrl + 'shBrushColdFusion.js',
-         'cpp': brushUrl + 'shBrushCpp.js',
-         'c': brushUrl + 'shBrushCpp.js',
-         'c#': brushUrl + 'shBrushCSharp.js',
-         'c-sharp': brushUrl + 'shBrushCSharp.js',
-         'csharp': brushUrl + 'shBrushCSharp.js',
-         'css': brushUrl + 'shBrushCss.js',
-         'delphi': brushUrl + 'shBrushDelphi.js',
-         'pascal': brushUrl + 'shBrushDelphi.js',
-         'diff': brushUrl + 'shBrushDiff.js',
-         'patch': brushUrl + 'shBrushPatch.js',
-         'erl': brushUrl + 'shBrushErlang.js',
-         'erlang': brushUrl + 'shBrushErlang.js',
-         'groovy': brushUrl + 'shBrushGroovy.js',
-         'java': brushUrl + 'shBrushJava.js',
-         'jfx': brushUrl + 'shBrushJavaFX.js',
-         'javafx': brushUrl + 'shBrushJavaFX.js',
-         'js': brushUrl + 'shBrushJScript.js',
-         'jscript': brushUrl + 'shBrushJScript.js',
-         'javascript': brushUrl + 'shBrushJScript.js',
-         'perl': brushUrl + 'shBrushPerl.js',
-         'pl': brushUrl + 'shBrushPerl.js',
-         'php': brushUrl + 'shBrushPhp.js',
-         'text': brushUrl + 'shBrushPlain.js',
-         'plain': brushUrl + 'shBrushPlain.js',
-         'py': brushUrl + 'shBrushPython.js',
-         'python': brushUrl + 'shBrushPython.js',
-         'ruby': brushUrl + 'shBrushRuby.js',
-         'rails': brushUrl + 'shBrushRuby.js',
-         'ror': brushUrl + 'shBrushRuby.js',
-         'rb': brushUrl + 'shBrushRuby.js',
-         'sass':brushUrl + 'shBrushSass.js',
-         'scss':brushUrl + 'shBrushSass.js',
-         'scala':brushUrl + 'shBrushScala.js',
-         'sql':brushUrl + 'shBrushSql.js',
-         'vb':brushUrl + 'shBrushVb.js',
-         'vbnet':brushUrl + 'shBrushVb.js',
-         'xml':brushUrl + 'shBrushXml.js',
-         'xhtml':brushUrl + 'shBrushXml.js',
-       'xslt':brushUrl + 'shBrushXml.js',
-       'html':brushUrl + 'shBrushXml.js'       
-     };
-
     SyntaxHighlighter.config.tagName = "pre";
-   SyntaxHighlighter.config.brushPaths = brushes;
-
-    Asset.javascript(scriptPath);
-       
+   
                            window.addEvent('domready', function() {
 
                                $(${model.id}+'_addCommentBtn').addEvent('click',function(){
@@ -423,7 +371,8 @@
         growl.notify(args.text.length+' symbols copied to clipboard.');
     } );
 
-   SyntaxHighlighter.highlight(${model.id});
+   
+         SyntaxHighlighter.highlight(${model.id},{},$('pasteText'),true);
     
         $('pasteLoadSpinner').setStyle('display','none');
 
@@ -470,12 +419,12 @@
                 },beforeLoad: function() {
                     $('pageLoadSpinner').setStyle('display','');
                 },afterAppend: function(block,page) {
-    
+
                 
                 var ptext = document.getElementById(page+'_pasteText');
                 
                 //alert(page+",text="+ptext);
-                SyntaxHighlighter.highlight(page,{},ptext);
+                SyntaxHighlighter.highlight(page,{},ptext,false);
     
                ptext.setStyle('display','none');
     

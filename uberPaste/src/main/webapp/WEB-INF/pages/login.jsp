@@ -10,7 +10,7 @@
     <div class="errors">
         <c:if test="${param.error}">
         <fmt:message key="login.msg.failure"/><br /><br />
-        <fmt:message key="login.failure.reason"/>:  ${sessionScope.SPRING_SECURITY_LAST_EXCEPTION.message}
+        <fmt:message key="login.failure.reason"/>: <c:out value="${sessionScope.SPRING_SECURITY_LAST_EXCEPTION.message}"/>
           
         </c:if>
       </div>

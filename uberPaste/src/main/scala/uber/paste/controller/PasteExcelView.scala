@@ -17,7 +17,6 @@ import uber.paste.base.SpringAppContext
  * User: Alex
  * Date: 03.05.13
  * Time: 15:54
- * To change this template use File | Settings | File Templates.
  */
 class PasteExcelView  extends AbstractExcelView {
 

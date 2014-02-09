@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletRequest
  * User: achernyshev
  * Date: 09.04.13
  * Time: 14:56
- * To change this template use File | Settings | File Templates.
+ 
  */
 object VersionController {
 

@@ -10,7 +10,6 @@ import org.hibernate.ejb.HibernateEntityManagerFactory
  * User: achernyshev
  * Date: 09.02.13
  * Time: 19:49
- * To change this template use File | Settings | File Templates.
  */
 @Component("sessionFactoryHelper")
 class HibernateSessionFactoryHelper {

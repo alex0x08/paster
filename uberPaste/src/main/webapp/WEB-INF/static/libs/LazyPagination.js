@@ -63,7 +63,8 @@ var LazyPagination = new Class({
 		var scrollHeight = this.element.getScrollSize().y, 
 			height = this.element.getSize().y,
 			scroll = this.element.getScroll().y;
-               // alert("scrollHeight="+scrollHeight+" height="+height+" scroll="+scroll+" calc="+(scrollHeight-height - this.options.buffer));
+        
+            console.log("scrollHeight="+scrollHeight+" height="+height+" scroll="+scroll+" calc="+(scrollHeight-height - this.options.buffer));
                 
 		if(scrollHeight-height - this.options.buffer <= scroll) this.send();
 		return this;

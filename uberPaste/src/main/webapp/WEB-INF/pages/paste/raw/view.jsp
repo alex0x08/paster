@@ -1,8 +1,9 @@
 <%@ include file="/WEB-INF/pages/common/taglibs.jsp"%>
 
+
+
 <div id="${model.id}_pagedPaste">
-    
-    
+         
     
 <div class="row">
     <div class="column grid-16">
@@ -141,7 +142,7 @@
             </div>
 
             <div id="${model.id}_comment_l${comment.id}" commentId="${comment.id}"
-                 lineNumber="${comment.lineNumber}"  parentCommentId="${comment.parentId}" class=" commentBlock" >
+                 lineNumber="${comment.lineNumber}"  parentCommentId="${comment.parentId}" class="commentBlock" >
                 <div id="innerBlock" class="commentInner p-comment">
 
                 <div class="row">

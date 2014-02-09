@@ -336,7 +336,6 @@ class PasteController extends VersionController[Paste]   {
         if (isCurrentUserLoggedIn()) {
           b.setOwner(getCurrentUser())
           b.getOwner().increaseTotalPastas()
-
           SessionStore.instance.updateUser(b.getOwner())
         }
       }
@@ -368,9 +367,7 @@ class PasteController extends VersionController[Paste]   {
 
             override def checkServerTrusted(certs:Array[X509Certificate], authType:String)  {
                 // Do nothing
-            }
-
-        
+            }        
       }
     }
   
@@ -484,7 +481,6 @@ class PasteController extends VersionController[Paste]   {
       r
     else
       "/paste/integrated/view"
-
   }
 
   @RequestMapping(value = Array("/integrated/preview/{id:[0-9]+}"), method = Array(RequestMethod.GET))
@@ -494,7 +490,6 @@ class PasteController extends VersionController[Paste]   {
       r
     else
       "/paste/integrated/preview"
-
   }
 
   
@@ -505,11 +500,8 @@ class PasteController extends VersionController[Paste]   {
       r
     else
       "/paste/raw/view"
-
   }
 
-  
-  
 
   @RequestMapping(value = Array("/{id:[0-9]+}"), method = Array(RequestMethod.GET))
   override def getByPath(@PathVariable("id") id:java.lang.Long,model:Model,locale:Locale):String = {
@@ -519,7 +511,6 @@ class PasteController extends VersionController[Paste]   {
            return r
 
     val p = model.asMap().get(GenericController.MODEL_KEY).asInstanceOf[Paste]
-
 
     model.addAttribute("title",getResource("paste.view.title",Array(p.getId,StringEscapeUtils.escapeHtml(p.getName())),locale))
     

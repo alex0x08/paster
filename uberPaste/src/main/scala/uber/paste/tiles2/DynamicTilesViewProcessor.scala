@@ -277,7 +277,7 @@ class DynamicTilesViewProcessor extends Loggered {
 
                 root += pType.getTemplateName
 
-              System.out.println("_final "+root)
+              logger.debug("_final "+root)
 
                 if (container.isValidDefinition(root, tilesRequest)) {
                     result = root
