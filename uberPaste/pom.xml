@@ -745,7 +745,9 @@
 
                 <hibernate.dialect>org.hibernate.dialect.H2Dialect</hibernate.dialect>
                 <jdbc.driverClassName>org.h2.Driver</jdbc.driverClassName>
-                <jdbc.url>jdbc:h2:file:${paste.app.home}/pastedb;DB_CLOSE_ON_EXIT=TRUE;LOCK_TIMEOUT=10000</jdbc.url>
+                <jdbc.url>jdbc:h2:tcp://localhost:6668/pastedb;DB_CLOSE_ON_EXIT=TRUE</jdbc.url>
+                
+                <!--jdbc.url>jdbc:h2:file:${paste.app.home}/pastedb;DB_CLOSE_ON_EXIT=TRUE;LOCK_TIMEOUT=10000</jdbc.url-->
                 <jdbc.username>bo</jdbc.username>
                 <jdbc.password>bo</jdbc.password>
                 <jdbc.show-sql>false</jdbc.show-sql>
@@ -975,6 +977,7 @@
                         <com.sun.management.jmxremote.authenticate>false</com.sun.management.jmxremote.authenticate>
                         <logback.ContextSelector>JNDI</logback.ContextSelector -->
                         <app.home>${user.home}/.${project.artifactId}</app.home>
+                        <paste.h2.embedded.server>1</paste.h2.embedded.server>
                         <JAVA_OPTS>
                             -Xms256m -Xmx1024m -XX:MaxPermSize=512m -XX:NewRatio=6
                             -XX:+CMSClassUnloadingEnabled -XX:+CMSPermGenSweepingEnabled

@@ -233,7 +233,7 @@
 
                                     <c:choose>
                                         <c:when test="${not empty paste.thumbImage}">
-                                            <img src="${paste.thumbImage}"/>
+                                            <img src="${paste.thumbImageRead}"/>
 
                                         </c:when>
                                         <c:otherwise>

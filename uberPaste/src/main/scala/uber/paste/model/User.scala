@@ -56,7 +56,7 @@ class User extends Struct with UserDetails with java.io.Serializable{
    *  набор ролей
    */
    @ElementCollection(fetch = FetchType.EAGER)
-   @CollectionTable(name="S_USER_ROLES", joinColumns=Array(new JoinColumn(name="USER_ID")))
+   @CollectionTable(joinColumns=Array(new JoinColumn(name="USER_ID")))
    @Column(name="ROLE")
    private var roles:Set[String] = new HashSet[String]()
 
@@ -65,9 +65,7 @@ class User extends Struct with UserDetails with java.io.Serializable{
 
 
   @OneToMany(fetch = FetchType.EAGER,cascade = Array(CascadeType.PERSIST,CascadeType.MERGE,CascadeType.REMOVE))
-  @JoinTable(
-            name="S_USER_SESSIONS",
-            joinColumns = Array(new JoinColumn( name="USER_ID")),
+  @JoinTable(joinColumns = Array(new JoinColumn( name="USER_ID")),
             inverseJoinColumns = Array(new JoinColumn( name="SESSION_ID"))
     )
   @XmlTransient

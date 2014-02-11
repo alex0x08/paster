@@ -18,13 +18,13 @@ package uber.paste.controller
 
 
 import java.util.Locale
-import org.apache.tools.ant.Project
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import uber.paste.manager.ProjectManager
+import uber.paste.model.Project
 
 @Controller
 @RequestMapping(Array("/admin/settings"))
@@ -34,6 +34,10 @@ class SettingsController extends GenericEditController[Project]{
   val projectManager:ProjectManager = null
 
   def editPage()="/admin/settings/edit"
+   def listPage()="/admin/settings/edit"
+  def viewPage()="/admin/settings/edit"
+
+  def getNewModelInstance():Project = null
   
   def manager():ProjectManager = return projectManager
  

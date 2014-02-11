@@ -469,7 +469,7 @@ $('cl_lineHtml_'+lineNumber).setStyle('background-color','yellow');
 
     },  insertEditForm: function(modelId,lineNumber,parentId) {
 
-        alert(parentId);
+       // alert(parentId);
             var cForm = $(modelId+'_commentForm'),
                     nspace = $("numSpace");
             

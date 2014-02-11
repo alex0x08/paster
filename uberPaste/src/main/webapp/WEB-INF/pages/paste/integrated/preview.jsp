@@ -58,7 +58,7 @@
     </div>
 </div>
 
-<img style="border: 2px saddlebrown;" src="${model.thumbImage}"/>
+<img style="border: 2px saddlebrown;" src="${model.thumbImageRead}"/>
 
 
 

@@ -20,11 +20,17 @@ import javax.persistence._
 import javax.validation.constraints.{Size, NotNull}
 import org.compass.core.CompassHighlighter
 import org.compass.annotations._
+import org.apache.commons.io.FileUtils
+import org.apache.commons.io.IOUtils
 import org.apache.commons.lang.StringUtils
 import org.codehaus.jackson.annotate.JsonIgnore
 import javax.xml.bind.annotation._
 import uber.paste.base.Loggered
-import java.util.{Set,HashSet,ArrayList}
+import com.thoughtworks.xstream.annotations.XStreamAsAttribute
+import java.io.FileInputStream
+import java.io.InputStream
+import java.nio.file.FileSystems
+import java.util.{Set,HashSet,ArrayList, UUID}
 import scala.collection.JavaConversions._
 import org.hibernate.envers.{NotAudited, Audited}
 
@@ -69,6 +75,10 @@ class PasteListener extends Loggered{
 @Audited
 class Paste extends Struct with java.io.Serializable{
 
+  @NotNull(message = "{validator.not-null}")
+  @Column(nullable = false, unique = true, length = 255)
+  @SearchableProperty(store=Store.YES,index=Index.NO)
+  private var uuid = UUID.randomUUID().toString()
   
   @Lob
   @NotNull
@@ -78,12 +88,13 @@ class Paste extends Struct with java.io.Serializable{
   @Column(length = Integer.MAX_VALUE)
   private var text: String = null
 
-  @Lob
+  //@Lob
   //@NotNull
   //@Column(length=1024,name="thumb_img")
   @XmlTransient
   //@NotAudited
   @SearchableProperty(store=Store.YES,index=Index.NO)
+  //@transient
   private var thumbImage:String =null
 
   //@Transient
@@ -140,7 +151,10 @@ class Paste extends Struct with java.io.Serializable{
   private var symbolsCount:java.lang.Integer = null
   
   private var wordsCount:java.lang.Integer = null
-    
+  
+  @transient
+  private var thumbData:String = null
+  
   override def terms():List[String] = Paste.terms
   
   /**
@@ -179,6 +193,8 @@ class Paste extends Struct with java.io.Serializable{
 
   def getTags(): Set[String] = tags
 
+  def getUuid():String = uuid
+  
   def getPriority() : Priority = Priority.valueOf(priority)
 
   def setPriority(prior:Priority)  = {
@@ -187,6 +203,20 @@ class Paste extends Struct with java.io.Serializable{
 
   @JsonIgnore
   def getThumbImage() = thumbImage
+  
+  @JsonIgnore
+  def getThumbImageRead():String = {
+    
+    if ( thumbData==null) {    
+      val fimg = FileSystems.getDefault().getPath(System.getProperty("paste.app.home"),"images",uuid).toFile
+     if (fimg.exists && fimg.isFile) {      
+       thumbData =FileUtils.readFileToString(fimg)
+     }      
+    }
+    return  thumbData
+  }
+  
+ 
   def setThumbImage(img:String) {thumbImage = img}
 
  /* @XmlTransient

@@ -37,7 +37,7 @@
                        <c:choose>
                            <c:when test="${not empty paste.thumbImage}">
                 <div class="column grid-4" >
-                               <img src="${paste.thumbImage}" />
+                               <img src="${paste.thumbImageRead}" />
                     </div>
 
                                <c:set var="currentRowSize" value="12"/>

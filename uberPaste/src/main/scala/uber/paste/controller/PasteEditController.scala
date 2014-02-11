@@ -35,6 +35,7 @@ import javax.validation.Valid
 import java.util.Locale
 import scala.collection.JavaConversions._
 import org.codehaus.jackson.annotate.JsonIgnore
+import org.apache.commons.io.IOUtils
 import org.apache.commons.lang.{StringEscapeUtils, WordUtils, StringUtils}
 import scala.Array
 import com.google.gson.{JsonParser, GsonBuilder}
@@ -45,8 +46,10 @@ import org.apache.http.client.methods.HttpGet
 import javax.annotation.Resource
 import org.springframework.context.MessageSource
 import java.util
+import org.apache.commons.io.FileUtils
 import org.apache.commons.io.FilenameUtils
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
+import java.nio.file.FileSystems
 import java.security.cert.X509Certificate;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
@@ -54,6 +57,7 @@ import javax.net.ssl.X509TrustManager;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.ssl.SSLSocketFactory;
+import java.nio.file.FileSystems
 
 /**
  * Paste model controller
@@ -127,7 +131,6 @@ class PasteController extends VersionController[Paste]   {
     } else {
       model.addAttribute("availableNext",null)
       model.addAttribute("availablePrev",null)
-
     }
 
 
@@ -245,7 +248,7 @@ class PasteController extends VersionController[Paste]   {
   }
 
   @RequestMapping(value = Array(
-    GenericListController.INTEGRATED +GenericEditController.NEW_ACTION+ "/{integrationCode:[a-z0-9_]+}"),
+    GenericListController.INTEGRATED+GenericEditController.NEW_ACTION+ "/{integrationCode:[a-z0-9_]+}"),
     method = Array(RequestMethod.GET))
   @ResponseStatus(HttpStatus.CREATED)
   def createNewIntegrated(model:Model,
@@ -340,10 +343,21 @@ class PasteController extends VersionController[Paste]   {
         }
       }
 
+    
 
       logger.debug("__found thumbnail "+b.getThumbImage())
       logger.debug("__found comments "+b.getComments().size())
 
+    
+    if (b.getThumbImage()!=null) {
+        
+        val fimg = FileSystems.getDefault().getPath(System.getProperty("paste.app.home"),"images",b.getUuid).toFile
+        
+          FileUtils.writeStringToFile(fimg, b.getThumbImage())
+          
+          b.setThumbImage(fimg.getName)
+      }
+    
        val out =super.save(cancel,b,result,model,locale,redirectAttributes)
       return if (out.equals(listPage))  {
         model.asMap().clear()

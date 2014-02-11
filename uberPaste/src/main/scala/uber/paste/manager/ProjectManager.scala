@@ -37,6 +37,10 @@ class ProjectManagerImpl extends GenericSearchManagerImpl[Project] with ProjectM
 
   def getCurrentProject() = SystemInfo.instance.getProject
   
+   protected override def getDao:ProjectDao = {
+    return projectDao
+  }
+  
   @Secured(Array("ROLE_ADMIN"))
   override def save(obj:Project):Project = {
     val pr =projectDao.save(obj)

@@ -198,6 +198,8 @@
         <load-on-startup>1</load-on-startup>
     </servlet>
 
+   
+
     <servlet>
         <servlet-name>H2Console</servlet-name>
         <servlet-class>org.h2.server.web.WebServlet</servlet-class>
@@ -222,6 +224,9 @@
         <servlet-name>OpenIDServlet</servlet-name>
         <url-pattern>/act/openid-login</url-pattern>
     </servlet-mapping>
+
+
+   
 
 
     <servlet-mapping>

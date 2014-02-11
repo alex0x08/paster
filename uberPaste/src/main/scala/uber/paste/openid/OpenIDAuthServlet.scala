@@ -8,7 +8,7 @@ import com.dyuproject.util.http.UrlEncodedParameterMap
 import java.lang.String
 import scala.collection.JavaConversions._
 import uber.paste.build.UserBuilder
-import uber.paste.model.{SavedSession, User}
+import uber.paste.model.User
 import org.springframework.security.core.AuthenticationException
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
@@ -17,7 +17,6 @@ import javax.servlet.ServletException
 import uber.paste.manager.{UserRememberMeService, UserManager}
 import org.springframework.web.context.support.WebApplicationContextUtils
 import java.net.UnknownHostException
-import org.springframework.security.web.context.HttpSessionSecurityContextRepository
 import scala.Predef._
 
 
@@ -26,7 +25,6 @@ import scala.Predef._
  * User: achernyshev
  * Date: 13.02.13
  * Time: 13:59
- * To change this template use File | Settings | File Templates.
  */
 class OpenIDAuthServlet extends HttpServlet with Loggered{
 

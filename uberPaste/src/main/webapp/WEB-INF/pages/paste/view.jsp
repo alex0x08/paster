@@ -3,8 +3,7 @@
 
   <jsp:include page="/WEB-INF/pages/common/paste-update-poll.jsp"/>
 
-    <c:out value="size: ${availablePrevList.count}"/>,
-  
+   
   
 <div class="row">
     <div class="column grid-1" style="text-align:right;padding-right: 0;margin-top: -1em;" >
@@ -123,7 +122,7 @@
       <div id="pasteLoadSpinner" style="">
              <img src="<c:url value='/main/static/${appVersion}/images/gear_sml.gif'/>"/>  
                       <fmt:message key="action.loading"/>   
-                      <img style="border: 2px saddlebrown;" src="${model.thumbImage}"/>
+                      <img style="border: 2px saddlebrown;" src="${model.thumbImageRead}"/>
 
           </div>    
         
