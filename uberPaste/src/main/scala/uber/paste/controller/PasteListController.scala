@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletRequest
 import org.springframework.beans.factory.annotation.{Value, Autowired}
 import org.springframework.ui.Model
 import java.util.Locale
+import org.springframework.beans.support.MutableSortDefinition
 import org.springframework.beans.support.PagedListHolder
 import org.joda.time.{DateTime, DateMidnight, Days}
 import org.apache.commons.lang.StringEscapeUtils
@@ -160,7 +161,7 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
                                  @PathVariable("integrationCode") integrationCode:String,
                                  request:HttpServletRequest,
                                  model:Model,
-                                 locale:Locale) =  listImpl(request,locale, model, page, null, null,source,true,integrationCode)
+                                 locale:Locale) =  listImpl(request,locale, model, page, null, null,null,false,source,integrationCode)
   
   
   
@@ -171,7 +172,7 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
                            @PathVariable("integrationCode") integrationCode:String,
                            request:HttpServletRequest,
                            model:Model,
-                           locale:Locale)= listImpl(request,locale, model, null, null, pageSize,source,true,integrationCode)
+                           locale:Locale)= listImpl(request,locale, model, null, null, pageSize,null,false,source,integrationCode)
 
 
   @RequestMapping(value = Array(GenericListController.INTEGRATED +GenericListController.LIST_ACTION + "/{integrationCode:[a-z0-9_]+}/{source:[a-zA-Z0-9]+}/next"), method = Array(RequestMethod.GET))
@@ -181,7 +182,7 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
                             @PathVariable("source") source:String,
                             @PathVariable("integrationCode") integrationCode:String,
                             model:Model,
-                            locale:Locale) = listImpl(request,locale, model, null, GenericListController.NEXT_PARAM, null,source,true,integrationCode)
+                            locale:Locale) = listImpl(request,locale, model, null, GenericListController.NEXT_PARAM, null,null,false,source,integrationCode)
 
 
   @RequestMapping(value = Array(GenericListController.INTEGRATED +GenericListController.LIST_ACTION + "/{integrationCode:[a-z0-9_]+}/{source:[a-zA-Z0-9]+}/prev"), method = Array(RequestMethod.GET))
@@ -191,7 +192,7 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
                             @PathVariable("source") source:String,
                             @PathVariable("integrationCode") integrationCode:String,
                             model:Model,
-                            locale:Locale) = listImpl(request,locale, model, null, "prev", null,source,true,integrationCode)
+                            locale:Locale) = listImpl(request,locale, model, null, "prev", null,null,false,source,integrationCode)
 
   @RequestMapping(value = Array(
     GenericListController.INTEGRATED +GenericListController.LIST_ACTION+"/{integrationCode:[a-z0-9_]+}/{source:[a-zA-Z0-9]+}/earlier",
@@ -207,7 +208,7 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
                   @RequestParam(required = false)  NPpage:String,
                   @RequestParam(required = false)  pageSize:java.lang.Integer):java.util.List[Paste] = {
 
-    return listImpl(request,locale,model,page,NPpage,pageSize,source,true,integrationCode)
+    return listImpl(request,locale,model,page,NPpage,pageSize,"lastModified",true,source,integrationCode)
   }
 
 
@@ -224,7 +225,7 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
                        @RequestParam(required = false)  NPpage:String,
                        @RequestParam(required = false)  pageSize:java.lang.Integer):java.util.List[Paste] = {
 
-    return listImpl(request,locale,model,page,NPpage,pageSize,source,false,integrationCode)
+    return listImpl(request,locale,model,page,NPpage,pageSize,"lastModified",false,source,integrationCode)
   }
   
   
@@ -237,9 +238,11 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
                      @PathVariable("integrationCode") integrationCode:String,
                      @RequestParam(required = false)  page:java.lang.Integer,
                      @RequestParam(required = false)  NPpage:String,
-                     @RequestParam(required = false)  pageSize:java.lang.Integer):java.util.List[Paste] = {
+                     @RequestParam(required = false)  pageSize:java.lang.Integer,
+                     @RequestParam(required = false)  sortColumn:String,
+                     @RequestParam(required = false)  sortAsc:Boolean):java.util.List[Paste] = {
     
-    return listImpl(request,locale,model,page,NPpage,pageSize,PasteSource.FORM.getCode(),true,integrationCode)
+    return listImpl(request,locale,model,page,NPpage,pageSize,sortColumn,sortAsc,PasteSource.FORM.getCode(),integrationCode)
   }
   
 
@@ -250,7 +253,7 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
                             @PathVariable("result") result:String,
                             request:HttpServletRequest,
                             model:Model,
-                            locale:Locale) =  listImpl(request,locale, model, page, null, null, result)
+                            locale:Locale) =  listImpl(request,locale, model, page, null, null,"lastModified",true,null, result)
   
   @RequestMapping(value = Array(
       GenericListController.RAW+SearchController.SEARCH_ACTION + "/{result:[a-z]+}"), method = Array(RequestMethod.GET))
@@ -259,7 +262,7 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
                         @PathVariable("result") result:String,
                         request:HttpServletRequest,
                         model:Model,
-                        locale:Locale) =  listImpl(request,locale, model, page, null, null, result)
+                        locale:Locale) =  listImpl(request,locale, model, page, null, null,"lastModified",true, null, result)
   
   
   
@@ -271,7 +274,7 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
                        @PathVariable("source") source:String,
                        request:HttpServletRequest,
                        model:Model,
-                       locale:Locale) =  listImpl(request,locale, model, page, null, null,source,true,null)
+                       locale:Locale) =  listImpl(request,locale, model, page, null, null,"lastModified",true,source,null)
   
   
   @RequestMapping(value = Array(GenericListController.LIST_ACTION + "/{source:[a-zA-Z0-9]+}/limit/{pageSize:[0-9]+}"), method = Array(RequestMethod.GET))
@@ -280,7 +283,7 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
                            @PathVariable("source") source:String,
                            request:HttpServletRequest,
                            model:Model,
-                           locale:Locale)= listImpl(request,locale, model, null, null, pageSize,source,true,null)
+                           locale:Locale)= listImpl(request,locale, model, null, null, pageSize,"lastModified",true,source,null)
   
   
   @RequestMapping(value = Array(GenericListController.LIST_ACTION + "/{source:[a-zA-Z0-9]+}/next"), method = Array(RequestMethod.GET))
@@ -289,7 +292,7 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
                       request:HttpServletRequest,
                       @PathVariable("source") source:String,
                       model:Model,
-                      locale:Locale) = listImpl(request,locale, model, null, GenericListController.NEXT_PARAM, null,source,true,null)
+                      locale:Locale) = listImpl(request,locale, model, null, GenericListController.NEXT_PARAM, null,"lastModified",true,source,null)
 
 
   @RequestMapping(value = Array(GenericListController.LIST_ACTION + "/{source:[a-zA-Z0-9]+}/prev"), method = Array(RequestMethod.GET))
@@ -298,7 +301,7 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
                       request:HttpServletRequest,
                       @PathVariable("source") source:String,
                       model:Model,
-                      locale:Locale) = listImpl(request,locale, model, null, "prev", null,source,true,null)
+                      locale:Locale) = listImpl(request,locale, model, null, "prev", null,"lastModified",true,source,null)
 
   @RequestMapping(value = Array(GenericListController.LIST_ACTION+"/{source:[a-zA-Z0-9]+}",
                                 GenericListController.RAW+GenericListController.LIST_ACTION+"/{source:[a-zA-Z0-9]+}",
@@ -312,7 +315,7 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
                      @RequestParam(required = false)  NPpage:String,
                      @RequestParam(required = false)  pageSize:java.lang.Integer):java.util.List[Paste] = {
 
-    return listImpl(request,locale,model,page,NPpage,pageSize,source,true,null)
+    return listImpl(request,locale,model,page,NPpage,pageSize,"lastModified",true,source,null)
   }
 
 
@@ -326,7 +329,7 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
                   @RequestParam(required = false)  NPpage:String,
                   @RequestParam(required = false)  pageSize:java.lang.Integer):java.util.List[Paste] = {
 
-    return listImpl(request,locale,model,page,NPpage,pageSize,source,false,null)
+    return listImpl(request,locale,model,page,NPpage,pageSize,"lastModified",false,source,null)
   }
 
 
@@ -337,9 +340,11 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
   override def list( request:HttpServletRequest, locale:Locale,  model:Model,
            @RequestParam(required = false)  page:java.lang.Integer,
            @RequestParam(required = false)  NPpage:String,
-           @RequestParam(required = false)  pageSize:java.lang.Integer):java.util.List[Paste] = {
+           @RequestParam(required = false)  pageSize:java.lang.Integer,
+           @RequestParam(required = false)  sortColumn:String,
+           @RequestParam(required = false)  sortAsc:Boolean):java.util.List[Paste] = {
 
-    return listImpl(request,locale,model,page,NPpage,pageSize,PasteSource.FORM.getCode(),true,null)
+    return listImpl(request,locale,model,page,NPpage,pageSize,sortColumn,sortAsc,PasteSource.FORM.getCode(),null)
   }
 
   @RequestMapping(value = Array( GenericListController.COUNT_ACTION+ "/{source:[a-zA-Z0-9]+}/{since:[0-9]+}"), 
@@ -356,7 +361,9 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
                      page:java.lang.Integer,
                      NPpage:String,
                      pageSize:java.lang.Integer,
-                     sourceType:String,desc:java.lang.Boolean,integrationCode:String):java.util.List[Paste] = {
+                     sortColumn:String,
+                     desc:java.lang.Boolean,
+                     sourceType:String,integrationCode:String):java.util.List[Paste] = {
 
     logger.debug("_paste listImpl, pageSize "+pageSize)
 
@@ -375,7 +382,7 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
 
     val order = if (desc == null) {java.lang.Boolean.TRUE} else {desc}
 
-    return processPageListHolder(request,locale,model,page,NPpage,pageSize,
+    return processPageListHolder(request,locale,model,page,NPpage,pageSize,sortColumn,desc,
       if (ps==null) {pasterListCallback} else {
         new PasteListCallback(ps,order,integrationCode)},GenericController.NODE_LIST_MODEL_PAGE)
 
@@ -400,9 +407,20 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
   class PasteListCallback(sourceType:PasteSource,desc:Boolean,integrationCode:String) extends SourceCallback[Paste] {
     override def invokeCreate():PagedListHolder[Paste] = {
 
-      return new PagedListHolder[Paste](if (integrationCode!=null) {
+      val ph =new ExtendedPageListHolder[Paste](if (integrationCode!=null) {
         manager.getListIntegrated(integrationCode)} else {
         manager.getBySourceType(sourceType,desc)})
+    
+      val sort =ph.getSort().asInstanceOf[MutableSortDefinition]
+            
+                /**
+                 * default sort
+                 */
+                sort.setProperty("lastModified")
+		sort.setIgnoreCase(false)
+                sort.setAscending(false)
+      
+      return ph
     }
   }
 

@@ -2,7 +2,19 @@
 
 <div class="page">
     <h4 class="f-h4">
-    <a href="<c:url value="/main/paste/list/${sourceType}/${param.page}"/>">Page: <c:out value="${param.page}"/></a>
+        <fmt:formatDate pattern="${dateTimePattern}" var="fromDate" value="${pageItems.firstElement.lastModified}" />
+        <fmt:formatDate pattern="${dateTimePattern}" var="toDate" value="${pageItems.lastElement.lastModified}" />
+        
+    <a href="<c:url value="/main/paste/list/${sourceType}/${param.page}"/>">
+    
+        <fmt:message key='common.list.page'>
+            <fmt:param value="${param.page}"/>
+            <fmt:param value="${fromDate}"/>
+            <fmt:param value="${toDate}"/>
+            <fmt:param value="${pageItems.elementsOnPage}"/>
+        </fmt:message>
+       
+    </a>
     </h4>
     
 

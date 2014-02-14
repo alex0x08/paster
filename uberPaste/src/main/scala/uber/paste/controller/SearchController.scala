@@ -120,7 +120,9 @@ abstract class SearchController[T <: Struct,QV <: Query ] extends GenericListCon
                     @ModelAttribute("query") query:QV,  model:Model,
            @RequestParam(required = false)  page:java.lang.Integer,
            @RequestParam(required = false)  NPpage:String,
-           @RequestParam(required = false)  pageSize:java.lang.Integer):java.util.List[T] = {
+           @RequestParam(required = false)  pageSize:java.lang.Integer,
+           @RequestParam(required = false)  sortColumn:String,
+           @RequestParam(required = false)  sortAsc:Boolean):java.util.List[T] = {
 
 
     fillListModel(model,locale)
@@ -133,7 +135,7 @@ abstract class SearchController[T <: Struct,QV <: Query ] extends GenericListCon
 
       for (r<-getAvailableResults()) {
 
-       val rout =  processPageListHolder(request,locale,model,page,NPpage,pageSize,new SourceCallback[T]() {
+       val rout =  processPageListHolder(request,locale,model,page,NPpage,pageSize,sortColumn,sortAsc,new SourceCallback[T]() {
 
          override def invokeCreate():PagedListHolder[T]= {
            try {
@@ -193,13 +195,16 @@ abstract class SearchController[T <: Struct,QV <: Query ] extends GenericListCon
   override def listImpl( request:HttpServletRequest, locale:Locale,  model:Model,
                 page:java.lang.Integer,
                 NPpage:String,
-                pageSize:java.lang.Integer,result:String):java.util.List[T] = {
+                pageSize:java.lang.Integer,
+              sortColumn:String,sortAsc:Boolean,result:String):java.util.List[T] = {
     fillSearchModel(model,locale)
     model.addAttribute("result",result.toLowerCase())
 
-    logger.debug("_listImpl(search) pageSize "+pageSize+", result "+model.asMap().get("result"))
-
-    return super.listImpl(request,locale,model,page,NPpage,pageSize,getSearchResultByCode(result).getItemsModel())
+    if (logger.isDebugEnabled()) {
+      logger.debug("_listImpl(search) pageSize "+pageSize+", result "+model.asMap().get("result"))
+    }
+    
+    return super.listImpl(request,locale,model,page,NPpage,pageSize,sortColumn,sortAsc,getSearchResultByCode(result).getItemsModel())
   }
 
 
@@ -209,7 +214,7 @@ abstract class SearchController[T <: Struct,QV <: Query ] extends GenericListCon
                    @PathVariable("result") result:String,
                  request:HttpServletRequest,
                  model:Model,
-                 locale:Locale) =  listImpl(request,locale, model, page, null, null, result)
+                 locale:Locale) =  listImpl(request,locale, model, page, null, null,null,false, result)
 
 
   @RequestMapping(value = Array(SearchController.SEARCH_ACTION + "/{result:[a-z]+}/limit/{pageSize:[0-9]+}"),
@@ -220,7 +225,7 @@ abstract class SearchController[T <: Struct,QV <: Query ] extends GenericListCon
                         @PathVariable("result") result:String,
                         request:HttpServletRequest,
                         model:Model,
-                        locale:Locale)= listImpl(request,locale, model, null, null, pageSize,
+                        locale:Locale)= listImpl(request,locale, model, null, null, pageSize,null,false,
                         result)
 
 
@@ -230,7 +235,7 @@ abstract class SearchController[T <: Struct,QV <: Query ] extends GenericListCon
                       request:HttpServletRequest,
                       @PathVariable("result") result:String,
                       model:Model,
-                      locale:Locale) = listImpl(request,locale, model, null, GenericListController.NEXT_PARAM, null,
+                      locale:Locale) = listImpl(request,locale, model, null, GenericListController.NEXT_PARAM, null,null,false,
                       result)
 
 
@@ -240,7 +245,7 @@ abstract class SearchController[T <: Struct,QV <: Query ] extends GenericListCon
                       request:HttpServletRequest,
                       @PathVariable("result") result:String,
                       model:Model,
-                      locale:Locale) = listImpl(request,locale, model, null, "prev", null,result)
+                      locale:Locale) = listImpl(request,locale, model, null, "prev", null,null,false,result)
 
 
   /*@RequestMapping(value = Array("/body/list"), method = Array(RequestMethod.GET,RequestMethod.POST))

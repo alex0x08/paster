@@ -67,9 +67,12 @@
         
       </c:if>       
 
+        
+        
 <div class="row">
     <div class="column grid-12" >
-
+   
+        
     <div id="pastas">
         
     <c:forEach var="paste" items="${pageItems.pageList}" varStatus="status">
@@ -212,14 +215,13 @@
 
 <c:if test="${pageItems.nrOfElements == 0}">
     <center>
-        No pastas
+        <fmt:message key='common.list.empty'/>
     </center>
 </c:if>
 
     </div>    
-       <div class="column grid-3">
-        
-<tiles:insertDefinition name="/common/pageList" >
+    <div class="column grid-3">
+        <tiles:insertDefinition name="/common/pageList" >
             <tiles:putAttribute name="listMode" value="${listMode}"/>
             <tiles:putAttribute name="pageItems" value="${pageItems}"/>
 
@@ -231,7 +233,6 @@
 </div>
 
 <c:if test="${pageItems.nrOfElements > 5 and pageItems.page < pageItems.pageCount-1}">
-
    
     <c:choose>
         <c:when test="${listMode eq 'search'}">
