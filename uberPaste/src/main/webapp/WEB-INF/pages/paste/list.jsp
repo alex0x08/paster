@@ -1,5 +1,6 @@
 <%@ include file="/WEB-INF/pages/common/taglibs.jsp"%>
 
+
   <jsp:include page="/WEB-INF/pages/common/paste-update-poll.jsp"/>
 <div class="row">
     <div class="column grid-1" style="text-align:right;padding-right: 0;margin-top: -1em;" >
@@ -231,8 +232,7 @@
 
 <c:if test="${pageItems.nrOfElements > 5 and pageItems.page < pageItems.pageCount-1}">
 
-    <script src="<c:url value='/main/static/${appVersion}/libs/LazyPagination.js'/>" type="text/javascript" charset="utf-8"></script>
-
+   
     <c:choose>
         <c:when test="${listMode eq 'search'}">
             <c:url var="rawPageUrl" value="/main/paste/raw/list/search/${result}"/>
@@ -286,8 +286,6 @@
         <div id="morePages"></div>
  </c:if>
   
-<script src="<c:url value='/main/static/${appVersion}/libs/lightface/Source/LightFace.js'/>" type="text/javascript" charset="utf-8"></script>
-<script src="<c:url value='/main/static/${appVersion}/libs/lightface/Source/LightFace.IFrame.js'/>" type="text/javascript" charset="utf-8"></script>
 
 
 <script type="text/javascript">
@@ -307,58 +305,7 @@
     window.addEvent('domready', function() {
 
         parseSearchResults($('pastas'));
-     
+   
 
-/*
-        var pastePreview = new LightFace.IFrame(
-                { height:400,
-                  width:800,
-                  fadeDuration: 100,
-                  fadeDelay: 500,
-                  keys: {
-		esc: function() { this.close(); }
-			},
-                 draggable:true , url:  '', title: 'Google!' })
-                .addButton('Close', function() { pastePreview.close(); },true);
-
-                pastePreview.addEvent('open',function() {             
-
-                      pastePreview.iframe.contentWindow.document.body.onblur=function() {
-                 alert('fuck!');
-                    pastePreview.close();
-              
-
-             };
-
-             });
-
-
-         
-
-
-        document.body.getElements('.pastePreviewLink').each(function(el, i)
-        {
-
-            el.addEvent('mouseover',function() {
-
-                 var pasteId = el.get('pasteId');
-                setTimeout(function() {
-                    pastePreview.load(viewUrl+ '/'+pasteId, 'Google!');
-                    pastePreview.open();
-                    pastePreview.iframe.contentWindow.focus();
-                }, 1000);
-                 
-            });
-          
-
-             el.addEvent('mouseout',function() {
-                 if (this.focused==false) {
-                    pastePreview.close();
-                }
-
-             });
-
-        });
-        */
     });
 </script>

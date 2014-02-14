@@ -1,3 +1,3 @@
 <%@ include file="/WEB-INF/pages/common/taglibs.jsp"%>
 
-                          <tiles:insertAttribute name="content" />
+<tiles:insertAttribute name="content" />

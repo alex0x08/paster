@@ -152,18 +152,18 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
 
   }
 
-
-       @RequestMapping(value = Array(GenericListController.INTEGRATED +GenericListController.LIST_ACTION + "/{integrationCode:[a-z0-9_]+}/{source:[a-zA-Z0-9]+}/{page:[0-9]+}"), method = Array(RequestMethod.GET))
-       @ModelAttribute(GenericController.NODE_LIST_MODEL)
-       def listByPathSourceIntegrated(@PathVariable("page") page:java.lang.Integer,
-                            @PathVariable("source") source:String,
-                            @PathVariable("integrationCode") integrationCode:String,
-                            request:HttpServletRequest,
-                            model:Model,
-                            locale:Locale) =  listImpl(request,locale, model, page, null, null,source,true,integrationCode)
-
-
-
+  
+  @RequestMapping(value = Array(GenericListController.INTEGRATED +GenericListController.LIST_ACTION + "/{integrationCode:[a-z0-9_]+}/{source:[a-zA-Z0-9]+}/{page:[0-9]+}"), method = Array(RequestMethod.GET))
+  @ModelAttribute(GenericController.NODE_LIST_MODEL)
+  def listByPathSourceIntegrated(@PathVariable("page") page:java.lang.Integer,
+                                 @PathVariable("source") source:String,
+                                 @PathVariable("integrationCode") integrationCode:String,
+                                 request:HttpServletRequest,
+                                 model:Model,
+                                 locale:Locale) =  listImpl(request,locale, model, page, null, null,source,true,integrationCode)
+  
+  
+  
   @RequestMapping(value = Array(GenericListController.INTEGRATED +GenericListController.LIST_ACTION + "/{integrationCode:[a-z0-9_]+}/{source:[a-zA-Z0-9]+}/limit/{pageSize:[0-9]+}"), method = Array(RequestMethod.GET))
   @ModelAttribute(GenericController.NODE_LIST_MODEL)
   def listByPathSizeSourceIntegrated(@PathVariable("pageSize") pageSize:java.lang.Integer,
@@ -226,63 +226,63 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
 
     return listImpl(request,locale,model,page,NPpage,pageSize,source,false,integrationCode)
   }
-
-
-
+  
+  
+  
   @RequestMapping(value = Array(
-    GenericListController.INTEGRATED +GenericListController.LIST_ACTION+"/{integrationCode:[a-z0-9_]+}"),
+      GenericListController.INTEGRATED +GenericListController.LIST_ACTION+"/{integrationCode:[a-z0-9_]+}"),
     method = Array(RequestMethod.GET))
   @ModelAttribute(GenericController.NODE_LIST_MODEL)
   def listIntegrated( request:HttpServletRequest, locale:Locale,  model:Model,
-                      @PathVariable("integrationCode") integrationCode:String,
-                      @RequestParam(required = false)  page:java.lang.Integer,
+                     @PathVariable("integrationCode") integrationCode:String,
+                     @RequestParam(required = false)  page:java.lang.Integer,
                      @RequestParam(required = false)  NPpage:String,
                      @RequestParam(required = false)  pageSize:java.lang.Integer):java.util.List[Paste] = {
-
+    
     return listImpl(request,locale,model,page,NPpage,pageSize,PasteSource.FORM.getCode(),true,integrationCode)
   }
-
+  
 
   @RequestMapping(value = Array(SearchController.SEARCH_ACTION + "/{result:[a-z]+}/{page:[0-9]+}",
-    GenericListController.RAW+SearchController.SEARCH_ACTION + "/{result:[a-z]+}/{page:[0-9]+}"), method = Array(RequestMethod.GET))
+                                GenericListController.RAW+SearchController.SEARCH_ACTION + "/{result:[a-z]+}/{page:[0-9]+}"), method = Array(RequestMethod.GET))
   @ModelAttribute(GenericController.NODE_LIST_MODEL)
   override def searchByPath(@PathVariable("page") page:java.lang.Integer,
-                   @PathVariable("result") result:String,
-                 request:HttpServletRequest,
-                 model:Model,
-                 locale:Locale) =  listImpl(request,locale, model, page, null, null, result)
-
-@RequestMapping(value = Array(
-    GenericListController.RAW+SearchController.SEARCH_ACTION + "/{result:[a-z]+}"), method = Array(RequestMethod.GET))
+                            @PathVariable("result") result:String,
+                            request:HttpServletRequest,
+                            model:Model,
+                            locale:Locale) =  listImpl(request,locale, model, page, null, null, result)
+  
+  @RequestMapping(value = Array(
+      GenericListController.RAW+SearchController.SEARCH_ACTION + "/{result:[a-z]+}"), method = Array(RequestMethod.GET))
   @ModelAttribute(GenericController.NODE_LIST_MODEL)
   def searchByPathParam(@RequestParam(required = false) page:java.lang.Integer,
-                   @PathVariable("result") result:String,
-                 request:HttpServletRequest,
-                 model:Model,
-                 locale:Locale) =  listImpl(request,locale, model, page, null, null, result)
-
-
+                        @PathVariable("result") result:String,
+                        request:HttpServletRequest,
+                        model:Model,
+                        locale:Locale) =  listImpl(request,locale, model, page, null, null, result)
+  
+  
   
   @RequestMapping(value = Array(GenericListController.LIST_ACTION + "/{source:[a-zA-Z0-9]+}/{page:[0-9]+}",
-    GenericListController.RAW+GenericListController.LIST_ACTION + "/{source:[a-zA-Z0-9]+}/{page:[0-9]+}"), 
+                                GenericListController.RAW+GenericListController.LIST_ACTION + "/{source:[a-zA-Z0-9]+}/{page:[0-9]+}"), 
                   method = Array(RequestMethod.GET))
   @ModelAttribute(GenericController.NODE_LIST_MODEL)
   def listByPathSource(@PathVariable("page") page:java.lang.Integer,
                        @PathVariable("source") source:String,
-                 request:HttpServletRequest,
-                 model:Model,
-                 locale:Locale) =  listImpl(request,locale, model, page, null, null,source,true,null)
-
-
+                       request:HttpServletRequest,
+                       model:Model,
+                       locale:Locale) =  listImpl(request,locale, model, page, null, null,source,true,null)
+  
+  
   @RequestMapping(value = Array(GenericListController.LIST_ACTION + "/{source:[a-zA-Z0-9]+}/limit/{pageSize:[0-9]+}"), method = Array(RequestMethod.GET))
   @ModelAttribute(GenericController.NODE_LIST_MODEL)
   def listByPathSizeSource(@PathVariable("pageSize") pageSize:java.lang.Integer,
                            @PathVariable("source") source:String,
                            request:HttpServletRequest,
-                     model:Model,
-                     locale:Locale)= listImpl(request,locale, model, null, null, pageSize,source,true,null)
-
-
+                           model:Model,
+                           locale:Locale)= listImpl(request,locale, model, null, null, pageSize,source,true,null)
+  
+  
   @RequestMapping(value = Array(GenericListController.LIST_ACTION + "/{source:[a-zA-Z0-9]+}/next"), method = Array(RequestMethod.GET))
   @ModelAttribute(GenericController.NODE_LIST_MODEL)
   def listByPathNextSource(
@@ -347,6 +347,7 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
   @ModelAttribute(GenericController.NODE_COUNT_KEY)
    def countAllSince(@PathVariable("source") source:String, 
                     @PathVariable("since")dateFrom:java.lang.Long):java.lang.Long = {
+               //System.out.println("_count all from "+dateFrom)   
      return pasteManager.countAllSince(PasteSource.valueOf(source.toUpperCase),dateFrom)
   }
   

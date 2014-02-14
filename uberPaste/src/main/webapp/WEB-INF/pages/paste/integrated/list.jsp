@@ -1,6 +1,7 @@
 <%@ include file="/WEB-INF/pages/common/taglibs.jsp"%>
 
 
+
 <div class="row">
     <div class="column grid-1" style="text-align:right;padding-right: 0;margin-top: -1em;" >
         <a class="mainLinkLine" href="<c:url value='/main/paste/integrated/new/${integrationCode}'></c:url>" title="<fmt:message key='paste.create.new'/>">
@@ -56,9 +57,7 @@
                     </c:choose>
                     <c:if test="${!loopStatus.last}"> | </c:if>
                 </c:forEach>
-
             </div>
-
         </c:if>
 
         <%-- processing page list --%>
@@ -122,8 +121,6 @@
                 </c:when>
             </c:choose>
 
-
-
         </div>
 
         <%-- processing elements per page and sort setup --%>
@@ -145,7 +142,6 @@
 
                         <c:if test="${!loopStatus.last}"> | </c:if>
                     </c:forEach>
-
 
                 </c:when>
                 <c:when test="${listMode eq 'list' }">
@@ -177,15 +173,10 @@
             </c:choose>
         </span>
 
-
                 </c:when>
-
             </c:choose>
 
-
         </div>
-
-
 
     </div>
 </div>
@@ -194,10 +185,8 @@
 <div class="row">
     <div class="column grid-14">
 
-
         <div id="pastas">
             <c:forEach var="paste" items="${pageItems.pageList}" varStatus="status">
-
 
                 <c:choose>
                     <c:when test="${paste['class'].name eq 'uber.paste.model.Paste'}">
@@ -241,8 +230,6 @@
                                         </c:otherwise>
                                     </c:choose>
                                 </a>
-
-
 
                             </div>
 
@@ -290,32 +277,16 @@
                                             |  <a href="<c:url value='/main/paste/delete'><c:param name="id" value="${paste.id}"/> </c:url>"><fmt:message key='button.delete'/></a>
                                         </sec:authorize>
 
-
-
                                     </div>
 
                                 </div>
 
 
-
-
-
-
                             </div>
 
-
-
-
                         </div>
-
-
-
-
-                    </c:when>
+       </c:when>
                 </c:choose>
-
-
-
 
 
             </c:forEach>
@@ -343,10 +314,6 @@
                     'html', el.get('html').replace(/\[result[^\]]*\]([\s\S]*?)\[\/result\]/gi,"<span style='background-color: #e3e658; '>$1</span>")
             );
 
-
-            // el.set("html", 'FUCK');
-            //  alert(el.text);
-            // do something
         });
     });
 </script>

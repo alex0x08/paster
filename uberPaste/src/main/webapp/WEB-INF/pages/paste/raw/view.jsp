@@ -1,9 +1,7 @@
 <%@ include file="/WEB-INF/pages/common/taglibs.jsp"%>
 
-
-
 <div id="${model.id}_pagedPaste">
-         
+        
     
 <div class="row">
     <div class="column grid-16">

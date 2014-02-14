@@ -2,77 +2,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
-    <link rel="icon" href="<c:url value='/main/static/${appVersion}/images/ninja.png'/>"/>
-
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-
-    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE9" />
-
-    <title><tiles:insertAttribute name="pageTitle" ignore="true"/></title>
-    <!--
-       <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold" rel="stylesheet" type="text/css">
-       <link href="http://fonts.googleapis.com/css?family=PT+Sans+Narrow:regular,bold" rel="stylesheet" type="text/css">
-        -->
-
-    <!--
-The {app.less} file is magic. It loads the perkins configurations,
-establishes your preferences and calls me. You will write all your
-code (or most of it) here, all the time.
-    -->
-
     <link href="<c:url value='/main/static/${appVersion}/css/app-integrated.less'/>" media="all" rel="stylesheet/less" />
-
-    <link href="<c:url value='/main/static/${appVersion}/libs/moodialog/css/MooDialog.css'/>" rel="stylesheet" type="text/css">
-    <link href="<c:url value='/main/static/${appVersion}/libs/growler/growler.css'/>" rel="stylesheet" type="text/css">
-
-
-    <!--
-      I am based in LESS.js to render stylesheets. More information can
-      be found at {http://www.lesscss.org/}.
-    -->
-    <script src="<c:url value='/main/static/${appVersion}/js/less-1.1.3.min.js'/>"></script>
-    <script src="<c:url value='/main/static/${appVersion}/js/mootools-core-1.4.5-full-compat.js'/>"></script>
-    <script src="<c:url value='/main/static/${appVersion}/js/mootools-more-1.4.0.1-nc.js'/>"></script>
-    <script src="<c:url value='/main/static/${appVersion}/libs/moodialog/js/Overlay.js'/>"></script>
-    <script src="<c:url value='/main/static/${appVersion}/libs/moodialog/js/MooDialog.js'/>"></script>
-
-    <script src="<c:url value='/main/static/${appVersion}/libs/moodialog/js/MooDialog.Fx.js'/>"></script>
-    <script src="<c:url value='/main/static/${appVersion}/libs/moodialog/js/MooDialog.Alert.js'/>"></script>
-    <script src="<c:url value='/main/static/${appVersion}/libs/moodialog/js/MooDialog.Confirm.js'/>"></script>
-    <script src="<c:url value='/main/static/${appVersion}/libs/moodialog/js/MooDialog.Error.js'/>"></script>
-    <script src="<c:url value='/main/static/${appVersion}/libs/moodialog/js/MooDialog.Prompt.js'/>"></script>
-    <script src="<c:url value='/main/static/${appVersion}/libs/moodialog/js/MooDialog.IFrame.js'/>"></script>
-    <script src="<c:url value='/main/static/${appVersion}/libs/moodialog/js/MooDialog.Request.js'/>"></script>
-
-    <script src="<c:url value='/main/static/${appVersion}/libs/growler/growler.js'/>"></script>
-
-    <script type="text/javascript">
-
-    var growl= null;
-
-    window.addEvent('domready',function() {
-        growl = new Growler.init();
-
-
-    });
-    </script>
-
-
-    <!--
-      Under development, this section allows you to preview your changes
-      immediately after saving them on the {app.less} file. However, you
-      must remove it once it enters the production stage or it will open
-      a bunch of requests to your server to retrieve new changes.
-    -->
-    <script charset="utf-8">
-        //less.env = "development";
-        //less.watch();
-    </script>
-
-    <!--[if lt IE 9]>
-    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
+       <jsp:include page="/WEB-INF/pages/template/template-common-head.jsp"/>
+    
+       <title><tiles:insertAttribute name="pageTitle" ignore="true"/></title>
+         <tiles:insertAttribute name="head" />
 
 
 
@@ -80,8 +14,7 @@ code (or most of it) here, all the time.
 
     <script type="text/javascript" src="<c:url value='/main/static/${appVersion}/libs/syntax-highlight/scripts/shCore.js'/>"></script>
 
-    <script type="text/javascript" src="<c:url value='/main/static/${appVersion}/libs/syntax-highlight/scripts/shAutoloader.js'/>"></script>
-
+   
     <link type="text/css" rel="stylesheet" href="<c:url value='/main/static/${appVersion}/libs/syntax-highlight/styles/shCoreDefault.css'/>"/>
 
     </head>
@@ -119,7 +52,10 @@ code (or most of it) here, all the time.
     </div>
 </div>
 
-
+            <jsp:include page="/WEB-INF/pages/template/template-common-body.jsp"/>
+   
+        <tiles:insertAttribute name="footer" />
+  
 
 </body>
 

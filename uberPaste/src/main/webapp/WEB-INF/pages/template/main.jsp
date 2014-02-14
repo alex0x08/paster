@@ -2,73 +2,13 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        
-        <!--link rel="icon" href="<c:url value='/snowfall2/ninja-ng.png'/>"/-->
        
-        <link rel="icon" href="<c:url value='/main/static/${appVersion}/images/ninja.png'/>"/>
-        
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+            <link href="<c:url value="/main/static/${appVersion}/css/app.less"/>" media="all" rel="stylesheet/less" />
 
-        <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE9" />
-
+        <jsp:include page="/WEB-INF/pages/template/template-common-head.jsp"/>
+       
         <title><tiles:insertAttribute name="pageTitle" ignore="true"/></title>
-
-        <link href="<c:url value="/main/static/${appVersion}/css/app.less"/>" media="all" rel="stylesheet/less" />
-
-        <link href="<c:url value="/main/static/${appVersion}/libs/moodialog/css/MooDialog.css"/>" rel="stylesheet" type="text/css">
-        <link href="<c:url value="/main/static/${appVersion}/libs/growler/growler.css"/>" rel="stylesheet" type="text/css">
-
-        <link href="<c:url value="/main/static/${appVersion}/libs/lightface/Assets/LightFace.css"/>" rel="stylesheet" type="text/css">
-
-           <link href="<c:url value='/main/static/${appVersion}/libs/dv_tabs/dv_tabs.css'/>" rel="stylesheet" type="text/css">
-
-        
-        <!-- 
-          I am based in LESS.js to render stylesheets. More information can
-          be found at {http://www.lesscss.org/}.
-        -->
-        <script src="<c:url value='/main/static/${appVersion}/js/less-1.1.3.min.js'/>"></script>
-        <script src="<c:url value='/main/static/${appVersion}/js/mootools-core-1.4.5-full-nocompat.js'/>"></script>
-        <script src="<c:url value='/main/static/${appVersion}/js/mootools-more-1.4.0.1-nc.js'/>"></script>
-        <script src="<c:url value='/main/static/${appVersion}/libs/tinycon.min.js'/>" type="text/javascript" charset="utf-8"></script>
-    <script type="text/javascript" src="<c:url value="/main/static/${appVersion}/libs/syntax-highlight/scripts/xregexp.js"/>"></script>
-
-    <script type="text/javascript" src="<c:url value="/main/static/${appVersion}/libs/syntax-highlight/scripts/shCore.js"/>"></script>
-<%--
-    <script type="text/javascript" src="<c:url value="/main/static/${appVersion}/libs/syntax-highlight/scripts/shAutoloader.js"/>"></script>
---%>
-
-          <script  type="text/javascript">
-              var transmitText = '<fmt:message key="action.sending"/>';
-        
-          </script>
-        
-        <%--
-         <script src="<c:url value='/snowfall2/js/jquery-latest.min.js'/>"></script>
-         <script src="<c:url value='/snowfall2/js/snowfall.jquery.js'/>"></script>
-       
-           <script  type="text/javascript">
-            
-           
-            $.noConflict();
-    jQuery( document ).ready(function( $ ) {       
-        
-     
-        
-    $(document).snowfall({
-        deviceorientation : true,flakeColor : '#d1d1d1',
-				
-        round : true, minSize: 1, maxSize:8,  flakeCount : 250});
-
-  // Code that uses jQuery's $ can follow here.
-});
-// Code that uses other library's $ can follow here.
-        </script>
-      
---%>
-
-        <link type="text/css" rel="stylesheet" href="<c:url value="/main/static/${appVersion}/libs/syntax-highlight/styles/shCoreDefault.css"/>"/>
-
+         <tiles:insertAttribute name="head" />
     </head>
     <body>
 
@@ -137,29 +77,9 @@
                       <small>2014. (c) Alex</small>
                   </div>
               </div>
-
-    <script src="<c:url value="/main/static/${appVersion}/libs/growler/growler.js"/>"></script>
-
-    <script type="text/javascript">
-        var growl= null;
-        window.addEvent('domready',function() {
-            growl = new Growler.init();
-
-        });
-    </script>
-
-    <%--
-    <!--
-  Under development, this section allows you to preview your changes
-  immediately after saving them on the {app.less} file. However, you
-  must remove it once it enters the production stage or it will open
-  a bunch of requests to your server to retrieve new changes.
--->
-    <script charset="utf-8">
-        //less.env = "development";
-        //less.watch();
-    </script>
---%>
+                  
+         <jsp:include page="/WEB-INF/pages/template/template-common-body.jsp"/>
+          <tiles:insertAttribute name="footer" />
     </body>
 
 </html>
