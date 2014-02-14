@@ -158,8 +158,10 @@ class PasteDaoImpl extends SearchableDaoImpl[Paste](classOf[Paste]) with PasteDa
         return query.getResultList().asInstanceOf[java.util.List[Paste]]
   }
 
-  def getBySourceType(sourceType:PasteSource,desc:Boolean) : java.util.List[Paste] = {
+  def getBySourceType(sourceType:PasteSource,sortAsc:Boolean) : java.util.List[Paste] = {
 
+    System.out.println("_getBySource "+sourceType.getCode())
+    
     val cr = new CriteriaSet
 
     val query:Query = em.createQuery(
@@ -168,7 +170,7 @@ class PasteDaoImpl extends SearchableDaoImpl[Paste](classOf[Paste]) with PasteDa
           cr.cb.equal(cr.r.get("pasteSource"), sourceType.getCode())
         ):_*)
         .orderBy(cr.cb.desc(cr.r.get("sticked"))
-      ,if (desc) {cr.cb.desc(cr.r.get("lastModified"))} else {cr.cb.asc(cr.r.get("lastModified"))})
+      ,if (sortAsc) {cr.cb.asc(cr.r.get("lastModified"))} else {cr.cb.desc(cr.r.get("lastModified"))})
       .select(cr.r))
       .setMaxResults(BaseDaoImpl.MAX_RESULTS)
     return query.getResultList().asInstanceOf[java.util.List[Paste]]

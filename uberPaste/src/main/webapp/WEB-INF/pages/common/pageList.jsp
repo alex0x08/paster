@@ -50,7 +50,7 @@
                     <span style="padding-left: 1em;">
                   
             <c:choose>
-                <c:when test="${pageItems.sort.ascending == true}">
+                <c:when test="${pageItems.sort.ascending == false}">
                     <span style="font-size: larger; "> &#x2191; </span>
                     <a href="<c:url value="/main/paste/list/${sourceType}/older"/>"> &#8595;</a>
                 </c:when>

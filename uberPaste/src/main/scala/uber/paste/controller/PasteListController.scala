@@ -89,18 +89,15 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
   @Value("${config.skype.enabled}")
   val skypeSource:Boolean = false
 
-
   @Autowired
   val pasteManager:PasteManager = null
 
   @Autowired
   val commentManager:CommentManager = null
 
-
   def listPage()="redirect:/main/paste/list"
   def editPage()="/paste/edit"
   def viewPage()="/paste/view"
-
 
   def manager():PasteManager = pasteManager
 
@@ -128,8 +125,6 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
    // }
     return out
   }
-
-  
   
   
   protected override def fillListModel(model:Model,locale:Locale) {
@@ -292,7 +287,7 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
                       request:HttpServletRequest,
                       @PathVariable("source") source:String,
                       model:Model,
-                      locale:Locale) = listImpl(request,locale, model, null, GenericListController.NEXT_PARAM, null,"lastModified",true,source,null)
+                      locale:Locale) = listImpl(request,locale, model, null, GenericListController.NEXT_PARAM, null,"lastModified",false,source,null)
 
 
   @RequestMapping(value = Array(GenericListController.LIST_ACTION + "/{source:[a-zA-Z0-9]+}/prev"), method = Array(RequestMethod.GET))
@@ -301,7 +296,7 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
                       request:HttpServletRequest,
                       @PathVariable("source") source:String,
                       model:Model,
-                      locale:Locale) = listImpl(request,locale, model, null, "prev", null,"lastModified",true,source,null)
+                      locale:Locale) = listImpl(request,locale, model, null, "prev", null,"lastModified",false,source,null)
 
   @RequestMapping(value = Array(GenericListController.LIST_ACTION+"/{source:[a-zA-Z0-9]+}",
                                 GenericListController.RAW+GenericListController.LIST_ACTION+"/{source:[a-zA-Z0-9]+}",
@@ -315,7 +310,7 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
                      @RequestParam(required = false)  NPpage:String,
                      @RequestParam(required = false)  pageSize:java.lang.Integer):java.util.List[Paste] = {
 
-    return listImpl(request,locale,model,page,NPpage,pageSize,"lastModified",true,source,null)
+    return listImpl(request,locale,model,page,NPpage,pageSize,null,false,source,null)
   }
 
 
@@ -329,20 +324,21 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
                   @RequestParam(required = false)  NPpage:String,
                   @RequestParam(required = false)  pageSize:java.lang.Integer):java.util.List[Paste] = {
 
-    return listImpl(request,locale,model,page,NPpage,pageSize,"lastModified",false,source,null)
+    return listImpl(request,locale,model,page,NPpage,pageSize,"lastModified",true,source,null)
   }
 
 
 
   @RequestMapping(value = Array(GenericListController.LIST_ACTION,
-                                GenericListController.RAW+GenericListController.LIST_ACTION),method = Array(RequestMethod.GET))
+                                GenericListController.RAW+GenericListController.LIST_ACTION),
+                  method = Array(RequestMethod.GET))
   @ModelAttribute(GenericController.NODE_LIST_MODEL)
   override def list( request:HttpServletRequest, locale:Locale,  model:Model,
            @RequestParam(required = false)  page:java.lang.Integer,
            @RequestParam(required = false)  NPpage:String,
            @RequestParam(required = false)  pageSize:java.lang.Integer,
            @RequestParam(required = false)  sortColumn:String,
-           @RequestParam(required = false)  sortAsc:Boolean):java.util.List[Paste] = {
+           @RequestParam(required = false)  sortAsc:Boolean =false):java.util.List[Paste] = {
 
     return listImpl(request,locale,model,page,NPpage,pageSize,sortColumn,sortAsc,PasteSource.FORM.getCode(),null)
   }
@@ -362,7 +358,7 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
                      NPpage:String,
                      pageSize:java.lang.Integer,
                      sortColumn:String,
-                     desc:java.lang.Boolean,
+                     sortAsc:java.lang.Boolean = false,
                      sourceType:String,integrationCode:String):java.util.List[Paste] = {
 
     logger.debug("_paste listImpl, pageSize "+pageSize)
@@ -375,16 +371,16 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
 
     val ps = if (sourceType!=null) {
       model.addAttribute("sourceType",sourceType.toLowerCase)
-      model.addAttribute("sortDesc",desc)
+      model.addAttribute("sortDesc",!sortAsc)
 
       PasteSource.valueOf(sourceType.toUpperCase)
     } else {null}
 
-    val order = if (desc == null) {java.lang.Boolean.TRUE} else {desc}
-
-    return processPageListHolder(request,locale,model,page,NPpage,pageSize,sortColumn,desc,
+    System.out.println("ps="+ps+" sourceType="+sourceType)
+   
+    return processPageListHolder(request,locale,model,page,NPpage,pageSize,sortColumn,sortAsc,
       if (ps==null) {pasterListCallback} else {
-        new PasteListCallback(ps,order,integrationCode)},GenericController.NODE_LIST_MODEL_PAGE)
+        new PasteListCallback(ps,sortAsc,integrationCode)},GenericController.NODE_LIST_MODEL_PAGE)
 
   }
 
@@ -404,12 +400,12 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
 
   protected val pasterListCallback:PasteListCallback  = new PasteListCallback(PasteSource.FORM,true,null)
 
-  class PasteListCallback(sourceType:PasteSource,desc:Boolean,integrationCode:String) extends SourceCallback[Paste] {
+  class PasteListCallback(sourceType:PasteSource,sortAsc:Boolean,integrationCode:String) extends SourceCallback[Paste] {
     override def invokeCreate():PagedListHolder[Paste] = {
 
       val ph =new ExtendedPageListHolder[Paste](if (integrationCode!=null) {
         manager.getListIntegrated(integrationCode)} else {
-        manager.getBySourceType(sourceType,desc)})
+        manager.getBySourceType(sourceType,sortAsc)})
     
       val sort =ph.getSort().asInstanceOf[MutableSortDefinition]
             
@@ -418,7 +414,7 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
                  */
                 sort.setProperty("lastModified")
 		sort.setIgnoreCase(false)
-                sort.setAscending(false)
+                sort.setAscending(sortAsc)
       
       return ph
     }

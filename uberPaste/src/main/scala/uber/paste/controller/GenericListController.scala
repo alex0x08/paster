@@ -16,12 +16,17 @@
 
 package uber.paste.controller
 
+
+import uber.paste.model.SortColumn
 import uber.paste.model.Struct
 import javax.servlet.http.HttpServletRequest
+import javax.servlet.http.HttpSession
 import org.springframework.beans.support.MutableSortDefinition
 import org.springframework.beans.support.PagedListHolder
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation._
+import java.util.Arrays
+import java.util.Collection
 import java.util.Locale
 
 object GenericListController {
@@ -44,6 +49,12 @@ object GenericListController {
    * value can be 'search' or 'list'
    */
   final val LIST_MODE = "listMode"
+  
+  
+     final val defaultSortColumns:List[SortColumn] = 
+            List[SortColumn](new SortColumn("id","struct.id"),
+                              new SortColumn("name","struct.name"),
+                              new SortColumn("lastModified","struct.lastModified"))
 }
 
 
@@ -178,9 +189,33 @@ abstract class GenericListController[T <: Struct ] extends StructController[T] {
 
     return pagedListHolder.getPageList()
   }
+    
+    @ModelAttribute("availableSortColumns")
+    def getAvailableSortColumns():List[SortColumn] = GenericListController.defaultSortColumns
 
   
-
+  @RequestMapping(value = Array(GenericListController.LIST_ACTION + "/sort/{sortColumn:[a-z0-9A-Z]+}",
+                             GenericListController.LIST_ACTION + "/sort/{sortColumn:[a-z0-9A-Z]+}/up"), 
+                    method = Array(RequestMethod.GET))
+    @ModelAttribute(GenericController.NODE_LIST_MODEL)
+    def listWithSort(@PathVariable("sortColumn") sortColumn:String,
+             request:HttpServletRequest,
+             session:HttpSession,
+             model:Model,
+             locale:Locale) = list(request,locale, model, null, null,null, sortColumn,false)
+    
+    @RequestMapping(value = Array(GenericListController.LIST_ACTION + "/sort/{sortColumn:[a-z0-9A-Z]+}/down"), 
+                    method = Array(RequestMethod.GET))
+    @ModelAttribute(GenericController.NODE_LIST_MODEL)
+    def listWithSortDown(@PathVariable("sortColumn") sortColumn:String,
+            request:HttpServletRequest,
+            session:HttpSession,
+            model:Model,
+            locale:Locale) = list(request,locale, model, null, null,null, sortColumn,true)
+    
+    
+  
+  
   @RequestMapping(value = Array(GenericListController.LIST_ACTION + "/{page:[0-9]+}"), method = Array(RequestMethod.GET))
   @ModelAttribute(GenericController.NODE_LIST_MODEL)
   def listByPath(@PathVariable("page") page:java.lang.Integer,
