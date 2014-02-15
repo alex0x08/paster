@@ -247,8 +247,7 @@ class PasteController extends VersionController[Paste]   {
     return "redirect:/main/paste/" + pasteId + "#line_" + b.getLineNumber
   }
 
-  @RequestMapping(value = Array(
-    GenericListController.INTEGRATED+GenericEditController.NEW_ACTION+ "/{integrationCode:[a-z0-9_]+}"),
+  @RequestMapping(value = Array("/integrated/new/{integrationCode:[a-z0-9_]+}"),
     method = Array(RequestMethod.GET))
   @ResponseStatus(HttpStatus.CREATED)
   def createNewIntegrated(model:Model,
@@ -507,7 +506,7 @@ class PasteController extends VersionController[Paste]   {
   }
 
   
-  @RequestMapping(value = Array(GenericListController.RAW+"/view"), method = Array(RequestMethod.GET))
+  @RequestMapping(value = Array("/raw/view"), method = Array(RequestMethod.GET))
   def getByPathRaw(@RequestParam(required = true) id:java.lang.Long,model:Model,locale:Locale):String = {
     val r = getByPath(id,model,locale)
     return if (!r.equals(viewPage))

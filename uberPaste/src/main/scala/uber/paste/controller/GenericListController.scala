@@ -194,8 +194,8 @@ abstract class GenericListController[T <: Struct ] extends StructController[T] {
     def getAvailableSortColumns():List[SortColumn] = GenericListController.defaultSortColumns
 
   
-  @RequestMapping(value = Array(GenericListController.LIST_ACTION + "/sort/{sortColumn:[a-z0-9A-Z]+}",
-                             GenericListController.LIST_ACTION + "/sort/{sortColumn:[a-z0-9A-Z]+}/up"), 
+  @RequestMapping(value = Array("/list/sort/{sortColumn:[a-z0-9A-Z]+}",
+                             "/list/sort/{sortColumn:[a-z0-9A-Z]+}/up"), 
                     method = Array(RequestMethod.GET))
     @ModelAttribute(GenericController.NODE_LIST_MODEL)
     def listWithSort(@PathVariable("sortColumn") sortColumn:String,
@@ -204,7 +204,7 @@ abstract class GenericListController[T <: Struct ] extends StructController[T] {
              model:Model,
              locale:Locale) = list(request,locale, model, null, null,null, sortColumn,false)
     
-    @RequestMapping(value = Array(GenericListController.LIST_ACTION + "/sort/{sortColumn:[a-z0-9A-Z]+}/down"), 
+    @RequestMapping(value = Array("/list/sort/{sortColumn:[a-z0-9A-Z]+}/down"), 
                     method = Array(RequestMethod.GET))
     @ModelAttribute(GenericController.NODE_LIST_MODEL)
     def listWithSortDown(@PathVariable("sortColumn") sortColumn:String,
@@ -216,7 +216,7 @@ abstract class GenericListController[T <: Struct ] extends StructController[T] {
     
   
   
-  @RequestMapping(value = Array(GenericListController.LIST_ACTION + "/{page:[0-9]+}"), method = Array(RequestMethod.GET))
+  @RequestMapping(value = Array("/list/{page:[0-9]+}"), method = Array(RequestMethod.GET))
   @ModelAttribute(GenericController.NODE_LIST_MODEL)
   def listByPath(@PathVariable("page") page:java.lang.Integer,
   request:HttpServletRequest,
@@ -224,7 +224,7 @@ abstract class GenericListController[T <: Struct ] extends StructController[T] {
   locale:Locale) =  list(request,locale, model, page, null, null, null,false)
 
 
-  @RequestMapping(value = Array(GenericListController.LIST_ACTION + "/limit/{pageSize:[0-9]+}"), method = Array(RequestMethod.GET))
+  @RequestMapping(value = Array("/list/limit/{pageSize:[0-9]+}"), method = Array(RequestMethod.GET))
   @ModelAttribute(GenericController.NODE_LIST_MODEL)
   def listByPathSize(@PathVariable("pageSize") pageSize:java.lang.Integer,
   request:HttpServletRequest,
@@ -232,7 +232,7 @@ abstract class GenericListController[T <: Struct ] extends StructController[T] {
   locale:Locale)= list(request,locale, model, null, null, pageSize, null,false)
 
 
-  @RequestMapping(value = Array(GenericListController.LIST_ACTION + "/next"), method = Array(RequestMethod.GET))
+  @RequestMapping(value = Array("/list/next"), method = Array(RequestMethod.GET))
   @ModelAttribute(GenericController.NODE_LIST_MODEL)
   def listByPathNext(
     request:HttpServletRequest,
@@ -240,7 +240,7 @@ abstract class GenericListController[T <: Struct ] extends StructController[T] {
     locale:Locale) = list(request,locale, model, null, GenericListController.NEXT_PARAM, null, null,false)
 
 
-  @RequestMapping(value = Array(GenericListController.LIST_ACTION + "/prev"), method = Array(RequestMethod.GET))
+  @RequestMapping(value = Array("/list/prev"), method = Array(RequestMethod.GET))
   @ModelAttribute(GenericController.NODE_LIST_MODEL)
   def listByPathPrev(
     request:HttpServletRequest,

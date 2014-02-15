@@ -208,7 +208,7 @@ abstract class SearchController[T <: Struct,QV <: Query ] extends GenericListCon
   }
 
 
-  @RequestMapping(value = Array(SearchController.SEARCH_ACTION + "/{result:[a-z]+}/{page:[0-9]+}"), method = Array(RequestMethod.GET))
+  @RequestMapping(value = Array("/search/{result:[a-z]+}/{page:[0-9]+}"), method = Array(RequestMethod.GET))
   @ModelAttribute(GenericController.NODE_LIST_MODEL)
   def searchByPath(@PathVariable("page") page:java.lang.Integer,
                    @PathVariable("result") result:String,
@@ -217,7 +217,7 @@ abstract class SearchController[T <: Struct,QV <: Query ] extends GenericListCon
                  locale:Locale) =  listImpl(request,locale, model, page, null, null,null,false, result)
 
 
-  @RequestMapping(value = Array(SearchController.SEARCH_ACTION + "/{result:[a-z]+}/limit/{pageSize:[0-9]+}"),
+  @RequestMapping(value = Array("/search/{result:[a-z]+}/limit/{pageSize:[0-9]+}"),
     method = Array(RequestMethod.GET))
   @ModelAttribute(GenericController.NODE_LIST_MODEL)
   def searchByPathSize(
@@ -229,7 +229,7 @@ abstract class SearchController[T <: Struct,QV <: Query ] extends GenericListCon
                         result)
 
 
-  @RequestMapping(value = Array(SearchController.SEARCH_ACTION + "/{result:[a-z]+}/next"), method = Array(RequestMethod.GET))
+  @RequestMapping(value = Array("/search/{result:[a-z]+}/next"), method = Array(RequestMethod.GET))
   @ModelAttribute(GenericController.NODE_LIST_MODEL)
   def searchByPathNext(
                       request:HttpServletRequest,
@@ -239,7 +239,7 @@ abstract class SearchController[T <: Struct,QV <: Query ] extends GenericListCon
                       result)
 
 
-  @RequestMapping(value = Array(SearchController.SEARCH_ACTION + "/{result:[a-z]+}/prev"), method = Array(RequestMethod.GET))
+  @RequestMapping(value = Array("/search/{result:[a-z]+}/prev"), method = Array(RequestMethod.GET))
   @ModelAttribute(GenericController.NODE_LIST_MODEL)
   def searchByPathPrev(
                       request:HttpServletRequest,

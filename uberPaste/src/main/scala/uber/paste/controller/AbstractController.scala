@@ -19,10 +19,8 @@ package uber.paste.controller
 import uber.paste.base.plugins.PluginUI
 import uber.paste.base.{Loggered,SystemInfo}
 import org.springframework.orm.ObjectRetrievalFailureException
-import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.annotation.ExceptionHandler
-import uber.paste.model.{Struct, User,ConfigProperty}
-import uber.paste.base.SessionStore
+import uber.paste.model.User
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.MessageSource
 import javax.annotation.Resource

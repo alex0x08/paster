@@ -25,11 +25,7 @@ import uber.paste.openid.OpenIDServer
 @Controller
 class IndexController extends AbstractController{
   
-  /**
-   *    @RequestMapping(value = Array("/**/*"))
-    def default() = "redirect:/main/paste/list"
- 
-   */
+  
   @RequestMapping(value = Array("/"))
   def index(model:Model) = {
     model.asMap().clear()

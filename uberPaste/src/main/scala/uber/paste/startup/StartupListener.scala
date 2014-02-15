@@ -17,6 +17,7 @@
 package uber.paste.startup
 
 
+import java.util.Collections
 import javax.servlet.{ServletContextListener, ServletContext, ServletContextEvent}
 import org.springframework.context.ApplicationContext
 import org.apache.commons.io.FileUtils
@@ -27,6 +28,7 @@ import uber.paste.build._
 import org.compass.gps.CompassGps;
 import java.io.IOException
 import uber.paste.dao.UserExistsException
+import uber.paste.base.plugins.PluginUI
 import uber.paste.base.{MergedPropertyConfigurer, Loggered, SystemInfo}
 import uber.paste.build._
 import uber.paste.mail.EmbeddedSMTPServer
@@ -91,6 +93,26 @@ class StartupListener extends ServletContextListener with Loggered{
     val pasteDao:PasteDao = ctx.getBean("pasteDao").asInstanceOf[PasteDao]
     val projectDao:ProjectDao = ctx.getBean("projectDao").asInstanceOf[ProjectDao]
 
+    
+     /*PluginUI.load(getClass().getResourceAsStream("/paster-ui-definitions.xml"))
+      
+      val pluginDefs=  
+        ctx.getResources("classpath*:META-INF/resources/paster-ui-definition.xml")
+      
+    if (pluginDefs!=null && pluginDefs.length>0) {
+        logger.info(String.format("Found %s plugin definitions",pluginDefs.length+""))
+         for (d<-pluginDefs) {
+           logger.info("loading "+d.getURL)
+           PluginUI.append(d.getURL)
+         }
+      }
+      
+      if (logger.isDebugEnabled) {
+        logger.debug(PluginUI.getXml)
+      }
+     
+    */
+    
 
     if (configDao.isPropertySet(ConfigProperty.IS_INSTALLED.getCode, "1")) {
       

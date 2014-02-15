@@ -17,13 +17,12 @@
 package uber.paste.controller
 
 import uber.paste.model.Struct
+import org.springframework.http.HttpStatus
 import org.springframework.ui.Model
 import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation._
 import javax.validation.Valid
 import java.util.Locale
-import scala.Array
-import org.springframework.http.HttpStatus
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
 
 object GenericEditController {
@@ -64,7 +63,7 @@ abstract class GenericEditController[T <: Struct ] extends StructController[T] {
   }
 
 
-  @RequestMapping(value = Array(GenericEditController.EDIT_ACTION+"/{id:[0-9]+}"), method = Array(RequestMethod.GET))
+  @RequestMapping(value = Array("/edit/{id:[0-9]+}"), method = Array(RequestMethod.GET))
   def editWithId(model:Model,@PathVariable("id") id:Long,locale:Locale):String= {
 
       fillEditModel(loadModel(id),model,locale)

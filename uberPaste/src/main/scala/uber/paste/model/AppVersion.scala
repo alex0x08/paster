@@ -21,9 +21,16 @@ import java.util.regex.Pattern
 import javax.persistence.Embeddable
 import uber.paste.base.Loggered
 
+/**
+ * Contants related to app version
+ */
 object AppVersion {
   
+  /**
+   *  undefined string, will display when version info cannot be obtained
+   */
   val UNDEFINED = "UNDEFINED"
+  
   val MF_IMPLEMENTATION_VERSION="Paster-Implementation-Version"
   val MF_IMPLEMENTATION_BUILD="Paster-Implementation-Build"
   val MF_IMPLEMENTATION_BUILD_DATE="Paster-Implementation-Build-Time"
@@ -32,6 +39,9 @@ object AppVersion {
  
 }
 
+/**
+ *  Application version
+ */
 @Embeddable
 class AppVersion {
 
@@ -43,34 +53,43 @@ class AppVersion {
    private var implBuildTime:String = AppVersion.UNDEFINED
    //private var implVersionFull:String = null
    
+  /**
+   * @return app version to store in database
+   */
   def toDbString():String =  {
     return implVer + "|" + implBuildNum + "|" + implBuildTime   
   }
   
+  /**
+   * @return full version string
+   */
   def getFull():String = {
     return implVer + "." + implBuildNum + " " + implBuildTime
   }
   
+  /**
+   * load & parse version from database
+   *
+   * @param ver property from database
+   */
   def fillFromConfigProperty(ver:ConfigProperty):AppVersion = {
   
       if (ver==null) {
         return null
       }
-      
-    //System.out.println("_parsing value "+ver.getValue)
-    
+   
       val parts =ver.getValue.split('|')
     
         implVer = parts(0)
-
         implBuildNum = parts(1)
-
         implBuildTime = parts(2)
-
     
     return this;
   }
   
+  /**
+   * @return appversion object loaded from application manifest
+   */
    def fillFromManifest():AppVersion = {
         
         implVer = getManifestValue(AppVersion.MF_IMPLEMENTATION_VERSION)
@@ -82,18 +101,31 @@ class AppVersion {
         return this;
     }
 
-    def getImplVersion() =  implVer
-    
-
+    /**
+     * @return version number (ex. 1.0-SNAPSHOT)
+     */
+    def getImplVersion() =  implVer    
+    /**
+     * @return build number (changeset)
+     */    
     def getImplBuildNum()= implBuildNum
     
+    /**
+     * @return build date and time 
+     */
     def getImplBuildTime()= implBuildTime
 
-    
-    def getManifestValue(key:String ):String = {
+    /**
+     * @return property value from manifest
+     */
+    private def getManifestValue(key:String ):String = {
      return if (Manifests.exists(key)) Manifests.read(key) else AppVersion.UNDEFINED
     }
     
+   /**
+    * Compares this version object to another
+    * @param o version object to compare
+    */
     def compareTo(o:AppVersion): Int = {
         if (o==null) return -2
         
@@ -102,11 +134,9 @@ class AppVersion {
         
     if ( !current.getMod.equals(compare.getMod) || current.getMajor != compare.getMajor ) {
             return -2
-        }
+        }  
    
-   
-    return if (current.getMinor > compare.getMinor)  -1 else 1   
-        
+    return if (current.getMinor > compare.getMinor)  -1 else 1           
     }
     
 }

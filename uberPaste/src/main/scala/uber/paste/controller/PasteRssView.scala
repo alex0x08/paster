@@ -13,7 +13,6 @@ import com.sun.syndication.feed.atom.Entry
  * User: achernyshev
  * Date: 14.03.13
  * Time: 14:50
- * To change this template use File | Settings | File Templates.
  */
 class PasteRssView extends AbstractRssFeedView{
 
@@ -23,6 +22,7 @@ class PasteRssView extends AbstractRssFeedView{
 
   def setExternalUrl(url:String) { externalUrl = url}
 
+  
   override protected def buildFeedMetadata(model:java.util.Map[String, Object], feed:Channel,
     request:HttpServletRequest) {
 

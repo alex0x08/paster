@@ -35,18 +35,23 @@ import scala.collection.JavaConversions._
 import org.hibernate.envers.{NotAudited, Audited}
 
 /**
- * 
- * This is entity object implements "pasta" : piece of code with id,title and text
- * 
- * @author Alex
+ * paste model constants
  */
-
 object Paste extends Struct {
   
+  /**
+   *  a set of properties to search by default (without field prefix)
+   */
   override val terms = super.terms ::: List[String]("text","tags")
+  /**
+   *  max title length, if greater - will be cut
+   */
   val TITLE_LENGTH=256
 }
 
+/**
+ * Entity listener for paste 
+ */
 class PasteListener extends Loggered{
 
   /**
@@ -68,6 +73,13 @@ class PasteListener extends Loggered{
   }
 }
 
+/**
+ * 
+ * This is entity object implements "pasta" : piece of code with id,title and text
+ * 
+ * @author Alex
+ */
+
 @Entity
 @Searchable
 @XmlRootElement(name="paste")
@@ -75,11 +87,17 @@ class PasteListener extends Loggered{
 @Audited
 class Paste extends Struct with java.io.Serializable{
 
+  /**
+   * unique paste id
+   */
   @NotNull(message = "{validator.not-null}")
   @Column(nullable = false, unique = true, length = 255)
   @SearchableProperty(store=Store.YES,index=Index.NO)
   private var uuid = UUID.randomUUID().toString()
   
+  /**
+   * paste's body
+   */
   @Lob
   @NotNull
   @SearchableProperty
@@ -88,6 +106,9 @@ class Paste extends Struct with java.io.Serializable{
   @Column(length = Integer.MAX_VALUE)
   private var text: String = null
 
+  /**
+   *  link to preview image
+   */
   //@Lob
   //@NotNull
   //@Column(length=1024,name="thumb_img")
@@ -100,6 +121,9 @@ class Paste extends Struct with java.io.Serializable{
   //@Transient
   //private var thumbUpload:MultipartFile = null
 
+  /**
+   * paste title
+   */
   //@NotNull
   @Column(length=256)
   @Size(min=3,max=256, message = "{struct.name.validator}")
@@ -107,24 +131,42 @@ class Paste extends Struct with java.io.Serializable{
   @SearchableProperty
   private var title: String = null
 
+  /**
+   * paste owner (author)
+   */
   @ManyToOne(fetch = FetchType.EAGER,cascade= Array(CascadeType.PERSIST,CascadeType.MERGE))
   @JoinColumn(name = "owner_id")
   @NotAudited
   private var owner:User = null
   
+  /**
+   * type of paste, used almost to highlight it correctly
+   */
   @NotNull
   @SearchableProperty
   private var codeType:String = CodeType.Plain.getCode
 
+  /**
+   * integration code, used when paste was created in/for some integrated system
+   */
   private var integrationCode:String = null
 
+  /**
+   *  remote url, used when paste was loaded from external site
+   */
   private var remoteUrl:String = null
 
+  /**
+   * related tags
+   */
   @ElementCollection(fetch = FetchType.EAGER)
   @SearchableProperty
   //@NotAudited
   private var tags:Set[String] = new HashSet[String]()
 
+  /**
+   * paste's  source, describes where it came from
+   */
   @NotNull
   @SearchableProperty
   private var pasteSource:String = PasteSource.FORM.getCode
@@ -134,6 +176,9 @@ class Paste extends Struct with java.io.Serializable{
 
   private var normalized:Boolean = false
 
+  /**
+   * comments relation
+   */
   @OneToMany(fetch = FetchType.LAZY,
     cascade = Array(CascadeType.PERSIST,CascadeType.MERGE,CascadeType.REMOVE),
     orphanRemoval = true)
@@ -263,18 +308,26 @@ class Paste extends Struct with java.io.Serializable{
   /**
    * Pasta content
    * Blob field stores all text for pasta
+   * @return big text
    */
   def getText() : String = text
 
   def setText(f:String) : Unit = {
     this.text = f
   }
+  /**
+   * @return list of comments
+   */
   @XmlTransient
   @JsonIgnore
   def getComments():java.util.List[Comment] = comments
 
   def getCommentCount():java.lang.Integer = commentsCount
 
+  /**
+   * loads this instance fully from database
+   * MUST be called with opened hibernate session
+   */
   override def loadFull() {
       getText
               for (c<-comments) {
@@ -287,7 +340,6 @@ class Paste extends Struct with java.io.Serializable{
     //  .append("title", title)
     //  .append("text", text)
       .append("tags", tags)
-
       .append("super",super.toString())
       .toString
   }

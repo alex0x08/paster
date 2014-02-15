@@ -15,7 +15,7 @@
             </goals>
             <activatedProfiles>
                 <activatedProfile>h2</activatedProfile>
-                <activatedProfile>jetty6</activatedProfile>
+                <activatedProfile>jetty9</activatedProfile>
             </activatedProfiles>
         </action>
         <action>
@@ -49,5 +49,19 @@
                 <activatedProfile>oracle-xe</activatedProfile>
                 <activatedProfile>tomcat7</activatedProfile>
             </activatedProfiles>
+        </action>
+        <action>
+            <actionName>CUSTOM-site</actionName>
+            <displayName>site</displayName>
+            <goals>
+                <goal>site</goal>
+            </goals>
+        </action>
+        <action>
+            <actionName>CUSTOM-scala-doc</actionName>
+            <displayName>scala-doc</displayName>
+            <goals>
+                <goal>scala:doc</goal>
+            </goals>
         </action>
     </actions>

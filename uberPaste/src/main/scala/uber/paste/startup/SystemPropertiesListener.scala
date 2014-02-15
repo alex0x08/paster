@@ -64,21 +64,6 @@ class SystemPropertiesListener extends ServletContextListener with Loggered {
         
         System.setProperty("paste.app.version", mf_version.getImplBuildNum())
         
-      PluginUI.load(getClass().getResourceAsStream("/paster-ui-definitions.xml"))
-      
-      val pluginDefs=  Collections.list(
-        event.getServletContext.getClassLoader.getResources("META-INF/resources/paster-ui-definition.xml"))
-      
-      if (pluginDefs!=null && !pluginDefs.isEmpty) {
-        logger.info(String.format("Found %s plugin definitions",pluginDefs.size+""))
-         for (d<-pluginDefs) {
-            PluginUI.append(d)
-         }
-      }
-      
-      if (logger.isDebugEnabled) {
-        logger.debug(PluginUI.getXml)
-      }
       
       logger.info("current locale: "+Locale.getDefault)
       

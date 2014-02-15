@@ -26,6 +26,11 @@ import scala.collection.JavaConversions._
 
 abstract trait BaseDao[T <: java.io.Serializable,PK <:Long] {
 
+  /**
+   * Saves object of type T to database
+   * @param obj Object to save
+   * @return saved object instance
+   */
   def save(obj:T):T
 
   def persist(obj:T)
@@ -65,6 +70,9 @@ abstract class BaseDaoImpl[T <: java.io.Serializable,PK <:Long ](model:Class[T])
 
   protected def getModel() = model
 
+   /**
+     * @inheritdoc
+     */
   @Transactional(readOnly = false)
   def save(obj:T):T = {
     logger.debug("saving obj "+obj)

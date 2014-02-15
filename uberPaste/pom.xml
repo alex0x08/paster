@@ -636,7 +636,7 @@
 
 
         <profile>
-            <id>jetty6</id>
+            <id>jetty9</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
@@ -891,8 +891,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>2.3.2</version>
                 <configuration>
-                    <source>1.5</source>
-                    <target>1.5</target>
+                    <source>1.7</source>
+                    <target>1.7</target>
                     <encoding>UTF-8</encoding>
                     <showDeprecation>true</showDeprecation>
                 </configuration>
@@ -922,7 +922,7 @@
 
             </plugin>
 
-            <plugin>
+            <!--plugin>
                 <groupId>org.mortbay.jetty</groupId>
                 <artifactId>maven-jetty-plugin</artifactId>
                 <version>6.1.26</version>
@@ -949,8 +949,29 @@
 
                 </configuration>
 
-            </plugin>
+            </plugin-->
 
+
+              <plugin>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-maven-plugin</artifactId>
+                <version>9.1.0.RC2</version>
+                <configuration>
+                    <systemProperties>
+                        <systemProperty>
+                            <name>paste.h2.embedded.server</name>
+                            <value>1</value>
+                        </systemProperty>
+                        
+                    </systemProperties>
+                    <scanIntervalSeconds>10</scanIntervalSeconds>
+                    <webApp>
+                    <contextPath>/${project.artifactId}</contextPath>
+                    </webApp>
+                    <!--webDefaultXml>src/container/jetty/webdefault.xml</webDefaultXml-->
+                </configuration>
+
+            </plugin>
 
             <plugin>
 
