@@ -18,11 +18,16 @@ package uber.paste.controller
 
 
 import java.util.Locale
+import javax.validation.Valid
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
+import org.springframework.validation.BindingResult
+import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
+import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.servlet.mvc.support.RedirectAttributes
 import uber.paste.manager.ProjectManager
 import uber.paste.model.Project
 
@@ -49,5 +54,33 @@ class SettingsController extends GenericEditController[Project]{
     return editPage
   }
 
-  
+   @RequestMapping(value = Array(GenericEditController.SAVE_ACTION), method = Array(RequestMethod.POST))
+   override def save(@RequestParam(required = false) cancel:String,
+            @Valid @ModelAttribute(GenericController.MODEL_KEY) b:Project,
+            result:BindingResult, model:Model,locale:Locale,
+            redirectAttributes:RedirectAttributes):String = {
+
+        if (cancel != null) {
+            redirectAttributes.addFlashAttribute("statusMessageKey", "action.cancelled")
+            return editPage
+        }
+
+        if (result.hasErrors()) {
+              logger.debug("form has errors " + result.getErrorCount())
+              
+             fillEditModel(b,model,locale)
+           /* for ( f:FieldError : result.getFieldErrors()) {
+                getLogger().debug("field=" + f.getField() + ",rejected value=" + f.getRejectedValue()+",message="+f.getDefaultMessage());
+            }*/
+            return editPage
+        }
+
+      
+       
+
+      redirectAttributes.addFlashAttribute("statusMessageKey", "action.success")
+
+      return editPage
+    }
+
 }

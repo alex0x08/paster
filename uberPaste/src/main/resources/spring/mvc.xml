@@ -146,17 +146,17 @@
                     <property name="contentType" value="application/xml" />
                 </bean>
 
-                <bean class="uber.paste.controller.PasteExcelView">
+                <bean class="uber.paste.controller.view.PasteExcelView">
                     <property name="contentType" value="application/vnd.ms-excel" />
                 </bean>
-                <bean class="uber.paste.controller.PasteAtomView">
+                <bean class="uber.paste.controller.view.PasteAtomView">
                     <property name="contentType" value="application/atom+xml" />
                 </bean>
-                <bean class="uber.paste.controller.PasteRssView">
+                <bean class="uber.paste.controller.view.PasteRssView">
                     <property name="contentType" value="application/rss+xml" />
                     <property name="externalUrl" value="${config.external-site-url}" />
                 </bean>
-                <bean class="uber.paste.controller.PasteDocxView">
+                <bean class="uber.paste.controller.view.PasteDocxView">
                     <property name="contentType" value="application/vnd.openxmlformats-officedocument.wordprocessingml.document" />
                 </bean>
             </list>

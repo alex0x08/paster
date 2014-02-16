@@ -1,8 +1,9 @@
-package uber.paste.controller
+package uber.paste.controller.view
 
 import org.springframework.web.servlet.view.document.AbstractExcelView
 import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
 import org.apache.poi.hssf.usermodel.{HSSFCell, HSSFRow, HSSFSheet, HSSFWorkbook}
+import uber.paste.controller.GenericController
 import uber.paste.model.Paste
 import org.springframework.beans.support.PagedListHolder
 import java.util.Collections

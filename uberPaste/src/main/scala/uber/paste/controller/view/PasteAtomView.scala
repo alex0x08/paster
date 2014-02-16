@@ -1,8 +1,9 @@
-package uber.paste.controller
+package uber.paste.controller.view
 
 import org.springframework.web.servlet.view.feed.AbstractAtomFeedView
 import javax.servlet.http.{HttpServletResponse, HttpServletRequest}
 import com.sun.syndication.feed.atom.{Content, Entry, Feed}
+import uber.paste.controller.GenericController
 import uber.paste.model.Paste
 import scala.collection.JavaConversions._
 import java.util.Collections

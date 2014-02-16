@@ -16,7 +16,20 @@
         <div class="column grid-10">
             <tiles:insertAttribute name="menu" />
             <c:if test="${not empty statusMessageKey}">
+                <script type="text/javascript">
+                    
+                    var operationMessage = '<fmt:message key="${statusMessageKey}"/>';
+                
+                  window.addEvent('domready', function() {
+                       growl.notify(operationMessage);
+                 });
+
+                
+                </script>
+     
+                <noscript>
                 <p><fmt:message key="${statusMessageKey}"/></p>
+                </noscript>  
             </c:if>
         </div>
         <div class="column grid-4">
@@ -74,7 +87,21 @@
                       <p title="<c:out value="${systemInfo.runtimeVersion.full}"/>">
                           <c:out value="${systemInfo.runtimeVersion.implVersion}"/>
                       </p>
-                      <small>2014. (c) Alex</small>
+                      
+                         <fmt:formatDate pattern="${datePattern}" var="startDate" 
+                                         value="${systemInfo.dateStart}" />
+     
+                          <fmt:formatDate pattern="${datePattern}" var="installDate" 
+                                         value="${systemInfo.dateInstall}" />
+                          <p>
+                           <fmt:message key='system.installed.title'>
+            <fmt:param value="${startDate}"/>
+            <fmt:param value="${installDate}"/>
+        </fmt:message>   
+                          </p>
+                           
+                          
+                      <small><fmt:message key="site.footer"/></small>
                   </div>
               </div>
                   

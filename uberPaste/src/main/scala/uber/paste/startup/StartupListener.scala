@@ -17,6 +17,7 @@
 package uber.paste.startup
 
 
+import java.util.Calendar
 import java.util.Collections
 import javax.servlet.{ServletContextListener, ServletContext, ServletContextEvent}
 import org.springframework.context.ApplicationContext
@@ -115,6 +116,17 @@ class StartupListener extends ServletContextListener with Loggered{
     
 
     if (configDao.isPropertySet(ConfigProperty.IS_INSTALLED.getCode, "1")) {
+
+      SystemInfo.instance.setDateInstall({
+        val installDate=configDao.getProperty(ConfigProperty.INSTALL_DATE)
+        if (installDate!=null && installDate.getValue != null) {
+          new java.util.Date(java.lang.Long.valueOf(installDate.getValue))
+        } else {
+          null
+        }
+        }
+      )
+
       
       val dbVersion = new AppVersion().fillFromConfigProperty(
         configDao.getProperty(ConfigProperty.APP_VERSION.getCode))
@@ -190,7 +202,9 @@ class StartupListener extends ServletContextListener with Loggered{
         PasteManager.Stats.valueOf(p.getCode).increment(pasteDao.countAll(p).toInt)
         
       }
-      
+
+      SystemInfo.instance.setDateStart(Calendar.getInstance.getTime)
+
      return
     }
 
@@ -242,6 +256,11 @@ class StartupListener extends ServletContextListener with Loggered{
       configDao.persist(ConfigProperty.IS_INSTALLED)
       configDao.persist(ConfigProperty.UPLOADS_DIR)
       
+      val installDate = Calendar.getInstance.getTime.getTime
+      ConfigProperty.INSTALL_DATE.setValue(installDate+"")
+      configDao.persist(ConfigProperty.INSTALL_DATE)
+ 
+      SystemInfo.instance.setDateInstall(new java.util.Date(installDate))
       
       ConfigProperty.APP_VERSION.setValue(SystemInfo.instance.getRuntimeVersion.toDbString)
       configDao.persist(ConfigProperty.APP_VERSION)
@@ -254,6 +273,9 @@ class StartupListener extends ServletContextListener with Loggered{
 
       startSmtpServer(ctx,props)
 
+        SystemInfo.instance.setDateStart(Calendar.getInstance.getTime)
+
+      
     } catch {
       case e:UserExistsException => {
           logger.error(e.getLocalizedMessage,e)

@@ -1,4 +1,4 @@
-package uber.paste.controller
+package uber.paste.controller.view
 
 import org.springframework.web.servlet.view.AbstractView
 import java.util
@@ -6,6 +6,7 @@ import javax.servlet.http.{HttpServletResponse, HttpServletRequest}
 import fr.opensagres.xdocreport.template.{IContext, TemplateEngineKind}
 import fr.opensagres.xdocreport.document.registry.XDocReportRegistry
 import fr.opensagres.xdocreport.document.IXDocReport
+import uber.paste.controller.GenericController
 import uber.paste.model.{Comment, Paste}
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata
 

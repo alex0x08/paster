@@ -23,10 +23,12 @@ import org.springframework.transaction.annotation.Transactional
 
 trait ConfigDao extends KeyDao[ConfigProperty] {
 
-   def isPropertySet(code:String,value:String) : Boolean;
+   def isPropertySet(code:String,value:String) : Boolean
 
-   def getProperty(code:String) : ConfigProperty;
+   def getProperty(code:String) : ConfigProperty
 
+   def getProperty(obj:ConfigProperty) : ConfigProperty
+  
 }
 
 @Repository("configDao")
@@ -35,6 +37,10 @@ class ConfigDaoImpl extends KeyDaoImpl[ConfigProperty](classOf[ConfigProperty]) 
 
   def getProperty(code:String) : ConfigProperty = {
     return getByKey(code)
+  }
+  
+   def getProperty(obj:ConfigProperty) : ConfigProperty = {
+     return getByKey(obj.getCode)
   }
 
   override def isPropertySet(code:String,value:String) : Boolean = {

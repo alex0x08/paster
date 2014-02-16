@@ -1,14 +1,7 @@
 <%@ include file="/WEB-INF/pages/common/taglibs.jsp"%>
 
   
-    <script type="text/javascript">
-        var growl= null;
-        window.addEvent('domready',function() {
-            growl = new Growler.init();
-
-        });
-    </script>
-
+   
     <%--
     <!--
   Under development, this section allows you to preview your changes

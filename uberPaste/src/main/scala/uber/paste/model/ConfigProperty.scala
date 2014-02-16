@@ -26,6 +26,7 @@ object ConfigProperty {
   val UPLOADS_DIR = new ConfigProperty("config.property.upload-dir","UPLOAD_DIR","upload")
   val EXTERNAL_SITE_URL = new ConfigProperty("config.property.external-site-url","EXTERNAL_SITE_URL","http://localhost")
   val APP_VERSION = new ConfigProperty("config.property.app-version","APP_VERSION","UNDEFINED")
+  val INSTALL_DATE = new ConfigProperty("config.property.install-date","INSTALL_DATE",null)
  
 
 }

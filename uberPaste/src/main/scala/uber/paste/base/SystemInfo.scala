@@ -28,8 +28,10 @@ class SystemInfo {
   
     private var runtimeVersion:AppVersion = null
     
-    private val dateStart = Calendar.getInstance().getTime()
-
+    private var dateStart:java.util.Date = null
+    
+    private var dateInstall:java.util.Date = null
+  
     private var project:Project =null
   
     def getRuntimeVersion() = runtimeVersion
@@ -39,7 +41,12 @@ class SystemInfo {
     }
 
     def getDateStart() =  dateStart
-
+    def setDateStart(date:java.util.Date) {this.dateStart = date}
+    
+    def getDateInstall() =  dateInstall
+    def setDateInstall(date:java.util.Date) {this.dateInstall = date}
+    
+  
     def getProject() = project
     def setProject(p:Project) {project = p}
   
