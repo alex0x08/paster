@@ -12,5 +12,8 @@
 
 <sec:authorize ifAnyGranted="ROLE_ADMIN">
 |
-    <a href="<c:url value='/main/user/list'/>">Manage users</a>
+<a href="<c:url value='/main/user/list'/>"><fmt:message key='user.list.title'/></a>
+|
+    <a href="<c:url value='/main/admin/settings/edit'/>"><fmt:message key='settings.edit.title'/></a>
+    
 </sec:authorize>

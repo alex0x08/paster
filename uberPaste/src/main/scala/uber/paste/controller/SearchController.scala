@@ -87,7 +87,6 @@ abstract class SearchController[T <: Struct,QV <: Query ] extends GenericListCon
    */
   def getAvailableResults():java.util.Collection[SearchResult]
 
-
   def getSearchResultByCode(code:String):SearchResult
 
   def getManagerBySearchResult(result:SearchResult):GenericSearchManager[_]

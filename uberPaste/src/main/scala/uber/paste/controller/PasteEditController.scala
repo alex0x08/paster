@@ -133,11 +133,8 @@ class PasteController extends VersionController[Paste]   {
       model.addAttribute("availablePrev",null)
     }
 
-
     model.addAttribute("shareIntegration",shareIntegration)
     model.addAttribute("shareUrl",shareUrl)
-
-
 
     //  obj.tagsAsString = for (s<-obj.getTags()) yield s+" "
 
@@ -322,13 +319,12 @@ class PasteController extends VersionController[Paste]   {
                       //ignore
                 }
               }
-
           }
           case CodeType.Plain => {
             /**
              * set word wrap for plain
              */
-               b.setText(WordUtils.wrap(b.getText(),80))
+             b.setText(WordUtils.wrap(b.getText(),80))
           }
           case _ => {}
         }
@@ -377,8 +373,7 @@ class PasteController extends VersionController[Paste]   {
             override def checkClientTrusted(certs:Array[X509Certificate], authType:String) {
                 // Do nothing
             }
-
-            override def checkServerTrusted(certs:Array[X509Certificate], authType:String)  {
+           override def checkServerTrusted(certs:Array[X509Certificate], authType:String)  {
                 // Do nothing
             }        
       }
@@ -402,7 +397,7 @@ class PasteController extends VersionController[Paste]   {
     
     val response =  client.execute(method)
 
-    var paste =   manager.getByRemoteUrl(url)
+    var paste =  manager.getByRemoteUrl(url)
 
     if (paste==null) {
       paste =getNewModelInstance(); paste.setRemoteUrl(url)
@@ -426,9 +421,7 @@ class PasteController extends VersionController[Paste]   {
                 fileName=p.getValue
                 break
               }
-
             }
-
             break
           }
         }
@@ -452,7 +445,6 @@ class PasteController extends VersionController[Paste]   {
     if (mime==null) {
       mime = response.getEntity.getContentType.getElements.head.getName
     }
-
 
     /*
     for (el<-response.getEntity.getContentType.getElements) {

@@ -1,7 +1,6 @@
 package uber.paste.model
 
 /**
- * Created with IntelliJ IDEA.
  * User: achernyshev
  * Date: 09.02.13
  * Time: 21:41

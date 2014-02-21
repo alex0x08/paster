@@ -26,6 +26,7 @@ import org.compass.annotations.Searchable
 import org.compass.annotations.SearchableProperty
 import org.hibernate.envers.Audited
 import org.compass.annotations._
+import org.springframework.web.multipart.MultipartFile
 
 @Entity
 @Searchable
@@ -42,7 +43,17 @@ class Project extends Struct with java.io.Serializable{
   
   @Lob
   @Column(length = Integer.MAX_VALUE)
+  @XmlTransient
   private var clientImage: String = null
+  
+  @transient
+  @XmlTransient
+  private var clientImageFile:MultipartFile = null
+ 
+  @transient
+  @XmlTransient
+  private var iconImageFile:MultipartFile = null
+ 
   
   def getDescription() = description
   def setDescription(d:String) {description = d}
@@ -56,4 +67,12 @@ class Project extends Struct with java.io.Serializable{
   def setClientImage(img:String) {clientImage = img}
 
   
+  @JsonIgnore
+  def getIconImageFile() = iconImageFile
+  def setIconImageFile(img:MultipartFile) {iconImageFile = img}
+
+  @JsonIgnore
+  def getClientImageFile() = clientImageFile
+  def setClientImageFile(img:MultipartFile) {clientImageFile = img}
+
 }

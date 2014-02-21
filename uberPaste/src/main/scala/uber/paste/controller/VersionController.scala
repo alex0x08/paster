@@ -1,6 +1,6 @@
 package uber.paste.controller
 
-import uber.paste.model.{Query, Struct}
+import uber.paste.model.Struct
 import uber.paste.manager.{VersionManager, GenericSearchManager}
 import org.springframework.web.bind.annotation.{RequestParam, RequestMethod, RequestMapping}
 import java.util.Locale

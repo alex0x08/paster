@@ -25,8 +25,6 @@ import org.springframework.beans.support.MutableSortDefinition
 import org.springframework.beans.support.PagedListHolder
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation._
-import java.util.Arrays
-import java.util.Collection
 import java.util.Locale
 
 object GenericListController {
@@ -50,8 +48,7 @@ object GenericListController {
    */
   final val LIST_MODE = "listMode"
   
-  
-     final val defaultSortColumns:List[SortColumn] = 
+  final val defaultSortColumns:List[SortColumn] = 
             List[SortColumn](new SortColumn("id","struct.id"),
                               new SortColumn("name","struct.name"),
                               new SortColumn("lastModified","struct.lastModified"))
@@ -77,7 +74,6 @@ abstract class GenericListController[T <: Struct ] extends StructController[T] {
    * default callback object: will simply use getList from attached manager
    */
   protected val defaultListCallback:SourceCallback[T]  = new SourceCallback[T]() {
-
     override def invokeCreate():PagedListHolder[T] = {
       return new PagedListHolder[T](manager.getList())
     }
@@ -127,19 +123,13 @@ abstract class GenericListController[T <: Struct ] extends StructController[T] {
       pagedListHolder = callback.invokeCreate()
       logger.debug("pagedListHolder created pageSize="+pageSize)
     } else {
-      
-      
        if (sortColumn!=null) {
                val sort =pagedListHolder.getSort().asInstanceOf[MutableSortDefinition]
-            
                 sort.setProperty(sortColumn)
 		sort.setIgnoreCase(false)
                 sort.setAscending(sortAsc)
-                
                 pagedListHolder.resort();
             }
-            
-      
       /**
        * NPage is string like NEXT or PREV
        * check if exist and use it
@@ -164,7 +154,6 @@ abstract class GenericListController[T <: Struct ] extends StructController[T] {
         if (npage > pagedListHolder.getPageCount()) {
           npage = pagedListHolder.getPageCount()
         }
-
         pagedListHolder.setPage(npage-1)
       }
 
@@ -180,7 +169,6 @@ abstract class GenericListController[T <: Struct ] extends StructController[T] {
     request.getSession().setAttribute(getClass().getName()+"_"+pageHolderName, pagedListHolder)
     model.addAttribute(pageHolderName, pagedListHolder)
 
-
     if (createDefaultItemModel && !pageHolderName.equals(GenericController.NODE_LIST_MODEL_PAGE)) {
       model.addAttribute(GenericController.NODE_LIST_MODEL_PAGE, pagedListHolder)
     }
@@ -188,13 +176,13 @@ abstract class GenericListController[T <: Struct ] extends StructController[T] {
     model.addAttribute(GenericListController.PAGE_SET, GenericListController.pageSet)
 
     return pagedListHolder.getPageList()
-  }
+    }
     
     @ModelAttribute("availableSortColumns")
     def getAvailableSortColumns():List[SortColumn] = GenericListController.defaultSortColumns
 
   
-  @RequestMapping(value = Array("/list/sort/{sortColumn:[a-z0-9A-Z]+}",
+    @RequestMapping(value = Array("/list/sort/{sortColumn:[a-z0-9A-Z]+}",
                              "/list/sort/{sortColumn:[a-z0-9A-Z]+}/up"), 
                     method = Array(RequestMethod.GET))
     @ModelAttribute(GenericController.NODE_LIST_MODEL)
@@ -212,9 +200,6 @@ abstract class GenericListController[T <: Struct ] extends StructController[T] {
             session:HttpSession,
             model:Model,
             locale:Locale) = list(request,locale, model, null, null,null, sortColumn,true)
-    
-    
-  
   
   @RequestMapping(value = Array("/list/{page:[0-9]+}"), method = Array(RequestMethod.GET))
   @ModelAttribute(GenericController.NODE_LIST_MODEL)
@@ -223,7 +208,6 @@ abstract class GenericListController[T <: Struct ] extends StructController[T] {
   model:Model,
   locale:Locale) =  list(request,locale, model, page, null, null, null,false)
 
-
   @RequestMapping(value = Array("/list/limit/{pageSize:[0-9]+}"), method = Array(RequestMethod.GET))
   @ModelAttribute(GenericController.NODE_LIST_MODEL)
   def listByPathSize(@PathVariable("pageSize") pageSize:java.lang.Integer,
@@ -231,14 +215,12 @@ abstract class GenericListController[T <: Struct ] extends StructController[T] {
   model:Model,
   locale:Locale)= list(request,locale, model, null, null, pageSize, null,false)
 
-
   @RequestMapping(value = Array("/list/next"), method = Array(RequestMethod.GET))
   @ModelAttribute(GenericController.NODE_LIST_MODEL)
   def listByPathNext(
     request:HttpServletRequest,
     model:Model,
     locale:Locale) = list(request,locale, model, null, GenericListController.NEXT_PARAM, null, null,false)
-
 
   @RequestMapping(value = Array("/list/prev"), method = Array(RequestMethod.GET))
   @ModelAttribute(GenericController.NODE_LIST_MODEL)
@@ -281,10 +263,8 @@ abstract class GenericListController[T <: Struct ] extends StructController[T] {
     return manager.getList()
   }
 
-
   protected trait SourceCallback[T ] {
     def invokeCreate():PagedListHolder[T];
   }
-
 
 }

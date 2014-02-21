@@ -45,7 +45,6 @@ object PasteSearchResult extends KeyValueObj[SearchResult] {
 @RequestMapping(value=Array("/paste"))
 class PasteListController extends SearchController[Paste,OwnerQuery] {
 
-
   class DateSplitHelper(locale:Locale) {
 
     var prevDate:java.util.Date =null
@@ -70,7 +69,6 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
       //System.out.println("_split dys="+d.getDays+" prev="+prevDate+" cur="+curDate)
       return if ( scala.math.abs(d.getDays())>14 )  {
         title=  PasteListController.this.getResource("paste.list.slider.title",Array(curDate,prevDate,total),locale)
-
         prevDate = curDate
         total =0
 
@@ -115,8 +113,6 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
     }
   }
 
-  
-
   @ModelAttribute("query")
    def newQuery():OwnerQuery = {
      val out =new OwnerQuery
@@ -139,13 +135,11 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
     }
 
     model.addAttribute("availableSourceTypes",PasteSource.list)
-
     model.addAttribute("splitHelper",new DateSplitHelper(locale))
                     //config.share.integration=1
     //config.share.url=https://dev.iqcard.ru/share
 
     model.addAttribute("sortDesc",false)
-
   }
 
   
@@ -328,8 +322,6 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
     return listImpl(request,locale,model,page,NPpage,pageSize,"lastModified",true,source,null)
   }
 
-
-
   @RequestMapping(value = Array("/list",
                                 "/raw/list"),
                   method = Array(RequestMethod.GET))
@@ -380,12 +372,10 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
     //System.out.println("ps="+ps+" sourceType="+sourceType)
    
     return processPageListHolder(request,locale,model,page,NPpage,pageSize,sortColumn,sortAsc,
-      if (ps==null) {pasterListCallback} else {
-        new PasteListCallback(ps,sortAsc,integrationCode)},GenericController.NODE_LIST_MODEL_PAGE)
-
+      if (ps==null) {pasterListCallback} else {new PasteListCallback(ps,sortAsc,integrationCode)},
+      GenericController.NODE_LIST_MODEL_PAGE)
+      
   }
-
-
 
   @RequestMapping(value = Array("/own/list"))
   @ModelAttribute("items")
@@ -403,7 +393,6 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
 
   class PasteListCallback(sourceType:PasteSource,sortAsc:Boolean,integrationCode:String) extends SourceCallback[Paste] {
     override def invokeCreate():PagedListHolder[Paste] = {
-
       val ph =new ExtendedPageListHolder[Paste](if (integrationCode!=null) {
         manager.getListIntegrated(integrationCode)} else {
         manager.getBySourceType(sourceType,sortAsc)})

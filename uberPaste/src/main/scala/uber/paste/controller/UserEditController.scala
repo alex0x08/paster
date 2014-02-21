@@ -35,13 +35,11 @@ class UserEditController extends GenericEditController[User]{
   @Autowired
   private val userManager:UserManager = null
   
- 
   def listPage()="redirect:/main/user/list"
   def editPage()="/user/edit"
   def viewPage()="/user/view"
 
   def manager():UserManager = return userManager
- 
   
   @InitBinder
   def initBinder(binder:WebDataBinder):Unit = {
@@ -51,14 +49,9 @@ class UserEditController extends GenericEditController[User]{
 
   override def fillEditModel(obj:User,model:Model,locale:Locale)  {
     super.fillEditModel(obj,model,locale)
-
-    model.addAttribute("availableRoles", Role.list)
- 
+   model.addAttribute("availableRoles", Role.list)
   }
   
   def getNewModelInstance():User = return new User
 
-  
-  
-    
 }

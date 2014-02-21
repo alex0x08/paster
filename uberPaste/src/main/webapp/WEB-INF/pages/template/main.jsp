@@ -5,6 +5,26 @@
        
             <link href="<c:url value="/main/static/${appVersion}/css/app.less"/>" media="all" rel="stylesheet/less" />
 
+            <c:choose>
+                <c:when test="${not empty systemInfo.project.clientImage}">
+                <style>
+                    body {
+                        background: url('${systemInfo.project.clientImage}') no-repeat;
+                    }
+                </style>
+                </c:when>
+                <c:otherwise>
+                    
+                    <c:url var="defaultBgUrl" value='/main/static/${appVersion}/images/ninjas/ninja-back.png'/>
+                    
+                <style>
+                    body {
+                        background: url('${defaultBgUrl}') no-repeat;
+                    }
+                </style>
+                </c:otherwise>
+            </c:choose>
+                
         <jsp:include page="/WEB-INF/pages/template/template-common-head.jsp"/>
        
         <title><tiles:insertAttribute name="pageTitle" ignore="true"/></title>
