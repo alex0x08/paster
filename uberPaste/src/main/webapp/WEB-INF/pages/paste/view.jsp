@@ -117,7 +117,11 @@
         <div id="pasteLoadSpinner" style="">
             <img src="<c:url value='/main/static/${appVersion}/images/gear_sml.gif'/>"/>  
             <fmt:message key="action.loading"/>   
-            <img style="border: 1px solid black;" src="${model.thumbImageRead}"/>
+
+           
+            <img style="border: 1px solid black;" src=" <c:url value='/act/get-resource' >
+                <c:param name="uuid" value="${model.uuid}"/>
+            </c:url>" />
 
         </div>    
 
@@ -136,15 +140,24 @@
 
                      <c:if test="${not empty availableNext and not empty availableNext.thumbImage}">
                          <a href="<c:url value="/${availableNext.id}"/>"  title="<fmt:message key="button.next"/>">
-                             <img style="border: 1px solid black;alignment-adjust: middle; width: 200px; height: 100px;" src="${availableNext.thumbImageRead}"/>
+                             <img style="border: 1px solid black;alignment-adjust: middle; width: 200px; height: 100px;"
+                                  src="<c:url value='/act/get-resource' >
+                                      <c:param name="uuid" value="${availableNext.thumbImage}"/>
+                                  </c:url>" />
                          </a>
                      </c:if>
 
-                <img style="border: 1px solid black;alignment-adjust: middle" src="${model.thumbImageRead}"/>
+                <img style="border: 1px solid black;alignment-adjust: middle" 
+                     src="<c:url value='/act/get-resource' >
+                <c:param name="uuid" value="${model.thumbImage}"/>
+            </c:url>"/>
 
                 <c:if test="${availablePrev!=null and not empty availablePrev.thumbImage}">
                     <a href="<c:url value="/${availablePrev.id}"/>"  title="<fmt:message key="button.prev"/>">
-                        <img style="border: 1px solid black;alignment-adjust: middle; width: 200px; height: 100px;" src="${availablePrev.thumbImageRead}"/>
+                        <img style="border: 1px solid black;alignment-adjust: middle; width: 200px; height: 100px;" 
+                             src="<c:url value='/act/get-resource' >
+                                 <c:param name="uuid" value="${availablePrev.thumbImage}"/>
+                             </c:url>"/>
                     </a>
                 </c:if>
 

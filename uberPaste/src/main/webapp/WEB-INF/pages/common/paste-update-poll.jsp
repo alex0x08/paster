@@ -3,7 +3,6 @@
 <div id="newPastasCountBlock" class="row" style="display: none;">
     <div class="column grid-10">
         <p class="notice" style="padding: 0.3em;">
-            
             <fmt:message key="paste.list.since.info">
                 <fmt:param value="<span id='newPastasCount'></span>"/>
             </fmt:message>
@@ -25,12 +24,11 @@
     limit: 60000,
     onSuccess: function(responseText){
         var obj = JSON.decode(responseText, true);
-        
         var pcount = obj['count'];
         
         if (pcount>0) {            
             $('newPastasCountBlock').setStyle('display','');
-           $('newPastasCount').set('text', pcount);
+            $('newPastasCount').set('text', pcount);
           	Tinycon.setBubble(pcount);
             }
     },

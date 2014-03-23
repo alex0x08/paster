@@ -7,11 +7,14 @@
 
 </h1>
 
-<a href="<c:url value="/main/paste/list"/>"><fmt:message key="paste.list.title"/></a> /
 
 
 <c:url var="url" value='/main/admin/settings/save' />
 
+<div class="row">
+    <div class="column grid-12">
+    
+        
 <form:form action="${url}" 
            modelAttribute="model"
            method="POST" enctype="multipart/form-data">
@@ -70,7 +73,7 @@
                     </c:choose>                
                 :</label>
             <span class="input">
-                
+                <input type="checkbox" name="scaleClientImg"  />
                 <form:input  path="clientImageFile" type="file" name="clientImageFile" id="clientImageFile"  />
                 <form:errors path="clientImageFile" cssClass="error" />
 
@@ -87,6 +90,11 @@
         </div>
     </fieldset>
 </form:form>
+
+        
+    </div>
+        
+</div>
 
 
 

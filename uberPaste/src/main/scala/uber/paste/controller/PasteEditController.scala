@@ -17,13 +17,14 @@
 package uber.paste.controller
 
 import org.springframework.http.HttpStatus
+import org.springframework.security.crypto.codec.Base64
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.WebDataBinder
 import org.springframework.web.bind.annotation._
 import uber.paste.model._
 import org.springframework.beans.factory.annotation.{Value, Autowired}
 import java.io.ByteArrayOutputStream
-import uber.paste.manager.{CommentManager, PasteManager}
+import uber.paste.manager.{CommentManager, PasteManager, ResourcePathHelper}
 import org.springframework.ui.Model
 import uber.kaba.markup.parser.AppMode
 import uber.kaba.markup.parser.KabaMarkupParser
@@ -45,7 +46,8 @@ import org.apache.http.impl.client.DefaultHttpClient
 import org.apache.http.client.methods.HttpGet
 import javax.annotation.Resource
 import org.springframework.context.MessageSource
-import java.util
+import java.text.SimpleDateFormat
+import java.util.{Calendar,ArrayList}
 import org.apache.commons.io.FileUtils
 import org.apache.commons.io.FilenameUtils
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
@@ -74,6 +76,9 @@ class PasteController extends VersionController[Paste]   {
   @Autowired
   val commentManager:CommentManager = null
 
+  @Autowired
+  val resourcePathHelper:ResourcePathHelper = null
+  
   @Value("${config.share.integration}")
   val shareIntegration:Boolean = false
 
@@ -111,7 +116,7 @@ class PasteController extends VersionController[Paste]   {
     model.addAttribute("availablePriorities", Priority.list)
 
     if (!obj.getComments.isEmpty) {
-      val commentLines = new util.ArrayList[Long]
+      val commentLines = new ArrayList[Long]
       for (c<-obj.getComments) {
         commentLines.add(c.getLineNumber)
       }
@@ -345,12 +350,7 @@ class PasteController extends VersionController[Paste]   {
 
     
     if (b.getThumbImage()!=null) {
-        
-        val fimg = FileSystems.getDefault().getPath(System.getProperty("paste.app.home"),"images",b.getUuid).toFile
-        
-          FileUtils.writeStringToFile(fimg, b.getThumbImage())
-          
-          b.setThumbImage(fimg.getName)
+        b.setThumbImage(resourcePathHelper.saveThumb(b))
       }
     
        val out =super.save(cancel,b,result,model,locale,redirectAttributes)

@@ -71,6 +71,7 @@ class SettingsController extends GenericEditController[Project]{
    @RequestMapping(value = Array(GenericEditController.SAVE_ACTION), method = Array(RequestMethod.POST))
    def save(@RequestParam(required = false) cancel:String,
                      @RequestParam(required = false) reset:String,
+                     @RequestParam(required = false) scaleClientImg:Boolean,
             @Valid @ModelAttribute(GenericController.MODEL_KEY) b:Project,
             result:BindingResult, model:Model,locale:Locale,
             redirectAttributes:RedirectAttributes):String = {
@@ -113,7 +114,8 @@ class SettingsController extends GenericEditController[Project]{
             val img:BufferedImage = ImageIO.read(b.getClientImageFile.getInputStream)
             val baar = new ByteArrayOutputStream()
             
-            ImageIO.write(Scalr.resize(img, Mode.AUTOMATIC, 640, 640), "JPEG", baar)
+            ImageIO.write(if (scaleClientImg) {Scalr.resize(img, Mode.AUTOMATIC, 640, 640)} else {img}                          
+                          , "JPEG", baar)
             current.setClientImage("data:image/jpeg;base64,"+Base64.encodeBase64String(baar.toByteArray))
         }
      

@@ -20,7 +20,7 @@ import javax.persistence._
 import javax.validation.constraints.NotNull
 import uber.paste.base.SystemInfo
 
-object ConfigProperty {
+object ConfigProperty extends KeyValueObj[ConfigProperty]{
   
   val IS_INSTALLED = new ConfigProperty("config.property.is-installed","IS_INSTALLED","1")
   val UPLOADS_DIR = new ConfigProperty("config.property.upload-dir","UPLOAD_DIR","upload")
@@ -28,6 +28,10 @@ object ConfigProperty {
   val APP_VERSION = new ConfigProperty("config.property.app-version","APP_VERSION","UNDEFINED")
   val INSTALL_DATE = new ConfigProperty("config.property.install-date","INSTALL_DATE",null)
  
+  add(EXTERNAL_SITE_URL)
+  
+  
+  
 
 }
 

@@ -112,8 +112,11 @@
                            <c:when test="${not empty paste.thumbImage}">
                 <div class="column grid-4" >
                     
-                   
-                               <img src="${paste.thumbImageRead}" />
+                    <c:url value='/act/get-resource' var="thumbUrl">
+                        <c:param name="uuid" value="${paste.thumbImage}"/>
+                    </c:url>
+                    
+                               <img src="${thumbUrl}" />
                     </div>
                                <c:set var="currentRowSize" value="12"/>
                            </c:when>

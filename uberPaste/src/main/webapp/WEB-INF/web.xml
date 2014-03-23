@@ -198,7 +198,14 @@
         <load-on-startup>1</load-on-startup>
     </servlet>
 
-   
+
+    <servlet>
+        <servlet-name>ResourceDownloadServlet</servlet-name>
+        <servlet-class>uber.paste.web.ResourceDownloadServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+
 
     <servlet>
         <servlet-name>H2Console</servlet-name>
@@ -225,6 +232,10 @@
         <url-pattern>/act/openid-login</url-pattern>
     </servlet-mapping>
 
+    <servlet-mapping>
+        <servlet-name>ResourceDownloadServlet</servlet-name>
+        <url-pattern>/act/get-resource</url-pattern>
+    </servlet-mapping>
 
    
 

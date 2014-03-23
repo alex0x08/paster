@@ -27,8 +27,10 @@ import org.codehaus.jackson.annotate.JsonIgnore
 import javax.xml.bind.annotation._
 import uber.paste.base.Loggered
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute
+import java.io.File
 import java.io.FileInputStream
 import java.io.InputStream
+import java.nio.ByteBuffer
 import java.nio.file.FileSystems
 import java.util.{Set,HashSet,ArrayList, UUID}
 import scala.collection.JavaConversions._
@@ -248,19 +250,7 @@ class Paste extends Struct with java.io.Serializable{
 
   @JsonIgnore
   def getThumbImage() = thumbImage
-  
-  @JsonIgnore
-  def getThumbImageRead():String = {
-    
-    if ( thumbData==null) {    
-      val fimg = FileSystems.getDefault().getPath(System.getProperty("paste.app.home"),"images",uuid).toFile
-     if (fimg.exists && fimg.isFile) {      
-       thumbData =FileUtils.readFileToString(fimg)
-     }      
-    }
-    return  thumbData
-  }
-  
+   
  
   def setThumbImage(img:String) {thumbImage = img}
 
