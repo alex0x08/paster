@@ -16,13 +16,17 @@
 package uber.megashare.listener;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import org.apache.lucene.queryParser.ParseException;
+import org.apache.lucene.search.highlight.InvalidTokenOffsetsException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -339,9 +343,9 @@ public class StartupListener extends LoggedClass implements ServletContextListen
    
                 fireStartupEvent(ctx);
                 
-            } catch (ParseException ex) {
-                getLogger().error(ex.getLocalizedMessage(), ex);
          
+        } catch (ParseException  ex) {
+                getLogger().error(ex.getLocalizedMessage(), ex);
         }
 
     }

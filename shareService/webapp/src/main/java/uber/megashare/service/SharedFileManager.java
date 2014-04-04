@@ -15,6 +15,7 @@
  */
 package uber.megashare.service;
 
+import java.util.Date;
 import java.util.List;
 import uber.megashare.model.AccessLevel;
 import uber.megashare.model.FileType;
@@ -35,7 +36,7 @@ public interface SharedFileManager extends GenericSearchableManager<SharedFile,S
      *          a list of access levels
      * @return 
      */
-    List<SharedFile> getFilesForUser(Long id,Long projectId,AccessLevel[] levels);
+    List<SharedFile> getFilesForUser(Long id,Long projectId,AccessLevel[] levels,Date from);
     /**
      * get all files with specified access levels
      * @param levels

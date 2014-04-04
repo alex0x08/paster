@@ -16,8 +16,10 @@
 package uber.megashare.model;
 
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
@@ -58,9 +60,10 @@ filters = {
     })
 })
 @Audited
-@EntityListeners({UpdateLastModifiedListener.class})
+
 public abstract class Struct extends BaseDBObject {
 
+    
     /**
      *
      */
@@ -93,7 +96,7 @@ public abstract class Struct extends BaseDBObject {
     protected Integer versionsCount;
 
     public boolean isEverModified() {
-        return created!=null && lastModified!=null  && lastModified.compareTo(created) != 0;
+        return lastModified!=null;
     }
     
     public Integer getVersionsCount() {
@@ -119,6 +122,12 @@ public abstract class Struct extends BaseDBObject {
         return created;
     }
 
+    public void setCreated(Date created) {
+        this.created = created;
+    }
+     
+     
+
     /**
      * данный метод не используется
      *
@@ -143,6 +152,8 @@ public abstract class Struct extends BaseDBObject {
 
     public void fillFrom(Struct source) {
         super.fillFrom(source);
+        
+        System.out.println("__fill from created="+source.created);
         this.created=source.created;
         this.lastModified=source.lastModified;
         this.name=source.name;

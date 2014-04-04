@@ -16,6 +16,7 @@
 package uber.megashare.service;
 
 import java.io.File;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import javax.annotation.Resource;
@@ -106,8 +107,8 @@ public class SharedFileManagerImpl extends GenericSearchableManagerImpl<SharedFi
     }  
 
     @Override
-    public List<SharedFile> getFilesForUser(Long id, Long projectId, AccessLevel[] levels) {
-        return shareDao.getFilesForUser(id, projectId, levels);
+    public List<SharedFile> getFilesForUser(Long id, Long projectId, AccessLevel[] levels,Date from) {
+        return shareDao.getFilesForUser(id, projectId, levels,from);
     }
 
     @Override

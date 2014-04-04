@@ -116,6 +116,7 @@
                 }
             );
         
+               
         $(document).ready(function() {
     
          initZoombox();
@@ -128,6 +129,18 @@
           .hide()
           .filter(':checked').parent('.btn').addClass('active');
    
+         
+          $('.fileObject').each(function()
+        {
+            
+            
+            $(this).html($(this)
+                    .html()
+                    .replace(/\[result[^\]]*\]([\s\S]*?)\[\/result\]/gi,
+            "<span style='background-color: #e3e658; '>$1</span>")
+            );
+
+        }); 
          
          			$.scrollUp({
 		        scrollName: 'scrollUp', // Element ID
@@ -165,6 +178,10 @@
         $('.remoteModal').on('show.bs.modal', function () {        
              $(this).find('#srcFrame').attr("src",$(this).attr('srcUrl'));
         });
+             
+             
+             
+ 
              
                 }); 
        </script>      

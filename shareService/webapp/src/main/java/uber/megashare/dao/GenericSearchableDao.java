@@ -15,8 +15,10 @@
  */
 package uber.megashare.dao;
 
+import java.io.IOException;
 import java.util.List;
 import org.apache.lucene.queryParser.ParseException;
+import org.apache.lucene.search.highlight.InvalidTokenOffsetsException;
 import uber.megashare.model.Struct;
 
 /**
@@ -36,5 +38,5 @@ public interface GenericSearchableDao<T extends Struct> extends GenericVersionin
       * @return
       * @throws ParseException 
       */
-    public List<T> search(String query) throws ParseException;
+    public List<T> search(String query) throws ParseException ;
 }

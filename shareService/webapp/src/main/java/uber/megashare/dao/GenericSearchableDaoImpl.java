@@ -16,8 +16,12 @@
 package uber.megashare.dao;
 
 import java.io.IOException;
+import java.io.StringReader;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.commons.lang.StringUtils;
+import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.search.Query;
@@ -29,6 +33,13 @@ import org.springframework.transaction.annotation.Transactional;
 import uber.megashare.model.Struct;
 import org.apache.lucene.morphology.russian.RussianAnalyzer;
 import org.apache.lucene.queryParser.MultiFieldQueryParser;
+import org.apache.lucene.search.highlight.Fragmenter;
+import org.apache.lucene.search.highlight.Highlighter;
+import org.apache.lucene.search.highlight.InvalidTokenOffsetsException;
+import org.apache.lucene.search.highlight.QueryScorer;
+import org.apache.lucene.search.highlight.SimpleFragmenter;
+import org.apache.lucene.search.highlight.SimpleHTMLFormatter;
+import org.apache.lucene.search.highlight.SimpleSpanFragmenter;
 import org.hibernate.CacheMode;
 
 /**
@@ -43,6 +54,9 @@ public abstract class GenericSearchableDaoImpl<T extends Struct> extends Generic
      */
     private static final long serialVersionUID = -4658396754985952199L;
 
+    protected SimpleHTMLFormatter formatter = new SimpleHTMLFormatter("[result]", "[/result]");
+   
+    
     protected GenericSearchableDaoImpl(Class<T> clazz) {
         super(clazz);
     }
@@ -96,7 +110,7 @@ public abstract class GenericSearchableDaoImpl<T extends Struct> extends Generic
      * {@inheritDoc}
      */
     @SuppressWarnings("unchecked")
-    public List<T> search(String query) throws ParseException {
+    public List<T> search(String query) throws ParseException{
 
         /**
          * ignore empty queries
@@ -117,18 +131,35 @@ public abstract class GenericSearchableDaoImpl<T extends Struct> extends Generic
         /**
          * "name" is default search field
          */
-        
-
+     
 
         QueryParser pparser = new MultiFieldQueryParser(Version.LUCENE_35, getDefaultStartFields(), an);
         //QueryParser pparser = new QueryParser(Version.LUCENE_31, "name", an); //new StandardAnalyzer(Version.LUCENE_31)
-
+        
         getLogger().debug("searching for "+query);
         
-        Query lucenceQuery = pparser.parse(query);
-
-        FullTextQuery fquery = fsession.createFullTextQuery(lucenceQuery, persistentClass);
-        return fquery.getResultList();
+        Query luceneQuery = pparser.parse(query);
+        QueryScorer scorer=new QueryScorer(luceneQuery);
+     
+        Highlighter highlighter = new Highlighter(formatter, scorer);
+         highlighter.setTextFragmenter(new SimpleSpanFragmenter(scorer, 100));
+         
+        FullTextQuery fquery = fsession.createFullTextQuery(luceneQuery, persistentClass);
+      
+        List<T> results = fquery.getResultList();
+       try {
+        for (T obj : results) {
+           
+                obj.setName(highlighter
+                        .getBestFragments(pparser.getAnalyzer()
+                                .tokenStream("name", new StringReader(obj.getName())),
+                                obj.getName(), 3, " ..."));
+           
+        }
+         } catch (IOException | InvalidTokenOffsetsException ex) {
+             throw new ParseException(ex.getLocalizedMessage());
+            }
+        return results;
 
     }
     

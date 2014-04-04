@@ -16,14 +16,19 @@
 package uber.megashare.dao;
 
 import com.mysema.query.types.expr.BooleanExpression;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.lucene.queryParser.MultiFieldQueryParser;
 import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.search.Query;
+import org.apache.lucene.search.highlight.Highlighter;
+import org.apache.lucene.search.highlight.QueryScorer;
+import org.apache.lucene.search.highlight.SimpleSpanFragmenter;
 import org.apache.lucene.util.Version;
 import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.jpa.FullTextQuery;
@@ -68,7 +73,8 @@ public class SharedFileDaoImpl extends GenericSearchableDaoImpl<SharedFile> impl
     /**
      * {@inheritDoc}
      */
-    @Transactional(readOnly = true, propagation = Propagation.REQUIRED,value= "transactionManager",rollbackFor = Exception.class)
+    @Transactional(readOnly = true, propagation = Propagation.REQUIRED,
+            value= "transactionManager",rollbackFor = Exception.class)
     @Override
     public List<SharedFile> search(final String query,
             final Long userId,final Long projectId,
@@ -83,7 +89,7 @@ public class SharedFileDaoImpl extends GenericSearchableDaoImpl<SharedFile> impl
                 if (org.apache.commons.lang.StringUtils.isBlank(query) || query.trim().equals("*")) {
                     log.append("empty query, return all files for user");
                     return userId != null
-                            ? getFilesForUser(userId,projectId, AccessLevel.values())
+                            ? getFilesForUser(userId,projectId, AccessLevel.values(),null)
                             : getFiles(projectId,new AccessLevel[]{AccessLevel.ALL});
                 }
 
@@ -98,13 +104,18 @@ public class SharedFileDaoImpl extends GenericSearchableDaoImpl<SharedFile> impl
                 FullTextEntityManager fsession = getFullTextEntityManager();
 
                    QueryParser pparser = new MultiFieldQueryParser(Version.LUCENE_35, SHARE_START_FIELDS, an);
-     
-                Query lucenceQuery = pparser.parse(qquery);
+       
+                Query luceneQuery = pparser.parse(qquery);
+                QueryScorer scorer = new QueryScorer(luceneQuery);
+                Highlighter highlighter = new Highlighter(formatter, scorer);
+                highlighter.setTextFragmenter(new SimpleSpanFragmenter(scorer, 100));
 
-                FullTextQuery fquery = fsession.createFullTextQuery(lucenceQuery, persistentClass);
+                FullTextQuery fquery = fsession.createFullTextQuery(luceneQuery, persistentClass);
 
                 log.append("found " + fquery.getResultSize() + " results ,an=" + an.getClass().getName());
 
+           
+                
 
                 for (Object o : fquery.getResultList()) {
                     SharedFile file = (SharedFile) o;
@@ -117,6 +128,10 @@ public class SharedFileDaoImpl extends GenericSearchableDaoImpl<SharedFile> impl
 
                     if (userId == null || file.getOwner().getId().equals(userId) || file.getAccessLevel() == AccessLevel.ALL) {
 
+                        file.setName(highlighter
+                                .getBestFragments(pparser.getAnalyzer()
+                                        .tokenStream("name", new StringReader(file.getName())),
+                                        file.getName(), 3, " ..."));
                         out.add(file);
                         log.append("added " + file.getId() + " to output");
                     }
@@ -133,10 +148,19 @@ public class SharedFileDaoImpl extends GenericSearchableDaoImpl<SharedFile> impl
     /**
      * {@inheritDoc}
      */
-    @Override
-    public List<SharedFile> getFilesForUser(Long userId, Long projectId, AccessLevel[] levels) {
+   
+    public List<SharedFile> getFilesForUser(Long userId, Long projectId, AccessLevel[] levels,Date from) {
        // System.out.println("_getFiles for user "+userId+" proj="+projectId);
         List<BooleanExpression> out = new ArrayList<>();
+        
+        if (from!=null) {
+             out.add(BooleanExpression.anyOf(
+                         QSharedFile.sharedFile.created.gt(from)
+                                 .and(QSharedFile.sharedFile.lastModified.isNull()),
+                         QSharedFile.sharedFile.lastModified.isNotNull()
+                                 .and(QSharedFile.sharedFile.lastModified.gt(from))
+                ));
+        }
         
         if (projectId!=null) {    
             

@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Set;
@@ -194,9 +195,7 @@ public class SharedFileEditController extends AbstractCommentController<SharedFi
                     }
                 
                 input.getXml().rebuildFields();
-                
-                  
-     
+               
                 
                 SharedFile old;
 
@@ -204,21 +203,9 @@ public class SharedFileEditController extends AbstractCommentController<SharedFi
                     
                     old = manager.getFull(input.getId());
                     
-                    input.setComments(old.getComments());
-                    input.setOwner(old.getOwner());
-                    input.setFileSize(old.getFileSize());
-                    input.setMime(old.getMime());
-                    input.setPreviewUrl(old.getPreviewUrl());
-                    input.setType(old.getType());
-                    input.setUrl(old.getUrl());
-                    input.setUuid(old.getUuid());
-                    input.setName(old.getName());
-                    input.setIntegrationCode(old.getIntegrationCode());
+                    input.fillFrom(old);
                     
-                     if (input.getRelatedProjects().isEmpty()) {
-                        input.setRelatedProjects(old.getRelatedProjects());
-                       // input.getRelatedProjects().add(getCurrentUser().getRelatedProject());
-                    }
+                    input.setLastModified(Calendar.getInstance().getTime());
                     
                     /**
                      * allow upload and replace exist pulic file for all logged in users
@@ -324,6 +311,8 @@ public class SharedFileEditController extends AbstractCommentController<SharedFi
                     /**
                      * create preview if applicable
                      */
+                    
+                   
                     ImageBuilder builder = ImageBuilder.createInstance().setSource(
                             new FileInputStream(fout));
 
@@ -338,7 +327,8 @@ public class SharedFileEditController extends AbstractCommentController<SharedFi
                         input.setPreviewUrl(calcPath +File.separator+input.getUuid()+ "_preview.png");
                         
                         FileUtils.writeByteArrayToFile(
-                                new File(settingsManager.getCurrentSettings().getUploadDir(), input.getPreviewUrl()), img);
+                                new File(settingsManager.getCurrentSettings().getUploadDir(), 
+                                        input.getPreviewUrl()), img);
                     } else {
 
                         log.append("image preview generation is not supported for file " + fout.getName());
@@ -363,6 +353,7 @@ public class SharedFileEditController extends AbstractCommentController<SharedFi
      *
      * @param inputFile
      * @param response
+     * @param request
      * @return json with result code
      */
     @ResponseBody

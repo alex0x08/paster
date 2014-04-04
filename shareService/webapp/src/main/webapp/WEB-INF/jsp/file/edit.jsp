@@ -291,7 +291,8 @@
                          </div>     
                      </c:if>                                    
 
-                 </div>                                 
+                 </div> 
+                        <%--         
                  <div class="row">
                      <div class="col-md-8 col-md-offset-1" >    
                       
@@ -333,10 +334,7 @@
            <script type="text/javascript">
                var totalRows = ${status.index+1};
            </script>
-          
-           
-            
-           
+        
       </c:if>
 
   </c:forEach>
@@ -384,7 +382,7 @@
                              </script>     
 
                          </div>       
-                         
+                         --%>
                          <c:if test="${model.blank}">
 
                              <div class="form-group">

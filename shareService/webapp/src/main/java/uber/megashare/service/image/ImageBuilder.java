@@ -22,14 +22,14 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.*;
-
+import org.imgscalr.Scalr;
 
 /**
- * Builder impelementation to work with images (resize at now)
- * Works in headless mode
+ * Builder impelementation to work with images (resize at now) Works in headless
+ * mode
  * <p/>
- * Билдер для работы с изображениями. (маштабирование на данный момент)
- * Работает в headless-режиме
+ * Билдер для работы с изображениями. (маштабирование на данный момент) Работает
+ * в headless-режиме
  *
  * @author alex
  * @see ImageInfo
@@ -44,20 +44,20 @@ public class ImageBuilder extends LoggedClass {
     /**
      * Support class used for type recognition.
      */
-    private ImageInfo ii_instance = new ImageInfo();
+    private final ImageInfo ii_instance = new ImageInfo();
     private BufferedImage source, //исходное изображение / original image
             scaled; //результат преобразований / scaled image
     private int min_width, //минимальная ширина изображения для преобразования // minimum width to start scaling
             min_height, //минимальная высота изображения // minimum height to ..
-            max_height=3000,max_width=3000,
+            max_height = 3000, max_width = 3000,
             scale_rate; // TODO: describe it
     /**
      * byte array with scaled image
      */
     private byte[] scaled_array;
     /**
-     * if source image format is supported
-     * this variable sets during setSource(..) call
+     * if source image format is supported this variable sets during
+     * setSource(..) call
      */
     private boolean unsupported;
 
@@ -66,7 +66,6 @@ public class ImageBuilder extends LoggedClass {
      */
     protected ImageBuilder() {
     }
-
 
     /**
      * builder function to set source
@@ -100,7 +99,7 @@ public class ImageBuilder extends LoggedClass {
         //this is dirty hack to avoid creating new stream
         try {
             ii_instance.setInput(iin);
-            if (!ii_instance.check() || ii_instance.getWidth()>max_width || ii_instance.getHeight() > max_height ) {
+            if (!ii_instance.check() || ii_instance.getWidth() > max_width || ii_instance.getHeight() > max_height) {
                 unsupported = true;
                 return this;
             }
@@ -110,12 +109,12 @@ public class ImageBuilder extends LoggedClass {
 
             try {
                 iin.close();
-            } catch (Exception e) {
+            } catch (IOException e) {
             }
 
             try {
                 in.close();
-            } catch (Exception e) {
+            } catch (IOException e) {
             }
         }
         return this;
@@ -140,7 +139,8 @@ public class ImageBuilder extends LoggedClass {
     }
 
     /**
-     * @return ImageInfo object which holds all information about image (size,width,height,mime..)
+     * @return ImageInfo object which holds all information about image
+     * (size,width,height,mime..)
      */
     public ImageInfo getImageInfo() {
         return ii_instance;
@@ -192,8 +192,7 @@ public class ImageBuilder extends LoggedClass {
     }
 
     /**
-     * scale to icon (uses predefined width,height)
-     * маштабировать в иконку
+     * scale to icon (uses predefined width,height) маштабировать в иконку
      *
      * @return self
      * @throws IOException
@@ -237,8 +236,6 @@ public class ImageBuilder extends LoggedClass {
      */
     public ImageBuilder scale() throws IOException {
 
-                
-
         if (min_width >= ii_instance.getWidth() && min_height >= ii_instance.getHeight()) {
             scaled = source;
 
@@ -260,7 +257,7 @@ public class ImageBuilder extends LoggedClass {
             if (out != null) {
                 try {
                     out.close();
-                } catch (Exception e) {
+                } catch (IOException e) {
                 }
             }
         }
@@ -288,9 +285,9 @@ public class ImageBuilder extends LoggedClass {
     /**
      * calculate new width and height to scale to
      *
-     * @param width  original width
+     * @param width original width
      * @param height original height
-     * @return array of two elements 0 - width, 1  - height
+     * @return array of two elements 0 - width, 1 - height
      */
     private int[] calcSizes(int width, int height) {
 
@@ -299,13 +296,12 @@ public class ImageBuilder extends LoggedClass {
         out[0] = width;
         out[1] = height;
 
-        float xx = width / scale_rate;
-        float yy = height / scale_rate;
-        float zz = (xx + yy) / 2;
-        float max_z = (min_height + min_width) / scale_rate;
+        float xx = width / scale_rate,
+                yy = height / scale_rate,
+                zz = (xx + yy) / 2,
+                max_z = (min_height + min_width) / scale_rate;
 
         if (zz > max_z) {
-
             float coeff = max_z / zz;
             out[0] = Math.round(xx * coeff);
             out[1] = Math.round(yy * coeff);
@@ -317,83 +313,21 @@ public class ImageBuilder extends LoggedClass {
         return new ImageBuilder();
     }
 
-    /**
-     * creates bufferedimage object from array of bytes
-     *
-     * @param bytes array of bytes contains image
-     * @param w     width
-     * @param h     height
-     * @return bufferedimage object
-     * @see BufferedImage
-     */
-    public static BufferedImage createImage(byte[] bytes, int w, int h) {
-        int redMask = 1;
-        int greenMask = 2;
-        int blueMask = 3;
-        int lineStride = w * 3;
-        int pixelStride = 3;
-     //   boolean flipped = false;
-
-        // TODO: would it be quicker to use a type that took a byte array directly?
-
-        BufferedImage bi = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
-        int[] pixels = new int[w * h];
-        int pixelIndex = 0;
-        int lineOffset = 0;
-       /* if (flipped) {
-            lineOffset = (h - 1) * lineStride;
-        }*/
-
-        for (int y = 0; y < h; ++y) {
-            int off = lineOffset;
-            for (int x = 0; x < w; ++x) {
-                byte r = bytes[off + redMask - 1];
-                byte g = bytes[off + greenMask - 1];
-                byte b = bytes[off + blueMask - 1];
-                int pixel = 0;
-                pixel += r & 0xff;    // red
-                pixel *= 256;
-                pixel += g & 0xff; // green
-                pixel *= 256;
-                pixel += b & 0xff;    // blue
-                pixels[pixelIndex++] = pixel;
-                off += pixelStride;
-            }
-           /* if (flipped) {
-                lineOffset -= lineStride;
-            } else {*/
-                lineOffset += lineStride;
-            //}
-        }
-
-        bi.setRGB(0, 0, w, h, pixels, 0, w);
-        //pixels = null;
-
-        return bi;
-
-    }
+    
 
     /**
      * creates scaled instance of input bufferedimage
      *
      * @param source input bufferedimage
-     * @param width  image with
+     * @param width image with
      * @param height image height
      * @return scaled bufferedimage
      */
     public static BufferedImage getScaledInstance(BufferedImage source, int width,
-                                                  int height) {
-        BufferedImage target = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g2 = target.createGraphics();
-        g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
-                RenderingHints.VALUE_INTERPOLATION_BICUBIC);
-        double scalex = (double) target.getWidth() / source.getWidth();
-        double scaley = (double) target.getHeight() / source.getHeight();
-        AffineTransform xform = AffineTransform.getScaleInstance(scalex, scaley);
-        g2.drawRenderedImage(source, xform);
-        g2.dispose();
+            int height) {
 
-        return target;
+        return Scalr.resize(source, Scalr.Mode.AUTOMATIC, width, height);
+
     }
 
     //@Override
@@ -402,30 +336,24 @@ public class ImageBuilder extends LoggedClass {
         return ii_instance.getFormatName() + ", " + ii_instance.getMimeType() + ", "
                 + ii_instance.getWidth() + " x " + ii_instance.getHeight() + " pixels, "
                 + ii_instance.getBitsPerPixel() + " bits per pixel, "
-                + ii_instance.getNumberOfImages() + " image(s), "
-                ;
+                + ii_instance.getNumberOfImages() + " image(s), ";
 
     }
 
     public static ImageBuilder getInstance() {
-
         return new ImageBuilder();
     }
 
     public static ImageBuilder getInstanceFor(InputStream stream) throws IOException {
-
         return new ImageBuilder().setSource(stream);
     }
 
     public static ImageBuilder getInstanceFor(byte[] bytes) throws IOException {
-
         return new ImageBuilder().setSource(bytes);
     }
 
     public static ImageBuilder getInstanceFor(BufferedImage image) throws IOException {
-
         return new ImageBuilder().setSource(image);
     }
-
 
 }

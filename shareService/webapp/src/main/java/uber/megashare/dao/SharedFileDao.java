@@ -15,11 +15,11 @@
  */
 package uber.megashare.dao;
 
+import java.util.Date;
 import java.util.List;
 import org.apache.lucene.queryParser.ParseException;
 import uber.megashare.model.AccessLevel;
 import uber.megashare.model.SharedFile;
-import uber.megashare.model.tree.FolderNode;
 
 /**
  * DAO related to shared files
@@ -47,7 +47,9 @@ public interface SharedFileDao extends GenericSearchableDao<SharedFile> {
      *          a list of access levels
      * @return 
      */
-    List<SharedFile> getFilesForUser(Long id,Long projectId,AccessLevel[] levels);
+    List<SharedFile> getFilesForUser(Long id,Long projectId,AccessLevel[] levels,Date from);
+   
+    
     /**
      * get all files with specified access levels
      * @param levels

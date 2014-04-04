@@ -55,7 +55,9 @@ public abstract class GenericVersioningDaoImpl<T extends Struct> extends  Struct
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED,value= "transactionManager",rollbackFor = Exception.class)
     @Override
     public T saveObject(T object) {
+        if ( getReader().isEntityClassAudited(persistentClass)) {
           object.setVersionsCount(object.isBlank() ? 1 : getRevisions(object.getId()).size()+1);
+        }
          return super.saveObject(object);
     }
    

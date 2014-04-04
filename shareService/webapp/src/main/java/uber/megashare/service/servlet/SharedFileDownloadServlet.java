@@ -47,19 +47,19 @@ import static uber.megashare.service.servlet.AbstractBaseServlet.writeError;
  */
 public class SharedFileDownloadServlet extends AbstractBaseServlet {
 
-     private static final int DEFAULT_BUFFER_SIZE = 10240; // ..bytes = 10KB.
+    private static final int DEFAULT_BUFFER_SIZE = 10240; // ..bytes = 10KB.
     private static final long DEFAULT_EXPIRE_TIME = 604800000L; // ..ms = 1 week.
     private static final String MULTIPART_BOUNDARY = "MULTIPART_BYTERANGES";
-    
+
     /**
      *
      */
     private static final long serialVersionUID = 2735894619181978770L;
     private static final int CACHE_DURATION_IN_SECOND = 60 * 60 * 24 * 2; // 2 days
     private static final long CACHE_DURATION_IN_MS = CACHE_DURATION_IN_SECOND * 1000;
-    
+
     private SharedFileManager manager;
-    
+
     private SettingsManager settingsManager;
 
     @Override
@@ -71,22 +71,26 @@ public class SharedFileDownloadServlet extends AbstractBaseServlet {
         log.debug("download servlet initialized");
     }
 
-     /**
-     * Process HEAD request. This returns the same headers as GET request, but without content.
+    /**
+     * Process HEAD request. This returns the same headers as GET request, but
+     * without content.
+     *
+     * @param request
+     * @param response
+     * @throws javax.servlet.ServletException
+     * @throws java.io.IOException
      * @see HttpServlet#doHead(HttpServletRequest, HttpServletResponse).
      */
+    @Override
     protected void doHead(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException
-    {
+            throws ServletException, IOException {
         // Process request without content.
         processRequest(request, response, false);
     }
 
-    
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
-     * Handles the HTTP
-     * <code>GET</code> method.
+     * Handles the HTTP <code>GET</code> method.
      *
      * @param request servlet request
      * @param response servlet response
@@ -96,12 +100,11 @@ public class SharedFileDownloadServlet extends AbstractBaseServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response,true);
+        processRequest(request, response, true);
     }
 
     /**
-     * Handles the HTTP
-     * <code>POST</code> method.
+     * Handles the HTTP <code>POST</code> method.
      *
      * @param request servlet request
      * @param response servlet response
@@ -111,7 +114,7 @@ public class SharedFileDownloadServlet extends AbstractBaseServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response,true);
+        processRequest(request, response, true);
     }
 
     /**
@@ -125,18 +128,16 @@ public class SharedFileDownloadServlet extends AbstractBaseServlet {
     }// </editor-f
 
     /**
-     * Processes requests for both HTTP
-     * <code>GET</code> and
-     * <code>POST</code> methods.
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
+     * methods.
      *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response,boolean content)
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response, boolean content)
             throws ServletException, IOException {
-
 
         String id = request.getParameter("id");
 
@@ -144,30 +145,27 @@ public class SharedFileDownloadServlet extends AbstractBaseServlet {
             writeError(response, "file id not set");
             return;
         }
-        
-         boolean inline = request.getParameter("inline")!=null;
-       
-        
-        Long revision = NumberUtils.toLong(request.getParameter("revision"));
-       
 
-        SharedFile f =  revision>0 ? manager.getRevision(NumberUtils.toLong(id), revision) : manager.getFileFromUUID(id);
+        boolean inline = request.getParameter("inline") != null;
+
+        Long revision = NumberUtils.toLong(request.getParameter("revision"));
+
+        SharedFile f = revision > 0 ? manager.getRevision(NumberUtils.toLong(id), revision) : manager.getFileFromUUID(id);
         if (f == null) {
-            
+
             f = manager.getFull(NumberUtils.toLong(id));
-            
-            if (f==null ){
+
+            if (f == null) {
                 writeError(response, "No such file id=" + id);
                 return;
             }
         }
 
-
-        switch(f.getAccessLevel()) {
+        switch (f.getAccessLevel()) {
             case PROJECT: {
-                
+
                 User current = getCurrentUser(request);
-                
+
                 if (current == null || (!current.isAdmin()
                         && !f.getRelatedProjects().contains(current.getRelatedProject()))) {
 
@@ -186,76 +184,53 @@ public class SharedFileDownloadServlet extends AbstractBaseServlet {
                 break;
             }
             case ALL: {
-            
-            }    
-        }
-        
-       
-        boolean preview = request.getParameter("preview") != null;
 
+            }
+        }
+
+        boolean preview = request.getParameter("preview") != null;
 
         if (preview) {
             response.setContentType("image/png");
-           // response.setHeader("Content-Disposition", "inline;filename=\"" + f.getUuid()+"_preview.png\"");
-                 
-            File fpreview = new File(settingsManager.getCurrentSettings().getUploadDir(), f.getPreviewUrl());
-          
-            log.debug("loading file "+fpreview.getAbsolutePath());
-            
-            
+         
+            File fpreview = new File(settingsManager.getCurrentSettings().getUploadDir(),
+                    f.getPreviewUrl());
+
+            log.debug("loading file " + fpreview.getAbsolutePath());
+
             if (!fpreview.exists() || !fpreview.isFile()) {
                 writeError(response, "Preview file not found " + id);
                 return;
             }
 
-   
-              response.setHeader("Content-Length", String.valueOf(fpreview.length()));
-          
-  
+            response.setHeader("Content-Length", String.valueOf(fpreview.length()));
 
-               try (FileInputStream in = new FileInputStream(fpreview)) {
-             IOUtils.copy(in, response.getOutputStream());
-             }
-            
-               response.flushBuffer();
-            
+            try (FileInputStream in = new FileInputStream(fpreview)) {
+                IOUtils.copy(in, response.getOutputStream());
+            }
+            response.flushBuffer();
+
             return;
         }
 
-/*        setContentDispositionHeader(request, response,
-                !inline || ( f.getType() != FileType.IMAGE && f.getType() != FileType.TEXT),
-                f.getName());
-
-        response.setContentType(f.getMime());
-
-        long now = f.getLastModified().getTime();
-        
-        response.addHeader("Cache-Control", "max-age=" + CACHE_DURATION_IN_SECOND);
-        response.addHeader("Cache-Control", "must-revalidate");
-        response.setDateHeader("Last-Modified", now);
-        response.setDateHeader("Expires", now + CACHE_DURATION_IN_MS);
-*/
-
+      
         File ff = new File(settingsManager.getCurrentSettings().getUploadDir(), f.getUrl());
 
-        log.debug("loading file "+ff.getAbsolutePath());
-            
-        
+        log.debug("loading file " + ff.getAbsolutePath());
+
         if (!ff.exists() || !ff.isFile()) {
             writeError(response, "The file was not found " + id);
             return;
         }
 
-        
          // Prepare some variables. The ETag is an unique identifier of the file.
-        String fileName = ff.getName();
-        long length = ff.length();
-        long lastModified = ff.lastModified();
-        String eTag = fileName + "_" + length + "_" + lastModified;
-        long expires = System.currentTimeMillis() + DEFAULT_EXPIRE_TIME;
-        
-        // Validate request headers for caching ---------------------------------------------------
+        long length = ff.length(),
+                lastModified = ff.lastModified(),
+                expires = System.currentTimeMillis() + DEFAULT_EXPIRE_TIME;
+        String fileName = ff.getName(),
+                eTag = fileName + "_" + length + "_" + lastModified;
 
+        // Validate request headers for caching ---------------------------------------------------
         // If-None-Match header should contain "*" or ETag. If so, then return 304.
         String ifNoneMatch = request.getHeader("If-None-Match");
         if (ifNoneMatch != null && matches(ifNoneMatch, eTag)) {
@@ -275,9 +250,7 @@ public class SharedFileDownloadServlet extends AbstractBaseServlet {
             return;
         }
 
-
         // Validate request headers for resume ----------------------------------------------------
-
         // If-Match header should contain "*" or ETag. If not, then return 412.
         String ifMatch = request.getHeader("If-Match");
         if (ifMatch != null && !matches(ifMatch, eTag)) {
@@ -292,10 +265,7 @@ public class SharedFileDownloadServlet extends AbstractBaseServlet {
             return;
         }
 
-
-       
         // Validate and process range -------------------------------------------------------------
-
         // Prepare some variables. The full Range represents the complete file.
         Range full = new Range(0, length - 1, length);
         List<Range> ranges = new ArrayList<>();
@@ -353,17 +323,14 @@ public class SharedFileDownloadServlet extends AbstractBaseServlet {
             }
         }
 
-
         // Prepare and initialize response --------------------------------------------------------
-
         // Get content type by file name and set default GZIP support and content disposition.
         String contentType = f.getMime(); // getServletContext().getMimeType(fileName);
         boolean acceptsGzip = false;
-       
-        //String disposition = "inline";
 
-        boolean isAttachment =true;
-        
+        //String disposition = "inline";
+        boolean isAttachment = true;
+
         // If content type is unknown, then set the default value.
         // For all content types, see: http://www.w3schools.com/media/media_mimeref.asp
         // To add new content types, add new mime-mapping entry in web.xml.
@@ -377,9 +344,7 @@ public class SharedFileDownloadServlet extends AbstractBaseServlet {
             String acceptEncoding = request.getHeader("Accept-Encoding");
             acceptsGzip = acceptEncoding != null && accepts(acceptEncoding, "gzip");
             contentType += ";charset=UTF-8";
-        } 
-
-        // Else, expect for images, determine content disposition. If content type is supported by
+        } // Else, expect for images, determine content disposition. If content type is supported by
         // the browser, then set to inline, else attachment which will pop a 'save as' dialogue.
         else if (!contentType.startsWith("image")) {
             String accept = request.getHeader("Accept");
@@ -389,22 +354,19 @@ public class SharedFileDownloadServlet extends AbstractBaseServlet {
         // Initialize response.
         response.reset();
         response.setBufferSize(DEFAULT_BUFFER_SIZE);
-        
-        
+
         setContentDispositionHeader(request, response,
                 !inline || isAttachment,
                 //( f.getType() != FileType.IMAGE && f.getType() != FileType.TEXT)
                 f.getName());
-        
-      //  response.setHeader("Content-Disposition", disposition + ";filename=\"" + fileName + "\"");
+
+        //  response.setHeader("Content-Disposition", disposition + ";filename=\"" + fileName + "\"");
         response.setHeader("Accept-Ranges", "bytes");
         response.setHeader("ETag", eTag);
         response.setDateHeader("Last-Modified", lastModified);
         response.setDateHeader("Expires", expires);
 
-
         // Send requested file (part(s)) to client ------------------------------------------------
-
         // Prepare streams.
         RandomAccessFile input = null;
         OutputStream output = null;
@@ -482,27 +444,10 @@ public class SharedFileDownloadServlet extends AbstractBaseServlet {
             close(output);
             close(input);
         }
-        
-        
-     
-        
-        /*
-        RandomAccessFile fff = new RandomAccessFile(ff,"r");
-        
-        FileChannel inChannel = new RandomAccessFile(ff, "r").getChannel();
-MappedByteBuffer buffer = inChannel.map(FileChannel.MapMode.READ_ONLY, 0, inChannel.size());
-// access the buffer as you wish.
-inChannel.close();
-        
 
-
-
-        try (FileInputStream stream = new FileInputStream(ff)) {
-            IOUtils.copyLarge(stream, response.getOutputStream());
-        }*/
     }
 
-     private String getContentDispositionFileName(HttpServletRequest request, String fileName, boolean isAttachment)
+    private String getContentDispositionFileName(HttpServletRequest request, String fileName, boolean isAttachment)
             throws UnsupportedEncodingException {
 
         StringBuilder cp = new StringBuilder(isAttachment ? "attachment;" : "inline;");
@@ -522,13 +467,12 @@ inChannel.close();
         cp.append(" filename=\"").append(MimeUtility.encodeText(fileName, "UTF8", "B")).append("\"");
         return cp.toString();
 
-
     }
-     
-     // Helpers (can be refactored to public utility class) ----------------------------------------
 
+     // Helpers (can be refactored to public utility class) ----------------------------------------
     /**
      * Returns true if the given accept header accepts the given value.
+     *
      * @param acceptHeader The accept header.
      * @param toAccept The value to be accepted.
      * @return True if the given accept header accepts the given value.
@@ -537,12 +481,13 @@ inChannel.close();
         String[] acceptValues = acceptHeader.split("\\s*(,|;)\\s*");
         Arrays.sort(acceptValues);
         return Arrays.binarySearch(acceptValues, toAccept) > -1
-            || Arrays.binarySearch(acceptValues, toAccept.replaceAll("/.*$", "/*")) > -1
-            || Arrays.binarySearch(acceptValues, "*/*") > -1;
+                || Arrays.binarySearch(acceptValues, toAccept.replaceAll("/.*$", "/*")) > -1
+                || Arrays.binarySearch(acceptValues, "*/*") > -1;
     }
 
     /**
      * Returns true if the given match header matches the given value.
+     *
      * @param matchHeader The match header.
      * @param toMatch The value to be matched.
      * @return True if the given match header matches the given value.
@@ -551,16 +496,20 @@ inChannel.close();
         String[] matchValues = matchHeader.split("\\s*,\\s*");
         Arrays.sort(matchValues);
         return Arrays.binarySearch(matchValues, toMatch) > -1
-            || Arrays.binarySearch(matchValues, "*") > -1;
+                || Arrays.binarySearch(matchValues, "*") > -1;
     }
 
     /**
-     * Returns a substring of the given string value from the given begin index to the given end
-     * index as a long. If the substring is empty, then -1 will be returned
+     * Returns a substring of the given string value from the given begin index
+     * to the given end index as a long. If the substring is empty, then -1 will
+     * be returned
+     *
      * @param value The string value to return a substring as long for.
-     * @param beginIndex The begin index of the substring to be returned as long.
+     * @param beginIndex The begin index of the substring to be returned as
+     * long.
      * @param endIndex The end index of the substring to be returned as long.
-     * @return A substring of the given string value as long or -1 if substring is empty.
+     * @return A substring of the given string value as long or -1 if substring
+     * is empty.
      */
     private static long sublong(String value, int beginIndex, int endIndex) {
         String substring = value.substring(beginIndex, endIndex);
@@ -569,15 +518,16 @@ inChannel.close();
 
     /**
      * Copy the given byte range of the given input to the given output.
+     *
      * @param input The input to copy the given range to the given output for.
-     * @param output The output to copy the given range from the given input for.
+     * @param output The output to copy the given range from the given input
+     * for.
      * @param start Start of the byte range.
      * @param length Length of the byte range.
      * @throws IOException If something fails at I/O level.
      */
     private static void copy(RandomAccessFile input, OutputStream output, long start, long length)
-        throws IOException
-    {
+            throws IOException {
         byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
         int read;
 
@@ -604,6 +554,7 @@ inChannel.close();
 
     /**
      * Close the given resource.
+     *
      * @param resource The resource to be closed.
      */
     private static void close(Closeable resource) {
@@ -618,18 +569,16 @@ inChannel.close();
     }
 
     // Inner classes ------------------------------------------------------------------------------
-
     /**
      * This class represents a byte range.
      */
     protected class Range {
-        long start;
-        long end;
-        long length;
-        long total;
+
+        long start, end, length, total;
 
         /**
          * Construct a byte range.
+         *
          * @param start Start of the byte range.
          * @param end End of the byte range.
          * @param total Total length of the byte source.
@@ -643,15 +592,12 @@ inChannel.close();
 
     }
 
-
-    private void setContentDispositionHeader(HttpServletRequest request, 
-            HttpServletResponse response, boolean isAttachment, 
+    private void setContentDispositionHeader(HttpServletRequest request,
+            HttpServletResponse response, boolean isAttachment,
             String fileName) throws UnsupportedEncodingException {
 
-         
-        response.setHeader("Content-Disposition", 
-               getContentDispositionFileName(request,fileName,isAttachment));
+        response.setHeader("Content-Disposition",
+                getContentDispositionFileName(request, fileName, isAttachment));
     }
 
-  
 }

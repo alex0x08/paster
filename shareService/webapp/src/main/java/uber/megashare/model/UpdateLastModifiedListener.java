@@ -28,12 +28,15 @@ public class UpdateLastModifiedListener extends LoggedClass {
 
     /**
      * Хук для обновления даты последней модификации
+     * @param s
      */
     @PreUpdate
-    @PrePersist
+    //@PrePersist
     public void updateTimeStamps(Struct s) {
-       
-        s.lastModified = s.lastModified == null ?  s.created : Calendar.getInstance().getTime();
-        
+      //  if (!s.isBlank()) {
+            s.lastModified =Calendar.getInstance().getTime();
+       // }
+      //  s.lastModified = s.lastModified == null ?  s.created : Calendar.getInstance().getTime();
+        System.out.println("class="+s.getClass().getName()+"_last="+s.lastModified+" created="+s.created);
     }
 }

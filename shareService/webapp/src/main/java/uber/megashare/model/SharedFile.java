@@ -24,6 +24,7 @@ import java.util.Set;
 import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
@@ -64,6 +65,7 @@ import uber.megashare.model.xml.XMLObject;
 @XStreamAlias("sharedFile")
 //@EntityListeners({CreateUUIDListener.class})
 //@TypeDef(defaultForType = XMLObject.class,name = "xmlObject", typeClass = uber.megashare.model.xml.XMLObjectType.class)
+//@EntityListeners({UpdateLastModifiedListener.class})
 public class SharedFile extends Node {
 
     public static final String PASTER_PREFIX= "paste_";

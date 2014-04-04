@@ -80,6 +80,7 @@ public class SharedFileListController
     
     /**
      * get list of shared files
+     * @return 
      */
     @Override
     protected List<SharedFile> getModels() {
@@ -97,10 +98,12 @@ public class SharedFileListController
           
            out.addAll(!isCurrentUserLoggedIn()? fileManager.getFiles(null,new AccessLevel[]{AccessLevel.ALL}):
                     fileManager.getFilesForUser(getCurrentUser().getId(),getCurrentUser().getRelatedProject().getId(),
-                    AccessLevel.values()));
+                    AccessLevel.values(),null));
            return out;
     }
    
+    
+    
    
 
     @RequestMapping(value = INTEGRATED_PREFIX+LIST_ACTION+"/{integrationCode:[a-z0-9_]+}", method = RequestMethod.GET)

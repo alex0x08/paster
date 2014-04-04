@@ -94,8 +94,10 @@
 </c:choose>
 
 
-<kc:prettyTime var="modelLastModified" date="${model.lastModified}" locale="${pageContext.response.locale}"/>
-<fmt:formatDate var="modelLastModifiedFull" value="${model.lastModified}" pattern="${dateTimePattern}"/>
+<c:if test="${model.everModified}">
+    <kc:prettyTime var="modelLastModified" date="${model.lastModified}" locale="${pageContext.response.locale}"/>
+    <fmt:formatDate var="modelLastModifiedFull" value="${model.lastModified}" pattern="${dateTimePattern}"/>
+</c:if>
 
 <kc:prettyTime var="modelCreated" date="${model.created}" locale="${pageContext.response.locale}"/>
 <fmt:formatDate var="modelCreatedFull" value="${model.created}" pattern="${dateTimePattern}"/>
@@ -127,9 +129,10 @@
     <div class="panel-heading" style="margin:0;padding:0;border:0;">   <ul class="nav nav-tabs" >
             <li class="active">
                 <a href="#file_${model.id}" data-toggle="tab" >
-                    <span class="glyphicon glyphicon-file"></span> <fmt:message key="file.tab.file"/></a></li>
-            <li>                        
-
+                    <span class="glyphicon glyphicon-file"></span>
+                    <fmt:message key="file.tab.file"/></a>
+            </li>
+            <li>
                 <a href="#comments_${model.id}" data-toggle="tab" class="commentsBtn" modelId="${model.id}">
                     <span class="glyphicon glyphicon-comment"></span> <fmt:message key="file.tab.comments"/>
                     <c:if test="${model.commentsCount>0}">
@@ -303,29 +306,38 @@
             <div class="tab-pane active" id="file_${model.id}">
 
                 <div class="caption" style="vertical-align: top;" >
-
-
+                    
                     <a href="<c:url value='/main/file/list/search?query=type:${model.type}'/>" target="${not empty param.integrationMode ? "_blank" : target}">
                         <img style="text-align: left; display: inline; " src="<c:url value='/main/static/${appVersion}/images/mime/${model.icon}'/>"/>
-
                     </a>
 
-                    <a href="<c:out value='${detailUrl}'/>" target="${target}"><c:out value="${model.name}"/></a>
+                    <a href="<c:out value='${detailUrl}'/>" target="${target}">
+                        <span class="fileObject">
+                            <c:out value="${model.name}"/>
+                        </span>
+                    </a>
 
 
-                    <c:if test="${model.versionsCount>0}">
+                    <c:if test="${model.versionsCount>1}">
                         <span class="glyphicon glyphicon-random" title="<fmt:message key="struct.versions"/>"></span>
                         : <c:out value="${model.versionsCount}"/> 
                     </c:if>
 
 
                     <div style="padding-left:10px;" >${model.formattedFileSize} 
-                        &nbsp; <span title="${modelLastModifiedFull}">${modelLastModified}</span>  
+                        &nbsp; 
+                        <c:choose>
+                            <c:when test="${model.everModified}">
+                                <span title="${modelLastModifiedFull}">${modelLastModified}</span> 
+                                | <span title="${modelCreatedFull}">${modelCreated}</span>
+                            </c:when>
+                            <c:otherwise>
+                               <span title="${modelCreatedFull}">${modelCreated}</span> 
+                            </c:otherwise>
+                        </c:choose>
+                        
 
-                        <c:if test="${model.everModified}">
-                            |<span title="${modelCreatedFull}">${modelCreated}</span>
-                        </c:if>
-
+                       
                         <c:set var="usermodel" value="${model.owner}" scope="request"></c:set>
                         <jsp:include page="/WEB-INF/jsp/templates/common/user-dropdown.jsp" >
                             <jsp:param name="mode" value="USER"/>
@@ -477,7 +489,7 @@
                                          </c:otherwise>
                                      </c:choose>
                                      <c:param name="preview" value="1"/>
-
+                                        <c:param name="fname" value="${model.name}"/>
                                  </c:url>"/>
                         </a>
 
