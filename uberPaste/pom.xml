@@ -82,6 +82,12 @@
     <dependencies>
 
           <dependency>
+        <groupId>classifier4j</groupId>
+<artifactId>classifier4j</artifactId>
+<version>0.6</version>
+        </dependency>
+
+          <dependency>
             <groupId>org.tuckey</groupId>
             <artifactId>urlrewritefilter</artifactId>
             <version>4.0.4</version>
@@ -572,7 +578,11 @@
 
     <repositories>
 
-         
+        <repository>
+            <id>atlassian-public</id>
+            <name>atlassian-public</name>
+            <url>https://maven.atlassian.com/content/groups/public</url>
+        </repository> 
         
         <repository>
             <id>codehaus</id>

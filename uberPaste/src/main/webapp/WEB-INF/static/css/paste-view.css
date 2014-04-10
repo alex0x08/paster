@@ -383,12 +383,11 @@
   /*  height: 4em;*/
    /* max-height: 4em;*/
     margin-left: 0.5em;
-    padding-top: 0;
+    padding-top: 0.2em;
 
 }
 .commentInner {
     background-color: #f8f8f8;
-    border: 1px solid black;
 }
 
 .commentCurrent {
@@ -402,7 +401,7 @@
     max-width: 35em;
  /*   max-height: 12em;*/
     width: 35em;
-    top: 0em;
+    top: 0.2em;
   /*  height: 7em; */
     margin-left: 1em;
     background-color: #e0e0e0;

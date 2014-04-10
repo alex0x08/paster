@@ -20,6 +20,7 @@ import javax.persistence._
 import javax.validation.constraints.{Size, NotNull}
 import org.compass.core.CompassHighlighter
 import org.compass.annotations._
+import net.sf.classifier4J.summariser.SimpleSummariser
 import org.apache.commons.io.FileUtils
 import org.apache.commons.io.IOUtils
 import org.apache.commons.lang.StringUtils
@@ -49,6 +50,8 @@ object Paste extends Struct {
    *  max title length, if greater - will be cut
    */
   val TITLE_LENGTH=256
+  
+  val summariser = new SimpleSummariser()
 }
 
 /**
@@ -64,11 +67,23 @@ class PasteListener extends Loggered{
   def onUpdate(obj:Paste) {
     logger.debug("_on update call ")
     obj.setTitle( if (obj.getText().length>Paste.TITLE_LENGTH) {
-      obj.getText().substring(0,Paste.TITLE_LENGTH-3)+"..."
-    } else {
-      obj.getText
-    })
-
+        
+        val summary:String =Paste.summariser.summarise(obj.getText(), 2)
+        if (summary==null || summary.length<3) {
+          obj.getText().substring(0,Paste.TITLE_LENGTH-3)+"..."
+        } else {
+          System.out.println("extracted summary="+summary)
+          if (summary.length>Paste.TITLE_LENGTH) {
+            summary.substring(0,Paste.TITLE_LENGTH-3)+"..."
+          } else {
+          summary   
+          }
+         
+        } 
+      } else {
+        obj.getText
+      })
+    
     obj.commentsCount = obj.getComments().size()
 
     logger.debug("_comments count= "+obj.commentsCount)

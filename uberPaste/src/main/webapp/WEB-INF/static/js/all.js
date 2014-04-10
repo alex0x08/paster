@@ -1909,7 +1909,8 @@ var LazyPagination = new Class({
 	
 	send: function(){
 		if(this.check && this.requests != this.options.maxRequests ) {
-                    this.options.beforeLoad();
+                  
+                this.options.beforeLoad();
                     
                     if (this.options.idMode) {
                         this.options.data[this.options.idKey] = this.options.idSet[this.options.data[this.options.pageDataIndex]];

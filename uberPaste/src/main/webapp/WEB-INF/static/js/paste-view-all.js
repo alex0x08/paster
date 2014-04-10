@@ -1020,27 +1020,20 @@ var sh = {
 			
 			target.parentNode.replaceChild(element, target);
 
-            var roots = []
-            $(sh.vars.modelId+ '_commentsList').getElements('div.commentBlock').each(function(el,index){
-
+            //var roots = []
+            $(sh.vars.modelId+ '_commentsList').getElements('div.parentComment').each(function(el,index){
                 sh.insertComment(el,0,index);
-                roots.push(el);
-                
             });
-
-            Array.each(roots, function(el, index){
+            
+            $(sh.vars.modelId+ '_commentsList').getElements('div.subComment').each(function(el,index){
                 sh.insertComment(el,1,index);
             });
-
             
             var ln = document.getElementById('lineNumber').value;
             if (!ln || 0 === ln.length ) {
 
             if (scrollToLine) {
-
                 var loc = window.location.hash.replace("#","");
-                
-               // alert(loc);
                 if (loc != "") {
                     new Fx.Scroll(window).toElement(sh.vars.modelId+'_'+loc);
                 }
@@ -1086,15 +1079,24 @@ var sh = {
         });
 
     },  insertComment: function(cl,mode,count) {
-    
+    // alert(mode+' sub '+id);
         var lineNumber =  cl.getAttribute('lineNumber'),
                 id =  cl.getAttribute('commentId');
-            $(sh.vars.modelId+'_cl_'+lineNumber).grab(cl,"after");
- 
+            
     
-      var space = $(sh.vars.modelId+"_numSpace_l"+id);
+    if (mode == 1) {
+        
+              cl.setStyle('padding-left','2em');  
+              $(sh.vars.modelId+'_comment_l'+cl.getAttribute('parentCommentId')).grab(cl,"after");
+       
+            } else {
+                
+                $(sh.vars.modelId+'_cl_'+lineNumber).grab(cl,"after");
     
-    var calc_size = cl.getComputedSize()["totalHeight"];
+            }
+    
+      var space = $(sh.vars.modelId+"_numSpace_l"+id),
+              calc_size = cl.getComputedSize()["totalHeight"];
     //cl.getStyle("height")+$('cl_'+lineNumber).getStyle("height");
     //alert(calc_size);
     space.setStyle("height",calc_size);
@@ -1120,12 +1122,18 @@ $('cl_lineHtml_'+lineNumber).setStyle('background-color','yellow');
 
     },  insertEditForm: function(modelId,lineNumber,parentId) {
 
-       // alert(parentId);
             var cForm = $(modelId+'_commentForm'),
                     nspace = $("numSpace");
             
         cForm.getElementById('pageNum').set("text",lineNumber);
         cForm.getElementById('lineNumber').set("value",lineNumber);
+
+            if (parentId > 0) {
+               // alert(parentId);
+                cForm.getElementById('parentId').set("value", parentId);
+                
+                //alert(cForm.getElementById('parentId').get('value'));
+            }
 
         cForm.setStyle("display","");
         $("numSpace").setStyle("display","");
@@ -1162,6 +1170,7 @@ $('cl_lineHtml_'+lineNumber).setStyle('background-color','yellow');
                });
       
             if (parentId>0) {
+                
                 
                 $(modelId+'_comment_l'+parentId).getElementById('innerBlock').removeClass('commentInner');
                 $(modelId+'_comment_l'+parentId).getElementById('innerBlock').addClass('commentCurrent');

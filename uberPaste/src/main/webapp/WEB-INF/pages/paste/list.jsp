@@ -15,7 +15,10 @@
     <div class="column grid-10">
    
              <a  href="<c:url value='/main/paste/list/${sourceType}'/>"><span class="i" style="font-size: 1.5em;">P</span></a>
-    <c:forEach var="source" items="${availableSourceTypes}" varStatus="loopStatus">
+    
+             <sec:authorize ifAnyGranted="ROLE_ADMIN">
+             
+                 <c:forEach var="source" items="${availableSourceTypes}" varStatus="loopStatus">
 
         <c:choose>
             <c:when test="${source.codeLowerCase eq sourceType}">
@@ -28,7 +31,9 @@
 
         <c:if test="${!loopStatus.last}"> | </c:if>
     </c:forEach>
-   
+                 
+             </sec:authorize>
+      
     </div>
     <div class="column grid-2">
         <a href="<c:url value="/main/paste/list/body.xml"/>">

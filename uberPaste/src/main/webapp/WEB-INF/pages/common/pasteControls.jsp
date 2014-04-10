@@ -19,15 +19,55 @@
 <div  class="row">
     <c:if test="${mode ne 'raw'}">
 
-        <div class="column grid-4">
+        <div class="column grid-2">
             <a href="<c:url value="/main/paste/list"/>" target="${target}"
                title="<fmt:message key="paste.list.title"/>"><span style="font-size: larger;" class="i">(</span></a> |
             <a href="<c:url value="/main/paste/edit/${model.id}"/>" target="${target}"
-               title="<fmt:message key="button.edit"/>"><span style="font-size: larger;" class="i">E</span></a>
+               title="<fmt:message key="button.edit"/>"><span style="font-size: larger;" class="i">E</span>
+            </a>
         </div>
 
     </c:if>
    
+    <div class="column grid-4">
+        
+         <span style="font-weight: normal; font-size: 12px;">
+
+                <tiles:insertDefinition name="/common/tags" >
+                    <tiles:putAttribute name="model" value="${model}"/>
+                    <tiles:putAttribute name="modelName" value="paste"/>
+                </tiles:insertDefinition>
+
+                <tiles:insertDefinition name="/common/owner" >
+                    <tiles:putAttribute name="model" value="${model}"/>
+                    <tiles:putAttribute name="modelName" value="paste"/>
+                </tiles:insertDefinition>
+
+                <tiles:insertDefinition name="/common/commentCount" >
+                    <tiles:putAttribute name="model" value="${model}"/>
+                    <tiles:putAttribute name="modelName" value="paste"/>
+                </tiles:insertDefinition>
+
+                <tiles:insertDefinition name="/common/deleteLink" >
+                    <tiles:putAttribute name="model" value="${model}"/>
+                    <tiles:putAttribute name="modelName" value="paste"/>
+                    <tiles:putAttribute name="currentUser" value="${currentUser}"/>
+                </tiles:insertDefinition>
+
+                <span style="font-size: 9px;">
+                    <fmt:message key="${model.codeType.name}"/>    
+                    ,<kc:prettyTime date="${model.lastModified}" locale="${pageContext.response.locale}"/>
+                </span>
+
+                 <c:if test="${not empty model.integrationCode}">
+                (integrated with <c:out value="${model.integrationCode}"/>)
+            </c:if>
+
+                
+            </span>    
+        
+    </div>
+    
     <div class="column grid-4">
 
         <a href="<c:url value="/main/paste/xml/${model.id}"/>" target="${target}" title="View as XML">

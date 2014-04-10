@@ -133,7 +133,8 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
     if (!skypeSource) {
       PasteSource.list.remove(PasteSource.SKYPE)
     }
-
+    
+   
     model.addAttribute("availableSourceTypes",PasteSource.list)
     model.addAttribute("splitHelper",new DateSplitHelper(locale))
                     //config.share.integration=1

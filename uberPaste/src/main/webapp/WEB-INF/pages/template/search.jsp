@@ -8,18 +8,17 @@
 <div class="row">
     <div class="column grid-9" style="padding-top: 0.5em;margin-right: 0;">
         <fmt:message key='paste.search.placeholder' var="searchPlaceHolder"/>
-        <form:input path="query" name="query" id="pquery" placeholder="${searchPlaceHolder}" cssStyle="width:97%;margin-right:0.5em;min-width: 5em;" autocomplete="true"  />
-     </div>
-    <div class="column grid-4" style="">
+        <form:input path="query" name="query" id="pquery" placeholder="${searchPlaceHolder}" 
+                    cssStyle="height:1em;width:97%;margin-right:0.5em;min-width: 5em;" autocomplete="true"  />
+     
+    </div>
+        <div class="column grid-4" style="text-align:left;padding-left: 0;margin-left: 0;margin-top: 0.3em;" >
         
-        <button class="p-btn-save btn " id="doSearchBtn" type="submit">
-                 <span class="i" >r</span>
+        <button class="sbtn p-btn-save  " id="doSearchBtn" type="submit">
                  <span id="btnCaption"><fmt:message key="button.search"/></span>
              <img id="btnIcon" style="display:none;" src="<c:url value='/main/static/${appVersion}/images/gear_sml.gif'/>"/>
                  </button>
        
-        <%--
-        <input name="submit" type="submit" value="Search" style="text-align:left;min-width: 5em;max-width: 5em;"  />--%>
         <form:errors path="query" cssClass="error" element="div"/>
     </div>
 </div>
