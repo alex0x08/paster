@@ -27,6 +27,7 @@ import org.springframework.security.crypto.codec.Base64
 import org.springframework.stereotype.Component
 import uber.paste.base.Loggered
 import uber.paste.model.Paste
+import uber.paste.model.Project
 
 object ResourcePathHelper {
    val PATH_FORMAT = new SimpleDateFormat("YYYY/MM/dd/")
@@ -42,20 +43,43 @@ class ResourcePathHelper extends Loggered {
   def getThumb(fid:String): File = {
     
        //to avoid relative paths
-    val id = URLDecoder.decode(fid,"UTF-8").replaceAll("/", "x").replaceAll("\\.", "x").replaceAll(",", "/")
+    val id = URLDecoder.decode(fid,"UTF-8")
+    .replaceAll("/", "x")
+    .replaceAll("\\.", "x")
+    .replaceAll(",", "/")
     
     if (logger.isDebugEnabled) {
       logger.debug("file url "+id)
     }
     
-    return FileSystems.getDefault().getPath(System.getProperty("paste.app.home"),"images",id+".jpg").toFile
+    return FileSystems.getDefault()
+      .getPath(System.getProperty("paste.app.home"),"images",id+".jpg").toFile
   }
+ 
+   def saveProjectImages(b:Project):String = {
+    
+   /* val fname = "customer/"+ResourcePathHelper.PATH_FORMAT.format(Calendar.getInstance().getTime())
+    +b.getId
+      
+        val fimg = FileSystems.getDefault().getPath(System.getProperty("paste.app.home"),
+                                                    "images",
+                                                    fname+".png").toFile
+      
+     // val imgData = b.getThumbImage.substring(b.getThumbImage.indexOf(',')+1)
+      //logger.debug(" base64="+imgData)
+      
+        FileUtils.writeByteArrayToFile(fimg,Base64.decode(imgData.getBytes))
+      
+     return fname.replaceAll("/", ",")*/
+    return null
+   }
   
   def saveThumb(b:Paste):String = {
     
-     val fname = ResourcePathHelper.PATH_FORMAT.format(Calendar.getInstance().getTime())+b.getUuid
+     val fname = "thumbnails/"+ResourcePathHelper.PATH_FORMAT.format(Calendar.getInstance().getTime())+b.getUuid
       
-        val fimg = FileSystems.getDefault().getPath(System.getProperty("paste.app.home"),"images",
+        val fimg = FileSystems.getDefault().getPath(System.getProperty("paste.app.home"),
+                                                    "images",
                                                     fname+".jpg").toFile
       
       val imgData = b.getThumbImage.substring(b.getThumbImage.indexOf(',')+1)

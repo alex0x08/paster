@@ -12,16 +12,19 @@
 
 <sec:authorize ifAnyGranted="ROLE_ADMIN">
     
-     <ul class="h-menu">
-            <li>
-<a href="<c:url value="/main/paste/list"/>"><fmt:message key="paste.list.title"/></a> 
-            </li>
-            <li>
-<a href="<c:url value='/main/user/list'/>"><fmt:message key='user.list.title'/></a>
-            </li>
-            <li>
-    <a href="<c:url value='/main/admin/settings/edit'/>"><fmt:message key='settings.edit.title'/></a>
-            </li>
-          </ul>
-<hr/>    
+  
+                
+<a href="<c:url value="/main/paste/list"/>">
+    <span class="i">/</span>
+    <fmt:message key="paste.list.title"/></a> 
+            
+<a href="<c:url value='/main/user/list'/>">
+       <span class="i">x</span>
+ <fmt:message key='user.list.title'/></a>
+            
+    <a href="<c:url value='/main/admin/settings/edit'/>">
+           <span class="i">B</span>
+ <fmt:message key='settings.edit.title'/></a>
+         
+  
 </sec:authorize>

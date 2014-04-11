@@ -277,10 +277,7 @@ class StartupListener extends ServletContextListener with Loggered{
 
       
     } catch {
-      case e:UserExistsException => {
-          logger.error(e.getLocalizedMessage,e)
-
-        } case e:IOException => {
+      case e @ (_ : UserExistsException | _ : java.io.IOException) => {
           logger.error(e.getLocalizedMessage,e)
 
         }

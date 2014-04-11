@@ -21,7 +21,7 @@
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
 	      http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
          version="3.0">
-    <display-name>UberPaste</display-name>
+    <display-name>Paster Application</display-name>
     <distributable/>
     
     <context-param>
@@ -29,10 +29,10 @@
         <param-value>classpath:/spring/app-main.xml</param-value>
     </context-param>
 
-<context-param>
-    <param-name>javax.servlet.jsp.jstl.fmt.localizationContext</param-name>
-    <param-value>messages</param-value>
-</context-param>
+    <context-param>
+        <param-name>javax.servlet.jsp.jstl.fmt.localizationContext</param-name>
+        <param-value>messages</param-value>
+    </context-param>
 
 
     <filter>
@@ -57,37 +57,7 @@
         </init-param>
     </filter>
 
-  <!-- Declaration -->
- <filter>
-        <filter-name>responseCacheFilter</filter-name>
-        <filter-class>com.googlecode.webutilities.filters.ResponseCacheFilter</filter-class>
- </filter>
- 
- <!-- Declaration -->
-  <filter>
-        <filter-name>compressionFilter</filter-name>
-        <filter-class>com.googlecode.webutilities.filters.CompressionFilter</filter-class>
-        <init-param>
-                <param-name>compressionThreshold</param-name>
-                <param-value>512</param-value> <!--  anything above 512bytes  -->
-        </init-param>
-        <init-param>
-                <param-name>ignoreURLPattern</param-name>
-                <param-value>.*\.(png|gif|jpg|tiff|bmp|mpg|jpeg|atom)</param-value>
-        </init-param>   
- </filter>
- 
-  <filter>
-        <filter-name>yuiMinFilter</filter-name>
-        <filter-class>com.googlecode.webutilities.filters.YUIMinFilter</filter-class>
- </filter>
-
-    <filter>
-        <filter-name>crossSecurityFilter</filter-name>
-        <filter-class>uber.paste.web.CrossOriginResourceFilter</filter-class>
-
-    </filter>
-
+  
 
  <filter>
         <filter-name>rewriteFilter</filter-name>
@@ -98,32 +68,7 @@
         </init-param>
     </filter>
 
- <!-- Mapping -->
-
-    <!--filter-mapping>
-        <filter-name>crossSecurityFilter</filter-name>
-        <url-pattern>/*</url-pattern>
-    </filter-mapping-->
-
-
-    <!--filter-mapping>
-   <filter-name>responseCacheFilter</filter-name>
-   <url-pattern>*.js</url-pattern>
-   <url-pattern>*.css</url-pattern>
- </filter-mapping-->
  
- <!--filter-mapping>
-   <filter-name>compressionFilter</filter-name>
-   <url-pattern>/*</url-pattern>
- </filter-mapping-->
- 
-  <!--filter-mapping>
-  <filter-name>yuiMinFilter</filter-name>
-  <url-pattern>*.js</url-pattern>
-  <url-pattern>*.json</url-pattern>
-  <url-pattern>*.css</url-pattern>
-
-    </filter-mapping-->
 
     <filter-mapping>
         <filter-name>encodingFilter</filter-name>
@@ -165,15 +110,7 @@
    
 
 
-    <!-- Declaration -->
-    <servlet>
-        <servlet-name>JSCSSMergeServet</servlet-name>
-        <servlet-class>com.googlecode.webutilities.servlets.JSCSSMergeServlet</servlet-class>
-        <init-param>
-            <param-name>expiresMinutes</param-name>
-            <param-value>43200</param-value> <!-- 30 days -->
-        </init-param>
-    </servlet>
+   
     
     <servlet>
         <servlet-name>dispatcher</servlet-name>
@@ -209,22 +146,12 @@
 
     <servlet>
         <servlet-name>H2Console</servlet-name>
-        <servlet-class>org.h2.server.web.WebServlet</servlet-class>
-        <!--
-        <init-param>
-        <param-name>webAllowOthers</param-name>
-        <param-value></param-value>
-        </init-param>
-        <init-param>
-        <param-name>trace</param-name>
-        <param-value></param-value>
-        </init-param>
-        -->
+        <servlet-class>org.h2.server.web.H2ConsoleExtendedServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
     <servlet-mapping>
         <servlet-name>H2Console</servlet-name>
-        <url-pattern>/console/*</url-pattern>
+        <url-pattern>/act/admin/dbconsole/*</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>
@@ -239,7 +166,6 @@
 
    
 
-
     <servlet-mapping>
         <servlet-name>dispatcher</servlet-name>
         <url-pattern>/main/*</url-pattern>
@@ -251,17 +177,6 @@
     </servlet-mapping>
 
 
-    <!-- Mapping -->
-    <!--servlet-mapping>
-        <servlet-name>JSCSSMergeServet</servlet-name>
-        <url-pattern>*.js</url-pattern>
-        <url-pattern>*.css</url-pattern>
-        <url-pattern>*.png</url-pattern>
-        <url-pattern>*.jpg</url-pattern>
-        <url-pattern>*.gif</url-pattern>
-    </servlet-mapping-->
- 
- 
     <session-config>
         <session-timeout>120</session-timeout>
     </session-config>
@@ -280,10 +195,10 @@
         <location>/WEB-INF/pages/403.jsp</location>
     </error-page>
  
-    <!--error-page>
+    <error-page>
         <exception-type>java.lang.Throwable</exception-type>
         <location>/WEB-INF/pages/500.jsp</location>
-    </error-page-->
+    </error-page>
     
     <jsp-config>
         <jsp-property-group>
