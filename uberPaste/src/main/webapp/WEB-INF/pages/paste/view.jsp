@@ -15,8 +15,6 @@
 
 <jsp:include page="/WEB-INF/pages/paste/paste-view-common.jsp"/>
 
-  
-
 
 <div id="numSpace" class="listEditSpace" >
 </div>
@@ -68,7 +66,7 @@
             
         });
 
-        ZeroClipboard.setDefaults({moviePath: "<c:url value='/main/static/${appVersion}/ZeroClipboard.swf'/>"});
+        ZeroClipboard.setDefaults({moviePath: "<c:url value='/main/static/${appVersion}/media/ZeroClipboard.swf'/>"});
 
         var clip = new ZeroClipboard(document.id("ctrlc_link"));
 

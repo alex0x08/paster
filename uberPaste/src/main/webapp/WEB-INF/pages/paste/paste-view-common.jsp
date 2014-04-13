@@ -78,8 +78,6 @@
 
     <div id="${model.id}_centerPanel" class="column ${centerGridSize}" style="min-width:650px;">
 
-       
-
         <pre id="${model.id}_pasteText" class="brush: ${model.codeType.code};toolbar: false; auto-links:false;highlight: [${commentedLinesList}]; " style="display:none; overflow-y: hidden;" >
             <c:out value="${model.text}" escapeXml="true" /></pre>
         <code id="${model.id}_pasteTextPlain" style="display:none;"><c:out value="${model.text}" escapeXml="true" /></code>
@@ -95,23 +93,29 @@
 
                      <c:if test="${not empty availableNext and not empty availableNext.thumbImage}">
                          <a href="<c:url value="/${availableNext.id}"/>"  title="<fmt:message key="button.next"/>">
-                             <img style="border: 1px solid black;alignment-adjust: middle; width: 200px; height: 100px;"
+                             <img width="300" height="200" style="border: 1px solid black;alignment-adjust: middle; width: 200px; height: 100px;"
                                   src="<c:url value='/act/get-resource' >
                                       <c:param name="uuid" value="${availableNext.thumbImage}"/>
+                                         <c:param name="lastModified" value="${paste.lastModified.time}"/>
+                     
                                   </c:url>" />
                          </a>
                      </c:if>
 
-                <img style="border: 1px solid black;alignment-adjust: middle;width: 250px; height: 150px;" 
+                <img width="300" height="200" style="border: 1px solid black;alignment-adjust: middle;width: 250px; height: 150px;" 
                      src="<c:url value='/act/get-resource' >
                 <c:param name="uuid" value="${model.thumbImage}"/>
+                   <c:param name="lastModified" value="${paste.lastModified.time}"/>
+                     
             </c:url>"/>
 
                 <c:if test="${availablePrev!=null and not empty availablePrev.thumbImage}">
                     <a href="<c:url value="/${availablePrev.id}"/>"  title="<fmt:message key="button.prev"/>">
-                        <img style="border: 1px solid black;alignment-adjust: middle; width: 200px; height: 100px;" 
+                        <img width="300" height="200" style="border: 1px solid black;alignment-adjust: middle; width: 200px; height: 100px;" 
                              src="<c:url value='/act/get-resource' >
                                  <c:param name="uuid" value="${availablePrev.thumbImage}"/>
+                                    <c:param name="lastModified" value="${paste.lastModified.time}"/>
+                     
                              </c:url>"/>
                     </a>
                 </c:if>
@@ -119,9 +123,7 @@
             </div>
                 
             </c:if>
-            
-           
-
+         
             <c:if test="${shareIntegration}">
                 <iframe id="${model.id}_shareFrame" src="${shareUrl}/main/file/integrated/list/paste_${model.id}"
                         scrolling="auto" frameborder="0"
@@ -205,6 +207,7 @@
                    
         <div class="row" >
             <div class="column grid-15"  >
+                <form:errors path="text" cssClass="error" /> 
                 <form:textarea path="text" id="commentText" cssErrorClass="error"  />
             </div>
             <div class="column grid-1" style="float:right;padding-top: 0.5em;" >
@@ -217,21 +220,31 @@
             </div>
         </div>
 
+                    <div class="row">
+                        <div class="column grid-16">
+                             <fmt:message key="comments.line">
+                    <fmt:param value="<span id='pageNum'></span>"/>
+                </fmt:message>
+                        
+                        </div>
+                    </div>            
+                    
         <div class="row">
-            <div class="column grid-16" >
-
-                <button id="${model.id}_addCommentBtn" class='sbtn p-btn-save' type="submit">
+            
+            
+            <div class="column grid-16"  >
+                <button id="${model.id}_addCommentBtn" class='sbtn p-btn-save' type="submit"  >
                     <span class="i" style="font-size:larger;">S</span>
                     <span id="btnCaption"><fmt:message key="button.save"/></span>
                     <img id="btnIcon" style="display:none;" src="<c:url value='/main/static/${appVersion}/images/gear_sml.gif'/>"/>
                 </button>
-
-
-                <fmt:message key="comments.line">
-                    <fmt:param value="<span id='pageNum'></span>"/>
-                </fmt:message>
-
-                <sec:authorize ifAnyGranted="ROLE_USER,ROLE_ADMIN">
+                
+                <a class="" title="<fmt:message key="button.cancel"/>" 
+                   href="javascript:void(0);" onclick="SyntaxHighlighter.hideEditForm(${model.id});">
+                    <span ><fmt:message key="button.cancel"/></span>
+                </a>
+            
+                    <sec:authorize ifAnyGranted="ROLE_USER,ROLE_ADMIN">
 
                     <span class="right"  style="padding-top: 0.5em;" >
                         <span  style="padding-top: 1em;">
@@ -244,12 +257,6 @@
                     </span>
 
                 </sec:authorize>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="column grid-16" >
-                <form:errors path="text" cssClass="error"    />
             </div>
         </div>
 

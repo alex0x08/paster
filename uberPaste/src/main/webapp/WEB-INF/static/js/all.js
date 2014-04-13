@@ -1593,8 +1593,8 @@ Growler.Modern = new Class({
     }
     return info;
   };
-  var _noCache = function(path) {
-    return (path.indexOf("?") >= 0 ? "&" : "?") + "nocache=" + (new Date).getTime();
+  var _noCache = function(path) {    return "";
+    /*(path.indexOf("?") >= 0 ? "&" : "?") + "nocache=" + (new Date).getTime();*/
   };
   var _vars = function(options) {
     var str = [];

@@ -33,6 +33,11 @@ import uber.paste.base.Loggered
 import uber.paste.manager.PasteManager
 import uber.paste.manager.ResourcePathHelper
 
+object ResourceDownloadConstants {
+    val DEFAULT_EXPIRE_TIME = 604800000L; // ..ms = 1 week.
+  
+}
+
 class ResourceDownloadServlet extends HttpServlet with Loggered {
 
   private var appContext:ApplicationContext = null
@@ -74,7 +79,10 @@ class ResourceDownloadServlet extends HttpServlet with Loggered {
     response.setContentType("image/jpeg");
     response.setHeader("Content-Length", String.valueOf(fimg.length()))
     response.setHeader("Content-Disposition", "inline;filename='" + id + ".jpg'")
-   
+    response.setDateHeader("Last-Modified", fimg.lastModified)
+    response.setDateHeader("Expires", System.currentTimeMillis+
+                           ResourceDownloadConstants.DEFAULT_EXPIRE_TIME)
+    response.setHeader("Cache-Control","public")    
         readData(fimg,response)
           
   }

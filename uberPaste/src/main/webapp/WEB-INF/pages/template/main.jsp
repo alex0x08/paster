@@ -51,6 +51,16 @@
                 <p><fmt:message key="${statusMessageKey}"/></p>
                 </noscript>  
             </c:if>
+                
+
+                <spring:hasBindErrors name="input">
+                    <c:forEach items="${errors.globalErrors}" var="errorMessage">
+                        <div id="globalErrors" class="error">
+                            <c:out value="${errorMessage.defaultMessage}" />
+                        </div>
+                    </c:forEach>
+                </spring:hasBindErrors>    
+                
         </div>
         <div class="column grid-4">
         <sec:authorize access="!isAuthenticated()" >
