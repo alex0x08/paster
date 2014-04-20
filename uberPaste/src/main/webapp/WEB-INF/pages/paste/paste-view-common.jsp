@@ -80,8 +80,7 @@
 
         <pre id="${model.id}_pasteText" class="brush: ${model.codeType.code};toolbar: false; auto-links:false;highlight: [${commentedLinesList}]; " style="display:none; overflow-y: hidden;" >
             <c:out value="${model.text}" escapeXml="true" /></pre>
-        <code id="${model.id}_pasteTextPlain" style="display:none;"><c:out value="${model.text}" escapeXml="true" /></code>
-
+     
     </div>
 
 
@@ -172,7 +171,7 @@
                                    <c:param name="commentId" value="${comment.id}"/>
                                    <c:param name="lineNumber" value="${comment.lineNumber}"/>
                                </c:url>" title="<fmt:message key='button.delete'/>">
-                                <span style="font-size: larger;" class="i">d</span>
+                                <span style="font-size: larger;" class="ir">Â</span>
                             </a>
 
                         </sec:authorize>
@@ -214,7 +213,7 @@
 
                 <a class="" title="<fmt:message key="button.cancel"/>" 
                    href="javascript:void(0);" onclick="SyntaxHighlighter.hideEditForm(${model.id});">
-                    <span style="font-size:1.2em;font-weight: bold;">X</span>
+                    <span class="ir" style="font-size:1.2em;font-weight: bold;">Â</span>
                 </a>
 
             </div>

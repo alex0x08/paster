@@ -560,6 +560,11 @@
             <version>4.2</version>
          </dependency>
         
+        <dependency>
+  <groupId>com.googlecode.htmlcompressor</groupId>
+  <artifactId>htmlcompressor</artifactId>
+  <version>1.4</version>
+</dependency>
 
             <!--dependency>
  	<groupId>org.xeustechnologies</groupId>
@@ -567,12 +572,17 @@
 	<version>2.5</version>
   </dependency-->
 
-  <dependency>
-        <groupId>uber.markup</groupId>
-        <artifactId>uni-markup-parser</artifactId>
-        <version>1.0-PRE</version>
-    </dependency>
-            
+<dependency>
+    <groupId>uber.markup</groupId>
+    <artifactId>uni-markup-parser</artifactId>
+    <version>1.0-PRE</version>
+</dependency>
+
+<dependency>
+    <groupId>uber.paste</groupId>
+    <artifactId>resources-lib</artifactId>
+    <version>1.0-PRE</version>   
+</dependency>
 
     </dependencies>
 

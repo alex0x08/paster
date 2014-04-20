@@ -1,9 +1,13 @@
 <%@ include file="/WEB-INF/pages/common/taglibs.jsp"%>
 <!DOCTYPE html>
+<compress:html enabled="true" 
+               removeComments="true" compressJavaScript="true" yuiJsDisableOptimizations="false">
+    
+    
 <html lang="en">
     <head>
-       
-            <link href="<c:url value="/main/static/${appVersion}/css/app.less"/>" media="all" rel="stylesheet/less" />
+
+        <link href="<c:url value='/main/assets/${appVersion}/paster/less/app.css'/>" rel="stylesheet" type="text/css">
 
             <c:choose>
                 <c:when test="${not empty systemInfo.project.clientImage}">
@@ -140,3 +144,4 @@
     </body>
 
 </html>
+</compress:html>

@@ -1482,7 +1482,8 @@ Growler.Modern = new Class({
  * Released under the MIT license
  * http://jonrohan.github.com/ZeroClipboard/
  * v1.1.7
- */(function() {
+ */
+(function() {
   "use strict";
   var _getStyle = function(el, prop) {
     var y = el.style[prop];

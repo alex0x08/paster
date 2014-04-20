@@ -49,7 +49,15 @@
                        <c:choose>
                            <c:when test="${not empty paste.thumbImage}">
                 <div class="column grid-4" >
-                               <img src="${paste.thumbImageRead}" />
+                    
+                     <c:url value='/act/get-resource' var="thumbUrl">
+                        <c:param name="uuid" value="${paste.thumbImage}"/>
+                        <c:param name="lastModified" value="${paste.lastModified.time}"/>
+                        
+                    </c:url>
+                    
+                    <img src="${thumbUrl}" width="300" height="200"  />
+                    
                     </div>
 
                                <c:set var="currentRowSize" value="12"/>

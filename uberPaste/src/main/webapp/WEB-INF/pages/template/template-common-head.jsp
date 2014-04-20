@@ -20,8 +20,8 @@
         <meta http-equiv="Expires" content="0"/>
      
 
-<link href="<c:url value='/main/static/${appVersion}/css/app.css'/>" rel="stylesheet" type="text/css">
-<script src="<c:url value='/main/static/${appVersion}/js/all.js'/>"></script>
+<link href="<c:url value='/main/assets/${appVersion}/paster/minified/all/css/all-style.min.css'/>" rel="stylesheet" type="text/css">
+<script src="<c:url value='/main/assets/${appVersion}/paster/minified/all/js/all-script.min.js'/>"></script>
 
 <script  type="text/javascript">
             var transmitText = '<fmt:message key="action.sending"/>';
