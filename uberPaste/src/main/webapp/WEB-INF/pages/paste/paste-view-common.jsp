@@ -1,8 +1,10 @@
 <%@ include file="/WEB-INF/pages/common/taglibs.jsp"%>
 
-
+             
 <div class="row">
     <div class="column grid-16">
+        
+        
         <c:set var="priorTitle"><fmt:message key="${model.priority.name}"/></c:set>
 
             <h4 class="f-h4" style="padding-top: 0;margin-top:0;">
@@ -92,7 +94,7 @@
 
                      <c:if test="${not empty availableNext and not empty availableNext.thumbImage}">
                          <a href="<c:url value="/${availableNext.id}"/>"  title="<fmt:message key="button.next"/>">
-                             <img width="300" height="200" style="border: 1px solid black;alignment-adjust: middle; width: 200px; height: 100px;"
+                             <img width="300" height="200" class="p-comment" style="alignment-adjust: middle; width: 200px; height: 100px;"
                                   src="<c:url value='/act/get-resource' >
                                       <c:param name="uuid" value="${availableNext.thumbImage}"/>
                                          <c:param name="lastModified" value="${paste.lastModified.time}"/>
@@ -101,7 +103,7 @@
                          </a>
                      </c:if>
 
-                <img width="300" height="200" style="border: 1px solid black;alignment-adjust: middle;width: 250px; height: 150px;" 
+                <img width="300" height="200" class="p-comment" style="border: 1px solid black;alignment-adjust: middle;width: 250px; height: 150px;" 
                      src="<c:url value='/act/get-resource' >
                 <c:param name="uuid" value="${model.thumbImage}"/>
                    <c:param name="lastModified" value="${paste.lastModified.time}"/>
@@ -110,7 +112,7 @@
 
                 <c:if test="${availablePrev!=null and not empty availablePrev.thumbImage}">
                     <a href="<c:url value="/${availablePrev.id}"/>"  title="<fmt:message key="button.prev"/>">
-                        <img width="300" height="200" style="border: 1px solid black;alignment-adjust: middle; width: 200px; height: 100px;" 
+                        <img width="300" height="200" class="p-comment" style="alignment-adjust: middle; width: 200px; height: 100px;" 
                              src="<c:url value='/act/get-resource' >
                                  <c:param name="uuid" value="${availablePrev.thumbImage}"/>
                                     <c:param name="lastModified" value="${paste.lastModified.time}"/>
@@ -149,7 +151,7 @@
 
                 <div class="row">
 
-                    <div class="column grid-12" style="font-size: small;padding-left: 0.1em; margin: 0;  ">
+                    <div class="column grid-10" style="font-size: small;padding-left: 0.1em; margin: 0;  ">
 
                         <tiles:insertDefinition name="/common/owner" >
                             <tiles:putAttribute name="model" value="${comment}"/>
@@ -158,9 +160,8 @@
                         , <kc:prettyTime date="${comment.lastModified}" locale="${pageContext.response.locale}"/>
                     </div>
 
-                    <div class="column grid-3 right">
-                        <a href="#comment_l${comment.id}" title="<c:out value="${comment.id}"/>">#${model.id}.${comment.id}</a>
-
+                    <div class="column" style="width:10%;float:right;padding:0;margin:0;" >
+                        <a href="#comment_l${comment.id}" title="<c:out value="${comment.id}"/>">#</a>
                         <c:if test="${comment.parentId==null}">
                             <a  href="javascript:void(0);" class="linkLine" title="<fmt:message key="comments.sub"/>"
                                 onclick="SyntaxHighlighter.insertEditForm(${model.id},${comment.lineNumber},${comment.id});"><span class="i">C</span></a>
@@ -171,9 +172,8 @@
                                    <c:param name="commentId" value="${comment.id}"/>
                                    <c:param name="lineNumber" value="${comment.lineNumber}"/>
                                </c:url>" title="<fmt:message key='button.delete'/>">
-                                <span style="font-size: larger;" class="ir">Â</span>
+                                <span style="font-size: larger;" class="i">d</span>
                             </a>
-
                         </sec:authorize>
                     </div>
                 </div>
@@ -235,7 +235,7 @@
                 <button id="${model.id}_addCommentBtn" class='sbtn p-btn-save' type="submit"  >
                     <span class="i" style="font-size:larger;">S</span>
                     <span id="btnCaption"><fmt:message key="button.save"/></span>
-                    <img id="btnIcon" style="display:none;" src="<c:url value='/main/static/${appVersion}/images/gear_sml.gif'/>"/>
+                    <i id="btnIcon" style="display:none;" class="fa fa-spinner fa-spin"></i>       
                 </button>
                 
                 <a class="" title="<fmt:message key="button.cancel"/>" 

@@ -123,7 +123,7 @@
                         
                     </c:url>
                     
-                    <img src="${thumbUrl}" width="300" height="200"  />
+                    <img src="${thumbUrl}" width="300" height="200" class="p-comment"  />
                     </div>
                                <c:set var="currentRowSize" value="12"/>
                            </c:when>
@@ -291,7 +291,7 @@
 
     </script>
     <div id="pageLoadSpinner" style="display:none;">
-             <img src="<c:url value='/main/static/${appVersion}/images/gear_sml.gif'/>"/>   
+                  <i  class="fa fa-spinner fa-spin"></i>       
              <fmt:message key="action.loading"/>
           </div>
         <div id="morePages"></div>

@@ -26,9 +26,12 @@
 <script  type="text/javascript">
             var transmitText = '<fmt:message key="action.sending"/>';
             var growl= null;
+            var SM=null;
         window.addEvent('domready',function() {
             growl = new Growler.init();
-
+            SM = new SimpleModal({"btn_ok": "Confirm button"});
+            
         });
+        
 </script>
  

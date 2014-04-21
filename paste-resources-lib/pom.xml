@@ -100,6 +100,7 @@
                   <jsSourceFile>growler.js</jsSourceFile>
                   <jsSourceFile>LazyPagination.js</jsSourceFile>
                   <jsSourceFile>ZeroClipboard.min.js</jsSourceFile>
+                  <jsSourceFile>simple-modal.js</jsSourceFile>
               </jsSourceFiles>
         
               <jsFinalFile>all-script.js</jsFinalFile>

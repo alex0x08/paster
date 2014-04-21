@@ -42,6 +42,7 @@
     </a>
     <span style="display: inline; vertical-align: top; ">
         <a title="Contact ${currentUser.name}" style="display: inline;vertical-align: top;" href="mailto:${currentUser.username}"><c:out value="${currentUser.name}" /></a>
-        <a class="btn sbtn" style="display: inline;vertical-align: top;" title="Logout" href="<c:url value='/act/logout'/>">X</a>
+        <a class="btn sbtn" style="vertical-align: top;" title="Logout" href="<c:url value='/act/logout'/>">
+            <i class="fa fa-sign-in"></i></a>
     </span>
 </div>

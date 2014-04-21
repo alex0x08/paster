@@ -83,7 +83,8 @@
 
         <c:if test="${mode ne 'icon'}">
             <a id="ctrlc_link" data-clipboard-target="${model.id}_pasteText" href="javascript:void(0);"
-               title="Copy to clipboard" ><img src="<c:url value='/main/static/${appVersion}/images/ctrlc.png'/>"/></a>
+               title="Copy to clipboard" >
+                <i class="fa fa-clipboard"></i></a>
         </c:if>
 
 

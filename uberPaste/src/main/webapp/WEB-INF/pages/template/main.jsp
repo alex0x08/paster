@@ -66,7 +66,7 @@
                 </spring:hasBindErrors>    
                 
         </div>
-        <div class="column grid-4">
+        <div class="column grid-3">
         <sec:authorize access="!isAuthenticated()" >
            <a href="<c:url value='/main/login'/>">
                <span style="font-size: 1em;vertical-align: middle;" class="i" title="Login here">x</span></a>
@@ -90,7 +90,8 @@
         </div>
             
             <div class="column grid-2">
-                        <c:forEach items="${availableLocales}" var="locale" >
+                <i class="fa fa-flag error"></i> 
+                <c:forEach items="${availableLocales}" var="locale" >
             <c:if test="${pageContext.response.locale ne locale}">
                     <a href="<c:url value="${request.requestURL}">
                            <c:param name="locale" value="${locale.language}_${locale.country}" />
@@ -101,9 +102,9 @@
                            </c:forEach>
 
                        </c:url>">
-                        <div style="font-size: small;" title="<c:out value='${locale.displayLanguage}'/>">
+                        <span title="<c:out value='${locale.displayLanguage}'/>">
                             <c:out value="${locale.language}"/>
-                        </div>
+                        </span>
                     </a>
             </c:if>
         </c:forEach> 
