@@ -14,4 +14,17 @@
         //less.watch();
     </script>
 --%>
+  <script  type="text/javascript">
+      function showModal(redirectUrl,action,title,message) {
+        new SimpleModal({"btn_ok": action,"btn_cancel": "<fmt:message key='button.cancel'/>"}).show({
+                    "model": "confirm",
+                    "callback": function() {
+                       window.location.href = redirectUrl;
+                     },
+                    "title": title,
+                    "contents": message
+                });
+      }
+  </script>
+  
   

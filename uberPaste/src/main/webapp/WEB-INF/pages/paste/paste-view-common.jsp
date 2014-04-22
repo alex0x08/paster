@@ -211,7 +211,7 @@
             </div>
             <div class="column grid-1" style="float:right;padding-top: 0.5em;" >
 
-                <a class="" title="<fmt:message key="button.cancel"/>" 
+                <a class="disableOnSubmit" title="<fmt:message key="button.cancel"/>" 
                    href="javascript:void(0);" onclick="SyntaxHighlighter.hideEditForm(${model.id});">
                     <span class="ir" style="font-size:1.2em;font-weight: bold;">Â</span>
                 </a>
@@ -238,7 +238,7 @@
                     <i id="btnIcon" style="display:none;" class="fa fa-spinner fa-spin"></i>       
                 </button>
                 
-                <a class="" title="<fmt:message key="button.cancel"/>" 
+                <a class="disableOnSubmit" title="<fmt:message key="button.cancel"/>" 
                    href="javascript:void(0);" onclick="SyntaxHighlighter.hideEditForm(${model.id});">
                     <span ><fmt:message key="button.cancel"/></span>
                 </a>

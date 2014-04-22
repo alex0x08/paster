@@ -59,8 +59,14 @@
   $(${model.id} + '_shareFrame').setStyle('height', document.body.scrollHeight< 1024 ?  '1024px' :  document.body.scrollHeight + 'px');
     
 
-        $(${model.id} + '_addCommentBtn').addEvent('click', function() {
-            this.getElementById('btnCaption').set('text', transmitText).disabled = true;
+        $('${model.id}_addCommentBtn').addEvent('click', function() {
+            this.getElementById('btnCaption').set('text', transmitText);
+            this.set('disabled', true);
+            
+             $('${model.id}_addCommentForm').getElements('.disableOnSubmit').each(function(el, i) {
+                 el.setStyle('display', 'none');
+             });
+        
             this.getElementById('btnIcon').setStyle('display', '');
             $('${model.id}_addCommentForm').submit();
             
@@ -124,9 +130,6 @@
                          //SyntaxHighlighter.hideEditForm(this.);
                         $('pageLoadSpinner').setStyle('display', '');
                     }, afterAppend: function(block, page) {
-
-                        
-                       
 
                         var ptext = document.getElementById(page + '_pasteText');
 

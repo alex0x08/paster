@@ -14,6 +14,9 @@
                 <style>
                     body {
                         background: url('${systemInfo.project.clientImage}') no-repeat;
+                         background-position: right bottom;
+                           background-attachment: fixed;
+
                     }
                 </style>
                 </c:when>

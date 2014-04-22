@@ -11,22 +11,17 @@
         <span style="font-size: larger;" class="i">d</span>
     </a>
 
-
+          <fmt:message var="dialogConfirmMessage" key="dialog.confirm.paste.remove.message"><fmt:param value="${model.title}"/></fmt:message>
+          
+          
     <script  type="text/javascript">
         window.addEvent('domready', function() {
 
             $("deleteBtn_${model.id}").addEvent("click", function(e) {
                 e.stop();
-                SM.show({
-                    "model": "confirm",
-                    "callback": function() {
                         var source = e.target || e.srcElement;
-                       window.location.href = source.parentElement.href;
-                     },
-                    "title": "Confirm Modal Title",
-                    "contents": "Lorem ipsum dolor sit amet..."
-                });
-
+                        showModal(source.parentElement.href,'<fmt:message key='button.delete'/>','<fmt:message key='dialog.confirm.remove'/>',
+                                        '${escape:escapeJS(dialogConfirmMessage)}');
             });
 
         });
