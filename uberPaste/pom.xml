@@ -75,6 +75,7 @@
         <jdbc.artifactId>h2</jdbc.artifactId>
         <jdbc.version>1.2.132</jdbc.version>
 
+    <npn-version>1.1.7.v20140316</npn-version>
 
     </properties>
 
@@ -457,6 +458,12 @@
             <groupId>com.dyuproject</groupId>
             <artifactId>dyuproject-openid</artifactId>
             <version>1.1.7</version>
+            <!--exclusions>
+                <exclusion>
+                    <groupId>org.mortbay.jetty</groupId>
+                    <artifactId>jetty-util</artifactId>
+                </exclusion>
+            </exclusions-->
         </dependency>
 
         <dependency>
@@ -978,11 +985,17 @@
             </plugin-->
 
 
-              <plugin>
+            <plugin>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
-                <version>9.1.0.RC2</version>
+                <version>9.1.4.v20140401</version>
                 <configuration>
+                    <jvmArgs>
+                        -Xbootclasspath/p:C:\Users\Alex\.m2\repository\org\mortbay\jetty\npn\npn-boot\1.1.7.v20140316\npn-boot-1.1.7.v20140316.jar
+                        -Dpaste.h2.embedded.server=1
+                    </jvmArgs>
+                    <!--                         ${settings.localRepository}/org/mortbay/jetty/npn/npn-boot/${npn.version}/npn-boot-${npn.version}.jar
+-->
                     <systemProperties>
                         <systemProperty>
                             <name>paste.h2.embedded.server</name>
@@ -992,10 +1005,44 @@
                     </systemProperties>
                     <scanIntervalSeconds>10</scanIntervalSeconds>
                     <webApp>
-                    <contextPath>/${project.artifactId}</contextPath>
+                        <contextPath>/${project.artifactId}</contextPath>
                     </webApp>
+                    <dumpOnStart>true</dumpOnStart>
+                       <stopPort>8888</stopPort>
+                    <stopKey>quit</stopKey>
+                    <jettyXml>src/main/containers/jetty/spdy.xml</jettyXml>
                     <!--webDefaultXml>src/container/jetty/webdefault.xml</webDefaultXml-->
                 </configuration>
+
+                <dependencies>
+                    
+                    <dependency>
+                        <groupId>org.eclipse.jetty.spdy</groupId>
+                        <artifactId>spdy-http-server</artifactId>
+                        <version>9.1.4.v20140401</version>
+                    </dependency>
+                    
+                   
+                    <dependency>
+                        <groupId>org.eclipse.jetty</groupId>
+                        <artifactId>jetty-servlet</artifactId>
+                        <version>9.1.4.v20140401</version>
+                    </dependency>
+                    
+                    
+                    <dependency>
+	<groupId>org.mortbay.jetty.npn</groupId>
+	<artifactId>npn-boot</artifactId>
+	<version>1.1.7.v20140316</version>
+</dependency>
+            
+                    
+                    <!--dependency>
+                        <groupId>org.eclipse.jetty</groupId>
+                        <artifactId>jetty-alpn-server</artifactId>
+                        <version>9.2.0.M0</version>
+                    </dependency-->
+                </dependencies>
 
             </plugin>
 
@@ -1016,8 +1063,8 @@
                     <!--update>true</update -->
                     <uriEncoding>UTF-8</uriEncoding>
                     <systemProperties>
-                         <user.language>en</user.language>
-                         <user.region>US</user.region>
+                        <user.language>en</user.language>
+                        <user.region>US</user.region>
                         <!--com.sun.management.jmxremote>true</com.sun.management.jmxremote>
                         <com.sun.management.jmxremote.port>8050</com.sun.management.jmxremote.port>
                         <com.sun.management.jmxremote.ssl>false</com.sun.management.jmxremote.ssl>
@@ -1047,13 +1094,13 @@
 
             </plugin>
 
- <plugin>
+            <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>buildnumber-maven-plugin</artifactId>
                 <version>1.2</version>
                 <executions>
                     <execution>
-                         <id>generate-buildnumber</id>
+                        <id>generate-buildnumber</id>
                         <phase>validate</phase>
                         <goals>
                             <goal>create</goal>

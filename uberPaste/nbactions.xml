@@ -64,4 +64,15 @@
                 <goal>scala:doc</goal>
             </goals>
         </action>
+        <action>
+            <actionName>CUSTOM-jetty-spdy-forked</actionName>
+            <displayName>jetty-spdy-forked</displayName>
+            <goals>
+                <goal>jetty:run-forked</goal>
+            </goals>
+            <activatedProfiles>
+                <activatedProfile>jetty9</activatedProfile>
+                <activatedProfile>h2</activatedProfile>
+            </activatedProfiles>
+        </action>
     </actions>

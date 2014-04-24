@@ -11,7 +11,7 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib uri="http://htmlcompressor.googlecode.com/taglib/compressor" prefix="compress" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<%@ taglib prefix="escape"  uri="/WEB-INF/tags/escape.tld"%>
+<%@ taglib prefix="escape"  uri="/WEB-INF/escape.tld"%>
 
 <c:set var="ctx" value="${pageContext.request.contextPath}"/>
 <c:set var="datePattern"><fmt:message key="date.format"/></c:set>

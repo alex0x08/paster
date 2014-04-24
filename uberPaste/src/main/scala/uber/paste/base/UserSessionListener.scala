@@ -74,9 +74,9 @@ class UserSessionListener extends Loggered with ServletContextListener with Http
           
             val  securityContext = event.getValue().asInstanceOf[SecurityContext]
 
-            logger.debug("__attributeAdded "+securityContext.getAuthentication().getPrincipal());
+            //logger.debug("__attributeAdded "+securityContext.getAuthentication().getPrincipal());
 
-            if (securityContext.getAuthentication().getPrincipal().isInstanceOf[User]) {
+            if (securityContext!=null && securityContext.getAuthentication().getPrincipal().isInstanceOf[User]) {
                
                   SessionStore.instance.add(
                     event.getSession().getId(), 
