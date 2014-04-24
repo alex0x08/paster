@@ -13,7 +13,7 @@
     </div>
 </div>
 
-<jsp:include page="/WEB-INF/pages/paste/paste-view-common.jsp"/>
+<jsp:include page="/WEB-INF/pages/paste/common/paste-view-common.jsp"/>
 
 
 <div id="numSpace" class="listEditSpace" >

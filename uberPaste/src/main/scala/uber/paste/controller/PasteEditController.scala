@@ -167,6 +167,16 @@ class PasteController extends VersionController[Paste]   {
     return p
   }
 
+  
+  @RequestMapping(value = Array("/newFrame"), method = Array(RequestMethod.GET))
+  @ResponseStatus(HttpStatus.CREATED)
+  def createNewFrame(model:Model,locale:Locale):String= {
+
+    fillEditModel(getNewModelInstance(),model,locale)
+
+    return "paste/integrated/edit"
+  }
+
 
   @RequestMapping(value = Array("/removeComment"), method = Array(RequestMethod.POST,RequestMethod.GET))
   def removeComment(@RequestParam(required = true) pasteId:java.lang.Long,
@@ -277,6 +287,7 @@ class PasteController extends VersionController[Paste]   {
     @RequestMapping(value = Array("/save"), method = Array(RequestMethod.POST))
    def saveIntegrated(@RequestParam(required = false) cancel:String,
                       @RequestParam(required = false) integrationMode:Boolean,
+                     
            @Valid @ModelAttribute(GenericController.MODEL_KEY) b:Paste,
            result:BindingResult, model:Model,locale:Locale,
            redirectAttributes:RedirectAttributes):String = {
@@ -357,7 +368,14 @@ class PasteController extends VersionController[Paste]   {
       return if (out.equals(listPage))  {
         model.asMap().clear()
         "redirect:/main/paste/"+b.getId()
-      } else {out}
+      } else {
+          if (integrationMode) {
+            "paste/integrated/edit"
+          } else {
+            out
+          }
+        
+      }
    }
 
   def getMimeResource(key:String):String = mimeSource.getMessage(key,

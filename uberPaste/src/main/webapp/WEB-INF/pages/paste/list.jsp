@@ -4,7 +4,7 @@
   <jsp:include page="/WEB-INF/pages/common/paste-update-poll.jsp"/>
 <div class="row">
     <div class="column grid-1" style="text-align:right;padding-right: 0;margin-top: -1em;" >
-        <a class="mainLinkLine" href="<c:url value="/main/paste/new"></c:url>" title="<fmt:message key='paste.create.new'/>"><span class="i" style="font-size: 4em;">/</span></a>
+        <a id="createNewBtn" class="mainLinkLine" href="<c:url value="/main/paste/new"></c:url>" title="<fmt:message key='paste.create.new'/>"><span class="i" style="font-size: 4em;">/</span></a>
     </div>
     <div class="column grid-12" style="padding-left: 0;margin-left: -1em;" >
          <jsp:include page="/WEB-INF/pages/template/search.jsp"/>
@@ -301,7 +301,9 @@
 
 <script type="text/javascript">
 
-    var viewUrl = '${ctx}/main/paste';
+  
+
+    var viewUrl = '${ctx}/main/paste',createUrl = '${ctx}/main/paste/newFrame';
 
      function parseSearchResults(parent) {
         parent.getElements('.pasteTitle').each(function(el, i)
@@ -314,6 +316,20 @@
      } 
     
     window.addEvent('domready', function() {
+
+          $("createNewBtn").addEvent("click", function(e){
+          e.stop();
+    var w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0),
+    h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+
+        var SM = new SimpleModal({"hideHeader":true, "closeButton":true,"hideFooter":true, "width":w * 0.9});
+        SM.show({
+          "title":"Vimeo video",
+          "model":"modal",
+          "contents":'<iframe src="'+createUrl+'" width="'+(w * 0.87)+'" height="382" frameborder="0" style="padding:0;margin:0;" ></iframe>'
+        });
+  })
+
 
         parseSearchResults($('pastas'));
    

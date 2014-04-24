@@ -2,7 +2,7 @@
 
 <c:choose>
                 <c:when test="${not empty systemInfo.project.iconImage}">
-<link id="favicon" rel="icon" type=​"image/​jpeg"  href="${systemInfo.project.iconImage}"/>
+<link id="favicon" rel="icon" type="image/jpeg"  href="${systemInfo.project.iconImage}"/>
                 </c:when>
     <c:otherwise>
 <link rel="icon" href="<c:url value='/main/static/${appVersion}/images/ninja.png'/>"/>

@@ -33,6 +33,12 @@
         <put-attribute name="head" value="/WEB-INF/pages/paste/paste-view-head.jsp" />
     </definition>
 
+    <definition name="/paste/integrated/edit" extends=".integratedTemplate">
+        <put-attribute name="content" value="/WEB-INF/pages/paste/integrated/edit.jsp" />
+        <put-attribute name="head" value="/WEB-INF/pages/paste/paste-edit-head.jsp" />
+    </definition>
+
+
     <definition name="/paste/integrated/preview" extends=".integratedTemplate">
         <put-attribute name="content" value="/WEB-INF/pages/paste/integrated/preview.jsp" />
     </definition>
