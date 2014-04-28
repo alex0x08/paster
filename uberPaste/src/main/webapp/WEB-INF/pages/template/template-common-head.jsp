@@ -27,8 +27,7 @@
             var transmitText = '<fmt:message key="action.sending"/>';
             var growl= null;
         window.addEvent('domready',function() {
-            growl = new Growler.init();
-            
+            growl = new Growler.init();            
         });
         
 </script>

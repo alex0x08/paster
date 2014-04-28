@@ -4,6 +4,18 @@
 
 <c:url var="url" value='/main/paste/save' />
 
+<c:choose>
+    <c:when test="${empty param.frameMode}">
+            <c:url var="urlCancel" value='/main/paste/list' />
+        
+    </c:when>
+    <c:otherwise>
+
+            <c:url var="urlCancel" value='javascript: window.parent.createNewPasteDlg.hide();' />
+        
+    </c:otherwise>
+</c:choose>
+
 
 <div class="row">
     <div class="column grid-14"  >
@@ -15,6 +27,11 @@
                 <input type="hidden" name="integrationMode" value="true"/>
             </c:if>
             
+                <c:if test="${not empty param.frameMode}">
+                <input type="hidden" name="frameMode" value="true"/>
+            </c:if>
+            
+                
             <form:input id="thumbImg" path="thumbImage" cssStyle="display:none;"  />
 
             <form:input id="wordsCount" path="wordsCount" cssStyle="display:none;"  />
@@ -197,7 +214,7 @@
                     </button>
 
 
-                    <a href="<c:url value="/main/paste/list"/>">
+                    <a href="<c:out value="${urlCancel}"/>">
                         <fmt:message key='button.cancel'/></a>
 
 
@@ -240,7 +257,7 @@
                                 <span id="btnCaption"><c:out value='${submit_button_text}'/></span>
                             </button>
 
-                            <a href="<c:url value="/main/paste/list"/>">
+                            <a href="<c:out value="${urlCancel}"/>">
                                 <fmt:message key='button.cancel'/></a>
 
                             <c:if test="${!model.blank}">

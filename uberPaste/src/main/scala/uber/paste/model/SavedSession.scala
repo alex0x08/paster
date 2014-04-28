@@ -1,6 +1,7 @@
 package uber.paste.model
 
 import javax.persistence.{Entity, Table}
+import org.hibernate.envers.Audited
 
 /**
  * Created with IntelliJ IDEA.
@@ -9,6 +10,7 @@ import javax.persistence.{Entity, Table}
  * Time: 21:02
  */
 @Entity
+@Audited
 class SavedSession extends Key with java.io.Serializable{
 
 

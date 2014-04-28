@@ -47,9 +47,9 @@ abstract class VersionDaoImpl[T <: Struct](model:Class[T]) extends StructDaoImpl
      * fix stupid envers bug
      */
     var r =rev
-    if (rev.isInstanceOf[java.lang.Long]) {
+   /* if (rev.isInstanceOf[java.lang.Long]) {
       r = new java.lang.Integer(rev.intValue())
-    }
+    }*/
 
     val out = getReader().find(model, id, r)
     if (out==null) {

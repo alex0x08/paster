@@ -11,7 +11,7 @@
       <property name="hibernate.connection.useUnicode" value="true"/>
       <property name="hibernate.connection.characterEncoding" value="UTF-8" />
 
-       <property name="org.hibernate.envers.revisionOnCollectionChange" value="true" />
+       <property name="org.hibernate.envers.revisionOnCollectionChange" value="false" />
 
         <property name="org.hibernate.envers.auditTablePrefix" value="P_AUD_" />
        

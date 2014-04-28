@@ -199,7 +199,8 @@ class Paste extends Struct with java.io.Serializable{
   @OneToMany(fetch = FetchType.LAZY,
     cascade = Array(CascadeType.PERSIST,CascadeType.MERGE,CascadeType.REMOVE),
     orphanRemoval = true)
-  @NotAudited
+  //@NotAudited
+  //@Audited(withModifiedFlag = false)
   private var comments:java.util.List[Comment] = new ArrayList[Comment]()
 
   @SearchableProperty

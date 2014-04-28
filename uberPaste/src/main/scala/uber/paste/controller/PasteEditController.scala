@@ -176,6 +176,15 @@ class PasteController extends VersionController[Paste]   {
 
     return "paste/integrated/edit"
   }
+  
+  @RequestMapping(value = Array("/integrated/pasteSaved/{id:[0-9]+}"), method = Array(RequestMethod.GET))
+  def pasteSavedPreview(@PathVariable("id") id:java.lang.Long,model:Model,locale:Locale):String = {
+    val r = getByPath(id,model,locale)
+    return if (!r.equals(viewPage))
+      r
+    else
+      "/paste/integrated/pasteSaved"
+  }
 
 
   @RequestMapping(value = Array("/removeComment"), method = Array(RequestMethod.POST,RequestMethod.GET))
@@ -281,13 +290,13 @@ class PasteController extends VersionController[Paste]   {
                               @Valid @ModelAttribute(GenericController.MODEL_KEY) b:Paste,
                               result:BindingResult, model:Model,locale:Locale
                               ,redirectAttributes:RedirectAttributes):String = {
-    return saveIntegrated(cancel,false,b,result,model,locale,redirectAttributes)
+    return saveIntegrated(cancel,false,false,b,result,model,locale,redirectAttributes)
   }
 
     @RequestMapping(value = Array("/save"), method = Array(RequestMethod.POST))
    def saveIntegrated(@RequestParam(required = false) cancel:String,
                       @RequestParam(required = false) integrationMode:Boolean,
-                     
+                     @RequestParam(required = false) frameMode:Boolean,
            @Valid @ModelAttribute(GenericController.MODEL_KEY) b:Paste,
            result:BindingResult, model:Model,locale:Locale,
            redirectAttributes:RedirectAttributes):String = {
@@ -366,8 +375,14 @@ class PasteController extends VersionController[Paste]   {
     
        val out =super.save(cancel,b,result,model,locale,redirectAttributes)
       return if (out.equals(listPage))  {
+        if (frameMode) {
+          "paste/integrated/pasteSaved/"+b.getId
+        } else {
+     
         model.asMap().clear()
         "redirect:/main/paste/"+b.getId()
+          
+        }
       } else {
           if (integrationMode) {
             "paste/integrated/edit"

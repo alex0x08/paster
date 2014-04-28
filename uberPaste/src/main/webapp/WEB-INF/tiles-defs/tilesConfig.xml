@@ -39,6 +39,10 @@
     </definition>
 
 
+    <definition name="/paste/integrated/pasteSaved" extends=".integratedTemplate">
+        <put-attribute name="content" value="/WEB-INF/pages/paste/integrated/pasteSaved.jsp" />
+    </definition>
+
     <definition name="/paste/integrated/preview" extends=".integratedTemplate">
         <put-attribute name="content" value="/WEB-INF/pages/paste/integrated/preview.jsp" />
     </definition>

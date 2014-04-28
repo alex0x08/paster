@@ -284,6 +284,8 @@
                     
                      $('pageLoadSpinner').setStyle('display','none');
 		    parseSearchResults(block);
+                         bindDeleteDlg(block);
+       
                 }
 	
             });
@@ -303,7 +305,7 @@
 
   
 
-    var viewUrl = '${ctx}/main/paste',createUrl = '${ctx}/main/paste/newFrame';
+    var viewUrl = '${ctx}/main/paste',createUrl = '${ctx}/main/paste/newFrame?frameMode=1';
 
      function parseSearchResults(parent) {
         parent.getElements('.pasteTitle').each(function(el, i)
@@ -314,21 +316,30 @@
 
         }); 
      } 
-    
+     
+      var createNewPasteDlg;
+        
     window.addEvent('domready', function() {
+
+
+        createNewPasteDlg = new SimpleModal({
+            "hideHeader":true, "closeButton":false,"hideFooter":true});
+      
 
           $("createNewBtn").addEvent("click", function(e){
           e.stop();
     var w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0),
     h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
 
-        var SM = new SimpleModal({"hideHeader":true, "closeButton":true,"hideFooter":true, "width":w * 0.9});
-        SM.show({
-          "title":"Vimeo video",
+            
+            if (w>1280) w=1280;
+            createNewPasteDlg.initialize({"width":w * 0.9});
+        createNewPasteDlg.show({
+          
           "model":"modal",
           "contents":'<iframe src="'+createUrl+'" width="'+(w * 0.87)+'" height="382" frameborder="0" style="padding:0;margin:0;" ></iframe>'
+            });
         });
-  })
 
 
         parseSearchResults($('pastas'));

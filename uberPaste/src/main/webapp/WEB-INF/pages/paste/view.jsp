@@ -87,10 +87,9 @@
         });
 
         SyntaxHighlighter.highlight(${model.id}, {}, $('${model.id}_pasteText'), true);
-
-        $('pageLoadSpinner').setStyle('display', 'none');
-
+        
     <c:if test="${availablePrevList.count > 1}">
+        $('pageLoadSpinner').setStyle('display', 'none');
         initLazy();
     </c:if>
 
@@ -147,6 +146,7 @@
                             history.pushState({id: page}, "Page " + page, userPageUrl + "/" + page);
                         } catch (e) {
                         }
+                        bindDeleteDlg(block);
 
                         $('pageLoadSpinner').setStyle('display', 'none');
                     }
@@ -156,7 +156,7 @@
             ;
 
     </script>
-    <div id="pageLoadSpinner" style="">
+    <div id="pageLoadSpinner" >
         <img src="<c:url value='/main/static/${appVersion}/images/gear_sml.gif'/>"/>   
         <fmt:message key="action.loading"/>
     </div>

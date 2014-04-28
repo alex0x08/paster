@@ -23,7 +23,9 @@
                     </div>
                 </c:if>
 
-                <sec:authorize ifAnyGranted="ROLE_USER,ROLE_ADMIN">
+                <c:if test="${empty param.frameMode}">
+            
+                        <sec:authorize ifAnyGranted="ROLE_USER,ROLE_ADMIN">
                     <div class="column grid-4" >
                         <jsp:include
                             page="/WEB-INF/pages/common/currentUser.jsp">
@@ -32,6 +34,9 @@
                     </div>
                 </sec:authorize>
 
+                    
+                </c:if>
+            
             </div>
 
             <div class="row">

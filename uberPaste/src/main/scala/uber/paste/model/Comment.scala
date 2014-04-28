@@ -5,6 +5,7 @@ import javax.xml.bind.annotation.{XmlTransient, XmlRootElement}
 import javax.persistence.{Entity,JoinColumn, FetchType, ManyToOne, Lob,CascadeType}
 import javax.validation.constraints.{Size, NotNull}
 import org.codehaus.jackson.annotate.JsonIgnore
+import org.hibernate.envers.Audited
 import uber.paste.base.Loggered
 import org.compass.core.CompassHighlighter
 
@@ -18,6 +19,7 @@ object Comment extends Struct {
 @Entity
 @Searchable
 @XmlRootElement(name="comment")
+@Audited
 class Comment extends Struct  with java.io.Serializable{
 
   @Lob

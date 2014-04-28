@@ -213,7 +213,7 @@
 
                 <a class="disableOnSubmit" title="<fmt:message key="button.cancel"/>" 
                    href="javascript:void(0);" onclick="SyntaxHighlighter.hideEditForm(${model.id});">
-                    <span class="ir" style="font-size:1.2em;font-weight: bold;">Â</span>
+                    <i class="fa fa-times" style="font-size:1.2em;font-weight: bold;"></i>
                 </a>
 
             </div>

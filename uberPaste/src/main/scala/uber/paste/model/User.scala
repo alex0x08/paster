@@ -26,6 +26,7 @@ import javax.validation.constraints.NotNull
 import org.codehaus.jackson.annotate.JsonIgnore
 import org.compass.annotations.Searchable
 import org.compass.annotations.SearchableProperty;
+import org.hibernate.envers.Audited
 import org.hibernate.validator.constraints.Length;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -38,7 +39,7 @@ import javax.xml.bind.annotation.XmlTransient
 
 @Entity
 @Searchable
-//@Audited
+@Audited
 class User extends Struct with UserDetails with java.io.Serializable{
 
   
