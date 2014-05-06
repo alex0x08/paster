@@ -36,15 +36,21 @@
       
     </div>
     <div class="column grid-2">
-        <a href="<c:url value="/main/paste/list/body.xml"/>">
-            <img src="<c:url value='/main/static/${appVersion}/images/xml.png'/>" title="xml" alt="xml"/></a> |
-        <a href="<c:url value="/main/paste/list/body.json"/>">
-            <img src="<c:url value='/main/static/${appVersion}/images/json.png'/>" title="json" alt="json"/></a> |
-        <a href="<c:url value="/main/paste/list.rss"/>"><img src="<c:url value='/main/static/${appVersion}/images/rss.png'/>" title="rss" alt="rss"/></a> |
-        <a href="<c:url value="/main/paste/list.atom"/>"><img src="<c:url value='/main/static/${appVersion}/images/atom.png'/>" title="atom" alt="atom"/></a> |
-        <a href="<c:url value="/main/paste/list.xls"/>"><img src="<c:url value='/main/static/${appVersion}/images/xls.gif'/>" title="xls" alt="xls"/></a> |
-        <a href="<c:url value="/ws/paste?wsdl"/>"><img src="<c:url value='/main/static/${appVersion}/images/wsdl_icon.png'/>" title="wsdl" alt="wsdl"/></a>
-
+       
+        <a class="img-map img-xml" href="<c:url value="/main/paste/list/body.xml"/>" title="xml" alt="xml">
+        </a> |
+        <a class="img-map img-json" href="<c:url value="/main/paste/list/body.json"/>" title="json" alt="json">
+        </a> |
+        <a class="img-map img-rss" href="<c:url value="/main/paste/list.rss"/>" title="rss" alt="rss">
+        </a>
+            |
+        <a class="img-map img-atom" href="<c:url value="/main/paste/list.atom"/>" title="atom" alt="atom">
+         </a> |
+        <a class="img-map img-xls" href="<c:url value="/main/paste/list.xls"/>" title="xls" alt="xls">
+        </a> |
+        <a class="img-map img-ws" href="<c:url value="/ws/paste?wsdl"/>" title="wsdl" alt="wsdl">
+        </a>
+       
     </div>
  </div>
 
@@ -332,12 +338,12 @@
     h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
 
             
-            if (w>1280) w=1280;
+            if (w>1140) w=1140;
             createNewPasteDlg.initialize({"width":w * 0.9});
         createNewPasteDlg.show({
           
           "model":"modal",
-          "contents":'<iframe src="'+createUrl+'" width="'+(w * 0.87)+'" height="382" frameborder="0" style="padding:0;margin:0;" ></iframe>'
+          "contents":'<iframe src="'+createUrl+'" width="'+(w * 0.9 )+'" height="382" frameborder="0" style="padding:0;margin:0;" ></iframe>'
             });
         });
 

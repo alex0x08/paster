@@ -9,6 +9,8 @@
 
         <link href="<c:url value='/main/assets/${appVersion}/paster/less/app.css'/>" rel="stylesheet" type="text/css">
 
+        
+        
             <c:choose>
                 <c:when test="${not empty systemInfo.project.clientImage}">
                 <style>
@@ -41,6 +43,8 @@
 
     <div class="row">
         <div class="column grid-10">
+            
+           
             <tiles:insertAttribute name="menu" />
             <c:if test="${not empty statusMessageKey}">
                 <script type="text/javascript">
@@ -75,8 +79,7 @@
                <span style="font-size: 1em;vertical-align: middle;" class="i" title="Login here">x</span></a>
 
             <c:forEach var="server" items="${availableServers}">
-                <a href="<c:url value='/act/openid-login?openid_identifier=${server.code}'/>">
-                    <img src="<c:url value='/main/static/${appVersion}/images/openid/${server.icon}'/>" alt="${server.name}" title="${server.name}" border="0" style=" vertical-align: middle; " />
+                <a  class="img-map ${server.icon}" href="<c:url value='/act/openid-login?openid_identifier=${server.code}'/>">
                 </a>
             </c:forEach>
         </sec:authorize>

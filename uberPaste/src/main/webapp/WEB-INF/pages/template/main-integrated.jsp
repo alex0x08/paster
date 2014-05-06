@@ -15,25 +15,29 @@
         <body>
 
 
-            <div class="row">
-
-                <c:if test="${not empty statusMessageKey}">
-                    <div class="column grid-16">
-                        <p><fmt:message key="${statusMessageKey}"/></p>
-                    </div>
-                </c:if>
-
-                <c:if test="${empty param.frameMode}">
+              <c:if test="${empty param.frameMode}">
             
                         <sec:authorize ifAnyGranted="ROLE_USER,ROLE_ADMIN">
+            <div class="row">
                     <div class="column grid-4" >
                         <jsp:include
                             page="/WEB-INF/pages/common/currentUser.jsp">
                             <jsp:param name="currentUser" value="${currentUser}" />
                         </jsp:include>
                     </div>
-                </sec:authorize>
+            </div>
+            </sec:authorize>
 
+            
+                <c:if test="${not empty statusMessageKey}">
+            <div class="row">
+        <div class="column grid-16">
+                        <p><fmt:message key="${statusMessageKey}"/></p>
+                    </div>
+            </div>
+                </c:if>
+
+              
                     
                 </c:if>
             

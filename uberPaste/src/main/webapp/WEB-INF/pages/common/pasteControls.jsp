@@ -70,11 +70,9 @@
     
     <div class="column grid-4">
 
-        <a href="<c:url value="/main/paste/xml/${model.id}"/>" target="${target}" title="View as XML">
-            <img src="<c:url value='/main/static/${appVersion}/images/xml.png'/>" title="xml" alt="xml"/>
+        <a class="img-map img-xml" href="<c:url value="/main/paste/xml/${model.id}"/>" target="${target}" title="View as XML">
         </a> |
-        <a href="<c:url value="/main/paste/${model.id}.json"/>" target="${target}" title="View as JSON">
-            <img src="<c:url value='/main/static/${appVersion}/images/json.png'/>" title="json" alt="json"/>
+        <a class="img-map img-json" href="<c:url value="/main/paste/${model.id}.json"/>" target="${target}" title="View as JSON">
         </a> |
         <a href="<c:url value="/main/paste/plain/${model.id}"/>" target="${target}" title="View as plain text">
             <span style="font-size: larger;" class="i">k</span>
@@ -84,7 +82,7 @@
         <c:if test="${mode ne 'icon'}">
             <a id="ctrlc_link" data-clipboard-target="${model.id}_pasteText" href="javascript:void(0);"
                title="Copy to clipboard" >
-                <i class="fa fa-clipboard"></i></a>
+                <i class="img-map img-clip"></i></a>
         </c:if>
 
 

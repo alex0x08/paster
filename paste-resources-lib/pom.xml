@@ -38,9 +38,9 @@
             
              <resource> 
                 <directory>${project.basedir}/src/main/resources/META-INF/resources/webjars/paster/static</directory> 
-                <targetPath>META-INF/resources/webjars/paster</targetPath>
+                <targetPath>META-INF/resources/webjars/paster/static</targetPath>
                 <includes> 
-                    <include>icons/**</include> 
+                    <include>**</include> 
                 </includes> 
                 <filtering>false</filtering>         
             </resource> 

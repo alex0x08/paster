@@ -20,9 +20,11 @@
 </div>
 
 <span id="pasteLineCopyBtn" style="display:none; white-space: normal;">
-    <a id="ctrlc_line" data-clipboard-target="pasteLineToCopy" href="javascript:void(0);" 
-       style="float:left;" title="Copy to clipboard" >
-        <img src="<c:url value='/main/static/${appVersion}/images/ctrlc.png'/>"/></a>
+    <a id="ctrlc_line" 
+       data-clipboard-target="pasteLineToCopy" href="javascript:void(0);" 
+        style="float:left;" title="Copy to clipboard" >
+        <span class="img-map img-clip"></span>
+    </a> 
 </span>
 
 <span id="pasteLineToCopy" style="display:none;">
@@ -72,7 +74,7 @@
             
         });
 
-        ZeroClipboard.setDefaults({moviePath: "<c:url value='/main/static/${appVersion}/media/ZeroClipboard.swf'/>"});
+        ZeroClipboard.setDefaults({moviePath: "<c:url value='/main/assets/${appVersion}/paster/static/ZeroClipboard.swf'/>"});
 
         var clip = new ZeroClipboard(document.id("ctrlc_link"));
 

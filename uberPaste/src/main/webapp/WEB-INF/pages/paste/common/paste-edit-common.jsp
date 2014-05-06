@@ -18,7 +18,7 @@
 
 
 <div class="row">
-    <div class="column grid-14"  >
+    <div class="column grid-15"   >
         <form:form id="editForm" action="${url}" cssClass="perk"
                    modelAttribute="model"
                    method="POST" >

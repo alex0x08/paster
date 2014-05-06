@@ -18,10 +18,10 @@ import uber.paste.model.{KeyValueObj, KeyValue}
 
  */
 object OpenIDServer extends KeyValueObj[OpenIDServer] {
-     val YANDEX = new OpenIDServer("http://openid.yandex.ru","Yandex","yandex.png")
+     val YANDEX = new OpenIDServer("http://openid.yandex.ru","Yandex","img-openid-yandex")
    //  val MAILRU = new OpenIDServer("http://openid.mail.ru","Mail.ru","mailru.ico")
-     val GOOGLE = new OpenIDServer("https://www.google.com/accounts/o8/id","Google","google.ico")
-     val YAHOO = new OpenIDServer("https://me.yahoo.com","Yahoo","yahoo.png")
+     val GOOGLE = new OpenIDServer("https://www.google.com/accounts/o8/id","Google","img-openid-google")
+     val YAHOO = new OpenIDServer("https://me.yahoo.com","Yahoo","img-openid-yahoo")
 
     add(YANDEX)
  //   add(MAILRU)

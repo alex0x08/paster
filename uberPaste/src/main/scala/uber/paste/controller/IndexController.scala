@@ -19,6 +19,7 @@ package uber.paste.controller
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
+import org.springframework.web.bind.annotation.RequestMethod
 import uber.paste.openid.OpenIDServer
 
 @Controller
@@ -35,5 +36,16 @@ class IndexController extends AbstractController{
   @RequestMapping(Array("/login"))
   def login(model:Model):Unit = {
     model.addAttribute("availableServers",OpenIDServer.list)
+  }
+  
+     <c:url value='/act/get-resource' var="thumbUrl">
+                        <c:param name="uuid" value="${paste.thumbImage}"/>
+                        <c:param name="lastModified" value="${paste.lastModified.time}"/>
+                        
+                    </c:url>
+  
+  @RequestMapping(value = Array("/integrated/list/{integrationCode:[a-z0-9_]+}/{source:[a-zA-Z0-9]+}/next"), method = Array(RequestMethod.GET))
+  def getResource(model:Model):Unit = {
+    
   }
 }

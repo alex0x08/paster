@@ -6,8 +6,9 @@
 .new_tabs_head {
 	overflow:visible;
 	padding:0;
-	margin:15px 0 0 0;
-	padding-left:20px;
+        margin: 0;
+	/*margin:15px 0 0 0;
+	padding-left:20px;*/
 	/*width:430px;*/
 }
 

@@ -14,6 +14,11 @@
 <div class="row">
     <div class="column grid-12">
     
+       <a href="<c:url value='/act/admin/dbconsole/frame.jsp'>
+       <c:param name="jsessionid" value="${applicationScope['h2console-session-id']}"/>
+       </c:url>" 
+               class="-btn"><i class="-icon-cogs"></i><fmt:message key="settings.dbconsole"/></a>
+ 
         
 <form:form action="${url}" 
            modelAttribute="model"
