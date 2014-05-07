@@ -95,28 +95,19 @@
                      <c:if test="${not empty availableNext and not empty availableNext.thumbImage}">
                          <a href="<c:url value="/${availableNext.id}"/>"  title="<fmt:message key="button.next"/>">
                              <img width="300" height="200" class="p-comment" style="alignment-adjust: middle; width: 200px; height: 100px;"
-                                  src="<c:url value='/act/get-resource' >
-                                      <c:param name="uuid" value="${availableNext.thumbImage}"/>
-                                         <c:param name="lastModified" value="${paste.lastModified.time}"/>
-                     
+                                  src="<c:url value='/main/resources/thumb/${availableNext.lastModified.time}/${availableNext.thumbImage}.jpg' >
                                   </c:url>" />
                          </a>
                      </c:if>
 
                 <img width="300" height="200" class="p-comment" style="border: 1px solid black;alignment-adjust: middle;width: 250px; height: 150px;" 
-                     src="<c:url value='/act/get-resource' >
-                <c:param name="uuid" value="${model.thumbImage}"/>
-                   <c:param name="lastModified" value="${paste.lastModified.time}"/>
-                     
-            </c:url>"/>
+                     src="<c:url value='/main/resources/thumb/${model.lastModified.time}/${model.thumbImage}.jpg' >
+                 </c:url>"/>
 
                 <c:if test="${availablePrev!=null and not empty availablePrev.thumbImage}">
                     <a href="<c:url value="/${availablePrev.id}"/>"  title="<fmt:message key="button.prev"/>">
                         <img width="300" height="200" class="p-comment" style="alignment-adjust: middle; width: 200px; height: 100px;" 
-                             src="<c:url value='/act/get-resource' >
-                                 <c:param name="uuid" value="${availablePrev.thumbImage}"/>
-                                    <c:param name="lastModified" value="${paste.lastModified.time}"/>
-                     
+                             src="<c:url value='/main/resources/thumb/${availablePrev.lastModified.time}/${availablePrev.thumbImage}.jpg' >
                              </c:url>"/>
                     </a>
                 </c:if>

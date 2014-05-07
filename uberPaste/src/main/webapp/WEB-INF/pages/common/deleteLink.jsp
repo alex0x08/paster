@@ -10,11 +10,15 @@
     <a id="deleteBtn_${model.id}" class="deleteBtn" href="<c:url value='/main/${modelName}/delete'><c:param name="id" value="${model.id}"/> </c:url>"
           title="<fmt:message key='button.delete'/>">
         <span style="font-size: larger;" class="i">d</span>
-        <span style="display:none;" id="dialogMsg">
+        <div style="display:none;" id="dialogMsg">
+              <img width="300" height="200" class="p-comment" style="width: 250px; height: 150px; float: left; margin: 5px;" 
+                     src="<c:url value='/main/resources/thumb/${model.lastModified.time}/${model.thumbImage}.jpg' >
+                 </c:url>"/>
+            
             <fmt:message  key="dialog.confirm.paste.remove.message">
-        <fmt:param value="${model.title}"/>
+        <fmt:param value="${model.id}"/>
     </fmt:message>    
-        </span>
+        </div>
     </a>
 
           

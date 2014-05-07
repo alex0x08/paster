@@ -123,10 +123,7 @@
                            <c:when test="${not empty paste.thumbImage}">
                 <div class="column grid-4" >
                     
-                    <c:url value='/act/get-resource' var="thumbUrl">
-                        <c:param name="uuid" value="${paste.thumbImage}"/>
-                        <c:param name="lastModified" value="${paste.lastModified.time}"/>
-                        
+                    <c:url value='/main/resources/thumb/${paste.lastModified.time}/${paste.thumbImage}.jpg' var="thumbUrl">
                     </c:url>
                     
                     <img src="${thumbUrl}" width="300" height="200" class="p-comment"  />

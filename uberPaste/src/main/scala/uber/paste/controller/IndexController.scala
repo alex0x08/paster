@@ -38,14 +38,6 @@ class IndexController extends AbstractController{
     model.addAttribute("availableServers",OpenIDServer.list)
   }
   
-     <c:url value='/act/get-resource' var="thumbUrl">
-                        <c:param name="uuid" value="${paste.thumbImage}"/>
-                        <c:param name="lastModified" value="${paste.lastModified.time}"/>
-                        
-                    </c:url>
   
-  @RequestMapping(value = Array("/integrated/list/{integrationCode:[a-z0-9_]+}/{source:[a-zA-Z0-9]+}/next"), method = Array(RequestMethod.GET))
-  def getResource(model:Model):Unit = {
-    
-  }
+  
 }
