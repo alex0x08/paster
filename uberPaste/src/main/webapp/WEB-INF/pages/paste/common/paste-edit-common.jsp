@@ -54,6 +54,7 @@
                                 </c:choose>
 
                             </li>
+                            <li><fmt:message key="paste.source.title"/></li>
                             <li><fmt:message key="paste.editor.title"/></li>
                         </ul>
                     </div>
@@ -136,6 +137,16 @@
                             </div>
 
                         </div>
+                                <div class="tabdata">
+                                    <form:input path="remoteUrl" maxlength="1024" id="loadUrl"/>
+                            <button id="loadUrlBtn"
+                                name="load_btn"
+                                class="p-btn-save" >
+                                        Load
+                            </button>
+         
+                                    
+                                </div>
                         <div class="tabdata">
 
 
@@ -424,6 +435,15 @@
     }
 
     window.addEvent('domready', function(){
+
+        $('loadUrlBtn').addEvent('click', function(event){
+            event.stop();
+
+        $('editForm').set('action','<c:url value='/main/paste/loadFrom'/>');
+
+        $('editForm').submit();
+        });
+
 
         $$('.submitBtn').addEvent('click',function(){
             this.getElementById('btnCaption').set('text', transmitText).disabled = true;

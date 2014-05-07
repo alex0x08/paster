@@ -413,12 +413,12 @@ class PasteController extends VersionController[Paste]   {
     }
   
 
-  @RequestMapping(value = Array("/loadFrom"), method = Array(RequestMethod.GET))
-  def getRemote(@RequestParam(required = false) url:java.lang.String,
+  @RequestMapping(value = Array("/loadFrom"), method = Array(RequestMethod.GET,RequestMethod.POST))
+  def getRemote(@ModelAttribute(GenericController.MODEL_KEY) b:Paste,
                          model:Model,
                          locale:Locale):String = {
 
-    val client = new DefaultHttpClient; val method = new HttpGet(url)
+    val client = new DefaultHttpClient; val method = new HttpGet(b.getRemoteUrl)
 
      val sc:SSLContext = SSLContext.getInstance("SSL")
      
@@ -430,10 +430,10 @@ class PasteController extends VersionController[Paste]   {
     
     val response =  client.execute(method)
 
-    var paste =  manager.getByRemoteUrl(url)
+    var paste =  manager.getByRemoteUrl(b.getRemoteUrl)
 
     if (paste==null) {
-      paste =getNewModelInstance(); paste.setRemoteUrl(url)
+      paste =getNewModelInstance(); paste.setRemoteUrl(b.getRemoteUrl)
     } else {
       paste.setName(null)
     }
@@ -462,12 +462,12 @@ class PasteController extends VersionController[Paste]   {
     }
 
     if (StringUtils.isEmpty(paste.getName())) {
-      var fname =new URL(url).getFile
+      var fname =new URL(b.getRemoteUrl).getFile
       if (fname!=null) {
         fname = FilenameUtils.getName(fname)
         fileName=fname
       }
-      paste.setName(if (fname!=null) {fname} else {url})
+      paste.setName(if (fname!=null) {fname} else {b.getRemoteUrl})
     }
 
       var mime:String = null
@@ -497,7 +497,7 @@ class PasteController extends VersionController[Paste]   {
     }
 
      paste.setCodeType(CodeType.valueOf(codeType))
-     paste.setPasteSource(PasteSource.REMOTE)
+//     paste.setPasteSource(PasteSource.REMOTE)
 
     val buf =new ByteArrayOutputStream
 
@@ -505,11 +505,14 @@ class PasteController extends VersionController[Paste]   {
 
     paste.setText(new String(buf.toByteArray))
 
-    paste=manager.save(paste)
+      fillEditModel(paste,model,locale)
 
-    model.asMap().clear()
+//    paste=manager.save(paste)
 
-    return "redirect:/main/paste/integrated/view/" + paste.getId()
+  //  model.asMap().clear()
+
+    return editPage
+    //"redirect:/main/paste/integrated/view/" + paste.getId()
  }
 
   @RequestMapping(value = Array("/integrated/view/{id:[0-9]+}"), method = Array(RequestMethod.GET))

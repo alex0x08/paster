@@ -302,7 +302,7 @@ var sh = {
 	 * 							provided, all elements in the current document 
 	 * 							are highlighted.
 	 */ 
-	highlight: function(modelId,globalParams, element, scrollToLine)
+	highlight: function(modelId,globalParams, element, scrollToLine,showEditForm)
 	{
             
            // alert(modelId);
@@ -381,18 +381,20 @@ var sh = {
             var ln = document.getElementById('lineNumber').value;
             if (!ln || 0 === ln.length ) {
 
-            if (scrollToLine) {
-                var loc = window.location.hash.replace("#","");
-                if (loc != "") {
-                    new Fx.Scroll(window).toElement(sh.vars.modelId+'_'+loc);
+                    if (scrollToLine) {
+                        var loc = window.location.hash.replace("#", "");
+                        if (loc != "") {
+                            new Fx.Scroll(window).toElement(sh.vars.modelId + '_' + loc);
+                        }
+                    }
+                } else {
+                    //  alert(ln);
+                    if (showEditForm) {
+                        sh.insertEditForm(sh.vars.modelId, ln);
+                    }
                 }
-            } 
-            } else {
-              //  alert(ln);
-                sh.insertEditForm(sh.vars.modelId,ln);
-            }
 
-		}
+            }
 	},
          
 	/**
@@ -491,10 +493,13 @@ $('cl_lineHtml_'+lineNumber).setStyle('background-color','yellow');
         cForm.setStyle("position","relative");
 
             if (sh.vars.currentEditLine != null) {
+               // alert('hide prev '+sh.vars.currentEditModel+'|line='+sh.vars.currentEditLine);
                 $(sh.vars.currentEditModel + '_cl_lineHtml_' + sh.vars.currentEditLine).setStyle("display", "");
                 $(sh.vars.currentEditModel + '_cl_linePlain_' + sh.vars.currentEditLine).setStyle("display", "none");
+                sh.vars.currentEditLine = null;
             } else {
-
+              //  alert('show new '+modelId+'|line='+lineNumber);
+            
                 $(modelId + '_cl_lineHtml_' + lineNumber).setStyle("display", "none");
                 $(modelId + '_cl_linePlain_' + lineNumber).setStyle("display", "");
 

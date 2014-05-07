@@ -88,7 +88,7 @@
             growl.notify(args.text.length + ' symbols copied to clipboard.');
         });
 
-        SyntaxHighlighter.highlight(${model.id}, {}, $('${model.id}_pasteText'), true);
+        SyntaxHighlighter.highlight(${model.id}, {}, $('${model.id}_pasteText'), true,true);
         
     <c:if test="${availablePrevList.count > 1}">
         $('pageLoadSpinner').setStyle('display', 'none');
@@ -126,17 +126,17 @@
                     inject: {
                         element: 'morePages',
                         where: 'before'
-                    }, beforeLoad: function() {
-                        
+                    }, beforeLoad: function(page) {
+                        //alert(page);
                          //SyntaxHighlighter.hideEditForm(this.);
                         $('pageLoadSpinner').setStyle('display', '');
                     }, afterAppend: function(block, page) {
 
                         var ptext = document.getElementById(page + '_pasteText');
 
-                        SyntaxHighlighter.highlight(page, {}, ptext, false);
+                        SyntaxHighlighter.highlight(page, {}, ptext, false,false);
 
-                        ptext.setStyle('display', 'none');
+                        //ptext.setStyle('display', 'none');
 
                         $(page + '_addCommentBtn').addEvent('click', function() {
                             this.getElementById('btnCaption').set('text', transmitText).disabled = true;
