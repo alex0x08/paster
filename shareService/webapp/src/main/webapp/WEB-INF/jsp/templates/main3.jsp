@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <%@ include file="/WEB-INF/jsp/templates/common/taglibs.jsp"%>
+<compress:html enabled="true"  compressCss="true"
+               removeComments="true" compressJavaScript="true" yuiJsDisableOptimizations="false">
 <html >
     <head>
        <%@ include file="/WEB-INF/jsp/templates/common/template-common-head.jsp"%>
@@ -128,3 +130,4 @@
 
 </body>
 </html>
+</compress:html>

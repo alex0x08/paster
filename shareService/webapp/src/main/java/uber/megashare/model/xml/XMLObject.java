@@ -15,6 +15,7 @@
  */
 package uber.megashare.model.xml;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -30,7 +31,7 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author alex
  */
 @XmlRootElement(name = "form")
-public class XMLObject implements XmlCloneable {
+public class XMLObject implements XmlCloneable,Serializable {
 
     @NotNull
     @Valid

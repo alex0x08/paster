@@ -47,7 +47,7 @@ public class SecurityHelper extends LoggedClass{
             /**
              * this almost all time means that we got anonymous user
              */
-            getLogger().debug("getCurrentUser ,unknown principal type: " + auth.getPrincipal());
+           // getLogger().debug("getCurrentUser ,unknown principal type: " + auth.getPrincipal());
             return null;
         }
     }

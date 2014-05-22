@@ -42,12 +42,21 @@ public class H2DBListener extends LoggedClass implements ServletContextListener{
         
         System.setProperty("share.app.h2.home",h2Home.getAbsolutePath());
         
+        String bindAddr = System.getProperty("h2.bindAddress", "localhost");
+      
+        System.setProperty("share.h2.host", bindAddr);
         
+        String bindPort = System.getProperty("share.h2.port",null);
+            if (bindPort==null) {
+                bindPort = "6666";
+        System.setProperty("share.h2.port", bindPort);
+                
+            }
         try {
             h2Server=Server.createTcpServer("-tcp",
                     "-tcpDaemon",
                     "-tcpShutdownForce",
-                    "-tcpPort","6666",
+                    "-tcpPort",bindPort,
                     
                     "-baseDir",h2Home.getAbsolutePath()).start();
         } catch (SQLException ex) {

@@ -15,6 +15,7 @@
  */
 package uber.megashare.controller;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -25,7 +26,6 @@ import org.springframework.beans.support.MutableSortDefinition;
 import org.springframework.beans.support.PagedListHolder;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import scala.actors.threadpool.Arrays;
 import static uber.megashare.controller.GenericController.NODE_LIST_MODEL;
 import static uber.megashare.controller.ListConstants.LIST_ACTION;
 import uber.megashare.model.SortColumn;
