@@ -47,8 +47,8 @@ class UserEditController extends GenericEditController[User]{
     binder.registerCustomEditor(classOf[Role], new RoleEditor())
   }
 
-  override def fillEditModel(obj:User,model:Model,locale:Locale)  {
-    super.fillEditModel(obj,model,locale)
+  override def fillEditModel(obj:User,rev:Long,model:Model,locale:Locale)  {
+    super.fillEditModel(obj,rev,model,locale)
    model.addAttribute("availableRoles", Role.list)
   }
   

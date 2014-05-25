@@ -95,19 +95,19 @@
                      <c:if test="${not empty availableNext and not empty availableNext.thumbImage}">
                          <a href="<c:url value="/${availableNext.id}"/>"  title="<fmt:message key="button.next"/>">
                              <img width="300" height="200" class="p-comment" style="alignment-adjust: middle; width: 200px; height: 100px;"
-                                  src="<c:url value='/main/resources/thumb/${availableNext.lastModified.time}/${availableNext.thumbImage}.jpg' >
+                                  src="<c:url value='/main/resources/${appVersion}/t/${availableNext.lastModified.time}/${availableNext.thumbImage}.jpg' >
                                   </c:url>" />
                          </a>
                      </c:if>
 
                 <img width="300" height="200" class="p-comment" style="border: 1px solid black;alignment-adjust: middle;width: 250px; height: 150px;" 
-                     src="<c:url value='/main/resources/thumb/${model.lastModified.time}/${model.thumbImage}.jpg' >
+                     src="<c:url value='/main/resources/${appVersion}/t/${model.lastModified.time}/${model.thumbImage}.jpg' >
                  </c:url>"/>
 
                 <c:if test="${availablePrev!=null and not empty availablePrev.thumbImage}">
                     <a href="<c:url value="/${availablePrev.id}"/>"  title="<fmt:message key="button.prev"/>">
                         <img width="300" height="200" class="p-comment" style="alignment-adjust: middle; width: 200px; height: 100px;" 
-                             src="<c:url value='/main/resources/thumb/${availablePrev.lastModified.time}/${availablePrev.thumbImage}.jpg' >
+                             src="<c:url value='/main/resources/${appVersion}/t/${availablePrev.lastModified.time}/${availablePrev.thumbImage}.jpg' >
                              </c:url>"/>
                     </a>
                 </c:if>
@@ -193,7 +193,8 @@
                method="POST" >
     <form:hidden path="lineNumber" id="lineNumber"/>
     <form:hidden path="parentId" id="parentId"/>
-    <input type="hidden" name="pasteId" value="${model.id}"/>
+    <form:hidden path="pasteRev"/>
+    <form:hidden path="pasteId"/>
                    
         <div class="row" >
             <div class="column grid-15"  >
@@ -225,7 +226,7 @@
             <div class="column grid-16"  >
                 <button id="${model.id}_addCommentBtn" class='sbtn p-btn-save' type="submit"  >
                     <span class="i" style="font-size:larger;">S</span>
-                    <span id="btnCaption"><fmt:message key="button.save"/></span>
+                    <span id="btnCaption"><fmt:message key="button.add"/></span>
                     <i id="btnIcon" style="display:none;" class="fa fa-spinner fa-spin"></i>       
                 </button>
                 

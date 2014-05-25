@@ -40,7 +40,7 @@ class ResourcePathHelper extends Loggered {
   @Value("${paste.app.home}")
   val pasteAppHome:String = null
 
-  def getThumb(fid:String): File = {
+  def getResource(ptype:String,fid:String): File = {
     
        //to avoid relative paths
     val id = URLDecoder.decode(fid,"UTF-8")
@@ -53,7 +53,7 @@ class ResourcePathHelper extends Loggered {
     }
     
     return FileSystems.getDefault()
-      .getPath(System.getProperty("paste.app.home"),"images",id+".jpg").toFile
+      .getPath(pasteAppHome,"resources",ptype,id+".jpg").toFile
   }
  
    def saveProjectImages(b:Project):String = {
@@ -65,21 +65,18 @@ class ResourcePathHelper extends Loggered {
                                                     "images",
                                                     fname+".png").toFile
       
-     // val imgData = b.getThumbImage.substring(b.getThumbImage.indexOf(',')+1)
-      //logger.debug(" base64="+imgData)
-      
         FileUtils.writeByteArrayToFile(fimg,Base64.decode(imgData.getBytes))
       
      return fname.replaceAll("/", ",")*/
     return null
    }
   
-  def saveThumb(b:Paste):String = {
+  def saveResource(pt:String,b:Paste):String = {
     
      val fname = "thumbnails/"+ResourcePathHelper.PATH_FORMAT.format(Calendar.getInstance().getTime())+b.getUuid
       
-        val fimg = FileSystems.getDefault().getPath(System.getProperty("paste.app.home"),
-                                                    "images",
+        val fimg = FileSystems.getDefault().getPath(pasteAppHome,"resources",
+                                                    pt,
                                                     fname+".jpg").toFile
       
       val imgData = b.getThumbImage.substring(b.getThumbImage.indexOf(',')+1)

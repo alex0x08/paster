@@ -30,6 +30,8 @@ import uber.paste.manager.UserManager
 import org.codehaus.jackson.annotate.JsonIgnore
 import org.springframework.web.bind.annotation._
 import uber.paste.manager.ConfigManager
+import uber.paste.openid.OpenIDServer
+import uber.paste.manager.{PasteManager, GenericManager}
 
 object LocaleConstants {
   
@@ -52,6 +54,14 @@ abstract class AbstractController extends Loggered{
   @Autowired
   val configManager:ConfigManager = null
 
+  
+  @ModelAttribute("availableServers")
+  @JsonIgnore
+  def getAvailableOpenIDServers() = OpenIDServer.list
+
+  @ModelAttribute("stats")
+  @JsonIgnore
+  def getStats() = PasteManager.Stats
   
   def getResource(key:String,locale:Locale):String = messageSource.getMessage(key,new Array[java.lang.Object](0),locale)
 

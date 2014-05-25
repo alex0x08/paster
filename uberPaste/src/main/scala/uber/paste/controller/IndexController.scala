@@ -19,7 +19,6 @@ package uber.paste.controller
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
-import org.springframework.web.bind.annotation.RequestMethod
 import uber.paste.openid.OpenIDServer
 
 @Controller
@@ -34,10 +33,14 @@ class IndexController extends AbstractController{
   
   
   @RequestMapping(Array("/login"))
-  def login(model:Model):Unit = {
+  def login(model:Model):String = {
+    return if (isCurrentUserLoggedIn) {
+      index(model)
+    } else {
     model.addAttribute("availableServers",OpenIDServer.list)
+    "/login"
+    }
   }
-  
   
   
 }

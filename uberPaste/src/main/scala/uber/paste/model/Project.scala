@@ -32,7 +32,7 @@ import org.springframework.web.multipart.MultipartFile
 @Searchable
 @XmlRootElement(name="project")
 @Audited
-class Project extends Struct with java.io.Serializable{
+class Project extends Named with java.io.Serializable{
 
   @Lob
   @XmlTransient

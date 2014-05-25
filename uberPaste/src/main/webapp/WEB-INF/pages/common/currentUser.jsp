@@ -4,6 +4,8 @@
 
     var avatarUrl = 'http://www.gravatar.com/avatar/${currentUser.avatarHash}';
 
+    var avatarOpen = false;
+
     window.addEvent('domready', function(){
 
         //First Example
@@ -12,34 +14,34 @@
 
         // We are setting the opacity of the element to 0.5 and adding two events
         $('avatarImageDiv').addEvents({
-            mouseenter: function(){
-
+            click: function(){
+                if (avatarOpen) {
+                    
+                this.set('tween', {}).tween('height', '40px');
+                $('avatarImage').src=avatarUrl+'?s=32&d=monsterid';
+                    avatarOpen = false;
+                } else {
                 this.set('tween', {
                     duration: 1000,
                     transition: Fx.Transitions.Bounce.easeOut // This could have been also 'bounce:out'
                 }).tween('height', '140px');
 
                 $('avatarImage').src=avatarUrl+'?s=128&d=monsterid';
-
-            },
-            mouseleave: function(){
-                this.set('tween', {}).tween('height', '40px');
-                $('avatarImage').src=avatarUrl+'?s=32&d=monsterid';
+                             avatarOpen = true;
+           
+                }
             }
         });
 
     });
 </script>
 <div id="avatarImageDiv" >
-    <a href="http://ru.gravatar.com/site/check/${currentUser.email}" >
         <img id="avatarImage" style="min-width: 40px;" alt="Gavatar" src="
              <c:url value='http://www.gravatar.com/avatar/${currentUser.avatarHash}'>
                  <c:param name='s' value='32'/>
                  <c:param name='d' value='monsterid'/>
              </c:url>"/>
 
-
-    </a>
     <span style="display: inline; vertical-align: top; ">
         <a title="Contact ${currentUser.name}" style="display: inline;vertical-align: top;" href="mailto:${currentUser.username}"><c:out value="${currentUser.name}" /></a>
         <a class="btn sbtn" style="vertical-align: top;" title="Logout" href="<c:url value='/act/logout'/>">

@@ -28,9 +28,25 @@
     <bean  class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor" />
     <bean class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor"/>
 
+    <bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">  
+      <property name="dataSourceProperties" >
+        <props>
+            <prop key="url">${database.url}</prop>
+            <prop key="user">${database.username}</prop>
+            <prop key="password">${database.password}</prop>
+        </props>
+      </property>  
+        <property name="connectionTestQuery" value="SELECT 1" />
+      <property name="dataSourceClassName"   
+                value="${database.driverClassName}" />  
+    </bean>  
+
+    <bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource" destroy-method="shutdown">  
+          <constructor-arg ref="hikariConfig" />  
+    </bean>  
 
    
-    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
+    <!--bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
       destroy-method="close">
         <property name="driverClass" value="${database.driverClassName}" />
         <property name="jdbcUrl" value="${database.url}" />
@@ -50,7 +66,7 @@
         <property name="idleConnectionTestPeriod" value="60"></property>
           
         
-    </bean>
+    </bean-->
     
     		
     <bean id="entityManagerFactory" 

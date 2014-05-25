@@ -50,7 +50,7 @@ class KeyObj[T <: Key] {
 
 
 @MappedSuperclass
-class Key extends Struct with java.io.Serializable{
+class Key extends Named with java.io.Serializable{
   
   @NotNull
   @Column(nullable = false, length = 50,unique=true)

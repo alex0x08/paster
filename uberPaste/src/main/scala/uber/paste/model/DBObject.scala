@@ -21,10 +21,12 @@ import java.io.Serializable
 import javax.persistence._
 import org.compass.annotations.{SearchableId}
 import org.hibernate.annotations.GenericGenerator
+import org.hibernate.envers.Audited
 import uber.paste.base.Loggered
 
 
 @MappedSuperclass
+@Audited
 abstract class DBObject extends java.io.Serializable {
 
   @Id

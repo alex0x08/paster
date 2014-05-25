@@ -40,7 +40,7 @@ import javax.xml.bind.annotation.XmlTransient
 @Entity
 @Searchable
 @Audited
-class User extends Struct with UserDetails with java.io.Serializable{
+class User extends Named with UserDetails with java.io.Serializable{
 
   
   /**
@@ -88,6 +88,7 @@ class User extends Struct with UserDetails with java.io.Serializable{
  // @NotNull(message = "{validator.not-null}")
   @SearchableProperty
   //@Column(nullable = false, length = 50,unique=true)
+  //@Basic
   private var email:String = null
 
 
@@ -271,7 +272,10 @@ class User extends Struct with UserDetails with java.io.Serializable{
     return out;
   }    
   
-  
+  override def loadFull() {
+    getRoles
+    getEmail
+  }
   
   override def toString():String = {
     return Loggered.getNewProtocolBuilder(this)

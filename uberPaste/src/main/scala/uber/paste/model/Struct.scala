@@ -17,6 +17,8 @@
 package uber.paste.model
 
 import javax.persistence._
+import org.hibernate.envers.Audited
+import org.hibernate.envers.NotAudited
 import org.hibernate.validator._
 import javax.validation.constraints.{Size, NotNull}
 import org.compass.annotations._
@@ -28,7 +30,7 @@ import uber.paste.base.Loggered
 
 object Struct {
   
-  val terms = List[String]("id","name")
+  val terms = List[String]("id")
 
   final val DB_DATE_FORMAT_FULL = "dd.MM.yyyy HH:mm:ss"
 
@@ -36,27 +38,21 @@ object Struct {
 }
 
 @MappedSuperclass
-//@Audited
+@Audited
 abstract class Struct extends DBObject with SearchObject with  java.io.Serializable{
-
-  @NotNull
-  @SearchableProperty
-  @Column(length=256)
-  //@Pattern(regexp = "(.+)", message = "{struct.name.validator}")
-  @Size(min=3, message = "{struct.name.validator}")
-  @XStreamAsAttribute
-  private var name: String = null
 
   @Column(name = "last_modified") //, columnDefinition = "datetime"
   @Temporal(javax.persistence.TemporalType.TIMESTAMP)
   @SearchableProperty(format = Struct.DB_DATE_FORMAT_FULL)
   @XStreamAsAttribute
+  @NotAudited
   private var lastModified:java.util.Date = null
 
   @PreUpdate
   @PrePersist
   def updateTimeStamps() {
     lastModified = Calendar.getInstance().getTime();
+   // System.out.println("id="+getId+"_lastModified update "+lastModified);
   }
   
   def getLastModified():Date = {
@@ -66,11 +62,6 @@ abstract class Struct extends DBObject with SearchObject with  java.io.Serializa
   def terms():List[String] = Struct.terms
   
   def fillFromHits(ch:CompassHighlighter)  {
-    
-    val f = ch.fragment("name")
-    if (f!=null) {
-      setName(f)
-    }
 
     val l = ch.fragment("lastModified")
     if (l!=null)
@@ -79,12 +70,10 @@ abstract class Struct extends DBObject with SearchObject with  java.io.Serializa
   
   def loadFull() {}
   
-  def getName() : String = name
-  def setName(f:String) : Unit = {name = f }
 
   override def toString():String = {
      return  Loggered.getNewProtocolBuilder(this)
-                .append("name", name)
+                .append("lastModified", lastModified)
                 .append("super",super.toString)
                 .toString()
   }

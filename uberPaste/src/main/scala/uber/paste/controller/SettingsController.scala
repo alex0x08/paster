@@ -40,33 +40,25 @@ import org.apache.commons.codec.binary.Base64
 
 @Controller
 @RequestMapping(Array("/admin/settings"))
-class SettingsController extends GenericEditController[Project]{
+class SettingsController extends AbstractController{
 
   @Autowired
   val projectManager:ProjectManager = null
 
   def editPage()="/admin/settings/edit"
-  def listPage()="/paste/list"
-  def viewPage()="/admin/settings/edit"
-
-  def getNewModelInstance():Project = null
+ 
   
   def manager():ProjectManager = return projectManager
  
   @RequestMapping(value = Array(GenericEditController.EDIT_ACTION), method = Array(RequestMethod.GET))
   def edit(model:Model,locale:Locale):String= {
     model.addAttribute(GenericController.MODEL_KEY, projectManager.getCurrentProject)
-    return editPage
+    
+    System.out.println("_model="+model.asMap.get("model"))
+    return editPage()
   }
 
-  @RequestMapping(value = Array("/save_not_used"), method = Array(RequestMethod.POST))
-   override def save(@RequestParam(required = false) cancel:String,
-                    
-            @Valid @ModelAttribute(GenericController.MODEL_KEY) b:Project,
-            result:BindingResult, model:Model,locale:Locale,
-            redirectAttributes:RedirectAttributes):String = {
-            return save(cancel,b,result,model,locale,redirectAttributes)
-  }
+  
   
    @RequestMapping(value = Array(GenericEditController.SAVE_ACTION), method = Array(RequestMethod.POST))
    def save(@RequestParam(required = false) cancel:String,
@@ -99,10 +91,7 @@ class SettingsController extends GenericEditController[Project]{
     
         if (result.hasErrors()) {
               logger.debug("form has errors " + result.getErrorCount())
-              fillEditModel(b,model,locale)
-           /* for ( f:FieldError : result.getFieldErrors()) {
-                getLogger().debug("field=" + f.getField() + ",rejected value=" + f.getRejectedValue()+",message="+f.getDefaultMessage());
-            }*/
+            
             return editPage
         }
         

@@ -42,6 +42,7 @@ abstract class VersionDaoImpl[T <: Struct](model:Class[T]) extends StructDaoImpl
   /**
    * {@inheritDoc}
    */
+  @Transactional(readOnly = true, propagation = Propagation.REQUIRED)
   def getRevision(id:java.lang.Long, rev:java.lang.Number):T = {
     /**
      * fix stupid envers bug

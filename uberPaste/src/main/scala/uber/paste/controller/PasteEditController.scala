@@ -104,17 +104,30 @@ class PasteController extends VersionController[Paste]   {
   //  binder.setDisallowedFields("id","lastModified")
   }
   
-  override def fillEditModel(obj:Paste,model:Model,locale:Locale)  {
-         super.fillEditModel(obj,model,locale)
+  override def fillEditModel(obj:Paste,rev:Long,model:Model,locale:Locale)  {
+         super.fillEditModel(obj,rev,model,locale)
 
+    
+    
     if (obj.isBlank) {
       model.addAttribute("title",getResource("paste.new",locale))
     } else {
       model.addAttribute("title",StringEscapeUtils.escapeHtml(getResource("paste.edit.title",Array(obj.getId,obj.getName()),locale)))
+      
+      obj.getComments.addAll(
+        commentManager.getCommentsForPaste(obj.getId,
+                                           if (rev>0) rev else model.asMap.get("lastRevision").asInstanceOf[Long] ))
+    
+      if (!model.containsAttribute("comment")) {
+        model.addAttribute("comment",getNewCommentInstance(obj,model))
+      }
+     
     }
     model.addAttribute("availableCodeTypes", CodeType.list)
     model.addAttribute("availablePriorities", Priority.list)
 
+   
+    
     if (!obj.getComments.isEmpty) {
       val commentLines = new ArrayList[Long]
       for (c<-obj.getComments) {
@@ -124,6 +137,8 @@ class PasteController extends VersionController[Paste]   {
       model.addAttribute("commentedLinesList", StringUtils.join(commentLines,","))
     }
   
+  
+    
     if (!obj.isBlank()) {
 
       val pnext = manager.getNextPaste(obj)
@@ -160,10 +175,13 @@ class PasteController extends VersionController[Paste]   {
     return p
   }
 
-  @ModelAttribute("comment")
-  def getNewCommentInstance():Comment = {
+  //@ModelAttribute("comment")
+  def getNewCommentInstance(pp:Paste,model:Model):Comment = {
     val p = new Comment
+    
     p.setOwner(getCurrentUser)
+    p.setPasteId(pp.getId)
+    p.setPasteRev(model.asMap.get("revision").asInstanceOf[Long])
     return p
   }
 
@@ -172,7 +190,7 @@ class PasteController extends VersionController[Paste]   {
   @ResponseStatus(HttpStatus.CREATED)
   def createNewFrame(model:Model,locale:Locale):String= {
 
-    fillEditModel(getNewModelInstance(),model,locale)
+    fillEditModel(getNewModelInstance(),-1,model,locale)
 
     return "paste/integrated/edit"
   }
@@ -188,25 +206,15 @@ class PasteController extends VersionController[Paste]   {
 
 
   @RequestMapping(value = Array("/removeComment"), method = Array(RequestMethod.POST,RequestMethod.GET))
-  def removeComment(@RequestParam(required = true) pasteId:java.lang.Long,
-                    @RequestParam(required = true) commentId:java.lang.Long,
+  def removeComment(@RequestParam(required = true) commentId:java.lang.Long,
+                    @RequestParam(required = true) pasteId:java.lang.Long,
+                    @RequestParam(required = true) pasteRev:java.lang.Long,
                     @RequestParam(required = true) lineNumber:java.lang.Long,
                     model:Model,locale:Locale):String = {
 
-    logger.debug("_removeComment pasteId="+pasteId+" commentId="+commentId+" lineNumber="+lineNumber)
+    logger.debug("_removeComment  commentId="+commentId+" lineNumber="+lineNumber)
 
-    val p = manager.getFull(pasteId)
-
-    if (p==null) {
-      return page404
-    }
-
-    val c = new Comment
-    c.setId(commentId)
-
-    p.getComments().remove(c)
-
-    manager.save(p)
+    commentManager.remove(commentId)
 
     model.asMap().clear()
 
@@ -223,31 +231,33 @@ class PasteController extends VersionController[Paste]   {
    * @return
    */
   @RequestMapping(value = Array("/saveComment"), method = Array(RequestMethod.POST))
-  def saveComment(@RequestParam(required = true) pasteId:java.lang.Long,
-                    @Valid b:Comment,
+  def saveComment(  @Valid b:Comment,
                     result:BindingResult, model:Model,locale:Locale):String = {
 
-        val p = manager.getFull(pasteId)
+    val p = manager.getRevision(b.getPasteId, b.getPasteRev)
 
         if (p==null) {
           return page404
         }
 
-        p.setTitle(null) // magic to invoke event listeners
-
+ 
         logger.debug("adding comment "+b)
 
     if (result.hasErrors()) {
       logger.debug("form has errors " + result.getErrorCount());
       model.addAttribute("comment", b)
-      fillEditModel(p,model,locale)
+      fillEditModel(p,b.getPasteRev,model,locale)
 
       return viewPage
     }
 
-    if (b.getOwner()!=null) {
-      b.getOwner().increaseTotalComments()
-    }
+      if (isCurrentUserLoggedIn()) {
+          b.setOwner(getCurrentUser())
+          b.getOwner().increaseTotalComments()
+          SessionStore.instance.updateUser(b.getOwner())
+        }
+
+    
     
     b.setText(
       KabaMarkupParser.getInstance().setSource(b.getText).setMode(AppMode.PASTE)
@@ -255,17 +265,18 @@ class PasteController extends VersionController[Paste]   {
                 .parseAll().get());
     
     
-      p.getComments().add(b)
+    commentManager.save(b)
+      //p.getComments().add(b)
 
-      manager.save(p)
+     // manager.save(p)
 
-    if (b.getOwner()!=null) {
+ /*   if (b.getOwner()!=null) {
       SessionStore.instance.updateUser(b.getOwner())
-    }
+    }*/
 
     model.asMap().clear()
 
-    return "redirect:/main/paste/" + pasteId + "#line_" + b.getLineNumber
+    return "redirect:/main/paste/" + b.getPasteId + "#line_" + b.getLineNumber
   }
 
   @RequestMapping(value = Array("/integrated/new/{integrationCode:[a-z0-9_]+}"),
@@ -278,7 +289,7 @@ class PasteController extends VersionController[Paste]   {
     val newPaste =  getNewModelInstance()
         newPaste.setIntegrationCode(integrationCode)
 
-    fillEditModel(newPaste,model,locale)
+    fillEditModel(newPaste,-1,model,locale)
 
     return editPage
   }
@@ -370,7 +381,7 @@ class PasteController extends VersionController[Paste]   {
 
     
     if (b.getThumbImage()!=null) {
-        b.setThumbImage(resourcePathHelper.saveThumb(b))
+      b.setThumbImage(resourcePathHelper.saveResource("t",b))
       }
     
        val out =super.save(cancel,b,result,model,locale,redirectAttributes)
@@ -505,7 +516,7 @@ class PasteController extends VersionController[Paste]   {
 
     paste.setText(new String(buf.toByteArray))
 
-      fillEditModel(paste,model,locale)
+      fillEditModel(paste,-1,model,locale)
 
 //    paste=manager.save(paste)
 
