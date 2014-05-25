@@ -3,7 +3,7 @@
 
 
 
-<c:url var="url" value='/main/user/save' />
+<c:url var="url" value='/main/user/save?${_csrf.parameterName}=${_csrf.token}' />
 
 <div class="row">
 
@@ -28,7 +28,7 @@
 
             <div class="col-md-4">
 
-        <form:form action="${url}" cssClass="form-horizontal" id="editUserForm"
+        <form:form action="${url}" cssClass="form-horizontal" id="editUserForm" htmlEscape="true"
                    modelAttribute="model" 
                    method="POST" enctype="multipart/form-data">
 

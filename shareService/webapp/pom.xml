@@ -30,8 +30,8 @@
 
     <properties>
         <maven.version>3.0.5</maven.version>
-        <spring.version>3.2.4.RELEASE</spring.version>
-        <spring.security.version>3.1.4.RELEASE</spring.security.version>
+        <spring.version>3.2.8.RELEASE</spring.version>
+        <spring.security.version>3.2.3.RELEASE</spring.security.version>
         <spring.webflow.version>2.3.0.RELEASE</spring.webflow.version>
         <commons.beanutils.version>1.8.0</commons.beanutils.version>
         <commons.collections.version>3.1</commons.collections.version>
@@ -575,8 +575,6 @@
     <artifactId>chosen</artifactId>
     <version>0.9.12</version>
 </dependency>
-
-
 
  <dependency>
                 <groupId>net.bull.javamelody</groupId>

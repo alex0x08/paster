@@ -26,7 +26,7 @@
 
                 <div class="col-md-4"> 
 
-                    <c:url var="url" value='/main/profile/save' />
+                    <c:url var="url" value='/main/profile/save?${_csrf.parameterName}=${_csrf.token}' />
 
                     <form:form id="editProfileForm" action="${url}"  cssClass="form-horizontal"
                                modelAttribute="user" 

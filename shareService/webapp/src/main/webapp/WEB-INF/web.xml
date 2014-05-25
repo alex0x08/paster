@@ -18,7 +18,10 @@
         </param-value>
     </context-param>
     
-    
+    <context-param>
+        <param-name>defaultHtmlEscape</param-name>
+        <param-value>true</param-value>
+    </context-param>
     
     <!-- filters -->
     
@@ -39,7 +42,7 @@
         </init-param>
     </filter>
     
-    <filter>
+    <!--filter>
         <filter-name>imagesCache</filter-name>
         <filter-class>com.samaxes.filter.CacheFilter</filter-class>
         <init-param>
@@ -72,7 +75,7 @@
             <param-name>expirationTime</param-name>
             <param-value>216000</param-value>
         </init-param>
-    </filter>
+    </filter-->
     
        <filter>
         <filter-name>etagFilter</filter-name>
@@ -98,6 +101,7 @@
                 </init-param>
         </filter>
     
+   
    <!-- filter mapping -->
     
     <!--filter-mapping>
@@ -116,7 +120,7 @@
     </filter-mapping>
 
     
-    <filter-mapping>
+    <!--filter-mapping>
         <filter-name>imagesCache</filter-name>
         <url-pattern>/images/*</url-pattern>
     </filter-mapping>
@@ -137,7 +141,7 @@
     <filter-mapping>
         <filter-name>jsCache</filter-name>
         <url-pattern>*.js</url-pattern>
-    </filter-mapping>
+    </filter-mapping-->
     
     <filter-mapping>
         <filter-name>encoding-filter</filter-name>
@@ -147,7 +151,10 @@
         <filter-name>springSecurityFilterChain</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
-    
+
+   
+
+            
       <filter-mapping>
                 <filter-name>monitoring</filter-name>
                 <url-pattern>/*</url-pattern>
@@ -231,6 +238,8 @@
         <listener-class>uber.megashare.listener.H2DBListener</listener-class>
     </listener>
 
+   
+
             <listener>
                 <listener-class>net.bull.javamelody.SessionListener</listener-class>
         </listener>
@@ -252,6 +261,7 @@
             uber.megashare.listener.UserSessionListener
         </listener-class>
     </listener>
+    
     <session-config>
         <session-timeout>20</session-timeout>
     </session-config>
@@ -270,4 +280,6 @@
         <exception-type>java.lang.Exception</exception-type>
         <location>/WEB-INF/jsp/500.jsp</location>
     </error-page>
+    
+   
 </web-app>

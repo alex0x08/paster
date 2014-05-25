@@ -21,9 +21,7 @@
     <http pattern="/main/assets/${app.version}/**" security="none"/>
     <http pattern="/main/static/${app.version}/**" security="none"/>
     
-    <http pattern="/main/login*" security="none" />
-    <http pattern="/main/logoutSuccess*" security="none" />
-
+  
  
    <http pattern="/api-main/**"   >
         <intercept-url pattern="/**" access="ROLE_USER,ROLE_ADMIN,ROLE_MANAGER" />
@@ -32,6 +30,8 @@
         <session-management >
             <concurrency-control error-if-maximum-exceeded="false" max-sessions="1"/>
         </session-management>
+        
+        
         
         <logout logout-url="/act/doLogout" 
             logout-success-url="/main/login.html?exit" 
@@ -44,10 +44,11 @@
            disable-url-rewriting="true"
           entry-point-ref="authenticationEntryPoint" >
  
-         <custom-filter position="REMEMBER_ME_FILTER"
+        
+         <!--custom-filter position="REMEMBER_ME_FILTER"
                            ref="rememberMeFilter" />
         <custom-filter position="FORM_LOGIN_FILTER"
-                           ref="ssoAuthenticationProcessingFilter" />
+                           ref="ssoAuthenticationProcessingFilter" /-->
  
         <intercept-url pattern="/main/user/*" access="hasRole('ROLE_ADMIN')"/>
         <intercept-url pattern="/main/project/*" access="hasRole('ROLE_ADMIN')"/>
@@ -60,10 +61,10 @@
         <intercept-url pattern="/**" access="permitAll()" />
 
        
-        <!--form-login login-page="/main/login.html" 
-        default-target-url='/main/index.html'
+        <form-login login-page="/main/login" 
+        default-target-url='/main/welcome'
             always-use-default-target='true'
-                    login-processing-url="/j_security_check"/-->
+                    login-processing-url="/act/doLogin"/>
         
       
         <logout logout-url="/act/doLogout" 
@@ -73,6 +74,8 @@
         <session-management >
             <concurrency-control error-if-maximum-exceeded="false" max-sessions="10"/>
         </session-management>
+        
+            <csrf />
             
             
     </http>

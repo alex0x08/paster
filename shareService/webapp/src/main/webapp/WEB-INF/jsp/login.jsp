@@ -1,11 +1,14 @@
 <%@ include file="/WEB-INF/jsp/templates/common/taglibs.jsp"%>
 
 
+    <c:url var="url" value='/act/doLogin' />
+
 <div class='row'>
     <div class='col-md-offset-3 col-xs-4 col-md-5'>
-
         
-<form role="form" action="<c:url value="/j_spring_security_check" />"  method="POST" >
+        <form:form  role="form" action="${url}"  method="POST" >
+    
+     
     
     <legend><fmt:message key="login.title"/></legend>
     
@@ -38,9 +41,12 @@
      <button type="submit" class="btn btn-primary" ><fmt:message key="button.login"/></button>
 
   
-</form>
+</form:form>
 
         
     </div>
 </div>
+
+
+    
 

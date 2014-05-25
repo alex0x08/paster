@@ -59,11 +59,21 @@
               </li>
               
               <c:if test="${param.mode eq 'PROFILE'}">
-                <li>
-                  <a href="<c:url value="/act/doLogout"/>">
-                      <span class="glyphicon glyphicon-log-out"></span>
-                      <fmt:message key="button.logout"/></a>
-              </li>   
+                  <li>
+
+
+                      <c:url var="logoutUrl" value="/act/doLogout"/>
+                      <form:form role="form" cssStyle="padding-left:1.5em;" action="${logoutUrl}" 
+                                 method="POST" >
+                          <button class="btn btn-danger btn-sm" type="submit" >
+                              <span class="glyphicon glyphicon-log-out"></span>
+                              <fmt:message key="button.logout"/>
+                          </button>
+
+                      </form:form>
+
+
+                  </li>   
               </c:if>
                
 

@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.xml.bind.annotation.XmlTransient;
@@ -63,9 +64,11 @@ public class User extends AvatarStruct implements Serializable, UserDetails {
     @Column(nullable = false, length = 50, unique = true)
     @Field
     @XStreamAsAttribute
+    @Min(4)
     private String login;
     
     @NotNull(message = "{validator.not-null}")
+    @Min(5)
     @Column(nullable = false, length = Integer.MAX_VALUE)
     @XStreamOmitField
     private String password;

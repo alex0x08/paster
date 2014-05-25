@@ -26,7 +26,7 @@
 <form role="form" action="<c:url value="/j_spring_security_check" />"  method="POST" >
     
     <legend><fmt:message key="login.title"/></legend>
-    
+    <%--
      <c:if test="${param.authfailed}">
         <div class="alert alert-block alert-danger" style="width:20em;">
             <a class="close" data-dismiss="alert" href="#">×</a>
@@ -34,7 +34,7 @@
             <fmt:message key="login.failure.reason"/>: <c:out value="${sessionScope.SPRING_SECURITY_LAST_EXCEPTION.message}"/>
         </div>
     </c:if>
-    
+    --%>
     <div class='row'>
         <div class='col-lg-8 col-md-8'>
             <div class="input-group">

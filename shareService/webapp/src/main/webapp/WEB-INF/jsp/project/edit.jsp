@@ -3,7 +3,7 @@
 
 
 
-<c:url var="url" value='/main/project/save' />
+<c:url var="url" value='/main/project/save?${_csrf.parameterName}=${_csrf.token}' />
 
 <div class="row">
 

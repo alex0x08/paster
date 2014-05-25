@@ -10,7 +10,9 @@
                             <ul class="dropdown-menu" id="auth-dropdown" role='menu'>
                                 <li >
                                     <div style="width:12em;" class='box'>
-                                        <form  action="<c:url value='/j_spring_security_check' />" role='form'  method="POST" class="form-inline">
+                                        
+                                        <c:url var="authUrl" value='/act/doLogin' />    
+                                        <form:form  action="${authUrl}" role='form'  method="POST" class="form-inline">
                                             <c:if test="${param.integrationCode ne null}">
                                                 <input type="hidden" name="integrationCode" value="${param.integrationCode}"/>
                                              </c:if>
@@ -24,7 +26,7 @@
                                                 <input class="form-control"  name="j_password" type="password" placeholder="Password">
                                             </div>  
                                             <button type="submit" class="btn" ><fmt:message key="button.login"/></button>
-                                        </form>
+                                        </form:form>
                                     </div>
                                 </li>
                             </ul>
