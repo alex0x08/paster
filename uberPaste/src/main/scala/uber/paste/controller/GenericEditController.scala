@@ -40,7 +40,7 @@ abstract class GenericEditController[T <: Struct ] extends StructController[T] {
   
     protected def getNewModelInstance():T
 
-    protected def fillEditModel(obj:T,model:Model,locale:Locale) {
+    protected def fillEditModel(obj:T,rev:Long,model:Model,locale:Locale) {
       model.addAttribute(GenericController.MODEL_KEY, obj)
     }
 
@@ -57,7 +57,7 @@ abstract class GenericEditController[T <: Struct ] extends StructController[T] {
   @ResponseStatus(HttpStatus.CREATED)
   def createNew(model:Model,locale:Locale):String= {
 
-    fillEditModel(getNewModelInstance(),model,locale)
+    fillEditModel(getNewModelInstance(),-1,model,locale)
 
     return editPage
   }
@@ -66,7 +66,7 @@ abstract class GenericEditController[T <: Struct ] extends StructController[T] {
   @RequestMapping(value = Array("/edit/{id:[0-9]+}"), method = Array(RequestMethod.GET))
   def editWithId(model:Model,@PathVariable("id") id:Long,locale:Locale):String= {
 
-      fillEditModel(loadModel(id),model,locale)
+      fillEditModel(loadModel(id),-1,model,locale)
 
     return editPage
   }
@@ -86,7 +86,7 @@ abstract class GenericEditController[T <: Struct ] extends StructController[T] {
         if (result.hasErrors()) {
               logger.debug("form has errors " + result.getErrorCount())
               
-             fillEditModel(b,model,locale)
+             fillEditModel(b,-1,model,locale)
            /* for ( f:FieldError : result.getFieldErrors()) {
                 getLogger().debug("field=" + f.getField() + ",rejected value=" + f.getRejectedValue()+",message="+f.getDefaultMessage());
             }*/
@@ -126,7 +126,7 @@ abstract class GenericEditController[T <: Struct ] extends StructController[T] {
 
     model.addAttribute(GenericController.MODEL_KEY, m)
 
-    fillEditModel(m,model,locale)
+    fillEditModel(m,-1,model,locale)
 
     return viewPage
   }

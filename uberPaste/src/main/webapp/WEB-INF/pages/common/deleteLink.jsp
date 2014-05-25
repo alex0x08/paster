@@ -12,7 +12,7 @@
         <span style="font-size: larger;" class="i">d</span>
         <div style="display:none;" id="dialogMsg">
               <img width="300" height="200" class="p-comment" style="width: 250px; height: 150px; float: left; margin: 5px;" 
-                     src="<c:url value='/main/resources/thumb/${model.lastModified.time}/${model.thumbImage}.jpg' >
+                     src="<c:url value='/main/resources/${appVersion}/t/${model.lastModified.time}/${model.thumbImage}.jpg' >
                  </c:url>"/>
             
             <fmt:message  key="dialog.confirm.paste.remove.message">

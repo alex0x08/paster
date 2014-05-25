@@ -2,7 +2,8 @@ package uber.paste.model
 
 import org.compass.annotations.{SearchableProperty, Searchable}
 import javax.xml.bind.annotation.{XmlTransient, XmlRootElement}
-import javax.persistence.{Entity,JoinColumn, FetchType, ManyToOne, Lob,CascadeType}
+import com.thoughtworks.xstream.annotations.XStreamAsAttribute
+import javax.persistence.{Entity,JoinColumn, FetchType, ManyToOne, Lob,CascadeType, Column}
 import javax.validation.constraints.{Size, NotNull}
 import org.codehaus.jackson.annotate.JsonIgnore
 import org.hibernate.envers.Audited
@@ -22,6 +23,15 @@ object Comment extends Struct {
 @Audited
 class Comment extends Struct  with java.io.Serializable{
 
+  @XStreamAsAttribute
+  @Column(nullable=false)
+  private var pasteId:java.lang.Long = null
+ 
+  @XStreamAsAttribute
+  @Column(nullable=false)
+  private var pasteRev:java.lang.Long = null
+  
+  
   @Lob
   @NotNull
   @SearchableProperty
@@ -32,15 +42,22 @@ class Comment extends Struct  with java.io.Serializable{
   @JoinColumn(name = "owner_id")
   private var owner:User = null
 
+  
   private var lineNumber:java.lang.Long = null
 
   private var parentId:java.lang.Long = null
 
+//  @ManyToOne
+//  @JoinColumn(name = "paste_ref", insertable = false, updatable = false)
+//  private var paste:Paste = null
 
-  {
-      setName("---")
-  }
 
+  def setPasteId(id:java.lang.Long) {pasteId=id}
+  def getPasteId() = pasteId
+  
+  def setPasteRev(rev:java.lang.Long) {pasteRev=rev}
+  def getPasteRev() = pasteRev
+  
   @XmlTransient
   @JsonIgnore
   def getOwner(): User = owner
@@ -48,10 +65,12 @@ class Comment extends Struct  with java.io.Serializable{
 
   def isHasOwner() = owner!=null
 
+ // def getPaste = paste
+ // def setPaste(p:Paste) { paste = p}
 
-  def getText() : String = text
+  def getText = text
 
-  def setText(f:String) : Unit = {
+  def setText(f:String) {
     this.text = f
   }
 
@@ -77,6 +96,11 @@ class Comment extends Struct  with java.io.Serializable{
   }
 
   override def loadFull() {
+    System.out.println("_comment loadFull "+owner)
+    if (owner!=null)
+      {
+        getOwner.loadFull
+      }
     getText
   }
 

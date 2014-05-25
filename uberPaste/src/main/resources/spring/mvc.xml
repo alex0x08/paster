@@ -66,9 +66,24 @@
               p:paramName="locale" />
     </mvc:interceptors>
 
-    <mvc:resources mapping="/assets/${paste.app.version}/**" location="classpath:/META-INF/resources/webjars/"/>
-    <mvc:resources mapping="/static/${paste.app.version}/**" location="/WEB-INF/static/"/>
+    <mvc:resources mapping="/assets/${paste.app.version}/**" 
+                   location="classpath:/META-INF/resources/webjars/"/>
+    <mvc:resources mapping="/static/${paste.app.version}/**" 
+                   location="/WEB-INF/static/"/>
   
+
+    <mvc:interceptors>
+    <mvc:interceptor>
+        <mvc:mapping path="/static/**"/>
+        <mvc:mapping path="/assets/**"/>
+        <bean id="webContentInterceptor" class="uber.paste.web.StaticResourcesContentInterceptor">
+            <property name="cacheSeconds" value="31557600"/>
+            <property name="useExpiresHeader" value="true"/>
+            <property name="useCacheControlHeader" value="true"/>
+            <property name="useCacheControlNoStore" value="false"/>
+        </bean>
+    </mvc:interceptor>
+</mvc:interceptors>    
 
     <bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver" />
 

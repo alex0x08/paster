@@ -16,11 +16,11 @@
 
 package uber.paste.build
 
-import uber.paste.model.Struct
+import uber.paste.model.Named
 
-abstract class StructBuilder[T <: Struct](model:T) extends AbstractBuilder[T](model) {
+abstract class NamedBuilder[T <: Named](model:T) extends AbstractBuilder[T](model) {
 
-  def addName(name:String): StructBuilder[T]  = {
+  def addName(name:String): NamedBuilder[T]  = {
     get().setName(name)
     return this
   }

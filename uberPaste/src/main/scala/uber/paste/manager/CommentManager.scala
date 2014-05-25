@@ -14,6 +14,9 @@ import uber.paste.dao.{CommentDao, PasteDao}
  */
 
 trait CommentManager extends GenericSearchManager[Comment]{
+
+ def getCommentsForPaste(pasteId:Long, pasteRev:Long):java.util.List[Comment]
+
 }
 
 @Service("commentManager")
@@ -23,5 +26,8 @@ class CommentManagerImpl extends GenericSearchManagerImpl[Comment] with CommentM
   val commentDao:CommentDao = null
 
   protected override def getDao:CommentDao = commentDao
+
+  
+  def getCommentsForPaste(pasteId:Long, pasteRev:Long):java.util.List[Comment] = commentDao.getCommentsForPaste(pasteId, pasteRev)
 
 }

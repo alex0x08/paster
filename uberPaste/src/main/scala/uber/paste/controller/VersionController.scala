@@ -26,17 +26,20 @@ abstract class VersionController[T <: Struct ] extends GenericEditController[T] 
   protected override def manager():VersionManager[T]
 
 
-  protected override def fillEditModel(obj:T, model:Model,locale:Locale) {
+  protected override def fillEditModel(obj:T, rev:Long, model:Model,locale:Locale) {
 
-    super.fillEditModel(obj, model,locale)
+    super.fillEditModel(obj,rev, model,locale)
 
-    logger.debug("__putModel obj id=" + obj.getId())
+    logger.debug("__putModel obj id=" + obj.getId()+" rev="+rev)
 
     if (!obj.isBlank()) {
         val revs = manager.getRevisions(obj.getId())
       // skip revisions display if only one revision exist
       model.addAttribute("availableRevisions", if (revs!=null && revs.size()>1) revs else null)
-      model.addAttribute("lastRevision", manager.getCurrentRevisionNumber(obj.getId()))
+      val lastRev= manager.getCurrentRevisionNumber(obj.getId())
+      model.addAttribute("lastRevision", lastRev)
+      model.addAttribute("revision", if (rev>0) rev else lastRev)
+      
     }
   }
 
@@ -64,8 +67,10 @@ abstract class VersionController[T <: Struct ] extends GenericEditController[T] 
 
     model.addAttribute(GenericController.MODEL_KEY, omodel)
 
-    fillEditModel(omodel, model,locale)
+    
+    fillEditModel(omodel, revision,model,locale)
 
+    
     return viewPage
   }
 

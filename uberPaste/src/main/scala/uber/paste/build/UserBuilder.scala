@@ -28,7 +28,7 @@ object UserBuilder extends Loggered{
   }
 }
 
-class UserBuilder(model:User) extends StructBuilder[User](model) {
+class UserBuilder(model:User) extends NamedBuilder[User](model) {
 
     def addUsername(username:String): UserBuilder =  {
         get.setUsername(username)

@@ -23,23 +23,19 @@ object Role extends KeyValueObj[Role]{
 
   val ROLE_ADMIN = new Role("ROLE_ADMIN","role.admin.name")
   val ROLE_USER = new Role("ROLE_USER","role.user.name")
+  val ROLE_REVIEWER = new Role("ROLE_REVIEWER","role.reviewer.name")
 
   add(ROLE_ADMIN)
   add(ROLE_USER)
+  add(ROLE_REVIEWER)
 
 
 }
 
 //@Entity
 //@Searchable
-class Role extends KeyValue with GrantedAuthority with java.io.Serializable{
+class Role(code:String,desc:String) extends KeyValue(code,desc) with GrantedAuthority with java.io.Serializable{
 
-  def this(code:String,desc:String) = {
-    this()
-    setCode(code)
-    setName(desc)
-  }
-  
   def getAuthority():String = getCode
 
 }

@@ -19,12 +19,10 @@ package uber.paste.controller
 import uber.paste.manager.GenericSearchManager
 import javax.servlet.http.HttpServletRequest
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation._;
+import org.springframework.web.bind.annotation._
 import java.util.{Collections, Locale}
-import uber.paste.model.{KeyValue, KeyValueObj, Struct, Query}
+import uber.paste.model.{KeyValue, Struct, Query}
 import org.springframework.beans.support.PagedListHolder
-import uber.paste.dao.UserExistsException
-import java.io.IOException
 import org.apache.lucene.queryParser.ParseException
 import org.apache.commons.lang.StringUtils
 import scala.collection.JavaConversions._
@@ -177,8 +175,6 @@ abstract class SearchController[T <: Struct,QV <: Query ] extends GenericListCon
          model.addAttribute("statusMessageKey", "action.query.incorrect")
          return manager.getList
     }  
-    
- //   return super.list(request, locale,model, page, NPpage, pageSize)
   }
 
 

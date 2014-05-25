@@ -61,7 +61,9 @@
   $(${model.id} + '_shareFrame').setStyle('height', document.body.scrollHeight< 1024 ?  '1024px' :  document.body.scrollHeight + 'px');
     
 
-        $('${model.id}_addCommentBtn').addEvent('click', function() {
+        $('${model.id}_addCommentBtn').addEvent('click', function(event) {
+             event.stop();
+
             this.getElementById('btnCaption').set('text', transmitText);
             this.set('disabled', true);
             

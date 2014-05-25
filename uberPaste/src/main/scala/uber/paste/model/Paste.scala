@@ -21,18 +21,10 @@ import javax.validation.constraints.{Size, NotNull}
 import org.compass.core.CompassHighlighter
 import org.compass.annotations._
 import net.sf.classifier4J.summariser.SimpleSummariser
-import org.apache.commons.io.FileUtils
-import org.apache.commons.io.IOUtils
 import org.apache.commons.lang.StringUtils
 import org.codehaus.jackson.annotate.JsonIgnore
 import javax.xml.bind.annotation._
 import uber.paste.base.Loggered
-import com.thoughtworks.xstream.annotations.XStreamAsAttribute
-import java.io.File
-import java.io.FileInputStream
-import java.io.InputStream
-import java.nio.ByteBuffer
-import java.nio.file.FileSystems
 import java.util.{Set,HashSet,ArrayList, UUID}
 import scala.collection.JavaConversions._
 import org.hibernate.envers.{NotAudited, Audited}
@@ -102,13 +94,13 @@ class PasteListener extends Loggered{
 @XmlRootElement(name="paste")
 @EntityListeners(Array(classOf[PasteListener]))
 @Audited
-class Paste extends Struct with java.io.Serializable{
+class Paste extends Named with java.io.Serializable{
 
   /**
    * unique paste id
    */
   @NotNull(message = "{validator.not-null}")
-  @Column(nullable = false, unique = true, length = 255)
+  @Column(nullable = false, unique = true, length = 255,updatable=false)
   @SearchableProperty(store=Store.YES,index=Index.NO)
   private var uuid = UUID.randomUUID().toString()
   
@@ -126,25 +118,19 @@ class Paste extends Struct with java.io.Serializable{
   /**
    *  link to preview image
    */
-  //@Lob
-  //@NotNull
-  //@Column(length=1024,name="thumb_img")
   @XmlTransient
-  //@NotAudited
   @SearchableProperty(store=Store.YES,index=Index.NO)
   //@transient
   private var thumbImage:String =null
 
-  //@Transient
-  //private var thumbUpload:MultipartFile = null
-
+ 
   /**
    * paste title
    */
   //@NotNull
   @Column(length=256)
   @Size(min=3,max=256, message = "{struct.name.validator}")
-  @NotAudited
+  //@NotAudited
   @SearchableProperty
   private var title: String = null
 
@@ -153,7 +139,7 @@ class Paste extends Struct with java.io.Serializable{
    */
   @ManyToOne(fetch = FetchType.EAGER,cascade= Array(CascadeType.PERSIST,CascadeType.MERGE))
   @JoinColumn(name = "owner_id")
-  @NotAudited
+  //@NotAudited
   private var owner:User = null
   
   /**
@@ -196,11 +182,16 @@ class Paste extends Struct with java.io.Serializable{
   /**
    * comments relation
    */
-  @OneToMany(fetch = FetchType.LAZY,
-    cascade = Array(CascadeType.PERSIST,CascadeType.MERGE,CascadeType.REMOVE),
-    orphanRemoval = true)
-  //@NotAudited
-  //@Audited(withModifiedFlag = false)
+ // @OneToMany(fetch = FetchType.LAZY,
+   // cascade = Array(CascadeType.PERSIST,CascadeType.MERGE,CascadeType.REMOVE),
+   // orphanRemoval = true)
+ // @JoinColumn(name = "paste_ref")
+ // @AuditMappedBy(mappedBy = "paste")
+	//@NotAudited
+//  @Audited
+  //(withModifiedFlag = false)
+  @NotAudited
+  @transient
   private var comments:java.util.List[Comment] = new ArrayList[Comment]()
 
   @SearchableProperty
@@ -266,7 +257,6 @@ class Paste extends Struct with java.io.Serializable{
 
   @JsonIgnore
   def getThumbImage() = thumbImage
-   
  
   def setThumbImage(img:String) {thumbImage = img}
 
@@ -335,6 +325,12 @@ class Paste extends Struct with java.io.Serializable{
    * MUST be called with opened hibernate session
    */
   override def loadFull() {
+    //    System.out.println("_loadFull paste "+owner)
+      
+     if (owner!=null)
+      {
+        getOwner.loadFull
+      }
       getText
               for (c<-comments) {
                       c.loadFull()

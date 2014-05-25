@@ -69,6 +69,10 @@
     </filter>
 
 
+<!--filter>
+        <filter-name>responseCacheFilter</filter-name>
+        <filter-class>com.googlecode.webutilities.filters.ResponseCacheFilter</filter-class>
+ </filter-->
 <filter>
         <filter-name>compressionFilter</filter-name>
         <filter-class>com.googlecode.webutilities.filters.CompressionFilter</filter-class>
@@ -106,6 +110,13 @@
    <url-pattern>/*</url-pattern>
  </filter-mapping>
  
+ 
+<!--filter-mapping>
+   <filter-name>responseCacheFilter</filter-name>
+   <url-pattern>/main/assets/*</url-pattern>
+   <url-pattern>/main/static/*</url-pattern>
+ </filter-mapping-->
+
  
 <filter-mapping>
   <filter-name>etagFilter</filter-name>
@@ -193,12 +204,7 @@
     </servlet>
 
 
-    <!--servlet-mapping>
-   <servlet-name>JSCSSMergeServlet</servlet-name>
-   <url-pattern>/main/static/*</url-pattern>
-   <url-pattern>/main/assets/*</url-pattern>
-  </servlet-mapping-->
-
+   
     <servlet>
         <servlet-name>H2Console</servlet-name>
         <servlet-class>org.h2.server.web.H2ConsoleExtendedServlet</servlet-class>
@@ -214,17 +220,15 @@
         <url-pattern>/act/openid-login</url-pattern>
     </servlet-mapping>
 
-    <servlet-mapping>
-        <servlet-name>ResourceDownloadServlet</servlet-name>
-        <url-pattern>/act/get-resource</url-pattern>
-    </servlet-mapping>
-
-   
+    
 
     <servlet-mapping>
         <servlet-name>dispatcher</servlet-name>
         <url-pattern>/main/*</url-pattern>
     </servlet-mapping>
+
+    
+
 
     <servlet-mapping>
         <servlet-name>CXFServlet</servlet-name>

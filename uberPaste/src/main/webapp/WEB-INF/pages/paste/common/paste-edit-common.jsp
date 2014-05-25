@@ -445,11 +445,11 @@
         });
 
 
-        $$('.submitBtn').addEvent('click',function(){
+        $$('.submitBtn').addEvent('click',function(event){
             this.getElementById('btnCaption').set('text', transmitText).disabled = true;
             this.getElementById('btnIcon').setStyle('display','');
 
-            event.preventDefault();
+            event.stop();
             onSave();
         });
 
