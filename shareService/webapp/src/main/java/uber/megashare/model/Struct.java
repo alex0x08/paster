@@ -16,12 +16,9 @@
 package uber.megashare.model;
 
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import javax.persistence.Column;
-import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Temporal;
 import javax.validation.constraints.Pattern;
@@ -41,6 +38,8 @@ import org.hibernate.search.annotations.Store;
 import org.hibernate.search.annotations.TermVector;
 import org.hibernate.search.annotations.TokenFilterDef;
 import org.hibernate.search.annotations.TokenizerDef;
+import org.hibernate.validator.constraints.SafeHtml;
+import org.hibernate.validator.constraints.SafeHtml.WhiteListType;
 import uber.megashare.base.LoggedClass;
 
 
@@ -74,6 +73,7 @@ public abstract class Struct extends BaseDBObject {
     @Field(index = Index.YES, store = Store.YES, termVector = TermVector.YES, boost=@Boost(2f))
     //   @Analyzer(definition = "customanalyzer")
     @XStreamAsAttribute
+    @SafeHtml(whitelistType=WhiteListType.NONE,message = "{validator.forbidden-symbols}")
     private String name;
     
     @Column(name = "last_modified", columnDefinition = "timestamp")

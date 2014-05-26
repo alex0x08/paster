@@ -27,9 +27,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import javax.persistence.*;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlTransient;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.LocaleUtils;
@@ -40,6 +40,8 @@ import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.Store;
 import org.hibernate.search.annotations.TermVector;
+import org.hibernate.validator.constraints.SafeHtml;
+import org.hibernate.validator.constraints.SafeHtml.WhiteListType;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import uber.megashare.base.MD5Util;
@@ -64,11 +66,11 @@ public class User extends AvatarStruct implements Serializable, UserDetails {
     @Column(nullable = false, length = 50, unique = true)
     @Field
     @XStreamAsAttribute
-    @Min(4)
+    @Size(min=4)
     private String login;
     
     @NotNull(message = "{validator.not-null}")
-    @Min(5)
+    @Size(min=5)
     @Column(nullable = false, length = Integer.MAX_VALUE)
     @XStreamOmitField
     private String password;
@@ -78,14 +80,17 @@ public class User extends AvatarStruct implements Serializable, UserDetails {
     @Field
     //@Column(unique = true)
     @XStreamAsAttribute
+    @SafeHtml(whitelistType=WhiteListType.NONE,message = "{validator.forbidden-symbols}")
     private String email;
     
     @Field
     @XStreamAsAttribute
+    @SafeHtml(whitelistType=WhiteListType.NONE,message = "{validator.forbidden-symbols}")
     private String skype;
     
     @Field
     @XStreamAsAttribute
+    @SafeHtml(whitelistType=WhiteListType.NONE,message = "{validator.forbidden-symbols}")
     private String phone;
     
     
@@ -105,7 +110,7 @@ public class User extends AvatarStruct implements Serializable, UserDetails {
    //@NotAudited
     @XmlTransient
     @XStreamOmitField
-    private List<SavedSession> savedSessions = new ArrayList<>();
+    private final List<SavedSession> savedSessions = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.EAGER)
     private Project relatedProject;

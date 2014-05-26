@@ -39,7 +39,7 @@
                 <script src="<c:url value='/main/assets/${appVersion}/bootstrap-datepicker/1.1.3/js/bootstrap-datepicker.js'/>"></script>
                 <script src="<c:url value='/main/assets/${appVersion}/jquery-knob/1.2.2/jquery.knob.js'/>"></script>
 
-                <c:url var="url" value='/main/file/upload-xdr' />
+                <c:url var="url" value='/main/file/upload-xdr?${_csrf.parameterName}=${_csrf.token}' />
                 <c:set var="mainBlockStyle" value="col-md-4"/>
                 
                 <script type="text/javascript">
@@ -74,6 +74,7 @@
                             dropZone: $('#dropzone'),                    
         add: function (e, data) {
         
+       
             var tpl = $('<li class="working"><input type="text" value="0" data-width="48" data-height="48"'+
                 ' data-fgColor="#0788a5" data-readOnly="1" data-bgColor="#3e4043" /><p></p><span></span></li>');
 

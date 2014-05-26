@@ -30,6 +30,7 @@ import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.Store;
 import org.hibernate.search.annotations.TermVector;
+import org.hibernate.validator.constraints.SafeHtml;
 
 /**
  *
@@ -49,6 +50,7 @@ public class Project extends AvatarStruct{
     @Field(index = Index.YES, store = Store.YES, termVector = TermVector.YES, boost=@Boost(3f))
     //   @Analyzer(definition = "customanalyzer")
     @XStreamAsAttribute
+    @SafeHtml(whitelistType=SafeHtml.WhiteListType.NONE,message = "{validator.forbidden-symbols}")
     private String description;
        
     public Project() {}

@@ -203,7 +203,7 @@ public class SharedFile extends Node {
         this.removeAfter = removeAfter;
     }
     
-    public int getDaysBeforeRemoval() {
+    public long getDaysBeforeRemoval() {
     
         if (!isWillBeRemoved()) {
             return -1;
@@ -214,8 +214,8 @@ public class SharedFile extends Node {
                  end = new DateTime(DateBuilder.getInstance()
                 .setTimeToEnd().getDate().getTime());
         
-        int out = Days.daysBetween(start, end).getDays();
-        return out > 0 ? out : 1;
+       return Days.daysBetween(end.toLocalDate(), start.toLocalDate()).toStandardDuration().getStandardDays();
+       // return out > 0 ? out : 1;
      }
     
     public boolean isWillBeRemoved() {

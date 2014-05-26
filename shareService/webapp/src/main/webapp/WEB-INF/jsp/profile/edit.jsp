@@ -1,7 +1,6 @@
 
 <%@ include file="/WEB-INF/jsp/templates/common/taglibs.jsp"%>
 
-
 <div class="row">
 
     <div class="col-md-3" style="text-align:right;">
@@ -41,13 +40,11 @@
                             <form:hidden path="id" />   
 
 
-
-
                             <div class="form-group">
 
                                 <div class="input-group">
                                     <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
-                                        <form:input cssErrorClass="form-control alert alert-danger" cssClass="form-control" path="name" />
+                                    <form:input cssErrorClass="form-control alert alert-danger" cssClass="form-control" path="name" htmlEscape="true"  />
                                 </div>                    
                                 <form:errors path="name" cssClass="help-block alert alert-danger" />                         
                             </div>
