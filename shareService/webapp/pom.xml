@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>uber.megashare</groupId>
     <artifactId>share-app</artifactId>
@@ -29,7 +31,6 @@
 
 
     <properties>
-        <maven.version>3.0.5</maven.version>
         <spring.version>3.2.8.RELEASE</spring.version>
         <spring.security.version>3.2.3.RELEASE</spring.security.version>
         <spring.webflow.version>2.3.0.RELEASE</spring.webflow.version>
@@ -43,7 +44,6 @@
         <slf4j.version>1.7.5</slf4j.version>
         <querydsl.version>2.6.0</querydsl.version>
        
-        <netbeans.hint.deploy.server>Tomcat</netbeans.hint.deploy.server>
 
         <jdbc.groupId>com.h2database</jdbc.groupId>
         <jdbc.artifactId>h2</jdbc.artifactId>
@@ -101,11 +101,6 @@
         <version>1.0-PRE</version>
     </dependency>
             
-    <!--dependency>
-        <groupId>de.tutorials</groupId>
-        <artifactId>de.tutorials.app.module2</artifactId>
-        <version>3.0.0-SNAPSHOT</version>
-    </dependency-->
       
 		<!-- jdbc driver -->
         <dependency>
@@ -960,7 +955,7 @@
                 <artifactId>jetty-maven-plugin</artifactId>
                 <version>9.1.0.RC2</version>
                 <configuration>
-                    <scanIntervalSeconds>10</scanIntervalSeconds>
+                    <scanIntervalSeconds>0</scanIntervalSeconds>
                     <webApp>
                     <contextPath>/${project.artifactId}</contextPath>
                     </webApp>

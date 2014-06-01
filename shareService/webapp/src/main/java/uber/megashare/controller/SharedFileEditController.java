@@ -189,11 +189,11 @@ public class SharedFileEditController extends AbstractCommentController<SharedFi
 
                 log.append("uploadSave starting ,currentUser=" + getCurrentUser() + " file=" + input);
                 
-                 for(XMLField f:input.getXml().getFields().values()) {
+                 /*for(XMLField f:input.getXml().getFields().values()) {
             
                        System.out.println("field "+f);
                     }
-                
+                */
                 input.getXml().rebuildFields();
                
                 
@@ -240,8 +240,7 @@ public class SharedFileEditController extends AbstractCommentController<SharedFi
 
                     input.resetContent();
 
-                    input.setName(mfile.getOriginalFilename());
-
+                 
                     /**
                      * user can specify only access level for now
                      */
@@ -263,10 +262,19 @@ public class SharedFileEditController extends AbstractCommentController<SharedFi
                        /**
                      * calc file extension from file name
                      */
-                    String ext= FilenameUtils.getExtension(input.getFile().getOriginalFilename());
+                    String ext= "unknown";
+                    String name= null;
+                    if (input.getFile().getOriginalFilename()!=null && input.getFile().getOriginalFilename().contains(".")) {
+                       input.setName(mfile.getOriginalFilename());
+
+                        ext= FilenameUtils.getExtension(input.getFile().getOriginalFilename());
                     if (ext==null) {
-                        ext = "data";
+                        ext = "unknown";
                     }
+                    } else {
+                       input.setName("unnamed.bin");
+                    }
+                    
                     String mime = fileManager.getMimeExt(ext);
                    
                     //System.out.println("__ext "+ext+" mime "+mime);
@@ -317,7 +325,11 @@ public class SharedFileEditController extends AbstractCommentController<SharedFi
                             new FileInputStream(fout));
 
 
+                    try {
                     if (!builder.isUnsupported()) {
+                        
+                        
+                        
                         byte[] img = builder.scaleToProfile().getScaledAsBytes();
                         
                         input.setPreviewHeight(builder.getImageInfo().getHeight());
@@ -330,8 +342,12 @@ public class SharedFileEditController extends AbstractCommentController<SharedFi
                                 new File(settingsManager.getCurrentSettings().getUploadDir(), 
                                         input.getPreviewUrl()), img);
                     } else {
-
                         log.append("image preview generation is not supported for file " + fout.getName());
+                    }
+                    } catch (Exception e) {
+                        log.append("erorr during image preview generation " + fout.getName());
+                        log.append(e);
+      
                     }
                     
                 }

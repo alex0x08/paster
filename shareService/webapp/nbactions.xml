@@ -1,58 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <actions>
         <action>
-            <actionName>CUSTOM-jetty:run</actionName>
-            <displayName>jetty:run</displayName>
+            <actionName>CUSTOM-jetty-run</actionName>
+            <displayName>jetty-run</displayName>
             <goals>
                 <goal>jetty:run</goal>
             </goals>
-            <activatedProfiles>
-                <activatedProfile>jetty6,h2</activatedProfile>
-            </activatedProfiles>
-        </action>
-        <action>
-            <actionName>CUSTOM-dep-tree</actionName>
-            <displayName>dep-tree</displayName>
-            <goals>
-                <goal>dependency:tree</goal>
-            </goals>
-        </action>
-        <action>
-            <actionName>CUSTOM-jetty-war</actionName>
-            <displayName>jetty-war</displayName>
-            <goals>
-                <goal>jetty:run-war</goal>
-            </goals>
-        </action>
-        <action>
-            <actionName>CUSTOM-tomcat7:run</actionName>
-            <displayName>tomcat7:run</displayName>
-            <goals>
-                <goal>tomcat7:run</goal>
-            </goals>
-        </action>
-        <action>
-            <actionName>CUSTOM-release-prepare</actionName>
-            <displayName>release-prepare</displayName>
-            <goals>
-                <goal>release:prepare</goal>
-            </goals>
-        </action>
-        <action>
-            <actionName>CUSTOM-release-perform</actionName>
-            <displayName>release-perform</displayName>
-            <goals>
-                <goal>release:perform</goal>
-            </goals>
-        </action>
-        <action>
-            <actionName>CUSTOM-tomcat7-run-war</actionName>
-            <displayName>tomcat7-run-war</displayName>
-            <goals>
-                <goal>tomcat7:run-war-only</goal>
-            </goals>
-            <activatedProfiles>
-                <activatedProfile>h2,tomcat7</activatedProfile>
-            </activatedProfiles>
         </action>
     </actions>
