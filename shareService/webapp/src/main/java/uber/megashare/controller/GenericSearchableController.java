@@ -77,15 +77,17 @@ public abstract class GenericSearchableController<T extends Struct, SQ extends S
             public PagedListHolder<T> invokeCreate() {
                 try {
                     List<T> result = smanager.search(query);
+                    
+                   
                     if (result!=null) {
                         session.setAttribute("queryString", query.getQuery());
                     } else {
                         session.removeAttribute("queryString");
                     }
-                    return new PagedListHolder<>(result!=null ? result : Collections.EMPTY_LIST);
+                    return new ExtendedPagedListHolder<>(result!=null ? result : Collections.EMPTY_LIST,"search");
                 } catch (ParseException e) {
-                    //getLogger().error(e.getLocalizedMessage(), e);
-                    return new PagedListHolder<>(Collections.EMPTY_LIST);
+                    getLogger().error(e.getLocalizedMessage(), e);
+                    return new ExtendedPagedListHolder<>(Collections.EMPTY_LIST,"search");
                 }
             }
         });

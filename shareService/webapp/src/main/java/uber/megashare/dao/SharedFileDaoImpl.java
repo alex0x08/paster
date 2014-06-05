@@ -95,11 +95,12 @@ public class SharedFileDaoImpl extends GenericSearchableDaoImpl<SharedFile> impl
 
                 String qquery = query;
                 /**
-                 * added for stupid users
+                 * hack for highlighter
                  */
-                /*if (!query.contains(":") && !query.contains("*")) {
+                if (!query.contains(":") && !query.contains("*")) {
                  qquery += "*";
-                 }*/
+                 }
+                
                 List<SharedFile> out = new ArrayList<>();
                 FullTextEntityManager fsession = getFullTextEntityManager();
 
@@ -127,12 +128,21 @@ public class SharedFileDaoImpl extends GenericSearchableDaoImpl<SharedFile> impl
                     }
 
                     if (userId == null || file.getOwner().getId().equals(userId) || file.getAccessLevel() == AccessLevel.ALL) {
-
-                        file.setName(highlighter
+  
+                
+                        String hl=highlighter
                                 .getBestFragments(pparser.getAnalyzer()
                                         .tokenStream("name", new StringReader(file.getName())),
-                                        file.getName(), 3, " ..."));
+                                        file.getName(), 3, " ...");
+                        
+                        if (hl!=null && hl.trim().length()>0) {
+                            file.setName(hl);
+                        }
+                        
+                        
                         out.add(file);
+                        
+                        
                         log.append("added " + file.getId() + " to output");
                     }
 

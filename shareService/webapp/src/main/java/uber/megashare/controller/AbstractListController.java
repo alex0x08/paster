@@ -157,7 +157,7 @@ public abstract class AbstractListController<T extends Struct> extends GenericCo
         public PagedListHolder<T> invokeCreate() {
             List<T> result = getModels();
                     session.removeAttribute("queryString");
-                    return new PagedListHolder<>(result!=null ? result : Collections.EMPTY_LIST);
+                    return new ExtendedPagedListHolder<>(result!=null ? result : Collections.EMPTY_LIST,"list_all");
             }
         });
     }

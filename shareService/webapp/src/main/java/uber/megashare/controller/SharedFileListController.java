@@ -125,7 +125,7 @@ public class SharedFileListController
             
             AccessLevel l = AccessLevel.valueOf(mode.toUpperCase());
            
-            model.addAttribute("currentViewMode",l);
+          
             
             switch(AccessLevel.valueOf(mode.toUpperCase())) {
                 case ALL: result = getModels(); break;
@@ -137,10 +137,9 @@ public class SharedFileListController
                         new AccessLevel[]{AccessLevel.OWNER,AccessLevel.USERS}, null); break;
                 default: result = null;
             }
-                     model.addAttribute("currentResultSize",result!=null ? result.size():0);
-         
+                 
                     session.removeAttribute("queryString");
-                    return new PagedListHolder<>(result!=null ? result : Collections.EMPTY_LIST);
+                    return new ExtendedPagedListHolder<>(result!=null ? result : Collections.EMPTY_LIST,"list_"+l.getCodeLowerCase());
             }
         });
 
@@ -161,22 +160,7 @@ public class SharedFileListController
             @RequestParam(required = false) boolean sortAsc,
             Locale locale) {
 
-          model.addAttribute("currentViewMode",AccessLevel.ALL);
-       
-    
-        putListModel(model, locale);
-
-        return processPagination(request, model, page, NPpage, pageSize,sortColumn,sortAsc,new SourceCallback<SharedFile>() {
-
-        @Override
-        public PagedListHolder<SharedFile> invokeCreate() {
-            List<SharedFile> result = getModels();
-                model.addAttribute("currentResultSize",result.size());
-     
-                    session.removeAttribute("queryString");
-                    return new PagedListHolder<>(result!=null ? result : Collections.EMPTY_LIST);
-            }
-        });
+        return super.list(request, session, model, page, NPpage, pageSize, sortColumn, sortAsc, locale);
     }
     
 

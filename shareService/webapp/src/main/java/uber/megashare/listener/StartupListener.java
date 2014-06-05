@@ -265,7 +265,7 @@ public class StartupListener extends LoggedClass implements ServletContextListen
                           
                         defaultParent =  folderManager.save(defaultParent);
                 
-                        System.out.println("_parent id: "+defaultParent.getId()+" type "+defaultParent.getNodeType());
+                     //   System.out.println("_parent id: "+defaultParent.getId()+" type "+defaultParent.getNodeType());
                         
                          FolderNode sub1 = new FolderNode();
                           sub1.setName("Sub 1");
@@ -296,7 +296,7 @@ public class StartupListener extends LoggedClass implements ServletContextListen
                           sub2 =  folderManager.save(sub2);
 
                           
-                        System.out.println("_sub1 id: "+sub1.getId()+" type "+sub1.getNodeType()+" sub2 id: "+sub2.getId()+" sub2 parent "+sub2.getParent().getId());
+                        //System.out.println("_sub1 id: "+sub1.getId()+" type "+sub1.getNodeType()+" sub2 id: "+sub2.getId()+" sub2 parent "+sub2.getParent().getId());
                     
           for (FolderNode friend : folderManager.getChildren(sub1)) {
     

@@ -161,7 +161,7 @@ extends GenericSearchableController<T, SQ> implements ListConstants
         return processPagination(request, model, page, NPpage, pageSize, sortColumn, sortAsc, new SourceCallback<T>() {
             @Override
             public PagedListHolder<T> invokeCreate() {
-                return new PagedListHolder<>(manager.getObjectsForIntegration(integrationCode));
+                return new ExtendedPagedListHolder<>(manager.getObjectsForIntegration(integrationCode),"list_integrated");
             }
         });
     }

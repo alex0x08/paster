@@ -9,23 +9,6 @@
                method="POST" >
         <form:errors path="*" cssClass="errorblock" element="span"/>
 
-        <div class="form-group">
-            
-            <c:choose >
-                <c:when test="${param.filesBtn == 'LIST'}">
-                    <a class="btn btn-primary btn-large" href="<c:url value='/main/file/list' />">
-               <fmt:message key="files.title"/>
-           </a>
-                </c:when>
-                <c:otherwise>
-                    <a class="btn btn-primary btn-large" href="<c:url value='/main/file/list' />">
-                         <span class="glyphicon glyphicon-refresh" title="<fmt:message key='files.title'/>"></span>                       
-                    </a>
-                </c:otherwise>
-             </c:choose>
-           
-      
-        </div>
         
         <div class="form-group">
 

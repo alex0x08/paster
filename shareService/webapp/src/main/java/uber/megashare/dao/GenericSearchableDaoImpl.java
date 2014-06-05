@@ -149,7 +149,6 @@ public abstract class GenericSearchableDaoImpl<T extends Struct> extends Generic
         List<T> results = fquery.getResultList();
        try {
         for (T obj : results) {
-           
                 obj.setName(highlighter
                         .getBestFragments(pparser.getAnalyzer()
                                 .tokenStream("name", new StringReader(obj.getName())),

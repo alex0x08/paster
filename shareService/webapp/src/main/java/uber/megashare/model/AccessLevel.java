@@ -40,6 +40,11 @@ public enum AccessLevel {
     public String getCode() {
         return name();
     }
+    
+    public String getSourceCode() {
+        return "list_"+name().toLowerCase();
+    }
+    
     public String getCodeLowerCase() {
         return name().toLowerCase();
     }

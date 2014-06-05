@@ -59,7 +59,6 @@ filters = {
     })
 })
 @Audited
-
 public abstract class Struct extends BaseDBObject {
 
     
@@ -95,10 +94,8 @@ public abstract class Struct extends BaseDBObject {
     @NotAudited
     protected Integer versionsCount;
 
-    public boolean isEverModified() {
-    
+    public boolean isEverModified() {    
         return lastModified!=null && lastModified.after(created);
- 
     }
     
     public Integer getVersionsCount() {
