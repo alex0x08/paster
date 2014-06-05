@@ -53,7 +53,7 @@
 
         <form:form action="${commentUrl}" modelAttribute="newComment" 
                    method="POST" id="add_comment" cssClass="form-vertical"
-                   enctype="multipart/form-data">
+                   >
             <fieldset>
 
                 <div class="control-group" >

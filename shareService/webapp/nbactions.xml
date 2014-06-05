@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <actions>
         <action>
-<<<<<<< HEAD
             <actionName>CUSTOM-jetty:run</actionName>
             <displayName>jetty:run</displayName>
             <goals>
@@ -55,12 +54,5 @@
             <activatedProfiles>
                 <activatedProfile>h2,tomcat7</activatedProfile>
             </activatedProfiles>
-=======
-            <actionName>CUSTOM-jetty-run</actionName>
-            <displayName>jetty-run</displayName>
-            <goals>
-                <goal>jetty:run</goal>
-            </goals>
->>>>>>> dbf52a094d477965568a60d39b920438f36ce077
         </action>
     </actions>

@@ -151,5 +151,3 @@
        <script src="<c:url value='/main/assets/${appVersion}/bootstrap/3.0.0/js/bootstrap.min.js'/>"></script>
        <script src="<c:url value='/main/static/${appVersion}/libs/zoombox/zoombox.js'/>"></script>
        <script src="<c:url value='/main/assets/${appVersion}/prettify/4-Mar-2013/run_prettify.js'/>"></script> 
->>>>>>> dbf52a094d477965568a60d39b920438f36ce077
-       

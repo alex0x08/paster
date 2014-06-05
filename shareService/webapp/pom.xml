@@ -30,9 +30,9 @@
 
     <properties>
         <maven.version>3.0.5</maven.version>
-        <spring.version>3.2.4.RELEASE</spring.version>
-        <spring.security.version>3.1.4.RELEASE</spring.security.version>
-        <spring.webflow.version>2.3.0.RELEASE</spring.webflow.version>
+        <spring.version>3.2.9.RELEASE</spring.version>
+        <spring.security.version>3.2.4.RELEASE</spring.security.version>
+        <spring.webflow.version>2.3.4.RELEASE</spring.webflow.version>
         <commons.beanutils.version>1.8.0</commons.beanutils.version>
         <commons.collections.version>3.1</commons.collections.version>
         <jstl.version>1.1.2</jstl.version>
@@ -282,7 +282,11 @@
                 </dependency>
 
        
-              
+                <dependency>
+                    <groupId>org.jsoup</groupId>
+                    <artifactId>jsoup</artifactId>
+                    <version>1.7.3</version>
+                </dependency>
 
 
 
