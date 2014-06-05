@@ -96,7 +96,7 @@ public abstract class Struct extends BaseDBObject {
     protected Integer versionsCount;
 
     public boolean isEverModified() {
-        return lastModified!=null;
+        return lastModified!=null && lastModified.after(created);
     }
     
     public Integer getVersionsCount() {
@@ -153,7 +153,7 @@ public abstract class Struct extends BaseDBObject {
     public void fillFrom(Struct source) {
         super.fillFrom(source);
         
-        System.out.println("__fill from created="+source.created);
+        //System.out.println("__fill from created="+source.created);
         this.created=source.created;
         this.lastModified=source.lastModified;
         this.name=source.name;

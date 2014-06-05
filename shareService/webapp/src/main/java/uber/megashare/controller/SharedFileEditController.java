@@ -77,7 +77,7 @@ public class SharedFileEditController extends AbstractCommentController<SharedFi
      */
     private static final long serialVersionUID = -7829803368219070244L;
 
-    private SharedFileManager fileManager;
+    private final SharedFileManager fileManager;
     
     
     
@@ -189,10 +189,10 @@ public class SharedFileEditController extends AbstractCommentController<SharedFi
 
                 log.append("uploadSave starting ,currentUser=" + getCurrentUser() + " file=" + input);
                 
-                 for(XMLField f:input.getXml().getFields().values()) {
+                 /*for(XMLField f:input.getXml().getFields().values()) {
             
                        System.out.println("field "+f);
-                    }
+                    }*/
                 
                 input.getXml().rebuildFields();
                

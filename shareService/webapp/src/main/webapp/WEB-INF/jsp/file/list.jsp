@@ -4,6 +4,9 @@
 <c:if test="${pageItems.nrOfElements > 0}">
 <div class="row" >                
     <div class="col-md-6"  > 
+        
+    </div>
+    <div class="col-md-6"  > 
         <c:if test="${pageItems.pageCount > 1}">  
             <jsp:include
                 page="/WEB-INF/jsp/templates/common/pagination.jsp">

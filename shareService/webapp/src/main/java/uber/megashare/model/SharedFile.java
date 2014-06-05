@@ -65,7 +65,7 @@ import uber.megashare.model.xml.XMLObject;
 @XStreamAlias("sharedFile")
 //@EntityListeners({CreateUUIDListener.class})
 //@TypeDef(defaultForType = XMLObject.class,name = "xmlObject", typeClass = uber.megashare.model.xml.XMLObjectType.class)
-//@EntityListeners({UpdateLastModifiedListener.class})
+@EntityListeners({UpdateLastModifiedListener.class})
 public class SharedFile extends Node {
 
     public static final String PASTER_PREFIX= "paste_";

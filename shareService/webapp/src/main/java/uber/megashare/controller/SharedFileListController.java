@@ -18,11 +18,13 @@ package uber.megashare.controller;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.support.PagedListHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -91,19 +93,54 @@ public class SharedFileListController
       //  Collections.addAll(this, elements);
       //  folderManager.getChildren(folderManager.getParentFolder())
         
-          List<SharedFile> out = new ArrayList<>();
+ //         List<SharedFile> out = new ArrayList<>();
           /*for(FolderNode f:folderManager.getChildren(folderManager.getParentFolder())) {
               out.add(f.toSharedFile());
           }*/
           
-           out.addAll(!isCurrentUserLoggedIn()? fileManager.getFiles(null,new AccessLevel[]{AccessLevel.ALL}):
+           return !isCurrentUserLoggedIn()? fileManager.getFiles(null,new AccessLevel[]{AccessLevel.ALL}):
                     fileManager.getFilesForUser(getCurrentUser().getId(),getCurrentUser().getRelatedProject().getId(),
-                    AccessLevel.values(),null));
-           return out;
+                    AccessLevel.values(),null);
+          
     }
    
     
-    
+    @RequestMapping(value = LIST_ACTION + "/{mode:[a-z]+}", method = RequestMethod.GET)
+    public @ModelAttribute(NODE_LIST_MODEL)
+    Collection<SharedFile> listByMode(final @PathVariable("mode") String mode,
+            HttpServletRequest request,
+            final HttpSession session,
+            Model model,
+            Locale locale) {
+        
+                putListModel(model, locale);
+
+        return processPagination(request, model, null, null, null,null,false,new SourceCallback<SharedFile>() {
+
+        @Override
+        public PagedListHolder<SharedFile> invokeCreate() {
+            
+            List<SharedFile> result;
+            
+            switch(mode) {
+                case "all": result = getModels(); break;
+                case "project": result = fileManager.getFiles(
+                        getCurrentUser().getRelatedProject().getId(), 
+                        new AccessLevel[]{AccessLevel.PROJECT}); break;
+                case "user": result = fileManager.getFilesForUser(
+                        getCurrentUser().getId(),null,
+                        new AccessLevel[]{AccessLevel.OWNER,AccessLevel.USERS}, null); break;
+                default: result = null;
+            }
+            
+                    session.removeAttribute("queryString");
+                    return new PagedListHolder<>(result!=null ? result : Collections.EMPTY_LIST);
+            }
+        });
+
+        
+    }
+
    
 
     @RequestMapping(value = INTEGRATED_PREFIX+LIST_ACTION+"/{integrationCode:[a-z0-9_]+}", method = RequestMethod.GET)
