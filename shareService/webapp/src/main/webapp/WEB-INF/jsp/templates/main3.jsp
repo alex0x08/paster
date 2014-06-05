@@ -48,8 +48,11 @@
 
         </div>
                        
-                 <div class="container">
+                    <div class="container" style="margin:0;">
                      <div class="row">
+                         
+                         
+                         
                          <div class="col-xs-12 col-md-12" >
                              <div id="jsErrors">
                                  <!--[if IE]>

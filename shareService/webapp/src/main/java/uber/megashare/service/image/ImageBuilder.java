@@ -47,8 +47,8 @@ public class ImageBuilder extends LoggedClass {
     private final ImageInfo ii_instance = new ImageInfo();
     private BufferedImage source, //исходное изображение / original image
             scaled; //результат преобразований / scaled image
-    private int min_width, //минимальная ширина изображения для преобразования // minimum width to start scaling
-            min_height, //минимальная высота изображения // minimum height to ..
+    private int min_width=64, //минимальная ширина изображения для преобразования // minimum width to start scaling
+            min_height=64, //минимальная высота изображения // minimum height to ..
             max_height = 3000, max_width = 3000,
             scale_rate; // TODO: describe it
     /**

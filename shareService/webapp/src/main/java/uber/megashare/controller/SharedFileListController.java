@@ -105,13 +105,14 @@ public class SharedFileListController
     }
    
     
-    @RequestMapping(value = LIST_ACTION + "/{mode:[a-z]+}", method = RequestMethod.GET)
+    @RequestMapping(value = LIST_ACTION + "/{mode:[a-zA-Z]+}", method = RequestMethod.GET)
     public @ModelAttribute(NODE_LIST_MODEL)
     Collection<SharedFile> listByMode(final @PathVariable("mode") String mode,
             HttpServletRequest request,
             final HttpSession session,
-            Model model,
+            final Model model,
             Locale locale) {
+        
         
                 putListModel(model, locale);
 
@@ -122,17 +123,22 @@ public class SharedFileListController
             
             List<SharedFile> result;
             
-            switch(mode) {
-                case "all": result = getModels(); break;
-                case "project": result = fileManager.getFiles(
+            AccessLevel l = AccessLevel.valueOf(mode.toUpperCase());
+           
+            model.addAttribute("currentViewMode",l);
+            
+            switch(AccessLevel.valueOf(mode.toUpperCase())) {
+                case ALL: result = getModels(); break;
+                case PROJECT: result = fileManager.getFiles(
                         getCurrentUser().getRelatedProject().getId(), 
                         new AccessLevel[]{AccessLevel.PROJECT}); break;
-                case "user": result = fileManager.getFilesForUser(
+                case OWNER: result = fileManager.getFilesForUser(
                         getCurrentUser().getId(),null,
                         new AccessLevel[]{AccessLevel.OWNER,AccessLevel.USERS}, null); break;
                 default: result = null;
             }
-            
+                     model.addAttribute("currentResultSize",result!=null ? result.size():0);
+         
                     session.removeAttribute("queryString");
                     return new PagedListHolder<>(result!=null ? result : Collections.EMPTY_LIST);
             }
@@ -141,7 +147,38 @@ public class SharedFileListController
         
     }
 
-   
+
+    @RequestMapping(value = LIST_ACTION, method = RequestMethod.GET)
+    public @ModelAttribute(NODE_LIST_MODEL)
+    @Override
+    Collection<SharedFile> list(HttpServletRequest request,
+            final HttpSession session,
+            final Model model,
+            @RequestParam(required = false) Integer page,
+            @RequestParam(required = false) String NPpage,
+            @RequestParam(required = false) Integer pageSize,
+            @RequestParam(required = false) String sortColumn,
+            @RequestParam(required = false) boolean sortAsc,
+            Locale locale) {
+
+          model.addAttribute("currentViewMode",AccessLevel.ALL);
+       
+    
+        putListModel(model, locale);
+
+        return processPagination(request, model, page, NPpage, pageSize,sortColumn,sortAsc,new SourceCallback<SharedFile>() {
+
+        @Override
+        public PagedListHolder<SharedFile> invokeCreate() {
+            List<SharedFile> result = getModels();
+                model.addAttribute("currentResultSize",result.size());
+     
+                    session.removeAttribute("queryString");
+                    return new PagedListHolder<>(result!=null ? result : Collections.EMPTY_LIST);
+            }
+        });
+    }
+    
 
     @RequestMapping(value = INTEGRATED_PREFIX+LIST_ACTION+"/{integrationCode:[a-z0-9_]+}", method = RequestMethod.GET)
     public @ModelAttribute(NODE_LIST_MODEL)
@@ -164,14 +201,20 @@ public class SharedFileListController
         smodel.setAccessLevel(AccessLevel.ALL);
         
          model.addAttribute(AbstractEditController.MODEL_KEY, smodel);
-    
-        return super.listIntegrated(integrationCode, request, session, model, page, NPpage, pageSize,sortColumn,sortAsc, locale);
+        Collection<SharedFile> out= super.listIntegrated(integrationCode, request, session, model, page, NPpage, pageSize,sortColumn,sortAsc, locale);
+            
+        return out;
     }
 
     
 
     @Override
     protected void putListModel(Model model, Locale locale) {
+        
+        model.addAttribute("availableModes", new AccessLevel[]{
+            AccessLevel.ALL,
+            AccessLevel.OWNER,
+            AccessLevel.PROJECT});
         /**
          * add list of users in systems to view from dropdown selectbox
          */

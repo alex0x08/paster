@@ -54,5 +54,5 @@
     });
     </script>  
     
-            <ul id="list-pagination" style="" ></ul>  
+            <ul id="list-pagination" style="margin:0;" ></ul>  
        

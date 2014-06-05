@@ -31,12 +31,17 @@ public enum AccessLevel {
         this.desc=desc;
     }
     
+   
+    
     public String getDesc() {
         return desc;
     }
     
     public String getCode() {
         return name();
+    }
+    public String getCodeLowerCase() {
+        return name().toLowerCase();
     }
     
     public AccessLevel[] getLevels() {

@@ -23,15 +23,22 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Set;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
+import org.h2.util.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomCollectionEditor;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -79,7 +86,8 @@ public class SharedFileEditController extends AbstractCommentController<SharedFi
 
     private final SharedFileManager fileManager;
     
-    
+    private final ExecutorService mergeExecutor = Executors.newFixedThreadPool(5);
+
     
     @Autowired
     public SharedFileEditController(SharedFileManager fileManager) {
@@ -263,7 +271,7 @@ public class SharedFileEditController extends AbstractCommentController<SharedFi
                        /**
                      * calc file extension from file name
                      */
-                    String ext= FilenameUtils.getExtension(input.getFile().getOriginalFilename());
+                    String ext= FilenameUtils.getExtension(input.getName());
                     if (ext==null) {
                         ext = "data";
                     }
@@ -311,8 +319,7 @@ public class SharedFileEditController extends AbstractCommentController<SharedFi
                     /**
                      * create preview if applicable
                      */
-                    
-                   
+                  
                     ImageBuilder builder = ImageBuilder.createInstance().setSource(
                             new FileInputStream(fout));
 
@@ -335,7 +342,26 @@ public class SharedFileEditController extends AbstractCommentController<SharedFi
                     }
                     
                 }
-                SharedFile out = manager.save(input);
+                
+                SharedFile out = mergeExecutor.submit(new Callable<SharedFile>() {
+                    final Authentication a = SecurityContextHolder.getContext().getAuthentication();
+
+                    @Override
+                    public SharedFile call() {
+                        try {
+                            SecurityContext ctx = SecurityContextHolder.createEmptyContext();
+                            ctx.setAuthentication(a);
+                            SecurityContextHolder.setContext(ctx);
+                            return manager.save(input);
+
+                        } finally {
+                            SecurityContextHolder.clearContext();
+                        }
+                    }
+                }).get();
+
+                
+                //SharedFile out = manager.save(input);
    
                 log.append("saved file " + out);
 
@@ -589,7 +615,7 @@ public class SharedFileEditController extends AbstractCommentController<SharedFi
         
     @Override
     protected Object convertElement(Object element) {
-        System.out.println("getSting : " + element.toString()+" element class="+element.getClass().getName());
+       // System.out.println("getSting : " + element.toString()+" element class="+element.getClass().getName());
         if (element.getClass().isAssignableFrom(modelClass)) {
             return element;
         }

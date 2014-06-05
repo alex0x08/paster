@@ -23,7 +23,7 @@ import java.util.Objects;
  */
 public class SortColumn {
 
-    private String property,name;
+    private final String property,name;
 
     public SortColumn(String property,String name) {
         this.property=property;
