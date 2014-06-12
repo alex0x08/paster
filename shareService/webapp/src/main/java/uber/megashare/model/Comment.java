@@ -65,6 +65,24 @@ public class Comment extends BaseDBObject implements Serializable {
     @Field(index = Index.YES, store = Store.YES, termVector = TermVector.YES, boost=@Boost(1.2f))
     private String message;
     
+  
+    private Long objectId, revId;
+
+    public Long getObjectId() {
+        return objectId;
+    }
+
+    public void setObjectId(Long objectId) {
+        this.objectId = objectId;
+    }
+
+    public Long getRevId() {
+        return revId;
+    }
+
+    public void setRevId(Long revId) {
+        this.revId = revId;
+    }
     
 
     /**

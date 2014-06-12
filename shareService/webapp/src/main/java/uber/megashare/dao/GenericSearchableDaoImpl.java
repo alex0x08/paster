@@ -18,29 +18,25 @@ package uber.megashare.dao;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.apache.commons.lang.StringUtils;
-import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.util.Version;
-import org.hibernate.search.jpa.Search;
 import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.jpa.FullTextQuery;
 import org.springframework.transaction.annotation.Transactional;
 import uber.megashare.model.Struct;
 import org.apache.lucene.morphology.russian.RussianAnalyzer;
 import org.apache.lucene.queryParser.MultiFieldQueryParser;
-import org.apache.lucene.search.highlight.Fragmenter;
 import org.apache.lucene.search.highlight.Highlighter;
 import org.apache.lucene.search.highlight.InvalidTokenOffsetsException;
 import org.apache.lucene.search.highlight.QueryScorer;
-import org.apache.lucene.search.highlight.SimpleFragmenter;
 import org.apache.lucene.search.highlight.SimpleHTMLFormatter;
 import org.apache.lucene.search.highlight.SimpleSpanFragmenter;
 import org.hibernate.CacheMode;
+import org.hibernate.search.jpa.Search;
+import uber.megashare.base.LoggedClass;
 
 /**
  *
@@ -49,6 +45,35 @@ import org.hibernate.CacheMode;
 @Transactional(readOnly = true, rollbackFor = Exception.class,value= "transactionManager")
 public abstract class GenericSearchableDaoImpl<T extends Struct> extends GenericVersioningDaoImpl<T> {
 
+    protected class FSearch extends LoggedClass{
+        
+         FullTextEntityManager fsession = getFullTextEntityManager();
+
+         QueryParser pparser = new MultiFieldQueryParser(Version.LUCENE_35, getDefaultStartFields(), an);
+        
+        
+        Query luceneQuery;
+        QueryScorer scorer;
+        Highlighter highlighter;
+        FullTextQuery fquery;
+        
+        public FSearch(String query) throws ParseException {
+        
+            getLogger().debug("searching for "+query);
+            luceneQuery = pparser.parse(query);
+            scorer=new QueryScorer(luceneQuery);
+            highlighter = new Highlighter(formatter, scorer);
+            highlighter.setTextFragmenter(new SimpleSpanFragmenter(scorer, 100));
+            fquery = fsession.createFullTextQuery(luceneQuery, persistentClass);
+      
+        }
+        
+        public List<T> getResults() {        
+            return fillHighlighted(highlighter, pparser, fquery.getResultList());
+        }
+    }
+    
+    
     /**
      *
      */
@@ -126,42 +151,37 @@ public abstract class GenericSearchableDaoImpl<T extends Struct> extends Generic
             query+="*";
         }
 
-        FullTextEntityManager fsession = getFullTextEntityManager();
-
-        /**
-         * "name" is default search field
-         */
-     
-
-        QueryParser pparser = new MultiFieldQueryParser(Version.LUCENE_35, getDefaultStartFields(), an);
-        //QueryParser pparser = new QueryParser(Version.LUCENE_31, "name", an); //new StandardAnalyzer(Version.LUCENE_31)
-        
-        getLogger().debug("searching for "+query);
-        
-        Query luceneQuery = pparser.parse(query);
-        QueryScorer scorer=new QueryScorer(luceneQuery);
-     
-        Highlighter highlighter = new Highlighter(formatter, scorer);
-         highlighter.setTextFragmenter(new SimpleSpanFragmenter(scorer, 100));
-         
-        FullTextQuery fquery = fsession.createFullTextQuery(luceneQuery, persistentClass);
-      
-        List<T> results = fquery.getResultList();
-       try {
-        for (T obj : results) {
-                obj.setName(highlighter
-                        .getBestFragments(pparser.getAnalyzer()
-                                .tokenStream("name", new StringReader(obj.getName())),
-                                obj.getName(), 3, " ..."));
-           
-        }
-         } catch (IOException | InvalidTokenOffsetsException ex) {
-             throw new ParseException(ex.getLocalizedMessage());
-            }
-        return results;
+            return new FSearch(query).getResults();
 
     }
+   
+     protected List<T> fillHighlighted(Highlighter highlighter,
+            QueryParser pparser,
+            List<T> results) {
+        for (T obj : results) {
+            fillHighlighted(highlighter, pparser, obj);
+        }
+        return results;
+     }
     
+    protected void fillHighlighted(Highlighter highlighter,
+            QueryParser pparser,
+            T model) {
+        try {
+            String hl = highlighter
+                    .getBestFragments(pparser.getAnalyzer()
+                            .tokenStream("name", new StringReader(model.getName())),
+                            model.getName(), 3, " ...");
+
+            if (hl != null && hl.trim().length() > 0) {
+                model.setName(hl);
+            }
+        } catch (IOException | InvalidTokenOffsetsException ex) {
+            getLogger().error(ex.getLocalizedMessage(), ex);
+        }
+
+    }
+
 
     
     protected static RussianAnalyzer an;
@@ -170,7 +190,7 @@ public abstract class GenericSearchableDaoImpl<T extends Struct> extends Generic
         try {
             an= new RussianAnalyzer();
         } catch (IOException ex) {
-           ex.printStackTrace();
+          throw new RuntimeException(ex);
         }
     }
 }

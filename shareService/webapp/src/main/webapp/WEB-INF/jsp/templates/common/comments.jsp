@@ -54,6 +54,10 @@
         <form:form action="${commentUrl}" modelAttribute="newComment" 
                    method="POST" id="add_comment" cssClass="form-vertical"
                    >
+                    <input type="hidden" name="objectId" value="${model.id}"/>
+                    <input type="hidden" name="revId" value="${lastRevision}"/>
+                    
+  
             <fieldset>
 
                 <div class="control-group" >

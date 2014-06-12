@@ -39,14 +39,15 @@ public class CommentedStruct extends Struct implements Serializable {
     private static final long serialVersionUID = 8839150374530598001L;
     
     
-    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.REMOVE})
+    //@OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.REMOVE})
    // @ContainedIn
     //@IndexedEmbedded
-    @NotAudited
+    //@NotAudited
    // @Audited(modStore=ModificationStore.FULL, targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
-    @IndexedEmbedded(depth = 1, prefix = "comments_")
+    //@IndexedEmbedded(depth = 1, prefix = "comments_")
     //@XStreamImplicit(keyFieldName="comments")
-    private List<Comment> comments = new ArrayList<>();
+    @NotAudited
+    private transient List<Comment> comments = new ArrayList<>();
 
     @NotAudited
     private int commentsCount;
@@ -55,11 +56,15 @@ public class CommentedStruct extends Struct implements Serializable {
         
         comments.add(c);
         
-        commentsCount=comments.size();
         
         return this;
     }
    
+    public void syncCommentsCount() {
+           commentsCount=comments.size();
+     
+    }
+    
     public CommentedStruct removeComment(Comment c) {
         comments.remove(c);
         commentsCount=comments.size();

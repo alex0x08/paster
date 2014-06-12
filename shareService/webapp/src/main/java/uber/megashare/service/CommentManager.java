@@ -15,6 +15,7 @@
  */
 package uber.megashare.service;
 
+import java.util.List;
 import org.springframework.transaction.annotation.Transactional;
 import uber.megashare.model.Comment;
 
@@ -36,4 +37,7 @@ public interface CommentManager extends GenericManager<Comment, Long> {
       *         коммент
       */
      public Comment getFull(Long id);
+     
+     public List<Comment> getCommentsFor(Long id, Long rev);
+    
 }

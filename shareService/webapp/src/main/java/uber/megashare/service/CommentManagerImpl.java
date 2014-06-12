@@ -15,6 +15,7 @@
  */
 package uber.megashare.service;
 
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uber.megashare.dao.CommentDao;
@@ -40,7 +41,9 @@ public class CommentManagerImpl extends GenericManagerImpl<Comment, Long> implem
         this.commentDao = commentDao;
     }
 
-   
+public List<Comment> getCommentsFor(Long id, Long rev) {
+    return commentDao.getCommentsFor(id, rev);
+}   
 
     /**
      * {@inheritDoc}

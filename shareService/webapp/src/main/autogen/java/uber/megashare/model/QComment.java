@@ -49,6 +49,10 @@ public class QComment extends EntityPathBase<Comment> {
 
     public final StringPath message = createString("message");
 
+    public final NumberPath<Long> objectId = createNumber("objectId", Long.class);
+
+    public final NumberPath<Long> revId = createNumber("revId", Long.class);
+
     public QComment(String variable) {
         this(Comment.class, forVariable(variable), INITS);
     }

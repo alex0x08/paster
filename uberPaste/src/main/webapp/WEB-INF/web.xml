@@ -197,11 +197,6 @@
     </servlet>
 
 
-    <servlet>
-        <servlet-name>ResourceDownloadServlet</servlet-name>
-        <servlet-class>uber.paste.web.ResourceDownloadServlet</servlet-class>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
 
 
    

@@ -57,7 +57,7 @@ public abstract class GenericVersioningController<T extends Struct> extends Abst
              * one element = current revision
              */
             model.addAttribute("availableRevisions",revs!=null && revs.size()>1 ? revs : null  );
-            model.addAttribute("lastRevision", smanager.getCurrentRevisionNumber(obj.getId()));
+            model.addAttribute("lastRevision", smanager.getCurrentRevisionNumber(obj.getId()).longValue());
         }
     }
 

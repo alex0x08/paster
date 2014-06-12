@@ -15,13 +15,18 @@
  */
 package uber.megashare.dao;
 
+import java.util.List;
 import uber.megashare.model.Comment;
 /**
  * Интерфейс работы с комментами со стороны базы
  * @author alex
  */
-public interface CommentDao extends GenericDao<Comment, Long> {
+public interface CommentDao extends GenericDSLDao<Comment, Long> {
 
 
     public Comment getFull(Long id);
+    
+    public List<Comment> getCommentsFor(Long id, Long rev);
+    
+    
 }

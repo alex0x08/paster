@@ -50,6 +50,14 @@
         </ul>
 
 
+            <br/>
+            <ul class="nav nav-pills nav-stacked nav-collapse">
+  <li ><a href="#">Today</a></li>
+  <li><a href="#">Yesterday</a></li>
+  <li><a href="#">Last week</a></li>
+  <li><a href="#">Last month</a></li>
+  
+</ul>
 
 
     </div>

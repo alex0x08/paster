@@ -354,6 +354,9 @@
 
                                     <c:forEach var="proj" items="${model.relatedProjects}" >
 
+                                        <c:if test="${proj ne currentUser.relatedProject}">
+                                            
+                                            
                                         <a href="<c:url value='/main/file/list/search?query=relatedProjects_name:${proj.name}'/>" 
                                            target="${not empty param.integrationMode ? "_blank" : target}">
 
@@ -364,6 +367,9 @@
 
                                             <c:out value="${proj.name}"/>
                                         </a>   
+                                            
+                                        </c:if>
+                                        
 
 
                                     </c:forEach>

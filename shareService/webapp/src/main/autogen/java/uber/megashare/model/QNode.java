@@ -42,9 +42,6 @@ public class QNode extends EntityPathBase<Node> {
     public final StringPath code = createString("code");
 
     //inherited
-    public final ListPath<Comment, QComment> comments = _super.comments;
-
-    //inherited
     public final NumberPath<Integer> commentsCount = _super.commentsCount;
 
     //inherited
