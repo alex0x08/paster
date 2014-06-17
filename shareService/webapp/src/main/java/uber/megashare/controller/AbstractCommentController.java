@@ -58,6 +58,14 @@ public abstract class AbstractCommentController<T extends CommentedStruct> exten
         return c;
     }
     
+    @Override
+    protected void putModel(T obj, Model model) {
+            super.putModel(obj, model);
+            
+            obj.setComments(commentManager.getCommentsFor(obj.getId(), (Long)model.asMap().get("lastRevision")));
+    }
+    
+    
     @RequestMapping(value = REMOVE_COMMENT_ACTION, method = {RequestMethod.POST,RequestMethod.GET})
     public String deleteComment(
             @RequestParam(required = true) Long modelId,
@@ -69,23 +77,13 @@ public abstract class AbstractCommentController<T extends CommentedStruct> exten
             addMessageDenied(redirectAttributes);
             return viewPage;
         }
+     
+        commentManager.remove(commentId);
         
-         T b = manager.getFull(modelId);
-        
-        if (b==null) {
-            return page404;
-        }
-
-        Comment toRemove = new Comment();
-        toRemove.setId(commentId);
-        
-        b.removeComment(toRemove);
-
-        T r = manager.save(b);
-      
+       
         addMessageSuccess(redirectAttributes);
      
-      return  "redirect:/main"+viewPage+"?id="+r.getId();
+      return  "redirect:/main"+viewPage+"?id="+modelId;
     }    
 
     @RequestMapping(value = ADD_COMMENT_ACTION, method = RequestMethod.POST)
@@ -110,30 +108,20 @@ public abstract class AbstractCommentController<T extends CommentedStruct> exten
             return viewPage;
         }
 
-        T b = manager.getFull(modelId);
-        
-        if (b==null) {
+        T modelObj = manager.get(modelId);
+        if (modelObj==null) {
             return page404;
         }
 
         newComment.setMessage(
         KabaMarkupParser.getInstance().setSource(newComment.getMessage()).setMode(AppMode.SHARE)
                 .setPasteUrl(pasterUrl).setShareUrl(externalUrl).parseAll().get());
-    
-        
-        b.addComment(newComment);
-        
-        T r = manager.save(b);
- 
 
-        /**
-         * set id from create this is needed to correct model's id postback when
-         * validation fails
-         */
-        if (b.isBlank()) {
-            b.setId(r.getId());
-        }
+        commentManager.save(newComment);
+        
+      
 
+        
         //resetPagingList(request);
 
         addMessageSuccess(redirectAttributes);
@@ -147,6 +135,6 @@ public abstract class AbstractCommentController<T extends CommentedStruct> exten
    
         model.asMap().clear();
         
-      return  "redirect:/main"+viewPage+"?id="+r.getId();
+      return  "redirect:/main"+viewPage+"?id="+modelId;
     }
 }

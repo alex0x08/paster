@@ -38,7 +38,16 @@ public class UpdateLastModifiedListener extends LoggedClass {
     }
     
     @PreUpdate
-    public void updateTimeStamps(Struct s) {
+    public void updateTimeStamps(CommentedStruct s) {
+        
+        /**
+         *  don't update lastModified if comment was added
+         */
+        if (s.getCommentsCount()!=s.getComments().size()) {
+               s.syncCommentsCount();
+     System.out.println("__sync comments");
+        } else {
             s.lastModified =Calendar.getInstance().getTime();
+        }
     }
 }

@@ -15,9 +15,11 @@
  */
 package uber.megashare.dao;
 
+import java.util.List;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import uber.megashare.model.Comment;
+import uber.megashare.model.QComment;
 
 /**
  *
@@ -25,7 +27,7 @@ import uber.megashare.model.Comment;
  */
 @Repository("commentDao")
 @Transactional(readOnly = true, rollbackFor = Exception.class,value= "transactionManager")
-public class CommentDaoImpl extends GenericDaoImpl<Comment, Long> implements CommentDao {
+public class CommentDaoImpl extends GenericDSLDaoImpl<Comment, Long> implements CommentDao {
 
     /**
      *
@@ -36,5 +38,12 @@ public class CommentDaoImpl extends GenericDaoImpl<Comment, Long> implements Com
         super(Comment.class);
     }
 
+    @Override
+    public List<Comment> getCommentsFor(Long id, Long rev) {
+    
+        return findAll(QComment.comment.objectId.eq(id).and(QComment.comment.revId.eq(rev)));
+    
+    }
+    
     
 }

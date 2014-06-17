@@ -62,6 +62,12 @@ public class SharedFileDaoImpl extends GenericSearchableDaoImpl<SharedFile> impl
         super(SharedFile.class);
     }
 
+    
+    @Override
+    public String[] getDefaultStartFields()  {
+        return SHARE_START_FIELDS;
+    }
+    
     /**
      * {@inheritDoc}
      */
@@ -102,23 +108,9 @@ public class SharedFileDaoImpl extends GenericSearchableDaoImpl<SharedFile> impl
                  }
                 
                 List<SharedFile> out = new ArrayList<>();
-                FullTextEntityManager fsession = getFullTextEntityManager();
-
-                   QueryParser pparser = new MultiFieldQueryParser(Version.LUCENE_35, SHARE_START_FIELDS, an);
-       
-                Query luceneQuery = pparser.parse(qquery);
-                QueryScorer scorer = new QueryScorer(luceneQuery);
-                Highlighter highlighter = new Highlighter(formatter, scorer);
-                highlighter.setTextFragmenter(new SimpleSpanFragmenter(scorer, 100));
-
-                FullTextQuery fquery = fsession.createFullTextQuery(luceneQuery, persistentClass);
-
-                log.append("found " + fquery.getResultSize() + " results ,an=" + an.getClass().getName());
-
-           
                 
 
-                for (Object o : fquery.getResultList()) {
+                for (Object o : new FSearch(query).getResults()) {
                     SharedFile file = (SharedFile) o;
 
                     log.append("file id=" + file.getId() + ",owner=" + file.getOwner() + ",level=" + file.getAccessLevel());
@@ -129,19 +121,7 @@ public class SharedFileDaoImpl extends GenericSearchableDaoImpl<SharedFile> impl
 
                     if (userId == null || file.getOwner().getId().equals(userId) || file.getAccessLevel() == AccessLevel.ALL) {
   
-                
-                        String hl=highlighter
-                                .getBestFragments(pparser.getAnalyzer()
-                                        .tokenStream("name", new StringReader(file.getName())),
-                                        file.getName(), 3, " ...");
-                        
-                        if (hl!=null && hl.trim().length()>0) {
-                            file.setName(hl);
-                        }
-                        
-                        
                         out.add(file);
-                        
                         
                         log.append("added " + file.getId() + " to output");
                     }
@@ -159,8 +139,8 @@ public class SharedFileDaoImpl extends GenericSearchableDaoImpl<SharedFile> impl
      * {@inheritDoc}
      */
    
+    @Override
     public List<SharedFile> getFilesForUser(Long userId, Long projectId, AccessLevel[] levels,Date from) {
-       // System.out.println("_getFiles for user "+userId+" proj="+projectId);
         List<BooleanExpression> out = new ArrayList<>();
         
         if (from!=null) {
@@ -173,12 +153,8 @@ public class SharedFileDaoImpl extends GenericSearchableDaoImpl<SharedFile> impl
         }
         
         if (projectId!=null) {    
-            
-            //List<BooleanExpression> pout = new ArrayList<>();
-        
-            
-        //     pout.add(QSharedFile.sharedFile.accessLevel.in(AccessLevel.ALL));
-             out.add(QSharedFile.sharedFile.relatedProjects.contains(new Project(projectId)));
+     
+            out.add(QSharedFile.sharedFile.relatedProjects.contains(new Project(projectId)));
         
             if (userId!=null) {            
                  out.add(BooleanExpression.anyOf(
@@ -187,10 +163,6 @@ public class SharedFileDaoImpl extends GenericSearchableDaoImpl<SharedFile> impl
                          QSharedFile.sharedFile.accessLevel.in(AccessLevel.PROJECT,AccessLevel.USERS)
                 ));
             } 
-           
-        
-             //out.add(BooleanExpression.anyOf(QSharedFile.sharedFile.accessLevel.in(AccessLevel.ALL),
-              //       BooleanExpression.allOf(pout.toArray(new BooleanExpression[pout.size()]))));
             
         } else {
             if (userId != null) {
@@ -200,7 +172,7 @@ public class SharedFileDaoImpl extends GenericSearchableDaoImpl<SharedFile> impl
         }
         
         
-        return findAll(BooleanExpression.anyOf(QSharedFile.sharedFile.accessLevel.in(AccessLevel.ALL),
+        return findAll(BooleanExpression.anyOf(QSharedFile.sharedFile.accessLevel.eq(AccessLevel.ALL),
                 BooleanExpression.allOf(out.toArray(new BooleanExpression[out.size()]))), 
                 QSharedFile.sharedFile.lastModified.desc());
     }

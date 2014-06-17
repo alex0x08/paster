@@ -44,9 +44,6 @@ public class QSharedFile extends EntityPathBase<SharedFile> {
     public final StringPath code;
 
     //inherited
-    public final ListPath<Comment, QComment> comments;
-
-    //inherited
     public final NumberPath<Integer> commentsCount;
 
     //inherited
@@ -118,7 +115,6 @@ public class QSharedFile extends EntityPathBase<SharedFile> {
         this._super = new QNode(type, metadata, inits);
         this.accessLevel = _super.accessLevel;
         this.code = _super.code;
-        this.comments = _super.comments;
         this.commentsCount = _super.commentsCount;
         this.created = _super.created;
         this.disabled = _super.disabled;
