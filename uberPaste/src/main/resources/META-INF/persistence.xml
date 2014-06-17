@@ -21,14 +21,15 @@
       <!--property name="org.hibernate.envers.audit_strategy" 
                 value="org.hibernate.envers.strategy.ValidityAuditStrategy" /-->
   
-        <property name="hibernate.ejb.event.post-insert" value="org.hibernate.ejb.event.EJB3PostInsertEventListener,uber.paste.base.PasteAuditListener"/>
+  
+     <property name="hibernate.ejb.event.post-insert" value="org.hibernate.ejb.event.EJB3PostInsertEventListener,org.hibernate.envers.event.AuditEventListener"/>
 
-        <property name="hibernate.ejb.event.post-update" value="org.hibernate.ejb.event.EJB3PostUpdateEventListener,uber.paste.base.PasteAuditListener"/>
-        <property name="hibernate.ejb.event.post-delete" value="org.hibernate.ejb.event.EJB3PostDeleteEventListener,uber.paste.base.PasteAuditListener"/>
-
-        <property name="hibernate.ejb.event.pre-collection-update" value="uber.paste.base.PasteAuditListener"/>
-        <property name="hibernate.ejb.event.pre-collection-remove" value="uber.paste.base.PasteAuditListener"/>
-        <property name="hibernate.ejb.event.post-collection-recreate" value="uber.paste.base.PasteAuditListener"/>
+        <property name="hibernate.ejb.event.post-update" value="org.hibernate.ejb.event.EJB3PostUpdateEventListener,org.hibernate.envers.event.AuditEventListener"/>
+        <property name="hibernate.ejb.event.post-delete" value="org.hibernate.ejb.event.EJB3PostDeleteEventListener,org.hibernate.envers.event.AuditEventListener"/>
+        
+        <property name="hibernate.ejb.event.pre-collection-update" value="org.hibernate.envers.event.AuditEventListener"/>
+        <property name="hibernate.ejb.event.pre-collection-remove" value="org.hibernate.envers.event.AuditEventListener"/>
+        <property name="hibernate.ejb.event.post-collection-recreate" value="org.hibernate.envers.event.AuditEventListener"/>
 
 
         <property name="hibernate.c3p0.timeout" value="300"/>

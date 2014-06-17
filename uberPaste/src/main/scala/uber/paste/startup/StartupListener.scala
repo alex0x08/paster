@@ -32,7 +32,6 @@ import uber.paste.dao.UserExistsException
 import uber.paste.base.plugins.PluginUI
 import uber.paste.base.{MergedPropertyConfigurer, Loggered, SystemInfo}
 import uber.paste.build._
-import uber.paste.mail.EmbeddedSMTPServer
 import java.nio.file._
 import java.nio.file.attribute.BasicFileAttributes
 import uber.paste.manager.PasteManager
@@ -173,29 +172,7 @@ class StartupListener extends ServletContextListener with Loggered{
       reindex(ctx,props)
 
 
-      if (props.getProperty("config.load.data.enabled").equals("1")) {
-
-        logger.info("Data loading enabled..")
-
-        var dirs = props.getProperty("config.load.data.folders").split(",")
-        
-        
-         for (f<-dirs) {
-            logger.info("Start loading for "+f)
-
-             new Thread(new Runnable() {
-        def run() {
-          Files.walkFileTree(Paths.get(f), new WalkFileTree(pasteDao))
-        }
-      }).start()
-
-        }
-      }
- 
       
-      
-      
-      startSmtpServer(ctx,props)
 
       for(p<-Priority.list) {
         
@@ -205,6 +182,7 @@ class StartupListener extends ServletContextListener with Loggered{
 
       SystemInfo.instance.setDateStart(Calendar.getInstance.getTime)
 
+      logger.info("completed")
      return
     }
 
@@ -271,7 +249,6 @@ class StartupListener extends ServletContextListener with Loggered{
 
       logger.info("db generation completed successfully.")
 
-      startSmtpServer(ctx,props)
 
         SystemInfo.instance.setDateStart(Calendar.getInstance.getTime)
 
@@ -289,16 +266,6 @@ class StartupListener extends ServletContextListener with Loggered{
     
   }
 
-
-  def startSmtpServer(ctx:ApplicationContext,props:MergedPropertyConfigurer) {
-
-    if (props.getProperty("config.smtpd.enabled").equals("1")) {
-      EmbeddedSMTPServer.createInstance(ctx).start()
-    } else {
-      logger.info("smtpd was disabled. skipping it.")
-    }
-  }
-
   def reindex( ctx:ApplicationContext,props:MergedPropertyConfigurer):Unit = {
     if (props.getProperty("config.reindex.enabled").equals("1")) {
       val compassGps:CompassGps = ctx.getBean("compassGps").asInstanceOf[CompassGps]
@@ -311,49 +278,5 @@ class StartupListener extends ServletContextListener with Loggered{
   }
 
 
-  class WalkFileTree(pasteDao:PasteDao) extends SimpleFileVisitor[Path] with Loggered {
-
-    override def preVisitDirectory(dir:Path, attr:BasicFileAttributes):FileVisitResult= {
-    //  System.out.printf("Begin Directory: %s%n", dir)
-      return FileVisitResult.CONTINUE
-    }
-
-    // Print information about each file/symlink visited.
-    override def visitFile(file:Path, attr:BasicFileAttributes):FileVisitResult = {
-
-      //logger.debug("visiting file: "+file.getFileName()+" is java "+file.getFileName().endsWith(".java"))
-
-
-      if (file.getFileName.toString.endsWith(".java")) {
-
-          logger.debug("pasting file: "+file)
-
-         val p:Paste = new Paste
-         p.setCodeType(CodeType.Java)
-         p.setName(file.getFileName.toString)
-         p.setText(FileUtils.readFileToString(file.toFile))
-
-        try {
-
-          pasteDao.save(p)
-
-        }  catch {
-          case e:Exception => {
-            logger.error(e.getLocalizedMessage,e)
-          }
-        }
-
-       }
-      return FileVisitResult.CONTINUE
-    }
-
-    // If there is an error accessing the file, print a message and continue.
-    override def visitFileFailed(file:Path, ex:IOException):FileVisitResult= {
-      logger.error(ex.getLocalizedMessage,ex)
-      return FileVisitResult.CONTINUE;  // or TERMINATE
-    }
-
-
-  }
 
 }

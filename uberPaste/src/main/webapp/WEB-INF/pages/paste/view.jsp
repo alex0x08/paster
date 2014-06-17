@@ -58,8 +58,11 @@
 
     window.addEvent('domready', function() {
 
+  <c:if test="${shareIntegration}">
+          
   $(${model.id} + '_shareFrame').setStyle('height', document.body.scrollHeight< 1024 ?  '1024px' :  document.body.scrollHeight + 'px');
-    
+  
+  </c:if>
 
         $('${model.id}_addCommentBtn').addEvent('click', function(event) {
              event.stop();

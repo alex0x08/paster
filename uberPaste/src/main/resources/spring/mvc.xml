@@ -146,8 +146,8 @@
                 <entry key="xml" value="application/xml" />
                 <entry key="atom" value="application/atom+xml"/>
                 <entry key="rss" value="application/rss+xml"/>
-                <entry key="xls" value="application/vnd.ms-excel"/>
-                <entry key="docx" value="application/vnd.openxmlformats-officedocument.wordprocessingml.document"/>
+                <!--entry key="xls" value="application/vnd.ms-excel"/>
+                <entry key="docx" value="application/vnd.openxmlformats-officedocument.wordprocessingml.document"/-->
 
             </map>
         </property>
@@ -155,15 +155,24 @@
             <list>
                 <bean class="org.springframework.web.servlet.view.json.MappingJacksonJsonView" >
                     <property name="contentType" value="application/json" />
+                    <property name="prettyPrint" value="true" />
+                     
+                    <property name="modelKeys">
+                        <set>
+                            <value>model</value>
+                            <value>items</value>
+                        </set>
+                    </property>
+     
                 </bean>
                 <bean class="org.springframework.web.servlet.view.xml.MarshallingView">
                     <constructor-arg ref="xstreamMarshaller"/>
                     <property name="contentType" value="application/xml" />
                 </bean>
 
-                <bean class="uber.paste.controller.view.PasteExcelView">
+                <!--bean class="uber.paste.controller.view.PasteExcelView">
                     <property name="contentType" value="application/vnd.ms-excel" />
-                </bean>
+                </bean-->
                 <bean class="uber.paste.controller.view.PasteAtomView">
                     <property name="contentType" value="application/atom+xml" />
                 </bean>
@@ -171,9 +180,9 @@
                     <property name="contentType" value="application/rss+xml" />
                     <property name="externalUrl" value="${config.external-site-url}" />
                 </bean>
-                <bean class="uber.paste.controller.view.PasteDocxView">
+                <!--bean class="uber.paste.controller.view.PasteDocxView">
                     <property name="contentType" value="application/vnd.openxmlformats-officedocument.wordprocessingml.document" />
-                </bean>
+                </bean-->
             </list>
         </property>
         <property name="viewResolvers">

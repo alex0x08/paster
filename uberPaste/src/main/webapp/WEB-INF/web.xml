@@ -184,11 +184,11 @@
        
     </servlet>
 
-    <servlet>
+    <!--servlet>
         <servlet-name>CXFServlet</servlet-name>
         <servlet-class>org.apache.cxf.transport.servlet.CXFServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
-    </servlet>
+    </servlet-->
 
     <servlet>
         <servlet-name>OpenIDServlet</servlet-name>
@@ -196,12 +196,6 @@
         <load-on-startup>1</load-on-startup>
     </servlet>
 
-
-    <servlet>
-        <servlet-name>ResourceDownloadServlet</servlet-name>
-        <servlet-class>uber.paste.web.ResourceDownloadServlet</servlet-class>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
 
 
    
@@ -230,10 +224,10 @@
     
 
 
-    <servlet-mapping>
+    <!--servlet-mapping>
         <servlet-name>CXFServlet</servlet-name>
         <url-pattern>/ws/*</url-pattern>
-    </servlet-mapping>
+    </servlet-mapping-->
 
 
     <session-config>

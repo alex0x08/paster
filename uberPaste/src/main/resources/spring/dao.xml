@@ -44,29 +44,6 @@
     <bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource" destroy-method="shutdown">  
           <constructor-arg ref="hikariConfig" />  
     </bean>  
-
-   
-    <!--bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
-      destroy-method="close">
-        <property name="driverClass" value="${database.driverClassName}" />
-        <property name="jdbcUrl" value="${database.url}" />
-        <property name="user" value="${database.username}" />
-        <property name="password" value="${database.password}" />
-        <property name="minPoolSize" value="5" />
-        <property name="maxPoolSize" value="50" />
-        <property name="maxStatements" value="500" />
-        <property name="loginTimeout" value="30000" />
-        <property name="numHelperThreads" value="10" />
-
-
-        <property name="initialPoolSize" value="5"></property>
-        <property name="checkoutTimeout" value="100000"/>
-        <property name="automaticTestTable" value="C3P0_TEST_TABLE"></property>
-        <property name="testConnectionOnCheckin" value="true"></property>
-        <property name="idleConnectionTestPeriod" value="60"></property>
-          
-        
-    </bean-->
     
     		
     <bean id="entityManagerFactory" 

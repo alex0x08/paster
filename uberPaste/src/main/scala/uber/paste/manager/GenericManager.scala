@@ -16,6 +16,7 @@
 
 package uber.paste.manager
 
+import javax.annotation.security.PermitAll
 import uber.paste.base.Loggered
 import uber.paste.dao.BaseDao
 
@@ -103,7 +104,7 @@ abstract class GenericManagerImpl[T <: java.io.Serializable, PK <:Long ] extends
   /**
    * {@inheritDoc}
    */
-
+  @PermitAll
   def remove(id:PK) {
     getDao.remove(id)
   }

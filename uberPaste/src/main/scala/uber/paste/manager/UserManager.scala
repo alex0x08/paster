@@ -32,6 +32,7 @@ import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import java.io.IOException
+import javax.annotation.security.PermitAll
 import javax.servlet.ServletException
 import org.springframework.security.crypto.codec.Base64
 import org.springframework.security.web.authentication.logout.{SimpleUrlLogoutSuccessHandler, LogoutFilter, LogoutHandler}
@@ -335,6 +336,7 @@ class UserManagerImpl extends StructManagerImpl[User] with UserManager with User
 
   @Override
   @throws(classOf[UserExistsException])
+  @PermitAll
   def saveUser(user:User): User = {
     return userDao.save(user)
   }

@@ -79,6 +79,7 @@ class PasteController extends VersionController[Paste]   {
   @Autowired
   val resourcePathHelper:ResourcePathHelper = null
   
+  
   @Value("${config.share.integration}")
   val shareIntegration:Boolean = false
 
@@ -107,8 +108,6 @@ class PasteController extends VersionController[Paste]   {
   override def fillEditModel(obj:Paste,rev:Long,model:Model,locale:Locale)  {
          super.fillEditModel(obj,rev,model,locale)
 
-    
-    
     if (obj.isBlank) {
       model.addAttribute("title",getResource("paste.new",locale))
     } else {
@@ -136,8 +135,6 @@ class PasteController extends VersionController[Paste]   {
       
       model.addAttribute("commentedLinesList", StringUtils.join(commentLines,","))
     }
-  
-  
     
     if (!obj.isBlank()) {
 
@@ -234,6 +231,10 @@ class PasteController extends VersionController[Paste]   {
   def saveComment(  @Valid b:Comment,
                     result:BindingResult, model:Model,locale:Locale):String = {
 
+        if (!isCurrentUserLoggedIn() && !allowAnonymousCommentsCreate) {
+          return page403
+        }
+    
     val p = manager.getRevision(b.getPasteId, b.getPasteRev)
 
         if (p==null) {
@@ -312,6 +313,10 @@ class PasteController extends VersionController[Paste]   {
            result:BindingResult, model:Model,locale:Locale,
            redirectAttributes:RedirectAttributes):String = {
 
+     if (!isCurrentUserLoggedIn() && !allowAnonymousPasteCreate) {
+          return page403
+        }
+    
       /**
        * copy fields not filled in form
        */

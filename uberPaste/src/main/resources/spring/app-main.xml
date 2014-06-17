@@ -45,8 +45,6 @@
     <import resource="search.xml" />    
     <import resource="mvc.xml" />
     <import resource="security.xml" />
-    <import resource="jaxws.xml" />
-
 
 
 </beans>

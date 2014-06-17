@@ -69,15 +69,10 @@
                 
 <div class="row">
 
-    <c:choose>
-        <c:when test="${shareIntegration}">
-            <c:set var="centerGridSize" value="grid-10"/>
-        </c:when>
-        <c:otherwise>
-            <c:set var="centerGridSize" value="grid-15"/>
-        </c:otherwise>
-    </c:choose>
-
+    
+           <c:set var="centerGridSize" value="grid-10"/>
+     
+    
     <div id="${model.id}_centerPanel" class="column ${centerGridSize}" style="min-width:650px;">
 
         <pre id="${model.id}_pasteText" class="brush: ${model.codeType.code};toolbar: false; auto-links:false;highlight: [${commentedLinesList}]; " style="display:none; overflow-y: hidden;" >

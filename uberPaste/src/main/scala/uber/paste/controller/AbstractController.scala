@@ -22,6 +22,7 @@ import org.springframework.orm.ObjectRetrievalFailureException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import uber.paste.model.User
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.MessageSource
 import javax.annotation.Resource
 import java.util.Locale
@@ -50,10 +51,23 @@ abstract class AbstractController extends Loggered{
   @Resource(name = "messageSource")
    protected val messageSource:MessageSource = null
 
+  @Value("${config.comments.allow-anonymous.create}")
+  val allowAnonymousCommentsCreate:Boolean = false
+ 
+  @Value("${config.paste.allow-anonymous.create}")
+  val allowAnonymousPasteCreate:Boolean = false
+ 
   
   @Autowired
   val configManager:ConfigManager = null
 
+  @ModelAttribute("allowAnonymousCommentsCreate")
+  @JsonIgnore
+  def isAllowAnonymousCommentsCreate() = allowAnonymousCommentsCreate
+ 
+  @ModelAttribute("allowAnonymousPasteCreate")
+  @JsonIgnore
+  def isAllowAnonymousPasteCreate() = allowAnonymousPasteCreate
   
   @ModelAttribute("availableServers")
   @JsonIgnore

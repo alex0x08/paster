@@ -149,11 +149,11 @@
         </dependency>
 
 
-        <dependency>
+        <!--dependency>
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
             <version>2.6</version>
-        </dependency>
+        </dependency-->
 
         <dependency>
             <groupId>commons-io</groupId>
@@ -200,7 +200,7 @@
             <version>${spring.version}</version>
         </dependency>
 
-        <dependency>
+        <!--dependency>
             <groupId>org.springframework.webflow</groupId>
             <artifactId>spring-js</artifactId>
             <version>${spring.webflow.version}</version>
@@ -209,7 +209,7 @@
             <groupId>org.springframework.webflow</groupId>
             <artifactId>spring-webflow</artifactId>
             <version>${spring.webflow.version}</version>
-        </dependency>
+        </dependency-->
 
         <dependency>
             <groupId>org.springframework</groupId>
@@ -236,11 +236,11 @@
             <artifactId>spring-core</artifactId>
             <version>${spring.version}</version>
         </dependency>
-        <dependency>
+        <!--dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-jdbc</artifactId>
             <version>${spring.version}</version>
-        </dependency>
+        </dependency-->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-orm</artifactId>
@@ -316,7 +316,7 @@
         </dependency>
 
 
-        <dependency>
+        <!--dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-frontend-jaxws</artifactId>
             <version>2.7.7</version>
@@ -325,7 +325,7 @@
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-transports-http</artifactId>
             <version>2.7.7</version>
-        </dependency>
+        </dependency-->
 
 
 
@@ -380,7 +380,18 @@
                     <groupId>javax.servlet</groupId>
                     <artifactId>jsp-api</artifactId>
                 </exclusion>
-
+                <exclusion>
+                    <groupId>org.apache.ant</groupId>
+                    <artifactId>ant</artifactId>
+                </exclusion>
+                <exclusion>                     
+                    <groupId>com.googlecode.jarjar</groupId>
+                    <artifactId>jarjar</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.google.protobuf</groupId>
+                    <artifactId>protobuf-java</artifactId>
+                </exclusion>
             </exclusions>
 
 
@@ -410,11 +421,11 @@
             <scope>provided</scope>
         </dependency-->
 
-        <dependency>
+        <!--dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>jstl</artifactId>
             <version>${jstl.version}</version>
-        </dependency>
+        </dependency-->
 
 
     
@@ -465,11 +476,11 @@
             <version>2.1.1.Final</version>
         </dependency>
 
-        <dependency>
+        <!--dependency>
             <groupId>org.subethamail</groupId>
             <artifactId>subethasmtp</artifactId>
             <version>3.1.6</version>
-        </dependency>
+        </dependency-->
 
         <dependency>
             <groupId>com.dyuproject</groupId>
@@ -487,15 +498,27 @@
             <groupId>com.jcabi</groupId>
             <artifactId>jcabi-manifests</artifactId>
             <version>0.8</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>log4j</groupId>
+                    <artifactId>log4j</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
-        <dependency>
+        <!--dependency>
             <groupId>org.apache.tika</groupId>
             <artifactId>tika-parsers</artifactId>
             <version>0.10</version>
-        </dependency>
+            <exclusions>
+                <exclusion>
+                    <groupId>rome</groupId>
+                    <artifactId>rome</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency-->
 
-        <dependency>
+        <!--dependency>
             <groupId>org.apache.james</groupId>
             <artifactId>apache-mime4j-core</artifactId>
             <version>0.7.2</version>
@@ -509,7 +532,7 @@
             <groupId>org.apache.james</groupId>
             <artifactId>apache-mime4j-storage</artifactId>
             <version>0.7.2</version>
-        </dependency>
+        </dependency-->
 
         <!-- RSS -->
         <dependency>
@@ -547,11 +570,11 @@
             <version>1.5</version>
         </dependency>
 
-        <dependency>
+        <!--dependency>
             <groupId>net.sf.jxls</groupId>
             <artifactId>jxls-core</artifactId>
             <version>1.0.3</version>
-        </dependency>
+        </dependency-->
 
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
@@ -559,17 +582,17 @@
             <version>4.3.1</version>
         </dependency>
 
-        <dependency>
+        <!--dependency>
             <groupId>fr.opensagres.xdocreport</groupId>
             <artifactId>fr.opensagres.xdocreport.document.docx</artifactId>
             <version>1.0.3</version>
-        </dependency>
+        </dependency-->
 
-        <dependency>
+        <!--dependency>
             <groupId>fr.opensagres.xdocreport</groupId>
             <artifactId>fr.opensagres.xdocreport.template.velocity</artifactId>
             <version>1.0.3</version>
-        </dependency>
+        </dependency-->
 
 
         <dependency>
@@ -691,11 +714,11 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <dependencies>
-                <dependency>
+                <!--dependency>
                     <groupId>org.apache.tomcat</groupId>
                     <artifactId>jasper-el</artifactId>
                     <version>6.0.33</version>
-                </dependency>
+                </dependency-->
 		<!--dependency>
             		<groupId>taglibs</groupId>
             		<artifactId>standard</artifactId>
@@ -1007,10 +1030,10 @@
                 <artifactId>jetty-maven-plugin</artifactId>
                 <version>9.1.4.v20140401</version>
                 <configuration>
-                    <jvmArgs>
+                    <!--jvmArgs>
                         -Xbootclasspath/p:C:\Users\Alex\.m2\repository\org\mortbay\jetty\npn\npn-boot\1.1.7.v20140316\npn-boot-1.1.7.v20140316.jar
                         -Dpaste.h2.embedded.server=1
-                    </jvmArgs>
+                    </jvmArgs-->
                     <!--                         ${settings.localRepository}/org/mortbay/jetty/npn/npn-boot/${npn.version}/npn-boot-${npn.version}.jar
 -->
                     <systemProperties>
@@ -1020,14 +1043,14 @@
                         </systemProperty>
                         
                     </systemProperties>
-                    <scanIntervalSeconds>10</scanIntervalSeconds>
+                    <scanIntervalSeconds>0</scanIntervalSeconds>
                     <webApp>
                         <contextPath>/${project.artifactId}</contextPath>
                     </webApp>
-                    <dumpOnStart>true</dumpOnStart>
+                    <!--dumpOnStart>true</dumpOnStart>
                        <stopPort>8888</stopPort>
                     <stopKey>quit</stopKey>
-                    <jettyXml>src/main/containers/jetty/spdy.xml</jettyXml>
+                    <jettyXml>src/main/containers/jetty/spdy.xml</jettyXml-->
                     <!--webDefaultXml>src/container/jetty/webdefault.xml</webDefaultXml-->
                 </configuration>
 
