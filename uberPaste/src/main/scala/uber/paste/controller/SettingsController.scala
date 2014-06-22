@@ -54,12 +54,18 @@ class SettingsController extends AbstractController{
   def edit(model:Model,locale:Locale):String= {
     model.addAttribute(GenericController.MODEL_KEY, projectManager.getCurrentProject)
     
-    System.out.println("_model="+model.asMap.get("model"))
     return editPage()
   }
 
   
   
+  @RequestMapping(value = Array("/dbconsole"), method = Array(RequestMethod.GET))
+  def dbconsole(model:Model,locale:Locale):String= {
+    model.addAttribute(GenericController.MODEL_KEY, projectManager.getCurrentProject)
+    
+    return "/admin/settings/dbconsole"
+  }
+
    @RequestMapping(value = Array(GenericEditController.SAVE_ACTION), method = Array(RequestMethod.POST))
    def save(@RequestParam(required = false) cancel:String,
                      @RequestParam(required = false) reset:String,

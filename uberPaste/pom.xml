@@ -614,17 +614,47 @@
   <version>1.4</version>
 </dependency>
 
+<dependency>
+    <groupId>org.pac4j</groupId>
+    <artifactId>spring-security-pac4j</artifactId>
+    <version>1.2.3</version>
+</dependency>
+
+   <dependency>
+            <groupId>org.pac4j</groupId>
+            <artifactId>pac4j-oauth</artifactId>
+            <version>1.5.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.pac4j</groupId>
+            <artifactId>pac4j-openid</artifactId>
+            <version>1.5.1</version>
+        </dependency>
+     
+ <dependency>
+            <groupId>org.pac4j</groupId>
+            <artifactId>pac4j-saml</artifactId>
+            <version>1.5.1</version>
+        </dependency>
+	
+         <dependency>
+            <groupId>org.pac4j</groupId>
+            <artifactId>pac4j-http</artifactId>
+            <version>1.5.1</version>
+        </dependency>
+       
+        
             <!--dependency>
  	<groupId>org.xeustechnologies</groupId>
 	<artifactId>jcl-core</artifactId> 
 	<version>2.5</version>
   </dependency-->
 
-<dependency>
+<!--dependency>
     <groupId>uber.markup</groupId>
     <artifactId>uni-markup-parser</artifactId>
     <version>1.0-PRE</version>
-</dependency>
+</dependency-->
 
 <dependency>
     <groupId>uber.paste</groupId>
@@ -819,14 +849,10 @@
 
                 <hibernate.dialect>org.hibernate.dialect.H2Dialect</hibernate.dialect>
                 <jdbc.driverClassName>org.h2.jdbcx.JdbcDataSource</jdbc.driverClassName>
-                <jdbc.url>jdbc:h2:tcp://localhost:6668/pastedb;DB_CLOSE_ON_EXIT=TRUE</jdbc.url>
-                
-                <!--jdbc.url>jdbc:h2:file:${paste.app.home}/pastedb;DB_CLOSE_ON_EXIT=TRUE;LOCK_TIMEOUT=10000</jdbc.url-->
+                <jdbc.url>jdbc:h2:file:${paste.app.home}/pastedb;DB_CLOSE_ON_EXIT=TRUE;LOCK_TIMEOUT=10000</jdbc.url>
                 <jdbc.username>bo</jdbc.username>
                 <jdbc.password>bo</jdbc.password>
                 <jdbc.show-sql>false</jdbc.show-sql>
-                <db.name>pastedb</db.name>
-
              
             </properties>
         </profile>
@@ -848,8 +874,6 @@
                 <jdbc.username>adminrTlKFqN</jdbc.username>
                 <jdbc.password>9T5nre_cQRg-</jdbc.password>
                 <jdbc.show-sql>true</jdbc.show-sql>
-
-                <db.name>appdb</db.name>
 
             </properties>
         </profile>
@@ -1045,8 +1069,8 @@
                         
                     </systemProperties>
                     <scanIntervalSeconds>0</scanIntervalSeconds>
-                    <webApp>
-                        <contextPath>/${project.artifactId}</contextPath>
+                    <webApp> <!--${project.artifactId}-->
+                        <contextPath>/</contextPath>
                     </webApp>
                     <!--dumpOnStart>true</dumpOnStart>
                        <stopPort>8888</stopPort>

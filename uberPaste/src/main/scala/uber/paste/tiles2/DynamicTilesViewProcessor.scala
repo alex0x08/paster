@@ -42,14 +42,16 @@ object PrefixType extends KeyValueObj[PrefixType] {
   val INTEGRATED = new PrefixType("INTEGRATED","Integrated usage site template","integratedTemplate","/integrated")
   val RAW = new PrefixType("RAW","Raw site template","rawTemplate","/raw") 
   val FRAME = new PrefixType("FRAME","frame view site template","frameTemplate","/frame") 
+  val SETTINGS = new PrefixType("SETTINGS","settings","mainTemplate","/settings") 
 
   val THIRD_LEVELS:Array[PrefixType] = Array[PrefixType](PrefixType.RAW,
-                                                        PrefixType.INTEGRATED,PrefixType.FRAME)
+                                                        PrefixType.INTEGRATED,PrefixType.FRAME,PrefixType.SETTINGS)
    
   add(MAIN)
   add(INTEGRATED)
   add(RAW) 
   add(FRAME) 
+  add(SETTINGS) 
   
   
   

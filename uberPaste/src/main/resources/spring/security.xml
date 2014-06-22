@@ -16,7 +16,6 @@
     <global-method-security secured-annotations="enabled" jsr250-annotations="enabled" />
 
 
-
     <http pattern="/images/**" security="none"/>
     <http pattern="/css/**" security="none"/>
     <http pattern="/js/**" security="none"/>
@@ -26,6 +25,23 @@
     <http pattern="/main/assets/${paste.app.version}/**" security="none"/>
     <http pattern="/main/static/${paste.app.version}/**" security="none"/>
 
+      <http pattern="/google/**" entry-point-ref="googleEntryPoint">
+        <intercept-url pattern="/google/**" access="IS_AUTHENTICATED_FULLY" />
+    </http>
+    
+    
+      <http pattern="/linkedin/**" entry-point-ref="linkedinEntryPoint">
+        <intercept-url pattern="/linkedin/**" access="IS_AUTHENTICATED_FULLY" />
+    </http>
+
+    
+      <http pattern="/act/callback*" entry-point-ref="googleEntryPoint">
+        <custom-filter after="CAS_FILTER"  ref="clientFilter" />
+        <intercept-url pattern="/act/callback*" access="IS_AUTHENTICATED_ANONYMOUSLY" />
+        <logout />
+    </http>
+
+    
     <http realm="Paster Realm" auto-config="false" use-expressions="true" 
           entry-point-ref="authenticationEntryPoint"
           disable-url-rewriting="true">
@@ -100,17 +116,65 @@
     </beans:bean>
 
 
-
     <authentication-manager alias="embedded-auth-manager">
    
-        <authentication-provider user-service-ref="userService">
-            <password-encoder hash="plaintext"/>
-
-        </authentication-provider>
+        <authentication-provider ref="clientProvider"/>
         <authentication-provider ref="rememberMeAuthenticationProvider" />
     </authentication-manager>
 
-   
+
+
+	<!-- common to all clients -->
+    <beans:bean id="clientFilter" class="org.pac4j.springframework.security.web.ClientAuthenticationFilter">
+    	<beans:constructor-arg value="/callback"/>
+        <beans:property name="clients" ref="clients" />
+        <beans:property name="sessionAuthenticationStrategy" ref="sas" />
+        <beans:property name="authenticationManager" ref="embedded-auth-manager" />
+    </beans:bean>
+
+    <beans:bean id="clientProvider" class="uber.paste.web.PasteClientAuthProvider">
+        <beans:property name="clients" ref="clients" />
+        <beans:property name="userDetailsService" ref="userService" />
+        
+    </beans:bean>
+    
+    <beans:bean id="httpSessionRequestCache" class="org.springframework.security.web.savedrequest.HttpSessionRequestCache" />
+    
+    <beans:bean id="sas" class="org.springframework.security.web.authentication.session.SessionFixationProtectionStrategy" />
+
+     <beans:bean id="googleEntryPoint" class="org.pac4j.springframework.security.web.ClientAuthenticationEntryPoint">
+        <beans:property name="client" ref="googleClient" />
+    </beans:bean>
+    
+    
+     <beans:bean id="linkedinEntryPoint" class="org.pac4j.springframework.security.web.ClientAuthenticationEntryPoint">
+        <beans:property name="client" ref="linkedinClient" />
+    </beans:bean>
+
+  <beans:bean id="googleClient" class="org.pac4j.oauth.client.Google2Client">
+        <beans:property name="key" value="508743441574-eulbpo5grqo35i9ob6scv96d7ag92vpt.apps.googleusercontent.com" />
+        <beans:property name="secret" value="0tR1fouvOhBHOSeTE-j13lzP" />
+    </beans:bean>
+
+
+
+  <beans:bean id="linkedinClient" class="org.pac4j.oauth.client.LinkedIn2Client">
+        <beans:property name="key" value="75klco4z9v62tf" />
+        <beans:property name="secret" value="DOa7v1Ig2nfxv9Vl" />
+    </beans:bean>
+
+
+  <beans:bean id="clients" class="org.pac4j.core.client.Clients">
+        <beans:property name="callbackUrl" value="http://localhost:8080/act/callback" />
+        <beans:property name="clients">
+        	<beans:list>
+        		<beans:ref bean="googleClient" />
+        		<beans:ref bean="linkedinClient" />
+        	</beans:list>
+        </beans:property>
+    </beans:bean>
+
+
 
     <!-- Automatically receives AuthenticationEvent messages -->
     <beans:bean id="loggerListener" class="org.springframework.security.authentication.event.LoggerListener"/>
@@ -129,6 +193,8 @@
         <beans:property name="key" value="1q2w3e4r5t6y7u8i" />
 
     </beans:bean>
+
+
 
 </beans:beans>
 

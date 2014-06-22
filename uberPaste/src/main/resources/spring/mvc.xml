@@ -189,7 +189,7 @@
             <list>
                 <bean class="org.springframework.web.servlet.view.BeanNameViewResolver"/>
                 <bean class="org.springframework.web.servlet.view.UrlBasedViewResolver"
-                      p:viewClass="uber.paste.tiles2.DynamicTilesView" p:prefix="/WEB-INF/pages/"
+                      p:viewClass="uber.paste.tiles2.DynamicTilesView" p:prefix="/WEB-INF/pages"
           p:suffix=".jsp" />
             </list>
         </property>

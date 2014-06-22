@@ -19,10 +19,13 @@ package uber.paste.manager
 import org.springframework.stereotype.Service
 import uber.paste.dao.UserDao
 import uber.paste.model.{SavedSession, User}
+import org.pac4j.core.credentials.Credentials
+import org.pac4j.springframework.security.authentication.ClientAuthenticationToken
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 import uber.paste.dao.UserExistsException
 import org.springframework.dao.DataAccessException
+import org.springframework.security.core.userdetails.AuthenticationUserDetailsService
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.web.authentication.rememberme.{RememberMeAuthenticationException, AbstractRememberMeServices}
@@ -283,7 +286,9 @@ trait UserManager extends StructManager[User] {
   }
 
 @Service("userManager")
-class UserManagerImpl extends StructManagerImpl[User] with UserManager with UserDetailsService {
+class UserManagerImpl extends StructManagerImpl[User] with UserManager 
+                         with UserDetailsService 
+                         with AuthenticationUserDetailsService[ClientAuthenticationToken]{
 
   @Autowired
   val userDao:UserDao = null
@@ -293,7 +298,7 @@ class UserManagerImpl extends StructManagerImpl[User] with UserManager with User
   }
 
   def getSSOCookieName():String = {
-    System.out.println("_call get sso cookie name")
+    //System.out.println("_call get sso cookie name")
     return UserManager.SSO_COOKIE_NAME
   }
 
@@ -351,6 +356,16 @@ class UserManagerImpl extends StructManagerImpl[User] with UserManager with User
     userDao.remove(u.getId)
   }
 
+  @Override
+  @throws(classOf[UsernameNotFoundException])
+  def loadUserDetails(token:ClientAuthenticationToken):UserDetails = {
+    val out = userDao.getUserByOpenID(token.getCredentials.asInstanceOf[Credentials].getClientName)
+   //if (out==null )
+    //  throw new UsernameNotFoundException("User not found (oauth)")
+    return out
+    
+  }
+  
   @Override
   @throws(classOf[UsernameNotFoundException])
   @throws(classOf[DataAccessException])

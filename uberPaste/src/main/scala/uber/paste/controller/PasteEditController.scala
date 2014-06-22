@@ -26,9 +26,6 @@ import org.springframework.beans.factory.annotation.{Value, Autowired}
 import java.io.ByteArrayOutputStream
 import uber.paste.manager.{CommentManager, PasteManager, ResourcePathHelper}
 import org.springframework.ui.Model
-import uber.kaba.markup.parser.AppMode
-import uber.kaba.markup.parser.KabaMarkupParser
-import uber.kaba.markup.parser.KabaMarkupParser
 import uber.paste.base.SessionStore
 import scala.util.control.Breaks._
 import org.springframework.validation.BindingResult
@@ -37,7 +34,8 @@ import java.util.Locale
 import scala.collection.JavaConversions._
 import org.codehaus.jackson.annotate.JsonIgnore
 import org.apache.commons.io.IOUtils
-import org.apache.commons.lang.{StringEscapeUtils, WordUtils, StringUtils}
+import org.apache.commons.lang3.{StringEscapeUtils,StringUtils}
+import org.apache.commons.lang3.text.WordUtils
 import scala.Array
 import com.google.gson.{JsonParser, GsonBuilder}
 import java.net.URL
@@ -111,7 +109,7 @@ class PasteController extends VersionController[Paste]   {
     if (obj.isBlank) {
       model.addAttribute("title",getResource("paste.new",locale))
     } else {
-      model.addAttribute("title",StringEscapeUtils.escapeHtml(getResource("paste.edit.title",Array(obj.getId,obj.getName()),locale)))
+      model.addAttribute("title",StringEscapeUtils.escapeHtml4(getResource("paste.edit.title",Array(obj.getId,obj.getName()),locale)))
       
       obj.getComments.addAll(
         commentManager.getCommentsForPaste(obj.getId,
@@ -259,12 +257,12 @@ class PasteController extends VersionController[Paste]   {
         }
 
     
-    
+    /*
     b.setText(
       KabaMarkupParser.getInstance().setSource(b.getText).setMode(AppMode.PASTE)
       .setShareUrl(shareUrl)
                 .parseAll().get());
-    
+    */
     
     commentManager.save(b)
       //p.getComments().add(b)
@@ -569,7 +567,7 @@ class PasteController extends VersionController[Paste]   {
 
     val p = model.asMap().get(GenericController.MODEL_KEY).asInstanceOf[Paste]
 
-    model.addAttribute("title",getResource("paste.view.title",Array(p.getId,StringEscapeUtils.escapeHtml(p.getName())),locale))
+    model.addAttribute("title",getResource("paste.view.title",Array(p.getId,StringEscapeUtils.escapeHtml4(p.getName())),locale))
     
     return viewPage
   }

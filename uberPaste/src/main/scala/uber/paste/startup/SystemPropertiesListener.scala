@@ -67,11 +67,11 @@ class SystemPropertiesListener extends ServletContextListener with Loggered {
       
       logger.info("current locale: "+Locale.getDefault)
       
-      Locale.setDefault(Locale.ENGLISH)
+      //Locale.setDefault(Locale.ENGLISH)
       
-      if (System.getProperties().containsKey("paste.h2.embedded.server")) {
+     /* if (System.getProperties().containsKey("paste.h2.embedded.server")) {
         initH2EmbeddedServer()
-      }
+      }*/
       
     } catch {
      case e:IOException => {
@@ -89,11 +89,25 @@ class SystemPropertiesListener extends ServletContextListener with Loggered {
         
         System.setProperty("paste.app.h2.home",h2Home.getAbsolutePath())
    
+      val bindAddr = System.getProperty("paste.h2.host", null)
+          if (bindAddr==null) {
+            System.setProperty("paste.h2.host", bindAddr)
+          }
+        System.setProperty("h2.bindAddress", bindAddr)
+        
+        var bindPort = System.getProperty("paste.h2.port",null)
+            if (bindPort==null) {
+                bindPort = "6666"
+                System.setProperty("paste.h2.port", bindPort)
+            }
+    
+    logger.info("binding h2 to "+bindAddr+":"+bindPort)
+    
          try {
             h2Server=Server.createTcpServer("-tcp",
                     "-tcpDaemon",
                     "-tcpShutdownForce",
-                    "-tcpPort","6668",
+                    "-tcpPort",bindPort,
                     
                     "-baseDir",h2Home.getAbsolutePath()).start();
         } catch  {

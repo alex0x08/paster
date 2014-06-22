@@ -45,11 +45,7 @@
         </a>
             |
         <a class="img-map img-atom" href="<c:url value="/main/paste/list.atom"/>" title="atom" alt="atom">
-         </a> |
-        <a class="img-map img-xls" href="<c:url value="/main/paste/list.xls"/>" title="xls" alt="xls">
-        </a> |
-        <a class="img-map img-ws" href="<c:url value="/ws/paste?wsdl"/>" title="wsdl" alt="wsdl">
-        </a>
+         </a> 
        
     </div>
  </div>

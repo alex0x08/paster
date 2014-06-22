@@ -91,6 +91,10 @@
         <put-attribute name="content" value="/WEB-INF/pages/admin/settings/edit.jsp" />
     </definition>
 
+    <definition name="/admin/settings/dbconsole"  extends=".mainTemplate">
+        <put-attribute name="content" value="/WEB-INF/pages/admin/settings/dbconsole.jsp" />
+    </definition>
+
 
     <definition name="/common/tags" template="/WEB-INF/pages/common/tags.jsp" >
         <put-attribute name="model" value="" />
@@ -131,6 +135,8 @@
 
 
     </definition>
+
+
 
 
 </tiles-definitions>

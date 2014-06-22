@@ -41,11 +41,11 @@ object LocaleConstants {
 
 abstract class AbstractController extends Loggered{
 
-  protected val page404= "404"
+  protected val page404= "/404"
 
-  protected val page403= "403"
+  protected val page403= "/403"
 
-  protected val page500= "500"
+  protected val page500= "/500"
 
 
   @Resource(name = "messageSource")

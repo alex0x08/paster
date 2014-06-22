@@ -246,6 +246,7 @@ class OpenIDAuthServlet extends HttpServlet with Loggered{
       user.getPassword(),
       user.getAuthorities())
     auth.setDetails(user)
+  
     SecurityContextHolder.getContext().setAuthentication(auth)
 
 

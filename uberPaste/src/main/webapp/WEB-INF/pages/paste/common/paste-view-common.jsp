@@ -155,6 +155,7 @@
                         <sec:authorize access="${currentUser !=null and (currentUser.admin or ( comment.hasOwner  and comment.owner eq currentUser)) }">
                             <a href="<c:url value='/main/paste/removeComment'>
                                    <c:param name="pasteId" value="${model.id}"/>
+                                   <c:param name="pasteRev" value="${lastRevision}"/>
                                    <c:param name="commentId" value="${comment.id}"/>
                                    <c:param name="lineNumber" value="${comment.lineNumber}"/>
                                </c:url>" title="<fmt:message key='button.delete'/>">
@@ -183,6 +184,23 @@
 
 <div id="${model.id}_commentForm" class="editForm p-comment"  style="display:none;" >
 
+    <c:choose>
+        <c:when test="${empty currentUser and !allowAnonymousCommentsCreate}">
+            
+   <fmt:message key="auth.login-to-add-comment"/>
+  
+   <form id="${model.id}_addCommentForm" style="display:none;">
+                 <input type="hidden"  id="lineNumber"/>
+                 <input type="hidden"  id="parentId"/>
+            <fmt:message key="comments.line">
+                    <fmt:param value="<span id='pageNum'></span>"/>
+                </fmt:message>
+   
+            </form>
+        </c:when>
+        <c:otherwise>
+            
+            
     <form:form action="${url}" id="${model.id}_addCommentForm"
                modelAttribute="comment"
                method="POST" >
@@ -248,4 +266,8 @@
 
     </form:form>
 
+            
+        </c:otherwise>
+    </c:choose>
+    
 </div>

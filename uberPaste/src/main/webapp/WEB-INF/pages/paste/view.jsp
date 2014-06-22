@@ -64,7 +64,9 @@
   
   </c:if>
 
-        $('${model.id}_addCommentBtn').addEvent('click', function(event) {
+    <c:if test="${not empty currentUser or allowAnonymousCommentsCreate}">
+      
+      $('${model.id}_addCommentBtn').addEvent('click', function(event) {
              event.stop();
 
             this.getElementById('btnCaption').set('text', transmitText);
@@ -79,6 +81,9 @@
             
         });
 
+    
+    </c:if>
+      
         ZeroClipboard.setDefaults({moviePath: "<c:url value='/main/assets/${appVersion}/paster/static/ZeroClipboard.swf'/>"});
 
         var clip = new ZeroClipboard(document.id("ctrlc_link"));

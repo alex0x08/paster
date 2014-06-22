@@ -8,7 +8,7 @@
 
 <div class="section">
     <div class="errors">
-        <c:if test="${param.error}">
+        <c:if test="${not empty param.error}">
         <fmt:message key="login.msg.failure"/><br /><br />
         <fmt:message key="login.failure.reason"/>: <c:out value="${sessionScope.SPRING_SECURITY_LAST_EXCEPTION.message}"/>
           

@@ -218,12 +218,26 @@
 
                 <div class="column grid-4 right" style="margin-top: 3em;">
 
-                    <button id="addCommentBtn" class="p-btn-save submitBtn" name="submit_btn" type="submit">
+                    
+                     <c:choose>
+        <c:when test="${empty currentUser and !allowAnonymousCommentsCreate}">
+        
+            <fmt:message key="auth.login-to-save-changes"/>
+        
+        </c:when>
+                         <c:otherwise>
+                   
+                              <button id="addCommentBtn" class="p-btn-save submitBtn" name="submit_btn" type="submit">
                         <span class="i">S</span>
                         <span id="btnCaption"><c:out value='${submit_button_text}'/></span>
                         <img id="btnIcon" style="display:none;" src="<c:url value='/main/static/${appVersion}/images/gear_sml.gif'/>"/>
                     </button>
 
+                             
+                         </c:otherwise>
+                     </c:choose>
+                    
+                   
 
                     <a href="<c:out value="${urlCancel}"/>">
                         <fmt:message key='button.cancel'/></a>
@@ -259,7 +273,15 @@
                     <div class="form-buttons">
                         <div class="button">
 
-                            <button
+                                                <c:choose>
+        <c:when test="${empty currentUser and !allowAnonymousCommentsCreate}">
+        
+            <fmt:message key="auth.login-to-save-changes"/>
+        
+        </c:when>
+                         <c:otherwise>
+                      
+                                   <button
                                 name="submit_btn"
                                 class="p-btn-save submitBtn" type="submit">
 
@@ -268,6 +290,9 @@
                                 <span id="btnCaption"><c:out value='${submit_button_text}'/></span>
                             </button>
 
+                             
+                         </c:otherwise>
+                                                </c:choose>
                             <a href="<c:out value="${urlCancel}"/>">
                                 <fmt:message key='button.cancel'/></a>
 
