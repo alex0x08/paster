@@ -1,7 +1,7 @@
 <%@ include file="/WEB-INF/pages/common/taglibs.jsp"%>
 
 
-<% response.setStatus(500); %>
+<% response.setStatus(401); %>
 
 
 <!DOCTYPE html>
@@ -20,7 +20,7 @@
 
         <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE9" />
 
-        <title>500: Internal Error</title>
+        <title>401: Not authorized</title>
         
         <link href="<c:url value='/main/assets/${pasteRuntime.appVersion}/paster/minified/all/css/all-style.min.css'/>" rel="stylesheet" type="text/css">
         <link href="<c:url value='/main/assets/${pasteRuntime.appVersion}/paster/less/app.css'/>" rel="stylesheet" type="text/css">
@@ -37,7 +37,7 @@
                <div class="column grid-8" >
           
                    <div style="padding-top: 5em;">
-                   <h1>Internal Error found.</h1>
+                   <h1>Not authorized</h1>
       
                    <a href="<c:url value='/'/>" title="<fmt:message key="index.title"/>">
                            <i class="fa fa-home"></i> <fmt:message key="index.title"/>

@@ -93,6 +93,8 @@ abstract class GenericEditController[T <: Struct ] extends StructController[T] {
             return editPage
         }
 
+     
+    
         val r:T = manager.save(b)
 
         // set id from create

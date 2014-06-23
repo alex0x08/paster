@@ -32,10 +32,10 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import scala.collection.JavaConversions._
 import uber.paste.base.Loggered
-import uber.paste.openid.MD5Util
 import org.apache.commons.lang.StringUtils
 import java.util
 import javax.xml.bind.annotation.XmlTransient
+import org.apache.commons.codec.digest.DigestUtils
 
 @Entity
 @Searchable
@@ -44,7 +44,7 @@ class User extends Named with UserDetails with java.io.Serializable{
 
   
   /**
-   * логин пользователя 
+   * username
    */
     
   @Length(min = 3, max = 250)
@@ -54,7 +54,7 @@ class User extends Named with UserDetails with java.io.Serializable{
   @Column(nullable = false, length = 50,unique=true)
   private var username:String = null
   /**
-   *  набор ролей
+   *  roles
    */
    @ElementCollection(fetch = FetchType.EAGER)
    @CollectionTable(joinColumns=Array(new JoinColumn(name="USER_ID")))
@@ -67,13 +67,12 @@ class User extends Named with UserDetails with java.io.Serializable{
 
   @OneToMany(fetch = FetchType.EAGER,cascade = Array(CascadeType.PERSIST,CascadeType.MERGE,CascadeType.REMOVE))
   @JoinTable(joinColumns = Array(new JoinColumn( name="USER_ID")),
-            inverseJoinColumns = Array(new JoinColumn( name="SESSION_ID"))
-    )
+            inverseJoinColumns = Array(new JoinColumn( name="SESSION_ID")))
   @XmlTransient
   private var savedSessions:java.util.List[SavedSession] = new ArrayList[SavedSession]()
 
   /**
-   * пароль
+   * pass
    */
   @NotNull(message = "{validator.not-null}")
   @Length(min = 3, max = 250)
@@ -111,11 +110,11 @@ class User extends Named with UserDetails with java.io.Serializable{
 
   def getAvatarHash():String = {
     return if (email!=null) {
-      MD5Util.instance.md5Hex(email)
+      DigestUtils.md5Hex(email)
     } else if (username==null) {
       null
     } else {
-      MD5Util.instance.md5Hex(username)
+      DigestUtils.md5Hex(username)
     }
 
   }
@@ -234,9 +233,11 @@ class User extends Named with UserDetails with java.io.Serializable{
     this.passwordRepeat = password;
   }
 
+  def isRemoteUser():Boolean = openID!=null 
+  
   def isPasswordEmpty():Boolean = StringUtils.isBlank(password)
     
-  def isAdmin():Boolean = return roles.contains(Role.ROLE_ADMIN.getCode)
+  def isAdmin():Boolean = roles.contains(Role.ROLE_ADMIN.getCode)
   
   def getRoles():Set[String] = {
     return roles;
@@ -276,6 +277,7 @@ class User extends Named with UserDetails with java.io.Serializable{
     getRoles
     getEmail
   }
+  
   
   override def toString():String = {
     return Loggered.getNewProtocolBuilder(this)

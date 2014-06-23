@@ -68,6 +68,7 @@ abstract class Struct extends DBObject with SearchObject with  java.io.Serializa
       lastModified = Struct.SD_FULL.parse(l)
   }
   
+  
   def loadFull() {}
   
 

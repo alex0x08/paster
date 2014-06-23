@@ -51,9 +51,6 @@ abstract class GenericController[T <: DBObject ] extends AbstractController {
     return viewPage;
   }
 
-  
-
   protected def manager():GenericManager[T,Long]
-  
 
 }

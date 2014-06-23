@@ -6,13 +6,10 @@
 
 <c:choose>
     <c:when test="${empty param.frameMode}">
-            <c:url var="urlCancel" value='/main/paste/list' />
-        
+        <c:url var="urlCancel" value='/main/paste/list' />
     </c:when>
     <c:otherwise>
-
-            <c:url var="urlCancel" value='javascript: window.parent.createNewPasteDlg.hide();' />
-        
+        <c:url var="urlCancel" value='javascript: window.parent.createNewPasteDlg.hide();' />
     </c:otherwise>
 </c:choose>
 
@@ -22,16 +19,16 @@
         <form:form id="editForm" action="${url}" cssClass="perk"
                    modelAttribute="model"
                    method="POST" >
-        
+
             <c:if test="${not empty param.integratedMode}">
                 <input type="hidden" name="integrationMode" value="true"/>
             </c:if>
-            
-                <c:if test="${not empty param.frameMode}">
+
+            <c:if test="${not empty param.frameMode}">
                 <input type="hidden" name="frameMode" value="true"/>
             </c:if>
-            
-                
+
+
             <form:input id="thumbImg" path="thumbImage" cssStyle="display:none;"  />
 
             <form:input id="wordsCount" path="wordsCount" cssStyle="display:none;"  />
@@ -87,9 +84,6 @@
                                 </div>
 
                                 <div class="column grid-3" style="float:right;">
-
-
-
                                     <form:label path="priority">
                                         <fmt:message key="paste.priority"/>:
                                     </form:label>
@@ -103,10 +97,7 @@
                                     <span id="priorPreview" class="i priority_normal" style="font-size:1.5em;">/</span>
 
                                     <form:errors path="priority" cssClass="error" />
-
                                 </div>
-
-
 
                             </div>
 
@@ -137,16 +128,16 @@
                             </div>
 
                         </div>
-                                <div class="tabdata">
-                                    <form:input path="remoteUrl" maxlength="1024" id="loadUrl"/>
+                        <div class="tabdata">
+                            <form:input path="remoteUrl" maxlength="1024" id="loadUrl"/>
                             <button id="loadUrlBtn"
-                                name="load_btn"
-                                class="p-btn-save" >
-                                        Load
+                                    name="load_btn"
+                                    class="p-btn-save" >
+                                Load
                             </button>
-         
-                                    
-                                </div>
+
+
+                        </div>
                         <div class="tabdata">
 
 
@@ -218,30 +209,28 @@
 
                 <div class="column grid-4 right" style="margin-top: 3em;">
 
-                    
-                     <c:choose>
-        <c:when test="${empty currentUser and !allowAnonymousCommentsCreate}">
-        
-            <fmt:message key="auth.login-to-save-changes"/>
-        
-        </c:when>
-                         <c:otherwise>
-                   
-                              <button id="addCommentBtn" class="p-btn-save submitBtn" name="submit_btn" type="submit">
-                        <span class="i">S</span>
-                        <span id="btnCaption"><c:out value='${submit_button_text}'/></span>
-                        <img id="btnIcon" style="display:none;" src="<c:url value='/main/static/${appVersion}/images/gear_sml.gif'/>"/>
-                    </button>
 
-                             
-                         </c:otherwise>
-                     </c:choose>
-                    
-                   
+                    <c:choose>
+                        <c:when test="${empty currentUser and !allowAnonymousCommentsCreate}">
+
+                            <fmt:message key="auth.login-to-save-changes"/>
+
+                        </c:when>
+                        <c:otherwise>
+
+                            <button id="addCommentBtn" class="p-btn-save submitBtn" name="submit_btn" type="submit">
+                                <span class="i">S</span>
+                                <span id="btnCaption"><c:out value='${submit_button_text}'/></span>
+                                <img id="btnIcon" style="display:none;" src="<c:url value='/main/static/${appVersion}/images/gear_sml.gif'/>"/>
+                            </button>
+
+
+                        </c:otherwise>
+                    </c:choose>
+
 
                     <a href="<c:out value="${urlCancel}"/>">
                         <fmt:message key='button.cancel'/></a>
-
 
                     <c:if test="${!model.blank}">
                         <tiles:insertDefinition name="/common/deleteLink" >
@@ -273,26 +262,26 @@
                     <div class="form-buttons">
                         <div class="button">
 
-                                                <c:choose>
-        <c:when test="${empty currentUser and !allowAnonymousCommentsCreate}">
-        
-            <fmt:message key="auth.login-to-save-changes"/>
-        
-        </c:when>
-                         <c:otherwise>
-                      
-                                   <button
-                                name="submit_btn"
-                                class="p-btn-save submitBtn" type="submit">
+                            <c:choose>
+                                <c:when test="${empty currentUser and !allowAnonymousCommentsCreate}">
 
-                                <img id="btnIcon" style="display:none;" src="<c:url value='/main/static/${appVersion}/images/gear_sml.gif'/>"/>
-                                <span class="i">S</span>
-                                <span id="btnCaption"><c:out value='${submit_button_text}'/></span>
-                            </button>
+                                    <fmt:message key="auth.login-to-save-changes"/>
 
-                             
-                         </c:otherwise>
-                                                </c:choose>
+                                </c:when>
+                                <c:otherwise>
+
+                                    <button
+                                        name="submit_btn"
+                                        class="p-btn-save submitBtn" type="submit">
+
+                                        <img id="btnIcon" style="display:none;" src="<c:url value='/main/static/${appVersion}/images/gear_sml.gif'/>"/>
+                                        <span class="i">S</span>
+                                        <span id="btnCaption"><c:out value='${submit_button_text}'/></span>
+                                    </button>
+
+
+                                </c:otherwise>
+                            </c:choose>
                             <a href="<c:out value="${urlCancel}"/>">
                                 <fmt:message key='button.cancel'/></a>
 
@@ -330,45 +319,45 @@
 </div>
 
 
-<script type="text/javascript">  
-   
-    var max_length= 100;
+<script type="text/javascript">
 
-    window.addEvent('paste', function(e){
+    var max_length = 100;
+
+    window.addEvent('paste', function(e) {
         if (e.event.clipboardData) {
-            
+
             /*console.log(e.event.clipboardData);*/
-            
+
             var text = e.event.clipboardData.getData('text/plain');
 
-            var block = (text.length<max_length-2) ? text.substring(0, text.length) : text.substring(0, max_length-2)+'..';
-             
+            var block = (text.length < max_length - 2) ? text.substring(0, text.length) : text.substring(0, max_length - 2) + '..';
 
-             var ptitle = $("pname");
-             
-             if (ptitle.get('value') == '') {
-                 ptitle.set('value',block);
-             }
-          
+
+            var ptitle = $("pname");
+
+            if (ptitle.get('value') == '') {
+                ptitle.set('value', block);
+            }
+
             //e.stop();
         }
     });
 
-    window.addEvent('domready', function(){
+    window.addEvent('domready', function() {
 
         var counter = new WordCount('wordCount', {
-                countWordsTo: $('wordsCount'),
-                countSymbolsTo: $('symbolsCount'),            
-		inputName: null,				//The input name from which text should be retrieved, defaults null
-		countWords: true,				//Whether or not to count words
-		countChars: true,				//Whether or not to count characters
-		charText: '<fmt:message key="paste.edit.word.counter.charText"/>',			//The text that follows the number of characters
-		wordText: '<fmt:message key="paste.edit.word.counter.wordText"/>',				//The text that follows the number of words
-		separator: ', ',				//The text that separates the number of words and the number of characters
-		liveCount: false,				//Whether or not to use the event trigger, set false if you'd like to call the getCount function separately
-		eventTrigger: 'keyup'			//The event that triggers the count update
-	});
-            
+            countWordsTo: $('wordsCount'),
+            countSymbolsTo: $('symbolsCount'),
+            inputName: null, //The input name from which text should be retrieved, defaults null
+            countWords: true, //Whether or not to count words
+            countChars: true, //Whether or not to count characters
+            charText: '<fmt:message key="paste.edit.word.counter.charText"/>', //The text that follows the number of characters
+            wordText: '<fmt:message key="paste.edit.word.counter.wordText"/>', //The text that follows the number of words
+            separator: ', ', //The text that separates the number of words and the number of characters
+            liveCount: false, //Whether or not to use the event trigger, set false if you'd like to call the getCount function separately
+            eventTrigger: 'keyup'			//The event that triggers the count update
+        });
+
         var editor = ace.edit("editor");
         editor.setTheme("ace/theme/chrome");
         editor.getSession().setMode("ace/mode/${model.codeType.editType}");
@@ -382,41 +371,41 @@
         //To focus the ace editor
         editor.focus();
         //Get the number of lines
-        var  count = editor.getSession().getLength();
+        var count = editor.getSession().getLength();
         //Go to end of the last line
-        editor.gotoLine(count, editor.getSession().getLine(count-1).length);
+        editor.gotoLine(count, editor.getSession().getLine(count - 1).length);
 
 
-        editor.getSession().on('change', function(){
+        editor.getSession().on('change', function() {
             var text = editor.getSession().getValue();
-            textarea.set('value',text);
+            textarea.set('value', text);
             counter.getCount(text);
         });
 
-     
-       $('normalized').addEvent('click', function() {
-            if(this.get('checked')) {
+
+        $('normalized').addEvent('click', function() {
+            if (this.get('checked')) {
                 var col = 80;
                 editor.getSession().setUseWrapMode(true);
                 editor.getSession().setWrapLimitRange(col, col);
                 editor.renderer.setPrintMarginColumn(col);
             } else {
-          editor.getSession().setUseWrapMode(false);
+                editor.getSession().setUseWrapMode(false);
                 editor.renderer.setPrintMarginColumn(80);
             }
         });
 
-        $('theme').addEvent('change',function(event) {
+        $('theme').addEvent('change', function(event) {
             editor.setTheme(this.getElement(':selected').value);
         });
 
 
-        $('ptype').addEvent('change',function(event) {
-            editor.getSession().setMode("ace/mode/"+this.getElement(':selected').get("editCode"));
+        $('ptype').addEvent('change', function(event) {
+            editor.getSession().setMode("ace/mode/" + this.getElement(':selected').get("editCode"));
         });
 
-        $('pprior').addEvent('change',function(event) {      
-         var prPreview = $('priorPreview');
+        $('pprior').addEvent('change', function(event) {
+            var prPreview = $('priorPreview');
             prPreview.erase('class');
             prPreview.addClass('i');
             prPreview.addClass(this.getElement(':selected').get("x-css-class-name"));
@@ -436,12 +425,11 @@
         html2canvas($('editor'), {
             allowTaint: true,
             taintTest: false,
-
             onrendered: function(canvas) {
 
-                var img= Pixastic.process(canvas, "crop", {
-                    rect : {
-                        left : 15, top : 0, width : 400, height : 300
+                var img = Pixastic.process(canvas, "crop", {
+                    rect: {
+                        left: 15, top: 0, width: 400, height: 300
                     }
                 });
 
@@ -449,30 +437,30 @@
 
                 img = Canvas2Image.saveAsJPEG(img, true, 300, 200);
                 document.body.appendChild(img);
-                thumbImg.set('value',img.src);
+                thumbImg.set('value', img.src);
                 $('editForm').submit();
             }
         });
     }
 
     function cleanTitle() {
-            $('pname').set('value','');
+        $('pname').set('value', '');
     }
 
-    window.addEvent('domready', function(){
+    window.addEvent('domready', function() {
 
-        $('loadUrlBtn').addEvent('click', function(event){
+        $('loadUrlBtn').addEvent('click', function(event) {
             event.stop();
 
-        $('editForm').set('action','<c:url value='/main/paste/loadFrom'/>');
+            $('editForm').set('action', '<c:url value='/main/paste/loadFrom'/>');
 
-        $('editForm').submit();
+            $('editForm').submit();
         });
 
 
-        $$('.submitBtn').addEvent('click',function(event){
+        $$('.submitBtn').addEvent('click', function(event) {
             this.getElementById('btnCaption').set('text', transmitText).disabled = true;
-            this.getElementById('btnIcon').setStyle('display','');
+            this.getElementById('btnIcon').setStyle('display', '');
 
             event.stop();
             onSave();

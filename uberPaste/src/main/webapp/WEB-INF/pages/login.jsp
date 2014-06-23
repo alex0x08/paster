@@ -4,11 +4,10 @@
 <h1><fmt:message key="login.title"/></h1>
 
 <div style="width: 300px;margin-left: auto; margin-right: auto;" >
-    
 
 <div class="section">
     <div class="errors">
-        <c:if test="${not empty param.error}">
+        <c:if test="${not empty param.authfailed}">
         <fmt:message key="login.msg.failure"/><br /><br />
         <fmt:message key="login.failure.reason"/>: <c:out value="${sessionScope.SPRING_SECURITY_LAST_EXCEPTION.message}"/>
           
@@ -17,6 +16,7 @@
 
 </div>
 
+    
 <div class="section">
 
 

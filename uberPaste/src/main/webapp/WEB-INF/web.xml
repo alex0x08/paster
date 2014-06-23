@@ -57,9 +57,7 @@
         </init-param>
     </filter>
 
-  
-
- <filter>
+    <filter>
         <filter-name>rewriteFilter</filter-name>
         <filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</filter-class>
         <init-param>
@@ -191,16 +189,6 @@
     </servlet-->
 
     <servlet>
-        <servlet-name>OpenIDServlet</servlet-name>
-        <servlet-class>uber.paste.openid.OpenIDAuthServlet</servlet-class>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
-
-
-
-
-   
-    <servlet>
         <servlet-name>H2Console</servlet-name>
         <servlet-class>org.h2.server.web.H2ConsoleExtendedServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
@@ -211,18 +199,9 @@
     </servlet-mapping>
 
     <servlet-mapping>
-        <servlet-name>OpenIDServlet</servlet-name>
-        <url-pattern>/act/openid-login</url-pattern>
-    </servlet-mapping>
-
-    
-
-    <servlet-mapping>
         <servlet-name>dispatcher</servlet-name>
         <url-pattern>/main/*</url-pattern>
     </servlet-mapping>
-
-    
 
 
     <!--servlet-mapping>
@@ -248,7 +227,14 @@
         <error-code>403</error-code>
         <location>/WEB-INF/pages/403.jsp</location>
     </error-page>
+
+     <error-page>
+        <error-code>401</error-code>
+        <location>/WEB-INF/pages/401.jsp</location>
+    </error-page>
  
+
+   
     <error-page>
         <exception-type>java.lang.Throwable</exception-type>
         <location>/WEB-INF/pages/500.jsp</location>

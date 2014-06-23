@@ -31,7 +31,6 @@ import uber.paste.manager.UserManager
 import org.codehaus.jackson.annotate.JsonIgnore
 import org.springframework.web.bind.annotation._
 import uber.paste.manager.ConfigManager
-import uber.paste.openid.OpenIDServer
 import uber.paste.manager.{PasteManager, GenericManager}
 
 object LocaleConstants {
@@ -69,9 +68,10 @@ abstract class AbstractController extends Loggered{
   @JsonIgnore
   def isAllowAnonymousPasteCreate() = allowAnonymousPasteCreate
   
-  @ModelAttribute("availableServers")
+/*  @ModelAttribute("availableServers")
   @JsonIgnore
   def getAvailableOpenIDServers() = OpenIDServer.list
+*/
 
   @ModelAttribute("stats")
   @JsonIgnore
@@ -130,8 +130,5 @@ abstract class AbstractController extends Loggered{
     val u:User = UserManager.getCurrentUser
     return u != null && u.isAdmin()
   }
-
-
-
 
 }

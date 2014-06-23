@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Ubersoft, LLC.
+ * Copyright 2014 Ubersoft, LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,30 +16,18 @@
 
 package uber.paste.controller
 
-import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
+import org.springframework.web.bind.annotation.RequestMapping
 
 @Controller
-class IndexController extends AbstractController{
-  
-  
-  @RequestMapping(value = Array("/"))
+@RequestMapping(Array("/auth"))
+class RemoteAuthController {
+
+  @RequestMapping(value = Array("/google","/linkedin"))
   def index(model:Model) = {
     model.asMap().clear()
     "redirect:/main/paste/list"
   }
-
-  
-  @RequestMapping(Array("/login"))
-  def login(model:Model):String = {
-    return if (isCurrentUserLoggedIn) {
-      index(model)
-    } else {
-    //model.addAttribute("availableServers",OpenIDServer.list)
-    "/login"
-    }
-  }
-  
   
 }

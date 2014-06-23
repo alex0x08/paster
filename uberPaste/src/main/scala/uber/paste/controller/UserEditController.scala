@@ -17,16 +17,23 @@
 package uber.paste.controller
 
 import org.springframework.stereotype.Controller
+import org.springframework.validation.BindingResult
 import org.springframework.web.bind.WebDataBinder
+import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.RequestMapping
 import uber.paste.model.User
+import javax.validation.Valid
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.web.bind.annotation.RequestMethod
+import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.servlet.mvc.support.RedirectAttributes
 import uber.paste.manager.UserManager
 import org.springframework.ui.Model
 import uber.paste.model.Role
 import uber.paste.model.RoleEditor
 import org.springframework.web.bind.annotation.InitBinder;
 import java.util.Locale
+import scala.collection.JavaConversions._
 
 @Controller
 @RequestMapping(Array("/user"))
@@ -48,9 +55,97 @@ class UserEditController extends GenericEditController[User]{
   }
 
   override def fillEditModel(obj:User,rev:Long,model:Model,locale:Locale)  {
+      obj.setPassword(null)
     super.fillEditModel(obj,rev,model,locale)
    model.addAttribute("availableRoles", Role.list)
   }
+  
+  
+   @RequestMapping(value = Array(GenericEditController.SAVE_ACTION), method = Array(RequestMethod.POST))
+   override def save(@RequestParam(required = false) cancel:String,
+            @Valid @ModelAttribute(GenericController.MODEL_KEY) b:User,
+            result:BindingResult, model:Model,locale:Locale,
+            redirectAttributes:RedirectAttributes):String = {
+
+        if (!isCurrentUserLoggedIn() || !isCurrentUserAdmin()) {
+          return page403
+        }
+    
+    
+        if (cancel != null) {
+            redirectAttributes.addFlashAttribute("statusMessageKey", "action.cancelled")
+            return listPage
+        }
+
+        if (result.hasErrors()) {
+              
+          for (f <- result.getFieldErrors()) {
+                
+                if (!f.getField().equals("username") && !f.getField().equals("password")) {
+                logger.debug("field=" + f.getField() + ",rejected value=" + f.getRejectedValue() + ",message=" + f.getDefaultMessage());
+             
+                fillEditModel(b,-1,model,locale)
+                return editPage
+                    
+                } 
+            }
+        }
+
+    if (b.isBlank && b.isPasswordEmpty) {
+        result.rejectValue("password", "error.password.required" )
+             fillEditModel(b,-1,model,locale)
+            return editPage
+    }
+    
+    if (!b.isPasswordEmpty() && !b.getPassword.equals(b.getPasswordRepeat)) {
+        result.rejectValue("password", "error.password.missmatch" )
+             fillEditModel(b,-1,model,locale)
+            return editPage
+    } 
+    
+    
+    if (!b.isBlank) {
+      
+      val old = manager.getFull(b.getId)
+      
+      if (!old.isRemoteUser) {
+      
+        old.setEmail(b.getEmail)
+        old.setName(b.getName)
+        old.setRoles(b.getRoles)
+   
+      }
+      
+      
+      old.setDisabled(b.isDisabled)
+      
+      if (!b.isPasswordEmpty() && b.getPassword.equals(b.getPasswordRepeat)) {
+              old.setPassword(b.getPassword)
+      }
+      
+      manager.save(old)
+    } else {
+      manager.save(b)
+    }
+    
+      redirectAttributes.addFlashAttribute("statusMessageKey", "action.success")
+
+      return listPage
+    }
+
+   
+
+    @RequestMapping(value = Array(GenericEditController.DELETE_ACTION), method = Array(RequestMethod.GET,RequestMethod.POST))
+    override def delete(@RequestParam(required = false) id:Long,
+            model:Model):String = {
+  
+        if (!isCurrentUserLoggedIn() || !isCurrentUserAdmin()) {
+          return page403
+        }
+        return super.delete(id, model)
+    }
+
+
   
   def getNewModelInstance():User = return new User
 

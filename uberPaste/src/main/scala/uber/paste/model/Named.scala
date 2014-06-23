@@ -54,10 +54,12 @@ class Named extends Struct {
     if (f!=null) {
       setName(f)
     }
-
-  
   }
-  
+
+ def fillFromDTO(dto:Named) {
+   setName(dto.name)
+  }
+   
   
   def getName() : String = name
   def setName(f:String) : Unit = {name = f }

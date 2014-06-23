@@ -1,16 +1,10 @@
 <%@ include file="/WEB-INF/pages/common/taglibs.jsp"%>
 <!DOCTYPE html>
 <compress:html enabled="true" 
-               removeComments="true" compressJavaScript="true" yuiJsDisableOptimizations="false">
-    
-    
+               removeComments="true" compressJavaScript="true" compressCss="true" yuiJsDisableOptimizations="false">
 <html lang="en">
     <head>
-
         <link href="<c:url value='/main/assets/${appVersion}/paster/less/app.css'/>" rel="stylesheet" type="text/css">
-
-        
-        
             <c:choose>
                 <c:when test="${not empty systemInfo.project.clientImage}">
                 <style>
@@ -43,8 +37,6 @@
 
     <div class="row">
         <div class="column grid-10">
-            
-           
             <tiles:insertAttribute name="menu" />
             <c:if test="${not empty statusMessageKey}">
                 <script type="text/javascript">
@@ -62,7 +54,6 @@
                 <p><fmt:message key="${statusMessageKey}"/></p>
                 </noscript>  
             </c:if>
-                
 
                 <spring:hasBindErrors name="input">
                     <c:forEach items="${errors.globalErrors}" var="errorMessage">
@@ -78,10 +69,10 @@
            <a href="<c:url value='/main/login'/>">
                <span style="font-size: 1em;vertical-align: middle;" class="i" title="Login here">x</span></a>
 
-            <c:forEach var="server" items="${availableServers}">
+            <%--c:forEach var="server" items="${availableServers}">
                 <a  class="img-map ${server.icon}" href="<c:url value='/act/openid-login?openid_identifier=${server.code}'/>">
                 </a>
-            </c:forEach>
+            </c:forEach--%>
         </sec:authorize>
 
 

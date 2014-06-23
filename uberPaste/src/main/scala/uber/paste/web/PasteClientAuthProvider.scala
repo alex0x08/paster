@@ -75,13 +75,16 @@ class PasteClientAuthProvider extends AuthenticationProvider with InitializingBe
         // get the user profile
         val userProfile:UserProfile = client.getUserProfile(credentials, null)
         logger.debug("userProfile : {}", userProfile)
-        
-    
          
-    System.out.println("_userProfile "+userProfile.getClass.getName)
     
     val currentUser =userDetailsService.getUserByOpenID(userProfile.getId)
+  
+  
     
+    /*if (currentUser.isDisabled) {
+        logger.debug("user disabled")
+      return null
+    }*/
     var user =if (currentUser==null) {
          val user = new User
          user.addRole(Role.ROLE_USER)
@@ -89,6 +92,8 @@ class PasteClientAuthProvider extends AuthenticationProvider with InitializingBe
       user
       
     } else {
+        this.userDetailsChecker.check(currentUser)
+
       currentUser
     }
     
@@ -100,7 +105,7 @@ class PasteClientAuthProvider extends AuthenticationProvider with InitializingBe
           user.setEmail(gp.getEmail)
           user.setName(gp.getDisplayName)
           user.setOpenID(gp.getId)
-          System.out.println("_match google "+gp.getDisplayName+" |username"+gp.getUsername+" email "+gp.getEmail)
+          logger.debug("_match google "+gp.getDisplayName+" |username"+gp.getUsername+" email "+gp.getEmail)
       }
       case ln : LinkedIn2Profile => {
        
@@ -108,15 +113,12 @@ class PasteClientAuthProvider extends AuthenticationProvider with InitializingBe
           user.setName(ln.getDisplayName)
           user.setEmail("fuck@off.com")
           user.setOpenID(ln.getId)
-          System.out.println("_match linkedin "+ln.getDisplayName+" |username"+ln.getUsername+" email "+ln.getEmail)
+          logger.debug("_match linkedin "+ln.getDisplayName+" |username"+ln.getUsername+" email "+ln.getEmail)
       }
     }
     
     user =userDetailsService.save(user)
     
-    
-    //      SessionStore.instance.add(s.getId(), user)
-
          val  result = new UsernamePasswordAuthenticationToken(
       user,
       user.getPassword(),
