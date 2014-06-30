@@ -100,7 +100,7 @@
 
         SyntaxHighlighter.highlight(${model.id}, {}, $('${model.id}_pasteText'), true,true);
         
-    <c:if test="${availablePrevList.count > 1}">
+    <c:if test="${availablePrevList.count > 0}">
         $('pageLoadSpinner').setStyle('display', 'none');
         initLazy();
     </c:if>
@@ -110,7 +110,7 @@
 </script>
 
 
-<c:if test="${availablePrevList.count > 1}">
+<c:if test="${availablePrevList.count > 0}">
 
 
     <c:url var="rawPageUrl" value="/main/paste/raw/view"/>
@@ -160,8 +160,10 @@
                         }
                         bindDeleteDlg(block);
 
+                      
                         $('pageLoadSpinner').setStyle('display', 'none');
-                    }
+                        $(page + '_pasteText').grab($('pageLoadSpinner'),"after");
+                        }
 
                 });
             }
@@ -169,7 +171,8 @@
 
     </script>
     <div id="pageLoadSpinner" >
-        <img src="<c:url value='/main/static/${appVersion}/images/gear_sml.gif'/>"/>   
+        <i class="fa fa-spinner"></i>
+        
         <fmt:message key="action.loading"/>
     </div>
     <div id="morePages"></div>

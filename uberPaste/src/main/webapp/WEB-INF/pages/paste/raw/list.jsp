@@ -1,6 +1,6 @@
 <%@ include file="/WEB-INF/pages/common/taglibs.jsp"%>
 
-<div class="page">
+<div id="paste_list_${param.page}" class="page">
     <h4 class="f-h4">
         <fmt:formatDate pattern="${dateTimePattern}" var="fromDate" value="${pageItems.firstElement.lastModified}" />
         <fmt:formatDate pattern="${dateTimePattern}" var="toDate" value="${pageItems.lastElement.lastModified}" />

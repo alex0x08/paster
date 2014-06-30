@@ -221,7 +221,7 @@
                             <button id="addCommentBtn" class="p-btn-save submitBtn" name="submit_btn" type="submit">
                                 <span class="i">S</span>
                                 <span id="btnCaption"><c:out value='${submit_button_text}'/></span>
-                                <img id="btnIcon" style="display:none;" src="<c:url value='/main/static/${appVersion}/images/gear_sml.gif'/>"/>
+                            <i id="btnIcon" style="display:none;" class="fa fa-spinner"></i>
                             </button>
 
 
@@ -273,8 +273,7 @@
                                     <button
                                         name="submit_btn"
                                         class="p-btn-save submitBtn" type="submit">
-
-                                        <img id="btnIcon" style="display:none;" src="<c:url value='/main/static/${appVersion}/images/gear_sml.gif'/>"/>
+         <i id="btnIcon" style="display:none;" class="fa fa-spinner"></i>
                                         <span class="i">S</span>
                                         <span id="btnCaption"><c:out value='${submit_button_text}'/></span>
                                     </button>

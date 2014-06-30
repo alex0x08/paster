@@ -18,13 +18,13 @@
                 </c:when>
                 <c:otherwise>
                     
-                    <c:url var="defaultBgUrl" value='/main/static/${appVersion}/images/ninjas/ninja-back.png'/>
+                <%--    <c:url var="defaultBgUrl" value='/main/static/${appVersion}/images/ninjas/ninja-back.png'/>
                     
                 <style>
                     body {
                         background: url('${defaultBgUrl}') no-repeat;
                     }
-                </style>
+                </style> --%>
                 </c:otherwise>
             </c:choose>
                 

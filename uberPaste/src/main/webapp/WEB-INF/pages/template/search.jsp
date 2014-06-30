@@ -16,7 +16,7 @@
         
         <button class="sbtn p-btn-save  " id="doSearchBtn" type="submit">
                  <span id="btnCaption"><fmt:message key="button.search"/></span>
-             <img id="btnIcon" style="display:none;" src="<c:url value='/main/static/${appVersion}/images/gear_sml.gif'/>"/>
+                 <i id="btnIcon" class="fa fa-spinner" style="display:none;"></i>
                  </button>
        
         <form:errors path="query" cssClass="error" element="div"/>

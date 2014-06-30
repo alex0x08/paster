@@ -280,7 +280,8 @@
                     try {
                         history.pushState({page: page}, "Page "+page, userPageUrl+"/"+page);
                     } catch (e) {}
-                    
+                              $('paste_list_'+page).grab($('pageLoadSpinner'),"after");
+              
                      $('pageLoadSpinner').setStyle('display','none');
 		    parseSearchResults(block);
                          bindDeleteDlg(block);
