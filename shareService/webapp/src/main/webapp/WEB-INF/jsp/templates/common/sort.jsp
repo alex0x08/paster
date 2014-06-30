@@ -10,7 +10,7 @@
 </c:choose>        
             <div class="btn-group" data-toggle="buttons">
                 <c:forEach items="${availableSortColumns}" var="sortColumn">
-                    <label class="btn btn-default" >
+                    <label class="btn btn-default btn-sm " >
                         <fmt:message key="${sortColumn.name}" />
                         <form:radiobutton cssClass="sortColumnKey"  path="pageItems.sort.property" value="${sortColumn.property}"   />
                     </label>
@@ -18,11 +18,11 @@
             </div>    
             
               <div class="btn-group" data-toggle="buttons">                 
-                  <label class="btn btn-default" title="<fmt:message key="sort.asc" />" >
+                  <label class="btn btn-default btn-sm" title="<fmt:message key="sort.asc" />" >
                              <span class="glyphicon glyphicon-arrow-up"></span>
                              <input class="sortColumnAsc" type="radio" value="up" ${pageItems.sort.ascending == false ? 'checked' : '' }  />
                     </label>             
-                    <label class="btn btn-default" title="<fmt:message key="sort.desc" />" >
+                    <label class="btn btn-default btn-sm" title="<fmt:message key="sort.desc" />" >
                              <span class="glyphicon glyphicon-arrow-down"></span>
                              <input class="sortColumnAsc" type="radio" value="down" ${pageItems.sort.ascending == true ? 'checked' : '' }/>
                     </label>

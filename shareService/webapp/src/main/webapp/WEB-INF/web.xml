@@ -155,12 +155,12 @@
    
 
             
-      <filter-mapping>
-                <filter-name>monitoring</filter-name>
-                <url-pattern>/*</url-pattern>
+    <filter-mapping>
+        <filter-name>monitoring</filter-name>
+        <url-pattern>/*</url-pattern>
                 
                 
-        </filter-mapping>
+    </filter-mapping>
     
     
     <filter-mapping>
@@ -223,7 +223,7 @@
         <servlet-name>file-download</servlet-name>
         <url-pattern>/act/download</url-pattern>
     </servlet-mapping>
-     <servlet-mapping>
+    <servlet-mapping>
         <servlet-name>file-download</servlet-name>
         <url-pattern>/login-basic/act/download</url-pattern>
     </servlet-mapping>
@@ -234,15 +234,11 @@
         <listener-class>uber.megashare.listener.SystemPropertiesListener</listener-class>
     </listener>
     
-    <listener>
-        <listener-class>uber.megashare.listener.H2DBListener</listener-class>
-    </listener>
-
    
 
-            <listener>
-                <listener-class>net.bull.javamelody.SessionListener</listener-class>
-        </listener>
+    <listener>
+        <listener-class>net.bull.javamelody.SessionListener</listener-class>
+    </listener>
 
             
     <listener>
