@@ -36,11 +36,11 @@
 
 
             <div class="row">
-                <div class="column grid-12" >
+                <div class="column ${not empty param.frameMode ? 'grid-13' : 'grid-12'}" style="margin-right: 0;" >
 
                     <div class="new_tabs_head"  >
                         <ul class="new_tabs">
-                            <li>
+                            <li style="border-radius: 10px 0px 0 0">
                                 <c:choose>
                                     <c:when test="${model.blank}">
                                         <fmt:message key="paste.new"/>
@@ -51,8 +51,8 @@
                                 </c:choose>
 
                             </li>
-                            <li><fmt:message key="paste.source.title"/></li>
-                            <li><fmt:message key="paste.editor.title"/></li>
+                            <li style="border-radius:0"><fmt:message key="paste.source.title"/></li>
+                            <li style="border-radius: 0px 10px 0 0"><fmt:message key="paste.editor.title"/></li>
                         </ul>
                     </div>
                     <div class="new_tabs_frame">
@@ -83,9 +83,9 @@
                                     <form:errors path="name" cssClass="error" />
                                 </div>
 
-                                <div class="column grid-3" style="float:right;">
+                                <div class="column ${not empty param.frameMode ? 'grid-4' : 'grid-3'}" style="float:right;">
                                     <form:label path="priority">
-                                        <fmt:message key="paste.priority"/>:
+                                        <fmt:message key="paste.priority"/>
                                     </form:label>
                                     <form:select cssStyle="display:inline;" path="priority" multiple="false" id="pprior">
                                         <c:forEach items="${availablePriorities}" var="prior">
@@ -94,7 +94,7 @@
                                             </form:option>
                                         </c:forEach>
                                     </form:select>
-                                    <span id="priorPreview" class="i priority_normal" style="font-size:1.5em;">/</span>
+                                    <span id="priorPreview" class="i priority_normal" style="font-size:1.9em;">/</span>
 
                                     <form:errors path="priority" cssClass="error" />
                                 </div>
@@ -104,13 +104,34 @@
                             <div class="row">
 
                                 <div class="column grid-6">
+                                     <form:label path="tagsAsString"><span  class="i" >T</span><fmt:message key="paste.tags"/></form:label>
+                                   
+                                    <div id="tagWrap" >
 
-                                    <form:label path="tagsAsString"><span  class="i" >T</span><fmt:message key="paste.tags"/></form:label>
-                                    <fmt:message key="paste.edit.tags.placeholder" var="tagsPlaceHolder"/>
-                                    <form:input id="ptags" path="tagsAsString" maxlength="155" cssStyle="width:95%;" 
-                                                autocomplete="true" placeholder="${tagsPlaceHolder}"  />
-                                    <form:errors path="tagsAsString" cssClass="error" />
+                                        <div class="tagLock">
 
+                                            <c:forEach var="tag" items="${model.tags}">
+                                                <div class="p-btn-tag"><c:out value="${tag}"/>
+                                                    <i  class="p-btn-tag-close"></i>
+                                                    
+                                                </div>
+
+                                            </c:forEach>
+
+                                        </div>
+
+                                        <div>
+                                            <input id="listTags" name="listTags" placeholder="+Add tags" />
+                                        </div>
+
+
+                                    </div>
+
+                                    
+                                    
+                                    <form:input id="ptags" path="tagsAsString" maxlength="155" cssStyle="display:none" 
+                                                />
+                                   
                                 </div>
 
                                 <div class="column grid-1" >
@@ -207,39 +228,61 @@
 
                 </div>
 
-                <div class="column grid-4 right" style="margin-top: 3em;">
+                <div class="column grid-3" style="margin-left: 0;"  >
+
+                    <div class="new_tabs_head"     >
+                        <ul class="new_tabs"  >
+                            <li style="padding-bottom:0.1em;border-style:none;border-left:0; border-top:0; border-bottom: 1px solid #c8c8c8; ">
+                                &nbsp;
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="new_tabs_frame"  style="border-left: 0;">
+                        <div class="tabdata" style="padding-left:3em;">
+
+                            <c:choose>
+                                <c:when test="${empty currentUser and !allowAnonymousCommentsCreate}">
+
+                                    <fmt:message key="auth.login-to-save-changes"/>
+
+                                </c:when>
+                                <c:otherwise>
+
+                                    <button id="addCommentBtn" class="p-btn-save submitBtn" name="submit_btn" type="submit">
+                                        <span class="i">S</span>
+                                        <span id="btnCaption"><c:out value='${submit_button_text}'/></span>
+                                        <i id="btnIcon" style="display:none;" class="fa fa-spinner"></i>
+                                    </button>
 
 
-                    <c:choose>
-                        <c:when test="${empty currentUser and !allowAnonymousCommentsCreate}">
+                                </c:otherwise>
+                            </c:choose>
 
-                            <fmt:message key="auth.login-to-save-changes"/>
+                            <div>
+                           
+                                 <a href="<c:out value="${urlCancel}"/>"><i  class="fa fa-ban"></i>
+                                <fmt:message key='button.cancel'/></a>
 
-                        </c:when>
-                        <c:otherwise>
+                            <c:if test="${!model.blank}">
+                                <tiles:insertDefinition name="/common/deleteLink" >
+                                    <tiles:putAttribute name="model" value="${model}"/>
+                                    <tiles:putAttribute name="modelName" value="paste"/>
+                                    <tiles:putAttribute name="currentUser" value="${currentUser}"/>
+                                </tiles:insertDefinition>
 
-                            <button id="addCommentBtn" class="p-btn-save submitBtn" name="submit_btn" type="submit">
-                                <span class="i">S</span>
-                                <span id="btnCaption"><c:out value='${submit_button_text}'/></span>
-                            <i id="btnIcon" style="display:none;" class="fa fa-spinner"></i>
-                            </button>
+                            </c:if>
+
+                                
+                            </div>
+                           
+
+                        </div>
 
 
-                        </c:otherwise>
-                    </c:choose>
+                    </div>
 
 
-                    <a href="<c:out value="${urlCancel}"/>">
-                        <fmt:message key='button.cancel'/></a>
-
-                    <c:if test="${!model.blank}">
-                        <tiles:insertDefinition name="/common/deleteLink" >
-                            <tiles:putAttribute name="model" value="${model}"/>
-                            <tiles:putAttribute name="modelName" value="paste"/>
-                            <tiles:putAttribute name="currentUser" value="${currentUser}"/>
-                        </tiles:insertDefinition>
-
-                    </c:if>
 
                 </div>
 
@@ -249,7 +292,7 @@
             <div  class="row">
                 <div class="column grid-16">
 
-                    <form:label path="text"><fmt:message key="paste.text"/>:</form:label>
+                    <form:label path="text"><fmt:message key="paste.text"/></form:label>
                     <form:textarea path="text" cssErrorClass="error" cssClass="notice" cssStyle="display:none;"
                                    name="text" id="ptext" placeHolder="paste text"
                                    cols="120" rows="10" />
@@ -273,7 +316,7 @@
                                     <button
                                         name="submit_btn"
                                         class="p-btn-save submitBtn" type="submit">
-         <i id="btnIcon" style="display:none;" class="fa fa-spinner"></i>
+                                        <i id="btnIcon" style="display:none;" class="fa fa-spinner"></i>
                                         <span class="i">S</span>
                                         <span id="btnCaption"><c:out value='${submit_button_text}'/></span>
                                     </button>
@@ -282,6 +325,7 @@
                                 </c:otherwise>
                             </c:choose>
                             <a href="<c:out value="${urlCancel}"/>">
+                                <i  class="fa fa-ban"></i>
                                 <fmt:message key='button.cancel'/></a>
 
                             <c:if test="${!model.blank}">
@@ -322,6 +366,8 @@
 
     var max_length = 100;
 
+    var tagify;
+    
     window.addEvent('paste', function(e) {
         if (e.event.clipboardData) {
 
@@ -343,6 +389,27 @@
     });
 
     window.addEvent('domready', function() {
+
+
+        tagify = new mooTagify(document.id("tagWrap"), [], {
+    		autoSuggest: false,
+                	tagEls: 'div.p-btn-tag',
+			closeEls: 'i.p-btn-tag-close',
+		
+             persist: false,
+    		// addOnBlur: false, // only works via enter to add.
+    		onInvalidTag: function(invalidTag) {
+    		    console.log(invalidTag + " was rejected due to length");
+    		},
+    		onLimitReached: function(rejectedTag) {
+    		    console.log(rejectedTag + " was not added, you have reached the maximum allowed tags count of " + this.options.maxItemCount);
+    		}
+    	});
+
+       
+
+
+
 
         var counter = new WordCount('wordCount', {
             countWordsTo: $('wordsCount'),
@@ -418,6 +485,10 @@
 <script type="text/javascript">
 
     function onSave() {
+
+        $('ptags').set('value', tagify.getTags().join(" "));
+        
+
 
         var thumbImg = document.getElementById('thumbImg');
 

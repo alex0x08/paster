@@ -173,7 +173,8 @@
                   <jsSourceFile>pixastic.core.js</jsSourceFile>
                   <jsSourceFile>crop.js</jsSourceFile>
                   <jsSourceFile>blurfast.js</jsSourceFile>
-                  
+                         <jsSourceFile>mootagify.js</jsSourceFile>
+           
               </jsSourceFiles>
            
               <jsFinalFile>paste-edit-script.js</jsFinalFile>

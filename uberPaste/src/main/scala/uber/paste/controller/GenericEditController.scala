@@ -100,6 +100,7 @@ abstract class GenericEditController[T <: Struct ] extends StructController[T] {
         // set id from create
         if (b.isBlank) {
             b.setId(r.getId())
+            b.setLastModified(r.getLastModified)
         }
 
       redirectAttributes.addFlashAttribute("statusMessageKey", "action.success")

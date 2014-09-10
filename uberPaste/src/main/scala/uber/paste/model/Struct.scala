@@ -59,6 +59,10 @@ abstract class Struct extends DBObject with SearchObject with  java.io.Serializa
     return lastModified;
   }
 
+  def setLastModified(from:Date) = { lastModified = from }
+    
+  
+  
   def terms():List[String] = Struct.terms
   
   def fillFromHits(ch:CompassHighlighter)  {

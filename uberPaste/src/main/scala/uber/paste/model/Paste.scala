@@ -25,6 +25,7 @@ import org.apache.commons.lang.StringUtils
 import org.codehaus.jackson.annotate.JsonIgnore
 import javax.xml.bind.annotation._
 import uber.paste.base.Loggered
+import com.google.gson.GsonBuilder
 import java.util.{Set,HashSet,ArrayList, UUID}
 import scala.collection.JavaConversions._
 import org.hibernate.envers.{NotAudited, Audited}
@@ -247,6 +248,8 @@ class Paste extends Named with java.io.Serializable{
 
   def getTags(): Set[String] = tags
 
+  def getTagsAsJson():String = new GsonBuilder().create().toJson(tags)
+  
   def getUuid():String = uuid
   
   def getPriority() : Priority = Priority.valueOf(priority)

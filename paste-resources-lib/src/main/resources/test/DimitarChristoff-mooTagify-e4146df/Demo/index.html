@@ -1,0 +1,83 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+    <title>mooTagify Demo Page</title>
+    <meta name="description" content="use tagify to enter tags.">
+    <meta name="author" content="Dimitar Christoff">
+
+    <link rel="stylesheet" href="../Source/css/mootagify.css">
+    <link class="stylesheet" rel="stylesheet" href="https://raw.github.com/necolas/normalize.css/master/normalize.css">
+
+</head>
+<body>
+<div class="main">
+    <h1>Enter some tags below</h1>
+    <div id="tagWrap" class="hide">
+        <div class="left tagLock">
+            <div class="tag">public<span class="tagClose" id="close1"></span></div>
+        </div>
+        <div class="left">
+            <input id="listTags" name="listTags" placeholder="+Add tags" />
+        </div>
+
+        <div class="clear"></div>
+    </div>
+
+
+    <div>
+        <h1>Get the current tag list from the instance</h1>
+        <button id="getTags">get tags</button>
+    </div>
+
+    <div>
+	<h1>The following are auto-completed</h1>
+	<pre>
+	    "bar"
+	    "barman"
+	    "barmaid"
+	    "bartender"
+	    "FooBar"
+	    "Gay Bar"
+	    "crowbar"
+	    "this"
+	    "I like this"
+	</pre>
+
+	<div class="alert">
+		 This demo is with its own base CSS. The data is arriving through a simple mock script 'checker.php'. If you don't have php, you can replace the url to 'checker.json' for a simulation (still need a web server to use Request). You can look at the other demo, powered by Bootstrap and without the need for request <a href="index-bootstrap.html">here</a>
+    </div>
+</div>
+
+<script src="http://ajax.googleapis.com/ajax/libs/mootools/1.4.5/mootools-yui-compressed.js"></script>
+<script type="text/javascript" src="../test/lib/mootools-more-1.4.0.1.js"></script>
+<script type="text/javascript" src="../Source/js/mootagify.js" defer="defer"></script>
+<script type="text/javascript">
+    window.addEvent("domready", function() {
+        var tagify = new mooTagify(document.id("tagWrap"), new Request.JSON({
+    		url: "checker.php",
+    		method: "get"
+    	}), {
+    		autoSuggest: true,
+            // persist: false,
+    		// addOnBlur: false, // only works via enter to add.
+    		onInvalidTag: function(invalidTag) {
+    		    console.log(invalidTag + " was rejected due to length");
+    		},
+    		onLimitReached: function(rejectedTag) {
+    		    console.log(rejectedTag + " was not added, you have reached the maximum allowed tags count of " + this.options.maxItemCount);
+    		}
+    	});
+
+        document.id("getTags").addEvent("click", function() {
+            console.log(tagify.getTags(), tagify.getTags().join(","));
+        });
+
+    });
+
+
+</script>
+</body>
+</html>

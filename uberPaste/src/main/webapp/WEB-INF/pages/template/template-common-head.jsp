@@ -20,6 +20,13 @@
      
 
 <link href="<c:url value='/main/assets/${appVersion}/paster/minified/all/css/all-style.min.css'/>" rel="stylesheet" type="text/css">
+
+<style>
+    .simple-modal .simple-modal-body {
+        padding:0;
+    }
+</style>
+
 <script src="<c:url value='/main/assets/${appVersion}/paster/minified/all/js/all-script.min.js'/>"></script>
 
 <script  type="text/javascript">

@@ -135,6 +135,12 @@
              lineNumber="${comment.lineNumber}"  parentCommentId="${comment.parentId}"  >
             <div id="innerBlock" class="commentInner p-comment">
 
+                
+                 <div class="row">
+                    <div class="column grid-16">
+                        <c:out value=" ${comment.text}" escapeXml="false"/>
+                    </div>
+                </div>
                 <div class="row">
 
                     <div class="column grid-10" style="font-size: small;padding-left: 0.1em; margin: 0;  ">
@@ -165,11 +171,7 @@
                     </div>
                 </div>
 
-                <div class="row">
-                    <div class="column grid-16">
-                        <c:out value=" ${comment.text}" escapeXml="false"/>
-                    </div>
-                </div>
+               
             </div>
         </div>
 
