@@ -1772,7 +1772,7 @@ sh.Highlighter.prototype = {
 						+ '<tr>'
 							+ (gutter ? '<td class="gutter">' + this.getLineNumbersHtml(code) + '</td>' : '')
 							+ '<td class="code">'
-								+ '<div class="container">'
+								+ '<div class="hg_container">'
 									+ html
 								+ '</div>'
 							+ '</td>'

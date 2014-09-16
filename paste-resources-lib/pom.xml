@@ -94,7 +94,7 @@
               <jsTargetDir>/all/js</jsTargetDir>
               <cssTargetDir>/all/css</cssTargetDir>
               <jsSourceFiles>
-                  <jsSourceFile>mootools-core-1.4.5-full-nocompat-yc.js</jsSourceFile>
+                  <jsSourceFile>behavior-ui.js</jsSourceFile>
                   <jsSourceFile>mootools-more-1.4.0.1.js</jsSourceFile>
                   <jsSourceFile>tinycon.min.js</jsSourceFile>
                   <jsSourceFile>growler.js</jsSourceFile>
@@ -106,7 +106,9 @@
               <jsFinalFile>all-script.js</jsFinalFile>
               <jsEngine>CLOSURE</jsEngine>
               <cssSourceFiles>
+                  <cssSourceFile>behavior-ui-flatui.css</cssSourceFile>  
                 <cssSourceFile>app.css</cssSourceFile>
+                <cssSourceFile>mnmlicons.css</cssSourceFile>
               </cssSourceFiles>
               <cssFinalFile>all-style.css</cssFinalFile>
               
