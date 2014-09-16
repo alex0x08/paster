@@ -4,15 +4,6 @@
 <jsp:include page="/WEB-INF/pages/common/paste-update-poll.jsp"/>
 
 
-<div class="row">
-    <div class="column grid-1" style="text-align:right;padding-right: 0;margin-top: -1em;" >
-        <a class="mainLinkLine" href="<c:url value="/main/paste/new"></c:url>" title="<fmt:message key='paste.create.new'/>"><span class="i" style="font-size: 4em;">/</span></a>
-        </div>
-        <div class="column grid-12" style="padding-left: 0;margin-left: -1em;" >
-        <jsp:include page="/WEB-INF/pages/template/search.jsp"/>
-    </div>
-</div>
-
 <jsp:include page="/WEB-INF/pages/paste/common/paste-view-common.jsp"/>
 
 
@@ -45,14 +36,14 @@
 
                             if (rightPanel.getStyle('display') != 'none') {
                                 rightPanel.setStyle('display', 'none');
-                                centerPanel.set('class', 'column grid-15');
+                                centerPanel.set('class', 'col-md-10');
                                 rightPanelCtrl.getElement('span').set('text', '+');
                             } else {
-                                centerPanel.set('class', 'column grid-12');
-                                rightPanel.setStyle('display', '');
+                                centerPanel.set('class', 'col-md-8');
+                                rightPanel.setStyle('display', 'inline');
                                 rightPanelCtrl.getElement('span').set('text', '-');
                             }
-                        }
+                        };
 
     SyntaxHighlighter.config.tagName = "pre";
 

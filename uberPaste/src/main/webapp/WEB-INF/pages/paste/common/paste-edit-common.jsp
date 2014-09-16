@@ -15,8 +15,8 @@
 
 
 <div class="row">
-    <div class="column grid-15"   >
-        <form:form id="editForm" action="${url}" cssClass="perk"
+    <div class="col-md-12"   >
+        <form:form cssClass="form" id="editForm" action="${url}" role="form"
                    modelAttribute="model"
                    method="POST" >
 
@@ -35,251 +35,202 @@
             <form:input id="symbolsCount" path="symbolsCount" cssStyle="display:none;"  />
 
 
-            <div class="row">
-                <div class="column ${not empty param.frameMode ? 'grid-13' : 'grid-12'}" style="margin-right: 0;" >
+            <ul class="nav nav-tabs nav-append-content" data-behavior="BS.Tabs">
+                <li><a>
+                        <c:choose>
+                            <c:when test="${model.blank}">
+                                <fmt:message key="paste.new"/>
+                            </c:when>
+                            <c:otherwise>
+                                <span >#<c:out value="${model.id}"/></span>
+                            </c:otherwise>
+                        </c:choose>
 
-                    <div class="new_tabs_head"  >
-                        <ul class="new_tabs">
-                            <li style="border-radius: 10px 0px 0 0">
+                    </a></li>
+                <li><a><fmt:message key="paste.editor.title"/></a></li>
+
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane">
+
+                    <div class="form-group" style="margin-bottom:0;">
+                        <div class="row" style="margin-bottom:0;"  >
+
+                            <div class="col-md-6">
+
+
                                 <c:choose>
                                     <c:when test="${model.blank}">
-                                        <fmt:message key="paste.new"/>
+                                        <form:hidden path="integrationCode"  />
                                     </c:when>
                                     <c:otherwise>
-                                        <span style="font-size:1.5em;">#<c:out value="${model.id}"/></span>
+                                        <form:hidden path="id"  />
                                     </c:otherwise>
                                 </c:choose>
 
-                            </li>
-                            <li style="border-radius:0"><fmt:message key="paste.source.title"/></li>
-                            <li style="border-radius: 0px 10px 0 0"><fmt:message key="paste.editor.title"/></li>
-                        </ul>
-                    </div>
-                    <div class="new_tabs_frame">
-                        <div class="tabdata">
+                                <fmt:message var="pasteTitle" key="paste.title"/>
 
-                            <div class="row">
+                                <form:label path="name"><c:out value="${pasteTitle}"/>
+                                    <a id="cleanTitleBtn" onclick="cleanTitle();" href="javascript:void(0);" title="<fmt:message key='button.clear'/>">
+                                        <span class="i">d</span>
+                                    </a> </form:label>
+                                <fmt:message key="paste.edit.title.placeholder" var="titlePlaceHolder"/>
+                                <form:input  cssClass="form-control" cssErrorClass="error" path="name" name="title"
+                                             id="pname"  maxlength="255" title="${pasteTitle}" placeholder="${titlePlaceHolder}"  />
+                                <form:errors path="name" cssClass="error" />
 
-                                <div class="column grid-8">
-
-                                    <c:choose>
-                                        <c:when test="${model.blank}">
-                                            <form:hidden path="integrationCode"  />
-                                        </c:when>
-                                        <c:otherwise>
-                                            <form:hidden path="id"  />
-                                        </c:otherwise>
-                                    </c:choose>
-
-                                    <fmt:message var="pasteTitle" key="paste.title"/>
-
-                                    <form:label path="name"><c:out value="${pasteTitle}"/>
-                                        <a id="cleanTitleBtn" onclick="cleanTitle();" href="javascript:void(0);" title="<fmt:message key='button.clear'/>">
-                                            <span class="i">d</span>
-                                        </a> </form:label>
-                                    <fmt:message key="paste.edit.title.placeholder" var="titlePlaceHolder"/>
-                                    <form:input  cssClass="notice" cssErrorClass="error" path="name" name="title"
-                                                 id="pname" cssStyle="width:97%;" maxlength="255" title="${pasteTitle}" placeholder="${titlePlaceHolder}"  />
-                                    <form:errors path="name" cssClass="error" />
-                                </div>
-
-                                <div class="column ${not empty param.frameMode ? 'grid-4' : 'grid-3'}" style="float:right;">
-                                    <form:label path="priority">
-                                        <fmt:message key="paste.priority"/>
-                                    </form:label>
-                                    <form:select cssStyle="display:inline;" path="priority" multiple="false" id="pprior">
-                                        <c:forEach items="${availablePriorities}" var="prior">
-                                            <form:option value="${prior.code}" cssClass="${prior.cssClass}" x-css-class-name="${prior.cssClass}">
-                                                <fmt:message key="${prior.name}"/>
-                                            </form:option>
-                                        </c:forEach>
-                                    </form:select>
-                                    <span id="priorPreview" class="i priority_normal" style="font-size:1.9em;">/</span>
-
-                                    <form:errors path="priority" cssClass="error" />
-                                </div>
 
                             </div>
 
-                            <div class="row">
-
-                                <div class="column grid-6">
-                                     <form:label path="tagsAsString"><span  class="i" >T</span><fmt:message key="paste.tags"/></form:label>
-                                   
-                                    <div id="tagWrap" >
-
-                                        <div class="tagLock">
-
-                                            <c:forEach var="tag" items="${model.tags}">
-                                                <div class="p-btn-tag"><c:out value="${tag}"/>
-                                                    <i  class="p-btn-tag-close"></i>
-                                                    
-                                                </div>
-
-                                            </c:forEach>
-
-                                        </div>
-
-                                        <div>
-                                            <input id="listTags" name="listTags" placeholder="+Add tags" />
-                                        </div>
 
 
-                                    </div>
+                            <div class="col-md-2 " >
 
-                                    
-                                    
-                                    <form:input id="ptags" path="tagsAsString" maxlength="155" cssStyle="display:none" 
-                                                />
-                                   
-                                </div>
 
-                                <div class="column grid-1" >
-                                    <form:label path="sticked" ><span class="i" >]</span></form:label>            
-                                    <fmt:message var="titleStick" key='paste.stick'/>            
-                                    <form:checkbox path="sticked" style="display:inline;" title="${titleStick}"/>
-                                </div>
+                                <form:label path="priority">
+                                    <fmt:message key="paste.priority"/>
+                                </form:label>
+                                <span id="priorPreview" class="i priority_normal" >/</span>
 
-                                <div class="column grid-3" >
-                                    <form:label path="normalized" ><fmt:message key="paste.normalize"/></form:label>
-                                    <fmt:message key='paste.normalize' var="labelNormalize"/>
-                                    <form:checkbox id="normalized" path="normalized" style="display:inline;" title="${labelNormalize}"/>
-                                </div>
+                                <form:select cssStyle="margin-bottom:0 !important;" cssClass="select-block" data-behavior="FlatUI.Select"   path="priority" multiple="false" id="pprior">
+                                    <c:forEach items="${availablePriorities}" var="prior">
+                                        <form:option value="${prior.code}" cssClass="${prior.cssClass}" x-css-class-name="${prior.cssClass}">
+                                            <fmt:message key="${prior.name}"/>
+                                        </form:option>
+                                    </c:forEach>
+                                </form:select>
 
+                                <form:errors path="priority" cssClass="error" />
                             </div>
 
-                        </div>
-                        <div class="tabdata">
-                            <form:input path="remoteUrl" maxlength="1024" id="loadUrl"/>
-                            <button id="loadUrlBtn"
-                                    name="load_btn"
-                                    class="p-btn-save" >
-                                Load
-                            </button>
+
+                            <div class="col-md-3">
+
+                                <c:choose>
+                                    <c:when test="${empty currentUser and !allowAnonymousCommentsCreate}">
+
+                                        <fmt:message key="auth.login-to-save-changes"/>
+
+                                    </c:when>
+                                    <c:otherwise>
+
+                                        <button id="addCommentBtn" class="p-btn-save submitBtn" name="submit_btn" type="submit">
+                                            <span class="i">S</span>
+                                            <span id="btnCaption"><c:out value='${submit_button_text}'/></span>
+                                            <i id="btnIcon" style="display:none;" class="fa fa-spinner"></i>
+                                        </button>
 
 
-                        </div>
-                        <div class="tabdata">
+                                    </c:otherwise>
+                                </c:choose>
 
 
-                            <div class="row">
 
-                                <div class="column grid-4">
-                                    <form:label path="codeType"><fmt:message key="paste.syntax.title"/></form:label>
-                                    <form:select path="codeType" multiple="false" id="ptype">                    
-                                        <c:forEach items="${availableCodeTypes}" var="codeType">
-                                            <form:option value="${codeType.code}" editCode="${codeType.editType}" >
-                                                <fmt:message key="${codeType.name}"/>
-                                            </form:option>
-                                        </c:forEach>
-                                    </form:select> 
-                                    <form:errors path="codeType" cssClass="error" />
+                                <a href="<c:out value="${urlCancel}"/>"><i  class="fa fa-ban"></i>
+                                    <fmt:message key='button.cancel'/></a>
 
-                                </div>
+                                <c:if test="${!model.blank}">
+                                    <tiles:insertDefinition name="/common/deleteLink" >
+                                        <tiles:putAttribute name="model" value="${model}"/>
+                                        <tiles:putAttribute name="modelName" value="paste"/>
+                                        <tiles:putAttribute name="currentUser" value="${currentUser}"/>
+                                    </tiles:insertDefinition>
+
+                                </c:if>
 
 
-                                <div class="column grid-5">
-
-                                    <label for="theme"><fmt:message key="paste.editor.theme.title"/></label>
-                                    <select id="theme" size="1">
-                                        <optgroup label="Bright">
-                                            <option value="ace/theme/chrome">Chrome</option>
-                                            <option value="ace/theme/clouds">Clouds</option>
-                                            <option value="ace/theme/crimson_editor">Crimson Editor</option>
-                                            <option value="ace/theme/dawn">Dawn</option>
-                                            <option value="ace/theme/dreamweaver">Dreamweaver</option>
-                                            <option value="ace/theme/eclipse">Eclipse</option>
-                                            <option value="ace/theme/github">GitHub</option>
-                                            <option value="ace/theme/solarized_light">Solarized Light</option>
-                                            <option value="ace/theme/textmate" selected="selected">TextMate</option>
-                                            <option value="ace/theme/tomorrow">Tomorrow</option>
-                                            <option value="ace/theme/xcode">XCode</option>
-                                        </optgroup>
-                                        <optgroup label="Dark">
-                                            <option value="ace/theme/ambiance">Ambiance</option>
-                                            <option value="ace/theme/chaos">Chaos</option>
-                                            <option value="ace/theme/clouds_midnight">Clouds Midnight</option>
-                                            <option value="ace/theme/cobalt">Cobalt</option>
-                                            <option value="ace/theme/idle_fingers">idleFingers</option>
-                                            <option value="ace/theme/kr_theme">krTheme</option>
-                                            <option value="ace/theme/merbivore">Merbivore</option>
-                                            <option value="ace/theme/merbivore_soft">Merbivore Soft</option>
-                                            <option value="ace/theme/mono_industrial">Mono Industrial</option>
-                                            <option value="ace/theme/monokai">Monokai</option>
-                                            <option value="ace/theme/pastel_on_dark">Pastel on dark</option>
-                                            <option value="ace/theme/solarized_dark">Solarized Dark</option>
-                                            <option value="ace/theme/twilight">Twilight</option>
-                                            <option value="ace/theme/tomorrow_night">Tomorrow Night</option>
-                                            <option value="ace/theme/tomorrow_night_blue">Tomorrow Night Blue</option>
-                                            <option value="ace/theme/tomorrow_night_bright">Tomorrow Night Bright</option>
-                                            <option value="ace/theme/tomorrow_night_eighties">Tomorrow Night 80s</option>
-                                            <option value="ace/theme/vibrant_ink">Vibrant Ink</option>
-                                        </optgroup>
-                                    </select>
-
-
-                                </div>
 
 
                             </div>
 
                         </div>
                     </div>
+
+                    <div class="form-group" >
+                        <div class="row" >
+
+                            <div class="col-md-4">
+                                <form:label path="tagsAsString"><span  class="i" >T</span><fmt:message key="paste.tags"/></form:label>
+
+                                <form:input cssClass="form-control" id="ptags" path="tagsAsString" maxlength="155" 
+                                            />
+                            </div>
+
+                            <div class="col-md-1" >
+                                <form:label path="sticked" ><span class="i" >]</span></form:label>            
+                                <fmt:message var="titleStick" key='paste.stick'/>            
+                                <form:checkbox path="sticked" style="display:inline;" title="${titleStick}"/>
+                            </div>
+
+                            <div class="col-md-3" >
+                                <form:label path="normalized" ><fmt:message key="paste.normalize"/></form:label>
+                                <fmt:message key='paste.normalize' var="labelNormalize"/>
+                                <form:checkbox id="normalized" path="normalized" style="display:inline;" title="${labelNormalize}"/>
+                            </div>
+
+                        </div>
+
+                    </div>
+
 
                 </div>
-
-                <div class="column grid-3" style="margin-left: 0;"  >
-
-                    <div class="new_tabs_head"     >
-                        <ul class="new_tabs"  >
-                            <li style="padding-bottom:0.1em;border-style:none;border-left:0; border-top:0; border-bottom: 1px solid #c8c8c8; ">
-                                &nbsp;
-                            </li>
-                        </ul>
-                    </div>
-
-                    <div class="new_tabs_frame"  style="border-left: 0;">
-                        <div class="tabdata" style="padding-left:3em;">
-
-                            <c:choose>
-                                <c:when test="${empty currentUser and !allowAnonymousCommentsCreate}">
-
-                                    <fmt:message key="auth.login-to-save-changes"/>
-
-                                </c:when>
-                                <c:otherwise>
-
-                                    <button id="addCommentBtn" class="p-btn-save submitBtn" name="submit_btn" type="submit">
-                                        <span class="i">S</span>
-                                        <span id="btnCaption"><c:out value='${submit_button_text}'/></span>
-                                        <i id="btnIcon" style="display:none;" class="fa fa-spinner"></i>
-                                    </button>
-
-
-                                </c:otherwise>
-                            </c:choose>
-
-                            <div>
-                           
-                                 <a href="<c:out value="${urlCancel}"/>"><i  class="fa fa-ban"></i>
-                                <fmt:message key='button.cancel'/></a>
-
-                            <c:if test="${!model.blank}">
-                                <tiles:insertDefinition name="/common/deleteLink" >
-                                    <tiles:putAttribute name="model" value="${model}"/>
-                                    <tiles:putAttribute name="modelName" value="paste"/>
-                                    <tiles:putAttribute name="currentUser" value="${currentUser}"/>
-                                </tiles:insertDefinition>
-
-                            </c:if>
-
-                                
-                            </div>
-                           
+                <div class="tab-pane">
+                    <div class="row">
+                        <div class="form-group col-md-4">
+                            <form:label path="codeType"><fmt:message key="paste.syntax.title"/></form:label>
+                            <form:select cssClass="select-block mbl" data-behavior="FlatUI.Select" path="codeType" multiple="false" id="ptype">                    
+                                <c:forEach items="${availableCodeTypes}" var="codeType">
+                                    <form:option value="${codeType.code}" editCode="${codeType.editType}" >
+                                        <fmt:message key="${codeType.name}"/>
+                                    </form:option>
+                                </c:forEach>
+                            </form:select> 
+                            <form:errors path="codeType" cssClass="error" />
 
                         </div>
 
 
+                        <div class="form-group col-md-4">
+
+                            <label for="theme"><fmt:message key="paste.editor.theme.title"/></label>
+                            <select class="select-block mbl" data-behavior="FlatUI.Select" id="theme" size="1">
+                                <optgroup label="Bright">
+                                    <option value="ace/theme/chrome">Chrome</option>
+                                    <option value="ace/theme/clouds">Clouds</option>
+                                    <option value="ace/theme/crimson_editor">Crimson Editor</option>
+                                    <option value="ace/theme/dawn">Dawn</option>
+                                    <option value="ace/theme/dreamweaver">Dreamweaver</option>
+                                    <option value="ace/theme/eclipse">Eclipse</option>
+                                    <option value="ace/theme/github">GitHub</option>
+                                    <option value="ace/theme/solarized_light">Solarized Light</option>
+                                    <option value="ace/theme/textmate" selected="selected">TextMate</option>
+                                    <option value="ace/theme/tomorrow">Tomorrow</option>
+                                    <option value="ace/theme/xcode">XCode</option>
+                                </optgroup>
+                                <optgroup label="Dark">
+                                    <option value="ace/theme/ambiance">Ambiance</option>
+                                    <option value="ace/theme/chaos">Chaos</option>
+                                    <option value="ace/theme/clouds_midnight">Clouds Midnight</option>
+                                    <option value="ace/theme/cobalt">Cobalt</option>
+                                    <option value="ace/theme/idle_fingers">idleFingers</option>
+                                    <option value="ace/theme/kr_theme">krTheme</option>
+                                    <option value="ace/theme/merbivore">Merbivore</option>
+                                    <option value="ace/theme/merbivore_soft">Merbivore Soft</option>
+                                    <option value="ace/theme/mono_industrial">Mono Industrial</option>
+                                    <option value="ace/theme/monokai">Monokai</option>
+                                    <option value="ace/theme/pastel_on_dark">Pastel on dark</option>
+                                    <option value="ace/theme/solarized_dark">Solarized Dark</option>
+                                    <option value="ace/theme/twilight">Twilight</option>
+                                    <option value="ace/theme/tomorrow_night">Tomorrow Night</option>
+                                    <option value="ace/theme/tomorrow_night_blue">Tomorrow Night Blue</option>
+                                    <option value="ace/theme/tomorrow_night_bright">Tomorrow Night Bright</option>
+                                    <option value="ace/theme/tomorrow_night_eighties">Tomorrow Night 80s</option>
+                                    <option value="ace/theme/vibrant_ink">Vibrant Ink</option>
+                                </optgroup>
+                            </select>
+
+
+                        </div>
                     </div>
 
 
@@ -289,8 +240,9 @@
             </div>
 
 
+
             <div  class="row">
-                <div class="column grid-16">
+                <div class="col-md-14">
 
                     <form:label path="text"><fmt:message key="paste.text"/></form:label>
                     <form:textarea path="text" cssErrorClass="error" cssClass="notice" cssStyle="display:none;"
@@ -367,7 +319,7 @@
     var max_length = 100;
 
     var tagify;
-    
+
     window.addEvent('paste', function(e) {
         if (e.event.clipboardData) {
 
@@ -392,21 +344,20 @@
 
 
         tagify = new mooTagify(document.id("tagWrap"), [], {
-    		autoSuggest: false,
-                	tagEls: 'div.p-btn-tag',
-			closeEls: 'i.p-btn-tag-close',
-		
-             persist: false,
-    		// addOnBlur: false, // only works via enter to add.
-    		onInvalidTag: function(invalidTag) {
-    		    console.log(invalidTag + " was rejected due to length");
-    		},
-    		onLimitReached: function(rejectedTag) {
-    		    console.log(rejectedTag + " was not added, you have reached the maximum allowed tags count of " + this.options.maxItemCount);
-    		}
-    	});
+            autoSuggest: false,
+            tagEls: 'div.p-btn-tag',
+            closeEls: 'i.p-btn-tag-close',
+            persist: false,
+            // addOnBlur: false, // only works via enter to add.
+            onInvalidTag: function(invalidTag) {
+                console.log(invalidTag + " was rejected due to length");
+            },
+            onLimitReached: function(rejectedTag) {
+                console.log(rejectedTag + " was not added, you have reached the maximum allowed tags count of " + this.options.maxItemCount);
+            }
+        });
 
-       
+
 
 
 
@@ -487,7 +438,7 @@
     function onSave() {
 
         $('ptags').set('value', tagify.getTags().join(" "));
-        
+
 
 
         var thumbImg = document.getElementById('thumbImg');

@@ -2,17 +2,10 @@
 
 
   <jsp:include page="/WEB-INF/pages/common/paste-update-poll.jsp"/>
-<div class="row">
-    <div class="column grid-1" style="text-align:right;padding-right: 0;margin-top: -1em;" >
-        <a id="createNewBtn" class="mainLinkLine" href="<c:url value="/main/paste/new"></c:url>" title="<fmt:message key='paste.create.new'/>"><span class="i" style="font-size: 4em;">/</span></a>
-    </div>
-    <div class="column grid-12" style="padding-left: 0;margin-left: -1em;" >
-         <jsp:include page="/WEB-INF/pages/template/search.jsp"/>
-     </div>
-</div>
+  
 
 <div class="row">
-    <div class="column grid-10">
+    <div class="col-md-10">
    
              <a  href="<c:url value='/main/paste/list/${sourceType}'/>"><span class="i" style="font-size: 1.5em;">P</span></a>
     
@@ -35,7 +28,7 @@
              </sec:authorize>
       
     </div>
-    <div class="column grid-2">
+    <div class="col-md-2">
        
         <a class="img-map img-xml" href="<c:url value="/main/paste/list/body.xml"/>" title="xml" alt="xml">
         </a> |
@@ -53,7 +46,7 @@
 
       <c:if test="${listMode eq 'search' }">
 <div class="row">
-    <div class="column grid-12"  >
+    <div class="col-md-12"  >
 
           <div class="paging" style="margin: auto; text-align: center;float: left;" >
               Found
@@ -77,7 +70,7 @@
         
         
 <div class="row">
-    <div class="column grid-12" >
+    <div class="col-md-10" >
    
         
     <div id="pastas">
@@ -94,7 +87,7 @@
 
         <div class="row">
 
-            <div class="column grid-16">
+            <div class="col-md-12">
 
                 <c:if test="${paste.sticked}">
                     <span class="i" title="Paste sticked">]</span>
@@ -112,29 +105,32 @@
 
         <div class="row" >
 
-                    <a class="pastePreviewLink" href="<c:url value="/${paste.id}"></c:url>" pasteId="${paste.id}" 
-                       title="Click to view paste vol. ${paste.id}">
-
+                   
                        <c:choose>
                            <c:when test="${not empty paste.thumbImage}">
-                <div class="column grid-4" >
-                    
-                    <c:url value='/main/resources/${appVersion}/t/${paste.lastModified.time}/${paste.thumbImage}.jpg' var="thumbUrl">
-                    </c:url>
-                    
-                    <img src="${thumbUrl}" width="300" height="200" class="p-comment"  />
-                    </div>
-                               <c:set var="currentRowSize" value="12"/>
+                               <div class="col-md-3" >
+
+                                   <c:url value='/main/resources/${appVersion}/t/${paste.lastModified.time}/${paste.thumbImage}.jpg' var="thumbUrl">
+                                   </c:url>
+
+                                   <a class="pastePreviewLink" href="<c:url value="/${paste.id}"></c:url>" pasteId="${paste.id}" 
+                                      title="Click to view paste vol. ${paste.id}">
+                                       <img src="${thumbUrl}" width="250" height="150" class="p-comment"  />
+
+                                   </a>
+                                   
+                               </div>
+                               <c:set var="currentRowSize" value="8"/>
                            </c:when>
                            <c:otherwise>
-                             <c:set var="currentRowSize" value="16"/>
+                             <c:set var="currentRowSize" value="10"/>
                            </c:otherwise>
                        </c:choose>
-                    </a>
                     
-                <div class="column grid-${currentRowSize}" >
+                    
+                <div class="col-md-${currentRowSize}" >
                     <div class="row">
-                        <div class="pasteTitle column grid-14">
+                        <div class="pasteTitle col-md-12">
                             <div class="pasteTitle" style="padding: 1em;">
                                 <a class="listLinkLine" href="<c:url value="/${paste.id}"></c:url>" 
                                    pasteId="${paste.id}" title="Click to view paste vol. ${paste.id}">
@@ -144,7 +140,7 @@
                         </div>
 
                     <div class="row">
-                    <div class="column grid-10">
+                    <div class="col-md-12">
                             <tiles:insertDefinition name="/common/tags" >
                                 <tiles:putAttribute name="model" value="${paste}"/>
                                 <tiles:putAttribute name="modelName" value="paste"/>
@@ -229,7 +225,7 @@
 </c:if>
 
     </div>    
-    <div class="column grid-3">
+    <div class="col-md-2">
         <tiles:insertDefinition name="/common/pageList" >
             <tiles:putAttribute name="listMode" value="${listMode}"/>
             <tiles:putAttribute name="pageItems" value="${pageItems}"/>

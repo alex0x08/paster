@@ -1,7 +1,7 @@
 <%@ include file="/WEB-INF/pages/common/taglibs.jsp"%>
 
 <div id="newPastasCountBlock" class="row" style="display: none;">
-    <div class="column grid-10">
+    <div class="col-md-12">
         <p class="notice" style="padding: 0.3em;">
             <fmt:message key="paste.list.since.info">
                 <fmt:param value="<span id='newPastasCount'></span>"/>

@@ -2,26 +2,26 @@
 
 <c:url var="url" value='/main/paste/list/search' />
 
-<form:form action="${url}" id="searchForm"
+
+<form:form cssClass="navbar-form navbar-left" cssStyle="margin:0;" role="search" action="${url}" id="searchForm" 
            modelAttribute="query"
            method="POST" >
-<div class="row">
-    <div class="column grid-9" style="padding-top: 0.5em;margin-right: 0;">
+<div class="form-group">
         <fmt:message key='paste.search.placeholder' var="searchPlaceHolder"/>
-        <form:input path="query" name="query" id="pquery" placeholder="${searchPlaceHolder}" 
-                    cssStyle="height:1em;width:97%;margin-right:0.5em;min-width: 5em;" autocomplete="true"  />
+        <form:input path="query" name="query" id="pquery" cssClass="form-control" placeholder="${searchPlaceHolder}" 
+                      autocomplete="true"  />
      
-    </div>
-        <div class="column grid-4" style="text-align:left;padding-left: 0;margin-left: 0;margin-top: 0.3em;" >
-        
-        <button class="sbtn p-btn-save  " id="doSearchBtn" type="submit">
+</div>      
+        <button class="btn btn-default" id="doSearchBtn" type="submit">
                  <span id="btnCaption"><fmt:message key="button.search"/></span>
                  <i id="btnIcon" class="fa fa-spinner" style="display:none;"></i>
                  </button>
        
         <form:errors path="query" cssClass="error" element="div"/>
-    </div>
-</div>
+   
+</form:form>
+
+<%--
 <div class="row">
     <div class="column grid-10">
 
@@ -38,9 +38,7 @@
 
     </div>
 </div>
-
-
-</form:form>
+--%>
 
 
 <script type="text/javascript">

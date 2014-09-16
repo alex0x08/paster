@@ -2,12 +2,11 @@
 
              
 <div class="row">
-    <div class="column grid-16">
+    <div class="col-md-12">
         
         
         <c:set var="priorTitle"><fmt:message key="${model.priority.name}"/></c:set>
 
-            <h4 class="f-h4" style="padding-top: 0;margin-top:0;">
                 <span class="i ${model.priority.cssClass}" style="font-size:2em;" title="${priorTitle}" >/</span>
             <c:if test="${model.sticked}">
                 <span class="i">]</span>
@@ -17,10 +16,7 @@
                title="<fmt:message key="button.edit"/>">
                     <c:out value="${model.name}" escapeXml="true"/>
             </a>    
-                    
-        </h4>
-
-       
+     
 
         <tiles:insertDefinition name="/common/pasteControls" >
             <tiles:putAttribute name="model" value="${model}"/>
@@ -38,7 +34,15 @@
             
               
 <div class="row">
-    <div class="column grid-12">
+    
+     <div class="col-md-2">
+            <a id="${model.id}_rightPanelCtrl" href="javascript:void(0);" onclick="toggleRight(${model.id});" title="toggle right panel">
+                <span class="i">-</span>
+            </a>
+    </div>
+    
+                
+    <div class="col-md-10">
         &nbsp;
         <c:if test="${not empty model.commentCount and model.commentCount>0}">
 
@@ -58,11 +62,7 @@
             
     </div>
 
-    <div class="column grid-3">
-            <a id="${model.id}_rightPanelCtrl" href="javascript:void(0);" onclick="toggleRight(${model.id});" title="toggle right panel">
-                <span class="i">-</span>
-            </a>
-    </div>
+   
 </div>
                 
                 
@@ -70,18 +70,9 @@
 <div class="row">
 
     
-           <c:set var="centerGridSize" value="grid-10"/>
+           <c:set var="centerGridSize" value="col-md-8"/>
      
-    
-    <div id="${model.id}_centerPanel" class="column ${centerGridSize}" style="min-width:650px;">
-
-        <pre id="${model.id}_pasteText" class="brush: ${model.codeType.code};toolbar: false; auto-links:false;highlight: [${commentedLinesList}]; " style="display:none; overflow-y: hidden;" >
-            <c:out value="${model.text}" escapeXml="true" /></pre>
-     
-    </div>
-
-
-        <div id="${model.id}_rightPanel" class="column grid-4" style="min-width:150px;" >
+             <div id="${model.id}_rightPanel" class="col-md-3" style="min-width:150px;" >
 
             <c:if test="${not empty model.thumbImage}">
                 
@@ -119,6 +110,16 @@
             </c:if>
 
         </div> 
+    
+    <div id="${model.id}_centerPanel" class="${centerGridSize}" style="min-width:650px;">
+
+        <pre id="${model.id}_pasteText" class="brush: ${model.codeType.code};toolbar: false; auto-links:false;highlight: [${commentedLinesList}]; " style="display:none; overflow-y: hidden;" >
+            <c:out value="${model.text}" escapeXml="true" /></pre>
+     
+    </div>
+
+
+      
 </div>
         
         
@@ -131,19 +132,19 @@
         <div id="${model.id}_numSpace_l${comment.id}" class="listSpace" >
         </div>
 
-        <div id="${model.id}_comment_l${comment.id}" class=" commentBlock ${comment.parentId==null ? 'parentComment' :'subComment'}" commentId="${comment.id}"
+        <div id="${model.id}_comment_l${comment.id}" style="padding:0;margin:0;" class=" commentBlock ${comment.parentId==null ? 'parentComment' :'subComment'}" commentId="${comment.id}"
              lineNumber="${comment.lineNumber}"  parentCommentId="${comment.parentId}"  >
             <div id="innerBlock" class="commentInner p-comment">
 
                 
-                 <div class="row">
-                    <div class="column grid-16">
+                <div class="row" >
+                    <div class="col-md-12">
                         <c:out value=" ${comment.text}" escapeXml="false"/>
                     </div>
                 </div>
                 <div class="row">
 
-                    <div class="column grid-10" style="font-size: small;padding-left: 0.1em; margin: 0;  ">
+                    <div class="col-md-10" >
 
                         <tiles:insertDefinition name="/common/owner" >
                             <tiles:putAttribute name="model" value="${comment}"/>
@@ -152,7 +153,7 @@
                         , <kc:prettyTime date="${comment.lastModified}" locale="${pageContext.response.locale}"/>
                     </div>
 
-                    <div class="column" style="width:10%;float:right;padding:0;margin:0;" >
+                    <div class="col-md-2"  >
                         <a href="#comment_l${comment.id}" title="<c:out value="${comment.id}"/>">#</a>
                         <c:if test="${comment.parentId==null}">
                             <a  href="javascript:void(0);" class="linkLine" title="<fmt:message key="comments.sub"/>"
@@ -212,11 +213,11 @@
     <form:hidden path="pasteId"/>
                    
         <div class="row" >
-            <div class="column grid-15"  >
+            <div class="col-md-8"  >
                 <form:errors path="text" cssClass="error" /> 
                 <form:textarea path="text" id="commentText" cssErrorClass="error"  />
             </div>
-            <div class="column grid-1" style="float:right;padding-top: 0.5em;" >
+            <div class="col-md-1" style="float:right;padding-top: 0.5em;" >
 
                 <a class="disableOnSubmit" title="<fmt:message key="button.cancel"/>" 
                    href="javascript:void(0);" onclick="SyntaxHighlighter.hideEditForm(${model.id});">
@@ -227,7 +228,7 @@
         </div>
 
                     <div class="row">
-                        <div class="column grid-16">
+                        <div class="col-md-12">
                              <fmt:message key="comments.line">
                     <fmt:param value="<span id='pageNum'></span>"/>
                 </fmt:message>
@@ -238,7 +239,7 @@
         <div class="row">
             
             
-            <div class="column grid-16"  >
+            <div class="col-md-12"  >
                 <button id="${model.id}_addCommentBtn" class='sbtn p-btn-save' type="submit"  >
                     <span class="i" style="font-size:larger;">S</span>
                     <span id="btnCaption"><fmt:message key="button.add"/></span>
@@ -250,19 +251,7 @@
                     <span ><fmt:message key="button.cancel"/></span>
                 </a>
             
-                    <sec:authorize ifAnyGranted="ROLE_USER,ROLE_ADMIN">
-
-                    <span class="right"  style="padding-top: 0.5em;" >
-                        <span  style="padding-top: 1em;">
-                            <c:out escapeXml="true" value="${currentUser.name}" />
-                        </span>
-
-                        <a href="http://ru.gravatar.com/site/check/${currentUser.username}" title="GAvatar">
-                            <img style="vertical-align: top;padding-bottom: 2px;" src="<c:out value='http://www.gravatar.com/avatar/${currentUser.avatarHash}?s=32&d=monsterid'/>"/>
-                        </a>
-                    </span>
-
-                </sec:authorize>
+                  
             </div>
         </div>
 

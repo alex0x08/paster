@@ -19,7 +19,7 @@
 <div  class="row">
     <c:if test="${mode ne 'raw'}">
 
-        <div class="column grid-2">
+        <div class="col-md-2">
             <a href="<c:url value="/main/paste/list"/>" target="${target}"
                title="<fmt:message key="paste.list.title"/>"><span style="font-size: larger;" class="i">(</span></a> |
             <a href="<c:url value="/main/paste/edit/${model.id}"/>" target="${target}"
@@ -29,7 +29,7 @@
 
     </c:if>
    
-    <div class="column grid-4">
+    <div class="col-md-6">
         
          <span style="font-weight: normal; font-size: 12px;">
 
@@ -68,7 +68,7 @@
         
     </div>
     
-    <div class="column grid-4">
+    <div class="col-md-4">
 
         <a class="img-map img-xml" href="<c:url value="/main/paste/xml/${model.id}"/>" target="${target}" title="View as XML">
         </a> |
@@ -87,8 +87,9 @@
 
 
     </div>
-
-    <div class="column grid-4 right">
+</div>
+<div  class="row">
+    <div class="col-md-2">
   
         <c:if test="${mode ne 'raw' and not empty prev}">
             <a href="<c:url value="/${prev.id}"/>" target="${target}" title="<fmt:message key="button.prev"/>">&#8592;</a>
