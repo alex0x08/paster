@@ -27,7 +27,6 @@ import java.io.InputStream
 import java.util.{Map,HashMap, AbstractMap}
 import javax.xml.bind.annotation.XmlRootElement
 import uber.paste.model.Key
-import org.compass.core.marshall.MarshallingContext
 import scala.collection.JavaConversions._
 
 /**

@@ -318,7 +318,10 @@
 
     var max_length = 100;
 
-    var tagify;
+
+
+
+   
 
     window.addEvent('paste', function(e) {
         if (e.event.clipboardData) {
@@ -343,19 +346,7 @@
     window.addEvent('domready', function() {
 
 
-        tagify = new mooTagify(document.id("tagWrap"), [], {
-            autoSuggest: false,
-            tagEls: 'div.p-btn-tag',
-            closeEls: 'i.p-btn-tag-close',
-            persist: false,
-            // addOnBlur: false, // only works via enter to add.
-            onInvalidTag: function(invalidTag) {
-                console.log(invalidTag + " was rejected due to length");
-            },
-            onLimitReached: function(rejectedTag) {
-                console.log(rejectedTag + " was not added, you have reached the maximum allowed tags count of " + this.options.maxItemCount);
-            }
-        });
+       
 
 
 
@@ -437,9 +428,7 @@
 
     function onSave() {
 
-        $('ptags').set('value', tagify.getTags().join(" "));
-
-
+      
 
         var thumbImg = document.getElementById('thumbImg');
 
@@ -470,23 +459,18 @@
 
     window.addEvent('domready', function() {
 
-        $('loadUrlBtn').addEvent('click', function(event) {
-            event.stop();
+       
 
-            $('editForm').set('action', '<c:url value='/main/paste/loadFrom'/>');
-
-            $('editForm').submit();
-        });
-
-
-        $$('.submitBtn').addEvent('click', function(event) {
+        $$('.submitBtn').each(function(el, i) {
+           
+            el.addEvent('click', function(event) {
             this.getElementById('btnCaption').set('text', transmitText).disabled = true;
             this.getElementById('btnIcon').setStyle('display', '');
 
             event.stop();
             onSave();
+                });
         });
-
     });
 
 </script>

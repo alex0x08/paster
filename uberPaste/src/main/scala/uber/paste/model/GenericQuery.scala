@@ -16,12 +16,12 @@
 
 package uber.paste.model
 
-import org.compass.core.CompassQuery
-import org.compass.core.CompassSession
 
 /**
  * Query trait
  */
+import org.hibernate.search.query.dsl.QueryBuilder
+
 trait Query {
 
   /**
@@ -43,7 +43,7 @@ trait Query {
   /**
    * build CompassQuery from CompassSession
    */
-  def fillQuery(session:CompassSession):CompassQuery
+  def fillQuery(qb:QueryBuilder):org.apache.lucene.search.Query 
 
 }
 
@@ -64,13 +64,17 @@ class GenericQuery extends Query {
   def getQuery():String = query
   def setQuery(query:String) { this.query = query }
   
-  def fillQuery(session:CompassSession):CompassQuery = {
+  def fillQuery(qb:QueryBuilder):org.apache.lucene.search.Query = {
     
     if (query == null || query.trim.length == 0) {
         query = "*"
     }
     
-    session.queryBuilder
-         .queryString(query).toQuery
+    return qb
+      .keyword()
+      .onFields("title", "subtitle", "authors.name")
+  .matching(query)
+  .createQuery()
+    
   }
 }

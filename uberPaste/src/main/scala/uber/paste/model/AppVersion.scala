@@ -118,9 +118,9 @@ class AppVersion {
     /**
      * @return property value from manifest
      */
-    private def getManifestValue(key:String ):String = {
-     return if (Manifests.exists(key)) Manifests.read(key) else AppVersion.UNDEFINED
-    }
+    private def getManifestValue(key:String ):String = 
+      if (Manifests.exists(key)) Manifests.read(key) else AppVersion.UNDEFINED
+    
     
    /**
     * Compares this version object to another

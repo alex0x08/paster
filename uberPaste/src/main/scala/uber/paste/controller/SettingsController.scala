@@ -52,6 +52,7 @@ class SettingsController extends AbstractController{
  
   @RequestMapping(value = Array(GenericEditController.EDIT_ACTION), method = Array(RequestMethod.GET))
   def edit(model:Model,locale:Locale):String= {
+    
     model.addAttribute(GenericController.MODEL_KEY, projectManager.getCurrentProject)
     
     return editPage()

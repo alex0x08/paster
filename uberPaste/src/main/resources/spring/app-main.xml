@@ -52,7 +52,6 @@
 
     <!-- Imports the configurations of the different infrastructure systems of the application -->
     <import resource="dao.xml" />
-    <import resource="search.xml" />    
     <import resource="mvc.xml" />
     <import resource="security.xml" />
 

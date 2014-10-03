@@ -24,9 +24,9 @@ import java.util.Collection
 import java.util.Set
 import javax.validation.constraints.NotNull
 import org.codehaus.jackson.annotate.JsonIgnore
-import org.compass.annotations.Searchable
-import org.compass.annotations.SearchableProperty;
 import org.hibernate.envers.Audited
+import org.hibernate.search.annotations.Field
+import org.hibernate.search.annotations.Indexed
 import org.hibernate.validator.constraints.Length;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -38,7 +38,7 @@ import javax.xml.bind.annotation.XmlTransient
 import org.apache.commons.codec.digest.DigestUtils
 
 @Entity
-@Searchable
+@Indexed(index = "indexes/users")
 @Audited
 class User extends Named with UserDetails with java.io.Serializable{
 
@@ -50,7 +50,7 @@ class User extends Named with UserDetails with java.io.Serializable{
   @Length(min = 3, max = 250)
   // @Pattern(regex = "^\\w*$", message = "not a valid username")
   @NotNull(message = "{validator.not-null}")
-  @SearchableProperty
+  @Field
   @Column(nullable = false, length = 50,unique=true)
   private var username:String = null
   /**
@@ -85,7 +85,7 @@ class User extends Named with UserDetails with java.io.Serializable{
 //  @Length(min = 3, max = 250)
   // @Pattern(regex = "^\\w*$", message = "not a valid username")
  // @NotNull(message = "{validator.not-null}")
-  @SearchableProperty
+  @Field
   //@Column(nullable = false, length = 50,unique=true)
   //@Basic
   private var email:String = null

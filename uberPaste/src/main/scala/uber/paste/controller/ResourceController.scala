@@ -38,8 +38,8 @@ class ResourceController extends AbstractController{
   
   
   
-  
-  @RequestMapping(value = Array("/{version:[a-zA-Z0-9]+}/{type:[a-z]}/{lastModified:[0-9]+}/{path:[a-z0-9,-]+}"), method = Array(RequestMethod.GET))
+  @RequestMapping(value = Array("/{version:[a-zA-Z0-9]+}/{type:[a-z]}/{lastModified:[0-9]+}/{path:[a-z0-9,-]+}"), 
+                  method = Array(RequestMethod.GET))
   @ResponseBody
   def getResource(model:Model,
                     @PathVariable("lastModified") lastModified:Long,
@@ -85,9 +85,10 @@ def writeError(response:HttpServletResponse, msg:String, status:Int)
   response.setContentType("text/html;charset=UTF-8");
   response.setStatus(status);
 
+    val out = response.getWriter()
   try  {
             
-    val out = response.getWriter()
+    
             
     out.println(new StringBuilder()
                 .append("<html><head><title>ERROR: ")
@@ -99,7 +100,9 @@ def writeError(response:HttpServletResponse, msg:String, status:Int)
     out.flush()
   } finally {
           
-    try { response.getWriter.close}
+    try { 
+        if (out!=null)  out.close
+    }
   }
 }
   

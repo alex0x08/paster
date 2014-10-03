@@ -18,7 +18,6 @@ package uber.paste.model
 
 import javax.persistence._
 import org.hibernate.validator._
-import org.compass.annotations._
 import uber.paste.base.Loggered
 import java.beans.PropertyEditorSupport
 
@@ -37,7 +36,7 @@ class KeyValueEditor[T <: KeyValue](vobj:KeyValueObj[T]) extends PropertyEditorS
   override def getAsText():String = {
     val s = getValue().asInstanceOf[T]
     return if (s == null) {
-      null;
+      null
     } else {
       s.getCode().toString()
     }
@@ -45,10 +44,8 @@ class KeyValueEditor[T <: KeyValue](vobj:KeyValueObj[T]) extends PropertyEditorS
 }
 
 
-class KeyValueObj[T <: KeyValue] extends KeyObj[T]{
-
+class KeyValueObj[T <: KeyValue] extends KeyObj[T]{ }
   
-}
 
 @MappedSuperclass
 class KeyValue extends Key with java.io.Serializable{
@@ -70,11 +67,10 @@ class KeyValue extends Key with java.io.Serializable{
   def getValue() : String = value
   def setValue(f:String) : Unit = {value = f }
 
-   override def toString():String = {
-     return Loggered.getNewProtocolBuilder(this)
+   override def toString():String = Loggered.getNewProtocolBuilder(this)
                 .append("value", value)
                  .toString()+super.toString
-  }
+  
   
   
 }

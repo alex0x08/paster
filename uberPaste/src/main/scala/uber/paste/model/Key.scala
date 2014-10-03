@@ -18,12 +18,24 @@ package uber.paste.model
 
 
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute
+import java.io.IOException
 import java.util.Collection
 import java.util.HashMap
 import javax.persistence._
+
+import org.apache.lucene.queryParser.QueryParser
+import org.apache.lucene.search.highlight.Highlighter
+import org.hibernate.search.annotations.Boost
+import org.hibernate.search.annotations.DateBridge
+import org.hibernate.search.annotations.Field
+import org.hibernate.search.annotations.Index
+import org.hibernate.search.annotations.Resolution
+import org.hibernate.search.annotations.Store
+import org.hibernate.search.annotations.TermVector
+import org.hibernate.validator.constraints.SafeHtml
+import org.hibernate.validator.constraints.SafeHtml.WhiteListType
 import org.hibernate.validator._
 import javax.validation.constraints.NotNull
-import org.compass.annotations._
 import uber.paste.base.Loggered
 
 /**
@@ -40,12 +52,11 @@ class KeyObj[T <: Key] {
 
    def getList:Collection[T] = list 
   
-  def list:Collection[T] = {
-    return map.values
-  }
-  def valueOf(key:String):T = {
-    return if (map.containsKey(key)) map.get(key) else null.asInstanceOf[T]
-  }
+  def list:Collection[T] =  map.values
+  
+  def valueOf(key:String):T = 
+    if (map.containsKey(key)) map.get(key) else null.asInstanceOf[T]
+  
 }
 
 
@@ -55,6 +66,8 @@ class Key extends Named with java.io.Serializable{
   @NotNull
   @Column(nullable = false, length = 50,unique=true)
   @XStreamAsAttribute
+  @Field(index = Index.YES, store =Store.YES, termVector = TermVector.YES) //,boost=@Boost(2f)
+  @SafeHtml(whitelistType=WhiteListType.NONE,message = "{validator.forbidden-symbols}")
   private var code: String = null  
   
   def this(code:String) = {
@@ -65,6 +78,9 @@ class Key extends Named with java.io.Serializable{
   def getCode() : String = code
   def setCode(f:String) : Unit = {code = f }
 
+  
+    
+  
   override def hashCode():Int = {
     var hash:Int = 53*7;
         
@@ -76,22 +92,17 @@ class Key extends Named with java.io.Serializable{
     return hash;
   }
 
-  override def equals(from:Any):Boolean = {
-
-    return if (from.isInstanceOf[Key]==false || getCode == null) {
-      false
-    } else {
-      from.asInstanceOf[Key].getCode().equals(code)
-    }
-  }
+  override def equals(from:Any):Boolean =  (from.isInstanceOf[Key] && getCode != null 
+                                            && from.asInstanceOf[Key].getCode().equals(code))
+  
 
   
-   override def toString():String = {
-     return Loggered.getNewProtocolBuilder(this)
+   override def toString():String = 
+     Loggered.getNewProtocolBuilder(this)
                 .append("code", code)
                 .append("super",super.toString)
                  .toString()
-  }
+  
   
   
 }

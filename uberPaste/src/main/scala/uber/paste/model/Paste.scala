@@ -18,8 +18,7 @@ package uber.paste.model
 
 import javax.persistence._
 import javax.validation.constraints.{Size, NotNull}
-import org.compass.core.CompassHighlighter
-import org.compass.annotations._
+
 import net.sf.classifier4J.summariser.SimpleSummariser
 import org.apache.commons.lang.StringUtils
 import org.codehaus.jackson.annotate.JsonIgnore
@@ -27,6 +26,12 @@ import javax.xml.bind.annotation._
 import uber.paste.base.Loggered
 import com.google.gson.GsonBuilder
 import java.util.{Set,HashSet,ArrayList, UUID}
+import org.hibernate.search.annotations.Field
+import org.hibernate.search.annotations.Index
+import org.hibernate.search.annotations.IndexedEmbedded
+import org.hibernate.search.annotations.Store
+import org.hibernate.search.annotations.TermVector
+import org.hibernate.search.annotations.Indexed
 import scala.collection.JavaConversions._
 import org.hibernate.envers.{NotAudited, Audited}
 
@@ -91,7 +96,7 @@ class PasteListener extends Loggered{
  */
 
 @Entity
-@Searchable
+@Indexed(index = "indexes/pastas")
 @XmlRootElement(name="paste")
 @EntityListeners(Array(classOf[PasteListener]))
 @Audited
@@ -102,7 +107,7 @@ class Paste extends Named with java.io.Serializable{
    */
   @NotNull(message = "{validator.not-null}")
   @Column(nullable = false, unique = true, length = 255,updatable=false)
-  @SearchableProperty(store=Store.YES,index=Index.NO)
+  @Field(index = Index.NO, store =Store.YES, termVector = TermVector.NO)
   private var uuid = UUID.randomUUID().toString()
   
   /**
@@ -110,7 +115,7 @@ class Paste extends Named with java.io.Serializable{
    */
   @Lob
   @NotNull
-  @SearchableProperty
+  @Field
   //(analyzer = )
   @Size(min=3, message = "{struct.name.validator}")
   @Column(length = Integer.MAX_VALUE)
@@ -120,7 +125,7 @@ class Paste extends Named with java.io.Serializable{
    *  link to preview image
    */
   @XmlTransient
-  @SearchableProperty(store=Store.YES,index=Index.NO)
+  @Field(store=Store.YES,index=Index.NO)
   //@transient
   private var thumbImage:String =null
 
@@ -132,7 +137,7 @@ class Paste extends Named with java.io.Serializable{
   @Column(length=256)
   @Size(min=3,max=256, message = "{struct.name.validator}")
   //@NotAudited
-  @SearchableProperty
+  @Field
   private var title: String = null
 
   /**
@@ -147,7 +152,7 @@ class Paste extends Named with java.io.Serializable{
    * type of paste, used almost to highlight it correctly
    */
   @NotNull
-  @SearchableProperty
+  @Field
   private var codeType:String = CodeType.Plain.getCode
 
   /**
@@ -164,7 +169,7 @@ class Paste extends Named with java.io.Serializable{
    * related tags
    */
   @ElementCollection(fetch = FetchType.EAGER)
-  @SearchableProperty
+  @IndexedEmbedded
   //@NotAudited
   private var tags:Set[String] = new HashSet[String]()
 
@@ -172,7 +177,7 @@ class Paste extends Named with java.io.Serializable{
    * paste's  source, describes where it came from
    */
   @NotNull
-  @SearchableProperty
+  @Field
   private var pasteSource:String = PasteSource.FORM.getCode
 
   @Transient
@@ -195,7 +200,7 @@ class Paste extends Named with java.io.Serializable{
   @transient
   private var comments:java.util.List[Comment] = new ArrayList[Comment]()
 
-  @SearchableProperty
+  @Field
   private var priority:String = Priority.NORMAL.getCode()
 
   private var sticked:Boolean = false
@@ -216,13 +221,13 @@ class Paste extends Named with java.io.Serializable{
    * this function will fill object fields from highlighter.
    * This needed to proper display highlighted text in result
    */
-  override def fillFromHits(ch:CompassHighlighter)  {
+  /*override def fillFromHits(ch:CompassHighlighter)  {
       super.fillFromHits(ch)
     val t = ch.fragment("text")
       if (!StringUtils.isBlank(t)) {
         setTitle(t)
       }
-  }
+  }*/
   
   def getSymbolsCount() = symbolsCount
   def setSymbolsCount(c:java.lang.Integer) { this.symbolsCount = c}

@@ -39,18 +39,19 @@
 
     <properties>
 
-        <spring.version>3.2.5.RELEASE</spring.version>
-        <spring.security.version>3.1.4.RELEASE</spring.security.version>
-
-        <spring.webflow.version>2.3.2.RELEASE</spring.webflow.version>
-
+            <spring.version>4.0.5.RELEASE</spring.version>
+        <spring.security.version>3.2.4.RELEASE</spring.security.version>
+        <hibernate.search.version>4.5.1.Final</hibernate.search.version>
+        <hibernate.version>4.3.5.Final</hibernate.version>
+    
+        
+      
         <commons.beanutils.version>1.8.0</commons.beanutils.version>
         <commons.collections.version>3.1</commons.collections.version>
 
         <jstl.version>1.2</jstl.version>
 
         <tiles.version>3.0.3</tiles.version>
-        <hibernate.version>3.6.10.Final</hibernate.version>
         <slf4j.version>1.6.1</slf4j.version>
 
         <logback.version>0.9.28</logback.version>
@@ -126,13 +127,6 @@
                 <version>1.3.170</version>
         </dependency>
 
-
-
-        <dependency>
-            <groupId>javax.annotation</groupId>
-            <artifactId>jsr250-api</artifactId>
-            <version>1.0</version>
-        </dependency>
         
 		<!-- google collections -->
         <dependency>
@@ -148,12 +142,6 @@
             <version>1.3</version>
         </dependency>
 
-
-        <!--dependency>
-            <groupId>commons-lang</groupId>
-            <artifactId>commons-lang</artifactId>
-            <version>2.6</version>
-        </dependency-->
 
         <dependency>
             <groupId>commons-io</groupId>
@@ -200,17 +188,6 @@
             <version>${spring.version}</version>
         </dependency>
 
-        <!--dependency>
-            <groupId>org.springframework.webflow</groupId>
-            <artifactId>spring-js</artifactId>
-            <version>${spring.webflow.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.webflow</groupId>
-            <artifactId>spring-webflow</artifactId>
-            <version>${spring.webflow.version}</version>
-        </dependency-->
-
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-aop</artifactId>
@@ -236,11 +213,7 @@
             <artifactId>spring-core</artifactId>
             <version>${spring.version}</version>
         </dependency>
-        <!--dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-jdbc</artifactId>
-            <version>${spring.version}</version>
-        </dependency-->
+      
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-orm</artifactId>
@@ -290,64 +263,84 @@
 
 		<!-- tiles -->
 
-        <dependency>
+  <dependency>
             <groupId>org.apache.tiles</groupId>
             <artifactId>tiles-jsp</artifactId>
-            <version>${tiles.version}</version>
+            <version>3.0.4</version>
         </dependency>
-
-        <dependency>
-            <groupId>org.apache.tiles</groupId>
-            <artifactId>tiles-el</artifactId>
-            <version>${tiles.version}</version>
-        </dependency>
-
         <dependency>
             <groupId>org.apache.tiles</groupId>
             <artifactId>tiles-core</artifactId>
-            <version>${tiles.version}</version>
+            <version>3.0.4</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.slf4j</groupId>
                     <artifactId>jcl-over-slf4j</artifactId>
                 </exclusion>
-
             </exclusions>
         </dependency>
 
 
-        <!--dependency>
-            <groupId>org.apache.cxf</groupId>
-            <artifactId>cxf-rt-frontend-jaxws</artifactId>
-            <version>2.7.7</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.cxf</groupId>
-            <artifactId>cxf-rt-transports-http</artifactId>
-            <version>2.7.7</version>
-        </dependency-->
+
 
 
 
 		<!-- Hibernate -->
+                 <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-search</artifactId>
+            <version>${hibernate.search.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.avro</groupId>
+                    <artifactId>avro</artifactId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>hibernate-core</artifactId>
+                    <groupId>org.hibernate</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
             <version>${hibernate.version}</version>
         </dependency>
-        <!--dependency>
+        <dependency>
             <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-annotations</artifactId>
-            <version>3.5.6-Final</version>
-        </dependency-->
+            <artifactId>hibernate-search-analyzers</artifactId>
+            <version>${hibernate.search.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.solr</groupId>
+                    <artifactId>solr-analysis-extras</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.lucene</groupId>
+            <artifactId>lucene-highlighter</artifactId>
+            <version>3.6.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-ehcache</artifactId>
+            <version>${hibernate.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate.java-persistence</groupId>
+            <artifactId>jpa-api</artifactId>
+            <version>2.0-cr-1</version>
+        </dependency>
+              
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-entitymanager</artifactId>
             <version>${hibernate.version}</version>
             <exclusions>
                 <exclusion>
-                    <groupId>javassist</groupId>
                     <artifactId>javassist</artifactId>
+                    <groupId>javassist</groupId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -358,17 +351,27 @@
             <version>${hibernate.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>javax.validation</groupId>
-            <artifactId>validation-api</artifactId>
-            <version>1.0.0.GA</version>
-        </dependency>
-        <dependency>
+  <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-validator</artifactId>
-            <version>4.2.0.Final</version>
+            <version>5.1.1.Final</version>
+        </dependency>
+                
+      
+<dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-ehcache</artifactId>
+            <version>${hibernate.version}</version>
         </dependency>
 
+        
+                
+       <!--  for Hibernate @SafeHtml -->
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>1.7.3</version>
+        </dependency>        
 
         <dependency>
             <groupId>com.googlecode.webutilities</groupId>
@@ -402,65 +405,27 @@
  <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-web-api</artifactId>
-            <version>6.0</version>
+            <version>7.0</version>
             <scope>provided</scope>
         </dependency>
 
-
-
-        <!--dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
-            <version>2.5</version>
-            <scope>provided</scope>
-        </dependency-->
-
-        <!--dependency>
-            <groupId>javax.servlet.jsp</groupId>
-            <artifactId>jsp-api</artifactId>
-            <version>2.1</version>
-            <scope>provided</scope>
-        </dependency-->
-
-        <!--dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>jstl</artifactId>
-            <version>${jstl.version}</version>
-        </dependency-->
 
 
     
 		<!-- jdbc pooling -->
-        <dependency>
+        <!--dependency>
                   <groupId>org.javassist</groupId>
                     <artifactId>javassist</artifactId>
                     <version>3.18.1-GA</version>
-        </dependency>
+        </dependency-->
 <dependency>
     <groupId>com.zaxxer</groupId>
     <artifactId>HikariCP</artifactId>
-    <version>1.3.8</version>
+    <version>1.4.0</version>
 </dependency>
 
-<!--dependency>
-            <groupId>c3p0</groupId>
-            <artifactId>c3p0</artifactId>
-            <version>0.9.1.2</version>
-        </dependency-->
 
-
-		<!-- compass search -->
-        <dependency>
-            <groupId>org.compass-project</groupId>
-            <artifactId>compass</artifactId>
-            <version>2.2.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.lucene</groupId>
-            <artifactId>lucene-highlighter</artifactId>
-            <version>2.4.1</version>
-        </dependency>
+		
             
 
 		<!-- scala -->
@@ -1060,7 +1025,7 @@
                         -Dpaste.h2.embedded.server=1
                     </jvmArgs-->
                     <!--                         ${settings.localRepository}/org/mortbay/jetty/npn/npn-boot/${npn.version}/npn-boot-${npn.version}.jar
--->
+                    -->
                     <systemProperties>
                         <systemProperty>
                             <name>paste.h2.embedded.server</name>
@@ -1096,10 +1061,10 @@
                     
                     
                     <dependency>
-	<groupId>org.mortbay.jetty.npn</groupId>
-	<artifactId>npn-boot</artifactId>
-	<version>1.1.7.v20140316</version>
-</dependency>
+                        <groupId>org.mortbay.jetty.npn</groupId>
+                        <artifactId>npn-boot</artifactId>
+                        <version>1.1.7.v20140316</version>
+                    </dependency>
             
                     
                     <!--dependency>

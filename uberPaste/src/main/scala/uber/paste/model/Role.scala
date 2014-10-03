@@ -16,7 +16,6 @@
 
 package uber.paste.model
 
-import org.compass.annotations._
 import org.springframework.security.core.GrantedAuthority
 
 object Role extends KeyValueObj[Role]{

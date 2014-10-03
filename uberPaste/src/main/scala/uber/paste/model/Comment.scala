@@ -1,14 +1,15 @@
 package uber.paste.model
 
-import org.compass.annotations.{SearchableProperty, Searchable}
 import javax.xml.bind.annotation.{XmlTransient, XmlRootElement}
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute
 import javax.persistence.{Entity,JoinColumn, FetchType, ManyToOne, Lob,CascadeType, Column}
 import javax.validation.constraints.{Size, NotNull}
 import org.codehaus.jackson.annotate.JsonIgnore
 import org.hibernate.envers.Audited
+import org.hibernate.search.annotations.Field
+import org.hibernate.search.annotations.Indexed
 import uber.paste.base.Loggered
-import org.compass.core.CompassHighlighter
+
 
 
 object Comment extends Struct {
@@ -18,7 +19,7 @@ object Comment extends Struct {
 
 
 @Entity
-@Searchable
+@Indexed(index = "indexes/comments")
 @XmlRootElement(name="comment")
 @Audited
 class Comment extends Struct  with java.io.Serializable{
@@ -34,7 +35,7 @@ class Comment extends Struct  with java.io.Serializable{
   
   @Lob
   @NotNull
-  @SearchableProperty
+  @Field
   @Size(min=3, message = "{struct.name.validator}")
   private var text: String = null
 
@@ -87,13 +88,13 @@ class Comment extends Struct  with java.io.Serializable{
    * this function will fill object fields from highlighter.
    * This needed to proper display highlighted text in result
    */
-  override def fillFromHits(ch:CompassHighlighter)  {
+  /*override def fillFromHits(ch:CompassHighlighter)  {
     super.fillFromHits(ch)
     val t = ch.fragment("text")
     if (t!=null) {
       setText(t)
     }
-  }
+  }*/
 
   override def loadFull() {
     System.out.println("_comment loadFull "+owner)

@@ -27,5 +27,5 @@ trait GenericSearchManager[T <: Struct] extends VersionManager[T] {
 abstract class GenericSearchManagerImpl[T <: Struct] extends VersionManagerImpl[T] {
 
   protected override def getDao:SearchableDao[T]
-  def search(query:Query):java.util.List[T] = getDao.search(query)
+  def search(query:Query):java.util.List[T] = getDao.search(query.getQuery)
 }

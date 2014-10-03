@@ -38,22 +38,22 @@ class PasterNamingStrategy  extends ImprovedNamingStrategy{
             ownerEntityTable:String, 
             associatedEntity:String,
             associatedEntityTable:String, 
-            propertyName:String):String = {
-        return transform(super.collectionTableName(ownerEntity,
+            propertyName:String):String = 
+         transform(super.collectionTableName(ownerEntity,
                 ownerEntityTable, associatedEntity, associatedEntityTable,
                 propertyName))
-    }
+    
 
     override def logicalCollectionTableName(tableName:String,
             ownerEntityTable:String,
             associatedEntityTable:String,
-            propertyName:String):String = {
-        return this.transform(super.logicalCollectionTableName(tableName,
+            propertyName:String):String = 
+        this.transform(super.logicalCollectionTableName(tableName,
                 ownerEntityTable, associatedEntityTable, propertyName))
-    }
+    
 
-    def transform(tableName:String):String ={
-      return PasterNamingStrategy.TABLE_PREFIX+tableName.toLowerCase
-    }
+    def transform(tableName:String):String =
+       PasterNamingStrategy.TABLE_PREFIX+tableName.toLowerCase
+   
   
 }

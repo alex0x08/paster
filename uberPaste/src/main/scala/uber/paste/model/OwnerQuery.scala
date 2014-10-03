@@ -16,10 +16,9 @@
 
 package uber.paste.model
 
-import org.compass.core.CompassQuery
-import org.compass.core.CompassQueryBuilder
-import org.compass.core.CompassSession
 
+
+import org.hibernate.search.query.dsl.QueryBuilder
 
 class OwnerQuery extends GenericQuery with Query {
 
@@ -29,7 +28,7 @@ class OwnerQuery extends GenericQuery with Query {
   
   def setOwnerId(ownerId:java.lang.Long) { this.ownerId = ownerId}
   
-  override def fillQuery(session:CompassSession):CompassQuery = {
+  /*override def fillQuery(qb:QueryBuilder):org.apache.lucene.search.Query = {
     
     val qb = session.queryBuilder
     
@@ -40,5 +39,5 @@ class OwnerQuery extends GenericQuery with Query {
       bb.addMust(qb.term("ownerId", ownerId))
     }
     return bb.toQuery
-  }
+  }*/
 }

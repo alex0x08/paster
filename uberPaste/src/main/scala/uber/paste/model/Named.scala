@@ -20,9 +20,8 @@ import com.thoughtworks.xstream.annotations.XStreamAsAttribute
 import javax.validation.constraints.{Size, NotNull}
 import javax.persistence.Column
 import javax.persistence.MappedSuperclass
-import org.compass.annotations.SearchableProperty
-import org.compass.core.CompassHighlighter
 import org.hibernate.envers.Audited
+import org.hibernate.search.annotations.Field
 import uber.paste.base.Loggered
 
 object Named extends Struct {
@@ -38,7 +37,7 @@ object Named extends Struct {
 class Named extends Struct {
 
   @NotNull
-  @SearchableProperty
+  @Field
   @Column(length=256)
   //@Pattern(regexp = "(.+)", message = "{struct.name.validator}")
   @Size(min=3, message = "{struct.name.validator}")
@@ -47,14 +46,14 @@ class Named extends Struct {
 
   override def terms():List[String] = Named.terms
   
-  override def fillFromHits(ch:CompassHighlighter)  {
+  /*override def fillFromHits(ch:CompassHighlighter)  {
     super.fillFromHits(ch)
     
     val f = ch.fragment("name")
     if (f!=null) {
       setName(f)
     }
-  }
+  }*/
 
  def fillFromDTO(dto:Named) {
    setName(dto.name)
@@ -64,12 +63,11 @@ class Named extends Struct {
   def getName() : String = name
   def setName(f:String) : Unit = {name = f }
 
-  override def toString():String = {
-     return  Loggered.getNewProtocolBuilder(this)
+  override def toString():String =  Loggered.getNewProtocolBuilder(this)
                 .append("name", name)
                 .append("super",super.toString)
                 .toString()
-  }
+  
   
 
   

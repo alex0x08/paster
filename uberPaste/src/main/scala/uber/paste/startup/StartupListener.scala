@@ -26,7 +26,7 @@ import org.springframework.web.context.support.WebApplicationContextUtils
 import uber.paste.model._
 import uber.paste.dao._
 import uber.paste.build._
-import org.compass.gps.CompassGps;
+
 import java.io.IOException
 import uber.paste.dao.UserExistsException
 import uber.paste.base.plugins.PluginUI
@@ -268,8 +268,12 @@ class StartupListener extends ServletContextListener with Loggered{
 
   def reindex( ctx:ApplicationContext,props:MergedPropertyConfigurer):Unit = {
     if (props.getProperty("config.reindex.enabled").equals("1")) {
-      val compassGps:CompassGps = ctx.getBean("compassGps").asInstanceOf[CompassGps]
-      compassGps.index()
+      
+      for (d<-SearchableDao.searchableDao) {
+        
+        d.indexAll()
+      }
+     
       logger.info("reindex completed.")
     } else {
       logger.info("reindex was disabled. skipping it.")

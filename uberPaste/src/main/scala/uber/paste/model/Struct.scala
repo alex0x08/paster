@@ -17,13 +17,17 @@
 package uber.paste.model
 
 import javax.persistence._
+import org.apache.lucene.queryParser.QueryParser
+import org.apache.lucene.search.highlight.Highlighter
 import org.hibernate.envers.Audited
 import org.hibernate.envers.NotAudited
+import org.hibernate.search.annotations.DateBridge
+import org.hibernate.search.annotations.Field
+import org.hibernate.search.annotations.Index
+import org.hibernate.search.annotations.Resolution
 import org.hibernate.validator._
 import javax.validation.constraints.{Size, NotNull}
-import org.compass.annotations._
 import java.util.{Calendar,Date}
-import org.compass.core.CompassHighlighter
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute
 import java.text.SimpleDateFormat
 import uber.paste.base.Loggered
@@ -43,7 +47,8 @@ abstract class Struct extends DBObject with SearchObject with  java.io.Serializa
 
   @Column(name = "last_modified") //, columnDefinition = "datetime"
   @Temporal(javax.persistence.TemporalType.TIMESTAMP)
-  @SearchableProperty(format = Struct.DB_DATE_FORMAT_FULL)
+  @Field(index = Index.YES)
+  @DateBridge(resolution = Resolution.DAY)    
   @XStreamAsAttribute
   @NotAudited
   private var lastModified:java.util.Date = null
@@ -52,12 +57,11 @@ abstract class Struct extends DBObject with SearchObject with  java.io.Serializa
   @PrePersist
   def updateTimeStamps() {
     lastModified = Calendar.getInstance().getTime();
-   // System.out.println("id="+getId+"_lastModified update "+lastModified);
+    // System.out.println("id="+getId+"_lastModified update "+lastModified);
   }
   
-  def getLastModified():Date = {
-    return lastModified;
-  }
+  def getLastModified():Date =  lastModified
+  
 
   def setLastModified(from:Date) = { lastModified = from }
     
@@ -65,23 +69,16 @@ abstract class Struct extends DBObject with SearchObject with  java.io.Serializa
   
   def terms():List[String] = Struct.terms
   
-  def fillFromHits(ch:CompassHighlighter)  {
-
-    val l = ch.fragment("lastModified")
-    if (l!=null)
-      lastModified = Struct.SD_FULL.parse(l)
-  }
   
   
   def loadFull() {}
   
 
-  override def toString():String = {
-     return  Loggered.getNewProtocolBuilder(this)
-                .append("lastModified", lastModified)
-                .append("super",super.toString)
-                .toString()
-  }
+  override def toString():String =  Loggered.getNewProtocolBuilder(this)
+    .append("lastModified", lastModified)
+    .append("super",super.toString)
+    .toString()
+  
   
   
   

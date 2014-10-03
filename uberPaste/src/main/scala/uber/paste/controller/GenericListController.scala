@@ -74,9 +74,9 @@ abstract class GenericListController[T <: Struct ] extends StructController[T] {
    * default callback object: will simply use getList from attached manager
    */
   protected val defaultListCallback:SourceCallback[T]  = new SourceCallback[T]() {
-    override def invokeCreate():PagedListHolder[T] = {
-      return new PagedListHolder[T](manager.getList())
-    }
+    override def invokeCreate():PagedListHolder[T] = 
+     new PagedListHolder[T](manager.getList())
+    
   }
 
 
@@ -110,7 +110,8 @@ abstract class GenericListController[T <: Struct ] extends StructController[T] {
                                       NPpage:String,
                                       pageSize:java.lang.Integer,sortColumn:String,sortAsc:Boolean,
                                       callback:SourceCallback[T],
-                                      pageHolderName:String,createDefaultItemModel:Boolean = true):java.util.List[T] = {
+                                      pageHolderName:String,
+                                      createDefaultItemModel:Boolean = true):java.util.List[T] = {
 
       var pagedListHolder:PagedListHolder[T] = request.getSession()
             .getAttribute(getClass().getName()+"_"+pageHolderName)
@@ -126,7 +127,7 @@ abstract class GenericListController[T <: Struct ] extends StructController[T] {
        if (sortColumn!=null) {
                val sort =pagedListHolder.getSort().asInstanceOf[MutableSortDefinition]
                 sort.setProperty(sortColumn)
-		sort.setIgnoreCase(false)
+                sort.setIgnoreCase(false)
                 sort.setAscending(sortAsc)
                 pagedListHolder.resort();
             }
@@ -135,6 +136,7 @@ abstract class GenericListController[T <: Struct ] extends StructController[T] {
        * check if exist and use it
        */
       if (NPpage != null) {
+        
         if (NPpage.equals(GenericListController.NEXT_PARAM)) {
           pagedListHolder.nextPage()
         } else {
@@ -146,15 +148,13 @@ abstract class GenericListController[T <: Struct ] extends StructController[T] {
          */
       } else if (page!=null){
 
-        var npage = page
-        
-        if (npage < 1) {
-          npage = 1
-        }
-        if (npage > pagedListHolder.getPageCount()) {
-          npage = pagedListHolder.getPageCount()
-        }
-        pagedListHolder.setPage(npage-1)
+       
+        pagedListHolder.setPage(
+          (
+          if (page < 1) 1
+          else if (page > pagedListHolder.getPageCount()) pagedListHolder.getPageCount()
+          else page
+        ).asInstanceOf[Integer]-1)
       }
 
     }
@@ -236,9 +236,9 @@ abstract class GenericListController[T <: Struct ] extends StructController[T] {
            @RequestParam(required = false)  NPpage:String,
            @RequestParam(required = false)  pageSize:java.lang.Integer,
            @RequestParam(required = false)  sortColumn:String,
-           @RequestParam(required = false)  sortAsc:Boolean):java.util.List[T] = {
-  return listImpl(request,locale,model,page,NPpage,pageSize,sortColumn,sortAsc,GenericController.NODE_LIST_MODEL_PAGE)
-  }
+           @RequestParam(required = false)  sortAsc:Boolean):java.util.List[T] = 
+  listImpl(request,locale,model,page,NPpage,pageSize,sortColumn,sortAsc,GenericController.NODE_LIST_MODEL_PAGE)
+  
 
 
   def listImpl( request:HttpServletRequest, locale:Locale,  model:Model,

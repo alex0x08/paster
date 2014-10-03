@@ -16,21 +16,22 @@
 
 package uber.paste.model
 
+
 import javax.persistence._
 import javax.validation.constraints.{Size,NotNull}
 import javax.xml.bind.annotation.XmlTransient
 import org.codehaus.jackson.annotate.JsonIgnore
-import org.compass.annotations.Searchable
-import org.compass.annotations.SearchableProperty
+import org.hibernate.search.annotations.Field
+import org.hibernate.search.annotations.Indexed
 
 @Entity
-@Searchable
+@Indexed
 class Review extends Struct{
 
   
   @Lob
   //@NotNull
-  @SearchableProperty
+  @Field
   //(analyzer = )
   @Size(min=3, message = "{struct.name.validator}")
   @Column(length = Integer.MAX_VALUE)

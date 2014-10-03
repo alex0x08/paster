@@ -26,7 +26,6 @@ import org.springframework.beans.factory.annotation.{Value, Autowired}
 import java.io.ByteArrayOutputStream
 import uber.paste.manager.{CommentManager, PasteManager, ResourcePathHelper}
 import org.springframework.ui.Model
-import uber.paste.base.SessionStore
 import scala.util.control.Breaks._
 import org.springframework.validation.BindingResult
 import javax.validation.Valid
@@ -44,9 +43,7 @@ import org.apache.http.impl.client.DefaultHttpClient
 import org.apache.http.client.methods.HttpGet
 import javax.annotation.Resource
 import org.springframework.context.MessageSource
-import java.text.SimpleDateFormat
-import java.util.{Calendar,ArrayList}
-import org.apache.commons.io.FileUtils
+import java.util.ArrayList
 import org.apache.commons.io.FilenameUtils
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
 import java.nio.file.FileSystems
@@ -253,7 +250,6 @@ class PasteController extends VersionController[Paste]   {
       if (isCurrentUserLoggedIn()) {
           b.setOwner(getCurrentUser())
           b.getOwner().increaseTotalComments()
-          SessionStore.instance.updateUser(b.getOwner())
         }
 
     
@@ -373,7 +369,7 @@ class PasteController extends VersionController[Paste]   {
         if (isCurrentUserLoggedIn()) {
           b.setOwner(getCurrentUser())
           b.getOwner().increaseTotalPastas()
-          SessionStore.instance.updateUser(b.getOwner())
+         
         }
       }
 

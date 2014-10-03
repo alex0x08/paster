@@ -19,7 +19,6 @@ package uber.paste.model
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute
 import java.io.Serializable
 import javax.persistence._
-import org.compass.annotations.{SearchableId}
 import org.hibernate.annotations.GenericGenerator
 import org.hibernate.envers.Audited
 import uber.paste.base.Loggered
@@ -35,7 +34,7 @@ abstract class DBObject extends java.io.Serializable {
                    strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator"
  )
   //@GeneratedValue(strategy = GenerationType.IDENTITY)
-  @SearchableId(name="id")
+  //@SearchableId(name="id")
   //@Index(name="ddesc_index",columnNames = Array("id desc"))
   @XStreamAsAttribute
   private var id:java.lang.Long = null
@@ -44,22 +43,15 @@ abstract class DBObject extends java.io.Serializable {
   private var disabled:Boolean = _
 
   
-  def isDisabled():Boolean = {
-    return disabled;
-  }
+  def isDisabled() = disabled
+  
 
-  def setDisabled(disabled:Boolean) {
-    this.disabled = disabled;
-  }
+  def setDisabled(disabled:Boolean) { this.disabled = disabled  }
 
-  def isBlank():Boolean = {
-    return id == null
-  }
-
-  def getId():java.lang.Long = {
-    return id
-  }
-
+  def isBlank() = (id == null)
+ 
+  def getId() = id
+ 
   def setId(id:java.lang.Long) {
     this.id=id
   }
@@ -73,19 +65,15 @@ abstract class DBObject extends java.io.Serializable {
     return hash;
   }
 
-  override def equals(from:Any):Boolean = {
+  override def equals(from:Any) =
+      (from.isInstanceOf[DBObject] && !isBlank() 
+       && from.asInstanceOf[DBObject].getId().equals(id)) 
+      
+  
 
-    return if (from.isInstanceOf[DBObject]==false || isBlank()) {
-      false
-    } else {
-      from.asInstanceOf[DBObject].getId().equals(id);
-    }
-  }
-
-  override def toString():String = {
-     return  Loggered.getNewProtocolBuilder(this)
+  override def toString():String =  Loggered.getNewProtocolBuilder(this)
                 .append("id", id)
-                .append("class", getClass().getCanonicalName()).toString();
-  }
+                .append("class", getClass().getCanonicalName()).toString()
+  
   
 }

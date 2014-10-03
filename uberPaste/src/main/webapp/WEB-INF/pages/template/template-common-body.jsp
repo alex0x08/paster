@@ -1,19 +1,50 @@
 <%@ include file="/WEB-INF/pages/common/taglibs.jsp"%>
 
   
+
+<div data-behavior="BS.Popup" class="modal hide" id="deletePopup">
+
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="dialogTitle"></h4>
+            </div>
+            <div id="dialogMessage" class="modal-body">
+                
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                
+                <a id="dialogAction" href="" class="btn btn-primary"></a>
+                
+            </div>
+
+        </div>
+    </div>
+</div>
+
    
-    <%--
-    <!--
-  Under development, this section allows you to preview your changes
-  immediately after saving them on the {app.less} file. However, you
-  must remove it once it enters the production stage or it will open
-  a bunch of requests to your server to retrieve new changes.
--->
-    <script charset="utf-8">
-        //less.env = "development";
-        //less.watch();
-    </script>
---%>
+
+
+<div data-behavior="BS.Popup" class="modal hide" id="newPasteDialog" >
+
+    <div class="modal-dialog">
+        <div class="modal-content" style="padding:0;margin:0;">
+
+           
+            <div id="dialogMessage" class="modal-body">
+                
+            </div>
+           
+
+        </div>
+    </div>
+</div>
+
+   
+
   <script  type="text/javascript">
       
        window.addEvent('domready', function() {
@@ -21,24 +52,32 @@
         });
 
       
-      function showModal(redirectUrl,action,title,message) {
-        new SimpleModal({"btn_ok": action,"btn_cancel": "<fmt:message key='button.cancel'/>"}).show({
-                    "model": "confirm",
-                    "callback": function() {
-                       window.location.href = redirectUrl;
-                     },
-                    "title": title,
-                    "contents": message
-                });
+      function showModal(dlg,redirectUrl,action,title,message) {
+          
+                   
+       
+         if (title!==null) {
+               dlg.getElementById('dialogTitle').set('text',title);
+         }
+         
+        if (action!==null) {
+             dlg.getElementById('dialogAction').set('text',action).set('href',redirectUrl);
+         }
+         
+         dlg.getElementById('dialogMessage').set('html',message);
+         
+          new Bootstrap.Popup(dlg, {animate:false,closeOnEsc:true}).show();
+      
       };
       
       function bindDeleteDlg(parent) {
+
 
         parent.getElements('.deleteBtn').each(function(el, i) {
                 el.addEvent("click", function(e) {
                 e.stop();
                         var source = e.target || e.srcElement;
-                        showModal(source.parentElement.href,
+                        showModal($('deletePopup'),source.parentElement.href,
                                   '<fmt:message key='button.delete'/>',
                                   '<fmt:message key='dialog.confirm.remove'/>',
                                         source.parentElement.getElementById('dialogMsg').innerHTML);

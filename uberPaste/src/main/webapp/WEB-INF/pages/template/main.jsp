@@ -36,7 +36,7 @@
         </head>
         <body>
 
-            <header class="navbar navbar-inverse navbar-fixed-top" role="banner" >
+            <header class="navbar" role="banner" >
                 <div class="container-fluid">
                     <div class="navbar-header">
                         <button class="navbar-toggle" type="button" data-trigger="toggleClass"
@@ -78,8 +78,11 @@
 
                     </div>
                
+                                            <sec:authorize access="isAuthenticated()" >
                           <jsp:include page="/WEB-INF/pages/template/search.jsp"/>
-                       
+                                               
+                                            </sec:authorize>
+                        
                                         
                     <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
                         <ul class="nav navbar-nav" data-behavior="BS.Dropdown">

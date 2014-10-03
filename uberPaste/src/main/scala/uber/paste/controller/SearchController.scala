@@ -171,7 +171,7 @@ abstract class SearchController[T <: Struct,QV <: Query ] extends GenericListCon
      } else { out }
 
     } catch {
-      case e:org.compass.core.engine.SearchEngineQueryParseException =>
+      case e:ParseException =>
          model.addAttribute("statusMessageKey", "action.query.incorrect")
          return manager.getList
     }  

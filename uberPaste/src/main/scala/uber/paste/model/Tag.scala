@@ -1,8 +1,9 @@
 package uber.paste.model
 
 import javax.persistence._
-import org.compass.annotations.{SearchableId, Searchable}
 import javax.xml.bind.annotation.XmlRootElement
+import org.hibernate.search.annotations.Indexed
+import org.hibernate.search.annotations.IndexedEmbedded
 
 /**
  * Created with IntelliJ IDEA.
@@ -11,12 +12,12 @@ import javax.xml.bind.annotation.XmlRootElement
  * Time: 20:02
  */
 @Entity
-@Searchable
+@Indexed
 @XmlRootElement(name="tag")
 class Tag {
 
   @Id
-  @SearchableId(name="id")
+ // @SearchableId(name="id")
   @GeneratedValue
   private var id:java.lang.Long = null
 

@@ -17,96 +17,165 @@
 package uber.paste.dao
 
 import org.springframework.transaction.annotation.Transactional
+import org.apache.lucene.util.Version
+import org.hibernate.CacheMode
+
+import org.hibernate.search.jpa.FullTextEntityManager
+import org.hibernate.search.jpa.FullTextQuery
+import org.hibernate.search.jpa.Search
 import org.springframework.beans.factory.annotation.Autowired
 import uber.paste.model.Struct
+
+import uber.paste.model.Key
 import uber.paste.model.Query
-import org.compass.core.CompassDetachedHits
-import org.compass.core.CompassHits
-import org.compass.core.CompassTemplate
-import org.compass.core.CompassCallback
-import org.compass.core.CompassSession
-import org.compass.core.CompassException
+
+import org.apache.commons.lang3.StringUtils
+import org.apache.lucene.analysis.standard.StandardAnalyzer
+import org.apache.lucene.queryParser.MultiFieldQueryParser
+import org.apache.lucene.queryParser.ParseException
+import org.apache.lucene.queryParser.QueryParser
+import org.apache.lucene.search.highlight.Highlighter
+import org.apache.lucene.search.highlight.InvalidTokenOffsetsException
+import org.apache.lucene.search.highlight.QueryScorer
+import org.apache.lucene.search.highlight.SimpleHTMLFormatter
+import org.apache.lucene.search.highlight.SimpleSpanFragmenter
+
+import java.io.IOException
+import java.io.StringReader
 import java.util.ArrayList
+import scala.collection.JavaConversions._
+import uber.paste.base.Loggered
+
+object SearchableDao {
+  
+  val FORMATTER = new SimpleHTMLFormatter("[result]", "[/result]")
+
+  val DEFAULT_START_FIELDS = Array[String]("name")
+  
+  val searchableDao = new ArrayList[SearchableDao[_]]()
+}
 
 abstract trait SearchableDao[T <: Struct] extends VersionDao[T] {
 
-  def search(query:Query):java.util.List[T]
+  @throws(classOf[ParseException])
+  def search(query:String):java.util.List[T]
+  
+  def indexAll()
+  
+  def getDefaultStartFields():Array[String]
 }
+
+
 
 @Transactional(readOnly = true)
 abstract class SearchableDaoImpl[T <: Struct](model:Class[T])
   extends VersionDaoImpl[T](model) with SearchableDao[T] {
+    
+  SearchableDao.searchableDao.add(this)
+  
+  @throws(classOf[ParseException])
+  protected class FSearch(query:String) extends Loggered{
+        
+      logger.debug("searching for "+query)
+    
+    val fsession = getFullTextEntityManager()
 
-  @Autowired
-  private val compassTemplate:CompassTemplate = null
-
-
-  def search(callback:CompassCallback[CompassDetachedHits]):java.util.List[T] = {
-    val out = new ArrayList[T]
-
-    val hits:CompassDetachedHits = compassTemplate.execute(callback)
-
-    val ch = hits.highlightedText(0)
-
-    val fragment = if (ch!=null) { ch.getHighlightedText } else { logger.debug("highlighter is null"); null }
-
-    logger.debug("highlight="+fragment)
-
-    for (d <- hits.getDatas) {
-      out.add(d.asInstanceOf[T])
+        val pparser = new MultiFieldQueryParser(Version.LUCENE_36, 
+                                                getDefaultStartFields(),
+                                                new StandardAnalyzer(Version.LUCENE_36))
+        
+        
+        val luceneQuery:org.apache.lucene.search.Query = pparser.parse(query)
+        val scorer:QueryScorer = new QueryScorer(luceneQuery)
+        val highlighter:Highlighter = new Highlighter(SearchableDao.FORMATTER, scorer)
+        
+            highlighter.setTextFragmenter(new SimpleSpanFragmenter(scorer, 100))
+    
+        val fquery:FullTextQuery = fsession.createFullTextQuery(luceneQuery, model)
+               
+        
+        def getResults() = fillHighlighted(highlighter, pparser, fquery.getResultList())
+        
     }
-    return out
-  }
-  def search(query:Query):java.util.List[T] = {
+  
+   def getFullTextEntityManager() = Search.getFullTextEntityManager(em)
 
-    logger.debug("_dao search "+query.getQuery())
-
-    if (query.isEmpty) {
-      return getList
+   def getDefaultStartFields():Array[String] = {
+        return SearchableDao.DEFAULT_START_FIELDS
     }
-   val out = new ArrayList[T]
-    compassTemplate.execute(new CompassCallback[CompassDetachedHits]() {
-
-      @throws(classOf[CompassException])
-      def doInCompass(session:CompassSession):CompassDetachedHits =  {
-        val hits:CompassHits = query.fillQuery(session)
-          .setTypes(model).hits
-
-        var maxlength = hits.length-1
-        if (maxlength>500) {
-          maxlength =500
+  
+   def fillHighlighted(highlighter:Highlighter,
+            pparser:QueryParser,
+            results:java.util.List[_]):java.util.List[T] = {
+        for (obj <- results) {
+          fillHighlighted(highlighter, pparser, obj.asInstanceOf[T])
         }
+        return results.asInstanceOf[java.util.List[T]]
+     }
+  
+   def indexAll() {
+        val fsession = getFullTextEntityManager()
+        try {
+          
+            fsession.createIndexer(model)
+                    .batchSizeToLoadObjects(25)
+                    .cacheMode(CacheMode.NORMAL)
+                    .threadsToLoadObjects(1)
+                    .threadsForSubsequentFetching(2)
+                    .startAndWait()
+        
+    } catch {
+      case e:InterruptedException =>
+       {
+         throw new RuntimeException(e)
+        }             
+    }    
+   }
+  
+   def fillHighlighted(highlighter:Highlighter,
+            pparser:QueryParser,
+            model:T) {
+       /* try {
+            val hl = highlighter
+                    .getBestFragments(pparser.getAnalyzer()
+                            .tokenStream("code", new StringReader(model.getCode())),
+                            model.getName(), 3, " ...");
 
-        val mterms = model.newInstance.terms
-
-        for (i <- 0 to maxlength) {
-
-          val data = hits.data(i).asInstanceOf[T]
-
-          try {
-
-          /*  if (logger.isDebugEnabled()) {
-              for (term <- mterms) {
-                val f = hits.highlighter(i).fragment(term)
-                logger.debug("fragment "+f)
-              }
-            }*/
-
-             data.fillFromHits(hits.highlighter(i))
-             out.add(data)
-
-          } catch {
-            case e:org.compass.core.engine.SearchEngineException => {
-           //   logger.error(e.getLocalizedMessage,e)
-            }
-          }
-
+            if (hl != null && hl.trim().length() > 0) {
+                model.setCode(hl);
+            }          
+      
+        
+    } catch {
+      case e @ (_ : IOException  | _ : InvalidTokenOffsetsException) => {
+          logger.error(e.getLocalizedMessage,e)
         }
+    }*/
+  
+   }
+  
 
-        return null
-        //hits.detach(0,50)
-      }
-    })
-    return out
+  @throws(classOf[ParseException])
+  def search(query:String):java.util.List[T] = {
+
+        /**
+         * ignore empty queries
+         */
+        if (StringUtils.isBlank(query) || query.trim().equals("*")) {
+          return getList()
+        }
+        
+        /**
+         * added for stupid users
+         */
+        return new FSearch(
+          if (!query.contains(":") && !query.contains("*")) 
+           (query+"*") else 
+            query
+          ).getResults()
   }
+   
+
 }
+
+  

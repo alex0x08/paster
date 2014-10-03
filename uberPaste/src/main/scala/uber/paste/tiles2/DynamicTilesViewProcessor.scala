@@ -36,45 +36,6 @@ import uber.paste.base.Loggered
 import uber.paste.model.KeyValue
 import uber.paste.model.KeyValueObj
 
-object PrefixType extends KeyValueObj[PrefixType] {
-  
-  val MAIN = new PrefixType("MAIN","Main site template","mainTemplate","/")
-  val INTEGRATED = new PrefixType("INTEGRATED","Integrated usage site template","integratedTemplate","/integrated")
-  val RAW = new PrefixType("RAW","Raw site template","rawTemplate","/raw") 
-  val FRAME = new PrefixType("FRAME","frame view site template","frameTemplate","/frame") 
-  val SETTINGS = new PrefixType("SETTINGS","settings","mainTemplate","/settings") 
-
-  val THIRD_LEVELS:Array[PrefixType] = Array[PrefixType](PrefixType.RAW,
-                                                        PrefixType.INTEGRATED,PrefixType.FRAME,PrefixType.SETTINGS)
-   
-  add(MAIN)
-  add(INTEGRATED)
-  add(RAW) 
-  add(FRAME) 
-  add(SETTINGS) 
-  
-  
-  
-   def lookupLevelPrefixType(beanName:String):PrefixType = {
-    for (s <-PrefixType.THIRD_LEVELS) {
-      if (beanName.contains(s.getUrlPrefix)) {
-        return s
-      }
-    }
-    return null
-  }
- }
-
-
-class PrefixType(code:String,desc:String,templateName:String,urlPrefix:String) extends KeyValue(code,desc){
-
-  def getCodeLowerCase() = super.getCode().toLowerCase
-   
-  def getTemplateName() = templateName
-  
-  def getUrlPrefix() = urlPrefix
-}
-
 
 class DynamicTilesViewProcessor extends Loggered {
 
@@ -83,7 +44,7 @@ class DynamicTilesViewProcessor extends Loggered {
      */
     private var derivedDefinitionName:String =null
     
-    private var tilesDefinitionName =  PrefixType.MAIN.getTemplateName
+    private var tilesDefinitionName =  ""
     
     private var tilesBodyAttributeName = "content"
     private var tilesDefinitionDelimiter = "."
@@ -128,7 +89,8 @@ class DynamicTilesViewProcessor extends Loggered {
              container:TilesContainer)
              {
 
-    val tilesRequest = createTilesRequest(ServletUtil.getApplicationContext(servletContext),request, response);
+    val tilesRequest = createTilesRequest(ServletUtil.getApplicationContext(servletContext),
+                                          request, response);
 	
     
                var beanName:String = bName.replaceAll("//","/")
@@ -137,35 +99,23 @@ class DynamicTilesViewProcessor extends Loggered {
                  beanName= "/"+beanName
                }
 
-               logger.debug("initial beanName "+beanName)
-
-               var pType = PrefixType.MAIN
-    
-             if (org.springframework.util.StringUtils.countOccurrencesOf(beanName, "/")>2) {
-
-              pType = PrefixType.lookupLevelPrefixType(beanName)
       
-                //contains3rdLevel(beanName)
-                if (pType!=null) {               
-          
-                 if (org.springframework.util.StringUtils.countOccurrencesOf(beanName, "/")>3) {
-                    logger.debug("found 3rd level")
-                    beanName = beanName.substring(0,org.apache.commons.lang.StringUtils.ordinalIndexOf(beanName, "/", 4) )                 
-                  }
-                }  else {
-                    beanName =beanName.substring(0,org.apache.commons.lang.StringUtils.ordinalIndexOf(beanName, "/", 3) )
-                }
-               }  
-
-     logger.debug("final beanName="+beanName)
-                   
+              while (!container.isValidDefinition(beanName, tilesRequest)) {
+                
+              val pos = beanName.lastIndexOf("/")
+              if (pos<1) 
+                 throw new TilesException("No defintion of found for "
+                            + "'" + beanName + "'")
+ 
+                beanName = beanName.substring(0,pos)
+              }
+    
     
         JstlUtils.exposeLocalizationContext(new RequestContext(request, servletContext));
 
-        val definitionName:String = startDynamicDefinition(beanName, url, tilesRequest, container,pType)
+        val definitionName:String = startDynamicDefinition(beanName, url, tilesRequest, container)
 
-        logger.debug("bName "+bName+" beanName "+beanName+" definition Name "+definitionName)
-
+      
         container.render(definitionName, tilesRequest)
 
         endDynamicDefinition(definitionName, beanName, tilesRequest, container)
@@ -181,11 +131,11 @@ class DynamicTilesViewProcessor extends Loggered {
     protected def startDynamicDefinition(beanName:String, 
                                          url:String,
                                          tilesRequest:Request,
-                                         container:TilesContainer,pType:PrefixType):String =
+                                         container:TilesContainer):String =
             {
         
       val definitionName:String = processTilesDefinitionName(beanName, container,
-                tilesRequest,pType)
+                tilesRequest)
         // create a temporary context and render using the incoming url as the
         // body attribute
         if (!definitionName.equals(beanName)) {
@@ -223,7 +173,7 @@ class DynamicTilesViewProcessor extends Loggered {
     @throws(classOf[TilesException])
     protected def processTilesDefinitionName(beanName:String,
              container:TilesContainer,
-             tilesRequest:Request,pType:PrefixType):String =
+             tilesRequest:Request):String =
              {
         // if definition already derived use it, otherwise 
         // check if url (bean name) is a template definition, then 
@@ -232,82 +182,25 @@ class DynamicTilesViewProcessor extends Loggered {
             derivedDefinitionName
         } else if (container.isValidDefinition(beanName, tilesRequest)) {
 
-            derivedDefinitionName = beanName
-
-            beanName
-        } else {
-
-            var result:String = null
-
-            val sb = new StringBuilder()
-            
-            val lastIndex = beanName.lastIndexOf("/")
-            
-            var rootDefinition = false
-
-            // if delim, tiles def will start with it
-            if (StringUtils.hasLength(tilesDefinitionDelimiter)) {
-                sb.append(tilesDefinitionDelimiter)
-            }
-
-            // if no '/', then at context root
-            if (lastIndex == -1) {
-                rootDefinition = true
-            } else {
-                var path = if (beanName != null ) { beanName.substring(0, lastIndex) } else { "" }
-
-                if (StringUtils.hasLength(tilesDefinitionDelimiter)) {
-                    path = StringUtils.replace(path, "/", tilesDefinitionDelimiter)
-                }
-
-                sb.append(path)
-
-                if (StringUtils.hasLength(tilesDefinitionDelimiter)) {
-                    sb.append(tilesDefinitionDelimiter);
-                }
-            }
-
-      sb.append(pType.getTemplateName)
-
-            if (container.isValidDefinition(sb.toString(), tilesRequest)) {
-                result = sb.toString()
-
-            } else if (!rootDefinition) {
-
-                var root:String = null
-
-                if (StringUtils.hasLength(tilesDefinitionDelimiter)) {
-                    root = tilesDefinitionDelimiter
-                }
-
-                root += pType.getTemplateName
-
-              logger.debug("_final "+root)
-
-                if (container.isValidDefinition(root, tilesRequest)) {
-                    result = root
-                } else {
+            derivedDefinitionName = beanName ;  beanName
+        }   else {
                     throw new TilesException("No defintion of found for "
-                            + "'" + root + "'"
-                            + " or '" + sb.toString() + "'");
+                            + "'" + beanName + "'")
                 }
             }
 
-            derivedDefinitionName = result
-
-            result
-        }
-    }
+            
+    
 
   
     protected def createTilesRequest(applicationContext:ApplicationContext,
-                                     request:HttpServletRequest, response:HttpServletResponse):Request = {
-		return new org.apache.tiles.request.servlet.ServletRequest(applicationContext, request, response) {
+                                     request:HttpServletRequest, response:HttpServletResponse):Request = 
+	 new org.apache.tiles.request.servlet.ServletRequest(applicationContext, request, response) {
 			override def getRequestLocale():Locale = {
 				return RequestContextUtils.getLocale(request)
 			}
 		};
-	}
+	
 
   
 }

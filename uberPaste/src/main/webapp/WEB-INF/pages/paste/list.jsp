@@ -329,12 +329,16 @@
 
             
             if (w>1140) w=1140;
-            createNewPasteDlg.initialize({"width":w * 0.9});
-        createNewPasteDlg.show({
-          
-          "model":"modal",
-          "contents":'<iframe src="'+createUrl+'" width="'+(w * 0.9 )+'" height="382" frameborder="0" style="padding:0;margin:0;" ></iframe>'
-            });
+            
+           // $('newPasteDialog').getElement('.modal-dialog').set('width',w);
+            
+            showModal($('newPasteDialog'),null,null,
+                                  null,
+                                  '<iframe src="'+createUrl+'" width="'+(w * 0.9 )+'" height="382" frameborder="0" style="padding:0;margin:0;" ></iframe>'
+                                        );
+            
+            //createNewPasteDlg.initialize({"width":w * 0.9});
+        
         });
 
 

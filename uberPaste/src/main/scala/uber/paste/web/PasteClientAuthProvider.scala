@@ -38,7 +38,6 @@ import org.springframework.security.core.userdetails.UserDetailsChecker
 import uber.paste.base.Loggered
 import uber.paste.manager.UserManager
 import uber.paste.model.{User,Role}
-import uber.paste.base.SessionStore
 
 class PasteClientAuthProvider extends AuthenticationProvider with InitializingBean with Loggered {
 

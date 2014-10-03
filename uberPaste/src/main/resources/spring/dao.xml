@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:aop="http://www.springframework.org/schema/aop"
+         xmlns:p="http://www.springframework.org/schema/p"
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:jee="http://www.springframework.org/schema/jee"
        xmlns:tx="http://www.springframework.org/schema/tx"
@@ -25,9 +26,6 @@
     </bean>
 
 
-    <bean  class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor" />
-    <bean class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor"/>
-
     <bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">  
       <property name="dataSourceProperties" >
         <props>
@@ -45,22 +43,48 @@
           <constructor-arg ref="hikariConfig" />  
     </bean>  
     
+    
     		
     <bean id="entityManagerFactory" 
-          class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"> 
-          <property name="dataSource" ref="dataSource" />
+          class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
+          p:dataSource-ref="dataSource" 
+          p:packagesToScan="uber.paste.model,uber.paste.plugin.model"
+          p:persistenceUnitName="pasteJPA"
+          p:persistenceProviderClass="org.hibernate.ejb.HibernatePersistence"
+          >     
+        
         <property name="jpaVendorAdapter">
-            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter" />
-
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter" >
+                <property name="databasePlatform" value="${hibernate.dialect}"/>
+                <property name="showSql" value="${database.show-sql}"/>
+               
+            </bean>
         </property>
-    <!--property name="packagesToScan" value="uber.paste.model" /-->
-
-
+        <property name="jpaPropertyMap">
+            <map>
+                <entry key="hibernate.search.default.indexBase" value="${paste.app.home}/index"/>
+                <!--entry key="hibernate.search.default.directory_provider"		
+                       value="org.hibernate.search.store.FSDirectoryProvider"/-->
+                <entry key="hibernate.search.lucene_version"		
+                       value="LUCENE_35"/>              
+                <entry key="hibernate.hbm2ddl.auto"		
+                       value="update"/>              
+                 <entry key="hibernate.query.substitutions"		
+                       value="true 'Y', false 'N'"/>
+                <entry key="hibernate.cache.use_second_level_cache"		
+                       value="true"/>              
+                          
+               
+                <!--entry key="hibernate.search.analyzer"		
+                       value="org.apache.lucene.morphology.russian.RussianAnalyzer"/-->
+            </map>		
+        </property>
     </bean>
 
-
-    <bean id="sessionFactory"
-            factory-bean="sessionFactoryHelper" factory-method="getSessionFactory" />
-
+    <bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor"/>
+    
+    <bean class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor"/>
+  
+    <bean class="org.springframework.orm.hibernate4.HibernateExceptionTranslator"/>
 
 </beans>

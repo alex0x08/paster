@@ -35,9 +35,8 @@ class MergedPropertyConfigurer extends PropertyPlaceholderConfigurer{
   }
 
 
-  def getProperty(key:String):String = {
-                 return propertiesMap.get(key).toString()
-  }
+  def getProperty(key:String) = propertiesMap.get(key).toString()
+  
 
 
 

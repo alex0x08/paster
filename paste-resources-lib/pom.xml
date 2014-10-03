@@ -86,6 +86,8 @@
             <id>all-minify</id>
             <phase>generate-resources</phase><!-- When omitted defaults to <phase>process-resources</phase> -->
             <configuration>
+                <closureLanguage>ECMASCRIPT5</closureLanguage>
+              <!--language_in>ECMASCRIPT5</language_in-->          
               <charset>UTF-8</charset>
               <webappSourceDir>${project.basedir}/src/main/resources</webappSourceDir>
               <webappTargetDir>${project.build.directory}/generated-resources/minified</webappTargetDir>
@@ -95,18 +97,17 @@
               <cssTargetDir>/all/css</cssTargetDir>
               <jsSourceFiles>
                   <jsSourceFile>behavior-ui.js</jsSourceFile>
-                  <jsSourceFile>mootools-more-1.4.0.1.js</jsSourceFile>
+                  <jsSourceFile>mootools-more-1.5.1.js</jsSourceFile>
                   <jsSourceFile>tinycon.min.js</jsSourceFile>
                   <jsSourceFile>growler.js</jsSourceFile>
                   <jsSourceFile>LazyPagination.js</jsSourceFile>
                   <jsSourceFile>ZeroClipboard.min.js</jsSourceFile>
-                  <jsSourceFile>simple-modal.js</jsSourceFile>
-              </jsSourceFiles>
+             </jsSourceFiles>
         
               <jsFinalFile>all-script.js</jsFinalFile>
               <jsEngine>CLOSURE</jsEngine>
               <cssSourceFiles>
-                  <cssSourceFile>behavior-ui-flatui.css</cssSourceFile>  
+                  <cssSourceFile>behavior-ui-bootstrap.css</cssSourceFile>  
                 <cssSourceFile>app.css</cssSourceFile>
                 <cssSourceFile>mnmlicons.css</cssSourceFile>
               </cssSourceFiles>
@@ -167,7 +168,6 @@
               <cssTargetDir>/paster-edit/css</cssTargetDir>
               <jsSourceFiles>
                   <jsSourceFile>word-count.js</jsSourceFile>
-                  <jsSourceFile>dv_tabs.js</jsSourceFile>
                   <jsSourceFile>base64.js</jsSourceFile>
                   <jsSourceFile>html2canvas.js</jsSourceFile>
                   <jsSourceFile>canvas2image.js</jsSourceFile>
@@ -175,7 +175,7 @@
                   <jsSourceFile>pixastic.core.js</jsSourceFile>
                   <jsSourceFile>crop.js</jsSourceFile>
                   <jsSourceFile>blurfast.js</jsSourceFile>
-                         <jsSourceFile>mootagify.js</jsSourceFile>
+                       
            
               </jsSourceFiles>
            

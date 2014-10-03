@@ -100,9 +100,8 @@ abstract class BaseDaoImpl[T <: java.io.Serializable,PK <:Long ](model:Class[T])
     }
   }
 
-  def get(id:PK):T = {
-    return em.find(model,id)
-  }
+  def get(id:PK):T = em.find(model,id)
+  
 
   def countAll():java.lang.Long = {
 
@@ -120,7 +119,8 @@ abstract class BaseDaoImpl[T <: java.io.Serializable,PK <:Long ](model:Class[T])
 
     val cr = new CriteriaSet
 
-    val query:Query = em.createQuery(cr.cr.orderBy(cr.cb.desc(cr.r.get("id")))).setMaxResults(BaseDaoImpl.MAX_RESULTS)
+    val query:Query = em.createQuery(cr.cr.orderBy(cr.cb.desc(cr.r.get("id"))))
+    .setMaxResults(BaseDaoImpl.MAX_RESULTS)
     return query.getResultList().asInstanceOf[java.util.List[T]]
   }
   

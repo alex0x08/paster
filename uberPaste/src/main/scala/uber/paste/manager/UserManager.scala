@@ -29,7 +29,7 @@ import org.springframework.security.core.userdetails.AuthenticationUserDetailsSe
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.web.authentication.rememberme.{RememberMeAuthenticationException, AbstractRememberMeServices}
-import uber.paste.base.{SessionStore, Loggered}
+import uber.paste.base.Loggered
 import javax.servlet.http.{Cookie, HttpServletResponse, HttpServletRequest}
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder
@@ -228,8 +228,7 @@ object UserManager extends Loggered{
     
       SecurityContextHolder.getContext().getAuthentication().getPrincipal() match {
       case u:User => {
-        SessionStore.instance.getUserForLogin(
-          (SecurityContextHolder.getContext().getAuthentication().getPrincipal()).asInstanceOf[User].getUsername())
+          SecurityContextHolder.getContext().getAuthentication().getPrincipal().asInstanceOf[User]
       }
       case _ => {
         /**
