@@ -106,14 +106,17 @@ class PasteController extends VersionController[Paste]   {
     if (obj.isBlank) {
       model.addAttribute("title",getResource("paste.new",locale))
     } else {
-      model.addAttribute("title",StringEscapeUtils.escapeHtml4(getResource("paste.edit.title",Array(obj.getId,obj.getName()),locale)))
+      model.addAttribute("title",StringEscapeUtils.escapeHtml4(
+          getResource("paste.edit.title",Array(obj.getId,obj.getName()),locale)))
       
       obj.getComments.addAll(
         commentManager.getCommentsForPaste(obj.getId,
-                                           if (rev>0) rev else model.asMap.get("lastRevision").asInstanceOf[Long] ))
+                                           if (rev>0) rev 
+                                              else 
+                                                model.asMap.get("lastRevision").asInstanceOf[Long] ))
     
       if (!model.containsAttribute("comment")) {
-        model.addAttribute("comment",getNewCommentInstance(obj,model))
+           model.addAttribute("comment",getNewCommentInstance(obj,model))
       }
      
     }
@@ -169,6 +172,7 @@ class PasteController extends VersionController[Paste]   {
 
   //@ModelAttribute("comment")
   def getNewCommentInstance(pp:Paste,model:Model):Comment = {
+    
     val p = new Comment
     
     p.setOwner(getCurrentUser)
@@ -375,8 +379,8 @@ class PasteController extends VersionController[Paste]   {
 
     
 
-      logger.debug("__found thumbnail "+b.getThumbImage())
-      logger.debug("__found comments "+b.getComments().size())
+      logger.debug("__found thumbnail {0}",b.getThumbImage())
+      logger.debug("__found comments {0}",b.getComments().size())
 
     
     if (b.getThumbImage()!=null) {

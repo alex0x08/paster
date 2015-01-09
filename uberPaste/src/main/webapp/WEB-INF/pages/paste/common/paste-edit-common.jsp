@@ -16,7 +16,8 @@
 
 <div class="row">
     <div class="col-md-12"   >
-        <form:form cssClass="form" id="editForm" action="${url}" role="form"
+        
+        <form:form cssClass="form-horizontal" id="editForm" action="${url}" role="form"
                    modelAttribute="model"
                    method="POST" >
 
@@ -30,34 +31,33 @@
 
 
             <form:input id="thumbImg" path="thumbImage" cssStyle="display:none;"  />
-
             <form:input id="wordsCount" path="wordsCount" cssStyle="display:none;"  />
             <form:input id="symbolsCount" path="symbolsCount" cssStyle="display:none;"  />
 
-
-            <ul class="nav nav-tabs nav-append-content" data-behavior="BS.Tabs">
-                <li><a>
-                        <c:choose>
-                            <c:when test="${model.blank}">
-                                <fmt:message key="paste.new"/>
-                            </c:when>
-                            <c:otherwise>
-                                <span >#<c:out value="${model.id}"/></span>
-                            </c:otherwise>
-                        </c:choose>
-
-                    </a></li>
+            <div class="form-group">
+          
+                  <div class="col-md-8 col-xs-10">
+         
+                   <ul class="nav nav-tabs nav-append-content" data-behavior="BS.Tabs">
+                       <li>
+                           <a>
+                               <c:choose>
+                                   <c:when test="${model.blank}">
+                                       <fmt:message key="paste.new"/>
+                                   </c:when>
+                                   <c:otherwise>
+                                       <span >#<c:out value="${model.id}"/></span>
+                                   </c:otherwise>
+                               </c:choose>
+                           </a>
+                       </li>
                 <li><a><fmt:message key="paste.editor.title"/></a></li>
 
             </ul>
             <div class="tab-content">
                 <div class="tab-pane">
-
-                    <div class="form-group" style="margin-bottom:0;">
-                        <div class="row" style="margin-bottom:0;"  >
-
-                            <div class="col-md-6">
-
+             
+                    <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8">
 
                                 <c:choose>
                                     <c:when test="${model.blank}">
@@ -70,130 +70,111 @@
 
                                 <fmt:message var="pasteTitle" key="paste.title"/>
 
-                                <form:label path="name"><c:out value="${pasteTitle}"/>
+                                <form:label path="name">
+                                    <c:out value="${pasteTitle}"/>
                                     <a id="cleanTitleBtn" onclick="cleanTitle();" href="javascript:void(0);" title="<fmt:message key='button.clear'/>">
                                         <span class="i">d</span>
                                     </a> </form:label>
                                 <fmt:message key="paste.edit.title.placeholder" var="titlePlaceHolder"/>
-                                <form:input  cssClass="form-control" cssErrorClass="error" path="name" name="title"
+                                <form:input  cssClass="form-control" 
+                                             cssErrorClass="error" path="name" name="title"
                                              id="pname"  maxlength="255" title="${pasteTitle}" placeholder="${titlePlaceHolder}"  />
                                 <form:errors path="name" cssClass="error" />
 
 
                             </div>
 
+                            <div class="col-xs-5 col-sm-6 col-md-2 col-lg-2 " >
 
 
-                            <div class="col-md-2 " >
-
-
-                                <form:label path="priority">
+                                <form:label cssClass="control-label" path="priority">
                                     <fmt:message key="paste.priority"/>
+                                    <span id="priorPreview" class="i priority_normal" >/</span>
                                 </form:label>
-                                <span id="priorPreview" class="i priority_normal" >/</span>
-
-                                <form:select cssStyle="margin-bottom:0 !important;" cssClass="select-block" data-behavior="FlatUI.Select"   path="priority" multiple="false" id="pprior">
+                                
+                                
+                                <form:select 
+                                             path="priority" multiple="false" id="pprior">
                                     <c:forEach items="${availablePriorities}" var="prior">
                                         <form:option value="${prior.code}" cssClass="${prior.cssClass}" x-css-class-name="${prior.cssClass}">
                                             <fmt:message key="${prior.name}"/>
                                         </form:option>
                                     </c:forEach>
-                                </form:select>
-
-                                <form:errors path="priority" cssClass="error" />
+                                </form:select>                              
                             </div>
+          
+                        
 
+                            <div class="col-md-4 col-xs-10">
+                                <form:label
+                                            cssClass="control-label" path="tagsAsString">
+                                    <span  class="i" >T</span><fmt:message key="paste.tags"/>
+                                </form:label>
 
-                            <div class="col-md-3">
-
-                                <c:choose>
-                                    <c:when test="${empty currentUser and !allowAnonymousCommentsCreate}">
-
-                                        <fmt:message key="auth.login-to-save-changes"/>
-
-                                    </c:when>
-                                    <c:otherwise>
-
-                                        <button id="addCommentBtn" class="p-btn-save submitBtn" name="submit_btn" type="submit">
-                                            <span class="i">S</span>
-                                            <span id="btnCaption"><c:out value='${submit_button_text}'/></span>
-                                            <i id="btnIcon" style="display:none;" class="fa fa-spinner"></i>
-                                        </button>
-
-
-                                    </c:otherwise>
-                                </c:choose>
-
-
-
-                                <a href="<c:out value="${urlCancel}"/>"><i  class="fa fa-ban"></i>
-                                    <fmt:message key='button.cancel'/></a>
-
-                                <c:if test="${!model.blank}">
-                                    <tiles:insertDefinition name="/common/deleteLink" >
-                                        <tiles:putAttribute name="model" value="${model}"/>
-                                        <tiles:putAttribute name="modelName" value="paste"/>
-                                        <tiles:putAttribute name="currentUser" value="${currentUser}"/>
-                                    </tiles:insertDefinition>
-
-                                </c:if>
-
-
-
-
-                            </div>
-
-                        </div>
-                    </div>
-
-                    <div class="form-group" >
-                        <div class="row" >
-
-                            <div class="col-md-4">
-                                <form:label path="tagsAsString"><span  class="i" >T</span><fmt:message key="paste.tags"/></form:label>
-
-                                <form:input cssClass="form-control" id="ptags" path="tagsAsString" maxlength="155" 
+                                <form:input cssClass="form-control" 
+                                            id="ptags" path="tagsAsString" maxlength="155" 
                                             />
                             </div>
 
-                            <div class="col-md-1" >
-                                <form:label path="sticked" ><span class="i" >]</span></form:label>            
-                                <fmt:message var="titleStick" key='paste.stick'/>            
-                                <form:checkbox path="sticked" style="display:inline;" title="${titleStick}"/>
-                            </div>
+                                <div class="col-md-4 col-xs-6" >
 
-                            <div class="col-md-3" >
-                                <form:label path="normalized" ><fmt:message key="paste.normalize"/></form:label>
+                                    <fmt:message var="titleStick" key='paste.stick'/> 
+                                    <form:label  cssClass="control-label" path="sticked" title="${titleStick}" >
+                                        <span class="i" >]</span> <c:out value="${titleStick}"/>
+                                    </form:label>     
+
+                                    <div class="checkbox">
+
+                                        <form:checkbox path="sticked"  
+                                                       title="${titleStick}"/>
+                                    </div>
+
+                                </div>
+
+                            <div class="col-md-3 col-xs-6" >
                                 <fmt:message key='paste.normalize' var="labelNormalize"/>
-                                <form:checkbox id="normalized" path="normalized" style="display:inline;" title="${labelNormalize}"/>
+                              
+                                <form:label path="normalized" cssClass="control-label" title="${labelNormalize}" >
+                                  ${labelNormalize}
+                                </form:label>
+                                
+                                <div class="checkbox">
+                                <form:checkbox id="normalized" path="normalized"  title="${labelNormalize}"/>
+                                    
+                                </div>
+                                
                             </div>
 
-                        </div>
-
-                    </div>
-
+              
 
                 </div>
                 <div class="tab-pane">
-                    <div class="row">
-                        <div class="form-group col-md-4">
-                            <form:label path="codeType"><fmt:message key="paste.syntax.title"/></form:label>
-                            <form:select cssClass="select-block mbl" data-behavior="FlatUI.Select" path="codeType" multiple="false" id="ptype">                    
+                    
+                        <div class="col-xs-5 col-sm-6 col-md-4 col-lg-2">
+                            
+                            <form:label cssClass="control-label" path="codeType">
+                                <fmt:message key="paste.syntax.title"/>
+                            </form:label>
+                            
+                            <form:select 
+                                         path="codeType" 
+                                         multiple="false" id="ptype">                    
                                 <c:forEach items="${availableCodeTypes}" var="codeType">
                                     <form:option value="${codeType.code}" editCode="${codeType.editType}" >
                                         <fmt:message key="${codeType.name}"/>
                                     </form:option>
                                 </c:forEach>
                             </form:select> 
-                            <form:errors path="codeType" cssClass="error" />
-
+                           
                         </div>
 
 
-                        <div class="form-group col-md-4">
+                        <div class="col-xs-5 col-sm-6 col-md-2 col-lg-2">
 
-                            <label for="theme"><fmt:message key="paste.editor.theme.title"/></label>
-                            <select class="select-block mbl" data-behavior="FlatUI.Select" id="theme" size="1">
+                            <label class="control-label" for="theme">
+                                <fmt:message key="paste.editor.theme.title"/>
+                            </label>
+                            <select  id="theme" size="1" >
                                 <optgroup label="Bright">
                                     <option value="ace/theme/chrome">Chrome</option>
                                     <option value="ace/theme/clouds">Clouds</option>
@@ -231,18 +212,58 @@
 
 
                         </div>
-                    </div>
-
-
-
+                    
                 </div>
 
             </div>
 
+                
+            </div>
+                         <div class="col-md-3 col-sm-2 hidden-xs">
+                
+                                      <c:choose>
+                                    <c:when test="${empty currentUser and !allowAnonymousCommentsCreate}">
+
+                                        <fmt:message key="auth.login-to-save-changes"/>
+
+                                    </c:when>
+                                    <c:otherwise>
+
+                                        <button id="addCommentBtn" class="btn btn-primary submitBtn" name="submit_btn" type="submit">
+                                            <span class="i">S</span>
+                                            <span id="btnCaption"><c:out value='${submit_button_text}'/></span>
+                                            <i id="btnIcon" style="display:none;" class="fa fa-spinner"></i>
+                                        </button>
 
 
-            <div  class="row">
-                <div class="col-md-14">
+                                    </c:otherwise>
+                                </c:choose>
+
+
+
+                             <a class="btn btn-default btn-xs" href="<c:out value="${urlCancel}"/>"><i  class="fa fa-ban"></i>
+                                    <fmt:message key='button.cancel'/></a>
+
+                                <c:if test="${!model.blank}">
+                                    <tiles:insertDefinition name="/common/deleteLink" >
+                                        <tiles:putAttribute name="model" value="${model}"/>
+                                        <tiles:putAttribute name="modelName" value="paste"/>
+                                        <tiles:putAttribute name="currentUser" value="${currentUser}"/>
+                                    </tiles:insertDefinition>
+
+                                </c:if>
+                                    
+                                    
+                               
+
+
+                            </div>       
+                
+            </div>
+                   
+
+            <div  class="form-group">
+                <div class="col-md-10">
 
                     <form:label path="text"><fmt:message key="paste.text"/></form:label>
                     <form:textarea path="text" cssErrorClass="error" cssClass="notice" cssStyle="display:none;"
@@ -267,7 +288,7 @@
 
                                     <button
                                         name="submit_btn"
-                                        class="p-btn-save submitBtn" type="submit">
+                                        class="btn btn-primary submitBtn" type="submit">
                                         <i id="btnIcon" style="display:none;" class="fa fa-spinner"></i>
                                         <span class="i">S</span>
                                         <span id="btnCaption"><c:out value='${submit_button_text}'/></span>
@@ -276,7 +297,7 @@
 
                                 </c:otherwise>
                             </c:choose>
-                            <a href="<c:out value="${urlCancel}"/>">
+                            <a class="btn btn-default btn-xs" href="<c:out value="${urlCancel}"/>">
                                 <i  class="fa fa-ban"></i>
                                 <fmt:message key='button.cancel'/></a>
 
@@ -319,10 +340,6 @@
     var max_length = 100;
 
 
-
-
-   
-
     window.addEvent('paste', function(e) {
         if (e.event.clipboardData) {
 
@@ -344,13 +361,6 @@
     });
 
     window.addEvent('domready', function() {
-
-
-       
-
-
-
-
 
 
         var counter = new WordCount('wordCount', {

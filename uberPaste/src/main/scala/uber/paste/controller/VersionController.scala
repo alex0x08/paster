@@ -30,7 +30,7 @@ abstract class VersionController[T <: Struct ] extends GenericEditController[T] 
 
     super.fillEditModel(obj,rev, model,locale)
 
-    logger.debug("__putModel obj id=" + obj.getId()+" rev="+rev)
+    logger.debug("__putModel obj id={0} rev={1}",obj.getId(),rev)
 
     if (!obj.isBlank()) {
         val revs = manager.getRevisions(obj.getId())
@@ -66,10 +66,8 @@ abstract class VersionController[T <: Struct ] extends GenericEditController[T] 
     }
 
     model.addAttribute(GenericController.MODEL_KEY, omodel)
-
     
     fillEditModel(omodel, revision,model,locale)
-
     
     return viewPage
   }

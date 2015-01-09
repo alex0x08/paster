@@ -112,7 +112,8 @@ class SettingsController extends AbstractController{
             
             ImageIO.write(if (scaleClientImg) {Scalr.resize(img, Mode.AUTOMATIC, 640, 640)} else {img}                          
                           , "JPEG", baar)
-            current.setClientImage("data:image/jpeg;base64,"+Base64.encodeBase64String(baar.toByteArray))
+            current.setClientImage("data:image/jpeg;base64,"+
+                                   Base64.encodeBase64String(baar.toByteArray))
         }
      
  
@@ -121,7 +122,8 @@ class SettingsController extends AbstractController{
             val baar = new ByteArrayOutputStream()
             
             ImageIO.write(Scalr.resize(img, Mode.FIT_EXACT, 32, 32), "JPEG", baar)
-            current.setIconImage("data:image/jpeg;base64,"+Base64.encodeBase64String(baar.toByteArray))
+            current.setIconImage("data:image/jpeg;base64,"+
+                                 Base64.encodeBase64String(baar.toByteArray))
         }
         
       SystemInfo.instance.setProject(manager.save(current))

@@ -3,12 +3,14 @@
 <c:url var="url" value='/main/paste/list/search' />
 
 
-<form:form cssClass="navbar-form navbar-left" cssStyle="margin:0;" role="search" action="${url}" id="searchForm" 
+    <form:form cssClass="navbar-form navbar-left" 
+               role="search" action="${url}" id="searchForm" 
            modelAttribute="query"
            method="POST" >
 <div class="form-group">
         <fmt:message key='paste.search.placeholder' var="searchPlaceHolder"/>
-        <form:input path="query" name="query" id="pquery" cssClass="form-control" placeholder="${searchPlaceHolder}" 
+        <form:input path="query" name="query" id="pquery" 
+                    cssClass="form-control" placeholder="${searchPlaceHolder}" 
                       autocomplete="true"  />
      
 </div>      
@@ -20,6 +22,8 @@
         <form:errors path="query" cssClass="error" element="div"/>
    
 </form:form>
+
+ 
 
 <%--
 <div class="row">

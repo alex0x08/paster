@@ -1,12 +1,14 @@
 <%@ include file="/WEB-INF/pages/common/taglibs.jsp"%>
 
 
-    <li class="dropdown">
-        <a href="#" role="button" class="dropdown-toggle" data-toggle="dropdown" >
+    <li class="dropdown" data-behavior="BS.Dropdown">
+        <a href="#" id="userProfileSwitch" role="button" class="dropdown-toggle" data-toggle="dropdown" >
 
             <c:out value="${currentUser.name}"/>
-            <span class="caret" style="padding-bottom:0;padding-top:0.5em;margin:0;"></span></a>
-        <ul class="dropdown-menu" role="menu">
+            <b class="caret"></b>
+        </a>
+             <span class="dropdown-arrow"></span>
+        <ul class="dropdown-menu" role="menu"  aria-labelledby="userProfileSwitch">
             <li>
                 Profile
             </li>

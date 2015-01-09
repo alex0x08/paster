@@ -61,6 +61,7 @@ class ResourceController extends AbstractController{
     
     
     val fimg = resourcePathHelper.getResource(ptype,path)
+    
     if (!fimg.exists || !fimg.isFile) {
       writeError(response, "file not found",404)
       return null
@@ -79,17 +80,14 @@ class ResourceController extends AbstractController{
     return new FileSystemResource(fimg)
   }
   
-  @throws(classOf[IOException])
+@throws(classOf[IOException])
 def writeError(response:HttpServletResponse, msg:String, status:Int)
 {
   response.setContentType("text/html;charset=UTF-8");
   response.setStatus(status);
 
     val out = response.getWriter()
-  try  {
-            
-    
-            
+  
     out.println(new StringBuilder()
                 .append("<html><head><title>ERROR: ")
                 .append(msg)
@@ -98,12 +96,8 @@ def writeError(response:HttpServletResponse, msg:String, status:Int)
                 .append("</h1></body></html>")
                 .toString)
     out.flush()
-  } finally {
-          
-    try { 
-        if (out!=null)  out.close
-    }
+  
   }
-}
+
   
 }

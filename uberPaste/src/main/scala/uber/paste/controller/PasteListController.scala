@@ -35,9 +35,7 @@ object PasteSearchResult extends KeyValueObj[SearchResult] {
   val PASTE = new SearchResult("paste","result.paste.name","pasteItems")
   val COMMENT = new SearchResult("comment","result.comment.name","commentItems")
 
-  add(PASTE)
-  add(COMMENT)
-
+  add(PASTE); add(COMMENT)
 }
 
 
@@ -66,14 +64,15 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
     def isSplit():Boolean = {
 
       val d = Days.daysBetween(new DateTime(prevDate), new DateTime(curDate))
-      //System.out.println("_split dys="+d.getDays+" prev="+prevDate+" cur="+curDate)
+  
       return if ( scala.math.abs(d.getDays())>14 )  {
-        title=  PasteListController.this.getResource("paste.list.slider.title",Array(curDate,prevDate,total),locale)
+        title=  PasteListController.this.getResource("paste.list.slider.title",
+                                                     Array(curDate,prevDate,total),locale)
         prevDate = curDate
         total =0
 
         true
-      } else {
+        } else {
         false
       }
 
@@ -144,7 +143,8 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
   }
 
   
-  @RequestMapping(value = Array("/integrated/list/{integrationCode:[a-z0-9_]+}/{source:[a-zA-Z0-9]+}/{page:[0-9]+}"), method = Array(RequestMethod.GET))
+  @RequestMapping(value = Array("/integrated/list/{integrationCode:[a-z0-9_]+}/{source:[a-zA-Z0-9]+}/{page:[0-9]+}"), 
+                  method = Array(RequestMethod.GET))
   @ModelAttribute(GenericController.NODE_LIST_MODEL)
   def listByPathSourceIntegrated(@PathVariable("page") page:java.lang.Integer,
                                  @PathVariable("source") source:String,
@@ -155,7 +155,8 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
   
   
   
-  @RequestMapping(value = Array("/integrated/list/{integrationCode:[a-z0-9_]+}/{source:[a-zA-Z0-9]+}/limit/{pageSize:[0-9]+}"), method = Array(RequestMethod.GET))
+  @RequestMapping(value = Array("/integrated/list/{integrationCode:[a-z0-9_]+}/{source:[a-zA-Z0-9]+}/limit/{pageSize:[0-9]+}"), 
+                  method = Array(RequestMethod.GET))
   @ModelAttribute(GenericController.NODE_LIST_MODEL)
   def listByPathSizeSourceIntegrated(@PathVariable("pageSize") pageSize:java.lang.Integer,
                            @PathVariable("source") source:String,
@@ -355,7 +356,7 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
                      sortAsc:java.lang.Boolean = false,
                      sourceType:String,integrationCode:String):java.util.List[Paste] = {
 
-    logger.debug("_paste listImpl, pageSize "+pageSize)
+    logger.debug("_paste listImpl, pageSize {0}",pageSize)
 
     fillListModel(model,locale)
 
@@ -370,12 +371,12 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
       PasteSource.valueOf(sourceType.toUpperCase)
     } else {null}
 
-    //System.out.println("ps="+ps+" sourceType="+sourceType)
-   
     return processPageListHolder(request,locale,model,page,NPpage,pageSize,sortColumn,sortAsc,
-      if (ps==null) {pasterListCallback} else {new PasteListCallback(ps,sortAsc,integrationCode)},
-      GenericController.NODE_LIST_MODEL_PAGE)
-      
+      if (ps==null) {
+            pasterListCallback
+                    } else {
+              new PasteListCallback(ps,sortAsc,integrationCode)
+        }, GenericController.NODE_LIST_MODEL_PAGE)      
   }
 
   @RequestMapping(value = Array("/own/list"))

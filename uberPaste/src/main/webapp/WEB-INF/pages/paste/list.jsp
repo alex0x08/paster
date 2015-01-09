@@ -5,9 +5,10 @@
   
 
 <div class="row">
-    <div class="col-md-10">
+    <div class="col-md-8">
    
-             <a  href="<c:url value='/main/paste/list/${sourceType}'/>"><span class="i" style="font-size: 1.5em;">P</span></a>
+             <a  href="<c:url value='/main/paste/list/${sourceType}'/>">
+                 <span class="i" style="font-size: 1.5em;">P</span></a>
     
              <sec:authorize ifAnyGranted="ROLE_ADMIN">
              
@@ -28,7 +29,7 @@
              </sec:authorize>
       
     </div>
-    <div class="col-md-2">
+    <div class="col-md-2 hidden-sm hidden-xs">
        
         <a class="img-map img-xml" href="<c:url value="/main/paste/list/body.xml"/>" title="xml" alt="xml">
         </a> |
@@ -70,11 +71,9 @@
         
         
 <div class="row">
-    <div class="col-md-10" >
+    <div id="pastas" class="col-md-8 col-lg-10 col-sm-10" >
    
-        
-    <div id="pastas">
-        
+     
     <c:forEach var="paste" items="${pageItems.pageList}" varStatus="status">
 
         <c:choose>
@@ -87,7 +86,7 @@
 
         <div class="row">
 
-            <div class="col-md-12">
+            <div class="col-sm-12 col-xs-12 col-md-10">
 
                 <c:if test="${paste.sticked}">
                     <span class="i" title="Paste sticked">]</span>
@@ -108,7 +107,7 @@
                    
                        <c:choose>
                            <c:when test="${not empty paste.thumbImage}">
-                               <div class="col-md-3" >
+                               <div class="col-md-4 col-lg-3 hidden-xs col-sm-5" >
 
                                    <c:url value='/main/resources/${appVersion}/t/${paste.lastModified.time}/${paste.thumbImage}.jpg' var="thumbUrl">
                                    </c:url>
@@ -116,7 +115,6 @@
                                    <a class="pastePreviewLink" href="<c:url value="/${paste.id}"></c:url>" pasteId="${paste.id}" 
                                       title="Click to view paste vol. ${paste.id}">
                                        <img src="${thumbUrl}" width="250" height="150" class="p-comment"  />
-
                                    </a>
                                    
                                </div>
@@ -128,9 +126,9 @@
                        </c:choose>
                     
                     
-                <div class="col-md-${currentRowSize}" >
+                <div class="col-md-${currentRowSize} col-sm-6" >
                     <div class="row">
-                        <div class="pasteTitle col-md-12">
+                        <div class="pasteTitle col-lg-10 col-md-12 col-xs-12">
                             <div class="pasteTitle" style="padding: 1em;">
                                 <a class="listLinkLine" href="<c:url value="/${paste.id}"></c:url>" 
                                    pasteId="${paste.id}" title="Click to view paste vol. ${paste.id}">
@@ -140,7 +138,7 @@
                         </div>
 
                     <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-md-10">
                             <tiles:insertDefinition name="/common/tags" >
                                 <tiles:putAttribute name="model" value="${paste}"/>
                                 <tiles:putAttribute name="modelName" value="paste"/>
@@ -214,9 +212,7 @@
         </c:if>
 
     </c:forEach>
-
-          </div>
-         
+ 
 
 <c:if test="${pageItems.nrOfElements == 0}">
     <center>
@@ -225,7 +221,7 @@
 </c:if>
 
     </div>    
-    <div class="col-md-2">
+    <div class="col-md-2 col-sm-2 hidden-xs col-lg-2">
         <tiles:insertDefinition name="/common/pageList" >
             <tiles:putAttribute name="listMode" value="${listMode}"/>
             <tiles:putAttribute name="pageItems" value="${pageItems}"/>
@@ -317,29 +313,6 @@
         
     window.addEvent('domready', function() {
 
-
-        createNewPasteDlg = new SimpleModal({
-            "hideHeader":true, "closeButton":false,"hideFooter":true});
-      
-
-          $("createNewBtn").addEvent("click", function(e){
-          e.stop();
-    var w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0),
-    h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
-
-            
-            if (w>1140) w=1140;
-            
-           // $('newPasteDialog').getElement('.modal-dialog').set('width',w);
-            
-            showModal($('newPasteDialog'),null,null,
-                                  null,
-                                  '<iframe src="'+createUrl+'" width="'+(w * 0.9 )+'" height="382" frameborder="0" style="padding:0;margin:0;" ></iframe>'
-                                        );
-            
-            //createNewPasteDlg.initialize({"width":w * 0.9});
-        
-        });
 
 
         parseSearchResults($('pastas'));

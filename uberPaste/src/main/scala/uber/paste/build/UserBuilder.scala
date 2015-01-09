@@ -19,7 +19,6 @@ package uber.paste.build
 import uber.paste.model.User
 import uber.paste.model.Role
 import uber.paste.base.Loggered
-import com.dyuproject.openid.OpenIdUser
 
 object UserBuilder extends Loggered{
   
@@ -45,60 +44,5 @@ class UserBuilder(model:User) extends NamedBuilder[User](model) {
         return this
     }
 
-  def fillFromOpenIdUser(user:OpenIdUser):UserBuilder= {
-
-    get.setOpenID(user.getIdentity())
-
-    val axschema = user.getAttribute("info").asInstanceOf[java.util.Map[String, String]]
-
-    if (axschema == null || axschema.isEmpty) {
-      throw new SecurityException("__axschema:  is empty. This is a bug!")
-    }
-
-    addUsername("openid_" + user.getIdentity())
-
-    if (axschema.containsKey("fullname")) {
-      val full:String = axschema.get("fullname")
-      get.setName(full);
-    }
-
-    if (axschema.containsKey("firstname")) {
-      get.setName(axschema.get("firstname"))
-    }
-
-    if (axschema.containsKey("lastname")) {
-      get.setName(get().getName+" "+axschema.get("lastname"))
-    }
-
-    if (axschema.containsKey("email")) {
-      val mail = axschema.get("email")
-      get.setUsername(mail)
-      if (get.getName()==null) {
-        get.setName(mail)
-      }
-    }
-
-    get().setUsername(get.getUsername())
-
-    if (logger.isDebugEnabled()) {
-      logger.debug("user login="+get.getUsername()+", name={"+get.getName()+"}")
-    }
-
-    if (get.getUsername().contains("yandex")) {
-
-      val id = get.getUsername().substring(get.getUsername().lastIndexOf("/"))
-      logger.debug("yandex id="+id)
-
-      var p = get.getUsername().substring(0,get.getUsername().lastIndexOf("/"))
-      p = p.substring(p.lastIndexOf("/")+1)
-
-      logger.debug("yandex username="+p)
-      get.setName(p)
-    }
-
-    addPassword(System.currentTimeMillis() + "_openid");
-    addRole(Role.ROLE_USER);
-    return this;
-  }
-
+  
 }

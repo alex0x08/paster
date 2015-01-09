@@ -53,6 +53,7 @@ abstract class Struct extends DBObject with SearchObject with  java.io.Serializa
   @NotAudited
   private var lastModified:java.util.Date = null
 
+  
   @PreUpdate
   @PrePersist
   def updateTimeStamps() {
@@ -62,15 +63,12 @@ abstract class Struct extends DBObject with SearchObject with  java.io.Serializa
   
   def getLastModified():Date =  lastModified
   
-
   def setLastModified(from:Date) = { lastModified = from }
     
   
-  
   def terms():List[String] = Struct.terms
   
-  
-  
+    
   def loadFull() {}
   
 

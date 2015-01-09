@@ -75,12 +75,15 @@
 </div>
 
 <%-- processing page list --%>
-<div class="paging" style="margin: auto; text-align: center; background-color: #eeeeee; " >
+
+<c:if test="${pageItems.pageCount > 1}">
+
+    <div class="paging" style="margin: auto; text-align: center; background-color: #eeeeee; " >
 
     <c:choose>
         <%-- for search results --%>
         <c:when test="${listMode eq 'search' }">
-
+           
             <c:if test="${!pageItems.firstPage}">
                 <a href="<c:url value="/main/paste/list/search/${result}/prev"/>">&#8592;</a>
             </c:if>
@@ -108,9 +111,7 @@
         <c:when test="${listMode eq 'list'}">
             <%-- for list --%>
 
-
-            
-            <c:if test="${pageItems.pageCount > 1}">
+             
                 <c:forEach begin="1" end="${pageItems.pageCount}" step="1" var="pnumber">
                     <c:choose>
                         <c:when test="${pnumber==pageItems.page+1}">
@@ -125,9 +126,8 @@
                     &nbsp;
                 </c:forEach>
 
-            </c:if>
-
-                    <br/>
+          
+            <br/>
              <c:if test="${!pageItems.firstPage}">
                 <a href="<c:url value="/main/paste/list/${sourceType}/prev"/>">&#8592;</a>
             </c:if>           
@@ -143,5 +143,10 @@
 
 
 </div>
+
+
+    
+    
+</c:if>
 
 

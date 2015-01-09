@@ -16,7 +16,9 @@
 
 package uber.paste.controller
 
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
+import javax.servlet.http.HttpServletResponse
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 
@@ -30,6 +32,23 @@ class IndexController extends AbstractController{
     "redirect:/main/paste/list"
   }
 
+  @RequestMapping(Array("/error/{errorCode:[0-9_]+}"))
+  def error(model:Model,
+            response:HttpServletResponse,
+            @PathVariable("errorCode") errorCode:Int):String = {
+  
+    errorCode match {
+          case 403 |404 |500  => {
+              response.setStatus(errorCode)
+              return "/error/"+errorCode
+          }
+         case _ => {
+             return "/error/500"
+         }
+    }
+   
+  }
+  
   
   @RequestMapping(Array("/login"))
   def login(model:Model):String = {

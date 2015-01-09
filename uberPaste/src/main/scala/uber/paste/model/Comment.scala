@@ -53,6 +53,8 @@ class Comment extends Struct  with java.io.Serializable{
 //  private var paste:Paste = null
 
 
+  
+  
   def setPasteId(id:java.lang.Long) {pasteId=id}
   def getPasteId() = pasteId
   
@@ -97,7 +99,7 @@ class Comment extends Struct  with java.io.Serializable{
   }*/
 
   override def loadFull() {
-    System.out.println("_comment loadFull "+owner)
+    
     if (owner!=null)
       {
         getOwner.loadFull

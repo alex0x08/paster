@@ -4,7 +4,8 @@
                removeComments="true" compressJavaScript="true" compressCss="true" yuiJsDisableOptimizations="false">
     <html lang="en">
         <head>
-            <meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
+            <meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, 
+                  user-scalable=yes" />
             <link href="<c:url value='/main/assets/${appVersion}/paster/less/app.css'/>" rel="stylesheet" type="text/css">
             <c:choose>
                 <c:when test="${not empty systemInfo.project.clientImage}">
@@ -35,31 +36,89 @@
             <tiles:insertAttribute name="head" />
         </head>
         <body>
-
-            <header class="navbar" role="banner" >
+            <nav class="navbar" style="margin-bottom:0;"  >
                 <div class="container-fluid">
                     <div class="navbar-header">
-                        <button class="navbar-toggle" type="button" data-trigger="toggleClass"
+                        <button class="navbar-toggle collapsed" 
+                                type="button" data-toggle="collapse" 
+                                data-target="#bs-js-navbar-collapse"
+                                data-trigger="toggleClass"
                                 data-toggleclass-options="
                                 'target': '!.navbar .navbar-collapse',
-                                'class': 'in'
-                                ">
-                            <span class="sr-only">Toggle navigation</span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
+                                'class': 'in' "
+                                >
+                            <span class="visible-xs">Toggle navigation
+                            <i class="fa fa-bars"></i>
+                           </span>
+                           
                         </button>
+                        <a class="navbar-brand" href="#" style="padding-top:15px;padding-right: 0; margin-right: 0;">
+                            <span class="i" style="font-size:3em;">/</span>
+                        </a>
+                        <span class="visible-xs navbar-text" style="font-size:1.5em;margin-top:15px;">
+                                Paster
+                            </span>
 
-                        <ul class="nav navbar-nav" data-behavior="BS.Dropdown">
-                            <li class="dropdown">
-                                <a href="#" role="button" class="dropdown-toggle" data-toggle="dropdown" style="padding-bottom:0;padding-top:0.5em;margin:0;">
+                    </div>
 
-                                    <span class="i" style="font-size: 3em;">/</span>
+                    <div id="bs-js-navbar-collapse" class="collapse navbar-collapse">
 
-                                    <span class="caret" style="padding-bottom:0;padding-top:0.5em;margin:0;"></span></a>
-                                <ul class="dropdown-menu" role="menu">
+
+                        <sec:authorize ifAnyGranted="ROLE_ADMIN">
+                            
+                             <ul class="nav navbar-nav " >
+                            <li class="dropdown" data-behavior="BS.Dropdown">
+                                <a href="#" 
+                                   role="button" class="dropdown-toggle" 
+                                   data-toggle="dropdown" 
+                                   aria-expanded="false" 
+                                   >
+                                    Admin
+                                    <span class="caret"></span>
+                                </a>
+                               
+
+                                <ul class="dropdown-menu" role="menu" 
+                                   >
                                     <li>
-                                        <a id="createNewBtn" class="mainLinkLine" href="<c:url value="/main/paste/new"></c:url>" title="<fmt:message key='paste.create.new'/>">
+                                        <a href="<c:url value='/main/user/list'/>">
+                <span class="i">x</span>
+                <fmt:message key='user.list.title'/></a>
+                                        
+                                     
+                                    </li>
+                                    <li>
+                                        
+                                         <a href="<c:url value='/main/admin/settings/edit'/>">
+                <span class="i">B</span>
+                <fmt:message key='settings.edit.title'/></a>
+
+                                    </li>
+
+                                </ul>
+                            </li>
+                        </ul>
+                        
+                            
+                        </sec:authorize>
+                        
+                        
+                             <ul class="nav navbar-nav " >
+                            <li class="dropdown" data-behavior="BS.Dropdown">
+                                <a href="#" 
+                                   role="button" class="dropdown-toggle" 
+                                   data-toggle="dropdown" 
+                                   aria-expanded="false" 
+                                   >
+                                    New
+                                    <span class="caret"></span>
+                                </a>
+                               
+
+                                <ul class="dropdown-menu" role="menu" 
+                                    id="pasteNewMenu">
+                                    <li>
+                                        <a role="menuitem" id="createNewBtn" class="mainLinkLine" href="<c:url value="/main/paste/new"></c:url>" title="<fmt:message key='paste.create.new'/>">
                                             <fmt:message key='paste.create.new'/>
                                         </a>
 
@@ -70,106 +129,117 @@
                                 </ul>
                             </li>
                         </ul>
-
-
-
-
-
-
-                    </div>
-               
-                                            <sec:authorize access="isAuthenticated()" >
-                          <jsp:include page="/WEB-INF/pages/template/search.jsp"/>
-                                               
-                                            </sec:authorize>
                         
-                                        
-                    <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
-                        <ul class="nav navbar-nav" data-behavior="BS.Dropdown">
+                        
+
+                            <jsp:include page="/WEB-INF/pages/template/search.jsp"/>
+
+
+                        
+                        <ul class="nav navbar-nav">
                             <li >
-                                <a href="/sandbox/about/overview">Overview</a>
-                            </li>
-                            <li class="">
-                                <a href="/sandbox/about/getting_started">Getting Started</a>
-                            </li>
-
-
-                            <li class="">
-                                <a href="/sandbox/JavaScript/Accordions,%20Carousels,%20and%20Tabs/Behavior.BS.Carousel">JavaScript</a>
-                            </li>
+                                <a href="/sandbox/about/overview">Help</a>
+                            </li>                     
                         </ul>
-                        <ul class="nav navbar-nav navbar-right" data-behavior="BS.Dropdown">
 
-                            <li >
+                        <p class="navbar-text hidden-sm hidden-xs" style="margin-top:5px;">
+                            
+                            <c:forEach var="stat" items="${stats.list}">
+                                <a class="i ${stat.priority.cssClass}" style="font-size:2em;"
+                                   title="<fmt:message key="${stat.priority.name}"/>. Click to search with same priority."
+                                   href="<c:url value='/main/paste/list/search?query=priority:${stat.priority.code}'/>">/</a>
+                                <span style="font-size: small;">x <c:out value="${stat.counter}"/>&nbsp;</span>
 
-                                <sec:authorize access="!isAuthenticated()" >
+
+                            </c:forEach>
+                        </p>
+                         
+                        
+                        
+                        <ul class="nav navbar-nav navbar-right" >
+
+                            <sec:authorize access="!isAuthenticated()" >
+                                <li >
                                     <a href="<c:url value='/main/login'/>">
-                                        <span style="font-size: 1em;vertical-align: middle;" class="i" title="Login here">x</span></a>
-
+                                        <span  class="i" title="Login here">x</span>
+                                        Authentication
+                                    </a>
+                                        
                                     <%--c:forEach var="server" items="${availableServers}">
                                         <a  class="img-map ${server.icon}" href="<c:url value='/act/openid-login?openid_identifier=${server.code}'/>">
                                         </a>
                                     </c:forEach--%>
-                                </sec:authorize>
+                                </li>
+                            </sec:authorize>
 
 
-                                <sec:authorize ifAnyGranted="ROLE_USER,ROLE_ADMIN">
-                                    <jsp:include
-                                        page="/WEB-INF/pages/common/currentUser.jsp">
-                                        <jsp:param name="currentUser" value="${currentUser}" />
-                                    </jsp:include>
+                            <sec:authorize ifAnyGranted="ROLE_USER,ROLE_ADMIN">
+                                <jsp:include
+                                    page="/WEB-INF/pages/common/currentUser.jsp">
+                                    <jsp:param name="currentUser" value="${currentUser}" />
+                                </jsp:include>
 
-                                </sec:authorize>
-
-
-                            </li>
+                            </sec:authorize>
 
 
-                            <li class="dropdown">
-                                <a href="#" role="button" class="dropdown-toggle" data-toggle="dropdown" 
+                            <li class="dropdown" data-behavior="BS.Dropdown">
+                                <a href="#" 
+                                   role="button" class="dropdown-toggle" 
+                                   data-toggle="dropdown" 
                                    >
-                                    <c:out value="${pageContext.response.locale.displayLanguage}"/>
-                                    <span class="caret" ></span></a>
-                                <ul class="dropdown-menu" role="menu">
-                                    <c:forEach items="${availableLocales}" var="locale" >
+                                    <c:out value="${pageContext.response.locale.language}"/>
+                                    <span class="caret" ></span>
+                                </a>
+                                    
+                                    <ul class="dropdown-menu" role="menu" 
+                                        >
+                                        <c:forEach items="${availableLocales}" var="locale" >
 
-                                        <li>
+                                            <li role="presentation">
 
-                                            <a href="<c:url value="${request.requestURL}">
-                                                   <c:param name="locale" value="${locale.language}_${locale.country}" />
-                                                   <c:forEach items="${param}" var="currentParam">
-                                                       <c:if test="${currentParam.key ne 'locale'}">
-                                                           <c:param name="${currentParam.key}" value="${currentParam.value}"/>
-                                                       </c:if>
-                                                   </c:forEach>
+                                                <c:url var="switchLangUrl" value="${request.requestURL}">
+                                                    <c:param name="locale" value="${locale.language}_${locale.country}" />
+                                                    <c:forEach items="${param}" var="currentParam">
+                                                        <c:if test="${currentParam.key ne 'locale'}">
+                                                            <c:param name="${currentParam.key}" value="${currentParam.value}"/>
+                                                        </c:if>
+                                                    </c:forEach>
 
-                                               </c:url>"><span title="<c:out value='${locale.displayLanguage}'/>">
-                                                    <c:out value="${locale.language}"/>
-                                                </span>
-                                            </a>
+                                                </c:url>
 
-                                        </li>
+                                                <a role="menuitem" href="${switchLangUrl}">
+                                                    <span title="<c:out value='${locale.displayLanguage}'/>">
+                                                        <c:out value="${locale.displayLanguage}"/>
+                                                    </span>
+                                                </a>
 
-                                    </c:forEach>
+                                            </li>
+
+                                        </c:forEach>
 
 
 
-                                </ul>
+                                    </ul>
                             </li>
 
 
-                            <li></li>
                         </ul>
 
-                    </nav>
+                    </div>
+
+
+
+
                 </div>
-            </header>
+            </nav>
 
-            <div class="container">
+            <div class="container-fluid">
+
+             
+
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-xs-6 col-sm-8 col-md-12 col-lg-14">
 
-                        <tiles:insertAttribute name="menu" />
 
                         <div class="notices">
                         </div>
@@ -179,7 +249,7 @@
 
                                 var operationMessage = '<fmt:message key="${statusMessageKey}"/>';
 
-                                window.addEvent('domready', function() {
+                                window.addEvent('domready', function () {
                                     growl.notify(operationMessage);
                                 });
 
@@ -193,59 +263,56 @@
 
 
 
-
-
-
                     </div>
                 </div>
-            
 
-            <div class="row">
-                <div class="col-md-10">
 
-                    <spring:hasBindErrors name="input">
-                        <c:forEach items="${errors.globalErrors}" var="errorMessage">
-                            <div id="globalErrors" class="error">
-                                <c:out value="${errorMessage.defaultMessage}" />
-                            </div>
-                        </c:forEach>
-                    </spring:hasBindErrors>    
+                <div class="row">
+                    <div class="col-xs-10 col-sm-10 col-md-12 col-lg-14">
+
+                        <spring:hasBindErrors name="input">
+                            <c:forEach items="${errors.globalErrors}" var="errorMessage">
+                                <div id="globalErrors" class="error">
+                                    <c:out value="${errorMessage.defaultMessage}" />
+                                </div>
+                            </c:forEach>
+                        </spring:hasBindErrors>    
+
+                    </div>
 
                 </div>
-               
-            </div>
 
-            <div class="row">
-                <div class="col-md-15">
-                    <tiles:insertAttribute name="content" />
+                <div class="row">
+                    <div class="col-xs-10 col-sm-12 col-md-12 col-lg-16 ">
+                        <tiles:insertAttribute name="content" />
+                    </div>
                 </div>
-            </div>
 
-            <div class="row">
-                <div class="col-md-10 offset2">
-                    <p title="<c:out value="${systemInfo.runtimeVersion.full}"/>">
-                        <c:out value="${systemInfo.runtimeVersion.implVersion}"/>
-                    </p>
+                <div class="row">
+                    <div class="col-md-10 offset2">
+                        <p title="<c:out value="${systemInfo.runtimeVersion.full}"/>">
+                            <c:out value="${systemInfo.runtimeVersion.implVersion}"/>
+                        </p>
 
-                    <fmt:formatDate pattern="${datePattern}" var="startDate" 
-                                    value="${systemInfo.dateStart}" />
+                        <fmt:formatDate pattern="${datePattern}" var="startDate" 
+                                        value="${systemInfo.dateStart}" />
 
-                    <fmt:formatDate pattern="${datePattern}" var="installDate" 
-                                    value="${systemInfo.dateInstall}" />
-                    <p>
-                        <fmt:message key='system.installed.title'>
-                            <fmt:param value="${startDate}"/>
-                            <fmt:param value="${installDate}"/>
-                        </fmt:message>   
-                    </p>
+                        <fmt:formatDate pattern="${datePattern}" var="installDate" 
+                                        value="${systemInfo.dateInstall}" />
+                        <p>
+                            <fmt:message key='system.installed.title'>
+                                <fmt:param value="${startDate}"/>
+                                <fmt:param value="${installDate}"/>
+                            </fmt:message>   
+                        </p>
 
 
-                    <small><fmt:message key="site.footer"/></small>
+                        <small><fmt:message key="site.footer"/></small>
+                    </div>
                 </div>
-            </div>
 
-            <jsp:include page="/WEB-INF/pages/template/template-common-body.jsp"/>
-            <tiles:insertAttribute name="footer" />
+                <jsp:include page="/WEB-INF/pages/template/template-common-body.jsp"/>
+                <tiles:insertAttribute name="footer" />
             </div>
         </body>
 

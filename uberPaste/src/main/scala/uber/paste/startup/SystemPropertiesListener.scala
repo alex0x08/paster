@@ -32,11 +32,11 @@ class SystemPropertiesListener extends ServletContextListener with Loggered {
 
   protected var appHome:File =null
 
-  private var h2Server:Server = null
+  
   
   override def contextInitialized(event:ServletContextEvent) {
     try {
-      Manifests.append(event.getServletContext())
+    
       
       if (!System.getProperties().containsKey("paste.app.home")) {
   
@@ -56,6 +56,15 @@ class SystemPropertiesListener extends ServletContextListener with Loggered {
         }
       }
 
+      val ehcacheStore = new File(appHome,"ehcache");
+         if (!ehcacheStore.exists() && !ehcacheStore.isDirectory() &&  !ehcacheStore.mkdirs()) {
+                throw new IllegalStateException(
+                        "Cannot create directory " + ehcacheStore.getAbsolutePath());
+            }
+         
+       System.setProperty("ehcache.disk.store.dir", ehcacheStore.getAbsolutePath())
+        
+      
       logger.info("application home:" + System.getProperty("paste.app.home"))
      
       val  mf_version = new AppVersion().fillFromManifest()
@@ -66,102 +75,19 @@ class SystemPropertiesListener extends ServletContextListener with Loggered {
         
       
       logger.info("current locale: "+Locale.getDefault)
-      
-      //Locale.setDefault(Locale.ENGLISH)
-      
-     /* if (System.getProperties().containsKey("paste.h2.embedded.server")) {
-        initH2EmbeddedServer()
-      }*/
-      
+     
     } catch {
      case e:IOException => {
-      logger.error(e.getLocalizedMessage,e)
+         throw new RuntimeException(e)
             }
     }
 
   }
 
-  def initH2EmbeddedServer() {
-    
-    val h2Home = new File(appHome,"h2")
-        
-        h2Home.mkdirs()
-        
-        System.setProperty("paste.app.h2.home",h2Home.getAbsolutePath())
-   
-      val bindAddr = System.getProperty("paste.h2.host", null)
-          if (bindAddr==null) {
-            System.setProperty("paste.h2.host", bindAddr)
-          }
-        System.setProperty("h2.bindAddress", bindAddr)
-        
-        var bindPort = System.getProperty("paste.h2.port",null)
-            if (bindPort==null) {
-                bindPort = "6666"
-                System.setProperty("paste.h2.port", bindPort)
-            }
-    
-    logger.info("binding h2 to "+bindAddr+":"+bindPort)
-    
-         try {
-            h2Server=Server.createTcpServer("-tcp",
-                    "-tcpDaemon",
-                    "-tcpShutdownForce",
-                    "-tcpPort",bindPort,
-                    
-                    "-baseDir",h2Home.getAbsolutePath()).start();
-        } catch  {
-      
-      case e:SQLException => {
-          logger.error(e.getLocalizedMessage,e)
-        }
-    }
-    
-  }
   
   override def contextDestroyed(servletContextEvent:ServletContextEvent ) {
     
-      if (h2Server!=null) {
-          h2Server.stop();
-      }
   }
 }
 
-/**
- * class H2DBListener extends LoggedClass implements ServletContextListener{
 
-    private Server h2Server;
-    
-    @Override
-    public void contextInitialized(ServletContextEvent sce) {
-        
-        
-        String appHome = System.getProperty("share.app.home");
-        
-        File h2Home = new File(appHome,"h2");
-        
-        h2Home.mkdirs();
-        
-        System.setProperty("share.app.h2.home",h2Home.getAbsolutePath());
-        
-        
-        try {
-            h2Server=Server.createTcpServer("-tcp",
-                    "-tcpDaemon",
-                    "-tcpShutdownForce",
-                    "-tcpPort","6666",
-                    
-                    "-baseDir",h2Home.getAbsolutePath()).start();
-        } catch (SQLException ex) {
-           getLogger().error(ex.getLocalizedMessage(),ex);
-        }
-         
-     }
-
-    @Override
-    public void contextDestroyed(ServletContextEvent sce) {
-        
-        h2Server.stop();
-    }
-
- */

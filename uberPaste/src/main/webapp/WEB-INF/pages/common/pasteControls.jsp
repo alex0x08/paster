@@ -17,18 +17,7 @@
 
 
 <div  class="row">
-    <c:if test="${mode ne 'raw'}">
-
-        <div class="col-md-2">
-            <a href="<c:url value="/main/paste/list"/>" target="${target}"
-               title="<fmt:message key="paste.list.title"/>"><span style="font-size: larger;" class="i">(</span></a> |
-            <a href="<c:url value="/main/paste/edit/${model.id}"/>" target="${target}"
-               title="<fmt:message key="button.edit"/>"><span style="font-size: larger;" class="i">E</span>
-            </a>
-        </div>
-
-    </c:if>
-   
+     
     <div class="col-md-6">
         
          <span style="font-weight: normal; font-size: 12px;">

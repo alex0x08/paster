@@ -6,21 +6,24 @@
 
     <!-- Default Main Template -->
     <definition name=".mainTemplate" template="/WEB-INF/pages/template/main.jsp">
-        <put-attribute name="pageTitle"  expression="${requestScope.title}"  />
         <put-attribute name="menu" value="/WEB-INF/pages/template/menu.jsp" />
         <put-attribute name="head" value="" />
         <put-attribute name="content" value="" />                
         <put-attribute name="footer" value="" />
     </definition>
 
+     <definition name=".errorTemplate" template="/WEB-INF/pages/template/main-error.jsp">      
+        <put-attribute name="content" value="" />
+    </definition>
+
+
     <definition name=".integratedTemplate" template="/WEB-INF/pages/template/main-integrated.jsp">
-        <put-attribute name="pageTitle"  expression="${requestScope.title}" />
         <put-attribute name="head" value="" />
         <put-attribute name="content" value="" />
         <put-attribute name="footer" value="" />
     </definition>
     
-     <definition name=".rawTemplate" template="/WEB-INF/pages/template/raw.jsp">
+    <definition name=".rawTemplate" template="/WEB-INF/pages/template/raw.jsp">
         <put-attribute name="pageTitle"  expression="" />
         <put-attribute name="head" value="" />
         <put-attribute name="content" value="" />
@@ -137,6 +140,27 @@
     </definition>
 
 
+ <definition name="/login"  extends=".mainTemplate">
+        <put-attribute name="content" value="/WEB-INF/pages/login.jsp" />
+        <put-attribute name="head" value="" />
+    </definition>
 
+
+
+ <definition name="/error/404"  extends=".errorTemplate">
+        <put-attribute name="content" value="/WEB-INF/pages/error/404.jsp" />
+    </definition>
+
+
+ <definition name="/error/403"  extends=".errorTemplate">
+        <put-attribute name="content" value="/WEB-INF/pages/error/403.jsp" />
+    </definition>
+
+
+
+
+ <definition name="/error/500"  extends=".errorTemplate">
+        <put-attribute name="content" value="/WEB-INF/pages/error/500.jsp" />
+    </definition>
 
 </tiles-definitions>
