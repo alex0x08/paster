@@ -1,6 +1,0 @@
-## Velocity Template.
-
-<iframe src="$shareUrl/main/file/integrated/view?id=$modelId" 
-	width="300" height="200" frameborder="0">
-</iframe>
-

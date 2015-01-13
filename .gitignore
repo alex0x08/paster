@@ -1,11 +1,6 @@
-/uberPaste/target/
 *.class
-# Package Files #
 *.jar
 *.war
-*.ear
 */target/*
 */.idea/*
 *.iml
-*/.project/*
-/shareService/webapp/target/
