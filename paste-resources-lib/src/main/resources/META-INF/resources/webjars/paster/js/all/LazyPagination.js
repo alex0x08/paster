@@ -36,15 +36,17 @@ var LazyPagination = new Class({
                         idSet: new Array(),
                         idMode: false,
 			navigation: false,
-			inject: false // {element: 'foo', where: 'before'}
+			inject: false, 
+                        
 		},
-
+              
 	initialize: function(element,options){
 		this.parent(options);
 		this.element = document.id(element);
 		this.bound = this.measure.bind(this);
 		this.requests = 0;
 		
+                
 		this.addEvent('onComplete',function(response,html){
                         //alert("event!");
                     

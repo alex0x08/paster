@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import javax.servlet.http.HttpServletResponse
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
+import uber.paste.model.GenericQuery
 
 @Controller
 class IndexController extends AbstractController{
@@ -55,7 +56,7 @@ class IndexController extends AbstractController{
     return if (isCurrentUserLoggedIn) {
       index(model)
     } else {
-    //model.addAttribute("availableServers",OpenIDServer.list)
+    model.addAttribute("query", new GenericQuery)
     "/login"
     }
   }

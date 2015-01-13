@@ -7270,7 +7270,7 @@ var special = {
 	'd': /[ďđ]/g,
 	'D': /[ĎÐ]/g,
 	'e': /[èéêëěę]/g,
-	'E': /[ÈÉÊËĚĘ]/g,
+	'E': /[ÈÉÊËĚ�?]/g,
 	'g': /[ğ]/g,
 	'G': /[Ğ]/g,
 	'i': /[ìíîï]/g,
@@ -7280,9 +7280,9 @@ var special = {
 	'n': /[ñňń]/g,
 	'N': /[ÑŇŃ]/g,
 	'o': /[òóôõöøő]/g,
-	'O': /[ÒÓÔÕÖØ]/g,
+	'O': /[ÒÓÔÕÖ�?]/g,
 	'r': /[řŕ]/g,
-	'R': /[ŘŔ]/g,
+	'R': /[�?Ŕ]/g,
 	's': /[ššş]/g,
 	'S': /[ŠŞŚ]/g,
 	't': /[ťţ]/g,
@@ -9741,9 +9741,29 @@ Request = Class.refactor(Request, {
 	},
 
 	initialize: function(options){
+		this._send = this.send;
+		this.send = function(options){
+			var spinner = this.getSpinner();
+			if (spinner) spinner.chain(this._send.pass(options, this)).show();
+			else this._send(options);
+			return this;
+		};
 		this.previous(options);
-	}
+	},
 
+	getSpinner: function(){
+		if (!this.spinner){
+			var update = document.id(this.options.spinnerTarget) || document.id(this.options.update);
+			if (this.options.useSpinner && update){
+				update.set('spinner', this.options.spinnerOptions);
+				var spinner = this.spinner = update.get('spinner');
+				['complete', 'exception', 'cancel'].each(function(event){
+					this.addEvent(event, spinner.hide.bind(spinner));
+				}, this);
+			}
+		}
+		return this.spinner;
+	}
 
 });
 
@@ -15337,26 +15357,46 @@ Behavior.addGlobalFilter('FormRequest', {
   returns: Form.Request,
 
   setup: function(element, api){
+    // figure out which element we're updating, spinning over
     var updateElement,
         update = api.get('update'),
         spinner = api.get('spinner');
     if (update =="self") updateElement = element;
     else updateElement = element.getElement(update);
 
+    // placeholder for response
+    var requestTarget = new Element('div');
+
+    // spinner target
     if (spinner == "self") spinner = element;
     else if (spinner) spinner = element.getElement(spinner);
     else spinner = updateElement;
 
+    // no update element? no worky!
     if (!updateElement) api.fail('Could not find target element for form update');
     var sentAt;
-    var req = new Form.Request(element, updateElement, {
+    var req = new Form.Request(element, requestTarget, {
       requestOptions: {
-        filter: api.get('filter'),
         spinnerTarget: spinner
       },
       resetForm: api.get('resetForm')
     }).addEvent('complete', function(){
-      api.applyFilters(updateElement);
+      // when our placeholder has been updated, get it's inner HTML (i.e. the response)
+      var html = requestTarget.get('html');
+      // are we filtering that response?
+      var elements;
+      if (api.get('filter')){
+        elements = new Element('div').set('html', html).getElements(api.get('filter'));
+      }
+      // destroy old DOM
+      api.fireEvent('destroyDom', updateElement.getChildren());
+      updateElement.empty();
+      // did we filter? if so, insert filtered, else just update HTML
+      if (elements) updateElement.adopt(elements);
+      else updateElement.set('html', html);
+      // apply behaviors and whatnot
+      api.fireEvent('ammendDom', [updateElement, updateElement.getChildren()]);
+      elements = []; //garbage collection
     }).addEvent('send', function(){
       sentAt = new Date().getTime();
     });
@@ -17452,11 +17492,10 @@ Chart = new Class({
         y: this.options.showSubTitle ? 20 : 35,
         useHTML: true
       } : null,
-      // subtitle styles, location; depends on if title is visible for positioning
-      subtitle: this.options.showSubTitle ? {
+      subtitle: this.options.showTitle && this.options.showSubTitle ? {
         align: 'left',
         x: 29,
-        y: this.options.showTitle ? 44 : 26,
+        y: 44,
         useHTML: true
       } : null,
       // xAxis styles
@@ -17470,7 +17509,6 @@ Chart = new Class({
         offset: 10,
         title: {
           margin: 10,
-          align: 'left',
           style: {
             fontFamily: 'lato',
             fontSize: 14,
@@ -21875,7 +21913,7 @@ Locale.define('he-IL', 'DatePicker', {
   use_mouse_wheel: 'השתמש בגלגלת העכבר לשינוי מהיר',
   time_confirm_button: 'אישור',
   apply_range: 'החל',
-  cancel: 'ביטול',
+  cancel: 'בי�?ול',
   week: 'שבוע'
 });
 
@@ -21975,7 +22013,7 @@ source: https://github.com/arian/mootools-datepicker/
 
 Locale.define('ru-RU', 'DatePicker', {
   select_a_time: 'Выберите время',
-  use_mouse_wheel: 'Используйте колесо мышки для быстрой смены значения',
+  use_mouse_wheel: '�?спользуйте колесо мышки для быстрой смены значения',
   time_confirm_button: 'OK'
 });
 
@@ -22093,6 +22131,7 @@ name: Delegator.Ajax
           if (api.get('updateHistory')){
             api.fireEvent('updateHistory', api.get('historyURI') || api.get('href') || link.get('href'));
           }
+          elements = []; //garbage collection
         }
       })
     );
@@ -24456,417 +24495,7 @@ Fx.Progress = new Class({
     this.parent(element, property, value, unit);
   }
 });
-/*
----
 
-name: GoogleMap.js
-
-description: An abstraction of the Google Maps API.
-
-requires:
- - Core/Fx.Tween
-
-provides: [GoogleMap, GoogleMap.Box, GoogleMap.Annotated]
-
-...
-*/
-
-(function(){
-  if (!window.google){
-    try {
-      console.log("not running google map class code as google maps is not included.");
-    } catch(e){}
-    return;
-  }
-
-  window.GoogleMap = new Class({
-
-    Implements: [Options, Events],
-
-    options: {
-      getMapType: function(){
-        return google.maps.MapTypeId.ROADMAP;
-      },
-      pinIcon: null,
-      shadowImage: null,
-      lat: 37.759465,
-      lng: -122.427864,
-      locationIcon: null,
-      locationAnchorX: null,
-      locationAnchorY: null,
-      showUserPosition: true,
-      pinTTL: 0, //zero lives forever
-      size: null,
-      useZ: true,
-      maxBounds: 10,
-      timeout: 4000,
-      zoom: 20,
-      zoomToFit: true,
-      showZoomControl: true,
-      // {
-      //   width: '100%',
-      //   height: 400
-      // },
-      showMapControls: true,
-      animation: google.maps.Animation.DROP,
-      mapStyles: {}
-    },
-
-    initialize: function(container, options){
-      this.setOptions(options);
-      this.container = document.id(container);
-      if (this.options.size) this.container.setStyles(this.options.size);
-      this.buildMap();
-      if (this.options.showUserPosition) this.centerOnUser();
-      else this.center();
-    },
-
-    makeBounds: function(){
-      this.bounds = new google.maps.LatLngBounds();
-    },
-
-    checkBounds: function(){
-      if (this.points.length > this.options.maxBounds && this.points.length%this.options.maxBounds){
-        this.makeBounds();
-        for (var i = this.points.length - this.options.maxBounds; i < this.points.length; i++){
-          this.bounds.extend(this.points[i]);
-        }
-      }
-    },
-
-    buildMap: function(){
-      this.makeBounds();
-      if (this.options.showMapControls){
-        this.map = new google.maps.Map(this.container, {
-          zoom: this.options.zoom,
-          mapTypeId: this.options.getMapType(),
-          styles: this.options.mapStyles,
-          panControl: this.options.panControl,
-          showMapControls: this.options.showMapControls
-        });
-      }
-      else {
-        this.map = new google.maps.Map(this.container, {
-          zoom: this.options.zoom,
-          mapTypeId: this.options.getMapType(),
-          mapTypeControl: false,
-          draggable: true,
-          scaleControl: false,
-          scrollwheel: false,
-          navigationControl: false,
-          streetViewControl: false,
-          showMapControls: this.options.showMapControls,
-          panControl: this.options.panControl,
-          zoomControl:this.options.showZoomControl,
-          zoomControlOptions: {
-            style:google.maps.ZoomControlStyle.SMALL
-          },
-          styles: this.options.mapStyles
-        });
-      };
-      return this;
-    },
-
-    lastCenter: null,
-
-    setZoom: function(zoom){
-      this.map.setZoom(zoom);
-      return this;
-    },
-
-    getZoom: function(){
-      return this.map.getZoom();
-    },
-
-    center: function(lat, lng){
-      var zoom = this.getZoom() || this.options.zoom;
-      this.map.setCenter(new google.maps.LatLng(lat || this.options.lat, lng || this.options.lng));
-      this.setZoom(zoom);
-      this.lastCenter = this.center.bind(this, arguments);
-      return this;
-    },
-
-    centerOnBounds: function(){
-      this.map.panTo(this.bounds.getCenter());
-    },
-
-    zoomToBounds: function(){
-      this.map.fitBounds(this.bounds);
-      this.map.setCenter(this.bounds.getCenter());
-    },
-
-    resize: function(){
-      google.maps.event.trigger(this.map, "resize");
-      if (this.lastCenter) this.lastCenter();
-    },
-
-    markCenter: function(lat, lng){
-      if (!this.userPosition){
-        this.userPosition = this.dropPin({
-          lat: lat || this.options.lat,
-          lng: lng || this.options.lng,
-          icon: this.options.locationIcon,
-          anchorX: this.options.locationAnchorX,
-          anchorY: this.options.locationAnchorY,
-          saveMarker: false
-        });
-      } else {
-        this.userPosition.setPosition(
-          new google.maps.LatLng(lat || this.options.lat, lng || this.options.lng)
-        );
-      }
-      return this;
-    },
-
-    centerOnUser: function(callback){
-      callback = callback || function(){};
-      var zoom = this.getZoom() || this.options.zoom;
-      // Try HTML5 geolocation
-      if (navigator.geolocation){
-        this.fireEvent('getLocation');
-        navigator.geolocation.getCurrentPosition(
-          // success handler
-          function(position){
-            this.fireEvent('receiveLocation', position);
-            this.markCenter(position.coords.latitude, position.coords.longitude);
-            this.center(position.coords.latitude, position.coords.longitude);
-            Cookie.write('location', JSON.encode(position.coords));
-            this.setZoom(zoom);
-            callback();
-          }.bind(this),
-          // error handler
-          function(){
-            this.fireEvent('receiveLocation');
-            if (Cookie.read('location')){
-              var cookie = JSON.decode(Cookie.read('location'));
-              this.center(cookie.lat, cookie.latitude);
-              this.markCenter(cookie.lat, cookie.longitude);
-            } else {
-              this.defaultCenter();
-            }
-            this.setZoom(zoom);
-            callback();
-          }.bind(this),
-          {timeout:this.options.timeout}
-        );
-      }
-      else {
-        this.fireEvent('receiveLocation');
-        this.center(this.options.lat, this.options.lng);
-        this.markCenter(this.options.lat, this.options.lng);
-        this.setZoom(zoom);
-        callback();
-      }
-      return this;
-    },
-    defaultCenter: function(lat, lng){
-      lat = lat || this.options.lat;
-      lng = lng || this.options.lng;
-      this.center(lat, lng);
-      this.markCenter(lat, lng);
-    },
-    _pinZIndex: 1,
-    points: [],
-    markers: [],
-    dropPin: function(options){
-      options = options || {};
-      if (!options.lat || !options.lng || options.lat == "0.0" || options.lng == "0.0") return {};
-      /*
-        options = {
-          icon: urlToIcon, //defaults to the icon named in the options
-          zindex: integer,
-          lat: integer,
-          lng: integer,
-          zIndex: integer,
-          title: string,
-          TTL: integer // (zero lives for ever),
-          saveMarker: boolean
-        }
-      */
-      if (typeof(options.saveMarker)==='undefined') options.saveMarker = true;
-      var point = new google.maps.LatLng(options.lat, options.lng);
-      this.points.push(point);
-      this.checkBounds();
-      this.bounds.extend(point);
-      this.zoomToBounds();
-      var anchor = null;
-      if (options.anchorX && options.anchorY) anchor = new google.maps.Point(options.anchorX, options.anchorY);
-
-      var shadowIcon = null;
-      var shadowImage = options.shadowImage || this.options.shadowImage
-      if (shadowImage){
-
-        var shadowAnchor = null;
-        if (options.shadowAnchorX && options.shadowAnchorY){
-          shadowAnchor = new google.maps.Point(options.shadowAnchorX, options.shadowAnchorY);
-        };
-        shadowIcon = new google.maps.MarkerImage(
-          shadowImage,
-          null,
-          null,
-          shadowAnchor
-        );
-      };
-
-      var markerIcon = new google.maps.MarkerImage(
-          options.icon || this.options.pinIcon,
-          null,
-          null,
-          anchor
-      );
-
-      // icon overrides the markerImage because of the merge below.
-      // leaving the name the same for backwards compatibility
-      delete options['icon'];
-
-      var localZ = this.options.useZ ? this._pinZIndex : null;
-      var marker = new google.maps.Marker(
-        Object.merge({
-          position: point,
-          map: this.map,
-          icon: markerIcon,
-          zIndex: localZ,
-          shadow: shadowIcon,
-          animation: this.options.animation
-        }, options)
-      );
-
-      if (options.saveMarker) this.markers.push(marker);
-      this._pinZIndex++;
-      if (this.options.pinTTL || options.TTL) marker.setVisible.delay(this.options.pinTTL || options.TTL, marker, false);
-      return marker;
-    }
-
-  });
-
-  GoogleMap.Box = new Class({
-
-    //see https://developers.google.com/maps/documentation/javascript/overlays
-    Extends: google.maps.OverlayView,
-
-    Implements: [Options, Events],
-
-    options: {
-      position: { lat: 0, lat: 0},
-      size: {width: 100, height: 40},
-      offset: {x: 0, y: 0},
-      content: '',
-      fxOptions: {
-        transition: 'bounce:out',
-        duration: 800
-      },
-      TTL: 0 //zero lives forever
-    },
-
-    initialize: function (map, options){
-      this.setOptions(options);
-      this.map = map;
-      this.setMap(map);
-      this.overlay = new google.maps.OverlayView(this.map).getProjection();
-    },
-
-    onAdd: function(){
-      // Create the DIV and set some basic attributes.
-      this.div = new Element('div', {
-        class: 'mapBox',
-        styles: {
-          position: 'absolute',
-          visibility: 'hidden'
-        }
-      }).set('tween', this.options.fxOptions);
-      if (typeOf(this.options.content) == "string") this.div.set('html', this.options.content);
-      else this.div.empty().adopt(this.options.content);
-      var panes = this.getPanes();
-      panes.overlayLayer.adopt(this.div);
-      this.show();
-      if (this.options.TTL) this.hide.delay(this.options.TTL, this);
-    },
-
-    draw: function(){
-      // Size and position the overlay. We use a southwest and northeast
-      // position of the overlay to peg it to the correct position and size.
-      // We need to retrieve the projection from this overlay to do this.
-      var overlayProjection = this.getProjection();
-
-      // Retrieve the southwest and northeast coordinates of this overlay
-      // in latlngs and convert them to pixels coordinates.
-      // We'll use these coordinates to resize the DIV.
-      var nw = overlayProjection.fromLatLngToDivPixel(new google.maps.LatLng(this.options.position.lat, this.options.position.lng));
-
-      // Resize the image's DIV to fit the indicated dimensions.
-      this.div.setStyles({
-        left: nw.x + this.options.offset.x,
-        top: nw.y + this.options.offset.y,
-        width: this.options.size.width,
-        height: this.options.size.height
-      });
-    },
-
-    remove: function(){
-      this.div.dispose();
-    },
-
-    hide: function(){
-      this.div.setStyle('visibility', 'hidden');
-    },
-
-    show: function(){
-      this.div.setStyle('marginTop', -800).setStyles({
-        visibility: 'visible'
-      }).tween('marginTop', -800, 0);
-    },
-
-    toggle: function(){
-      this.div.setStyle('display', this.div.getStyle('display') == 'none' ? 'block' : 'none');
-    }
-
-  });
-
-  GoogleMap.Annotated = new Class({
-
-    Extends: GoogleMap,
-
-    boxes: [],
-
-    dropPin: function(options){
-      var elements = {};
-      if (!options.lat || !options.lng || options.lat == "0.0" || options.lng == "0.0") return elements;
-
-      if (options.content){
-
-        var point = new google.maps.LatLng(options.lat, options.lng);
-        this.points.push(point);
-        this.checkBounds();
-        this.bounds.extend(point);
-        if (this.options.zoomToFit){
-          this.map.fitBounds(this.bounds);
-          this.map.panTo(this.bounds.getCenter());
-        }
-
-        elements.box = new GoogleMap.Box(this.map, {
-          position: {
-            lat: options.lat,
-            lng: options.lng
-          },
-          size: {
-            width: options.width || 20,
-            height: options.height || 20
-          },
-          offset: options.offset || {x: 0, y: 0},
-          content: options.content,
-          TTL: options.TTL || this.options.pinTTL
-        });
-        this.boxes.push(elements.box);
-      }
-      if (!options.noPin){
-        elements.marker = this.parent(options);
-      }
-      return elements;
-    }
-
-  });
-
-})();
 
 /*
 ---
@@ -27457,7 +27086,7 @@ Slider.Modify = new Class({
   },
 
   updateSlideFill: function(){
-    var percentage = 100*this.step/this.max;
+    var percentage = 100*(this.step-this.min)/(this.max-this.min);
     if (this.slideFill) this.slideFill.setStyle('width', percentage+"%");
   },
 
@@ -27499,7 +27128,7 @@ description: Behavior for creating an interactive slider that can update and
 requires:
  - Behavior/Behavior
  - More/Object.Extras
- - /Slider.Modify
+ - Behavior-UI/Slider.Modify
 
 provides: [Behavior.Slider.Modify]
 

@@ -252,11 +252,7 @@
                                     </tiles:insertDefinition>
 
                                 </c:if>
-                                    
-                                    
-                               
-
-
+        
                             </div>       
                 
             </div>

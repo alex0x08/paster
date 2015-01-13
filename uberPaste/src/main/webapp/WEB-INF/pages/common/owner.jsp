@@ -5,7 +5,9 @@
 
 
 <c:choose>
-    <c:when test="${not empty model.owner}">
+    <c:when test="${not empty model.owner and model.owner ne currentUser}">
+        
+        
         <a href="http://ru.gravatar.com/site/check/${model.owner.email}" title="GAvatar">
             <img style="vertical-align: middle;padding-bottom: 2px;" src="
                  <c:url value='http://www.gravatar.com/avatar/${model.owner.avatarHash}'>
@@ -19,6 +21,11 @@
 
 
     </c:when>
+     <c:when test="${not empty model.owner and model.owner eq currentUser}">
+         <span style="display: inline;  ">
+             <fmt:message key="user.you"/>
+         </span>
+     </c:when>
     <c:otherwise>
         <span style="font-size: 2em;" class="i" title="<fmt:message key='user.anonymous'/>">x</span>
     </c:otherwise>

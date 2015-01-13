@@ -97,7 +97,7 @@
               <cssTargetDir>/all/css</cssTargetDir>
               <jsSourceFiles>
                   <jsSourceFile>behavior-ui.js</jsSourceFile>
-                  <jsSourceFile>mootools-more-1.5.1.js</jsSourceFile>
+                  <jsSourceFile>MooTools-More-1.5.1.js</jsSourceFile>
                   <jsSourceFile>tinycon.min.js</jsSourceFile>
                   <jsSourceFile>growler.js</jsSourceFile>
                   <jsSourceFile>LazyPagination.js</jsSourceFile>

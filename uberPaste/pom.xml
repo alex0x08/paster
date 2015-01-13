@@ -840,12 +840,32 @@
                 </configuration>
             </plugin>
 
+
+                   <plugin>
+  <groupId>org.eclipse.jetty</groupId>
+   <artifactId>jetty-jspc-maven-plugin</artifactId>
+   <version>9.1.0.RC2</version>
+   <executions>
+     <execution>
+       <id>jspc</id>
+       <goals>
+         <goal>jspc</goal>
+       </goals>
+       <configuration>
+           
+       </configuration>
+     </execution>
+   </executions>
+ </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
                 <version>2.1.1</version>
 
                 <configuration>
+ 
+                    <webXml>${project.build.directory}/web.xml</webXml>
                     <attachClasses>true</attachClasses>
                     <classesClassifier>classes</classesClassifier>
                     <failOnMissingWebXml>false</failOnMissingWebXml>                    
@@ -1009,21 +1029,7 @@
                 <version>2.4.1</version>      
             </plugin>
 
-             <plugin>
-  <groupId>org.eclipse.jetty</groupId>
-   <artifactId>jetty-jspc-maven-plugin</artifactId>
-   <version>9.1.0.RC2</version>
-   <executions>
-     <execution>
-       <id>jspc</id>
-       <goals>
-         <goal>jspc</goal>
-       </goals>
-       <configuration>
-       </configuration>
-     </execution>
-   </executions>
- </plugin>
+      
 
         </plugins>
 
