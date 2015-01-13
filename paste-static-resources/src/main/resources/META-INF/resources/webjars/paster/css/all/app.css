@@ -1,0 +1,62 @@
+
+.priority_blocker {
+    color: #ff0000;
+}
+.priority_normal {
+    color: #90ee90;
+}
+.priority_trivial {
+    color: #5ba1cf;
+}
+
+
+/* For the container */
+.GrowlContainer {
+	width: 298;
+	position: fixed;
+	top: 0;
+	right: 0;
+}
+
+/* for the Modern Growler, implements CSS3 properties */
+.GrowlerModern {
+	background: rgba(0, 0, 0, 0.7);
+	
+	height: 73px;
+	width: 298px;
+	padding: 10px;
+	
+	margin: 10px;
+	position: relative;
+	top: 10;
+	right: 10;
+	
+	border-radius: 1em;
+	-moz-border-radius: 1em;
+	
+	-webkit-box-shadow: 2px 2px 12px #777777;
+	-moz-box-shadow: 2px 2px 12px #777777;
+	
+	color: #fafafa;
+}
+
+.img-map { 
+    display: inline-block; 
+    background: #fff url('../../../static/icons_map.png') no-repeat scroll top left; 
+    height: 16px; 
+    width: 16px; 
+}
+
+.img-ws { background-position: 0 -2px; }
+.img-atom { background-position: -16px 0; }
+.img-rss { background-position: 0 -18px; }
+.img-xls { background-position: -16px -19px; }
+.img-xml { background-position: -34px -19px; }
+.img-clip { background-position: -34px 0; }
+.img-json { background-position: -50px 0; }
+.img-logo { background-position: -50px -18px; }
+
+.img-openid-google { background-position: -67px -18px; }
+.img-openid-yandex { background-position: -67px 0px; }
+.img-openid-yahoo { background-position: -84px -1px; }
+.img-openid-vk { background-position: -84px -18px; }
