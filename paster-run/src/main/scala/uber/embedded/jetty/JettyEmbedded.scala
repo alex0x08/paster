@@ -24,6 +24,7 @@ import java.util.Locale
 import java.util.Properties
 import java.util.ResourceBundle
 import java.util.concurrent.ArrayBlockingQueue
+import java.util.concurrent.Executors
 import org.apache.commons.cli.{CommandLineParser,
                                Options,
                                Option,PosixParser,
@@ -35,10 +36,13 @@ import org.apache.commons.lang.builder.ToStringBuilder
 import org.eclipse.jetty.server.Connector
 import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.server.ServerConnector
+import org.eclipse.jetty.util.component.AbstractLifeCycle
+import org.eclipse.jetty.util.component.LifeCycle
 import org.eclipse.jetty.util.thread.QueuedThreadPool
 import org.eclipse.jetty.webapp.WebAppContext
 import org.fusesource.jansi.Ansi
 import org.fusesource.jansi.AnsiConsole
+import scala.util.Try
 
 object JettyEmbedded {
   
@@ -72,6 +76,8 @@ class JettyEmbedded {
   private var server:Server = null
     
   private var cmd:CommandLine = null
+  
+  private val cmdProgressExecutor = Executors.newSingleThreadExecutor()
   
   private final val messages:ResourceBundle = ResourceBundle
                             .getBundle("messages", Locale.getDefault,
@@ -136,7 +142,7 @@ class JettyEmbedded {
         Runtime.getRuntime().addShutdownHook(new Thread() {
             override def run() {
                 try 
-                    server.stop()
+                    server.stop()                   
                     
                    catch {
                         case e @ (_ : Exception ) => {
@@ -144,11 +150,13 @@ class JettyEmbedded {
                         }
         
                     } finally {
-                       
+                      
                           synchronized {
                             wait(1000)
                           } 
                         deleteDir(tempDir)
+                        
+                        Try(cmdProgressExecutor.shutdown) 
                     }
                       
                     
@@ -178,7 +186,7 @@ class JettyEmbedded {
 
             val p = new Properties(); p.load(is)
 
-            val appWarS = p.getProperty("appWar", null)
+            val appWarS = p.getProperty("app.war", null)
 
     
       
@@ -190,16 +198,16 @@ class JettyEmbedded {
                       if (cmd.hasOption("port")) 
                           cmd.getOptionValue("port")
                       else 
-                          p.getProperty("port", port + "")
+                          p.getProperty("http.port", port + "")
                       )
       
             addr = if (cmd.hasOption("host")) { cmd.getOptionValue("host") } 
-                  else p.getProperty("appHost", null)
+                  else p.getProperty("app.host", null)
 
             contextPath = if (cmd.hasOption("contextPath")) { 
                   cmd.getOptionValue("contextPath") 
                 } else
-                  p.getProperty("contextPath", contextPath)
+                  p.getProperty("app.context", contextPath)
 
 
       if (cmd.hasOption("tmpPath")) 
@@ -262,6 +270,19 @@ class JettyEmbedded {
                 webapp.setExtractWAR(true)
             
             server.setHandler(webapp)
+            server.addLifeCycleListener(new AbstractLifeCycle.AbstractLifeCycleListener() {
+              override def lifeCycleStarted(event:LifeCycle) {
+                cmdProgressExecutor.shutdown
+              }
+              
+            override def lifeCycleStopped(event:LifeCycle) {
+                deleteDir(tempDir)
+              }
+              } )
+            
+    
+
+      
         } else 
           log("error.application-not-set")
       return this
@@ -281,6 +302,41 @@ class JettyEmbedded {
       System.setErr(new PrintStream(new FileOutputStream(FileDescriptor.err),true,"cp866"))
     
     }
+    
+    cmdProgressExecutor.execute(new Runnable() {
+      def run() {
+        
+        var step:Int = 1 
+          
+        while(true) {
+          
+          this.synchronized {
+                notify
+          }
+          
+         //System.out.println(Ansi.ansi().eraseScreen()
+         //                   .fg(Ansi.Color.RED).a("Hello").fg(Ansi.Color.GREEN).a(" World").reset())   
+            
+           //  AnsiConsole.out.
+          System.out.print("\r\b")
+          System.out.print(
+            step match {
+              case 1 => "\\"
+              case 2 |4 => "|"
+              case 3 => "/"  
+            }
+            )
+            //System.out.println
+            
+              step = if (step==4) 1 else step+1
+            
+          this.synchronized {
+            wait(100)
+          }
+        }
+      }
+      })
+    
    
     return this
   }
@@ -367,7 +423,7 @@ class DeleteDirectory extends SimpleFileVisitor[Path] {
             Files.delete(file)
             catch {
                   case e @ (_ : Exception ) => {
-                      e.printStackTrace
+                     // e.printStackTrace
                   }
                 }
         

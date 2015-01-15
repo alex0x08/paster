@@ -18,22 +18,17 @@ package uber.paste.startup
 
 
 import java.util.Calendar
-import java.util.Collections
 import javax.servlet.{ServletContextListener, ServletContext, ServletContextEvent}
 import org.springframework.context.ApplicationContext
-import org.apache.commons.io.FileUtils
 import org.springframework.web.context.support.WebApplicationContextUtils
 import uber.paste.model._
 import uber.paste.dao._
 import uber.paste.build._
-
 import java.io.IOException
 import uber.paste.dao.UserExistsException
-import uber.paste.base.plugins.PluginUI
 import uber.paste.base.{MergedPropertyConfigurer, Loggered, SystemInfo}
 import uber.paste.build._
 import java.nio.file._
-import java.nio.file.attribute.BasicFileAttributes
 import uber.paste.manager.PasteManager
 import scala.collection.JavaConversions._
 
@@ -84,9 +79,10 @@ class StartupListener extends ServletContextListener with Loggered{
     sf.asInstanceOf[SessionFactoryImpl].getEventListeners.setPostLoadEventListeners(listeners)
     */
 
-    System.setProperty ("jsse.enableSNIExtension", "false")
+    //System.setProperty ("jsse.enableSNIExtension", "false")
     
-    var props:MergedPropertyConfigurer =  ctx.getBean("propertyConfigurer").asInstanceOf[MergedPropertyConfigurer]
+    var props:MergedPropertyConfigurer =  ctx.getBean("propertyConfigurer")
+                                              .asInstanceOf[MergedPropertyConfigurer]
 
 
     val configDao:ConfigDao = ctx.getBean("configDao").asInstanceOf[ConfigDao]
@@ -120,11 +116,9 @@ class StartupListener extends ServletContextListener with Loggered{
         val installDate=configDao.getProperty(ConfigProperty.INSTALL_DATE)
         if (installDate!=null && installDate.getValue != null) {
           new java.util.Date(java.lang.Long.valueOf(installDate.getValue))
-        } else {
-          null
-        }
-        }
-      )
+        } else 
+          null        
+        })
 
       
       val dbVersion = new AppVersion().fillFromConfigProperty(
@@ -133,7 +127,7 @@ class StartupListener extends ServletContextListener with Loggered{
            
             if (dbVersion != null) {
       
-        logger.debug("__currentSettings:" + dbVersion.getFull)
+              logger.debug("__currentSettings:" + dbVersion.getFull)
                 
                 val check =  SystemInfo.instance.getRuntimeVersion().compareTo(dbVersion)
                 
@@ -243,12 +237,13 @@ class StartupListener extends ServletContextListener with Loggered{
       ConfigProperty.APP_VERSION.setValue(SystemInfo.instance.getRuntimeVersion.toDbString)
       configDao.persist(ConfigProperty.APP_VERSION)
 
-      logger.debug("saved version "+ConfigProperty.APP_VERSION.getValue)
+      logger.debug("saved version {0}",ConfigProperty.APP_VERSION.getValue)
 
       reindex(ctx,props)
-
+   
       logger.info("db generation completed successfully.")
 
+        
 
         SystemInfo.instance.setDateStart(Calendar.getInstance.getTime)
 

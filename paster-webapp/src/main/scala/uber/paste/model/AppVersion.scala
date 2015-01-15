@@ -17,6 +17,8 @@
 package uber.paste.model
 
 import com.jcabi.manifests.Manifests
+import java.text.SimpleDateFormat
+import java.util.Properties
 import java.util.regex.Pattern
 import javax.persistence.Embeddable
 import uber.paste.base.Loggered
@@ -37,6 +39,8 @@ object AppVersion {
  
   val PT_VER = Pattern.compile("^([0-9]+)\\.([0-9]+)-([a-zA-Z]+)$")
  
+  val MAVEN_TS_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm")
+  
 }
 
 /**
@@ -51,7 +55,6 @@ class AppVersion {
    private var implVer:String = AppVersion.UNDEFINED
    private var implBuildNum:String = AppVersion.UNDEFINED
    private var implBuildTime:String = AppVersion.UNDEFINED
-   //private var implVersionFull:String = null
    
   /**
    * @return app version to store in database
@@ -84,13 +87,23 @@ class AppVersion {
         implBuildNum = parts(1)
         implBuildTime = parts(2)
     
-    return this;
+    return this
   }
   
   /**
    * @return appversion object loaded from application manifest
    */
-   def fillFromManifest():AppVersion = {
+  def fillFromResource(buildProps:Properties):AppVersion = {
+    
+     implVer = buildProps.getProperty("build.version")
+     implBuildNum = AppVersion.MAVEN_TS_FORMAT.parse(buildProps.getProperty("build.time"))
+                                        .getTime.toString
+     implBuildTime = buildProps.getProperty("build.time")                                 
+    
+    return this
+  }
+  
+  def fillFromManifest():AppVersion = {
         
         implVer = getManifestValue(AppVersion.MF_IMPLEMENTATION_VERSION)
 
@@ -98,7 +111,7 @@ class AppVersion {
 
         implBuildTime = getManifestValue(AppVersion.MF_IMPLEMENTATION_BUILD_DATE)
         
-        return this;
+        return this
     }
 
     /**
@@ -154,9 +167,9 @@ class AppVersion {
           logger.warn("version pattern not match: "+raw)
         } else {
           
-        major   = Integer.parseInt(m.group(1))
-        minor = Integer.parseInt(m.group(2))
-        mod  = m.group(3)
+          major   = Integer.parseInt(m.group(1))
+          minor = Integer.parseInt(m.group(2))
+          mod  = m.group(3)
         }
   
     def getMinor() = minor

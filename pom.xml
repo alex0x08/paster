@@ -1,0 +1,98 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>uber.paster</groupId>
+    <artifactId>paster-project</artifactId>
+    <version>1.2-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>Paster Project</name>
+    <url>https://github.com/alex0x08/paster</url>
+    <inceptionYear>2011</inceptionYear>	
+        
+    <scm>
+        <connection>scm:git:https://github.com/alex0x08/paster.git</connection>
+        <url>scm:git:https://github.com/alex0x08/paster.git</url>
+        <tag>HEAD</tag>
+    </scm>
+
+    <distributionManagement>
+        <repository>
+            <id>deployment</id>
+            <name>Internal Releases</name>
+            <url>file:///c:/work/releases/repository/maven-repository/</url>
+        </repository>
+    </distributionManagement>
+        
+    <developers>
+        <developer>
+            <name>Alex Chernyshev</name>
+            <timezone>GMT+4</timezone>
+        </developer>
+    </developers>
+        
+    <organization>
+        <name>Ubersoft, LLC</name>
+        <url>http://0x08.tk</url>
+    </organization>
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+            <comments>Lift Example is licensed under Apache License, Version 2.0</comments>
+        </license>
+    </licenses>
+
+        
+        
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding> 
+        <netbeans.hint.license>apache20</netbeans.hint.license>
+    </properties>
+
+    
+    
+    
+    <modules>
+        <module>paster-static-resources</module>
+        <module>paster-run</module>
+        <module>paster-webapp</module>
+	     
+    </modules>
+   
+
+      <repositories>
+
+        <repository>
+            <id>atlassian-public</id>
+            <name>atlassian-public</name>
+            <url>https://maven.atlassian.com/content/groups/public</url>
+        </repository> 
+        
+        <!--repository>
+            <id>codehaus</id>
+            <name>Codehaus</name>
+            <url>http://repository.codehaus.org</url>
+        </repository-->
+
+        <repository>
+            <id>scala</id>
+            <name>Scala tools</name>
+            <url>http://scala-tools.org/repo</url>
+        </repository>
+            
+        <repository>
+            <id>spring</id>
+            <name>Spring Release</name>
+            <url>http://maven.springframework.org/release</url>
+        </repository>
+            
+
+    
+    </repositories>
+
+  
+
+</project>

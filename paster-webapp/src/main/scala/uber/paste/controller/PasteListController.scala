@@ -72,9 +72,7 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
         total =0
 
         true
-        } else {
-        false
-      }
+        } else false     
 
     }
 
@@ -102,15 +100,16 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
 
   def getSearchResultByCode(code:String):SearchResult = {
     val out = PasteSearchResult.valueOf(code.toLowerCase)
-    return if (out==null) {PasteSearchResult.PASTE} else {out}
+    return if (out==null) 
+      PasteSearchResult.PASTE 
+          else out
   }
 
-  def getManagerBySearchResult(result:SearchResult):GenericSearchManager[_] = {
-    return result match {
-      case PasteSearchResult.PASTE => {manager()}
-      case PasteSearchResult.COMMENT => {commentManager}
+  def getManagerBySearchResult(result:SearchResult):GenericSearchManager[_] = return result match {
+      case PasteSearchResult.PASTE => manager()
+      case PasteSearchResult.COMMENT => commentManager
     }
-  }
+  
 
   @ModelAttribute("query")
    def newQuery():OwnerQuery = {
@@ -126,12 +125,12 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
     super.fillListModel(model,locale)
     model.addAttribute("title","Pastas")
 
-    if (!mailSource) {
+    if (!mailSource) 
       PasteSource.list.remove(PasteSource.MAIL)
-    }
-    if (!skypeSource) {
+    
+    if (!skypeSource) 
       PasteSource.list.remove(PasteSource.SKYPE)
-    }
+    
     
    
     model.addAttribute("availableSourceTypes",PasteSource.list)

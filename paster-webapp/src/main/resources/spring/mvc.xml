@@ -36,7 +36,8 @@
     <mvc:annotation-driven />
 
      <bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping"/>
-	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter"/>
+	
+     <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter"/>
 
     <!--oxm:jaxb2-marshaller id="jaxbMarshaller">
          <oxm:class-to-be-bound name="uber.paste.model.Paste" />

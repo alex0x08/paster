@@ -27,14 +27,11 @@ import org.apache.tiles.TilesException
 import org.apache.tiles.request.ApplicationContext
 import org.apache.tiles.request.Request
 import org.apache.tiles.request.servlet.ServletUtil
-import org.springframework.util.StringUtils
 import org.springframework.web.servlet.support.JstlUtils
 import org.springframework.web.servlet.support.RequestContext
 import org.springframework.web.servlet.support.RequestContextUtils
-import org.springframework.web.util.WebUtils
 import uber.paste.base.Loggered
-import uber.paste.model.KeyValue
-import uber.paste.model.KeyValueObj
+
 
 
 class DynamicTilesViewProcessor extends Loggered {
@@ -189,18 +186,12 @@ class DynamicTilesViewProcessor extends Loggered {
                 }
             }
 
-            
-    
-
-  
+   
     protected def createTilesRequest(applicationContext:ApplicationContext,
                                      request:HttpServletRequest, response:HttpServletResponse):Request = 
 	 new org.apache.tiles.request.servlet.ServletRequest(applicationContext, request, response) {
 			override def getRequestLocale():Locale = {
 				return RequestContextUtils.getLocale(request)
 			}
-		};
-	
-
-  
+		}  
 }
