@@ -24,45 +24,18 @@ import javax.persistence.criteria.CriteriaQuery
 import scala.collection.JavaConversions._
 
 
-abstract trait BaseDao[T <: java.io.Serializable,PK <:Long] {
-
-  /**
-   * Saves object of type T to database
-   * @param obj Object to save
-   * @return saved object instance
-   */
-  def save(obj:T):T
-
-  def persist(obj:T)
-
-  def remove(id:PK):Unit
-
-  def get(id:PK):T
-
-  def getFull(id:PK):T
-  
-  def getList():java.util.List[T]
-
-  def countAll():java.lang.Long
-
-  def exists(id:PK):Boolean
-
-  def getIdList(from:PK):java.util.List[PK]
-  
-}
-
 object BaseDaoImpl {
    val MAX_RESULTS  = 2000
 }
 
 @Transactional(readOnly = true)
-abstract class BaseDaoImpl[T <: java.io.Serializable,PK <:Long ](model:Class[T]) extends Loggered with BaseDao[T,PK]{
+abstract class BaseDaoImpl[T <: java.io.Serializable,PK <:Long ](model:Class[T]) extends Loggered 
+                                                                                    {
 
 
   protected class CriteriaSet {
     val cb = em.getCriteriaBuilder
-    val cr = cb.createQuery(model)
-    val r = cr.from(model)
+    val cr = cb.createQuery(model);  val r = cr.from(model)
   }
 
   @PersistenceContext
@@ -75,7 +48,7 @@ abstract class BaseDaoImpl[T <: java.io.Serializable,PK <:Long ](model:Class[T])
      */
   @Transactional(readOnly = false)
   def save(obj:T):T = {
-    logger.debug("saving obj "+obj)
+    logger.debug("saving obj {0}",obj)
     val out:T = em.merge(obj)
     em.flush()
     return out
@@ -92,8 +65,9 @@ abstract class BaseDaoImpl[T <: java.io.Serializable,PK <:Long ](model:Class[T])
 
   @Transactional
   def remove(id:PK):Unit = {
+    
     val obj:T = get(id)
-
+    
     if (obj!=null) {
       em.remove(obj)
       em.flush()
@@ -110,34 +84,27 @@ abstract class BaseDaoImpl[T <: java.io.Serializable,PK <:Long ](model:Class[T])
     val cq:CriteriaQuery[java.lang.Long] = cr.cb.createQuery(classOf[java.lang.Long])
     cq.select(cr.cb.count(cq.from(model)))
 
-    return em.createQuery(cq)
-      .getSingleResult().asInstanceOf[java.lang.Long]
-
+    return em.createQuery[java.lang.Long](cq)
+      .getSingleResult()
   }
 
   def getList():java.util.List[T] = {
 
     val cr = new CriteriaSet
 
-    val query:Query = em.createQuery(cr.cr.orderBy(cr.cb.desc(cr.r.get("id"))))
+    return em.createQuery[T](cr.cr.orderBy(cr.cb.desc(cr.r.get("id"))))
     .setMaxResults(BaseDaoImpl.MAX_RESULTS)
-    return query.getResultList().asInstanceOf[java.util.List[T]]
+    .getResultList()
   }
   
   
   def getIdList(from:PK):java.util.List[PK] = {
     
     val out = new ArrayList[PK]
-    
-   // val cr = new CriteriaSet
-
-    
-     val cb = em.getCriteriaBuilder
-    
-     val cr = cb.createTupleQuery()
+     
+     val cb = em.getCriteriaBuilder; val cr = cb.createTupleQuery()
  
-    val r = cr.from(model)
- 
+    val r = cr.from(model) 
     
     cr.multiselect(r.get("id"))
     

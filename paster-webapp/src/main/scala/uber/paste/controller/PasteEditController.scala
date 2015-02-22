@@ -16,15 +16,13 @@
 
 package uber.paste.controller
 
-import org.springframework.http.HttpStatus
-import org.springframework.security.crypto.codec.Base64
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.WebDataBinder
 import org.springframework.web.bind.annotation._
 import uber.paste.model._
-import org.springframework.beans.factory.annotation.{Value, Autowired}
-import java.io.ByteArrayOutputStream
-import uber.paste.manager.{CommentManager, PasteManager, ResourcePathHelper}
+import uber.paste.dao.CommentDaoImpl
+import uber.paste.dao.PasteDaoImpl
+import uber.paste.manager.ResourcePathHelper
 import org.springframework.ui.Model
 import scala.util.control.Breaks._
 import org.springframework.validation.BindingResult
@@ -32,29 +30,17 @@ import javax.validation.Valid
 import java.util.Locale
 import scala.collection.JavaConversions._
 import org.codehaus.jackson.annotate.JsonIgnore
-import org.apache.commons.io.IOUtils
 import org.apache.commons.lang3.{StringEscapeUtils,StringUtils}
 import org.apache.commons.lang3.text.WordUtils
 import scala.Array
 import com.google.gson.{JsonParser, GsonBuilder}
-import java.net.URL
 import com.google.gson.stream.MalformedJsonException
-import org.apache.http.impl.client.DefaultHttpClient
-import org.apache.http.client.methods.HttpGet
 import javax.annotation.Resource
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.MessageSource
 import java.util.ArrayList
-import org.apache.commons.io.FilenameUtils
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
-import java.nio.file.FileSystems
-import java.security.cert.X509Certificate;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.conn.scheme.Scheme;
-import org.apache.http.conn.ssl.SSLSocketFactory;
-import java.nio.file.FileSystems
+
 
 /**
  * Paste model controller
@@ -63,23 +49,18 @@ import java.nio.file.FileSystems
 @Controller
 @RequestMapping(Array("/paste"))
 //@SessionAttributes(Array(GenericController.MODEL_KEY))
-class PasteController extends VersionController[Paste]   {
+class PasteController extends GenericEditController[Paste]   {
 
   @Autowired
-  val pasteManager:PasteManager = null
+  val pasteManager:PasteDaoImpl = null
 
   @Autowired
-  val commentManager:CommentManager = null
+  val commentManager:CommentDaoImpl = null
 
   @Autowired
   val resourcePathHelper:ResourcePathHelper = null
   
   
-  @Value("${config.share.integration}")
-  val shareIntegration:Boolean = false
-
-  @Value("${config.share.url}")
-  val shareUrl:String = null
 
   @Resource(name="mimeTypeSource")
   protected val mimeSource:MessageSource = null
@@ -91,7 +72,7 @@ class PasteController extends VersionController[Paste]   {
   def editPage()="paste/edit"
   def viewPage()="paste/view"
 
-  def manager():PasteManager = return pasteManager
+  def manager():PasteDaoImpl = return pasteManager
 
   @InitBinder
   def initBinder(binder:WebDataBinder):Unit = {
@@ -100,8 +81,8 @@ class PasteController extends VersionController[Paste]   {
   //  binder.setDisallowedFields("id","lastModified")
   }
   
-  override def fillEditModel(obj:Paste,rev:Long,model:Model,locale:Locale)  {
-         super.fillEditModel(obj,rev,model,locale)
+  override def fillEditModel(obj:Paste,model:Model,locale:Locale)  {
+         super.fillEditModel(obj,model,locale)
 
     if (obj.isBlank) {
       model.addAttribute("title",getResource("paste.new",locale))
@@ -110,10 +91,7 @@ class PasteController extends VersionController[Paste]   {
           getResource("paste.edit.title",Array(obj.getId,obj.getName()),locale)))
       
       obj.getComments.addAll(
-        commentManager.getCommentsForPaste(obj.getId,
-                                           if (rev>0) rev 
-                                              else 
-                                                model.asMap.get("lastRevision").asInstanceOf[Long] ))
+        commentManager.getCommentsForPaste(obj.getId ))
     
       if (!model.containsAttribute("comment")) {
            model.addAttribute("comment",getNewCommentInstance(obj,model))
@@ -148,8 +126,7 @@ class PasteController extends VersionController[Paste]   {
       model.addAttribute("availablePrev",null)
     }
 
-    model.addAttribute("shareIntegration",shareIntegration)
-    model.addAttribute("shareUrl",shareUrl)
+ 
 
     //  obj.tagsAsString = for (s<-obj.getTags()) yield s+" "
 
@@ -177,39 +154,23 @@ class PasteController extends VersionController[Paste]   {
     
     p.setOwner(getCurrentUser)
     p.setPasteId(pp.getId)
-    p.setPasteRev(model.asMap.get("revision").asInstanceOf[Long])
+   
     return p
   }
 
   
-  @RequestMapping(value = Array("/newFrame"), method = Array(RequestMethod.GET))
-  @ResponseStatus(HttpStatus.CREATED)
-  def createNewFrame(model:Model,locale:Locale):String= {
-
-    fillEditModel(getNewModelInstance(),-1,model,locale)
-
-    return "paste/integrated/edit"
-  }
-  
-  @RequestMapping(value = Array("/integrated/pasteSaved/{id:[0-9]+}"), method = Array(RequestMethod.GET))
-  def pasteSavedPreview(@PathVariable("id") id:java.lang.Long,model:Model,locale:Locale):String = {
-    val r = getByPath(id,model,locale)
-    return if (!r.equals(viewPage))
-      r
-    else
-      "/paste/integrated/pasteSaved"
-  }
-
 
   @RequestMapping(value = Array("/removeComment"), method = Array(RequestMethod.POST,RequestMethod.GET))
   def removeComment(@RequestParam(required = true) commentId:java.lang.Long,
                     @RequestParam(required = true) pasteId:java.lang.Long,
-                    @RequestParam(required = true) pasteRev:java.lang.Long,
+                    
                     @RequestParam(required = true) lineNumber:java.lang.Long,
                     model:Model,locale:Locale):String = {
 
-    logger.debug("_removeComment  commentId="+commentId+" lineNumber="+lineNumber)
-
+    if (logger.isDebugEnabled) {
+      logger.debug("_removeComment commentId={0} , lineNumber ={1} {2}",commentId, lineNumber,"")
+    }
+  
     commentManager.remove(commentId)
 
     model.asMap().clear()
@@ -234,19 +195,21 @@ class PasteController extends VersionController[Paste]   {
           return page403
         }
     
-    val p = manager.getRevision(b.getPasteId, b.getPasteRev)
+      val p = manager.get(b.getPasteId)
 
         if (p==null) {
           return page404
         }
 
  
-        logger.debug("adding comment "+b)
+        logger.debug("adding comment {0}",b)
 
     if (result.hasErrors()) {
-      logger.debug("form has errors " + result.getErrorCount());
+      
+      logger.debug("form has errors {0}" , result.getErrorCount())
+      
       model.addAttribute("comment", b)
-      fillEditModel(p,b.getPasteRev,model,locale)
+      fillEditModel(p,model,locale)
 
       return viewPage
     }
@@ -256,55 +219,19 @@ class PasteController extends VersionController[Paste]   {
           b.getOwner().increaseTotalComments()
         }
 
-    
-    /*
-    b.setText(
-      KabaMarkupParser.getInstance().setSource(b.getText).setMode(AppMode.PASTE)
-      .setShareUrl(shareUrl)
-                .parseAll().get());
-    */
-    
+   
     commentManager.save(b)
-      //p.getComments().add(b)
-
-     // manager.save(p)
-
- /*   if (b.getOwner()!=null) {
-      SessionStore.instance.updateUser(b.getOwner())
-    }*/
+    
 
     model.asMap().clear()
 
     return "redirect:/main/paste/" + b.getPasteId + "#line_" + b.getLineNumber
   }
 
-  @RequestMapping(value = Array("/integrated/new/{integrationCode:[a-z0-9_]+}"),
-    method = Array(RequestMethod.GET))
-  @ResponseStatus(HttpStatus.CREATED)
-  def createNewIntegrated(model:Model,
-                          @PathVariable("integrationCode") integrationCode:String,
-                          locale:Locale):String= {
-
-    val newPaste =  getNewModelInstance()
-        newPaste.setIntegrationCode(integrationCode)
-
-    fillEditModel(newPaste,-1,model,locale)
-
-    return editPage
-  }
-
-
- @RequestMapping(value = Array("/save-plain"), method = Array(RequestMethod.POST))
-  override def save(@RequestParam(required = false) cancel:String,
-
-                              @Valid @ModelAttribute(GenericController.MODEL_KEY) b:Paste,
-                              result:BindingResult, model:Model,locale:Locale
-                              ,redirectAttributes:RedirectAttributes):String = {
-    return saveIntegrated(cancel,false,false,b,result,model,locale,redirectAttributes)
-  }
+  
 
     @RequestMapping(value = Array("/save"), method = Array(RequestMethod.POST))
-   def saveIntegrated(@RequestParam(required = false) cancel:String,
+   override def save(@RequestParam(required = false) cancel:String,
                       @RequestParam(required = false) integrationMode:Boolean,
                      @RequestParam(required = false) frameMode:Boolean,
            @Valid @ModelAttribute(GenericController.MODEL_KEY) b:Paste,
@@ -389,14 +316,12 @@ class PasteController extends VersionController[Paste]   {
     
        val out =super.save(cancel,b,result,model,locale,redirectAttributes)
       return if (out.equals(listPage))  {
-        if (frameMode) {
-          "paste/integrated/pasteSaved/"+b.getId
-        } else {
+       
      
         model.asMap().clear()
         "redirect:/main/paste/"+b.getId()
           
-        }
+      
       } else {
           if (integrationMode) {
             "paste/integrated/edit"
@@ -414,138 +339,6 @@ class PasteController extends VersionController[Paste]   {
     new Array[java.lang.Object](0),null,Locale.getDefault)
 
   
-   private def  getTrustingManager():Array[TrustManager] =  Array[TrustManager] { new X509TrustManager() {
-            override def getAcceptedIssuers(): Array[java.security.cert.X509Certificate] = null
-
-            override def checkClientTrusted(certs:Array[X509Certificate], authType:String) {
-                // Do nothing
-            }
-           override def checkServerTrusted(certs:Array[X509Certificate], authType:String)  {
-                // Do nothing
-            }        
-      }
-    }
-  
-
-  @RequestMapping(value = Array("/loadFrom"), method = Array(RequestMethod.GET,RequestMethod.POST))
-  def getRemote(@ModelAttribute(GenericController.MODEL_KEY) b:Paste,
-                         model:Model,
-                         locale:Locale):String = {
-
-    val client = new DefaultHttpClient; val method = new HttpGet(b.getRemoteUrl)
-
-     val sc:SSLContext = SSLContext.getInstance("SSL")
-     
-        sc.init(null, getTrustingManager(), new java.security.SecureRandom())
-
-        val socketFactory:SSLSocketFactory = new SSLSocketFactory(sc)
-        val sch:Scheme  = new Scheme("https", 443, socketFactory)
-        client.getConnectionManager().getSchemeRegistry().register(sch)
-    
-    val response =  client.execute(method)
-
-    var paste =  manager.getByRemoteUrl(b.getRemoteUrl)
-
-    if (paste==null) {
-      paste =getNewModelInstance(); paste.setRemoteUrl(b.getRemoteUrl)
-    } else {
-      paste.setName(null)
-    }
-
-    var fileName:String = null
-
-    val cd =response.getFirstHeader("Content-Disposition")
-    if (cd!=null) {
-      //val loop = new Breaks
-      breakable {
-        for (e<-cd.getElements) {
-          //     System.out.println("name="+e.getName)
-          if (e.getName().equalsIgnoreCase("attachment")||e.getName().equalsIgnoreCase("inline")) {
-            for (p<-e.getParameters) {
-              //                System.out.println("p="+p.getName+" |"+p.getValue)
-              if (p.getName.startsWith("filename")){
-                paste.setName(p.getValue)
-                fileName=p.getValue
-                break
-              }
-            }
-            break
-          }
-        }
-      }
-    }
-
-    if (StringUtils.isEmpty(paste.getName())) {
-      var fname =new URL(b.getRemoteUrl).getFile
-      if (fname!=null) {
-        fname = FilenameUtils.getName(fname)
-        fileName=fname
-      }
-      paste.setName(if (fname!=null) {fname} else {b.getRemoteUrl})
-    }
-
-      var mime:String = null
-      if (fileName!=null) {
-          mime=getMimeExtResource(FilenameUtils.getExtension(fileName))
-      }
-
-    if (mime==null) {
-      mime = response.getEntity.getContentType.getElements.head.getName
-    }
-
-    /*
-    for (el<-response.getEntity.getContentType.getElements) {
-               System.out.println("el "+el.getName+" "+el.getValue)
-                for (p<-el.getParameters) {
-                  System.out.println("p "+p.getName+" "+p.getValue)
-
-                }
-    } */
-
-    val codeType = getMimeResource(mime)
-
-    if (codeType == null) {
-        logger.debug("__unsupported mime type "+response.getEntity.getContentType.getValue)
-        model.addAttribute("statusMessageKey", "unsupported mime type "+response.getEntity.getContentType.getValue)
-      return "redirect:/main/paste/new"
-    }
-
-     paste.setCodeType(CodeType.valueOf(codeType))
-//     paste.setPasteSource(PasteSource.REMOTE)
-
-    val buf =new ByteArrayOutputStream
-
-    response.getEntity.writeTo(buf)
-
-    paste.setText(new String(buf.toByteArray))
-
-      fillEditModel(paste,-1,model,locale)
-
-//    paste=manager.save(paste)
-
-  //  model.asMap().clear()
-
-    return editPage
-    //"redirect:/main/paste/integrated/view/" + paste.getId()
- }
-
-  @RequestMapping(value = Array("/integrated/view/{id:[0-9]+}"), method = Array(RequestMethod.GET))
-  def getByPathIntegrated(@PathVariable("id") id:java.lang.Long,model:Model,locale:Locale):String = {
-    val r = getByPath(id,model,locale)
-    return if (!r.equals(viewPage))
-      r
-    else
-      "/paste/integrated/view"
-  }
-
-  @RequestMapping(value = Array("/integrated/preview/{id:[0-9]+}"), method = Array(RequestMethod.GET))
-  def getByPathIntegratedPreview(@PathVariable("id") id:java.lang.Long,model:Model,locale:Locale):String = {
-    val r = getByPath(id,model,locale)
-    return if (!r.equals(viewPage))
-      r
-    else
-      "/paste/integrated/preview"
-  }
 
   
   @RequestMapping(value = Array("/raw/view"), method = Array(RequestMethod.GET))

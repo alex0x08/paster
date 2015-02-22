@@ -16,9 +16,11 @@
 
 package uber.paste.controller
 
-import uber.paste.manager.GenericManager
+import uber.paste.dao.BaseDaoImpl
+import uber.paste.dao.StructDaoImpl
 import uber.paste.model.DBObject
 import org.springframework.web.bind.annotation._
+import uber.paste.model.Struct
 
 object GenericController {
   
@@ -29,7 +31,7 @@ object GenericController {
    
 }
 
-abstract class GenericController[T <: DBObject ] extends AbstractController {
+abstract class GenericController[T <: Struct ] extends AbstractController {
 
     
   protected def listPage:String
@@ -51,6 +53,6 @@ abstract class GenericController[T <: DBObject ] extends AbstractController {
     return viewPage;
   }
 
-  protected def manager():GenericManager[T,Long]
+  protected def manager():StructDaoImpl[T]
 
 }

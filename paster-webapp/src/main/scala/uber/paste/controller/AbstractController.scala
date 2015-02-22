@@ -30,8 +30,7 @@ import scala.collection.JavaConversions._
 import uber.paste.manager.UserManager
 import org.codehaus.jackson.annotate.JsonIgnore
 import org.springframework.web.bind.annotation._
-import uber.paste.manager.ConfigManager
-import uber.paste.manager.{PasteManager, GenericManager}
+import uber.paste.manager.ConfigManagerImpl
 
 object LocaleConstants {
   
@@ -57,8 +56,8 @@ abstract class AbstractController extends Loggered{
   val allowAnonymousPasteCreate:Boolean = false
  
   
-  @Autowired
-  val configManager:ConfigManager = null
+  //@Autowired
+ // val configManager:ConfigManagerImpl = null
 
   @ModelAttribute("allowAnonymousCommentsCreate")
   @JsonIgnore
@@ -73,9 +72,6 @@ abstract class AbstractController extends Loggered{
   def getAvailableOpenIDServers() = OpenIDServer.list
 */
 
-  @ModelAttribute("stats")
-  @JsonIgnore
-  def getStats() = PasteManager.Stats
   
   def getResource(key:String,locale:Locale):String = messageSource.getMessage(key,new Array[java.lang.Object](0),locale)
 

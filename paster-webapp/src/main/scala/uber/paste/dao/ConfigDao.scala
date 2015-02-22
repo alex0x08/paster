@@ -21,19 +21,10 @@ import uber.paste.model.ConfigProperty
 import org.springframework.transaction.annotation.Transactional
 
 
-trait ConfigDao extends KeyDao[ConfigProperty] {
-
-   def isPropertySet(code:String,value:String) : Boolean
-
-   def getProperty(code:String) : ConfigProperty
-
-   def getProperty(obj:ConfigProperty) : ConfigProperty
-  
-}
 
 @Repository("configDao")
 @Transactional(readOnly = true)
-class ConfigDaoImpl extends KeyDaoImpl[ConfigProperty](classOf[ConfigProperty]) with ConfigDao {
+class ConfigDaoImpl extends KeyDaoImpl[ConfigProperty](classOf[ConfigProperty]) {
 
   def getProperty(code:String) : ConfigProperty = {
     return getByKey(code)
@@ -43,7 +34,7 @@ class ConfigDaoImpl extends KeyDaoImpl[ConfigProperty](classOf[ConfigProperty]) 
      return getByKey(obj.getCode)
   }
 
-  override def isPropertySet(code:String,value:String) : Boolean = {
+   def isPropertySet(code:String,value:String) : Boolean = {
     return em.createQuery("SELECT count(c) FROM ConfigProperty c WHERE c.code = :code and c.value = :value")
       .setParameter("code", code)
       .setParameter("value", value)

@@ -17,12 +17,12 @@
 package uber.paste.manager
 
 import org.springframework.stereotype.Service
-import uber.paste.dao.UserDao
 import uber.paste.model.{SavedSession, User}
 import org.pac4j.core.credentials.Credentials
 import org.pac4j.springframework.security.authentication.ClientAuthenticationToken
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.userdetails.UsernameNotFoundException
+import uber.paste.dao.UserDaoImpl
 import uber.paste.dao.UserExistsException
 import org.springframework.dao.DataAccessException
 import org.springframework.security.core.userdetails.AuthenticationUserDetailsService
@@ -49,7 +49,7 @@ class UserLogoutSuccessHandler extends SimpleUrlLogoutSuccessHandler {
 
   //var cookieName:String = null
 
-  var userManager:UserManager =null
+  var userManager:UserManagerImpl =null
 
   @throws(classOf[IOException])
   @throws(classOf[ServletException])
@@ -79,8 +79,8 @@ class UserLogoutSuccessHandler extends SimpleUrlLogoutSuccessHandler {
  /* def getCookieName() = cookieName;
   def setCookieName(c:String) = {this.cookieName = c}
    */
-  def getUserManager():UserManager = userManager
-  def setUserManager(u:UserManager) {this.userManager =u}
+  def getUserManager():UserManagerImpl = userManager
+  def setUserManager(u:UserManagerImpl) {this.userManager =u}
 }
 
 
@@ -88,7 +88,7 @@ class UserAuthenticationProcessingFilter extends UsernamePasswordAuthenticationF
 
 //  val logger:Logger = Loggered.getLogger(this)
 
-  var userManager:UserManager =null
+  var userManager:UserManagerImpl =null
 
   //var cookieName:String = null
 
@@ -132,8 +132,8 @@ class UserAuthenticationProcessingFilter extends UsernamePasswordAuthenticationF
   /*def getCookieName() = cookieName;
   def setCookieName(c:String) = {this.cookieName = c}
     */
-  def getUserManager():UserManager = userManager
-  def setUserManager(u:UserManager) {this.userManager =u}
+  def getUserManager():UserManagerImpl = userManager
+  def setUserManager(u:UserManagerImpl) {this.userManager =u}
 }
 
 class UserRememberMeService extends AbstractRememberMeServices  {
@@ -157,7 +157,7 @@ class UserRememberMeService extends AbstractRememberMeServices  {
     var user:User = null;
     val cookieValue:String = UserManager.getCookieValue(request, getCookieName())
     if (cookieValue != null)    {
-      user = getUserDetailsService().asInstanceOf[UserManager].getUserBySavedSession(cookieValue)
+      user = getUserDetailsService().asInstanceOf[UserManagerImpl].getUserBySavedSession(cookieValue)
     }
     if (user != null)
     {
@@ -179,7 +179,8 @@ class UserRememberMeService extends AbstractRememberMeServices  {
     val sessionSso:String = request.getSession().getAttribute(cookieName).asInstanceOf[String]
     if (sessionSso != null)
     {
-      getUserDetailsService().asInstanceOf[UserManager].removeSession(UserManager.getCurrentUser().getId(),sessionSso);
+      getUserDetailsService().asInstanceOf[UserManagerImpl]
+              .removeSession(UserManager.getCurrentUser().getId(),sessionSso);
     }
 
     UserManager.invalidateSSOCookie(cookieName,response)
@@ -265,36 +266,13 @@ object UserManager extends Loggered{
 
 }
 
-trait UserManager extends StructManager[User] {
-
-    def getUserByUsername(username:String): User
-
-    def getUserByOpenID(openid:String): User
-
-    def getUserBySavedSession(sessionId:String): User
-
-    def removeSession(userId:java.lang.Long,sessionId:String)
-
-    def createSession(userId:java.lang.Long):SavedSession
-
-    def getSession(sessionId:String):SavedSession
-
-    def getSSOCookieName():String
-
-
-  }
 
 @Service("userManager")
-class UserManagerImpl extends StructManagerImpl[User] with UserManager 
-                         with UserDetailsService 
+class UserManagerImpl extends UserDetailsService 
                          with AuthenticationUserDetailsService[ClientAuthenticationToken]{
 
   @Autowired
-  val userDao:UserDao = null
-
-  protected override def getDao:UserDao = {
-    return userDao
-  }
+  val userDao:UserDaoImpl = null
 
   def getSSOCookieName():String = {
     //System.out.println("_call get sso cookie name")
@@ -302,6 +280,8 @@ class UserManagerImpl extends StructManagerImpl[User] with UserManager
   }
 
 
+  def save(u:User) = userDao.save(u)
+  
   @Override
   def getUser(userId:String): User = {
     return userDao.get(java.lang.Long.valueOf(userId));
@@ -346,7 +326,7 @@ class UserManagerImpl extends StructManagerImpl[User] with UserManager
   }
 
   @Secured(Array("ROLE_ADMIN"))
-  override def remove(id:Long) = super.remove(id)
+  def remove(id:Long) = userDao.remove(id)
 
   @Secured(Array("ROLE_ADMIN"))
   @Override

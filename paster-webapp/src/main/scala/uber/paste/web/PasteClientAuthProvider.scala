@@ -36,7 +36,7 @@ import org.springframework.security.core.AuthenticationException
 import org.springframework.security.core.userdetails.AuthenticationUserDetailsService
 import org.springframework.security.core.userdetails.UserDetailsChecker
 import uber.paste.base.Loggered
-import uber.paste.manager.UserManager
+import uber.paste.manager.UserManagerImpl
 import uber.paste.model.{User,Role}
 
 class PasteClientAuthProvider extends AuthenticationProvider with InitializingBean with Loggered {
@@ -44,7 +44,7 @@ class PasteClientAuthProvider extends AuthenticationProvider with InitializingBe
     
     private var clients:Clients = null
     
-    private var userDetailsService:UserManager = null
+    private var userDetailsService:UserManagerImpl = null
     
     private var userDetailsChecker:UserDetailsChecker = new AccountStatusUserDetailsChecker()
     
@@ -151,7 +151,7 @@ class PasteClientAuthProvider extends AuthenticationProvider with InitializingBe
     
     def getUserDetailsService() = this.userDetailsService
     
-    def setUserDetailsService(userDetailsService:UserManager) {
+    def setUserDetailsService(userDetailsService:UserManagerImpl) {
         this.userDetailsService = userDetailsService
     }
     

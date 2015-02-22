@@ -359,18 +359,7 @@
 
        
 
-        <dependency>
-            <groupId>com.jcabi</groupId>
-            <artifactId>jcabi-manifests</artifactId>
-            <version>0.8</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>log4j</groupId>
-                    <artifactId>log4j</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
+       
         <!--dependency>
             <groupId>org.apache.tika</groupId>
             <artifactId>tika-parsers</artifactId>
@@ -459,7 +448,11 @@
             <version>1.0.3</version>
         </dependency-->
 
-
+        <dependency>
+    <groupId>org.apache.commons</groupId>
+    <artifactId>commons-csv</artifactId>
+    <version>1.0</version>
+</dependency>
 
         <dependency>
             <groupId>classifier4j</groupId>
@@ -946,9 +939,12 @@
                 <directory>src/main/resources</directory>
                 <includes>
                     <include>*.xml</include>
+                    <include>*.csv</include>
+                    
                     <include>logging.properties</include>
                     <include>messages*.properties</include>
                     <include>mime*.properties</include>                
+                     <include>Validation*.properties</include>                
                 </includes>
                 <filtering>false</filtering>
             </resource>

@@ -52,7 +52,7 @@
                            </span>
                            
                         </button>
-                        <a class="navbar-brand" href="#" style="padding-top:15px;padding-right: 0; margin-right: 0;">
+                        <a class="navbar-brand" href="<c:url value='/'/>" style="padding-top:15px;padding-right: 0; margin-right: 0;">
                             <span class="i" style="font-size:3em;">/</span>
                         </a>
                         <span class="visible-xs navbar-text" style="font-size:1.5em;margin-top:15px;">

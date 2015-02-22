@@ -16,25 +16,20 @@
 
 package uber.paste.manager
 
+import uber.paste.dao.ConfigDaoImpl
 import uber.paste.model.ConfigProperty
-import uber.paste.dao.ConfigDao
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.stereotype.Service
 import org.springframework.beans.factory.annotation.Autowired
 
-trait ConfigManager extends StructManager[ConfigProperty]{
-
-  def getProperty(code:String)
-
-  def isPropertySet(code:String,value:String)
-}
-
 @Service("configManager")
-class ConfigManagerImpl extends StructManagerImpl[ConfigProperty] with ConfigManager{
+class ConfigManagerImpl {
 
   @Autowired
-  val configDao:ConfigDao = null
+  @Qualifier("configDao")
+  var configDao:ConfigDaoImpl = null
 
-  protected override def getDao:ConfigDao = configDao
+  protected def getDao:ConfigDaoImpl = configDao
 
   def getProperty(code:String) = configDao.getProperty(code)
  

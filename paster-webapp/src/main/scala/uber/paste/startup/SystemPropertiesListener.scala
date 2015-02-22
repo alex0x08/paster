@@ -12,14 +12,12 @@ import ch.qos.logback.classic.joran.JoranConfigurator
 import ch.qos.logback.classic.util.ContextInitializer
 import ch.qos.logback.core.joran.spi.JoranException
 import ch.qos.logback.core.util.StatusPrinter
-import com.jcabi.manifests.Manifests
 import java.io.{IOException, File}
 import uber.paste.base.SystemInfo
 import uber.paste.base.plugins.PluginUI
 import uber.paste.model.AppVersion
 import org.apache.commons.io.FileUtils
 import org.apache.commons.io.IOUtils
-import org.h2.tools.Server
 import org.slf4j.LoggerFactory
 import scala.collection.JavaConversions._
 

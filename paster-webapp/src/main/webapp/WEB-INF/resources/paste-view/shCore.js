@@ -431,30 +431,37 @@ var sh = {
 
     },  insertComment: function(cl,mode,count) {
     // alert(mode+' sub '+id);
-        var lineNumber =  cl.getAttribute('lineNumber'),
+        var lineNumber =  parseInt(cl.getAttribute('lineNumber')),
                 id =  cl.getAttribute('commentId');
             
     
+   
     if (mode == 1) {
         
-              cl.setStyle('padding-left','2em');  
-              $(sh.vars.modelId+'_comment_l'+cl.getAttribute('parentCommentId')).grab(cl,"after");
-       
+              cl.setStyle('padding-left','20px');
+             // $(sh.vars.modelId+'_comment_l'+cl.getAttribute('parentCommentId')).grab(cl,"after");
+             var ln = lineNumber+1;
+               $(sh.vars.modelId+'_cl_'+ln).grab(cl,"before");
+              
             } else {
                 
                 $(sh.vars.modelId+'_cl_'+lineNumber).grab(cl,"after");
-    
+               
             }
     
-      var space = $(sh.vars.modelId+"_numSpace_l"+id),
-              calc_size = cl.getComputedSize()["totalHeight"];
-    //cl.getStyle("height")+$('cl_'+lineNumber).getStyle("height");
-    //alert(calc_size);
-    space.setStyle("height",calc_size);
-
-    $(sh.vars.modelId+'_ln_'+lineNumber).grab(space,"after");
-
-    cl.setStyle("display","");
+            cl.setStyle("display","");
+            
+     var space = $(sh.vars.modelId+"_numSpace_l"+id),
+              calc_size = parseInt(cl.getComputedSize()["totalHeight"])+1;
+              space.setStyle("height",calc_size+"px");
+       cl.setStyle("height",calc_size+"px");
+    if (mode == 1) {
+         $(sh.vars.modelId+'_ln_'+ln).grab(space,"before");        
+    } else {        
+         $(sh.vars.modelId+'_ln_'+lineNumber).grab(space,"after");
+    }
+      
+     
     
 /*
 $('cl_lineHtml_'+lineNumber).setStyle('background-color','yellow');
@@ -468,6 +475,7 @@ $('cl_lineHtml_'+lineNumber).setStyle('background-color','yellow');
         if (sh.vars.currentEditLine != null) {
             $(modelId+'_cl_lineHtml_'+sh.vars.currentEditLine).setStyle("display","");
             $(modelId+'_cl_linePlain_'+sh.vars.currentEditLine).setStyle("display","none");
+             sh.vars.currentEditLine = null;
         }
 
 
@@ -486,12 +494,13 @@ $('cl_lineHtml_'+lineNumber).setStyle('background-color','yellow');
                 //alert(cForm.getElementById('parentId').get('value'));
             }
 
-        cForm.setStyle("display","");
-        $("numSpace").setStyle("display","");
+       
 
         cForm.getElementById('commentText').set("value","");
         cForm.setStyle("position","relative");
-
+        cForm.setStyle("max-width",window.innerWidth-100);
+        
+        cForm.setStyle("display","");
             if (sh.vars.currentEditLine != null) {
                // alert('hide prev '+sh.vars.currentEditModel+'|line='+sh.vars.currentEditLine);
                 $(sh.vars.currentEditModel + '_cl_lineHtml_' + sh.vars.currentEditLine).setStyle("display", "");
@@ -518,27 +527,20 @@ $('cl_lineHtml_'+lineNumber).setStyle('background-color','yellow');
             $(modelId+'_cl_'+lineNumber).grab(cForm,"after");
         }
         
-        $$('div.commentCurrent').each(function(el){
-                               el.removeClass('commentCurrent');
-                                el.addClass('commentInner');
-               });
-      
-            if (parentId>0) {
-                
-                
-                $(modelId+'_comment_l'+parentId).getElementById('innerBlock').removeClass('commentInner');
-                $(modelId+'_comment_l'+parentId).getElementById('innerBlock').addClass('commentCurrent');
-           }
-    
-        //}
-
-        
-           var calc_size = cForm.getComputedSize()["totalHeight"];
+       
+           var calc_size = parseInt(cForm.getComputedSize()["totalHeight"])+1;
  
            nspace.setStyle("height",calc_size);
 
-        $(modelId+'_ln_'+lineNumber).grab(nspace,"after");
-
+          cForm.setStyle("height",calc_size+" !important");
+        
+        if (parentId>0) {             
+             $(modelId+"_numSpace_l"+parentId).grab(nspace,"after");
+         } else {
+             $(modelId+'_ln_'+lineNumber).grab(nspace,"after");             
+         }
+         
+        nspace.setStyle("display","");
         setTimeout(function() { cForm.getElementById('commentText').focus(); }, 1);
 
     }
@@ -1562,7 +1564,7 @@ sh.Highlighter.prototype = {
 
              out+='<span id="'+sh.vars.modelId+'_cl_lineHtml_'+lineNumber+'"><a  href="javascript:void(0);"  class="linkLine" title="Comment line '+lineNumber+'" onclick="SyntaxHighlighter.insertEditForm('+sh.vars.modelId+','+lineNumber+',0);">' + code + '</a></span>';
              out+='<span style="display:none;"  id="'+sh.vars.modelId+'_cl_linePlain_'+lineNumber+'">';
-             out+='<span style="background-color: yellow;"  id="'+sh.vars.modelId+'_cl_linePlainCode_'+lineNumber+'">' + code + '</span></span>';
+             out+='<span style="background-color: yellow;height:1em;"  id="'+sh.vars.modelId+'_cl_linePlainCode_'+lineNumber+'">' + code + '</span></span>';
 
          }
         return out+='</div>';

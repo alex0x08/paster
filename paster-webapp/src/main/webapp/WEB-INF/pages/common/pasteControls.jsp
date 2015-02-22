@@ -27,20 +27,15 @@
                     <tiles:putAttribute name="modelName" value="paste"/>
                 </tiles:insertDefinition>
 
+               Created by
                 <tiles:insertDefinition name="/common/owner" >
                     <tiles:putAttribute name="model" value="${model}"/>
                     <tiles:putAttribute name="modelName" value="paste"/>
-                </tiles:insertDefinition>
+                </tiles:insertDefinition> ,
 
                 <tiles:insertDefinition name="/common/commentCount" >
                     <tiles:putAttribute name="model" value="${model}"/>
                     <tiles:putAttribute name="modelName" value="paste"/>
-                </tiles:insertDefinition>
-
-                <tiles:insertDefinition name="/common/deleteLink" >
-                    <tiles:putAttribute name="model" value="${model}"/>
-                    <tiles:putAttribute name="modelName" value="paste"/>
-                    <tiles:putAttribute name="currentUser" value="${currentUser}"/>
                 </tiles:insertDefinition>
 
                 <span style="font-size: 9px;">

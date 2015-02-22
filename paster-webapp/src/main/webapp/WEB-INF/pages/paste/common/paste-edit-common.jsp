@@ -38,9 +38,9 @@
           
                   <div class="col-md-8 col-xs-10">
          
-                   <ul class="nav nav-tabs nav-append-content" data-behavior="BS.Tabs">
+                   <ul class="nav nav-tabs nav-append-content" data-behavior="BS.Dropdown BS.Tabs">
                        <li>
-                           <a>
+                           <a class="tab" aria-controls="mainTab">
                                <c:choose>
                                    <c:when test="${model.blank}">
                                        <fmt:message key="paste.new"/>
@@ -51,11 +51,34 @@
                                </c:choose>
                            </a>
                        </li>
-                <li><a><fmt:message key="paste.editor.title"/></a></li>
+             
+                
+                <li  class="dropdown">
+    <a class="dropdown-toggle"
+      
+       data-toggle="dropdown" >
+     <fmt:message key="paste.editor.title"/><span class="caret"></span>
+    </a>
+          
+    <ul class="dropdown-menu" role="menu" id="theme">
+      
+        <li role="presentation"  aria-controls="syntaxTab">
+            <a role="menuitem"   ><fmt:message key="paste.syntax.title"/></a>
+        </li>
+        <li role="presentation" class="divider"></li>
+        
+         <li role="presentation"  aria-controls="colorTab">
+            <a role="menuitem"  ><fmt:message key="paste.editor.theme.title"/></a>
+        </li>
+    </ul>
+  </li>
+                
 
             </ul>
             <div class="tab-content">
-                <div class="tab-pane">
+                
+             
+                <div class="tab-pane" id="mainTab">
              
                     <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8">
 
@@ -77,22 +100,25 @@
                                     </a> </form:label>
                                 <fmt:message key="paste.edit.title.placeholder" var="titlePlaceHolder"/>
                                 <form:input  cssClass="form-control" 
-                                             cssErrorClass="error" path="name" name="title"
+                                              path="name" name="title"
                                              id="pname"  maxlength="255" title="${pasteTitle}" placeholder="${titlePlaceHolder}"  />
-                                <form:errors path="name" cssClass="error" />
-
+                                
+                                
+                                <form:errors element="div" path="name" cssClass="alert alert-danger" />
+                                
 
                             </div>
 
-                            <div class="col-xs-5 col-sm-6 col-md-2 col-lg-2 " >
+                            <div class="col-xs-8 col-sm-6 col-md-3 col-lg-3 " >
 
 
                                 <form:label cssClass="control-label" path="priority">
-                                    <fmt:message key="paste.priority"/>
-                                    <span id="priorPreview" class="i priority_normal" >/</span>
+                                   <fmt:message key="paste.priority"/>
+                                     
                                 </form:label>
                                 
-                                
+                                <p>
+                                  
                                 <form:select 
                                              path="priority" multiple="false" id="pprior">
                                     <c:forEach items="${availablePriorities}" var="prior">
@@ -100,8 +126,16 @@
                                             <fmt:message key="${prior.name}"/>
                                         </form:option>
                                     </c:forEach>
-                                </form:select>                              
-                            </div>
+                                </form:select> 
+                                    
+                                      <span id="priorPreview" 
+                                      class="i priority_normal"
+                                      style="font-size:4em;line-height: 18px;vertical-align: top;" >/</span>
+                             
+                                </p>
+                              
+                               
+                           </div>
           
                         
 
@@ -148,15 +182,16 @@
               
 
                 </div>
-                <div class="tab-pane">
+                                
+                <div class="tab-pane" id="syntaxTab" >
                     
-                        <div class="col-xs-5 col-sm-6 col-md-4 col-lg-2">
-                            
-                            <form:label cssClass="control-label" path="codeType">
-                                <fmt:message key="paste.syntax.title"/>
-                            </form:label>
-                            
-                            <form:select 
+                      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-2">
+                         
+                          <form:label path="codeType" cssClass="control-label" title="Select syntax" >
+                                 Select syntax
+                                </form:label>
+                                               
+                              <form:select
                                          path="codeType" 
                                          multiple="false" id="ptype">                    
                                 <c:forEach items="${availableCodeTypes}" var="codeType">
@@ -165,16 +200,26 @@
                                     </form:option>
                                 </c:forEach>
                             </form:select> 
+                                 <p class="help-block"> 
+                                     <a class="btn btn-xs" href="#">
+                                         <i class="fa fa-check-square-o"></i>Set as default</a>
+                                 </p>
+                       
+                        
                            
                         </div>
+                         
+                    
+                </div>
+                <div class="tab-pane" id="colorTab">
+                    
+                       <div class="col-xs-6 col-sm-4 col-md-4 col-lg-3">
 
-
-                        <div class="col-xs-5 col-sm-6 col-md-2 col-lg-2">
-
-                            <label class="control-label" for="theme">
-                                <fmt:message key="paste.editor.theme.title"/>
-                            </label>
-                            <select  id="theme" size="1" >
+                            <label for="ptheme" class="control-label"  >
+                                Select color theme
+                                </label>
+                            
+                             <select  id="ptheme" size="1" >
                                 <optgroup label="Bright">
                                     <option value="ace/theme/chrome">Chrome</option>
                                     <option value="ace/theme/clouds">Clouds</option>
@@ -209,10 +254,28 @@
                                     <option value="ace/theme/vibrant_ink">Vibrant Ink</option>
                                 </optgroup>
                             </select>
-
-
+                             <p class="help-block">
+                                 <a class="btn btn-xs" href="#"><i class="fa fa-check-square-o"></i> Set as default</a></p>
+                       
                         </div>
+                      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-2">
                     
+                         <label for="fontsize">Font Size</label>
+   
+        <select id="fontsize" size="1">
+          <option value="10px">10px</option>
+          <option value="11px">11px</option>
+          <option value="12px" selected="selected">12px</option>
+          <option value="13px">13px</option>
+          <option value="14px">14px</option>
+          <option value="16px">16px</option>
+          <option value="18px">18px</option>
+          <option value="20px">20px</option>
+          <option value="24px">24px</option>
+        </select>
+                         
+                     </div>
+                   
                 </div>
 
             </div>
@@ -224,8 +287,11 @@
                                       <c:choose>
                                     <c:when test="${empty currentUser and !allowAnonymousCommentsCreate}">
 
+                                        <div class="alert alert-warning" role="alert">
                                         <fmt:message key="auth.login-to-save-changes"/>
-
+    
+                                        </div>
+                                        
                                     </c:when>
                                     <c:otherwise>
 
@@ -268,7 +334,7 @@
                     <div id="editor" style="height: 50em;">
                     </div>
 
-                    <form:errors path="text" cssClass="error" />
+                    <form:errors path="text"  cssClass="alert alert-danger" element="div" />
 
 
                     <div class="form-buttons">
@@ -277,8 +343,10 @@
                             <c:choose>
                                 <c:when test="${empty currentUser and !allowAnonymousCommentsCreate}">
 
-                                    <fmt:message key="auth.login-to-save-changes"/>
+                                    <div class="alert alert-warning" role="alert">
+                                        <fmt:message key="auth.login-to-save-changes"/>
 
+                                    </div>  
                                 </c:when>
                                 <c:otherwise>
 
@@ -335,6 +403,7 @@
 
     var max_length = 100;
 
+    var editor;
 
     window.addEvent('paste', function(e) {
         if (e.event.clipboardData) {
@@ -372,8 +441,13 @@
             eventTrigger: 'keyup'			//The event that triggers the count update
         });
 
-        var editor = ace.edit("editor");
+
+        
+        editor = ace.edit("editor");
         editor.setTheme("ace/theme/chrome");
+        editor.setOptions({
+                autoScrollEditorIntoView: true
+            });
         editor.getSession().setMode("ace/mode/${model.codeType.editType}");
 
         var textarea = document.getElementById("ptext");
@@ -397,6 +471,9 @@
         });
 
 
+        $('ptheme').addEvent('change', function(event) {
+            editor.setTheme(this.getElement(':selected').value);
+        });
         $('normalized').addEvent('click', function() {
             if (this.get('checked')) {
                 var col = 80;
@@ -409,9 +486,11 @@
             }
         });
 
-        $('theme').addEvent('change', function(event) {
-            editor.setTheme(this.getElement(':selected').value);
+        
+          $('fontsize').addEvent('change', function(event) {
+               editor.setFontSize(this.getElement(':selected').get("value"));
         });
+
 
 
         $('ptype').addEvent('change', function(event) {

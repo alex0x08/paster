@@ -114,7 +114,8 @@
 
                                    <a class="pastePreviewLink" href="<c:url value="/${paste.id}"></c:url>" pasteId="${paste.id}" 
                                       title="Click to view paste vol. ${paste.id}">
-                                       <img src="${thumbUrl}" width="250" height="150" class="p-comment"  />
+                                       <img src="${thumbUrl}"  
+                                            class="img-thumbnail img-responsive p-comment"  />
                                    </a>
                                    
                                </div>

@@ -20,22 +20,18 @@ import uber.paste.model.Key
 import javax.persistence.Query
 import org.springframework.transaction.annotation.Transactional
 
-trait KeyDao[T <: Key] extends StructDao[T] {
-
-    def getByKey(code:String) : T
-}
 
 @Transactional(readOnly = true)
-abstract class KeyDaoImpl[T <: Key](model:Class[T]) extends StructDaoImpl[T](model) with KeyDao[T]{
+abstract class KeyDaoImpl[T <: Key](model:Class[T]) extends StructDaoImpl[T](model) {
 
   def getByKey(code:String) : T = {
 
     val cr = new CriteriaSet
 
-    val query:Query = em.createQuery(cr.cr.where(Array(cr.cb.equal(cr.r.get("code"), code)):_*).select(cr.r))
+    val query= em.createQuery[T](cr.cr.where(Array(cr.cb.equal(cr.r.get("code"), code)):_*).select(cr.r))
     val results = query.getResultList()
 
-    return if (results.isEmpty()) null.asInstanceOf[T] else results.get(0).asInstanceOf[T]
+    return if (results.isEmpty()) null.asInstanceOf[T] else results.get(0)
 
   }
 

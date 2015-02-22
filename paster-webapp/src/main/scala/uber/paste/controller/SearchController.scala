@@ -16,7 +16,7 @@
 
 package uber.paste.controller
 
-import uber.paste.manager.GenericSearchManager
+import uber.paste.dao.SearchableDaoImpl
 import javax.servlet.http.HttpServletRequest
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation._
@@ -74,7 +74,7 @@ abstract class SearchController[T <: Struct,QV <: Query ] extends GenericListCon
    * linked search manager
    * @return
    */
-  protected override def manager():GenericSearchManager[T]
+  protected override def manager():SearchableDaoImpl[T]
  
    //@ModelAttribute
    def newQuery():QV
@@ -87,7 +87,7 @@ abstract class SearchController[T <: Struct,QV <: Query ] extends GenericListCon
 
   def getSearchResultByCode(code:String):SearchResult
 
-  def getManagerBySearchResult(result:SearchResult):GenericSearchManager[_]
+  def getManagerBySearchResult(result:SearchResult):SearchableDaoImpl[_]
 
   override protected def fillListModel(model:Model,locale:Locale) {
            super.fillListModel(model,locale)
@@ -140,12 +140,12 @@ abstract class SearchController[T <: Struct,QV <: Query ] extends GenericListCon
            } catch {
              case e:ParseException => {
                logger.error(e.getLocalizedMessage,e)
-               return new PagedListHolder[T]();
+               return new PagedListHolder[T]()
              }
            }
          }
        },r.getItemsModel(),false
-       );
+       )
 
       //  totalFound+=rout.size()
 
@@ -184,7 +184,7 @@ abstract class SearchController[T <: Struct,QV <: Query ] extends GenericListCon
     return if(StringUtils.isBlank(query.getQuery()))
       getManagerBySearchResult(result).getList()
     else
-      getManagerBySearchResult(result).search(query)
+      getManagerBySearchResult(result).search(query.getQuery)
   }
 
   override def listImpl( request:HttpServletRequest, locale:Locale,  model:Model,

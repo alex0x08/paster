@@ -20,6 +20,7 @@ import javax.persistence._
 import javax.validation.constraints.NotNull
 import uber.paste.base.SystemInfo
 
+
 object ConfigProperty extends KeyValueObj[ConfigProperty]{
   
   val IS_INSTALLED = new ConfigProperty("config.property.is-installed","IS_INSTALLED","1")
@@ -31,23 +32,26 @@ object ConfigProperty extends KeyValueObj[ConfigProperty]{
   add(EXTERNAL_SITE_URL)
   
   
+  def createNew = new Builder(new ConfigProperty)
   
 
+  class Builder(model:ConfigProperty) extends Named.NamedBuilder[ConfigProperty](model){
+  
+    def addValue(value:String): Builder  = {
+      get.setValue(value); return this
+    }
+
+  }
 }
 
 @Entity
 class ConfigProperty extends KeyValue with java.io.Serializable {
 
-  
-  
-def this(name:String,code:String,value:String) = {
-    this()
-    setName(name)
-    setCode(code)
-    setValue(value)
-  }
-  
     
+def this(name:String,code:String,value:String) = {
+    this(); setName(name)
+    setCode(code); setValue(value)
+  }
   
   
 }

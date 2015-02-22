@@ -8,13 +8,7 @@
     <c:when test="${not empty model.owner and model.owner ne currentUser}">
         
         
-        <a href="http://ru.gravatar.com/site/check/${model.owner.email}" title="GAvatar">
-            <img style="vertical-align: middle;padding-bottom: 2px;" src="
-                 <c:url value='http://www.gravatar.com/avatar/${model.owner.avatarHash}'>
-                     <c:param name='s' value='32'/>
-                     <c:param name='d' value='monsterid'/>
-                 </c:url>"/>
-        </a>
+      
         <span style="display: inline;  ">
             <a title="Contact ${model.owner.name}"  href="mailto:${model.owner.username}?subject=<c:out value='${model.text}' escapeXml="true"/>"><c:out value="${model.owner.name}" /></a>
         </span>

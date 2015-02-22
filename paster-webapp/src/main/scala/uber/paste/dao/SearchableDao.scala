@@ -46,32 +46,21 @@ import java.util.ArrayList
 import scala.collection.JavaConversions._
 import uber.paste.base.Loggered
 
-object SearchableDao {
+object SearchableDaoImpl {
   
   val FORMATTER = new SimpleHTMLFormatter("[result]", "[/result]")
 
   val DEFAULT_START_FIELDS = Array[String]("name")
   
-  val searchableDao = new ArrayList[SearchableDao[_]]()
+  val searchableDao = new ArrayList[SearchableDaoImpl[_]]()
 }
-
-abstract trait SearchableDao[T <: Struct] extends VersionDao[T] {
-
-  @throws(classOf[ParseException])
-  def search(query:String):java.util.List[T]
-  
-  def indexAll()
-  
-  def getDefaultStartFields():Array[String]
-}
-
 
 
 @Transactional(readOnly = true)
 abstract class SearchableDaoImpl[T <: Struct](model:Class[T])
-  extends VersionDaoImpl[T](model) with SearchableDao[T] {
+  extends StructDaoImpl[T](model)  {
     
-  SearchableDao.searchableDao.add(this)
+  SearchableDaoImpl.searchableDao.add(this)
   
   @throws(classOf[ParseException])
   protected class FSearch(query:String) extends Loggered{
@@ -87,7 +76,7 @@ abstract class SearchableDaoImpl[T <: Struct](model:Class[T])
         
         val luceneQuery:org.apache.lucene.search.Query = pparser.parse(query)
         val scorer:QueryScorer = new QueryScorer(luceneQuery)
-        val highlighter:Highlighter = new Highlighter(SearchableDao.FORMATTER, scorer)
+        val highlighter:Highlighter = new Highlighter(SearchableDaoImpl.FORMATTER, scorer)
         
             highlighter.setTextFragmenter(new SimpleSpanFragmenter(scorer, 100))
     
@@ -101,7 +90,7 @@ abstract class SearchableDaoImpl[T <: Struct](model:Class[T])
    def getFullTextEntityManager() = Search.getFullTextEntityManager(em)
 
    def getDefaultStartFields():Array[String] = {
-        return SearchableDao.DEFAULT_START_FIELDS
+        return SearchableDaoImpl.DEFAULT_START_FIELDS
     }
   
    def fillHighlighted(highlighter:Highlighter,

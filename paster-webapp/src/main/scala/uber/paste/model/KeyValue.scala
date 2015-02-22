@@ -29,17 +29,17 @@ import java.beans.PropertyEditorSupport
 
 class KeyValueEditor[T <: KeyValue](vobj:KeyValueObj[T]) extends PropertyEditorSupport{
 
-  override def setAsText(text:String):Unit = {
+  override def setAsText(text:String) {
     setValue(vobj.valueOf(text.toLowerCase));
   }
 
   override def getAsText():String = {
     val s = getValue().asInstanceOf[T]
-    return if (s == null) {
+    return if (s == null) 
       null
-    } else {
+     else 
       s.getCode().toString()
-    }
+    
   }
 }
 
@@ -54,18 +54,15 @@ class KeyValue extends Key with java.io.Serializable{
   private var value: String = null
   
   def this(code:String) = {
-    this()
-    setCode(code)
+    this(); setCode(code)
   }
 
   def this(code:String,value:String) = {
-    this()
-    setCode(code)
-    this.value=value
+    this();  setCode(code); this.value=value
   }
    
   def getValue() : String = value
-  def setValue(f:String) : Unit = {value = f }
+  def setValue(f:String)  {value = f }
 
    override def toString():String = Loggered.getNewProtocolBuilder(this)
                 .append("value", value)

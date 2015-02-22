@@ -39,6 +39,12 @@ object Struct {
   final val DB_DATE_FORMAT_FULL = "dd.MM.yyyy HH:mm:ss"
 
   final val SD_FULL = new SimpleDateFormat(DB_DATE_FORMAT_FULL)
+  
+    abstract class AbstractBuilder[T <: java.io.Serializable](obj:T) extends Loggered{
+  
+        def get():T = obj 
+  
+        }
 }
 
 @MappedSuperclass

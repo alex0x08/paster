@@ -138,8 +138,8 @@
               <jsTargetDir>/paster-view/js</jsTargetDir>
               <cssTargetDir>/paster-view/css</cssTargetDir>
               <jsSourceFiles>
-                  <jsSourceFile>xregexp.js</jsSourceFile>
-                  <jsSourceFile>shCore.js</jsSourceFile>
+                  <!--jsSourceFile>xregexp.js</jsSourceFile-->
+                  <!--jsSourceFile>shCore.js</jsSourceFile-->
                   <jsSourceFile>shLegacy.js</jsSourceFile>
                   <jsSourceFile>shUber.js</jsSourceFile>
                   

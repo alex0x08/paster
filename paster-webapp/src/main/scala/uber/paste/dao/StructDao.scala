@@ -19,15 +19,10 @@ package uber.paste.dao
 import uber.paste.model.Struct
 import org.springframework.transaction.annotation.Transactional
 
-trait StructDao[T <: Struct] extends BaseDao[T,Long]{
-
-   def getFull(id:Long):T
-  
-}
 
 @Transactional(readOnly = true)
 abstract class StructDaoImpl[T <: Struct](model:Class[T])
-  extends BaseDaoImpl[T,Long](model) with StructDao[T] {
+  extends BaseDaoImpl[T,Long](model)  {
 
   @Transactional
   def getFull(id:Long):T = {

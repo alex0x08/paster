@@ -19,17 +19,16 @@ package uber.paste.startup
 
 import java.util.Calendar
 import javax.servlet.{ServletContextListener, ServletContext, ServletContextEvent}
+import org.apache.commons.csv.CSVFormat
 import org.springframework.context.ApplicationContext
 import org.springframework.web.context.support.WebApplicationContextUtils
 import uber.paste.model._
 import uber.paste.dao._
-import uber.paste.build._
 import java.io.IOException
 import uber.paste.dao.UserExistsException
 import uber.paste.base.{MergedPropertyConfigurer, Loggered, SystemInfo}
-import uber.paste.build._
+import java.io.InputStreamReader
 import java.nio.file._
-import uber.paste.manager.PasteManager
 import scala.collection.JavaConversions._
 
 /*
@@ -85,9 +84,9 @@ class StartupListener extends ServletContextListener with Loggered{
                                               .asInstanceOf[MergedPropertyConfigurer]
 
 
-    val configDao:ConfigDao = ctx.getBean("configDao").asInstanceOf[ConfigDao]
-    val pasteDao:PasteDao = ctx.getBean("pasteDao").asInstanceOf[PasteDao]
-    val projectDao:ProjectDao = ctx.getBean("projectDao").asInstanceOf[ProjectDao]
+    val configDao:ConfigDaoImpl = ctx.getBean("configDao").asInstanceOf[ConfigDaoImpl]
+    val pasteDao:PasteDaoImpl = ctx.getBean("pasteDao").asInstanceOf[PasteDaoImpl]
+    val projectDao:ProjectDaoImpl = ctx.getBean("projectDao").asInstanceOf[ProjectDaoImpl]
 
     
      /*PluginUI.load(getClass().getResourceAsStream("/paster-ui-definitions.xml"))
@@ -170,7 +169,7 @@ class StartupListener extends ServletContextListener with Loggered{
 
       for(p<-Priority.list) {
         
-        PasteManager.Stats.valueOf(p.getCode).increment(pasteDao.countAll(p).toInt)
+      //  PasteManager.Stats.valueOf(p.getCode).increment(pasteDao.countAll(p).toInt)
         
       }
 
@@ -181,43 +180,33 @@ class StartupListener extends ServletContextListener with Loggered{
     }
 
 
-    val userDao:UserDao = ctx.getBean("userDao").asInstanceOf[UserDao]
+    val userDao:UserDaoImpl = ctx.getBean("userDao").asInstanceOf[UserDaoImpl]
 
 
     try {
 
       
-      val admin = userDao.save(
-        UserBuilder.createNew()
-        .addRole(Role.ROLE_ADMIN)
-        .addUsername("admin")
-        .addPassword("admin")
-        .addName("Default")
+      val r = new InputStreamReader(getClass().getResourceAsStream("/default_users.csv"))
+      
+      val records = CSVFormat.DEFAULT.withHeader().parse(r)
+      
+      for (record <- records) {
+        
+         userDao.save(
+           User.createNew
+        .addRole(if (record.get("ADMIN").toBoolean) 
+                  {Role.ROLE_ADMIN} 
+                  else {Role.ROLE_USER})
+        .addUsername(record.get("USERNAME"))
+        .addPassword(record.get("PASSWORD"))
+        .addName(record.get("NAME"))
         .get())
 
-
-      val alex = userDao.save(
-        UserBuilder.createNew()
-        .addRole(Role.ROLE_USER)
-        .addUsername("alex")
-        .addPassword("login")
-        .addName("Alex")
-        .get());
-
-
-      var p1:Paste = new Paste
-      p1.setOwner(admin)
-      p1.setName("first test record")
-      p1.setText("test record body")
-     
-     
-      var p2:Paste = new Paste
-      p2.setOwner(alex)
-      p2.setName("second test record")
-      p2.setText("test second record body")
-     
-      pasteDao.save(p1)
-      pasteDao.save(p2)
+      }
+      
+      r.close
+      
+   
 
       val project = new Project
       project.setName("Sample project")
@@ -264,7 +253,7 @@ class StartupListener extends ServletContextListener with Loggered{
   def reindex( ctx:ApplicationContext,props:MergedPropertyConfigurer):Unit = {
     if (props.getProperty("config.reindex.enabled").equals("1")) {
       
-      for (d<-SearchableDao.searchableDao) {
+      for (d<-SearchableDaoImpl.searchableDao) {
         
         d.indexAll()
       }

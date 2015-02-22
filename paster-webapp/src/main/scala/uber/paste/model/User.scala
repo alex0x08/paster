@@ -37,6 +37,27 @@ import java.util
 import javax.xml.bind.annotation.XmlTransient
 import org.apache.commons.codec.digest.DigestUtils
 
+object User extends Named {
+  
+  def createNew = new Builder(new User)
+  
+  class Builder(model:User) extends Named.NamedBuilder[User](model) {
+
+    def addUsername(username:String): Builder = {
+        get.setUsername(username);  return this
+    }   
+
+   def addPassword(password:String):  Builder = {
+        get.setPassword(password);  return this
+    }
+
+    def addRole(role:Role): Builder = {
+      get.addRole(role);  return this
+    }  
+  }
+
+}
+
 @Entity
 @Indexed(index = "indexes/users")
 @Audited

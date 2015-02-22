@@ -30,7 +30,8 @@ object Loggered {
     setUseIdentityHashCode(false)
   }
 
-  def getNewProtocolBuilder(clazz:AnyRef):ToStringBuilder = new ToStringBuilder(clazz.getClass.getName, Loggered.style)
+  def getNewProtocolBuilder(clazz:AnyRef):ToStringBuilder 
+        = new ToStringBuilder(clazz.getClass.getName, Loggered.style)
 
   def getLogger(clazz:AnyRef):Logger = LoggerFactory.getLogger(clazz.getClass)
 }
@@ -40,7 +41,7 @@ trait Loggered {
   @transient
   @WebMethod(exclude = true)
   @JsonIgnore
-  def logger = LoggerFactory.getLogger(this.getClass.getName)
+  def logger = LoggerFactory.getLogger(getClass.getName)
 
   @transient
   @WebMethod(exclude = true)

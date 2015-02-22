@@ -33,13 +33,11 @@ object Role extends KeyValueObj[Role]{
 
 //@Entity
 //@Searchable
-class Role(code:String,desc:String) extends KeyValue(code,desc) with GrantedAuthority with java.io.Serializable{
+class Role(code:String,desc:String) extends KeyValue(code,desc)
+                                       with GrantedAuthority with java.io.Serializable{
 
   def getAuthority():String = getCode
 
 }
 
-
-class RoleEditor extends KeyValueEditor[Role](Role){
-
-}
+class RoleEditor extends KeyValueEditor[Role](Role){}

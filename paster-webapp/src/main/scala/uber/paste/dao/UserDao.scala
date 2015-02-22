@@ -23,26 +23,10 @@ import uber.paste.model.{SavedSession, User}
 import java.util.UUID
 
 
-trait UserDao extends StructDao[User]{
-
-  def getUserBySession(sessionId:String):User
-
-  def removeSession(userId:java.lang.Long,sessionId:String)
-
-  def createSession(userId:java.lang.Long):SavedSession
-
-  def getSession(sessionId:String):SavedSession
-
-  def getUser(username:String):User
-
-  def getUserByOpenID(openid:String):User
-
-  }
-
 
 @Repository("userDao")
 @Transactional(readOnly = true)
-class UserDaoImpl extends StructDaoImpl[User](classOf[User]) with UserDao {
+class UserDaoImpl extends StructDaoImpl[User](classOf[User])  {
 
   def createSession(userId:java.lang.Long):SavedSession = {
       var user:User  = get(userId)

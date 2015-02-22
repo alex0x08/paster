@@ -27,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
+import uber.paste.dao.UserDaoImpl
 import uber.paste.manager.UserManager
 import org.springframework.ui.Model
 import uber.paste.model.Role
@@ -40,13 +41,13 @@ import scala.collection.JavaConversions._
 class UserEditController extends GenericEditController[User]{
 
   @Autowired
-  private val userManager:UserManager = null
+  private val userManager:UserDaoImpl = null
   
   def listPage()="redirect:/main/user/list"
   def editPage()="/user/edit"
   def viewPage()="/user/view"
 
-  def manager():UserManager = return userManager
+  def manager():UserDaoImpl = return userManager
   
   @InitBinder
   def initBinder(binder:WebDataBinder):Unit = {
@@ -54,9 +55,9 @@ class UserEditController extends GenericEditController[User]{
     binder.registerCustomEditor(classOf[Role], new RoleEditor())
   }
 
-  override def fillEditModel(obj:User,rev:Long,model:Model,locale:Locale)  {
+  override def fillEditModel(obj:User,model:Model,locale:Locale)  {
       obj.setPassword(null)
-    super.fillEditModel(obj,rev,model,locale)
+    super.fillEditModel(obj,model,locale)
    model.addAttribute("availableRoles", Role.list)
   }
   
@@ -84,7 +85,7 @@ class UserEditController extends GenericEditController[User]{
                 if (!f.getField().equals("username") && !f.getField().equals("password")) {
                 logger.debug("field=" + f.getField() + ",rejected value=" + f.getRejectedValue() + ",message=" + f.getDefaultMessage());
              
-                fillEditModel(b,-1,model,locale)
+                fillEditModel(b,model,locale)
                 return editPage
                     
                 } 
@@ -93,13 +94,13 @@ class UserEditController extends GenericEditController[User]{
 
     if (b.isBlank && b.isPasswordEmpty) {
         result.rejectValue("password", "error.password.required" )
-             fillEditModel(b,-1,model,locale)
+             fillEditModel(b,model,locale)
             return editPage
     }
     
     if (!b.isPasswordEmpty() && !b.getPassword.equals(b.getPasswordRepeat)) {
         result.rejectValue("password", "error.password.missmatch" )
-             fillEditModel(b,-1,model,locale)
+             fillEditModel(b,model,locale)
             return editPage
     } 
     

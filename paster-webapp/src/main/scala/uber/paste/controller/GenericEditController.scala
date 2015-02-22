@@ -35,17 +35,17 @@ object GenericEditController {
 
 }
 
-abstract class GenericEditController[T <: Struct ] extends StructController[T] {    
+abstract class GenericEditController[T <: Struct ] extends GenericController[T] {    
   
   
     protected def getNewModelInstance():T
 
-    protected def fillEditModel(obj:T,rev:Long,model:Model,locale:Locale) {
+    protected def fillEditModel(obj:T,model:Model,locale:Locale) {
       model.addAttribute(GenericController.MODEL_KEY, obj)
     }
 
     def loadModel(@RequestParam(required = false) id:java.lang.Long):T = {
-      logger.debug("_new request id="+id)
+      logger.debug("_new request id={}",id)
 
         return if (id != null)
           manager.getFull(id)
@@ -57,7 +57,7 @@ abstract class GenericEditController[T <: Struct ] extends StructController[T] {
   @ResponseStatus(HttpStatus.CREATED)
   def createNew(model:Model,locale:Locale):String= {
 
-    fillEditModel(getNewModelInstance(),-1,model,locale)
+    fillEditModel(getNewModelInstance(),model,locale)
 
     return editPage
   }
@@ -66,7 +66,7 @@ abstract class GenericEditController[T <: Struct ] extends StructController[T] {
   @RequestMapping(value = Array("/edit/{id:[0-9]+}"), method = Array(RequestMethod.GET))
   def editWithId(model:Model,@PathVariable("id") id:Long,locale:Locale):String= {
 
-      fillEditModel(loadModel(id),-1,model,locale)
+      fillEditModel(loadModel(id),model,locale)
 
     return editPage
   }
@@ -84,9 +84,9 @@ abstract class GenericEditController[T <: Struct ] extends StructController[T] {
         }
 
         if (result.hasErrors()) {
-              logger.debug("form has errors " + result.getErrorCount())
+              logger.debug("form has errors {}", result.getErrorCount())
               
-             fillEditModel(b,-1,model,locale)
+             fillEditModel(b,model,locale)
            /* for ( f:FieldError : result.getFieldErrors()) {
                 getLogger().debug("field=" + f.getField() + ",rejected value=" + f.getRejectedValue()+",message="+f.getDefaultMessage());
             }*/
@@ -129,7 +129,7 @@ abstract class GenericEditController[T <: Struct ] extends StructController[T] {
 
     model.addAttribute(GenericController.MODEL_KEY, m)
 
-    fillEditModel(m,-1,model,locale)
+    fillEditModel(m,model,locale)
 
     return viewPage
   }

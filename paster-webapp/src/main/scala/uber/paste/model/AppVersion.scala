@@ -16,7 +16,7 @@
 
 package uber.paste.model
 
-import com.jcabi.manifests.Manifests
+
 import java.text.SimpleDateFormat
 import java.util.Properties
 import java.util.regex.Pattern
@@ -103,17 +103,7 @@ class AppVersion {
     return this
   }
   
-  def fillFromManifest():AppVersion = {
-        
-        implVer = getManifestValue(AppVersion.MF_IMPLEMENTATION_VERSION)
-
-        implBuildNum = getManifestValue(AppVersion.MF_IMPLEMENTATION_BUILD)
-
-        implBuildTime = getManifestValue(AppVersion.MF_IMPLEMENTATION_BUILD_DATE)
-        
-        return this
-    }
-
+  
     /**
      * @return version number (ex. 1.0-SNAPSHOT)
      */
@@ -128,11 +118,6 @@ class AppVersion {
      */
     def getImplBuildTime()= implBuildTime
 
-    /**
-     * @return property value from manifest
-     */
-    private def getManifestValue(key:String ):String = 
-      if (Manifests.exists(key)) Manifests.read(key) else AppVersion.UNDEFINED
     
     
    /**

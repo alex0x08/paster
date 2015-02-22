@@ -34,7 +34,7 @@ import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
 import uber.paste.base.SystemInfo
-import uber.paste.manager.ProjectManager
+import uber.paste.dao.ProjectDaoImpl
 import uber.paste.model.Project
 import org.apache.commons.codec.binary.Base64
 
@@ -43,12 +43,12 @@ import org.apache.commons.codec.binary.Base64
 class SettingsController extends AbstractController{
 
   @Autowired
-  val projectManager:ProjectManager = null
+  val projectManager:ProjectDaoImpl= null
 
   def editPage()="/admin/settings/edit"
  
   
-  def manager():ProjectManager = return projectManager
+  def manager():ProjectDaoImpl = return projectManager
  
   @RequestMapping(value = Array(GenericEditController.EDIT_ACTION), method = Array(RequestMethod.GET))
   def edit(model:Model,locale:Locale):String= {

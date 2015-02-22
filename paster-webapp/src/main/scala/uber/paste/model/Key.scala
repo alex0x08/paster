@@ -46,11 +46,11 @@ class KeyObj[T <: Key] {
 
   val map = new HashMap[String,T]
 
-   def add(c:T):Unit = {
+   def add(c:T) {
     map.put(c.getCode,c)
   }
 
-   def getList:Collection[T] = list 
+  def getList:Collection[T] = list 
   
   def list:Collection[T] =  map.values
   
@@ -71,8 +71,7 @@ class Key extends Named with java.io.Serializable{
   private var code: String = null  
   
   def this(code:String) = {
-    this()
-    this.code=code
+    this(); this.code=code
   }
 
   def getCode() : String = code

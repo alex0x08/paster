@@ -26,9 +26,9 @@ class PasteAtomView extends AbstractAtomFeedView{
 
     for (e:Paste<- contentList) {
       val date = e.getLastModified()
-      if (feed.getUpdated() == null || date.compareTo(feed.getUpdated()) > 0) {
-        feed.setUpdated(date);
-      }
+      if (feed.getUpdated() == null || date.compareTo(feed.getUpdated()) > 0) 
+        feed.setUpdated(date)
+      
     }
   }
 

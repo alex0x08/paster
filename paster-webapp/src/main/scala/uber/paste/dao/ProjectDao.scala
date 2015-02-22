@@ -19,24 +19,22 @@ package uber.paste.dao
 import javax.persistence.Query
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
+import uber.paste.base.SystemInfo
 import uber.paste.model.Project
 
-trait ProjectDao extends SearchableDao[Project]{
-
-  def getLast():Project
-}
 
 @Repository("projectDao")
 @Transactional(readOnly = true)
-class ProjectDaoImpl extends SearchableDaoImpl[Project](classOf[Project]) with ProjectDao{
+class ProjectDaoImpl extends SearchableDaoImpl[Project](classOf[Project]){
 
+def getCurrentProject() = SystemInfo.instance.getProject
 
  def getLast():Project = {
 
     val cr = new CriteriaSet
 
-    val query:Query = em.createQuery(cr.cr.orderBy(cr.cb.desc(cr.r.get("lastModified"))))
+    val query = em.createQuery[Project](cr.cr.orderBy(cr.cb.desc(cr.r.get("lastModified"))))
       .setMaxResults(1)
-      return query.getSingleResult.asInstanceOf[Project]
+      return query.getSingleResult
   }
 }

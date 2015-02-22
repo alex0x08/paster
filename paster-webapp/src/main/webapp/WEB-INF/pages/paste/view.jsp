@@ -7,7 +7,7 @@
 <jsp:include page="/WEB-INF/pages/paste/common/paste-view-common.jsp"/>
 
 
-<div id="numSpace" class="listEditSpace" >
+<div id="numSpace" class="line" >
 </div>
 
 <span id="pasteLineCopyBtn" style="display:none; white-space: normal;">

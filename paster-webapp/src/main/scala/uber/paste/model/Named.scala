@@ -30,11 +30,22 @@ object Named extends Struct {
    *  a set of properties to search by default (without field prefix)
    */
   override val terms = super.terms ::: List[String]("name")
+  
+  abstract class NamedBuilder[T <: Named](model:T) extends Struct.AbstractBuilder[T](model) {
+
+  def addName(name:String): NamedBuilder[T]  = {
+    get().setName(name)
+    return this
+  }
+  
+  }
 }
 
 @MappedSuperclass
 @Audited
 class Named extends Struct {
+  
+  
 
   @NotNull
   @Field
@@ -70,5 +81,6 @@ class Named extends Struct {
   
   
 
+  
   
 }

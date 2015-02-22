@@ -28,10 +28,7 @@ class Comment extends Struct  with java.io.Serializable{
   @Column(nullable=false)
   private var pasteId:java.lang.Long = null
  
-  @XStreamAsAttribute
-  @Column(nullable=false)
-  private var pasteRev:java.lang.Long = null
-  
+ 
   
   @Lob
   @NotNull
@@ -58,8 +55,6 @@ class Comment extends Struct  with java.io.Serializable{
   def setPasteId(id:java.lang.Long) {pasteId=id}
   def getPasteId() = pasteId
   
-  def setPasteRev(rev:java.lang.Long) {pasteRev=rev}
-  def getPasteRev() = pasteRev
   
   @XmlTransient
   @JsonIgnore

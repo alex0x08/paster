@@ -66,17 +66,25 @@ class PasteListener extends Loggered{
     logger.debug("_on update call ")
     obj.setTitle( if (obj.getText().length>Paste.TITLE_LENGTH) {
         
-        val summary:String =Paste.summariser.summarise(obj.getText(), 2)
-        if (summary==null || summary.length<3) {
+        val summary:String = try {
+          Paste.summariser.summarise(obj.getText(), 2)
+        } catch {
+             case e @ ( _ :Exception) => {
+                 if (logger.isDebugEnabled) {
+                   logger.error(e.getLocalizedMessage,e)
+                 }
+               null
+            }
+        }
+        
+        if (summary==null || summary.length<3) 
           obj.getText().substring(0,Paste.TITLE_LENGTH-3)+"..."
-        } else {
-          System.out.println("extracted summary="+summary)
-          if (summary.length>Paste.TITLE_LENGTH) {
+         else {
+          if (summary.length>Paste.TITLE_LENGTH) 
             summary.substring(0,Paste.TITLE_LENGTH-3)+"..."
-          } else {
+           else 
           summary   
-          }
-         
+        
         } 
       } else {
         obj.getText
@@ -84,7 +92,7 @@ class PasteListener extends Loggered{
     
     obj.commentsCount = obj.getComments().size()
 
-    logger.debug("_comments count= "+obj.commentsCount)
+    logger.debug("_comments count= {0}",obj.commentsCount)
   }
 }
 

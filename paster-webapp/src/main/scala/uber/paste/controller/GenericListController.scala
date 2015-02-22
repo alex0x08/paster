@@ -57,8 +57,12 @@ object GenericListController {
 
 class ExtendedPageListHolder[T <: Struct ](source:java.util.List[T]) extends PagedListHolder[T](source) {
   
-  def getFirstElement():T = if (getFirstElementOnPage()>=0) getSource().get(getFirstElementOnPage()) else null.asInstanceOf[T]
-  def getLastElement():T = if (getLastElementOnPage()>=0) getSource().get(getLastElementOnPage()) else null.asInstanceOf[T]
+  def getFirstElement():T = if 
+      (getFirstElementOnPage()>=0) getSource().get(getFirstElementOnPage()) 
+      else null.asInstanceOf[T]
+  def getLastElement():T = if 
+      (getLastElementOnPage()>=0) getSource().get(getLastElementOnPage()) 
+      else null.asInstanceOf[T]
   def getElementsOnPage():Int = getPageList().size()
   
 }
@@ -68,7 +72,7 @@ class ExtendedPageListHolder[T <: Struct ](source:java.util.List[T]) extends Pag
  * Based on Spring PageListHolder heavy usage
  * @tparam T model class
  */
-abstract class GenericListController[T <: Struct ] extends StructController[T] {
+abstract class GenericListController[T <: Struct ] extends GenericController[T] {
 
   /**
    * default callback object: will simply use getList from attached manager

@@ -71,6 +71,8 @@
                    location="classpath:/META-INF/resources/webjars/"/>
     <mvc:resources mapping="/static/${paste.app.version}/**" 
                    location="/WEB-INF/static/"/>
+     <mvc:resources mapping="/resources/${paste.app.version}/**" 
+                   location="/WEB-INF/resources/"/>
   
 
     <mvc:interceptors>

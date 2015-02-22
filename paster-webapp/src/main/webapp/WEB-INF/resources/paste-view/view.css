@@ -1,19 +1,5 @@
-/**
- * SyntaxHighlighter
- * http://alexgorbatchev.com/SyntaxHighlighter
- *
- * SyntaxHighlighter is donationware. If you are using it, please donate.
- * http://alexgorbatchev.com/SyntaxHighlighter/donate.html
- *
- * @version
- * 3.0.83 (July 02 2010)
- * 
- * @copyright
- * Copyright (C) 2004-2010 Alex Gorbatchev.
- *
- * @license
- * Dual licensed under the MIT and GPL licenses.
- */
+ 
+
 .syntaxhighlighter a,
 .syntaxhighlighter code,
 .syntaxhighlighter table,
@@ -31,12 +17,10 @@
   float: none !important;
   height: auto !important;
   left: auto !important;
-  /*line-height: 0.9em !important;
-    */
+  line-height: 1.1em !important;
   margin: 0 !important;
   outline: 0 !important;
-  /*overflow: visible !important;
-    */
+  overflow: visible !important;
   padding: 0 !important;
   position: static !important;
   right: auto !important;
@@ -53,11 +37,14 @@
   min-height: auto !important;
 }
 
+.syntaxhighlighter div {  
+  overflow: hidden !important;
+}
+
 .syntaxhighlighter {
   width: 100% !important;
   margin: 1em 0 1em 0 !important;
-  position: relative !important;
-  /*overflow: auto !important;*/
+  position: relative !important;  
   font-size: 1em !important;
 }
 .syntaxhighlighter.source {
@@ -69,10 +56,9 @@
 .syntaxhighlighter .italic {
   font-style: italic !important;
 }
-/*
 .syntaxhighlighter .line {
-  white-space: pre ;
-}*/
+  white-space: pre !important;
+}
 .syntaxhighlighter table {
   width: 100% !important;
 }
@@ -82,12 +68,11 @@
 }
 .syntaxhighlighter table td.code {
   width: 100% !important;
-    padding-bottom: 5px !important;
 }
-.syntaxhighlighter table td.code .hg_container {
+.syntaxhighlighter table td.code .container {
   position: relative !important;
 }
-.syntaxhighlighter table td.code .hg_container pre {
+.syntaxhighlighter table td.code .container  {
   box-sizing: border-box !important;
   position: absolute !important;
   left: 0 !important;
@@ -107,7 +92,7 @@
 .syntaxhighlighter table td.code .line {
   padding: 0 1em !important;
 }
-.syntaxhighlighter.nogutter td.code .hg_container, .syntaxhighlighter.nogutter td.code .line {
+.syntaxhighlighter.nogutter td.code .container textarea, .syntaxhighlighter.nogutter td.code .line {
   padding-left: 0em !important;
 }
 .syntaxhighlighter.show {
@@ -228,7 +213,7 @@
   color: black !important;
 }
 
-/*.syntaxhighlighter {
+.syntaxhighlighter {
   background-color: white !important;
 }
 .syntaxhighlighter .line.alt1 {
@@ -236,7 +221,7 @@
 }
 .syntaxhighlighter .line.alt2 {
   background-color: white !important;
-} */
+}
 .syntaxhighlighter .line.highlighted.alt1, .syntaxhighlighter .line.highlighted.alt2 {
   background-color: #e0e0e0 !important;
 }
@@ -330,22 +315,7 @@
   font-weight: bold !important;
 }
 
-.listSpace {
-    position: relative;
-    max-width: 1em;
-  /*  max-height: 3em;*/
-    width: 1em;
 
-}
-
-.listEditSpace {
-    position: relative;
-    max-width: 1em;
-    max-height: 9em;
-    width: 1em;
-    margin-bottom: 0em;
-
-}
 
 .mainLinkLine  {
     text-decoration: none;
@@ -376,6 +346,7 @@
 
 
 .commentBlock {
+    overflow: visible !important;
     white-space: normal;
     position: relative;
     max-width: 35em;
@@ -394,33 +365,3 @@
     background-color: #ffff67;
     border: 1px solid black;
 }
-
-.editForm {
-    white-space: normal;
-   /* position: absolute;*/
-    max-width: 35em;
- /*   max-height: 12em;*/
-    width: 35em;
-    top: 0.2em;
-  /*  height: 7em; */
-    margin-left: 1em;
-    background-color: #e0e0e0;
-    border: 1px solid black;
- 
-}
-.editForm textarea {
-    -webkit-box-shadow: inset 2px 2px 2px 0px #dddddd;
-    -moz-box-shadow: inset 2px 2px 2px 0px #dddddd;
-    box-shadow: inset 2px 2px 2px 0px #dddddd;
-    box-sizing:border-box; -moz-box-sizing:border-box;
-    margin-top: 0.5em;
-
-    padding-left: 0.5em;
-    max-width: 30em;
-  /*  max-height: 4em; */
-    width: 30em;
-    height: 4em; 
- 
-
-}
-
