@@ -8,9 +8,23 @@
     <definition name=".mainTemplate" template="/WEB-INF/pages/template/main.jsp">
         <put-attribute name="menu" value="/WEB-INF/pages/template/menu.jsp" />
         <put-attribute name="head" value="" />
-        <put-attribute name="content" value="" />                
+        <put-attribute name="content" value="" />
+        <put-attribute name="search-top" value="" />
+                
         <put-attribute name="footer" value="" />
     </definition>
+
+
+  <definition name=".mainTemplatePaste" template="/WEB-INF/pages/template/main.jsp">
+        <put-attribute name="menu" value="/WEB-INF/pages/template/menu.jsp" />
+        <put-attribute name="head" value="" />
+        <put-attribute name="content" value="" />
+        <put-attribute name="search-top" value="/WEB-INF/pages/template/search.jsp" />
+                
+        <put-attribute name="footer" value="" />
+    </definition>
+   
+        
 
     <definition name=".errorTemplate" template="/WEB-INF/pages/template/main-error.jsp">      
         <put-attribute name="content" value="" />
@@ -34,16 +48,16 @@
         <put-attribute name="content" value="/WEB-INF/pages/paste/raw/list.jsp" />
     </definition>
 
-    <definition name="/paste/list" extends=".mainTemplate">
+    <definition name="/paste/list" extends=".mainTemplatePaste">
         <put-attribute name="content" value="/WEB-INF/pages/paste/list.jsp" />
     </definition>
 
-    <definition name="/paste/edit"  extends=".mainTemplate">
+    <definition name="/paste/edit"  extends=".mainTemplatePaste">
         <put-attribute name="head" value="/WEB-INF/pages/paste/paste-edit-head.jsp" />
         <put-attribute name="content" value="/WEB-INF/pages/paste/edit.jsp" />
     </definition>
 
-    <definition name="/paste/view"  extends=".mainTemplate">
+    <definition name="/paste/view"  extends=".mainTemplatePaste">
         <put-attribute name="content" value="/WEB-INF/pages/paste/view.jsp" />
         <put-attribute name="head" value="/WEB-INF/pages/paste/paste-view-head.jsp" />
     </definition>

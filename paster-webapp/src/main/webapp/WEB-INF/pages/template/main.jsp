@@ -94,6 +94,13 @@
                 <fmt:message key='settings.edit.title'/></a>
 
                                     </li>
+                                    <li>
+                                         <a href="<c:url value='/main/admin/settings/dbconsole'/>">
+                    <span class="i">B</span>
+                    <fmt:message key="settings.dbconsole.title"/>
+                </a>
+
+                                    </li>
 
                                 </ul>
                             </li>
@@ -131,8 +138,7 @@
                         </ul>
                         
                         
-
-                            <jsp:include page="/WEB-INF/pages/template/search.jsp"/>
+                                          <tiles:insertAttribute name="search-top" />
 
 
                         

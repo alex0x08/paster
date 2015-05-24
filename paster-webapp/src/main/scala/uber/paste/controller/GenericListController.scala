@@ -124,10 +124,12 @@ abstract class GenericListController[T <: Struct ] extends GenericController[T] 
     /**
      * if no pageListHolder found or no page controls is set - recreate pageListHolder (load data from db)
      */
-    if (pagedListHolder == null || (page == null && NPpage == null && pageSize==null && sortColumn == null)) {
+    if (pagedListHolder == null || 
+        (page == null && NPpage == null && pageSize==null && sortColumn == null)) {
       pagedListHolder = callback.invokeCreate()
-      logger.debug("pagedListHolder created pageSize="+pageSize)
+      logger.debug("pagedListHolder created pageSize={}",pageSize)
     } else {
+      
        if (sortColumn!=null) {
                val sort =pagedListHolder.getSort().asInstanceOf[MutableSortDefinition]
                 sort.setProperty(sortColumn)
@@ -151,12 +153,12 @@ abstract class GenericListController[T <: Struct ] extends GenericController[T] 
          * if page number was specified
          */
       } else if (page!=null){
-
        
         pagedListHolder.setPage(
           (
           if (page < 1) 1
-          else if (page > pagedListHolder.getPageCount()) pagedListHolder.getPageCount()
+          else if (page > pagedListHolder.getPageCount()) 
+            pagedListHolder.getPageCount()
           else page
         ).asInstanceOf[Integer]-1)
       }
@@ -171,6 +173,7 @@ abstract class GenericListController[T <: Struct ] extends GenericController[T] 
     }
 
     request.getSession().setAttribute(getClass().getName()+"_"+pageHolderName, pagedListHolder)
+    
     model.addAttribute(pageHolderName, pagedListHolder)
 
     if (createDefaultItemModel && !pageHolderName.equals(GenericController.NODE_LIST_MODEL_PAGE)) {

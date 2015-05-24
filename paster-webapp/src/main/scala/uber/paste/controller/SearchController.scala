@@ -44,9 +44,10 @@ class SearchResult extends KeyValue{
            //,totalFound:Int
   ) = {
     this()
-    setCode(code)
-    setName(desc)
     this.itemsModel=itemsModel
+    
+    setCode(code); setName(desc)
+    
    // this.resultCount=totalFound
   }
 

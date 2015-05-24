@@ -231,9 +231,7 @@ class PasteController extends GenericEditController[Paste]   {
   
 
     @RequestMapping(value = Array("/save"), method = Array(RequestMethod.POST))
-   override def save(@RequestParam(required = false) cancel:String,
-                      @RequestParam(required = false) integrationMode:Boolean,
-                     @RequestParam(required = false) frameMode:Boolean,
+   override def save(@RequestParam(required = false) cancel:String,                      
            @Valid @ModelAttribute(GenericController.MODEL_KEY) b:Paste,
            result:BindingResult, model:Model,locale:Locale,
            redirectAttributes:RedirectAttributes):String = {
@@ -323,11 +321,9 @@ class PasteController extends GenericEditController[Paste]   {
           
       
       } else {
-          if (integrationMode) {
-            "paste/integrated/edit"
-          } else {
+         
             out
-          }
+          
         
       }
    }

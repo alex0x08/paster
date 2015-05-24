@@ -2,7 +2,7 @@
 
 
 <div class="row">
-    <div class="column grid-10">
+    <div class="col-md-8">
         
         <h4 class="f-h4">
             <fmt:message key="user.list.title"/> 
@@ -11,21 +11,56 @@
             </a>
         </h4>
     </div>
-    
-    <div class="column grid-10">
+</div>
+<div class="row">
+                
+    <div class="col-md-8">
   
-         <c:forEach var="user" items="${items}" varStatus="status">
-       <div>
-           <span style="background-color: darksalmon;" ><c:out value="${user.id}"/></span>
-                 
-           <span>
-           <a href="<c:url value="/main/user/edit/${user.id}"/>"><c:out value="${user.name}"/></a>
+        
+        <table class="table table-bordered table-striped table-condensed" 
+               data-behavior="HtmlTable" data-htmltable-sortable="true">
+  <thead>
+    <tr>
+      <th>
+            ID
+      </th>
+      <th>
+            Login
+      </th>
+      <th>
+            Name
+      </th>
+      <th>
+            Last modified
+      </th>
      
-           </span>
-           
-               
-       </div>
+    </tr>
+  </thead>
+  <tbody>
+      
+         <c:forEach var="user" items="${items}" varStatus="status">
+             <tr>
+                 <td>
+                         <a href="<c:url value="/main/user/edit/${user.id}"/>"><c:out value="${user.id}"/></a>
+                 </td>
+                 <td>
+                     <a href="<c:url value="/main/user/edit/${user.id}"/>"><c:out value="${user.username}"/></a>
+                 </td>
+                 <td>
+                     <a href="<c:url value="/main/user/edit/${user.id}"/>"><c:out value="${user.name}"/></a>
+                     
+                 </td>
+                 <td>
+                     <c:out value="${user.lastModified}"/>
+                 </td>
+             </tr>
+         
    </c:forEach>
+     
+  </tbody>
+</table>
+        
+      
         
     </div>
     

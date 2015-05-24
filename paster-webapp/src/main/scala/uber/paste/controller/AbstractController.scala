@@ -34,7 +34,8 @@ import uber.paste.manager.ConfigManagerImpl
 
 object LocaleConstants {
   
-  val availableLocales = Array(Locale.US,new Locale("ru","RU")).toList
+  val availableLocales = Array(Locale.US,
+                               new Locale("ru","RU")).toList
 }
 
 abstract class AbstractController extends Loggered{

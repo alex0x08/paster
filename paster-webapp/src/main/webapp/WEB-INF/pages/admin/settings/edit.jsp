@@ -14,9 +14,7 @@
 <div class="row">
     <div class="column grid-12">
     
-       <a href="<c:url value='/main/admin/dbconsole'/>" 
-               class="-btn"><i class="-icon-cogs"></i><fmt:message key="settings.dbconsole.title"/></a>
- 
+      
         
 <form:form action="${url}" 
            modelAttribute="model"

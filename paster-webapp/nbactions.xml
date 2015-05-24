@@ -10,4 +10,15 @@
                 <logback.configurationFile>src/main/resources/logback-debug.xml</logback.configurationFile>
             </properties>
         </action>
+        <action>
+            <actionName>CUSTOM-jetty-run</actionName>
+            <displayName>jetty-run</displayName>
+            <goals>
+                <goal>jetty:run</goal>
+            </goals>
+            <activatedProfiles>
+                <activatedProfile>h2</activatedProfile>
+                <activatedProfile>jetty9-paster-run</activatedProfile>
+            </activatedProfiles>
+        </action>
     </actions>

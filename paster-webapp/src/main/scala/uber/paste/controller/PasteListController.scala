@@ -254,7 +254,7 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
                      sortAsc:java.lang.Boolean = false,
                      sourceType:String,integrationCode:String):java.util.List[Paste] = {
 
-    logger.debug("_paste listImpl, pageSize {0}",pageSize)
+    logger.debug("_paste listImpl, pageSize {}",pageSize)
 
     fillListModel(model,locale)
 

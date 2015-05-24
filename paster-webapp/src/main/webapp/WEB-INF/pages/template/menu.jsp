@@ -23,6 +23,11 @@
                 <span class="i">B</span>
                 <fmt:message key='settings.edit.title'/></a>
 
+                <a href="<c:url value='/main/admin/settings/dbconsole'/>">
+                    <span class="i">B</span>
+                    <fmt:message key="settings.dbconsole.title"/>
+                </a>
+
 
         </sec:authorize>
 
