@@ -25,7 +25,7 @@ import uber.paste.base.Loggered
 
 
 @MappedSuperclass
-@Audited
+//@Audited
 abstract class DBObject extends java.io.Serializable {
 
   @Id

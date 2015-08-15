@@ -2,10 +2,10 @@ package uber.paste.startup
 
 import uber.paste.base.Loggered
 import javax.servlet.ServletContextListener
-import java.net.URL
+
 import java.nio.file.FileSystems
 import java.util.Locale
-import java.util.Properties
+
 import javax.servlet.ServletContextEvent
 import ch.qos.logback.classic.LoggerContext
 import ch.qos.logback.classic.joran.JoranConfigurator
@@ -13,11 +13,7 @@ import ch.qos.logback.classic.util.ContextInitializer
 import ch.qos.logback.core.joran.spi.JoranException
 import ch.qos.logback.core.util.StatusPrinter
 import java.io.{IOException, File}
-import uber.paste.base.SystemInfo
-import uber.paste.base.plugins.PluginUI
-import uber.paste.model.AppVersion
 import org.apache.commons.io.FileUtils
-import org.apache.commons.io.IOUtils
 import org.slf4j.LoggerFactory
 import scala.collection.JavaConversions._
 
@@ -49,11 +45,11 @@ class SystemPropertiesListener extends ServletContextListener with Loggered {
       
       setupEhcache     
      
-      loadBuildInfo
-      
-      logger.info("current locale: {0}",Locale.getDefault)
+      System.setProperty("paste.app.id", System.currentTimeMillis+"")
+     System.setProperty("spring.profiles.active", "main,auth-social")
+      logger.info("current locale: {}",Locale.getDefault)
      
-      logger.info("application home: {0}" , System.getProperty("paste.app.home"))
+      logger.info("application home: {}" , System.getProperty("paste.app.home"))
     
     } catch {
       case e:IOException => 
@@ -82,7 +78,7 @@ class SystemPropertiesListener extends ServletContextListener with Loggered {
       if (!appHome.exists() || !appHome.isDirectory()) 
         if (!appHome.mkdirs()) 
           throw new IllegalStateException(
-            "Cannot create application home directory " + appHome.getAbsolutePath())
+            "Cannot create application home directory " +appHome.getAbsolutePath())
         
   }
   
@@ -116,8 +112,7 @@ class SystemPropertiesListener extends ServletContextListener with Loggered {
         loggerContext.reset(); configurator.doConfigure(config)
          
     } catch {
-      case e:JoranException => {}      
-            
+      case e:JoranException => {}  
     }
     
     StatusPrinter.printInCaseOfErrorsOrWarnings(loggerContext)
@@ -126,28 +121,24 @@ class SystemPropertiesListener extends ServletContextListener with Loggered {
   
   def setupEhcache() {
     
-    val ehcacheStore = new File(appHome,"ehcache");
-         if (!ehcacheStore.exists() && !ehcacheStore.isDirectory() &&  !ehcacheStore.mkdirs()) {
+     val ehcacheConfig = new File(appHome,"ehcache.xml")
+    
+    if (!ehcacheConfig.exists || !ehcacheConfig.isFile) {
+        FileUtils.copyURLToFile(getClass().getResource("/ehcache.xml"), ehcacheConfig)
+    }
+    
+    val ehcacheStore = new File(appHome,"ehcache")
+         if (!ehcacheStore.exists && !ehcacheStore.mkdirs()) {
                 throw new IllegalStateException(
-                        "Cannot create directory " + ehcacheStore.getAbsolutePath());
+                        String.format("Cannot create directory %s", 
+                                      ehcacheStore.getAbsolutePath()))
             }
          
        System.setProperty("ehcache.disk.store.dir", ehcacheStore.getAbsolutePath())
         
   }
   
-  def loadBuildInfo() {
-    
-     val props = new Properties
-      props.load(getClass().getResourceAsStream("/build.properties"))
-      
-      val  mf_version = new AppVersion().fillFromResource(props)
-                
-        SystemInfo.instance.setRuntimeVersion(mf_version)
-        
-        System.setProperty("paste.app.version", mf_version.getImplBuildNum())
-      
-  }
+ 
 }
 
 

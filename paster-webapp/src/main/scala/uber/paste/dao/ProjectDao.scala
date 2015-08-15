@@ -17,8 +17,10 @@
 package uber.paste.dao
 
 import javax.persistence.Query
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
+import uber.paste.base.SystemInfo
 import uber.paste.base.SystemInfo
 import uber.paste.model.Project
 
@@ -27,14 +29,17 @@ import uber.paste.model.Project
 @Transactional(readOnly = true)
 class ProjectDaoImpl extends SearchableDaoImpl[Project](classOf[Project]){
 
-def getCurrentProject() = SystemInfo.instance.getProject
+@Autowired
+  protected val systemInfo: SystemInfo = null
+    
+  
+def getCurrentProject() = systemInfo.getProject
 
  def getLast():Project = {
 
     val cr = new CriteriaSet
 
-    val query = em.createQuery[Project](cr.cr.orderBy(cr.cb.desc(cr.r.get("lastModified"))))
-      .setMaxResults(1)
-      return query.getSingleResult
+   return em.createQuery[Project](cr.cr.orderBy(cr.cb.desc(cr.r.get("lastModified"))))
+      .setMaxResults(1).getSingleResult
   }
 }

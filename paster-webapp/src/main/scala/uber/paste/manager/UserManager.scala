@@ -24,15 +24,19 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 import uber.paste.dao.UserDaoImpl
 import uber.paste.dao.UserExistsException
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.dao.DataAccessException
+import org.springframework.security.core.session.SessionRegistry
 import org.springframework.security.core.userdetails.AuthenticationUserDetailsService
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.web.authentication.rememberme.{RememberMeAuthenticationException, AbstractRememberMeServices}
 import uber.paste.base.Loggered
 import javax.servlet.http.{Cookie, HttpServletResponse, HttpServletRequest}
+import org.springframework.security.authentication.dao.SaltSource
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import java.io.IOException
 import javax.annotation.security.PermitAll
@@ -41,16 +45,15 @@ import org.springframework.security.crypto.codec.Base64
 import org.springframework.security.web.authentication.logout.{SimpleUrlLogoutSuccessHandler, LogoutFilter, LogoutHandler}
 import scala.collection.JavaConversions._
 import org.apache.commons.lang.StringUtils
+import org.springframework.security.access.AccessDeniedException
 import org.springframework.security.access.annotation.Secured
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.authentication.RememberMeAuthenticationProvider
 
 
-class UserLogoutSuccessHandler extends SimpleUrlLogoutSuccessHandler {
+class UserLogoutSuccessHandler(userManager:UserManagerImpl) extends SimpleUrlLogoutSuccessHandler {
 
-  //var cookieName:String = null
-
-  var userManager:UserManagerImpl =null
-
+   
   @throws(classOf[IOException])
   @throws(classOf[ServletException])
   override def onLogoutSuccess(request:HttpServletRequest, response:HttpServletResponse,
@@ -59,61 +62,61 @@ class UserLogoutSuccessHandler extends SimpleUrlLogoutSuccessHandler {
     if (authentication != null) {
       // call sproc
 
-      logger.debug("UmsLogoutFilter.requiresLogout url="+request.getRequestURI);
+      logger.debug(String.format("logout url=%s",request.getRequestURI))
 
-      val sessionSso = request.getSession().getAttribute(UserManager.SSO_COOKIE_NAME).asInstanceOf[String]
+      val sessionSso = request.getSession().getAttribute(UserManager.SSO_COOKIE_NAME)
+      .asInstanceOf[String]
 
       if (sessionSso != null){
         userManager.removeSession(UserManager.getCurrentUser().getId(),sessionSso)
       }
 
       UserManager.invalidateSSOCookie(UserManager.SSO_COOKIE_NAME,response)
-
     }
 
-    setDefaultTargetUrl("/main/login");
+    setDefaultTargetUrl("/main/login")
     //below does the 'standard' spring logout handling
-    super.onLogoutSuccess(request, response, authentication);
+    super.onLogoutSuccess(request, response, authentication)
   }
 
- /* def getCookieName() = cookieName;
-  def setCookieName(c:String) = {this.cookieName = c}
-   */
-  def getUserManager():UserManagerImpl = userManager
-  def setUserManager(u:UserManagerImpl) {this.userManager =u}
 }
 
 
-class UserAuthenticationProcessingFilter extends UsernamePasswordAuthenticationFilter {
+class UserAuthenticationProcessingFilter(userManager:UserManagerImpl) extends UsernamePasswordAuthenticationFilter  {
 
-//  val logger:Logger = Loggered.getLogger(this)
 
-  var userManager:UserManagerImpl =null
-
-  //var cookieName:String = null
-
+  setFilterProcessesUrl("/act/doAuth")
+  setUsernameParameter("login")
+  setPasswordParameter("pwd")
+  
+  
   @throws(classOf[ServletException])
   @throws(classOf[IOException])
-  override protected def successfulAuthentication(request:HttpServletRequest, response:HttpServletResponse,
-  authResult:Authentication)  {
+  override protected def successfulAuthentication(request:HttpServletRequest, 
+                                                  response:HttpServletResponse,
+                                                  chain:javax.servlet.FilterChain,
+                                                  authResult:Authentication)  {
 
-    logger.debug("__success auth")
-
+   /**
+    * Warning, this class uses parent logger !
+    */
+    
+   
     val user:User = authResult.getPrincipal.asInstanceOf[User]
-
-    logger.debug(" user = "+user)
+   
 
     val currentCookie:String = UserManager.getCookieValue(request,UserManager.SSO_COOKIE_NAME)
 
     val sso:Cookie = getOrCreateCookie(user,currentCookie)
 
-    logger.debug("__current sso "+sso.getValue)
+   logger.info(String.format(" user %s authenticated, sso key: %s",user,sso.getValue))
+ 
 
-    response.addCookie(sso);
+    response.addCookie(sso)
 
     request.getSession().setAttribute(UserManager.SSO_COOKIE_NAME, sso.getValue)
 
-    super.successfulAuthentication(request, response, authResult)
+    super.successfulAuthentication(request, response, chain,authResult)
   }
 
   def getOrCreateCookie(user:User,cookie:String):Cookie = {
@@ -124,22 +127,16 @@ class UserAuthenticationProcessingFilter extends UsernamePasswordAuthenticationF
       userManager.createSession(user.getId())
     }
 
-    logger.debug("savedSession "+s)
-
-    return UserManager.createNewSSOCookie(UserManager.SSO_COOKIE_NAME,s)
+    UserManager.createNewSSOCookie(UserManager.SSO_COOKIE_NAME,s)
   }
 
-  /*def getCookieName() = cookieName;
-  def setCookieName(c:String) = {this.cookieName = c}
-    */
-  def getUserManager():UserManagerImpl = userManager
-  def setUserManager(u:UserManagerImpl) {this.userManager =u}
+  
 }
 
-class UserRememberMeService extends AbstractRememberMeServices  {
+class UserRememberMeService(key:String,userDetails:UserManagerImpl) 
+      extends AbstractRememberMeServices(key,userDetails)  {
 
-  //val logger:Logger = Loggered.getLogger(this)
-
+  
   override def getCookieName()= UserManager.SSO_COOKIE_NAME
 
   /**
@@ -152,49 +149,58 @@ class UserRememberMeService extends AbstractRememberMeServices  {
      response:HttpServletResponse):UserDetails =
   {
 
-    logger.debug("__process login ")
-
-    var user:User = null;
+  
+    var user:User = null
+    
     val cookieValue:String = UserManager.getCookieValue(request, getCookieName())
+    
     if (cookieValue != null)    {
-      user = getUserDetailsService().asInstanceOf[UserManagerImpl].getUserBySavedSession(cookieValue)
+      
+      user = getUserDetailsService().asInstanceOf[UserManagerImpl]
+      .getUserBySavedSession(cookieValue)
     }
     if (user != null)
     {
       request.getSession().setAttribute(getCookieName(), cookieValue)
-     // request.getSession().setAttribute("user", UserManager.getCurrentUser())
       return user
     }
     else
-      throw new UsernameNotFoundException("Couldn't load user details via cookie: " + getCookieName())
+      throw new UsernameNotFoundException(String.format("Couldn't load user details via cookie: %s ", 
+                                          getCookieName()))
   }
 
   /**
    * On logout, clear the single sign-on cookie (always attached to "/").
    */
-  override def logout(request:HttpServletRequest, response:HttpServletResponse, authentication:Authentication)
+  override def logout(request:HttpServletRequest, response:HttpServletResponse, 
+                      authentication:Authentication)
   {
-    logger.debug("UmsRememberMeServices.logout");
+    
+    val user:User = UserManager.getCurrentUser
+    
     val cookieName = getCookieName()
     val sessionSso:String = request.getSession().getAttribute(cookieName).asInstanceOf[String]
     if (sessionSso != null)
     {
       getUserDetailsService().asInstanceOf[UserManagerImpl]
-              .removeSession(UserManager.getCurrentUser().getId(),sessionSso);
+              .removeSession(UserManager.getCurrentUser().getId(),sessionSso)
     }
 
     UserManager.invalidateSSOCookie(cookieName,response)
 
+       logger.info(String.format("user %s has logged out",user.getName))
+ 
   }
 
-  def getSSOCookieName() = getCookieName()
+  def getSSOCookieName = getCookieName
 
-
+  
  override protected def onLoginSuccess(request:HttpServletRequest, response:HttpServletResponse,
                                        successfulAuthentication:Authentication )
   {
-    logger.debug("_onLoginSuccess");
+   // empty
   }
+  
 }
 
 object UserManager extends Loggered{
@@ -203,14 +209,13 @@ object UserManager extends Loggered{
 
   def createNewSSOCookie(cookieName:String,s:SavedSession):Cookie = {
 
-    System.out.println("__cookie name "+cookieName+" value="+new String(Base64.encode(s.getCode().getBytes())))
-
-    val c=new Cookie(cookieName,new String(Base64.encode(s.getCode().getBytes())))
+  
+    val c=new Cookie(cookieName,s.getBase64Encoded)
     c.setMaxAge(60 * 60 *60 *60)
     c.setPath("/")
     //c.setVersion(1)
 
-    logger.debug("createCookie savedSession "+s)
+    logger.debug("create new SSO cookie {}, {}",Array(cookieName,s.getBase64Encoded))
 
     return c
   }
@@ -222,15 +227,17 @@ object UserManager extends Loggered{
     response.addCookie(c)
   }
 
-  def  getCurrentUser():User = {
-      return if (SecurityContextHolder.getContext().getAuthentication() ==null) {
-          null
-        } else {
+  def  getCurrentUser():User = 
+    
+    if (SecurityContextHolder.getContext().getAuthentication() ==null) 
+      null
+        else
     
       SecurityContextHolder.getContext().getAuthentication().getPrincipal() match {
-      case u:User => {
-          SecurityContextHolder.getContext().getAuthentication().getPrincipal().asInstanceOf[User]
-      }
+      case u:User => 
+          SecurityContextHolder.getContext()
+          .getAuthentication().getPrincipal().asInstanceOf[User]
+      
       case _ => {
         /**
          * this almost all time means that we got anonymous user
@@ -240,12 +247,7 @@ object UserManager extends Loggered{
         null
       }
     }
-
-      
-    }
-    
-    
-  }
+  
 
   def getCookieValue(request:HttpServletRequest, cookieName:String):String =
   {
@@ -253,10 +255,12 @@ object UserManager extends Loggered{
     val cookies = request.getCookies()
     if (cookies != null)
       for (cookie <- cookies)     {
-        if (cookie.getName().equals(cookieName) && !StringUtils.isBlank(cookie.getValue()))
+        if (cookie.getName().equals(cookieName) )
         {
+          if (StringUtils.isBlank(cookie.getValue())) return null
+              
           val value= new String(Base64.decode(cookie.getValue().getBytes()))
-          logger.debug("UmsRememberMeServices.getCookieValue - cookieName: " + cookieName+" value="+value);
+          logger.debug("getCookieValue - cookieName: {} value = {}" , Array(cookieName,value))
 
           return value
         }
@@ -267,77 +271,68 @@ object UserManager extends Loggered{
 }
 
 
-@Service("userManager")
+//@Service("userManager")
 class UserManagerImpl extends UserDetailsService 
-                         with AuthenticationUserDetailsService[ClientAuthenticationToken]{
+                         with AuthenticationUserDetailsService[ClientAuthenticationToken] with Loggered{
 
   @Autowired
   val userDao:UserDaoImpl = null
 
-  def getSSOCookieName():String = {
-    //System.out.println("_call get sso cookie name")
-    return UserManager.SSO_COOKIE_NAME
-  }
-
-
+  @Autowired
+  @Qualifier("sessionRegistry")
+  val sessionRegistry:SessionRegistry = null
+  
+  @Autowired
+  val passwordEncoder:PasswordEncoder = null
+  
+  
+  def getSSOCookieName() = UserManager.SSO_COOKIE_NAME
+  
+  @PreAuthorize("isAuthenticated()")
   def save(u:User) = userDao.save(u)
   
   @Override
-  def getUser(userId:String): User = {
-    return userDao.get(java.lang.Long.valueOf(userId));
-  }
-
+  def getUser(userId:String) = userDao.get(java.lang.Long.valueOf(userId));
+  
   @Override
   @throws(classOf[UsernameNotFoundException])
-  def getUserByUsername(username:String): User = {
-    return userDao.getUser(username)
-  }
+  def getUserByUsername(username:String)= userDao.getUser(username)
+  
+  def getUserByOpenID(openid:String)= userDao.getUserByOpenID(openid)
+  
+  def getUserBySavedSession(sessionId:String)= userDao.getUserBySession(sessionId)
+  
+  def createSession(userId:java.lang.Long):SavedSession = userDao.createSession(userId)
 
-  def getUserByOpenID(openid:String): User = {
-    return userDao.getUserByOpenID(openid)
-  }
+  def getSession(sessionId:String):SavedSession = userDao.getSession(sessionId)
 
-  def getUserBySavedSession(sessionId:String): User = {
-    return userDao.getUserBySession(sessionId)
-  }
-
-  def createSession(userId:java.lang.Long):SavedSession = {
-    return userDao.createSession(userId)
-  }
-
-  def getSession(sessionId:String):SavedSession = {
-    return userDao.getSession(sessionId)
-  }
-
+  @PreAuthorize("isAuthenticated()")
   def removeSession(userId:java.lang.Long,sessionId:String) = {
     userDao.removeSession(userId,sessionId)
   }
-
-  @Override
-  def getUsers(): java.util.List[User] = {
-    return userDao.getList()
-  }
-
-  @Override
+  
+  @PreAuthorize("isAuthenticated()")
+  def getUsers= userDao.getList()
+  
+  @PreAuthorize("isAuthenticated()")
+  def getAllLoggedInUsers() = sessionRegistry.getAllPrincipals()
+   
+  
   @throws(classOf[UserExistsException])
-  @PermitAll
-  def saveUser(user:User): User = {
-    return userDao.save(user)
-  }
+  @PreAuthorize("isAuthenticated()")
+  def saveUser(user:User)= userDao.save(user)
 
   @Secured(Array("ROLE_ADMIN"))
   def remove(id:Long) = userDao.remove(id)
 
   @Secured(Array("ROLE_ADMIN"))
-  @Override
   def removeUser(userId:String) = {
     val u:User = userDao.get(java.lang.Long.valueOf(userId))
     userDao.remove(u.getId)
   }
 
-  @Override
   @throws(classOf[UsernameNotFoundException])
-  def loadUserDetails(token:ClientAuthenticationToken):UserDetails = {
+  override def loadUserDetails(token:ClientAuthenticationToken):UserDetails = {
     val out = userDao.getUserByOpenID(token.getCredentials.asInstanceOf[Credentials].getClientName)
    //if (out==null )
     //  throw new UsernameNotFoundException("User not found (oauth)")
@@ -345,23 +340,32 @@ class UserManagerImpl extends UserDetailsService
     
   }
   
-  @Override
   @throws(classOf[UsernameNotFoundException])
   @throws(classOf[DataAccessException])
-  def loadUserByUsername(username:String): UserDetails = {
+  override def loadUserByUsername(username:String): UserDetails = {
     val out:User=getUserByUsername(username)
-
-    if (out==null || out.getPassword()==null)
-      throw new UsernameNotFoundException("User not found")
+    
+    logger.debug("loaded by username {} , user {}",Array(username,out))
+    
+    if (out==null)
+      throw new UsernameNotFoundException(String.format("User %s not found",username))
+     
     return out
   }
-
-  @Override
-  def getUserPassword(username: String): String = {
-    val u:User = userDao.getUser(username)
-    return if (u==null)
-      null
-    else u.getPassword()
+  
+  def changePassword(user:User, newPassword:String):User = {
+    logger.debug("changing password for user {}",user.getName)
+    
+    val encodedPass = passwordEncoder.encode(newPassword)
+    
+    if (user.isBlank || user.isPasswordEmpty || !user.getPassword.equals(encodedPass)) {
+       user.setPassword(encodedPass)
+    }
+    
+    return user
   }
+  
+  
+ 
 
 }

@@ -2,7 +2,7 @@ package uber.paste.controller.view
 
 import org.springframework.web.servlet.view.feed.AbstractAtomFeedView
 import javax.servlet.http.{HttpServletResponse, HttpServletRequest}
-import com.sun.syndication.feed.atom.{Content, Entry, Feed}
+import com.rometools.rome.feed.atom.{Content, Entry, Feed}
 import uber.paste.controller.GenericController
 import uber.paste.model.Paste
 import scala.collection.JavaConversions._
@@ -19,13 +19,13 @@ class PasteAtomView extends AbstractAtomFeedView{
 
   override protected def buildFeedMetadata(model:java.util.Map[String, Object], feed:Feed, request:HttpServletRequest) {
 
-    feed.setId("tag:springsource.com")
-    feed.setTitle("Sample Content")
+    feed.setId("tag:paster")
+    feed.setTitle("Latest pastas")
 
     val contentList =model.get(GenericController.NODE_LIST_MODEL).asInstanceOf[java.util.List[Paste]]
 
     for (e:Paste<- contentList) {
-      val date = e.getLastModified()
+      val date = e.getLastModified
       if (feed.getUpdated() == null || date.compareTo(feed.getUpdated()) > 0) 
         feed.setUpdated(date)
       
@@ -34,7 +34,8 @@ class PasteAtomView extends AbstractAtomFeedView{
 
   @throws(classOf[Exception])
   override protected def buildFeedEntries(model:java.util.Map[String, Object] ,
-                                          request:HttpServletRequest , response:HttpServletResponse ):java.util.List[Entry]=  {
+                                          request:HttpServletRequest , 
+                                          response:HttpServletResponse ):java.util.List[Entry]=  {
 
          if (!model.containsKey(GenericController.NODE_LIST_MODEL)) {
            return Collections.emptyList[Entry]()
@@ -47,12 +48,12 @@ class PasteAtomView extends AbstractAtomFeedView{
     for (e:Paste<- contentList) {
 
       val entry = new Entry()
-      val date = String.format("%1$tY-%1$tm-%1$td", e.getLastModified())
+      val date = String.format("%1$tY-%1$tm-%1$td", e.getLastModified)
       // see http://diveintomark.org/archives/2004/05/28/howto-atom-id#other
       entry.setId(String.format("tag:springsource.com,%s:%d", date, e.getId()))
       entry.setTitle(String.format("On %s, %s wrote", date,
         if (e.getOwner()!=null) { e.getOwner().getUsername()} else { "Anonymous"}))
-      entry.setUpdated(e.getLastModified())
+      entry.setUpdated(e.getLastModified)
 
       val summary = new Content()
       summary.setValue(e.getText())

@@ -17,23 +17,35 @@
 package org.h2.server.web
 
 import java.sql.SQLException
+import javax.servlet.http.HttpServletRequest
+import javax.servlet.http.HttpServletResponse
 import javax.sql.DataSource
 import org.springframework.context.ApplicationContext
 import org.springframework.web.context.support.WebApplicationContextUtils
 import uber.paste.base.Loggered
 
+/**
+ * This is extended version of JDBC Database Console Servlet, 
+ * packed with H2 Driver
+ * 
+ * It was created to automatically bind connection from local datasource 
+ * to user's session and open console automatically.
+ * 
+ */
 class H2ConsoleExtendedServlet extends WebServlet with Loggered{
 
-   override def init() {
-         
+  private var dataSource:DataSource = null
+  
+  private val server = new ExtendedWebServer
+  
+   override def init() {         
         
-       val ctx:ApplicationContext = WebApplicationContextUtils.getWebApplicationContext(getServletContext())
-       val ds = ctx.getBean("dataSource").asInstanceOf[DataSource]
+       val ctx:ApplicationContext = WebApplicationContextUtils
+                    .getWebApplicationContext(getServletContext())
+       
+      dataSource = ctx.getBean("dataSource").asInstanceOf[DataSource]
        
          try {
-           
-        //     val  config = getServletConfig()
-            val server = new ExtendedWebServer()
                 server.setAllowChunked(false)
                 server.init()
          
@@ -41,16 +53,16 @@ class H2ConsoleExtendedServlet extends WebServlet with Loggered{
                     f.setAccessible(true)       
                     f.set(this, server)
                
-                val conn = ds.getConnection()
+                val conn = dataSource.getConnection()
                 
                val session = server.createNewSession("local")
                    session.setShutdownServerOnDisconnect()
-                   session.setConnection(ds.getConnection())
+                   session.setConnection(conn)
                    session.put("url", conn.getMetaData().getURL())
         
                val ss = session.get("sessionId").asInstanceOf[String]
                 
-              logger.debug("result="+ss);
+              logger.debug("h2 sessionId: ",ss);
                 
              getServletContext().setAttribute("h2console-session-id",ss);   
             
@@ -59,15 +71,25 @@ class H2ConsoleExtendedServlet extends WebServlet with Loggered{
                      | _ : IllegalAccessException
                      | _ : SQLException
                      | _ : SecurityException                    
-                     | _ : IllegalArgumentException) => {
-    
+                     | _ : IllegalArgumentException) => {    
                logger.error(e.getLocalizedMessage,e)
-
                 }
           }  
-      
-       
        
      }
+     
+  @throws(classOf[java.io.IOException])
+  override def doGet(req:HttpServletRequest,res:HttpServletResponse) {
   
+    val session =server.getSession("local")
+  
+    /**
+     * refresh connection if closed
+     */
+    if (session.getConnection.isClosed) {
+      session.setConnection(dataSource.getConnection)
+    }
+    
+    super.doGet(req,res)
+  }
 }

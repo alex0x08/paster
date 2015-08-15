@@ -26,13 +26,10 @@ import org.springframework.transaction.annotation.Transactional
 @Transactional(readOnly = true)
 class ConfigDaoImpl extends KeyDaoImpl[ConfigProperty](classOf[ConfigProperty]) {
 
-  def getProperty(code:String) : ConfigProperty = {
-    return getByKey(code)
-  }
+  def getProperty(code:String)  =  getByKey(code)
   
-   def getProperty(obj:ConfigProperty) : ConfigProperty = {
-     return getByKey(obj.getCode)
-  }
+  def getProperty(obj:ConfigProperty) = getByKey(obj.getCode)
+  
 
    def isPropertySet(code:String,value:String) : Boolean = {
     return em.createQuery("SELECT count(c) FROM ConfigProperty c WHERE c.code = :code and c.value = :value")

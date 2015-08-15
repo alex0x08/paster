@@ -14,7 +14,7 @@
         <fmt:message key='button.delete'/>
         <div style="display:none;" id="dialogMsg">
               <img width="300" height="200" class="p-comment" style="width: 250px; height: 150px; float: left; margin: 5px;" 
-                     src="<c:url value='/main/resources/${appVersion}/t/${model.lastModified.time}/${model.thumbImage}.jpg' >
+                     src="<c:url value='/main/resources/${appId}/t/${model.lastModified.time}/${model.thumbImage}.jpg' >
                  </c:url>"/>
             
             <fmt:message  key="dialog.confirm.paste.remove.message">

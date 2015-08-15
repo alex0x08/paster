@@ -44,31 +44,27 @@ abstract class GenericEditController[T <: Struct ] extends GenericController[T] 
       model.addAttribute(GenericController.MODEL_KEY, obj)
     }
 
-    def loadModel(@RequestParam(required = false) id:java.lang.Long):T = {
-      logger.debug("_new request id={}",id)
-
-        return if (id != null)
-          manager.getFull(id)
-        else
-          null.asInstanceOf[T]
-    }
+    def loadModel(id:java.lang.Long) =manager.getFull(id)
+      
 
   @RequestMapping(value = Array(GenericEditController.NEW_ACTION), method = Array(RequestMethod.GET))
   @ResponseStatus(HttpStatus.CREATED)
-  def createNew(model:Model,locale:Locale):String= {
+  def createNew(model:Model,locale:Locale):String = {
 
     fillEditModel(getNewModelInstance(),model,locale)
 
-    return editPage
+    editPage
   }
 
 
   @RequestMapping(value = Array("/edit/{id:[0-9]+}"), method = Array(RequestMethod.GET))
   def editWithId(model:Model,@PathVariable("id") id:Long,locale:Locale):String= {
 
+      if (id==0) page404      
+    
       fillEditModel(loadModel(id),model,locale)
 
-    return editPage
+    editPage
   }
 
 
@@ -100,7 +96,6 @@ abstract class GenericEditController[T <: Struct ] extends GenericController[T] 
         // set id from create
         if (b.isBlank) {
             b.setId(r.getId())
-            b.setLastModified(r.getLastModified)
         }
 
       redirectAttributes.addFlashAttribute("statusMessageKey", "action.success")
@@ -110,11 +105,11 @@ abstract class GenericEditController[T <: Struct ] extends GenericController[T] 
 
    
 
-    @RequestMapping(value = Array(GenericEditController.DELETE_ACTION), method = Array(RequestMethod.GET,RequestMethod.POST))
+    @RequestMapping(value = Array(GenericEditController.DELETE_ACTION), 
+                    method = Array(RequestMethod.GET,RequestMethod.POST,RequestMethod.DELETE))
     def delete(@RequestParam(required = false) id:Long,
             model:Model):String = {
-        manager.remove(id);
-        return listPage;
+        manager.remove(id); listPage
     }
 
 
@@ -125,21 +120,16 @@ abstract class GenericEditController[T <: Struct ] extends GenericController[T] 
     val m = loadModel(id)
 
     if (m==null)
-      return page404
+     return page404
 
     model.addAttribute(GenericController.MODEL_KEY, m)
 
     fillEditModel(m,model,locale)
 
-    return viewPage
+   viewPage
   }
 
 
-  @RequestMapping(value = Array("/xml/{id:[0-9]+}"), method = Array(RequestMethod.GET))
-  @ResponseBody
-  def getBody(@PathVariable("id") id:java.lang.Long,model:Model,locale:Locale):T = {
-    return loadModel(id);
-}
-
+  
 
 }

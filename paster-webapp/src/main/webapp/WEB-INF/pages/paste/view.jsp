@@ -75,7 +75,7 @@
     
     </c:if>
       
-        ZeroClipboard.setDefaults({moviePath: "<c:url value='/main/assets/${appVersion}/paster/static/ZeroClipboard.swf'/>"});
+        ZeroClipboard.setDefaults({moviePath: "<c:url value='/main/assets/${appId}/paster/static/ZeroClipboard.swf'/>"});
 
         var clip = new ZeroClipboard(document.id("ctrlc_link"));
 

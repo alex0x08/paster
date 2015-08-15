@@ -1,54 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <beans:beans xmlns="http://www.springframework.org/schema/security"
-    xmlns:beans="http://www.springframework.org/schema/beans"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:p="http://www.springframework.org/schema/p"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:p="http://www.springframework.org/schema/p"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans
                         http://www.springframework.org/schema/beans/spring-beans.xsd
                         http://www.springframework.org/schema/security 
                         http://www.springframework.org/schema/security/spring-security.xsd"
-                      >
-
-
-
+>
 
     <global-method-security secured-annotations="enabled" jsr250-annotations="enabled" />
-
 
     <http pattern="/images/**" security="none"/>
     <http pattern="/css/**" security="none"/>
     <http pattern="/js/**" security="none"/>
     <http pattern="/errors/*" security="none"/>
     <http pattern="/libs/**" security="none"/>
-
-    <http pattern="/main/assets/${paste.app.version}/**" security="none"/>
-    <http pattern="/main/static/${paste.app.version}/**" security="none"/>
-
-      <http pattern="/main/auth/google/**" entry-point-ref="googleEntryPoint" authentication-manager-ref="remote-auth-manager">
-        <intercept-url pattern="/main/auth/google/**" access="IS_AUTHENTICATED_FULLY" />
-    </http>
     
-    
-      <http pattern="/main/auth/linkedin/**" entry-point-ref="linkedinEntryPoint" authentication-manager-ref="remote-auth-manager">
-        <intercept-url pattern="/main/auth/linkedin/**" access="IS_AUTHENTICATED_FULLY" />
-    </http>
+    <http pattern="/main/assets/${paste.app.id}/**" security="none"/>
+    <http pattern="/main/static/${paste.app.id}/**" security="none"/>
 
-    
-      <http pattern="/act/callback*" entry-point-ref="googleEntryPoint" authentication-manager-ref="remote-auth-manager">
-        <custom-filter after="CAS_FILTER"  ref="clientFilter" />
-        <intercept-url pattern="/act/callback*" access="IS_AUTHENTICATED_ANONYMOUSLY" />
-        <logout />
-    </http>
-
+  
     
     <http realm="Paster Realm" auto-config="false" use-expressions="true" 
           entry-point-ref="authenticationEntryPoint" authentication-manager-ref="normal-auth-manager"
           disable-url-rewriting="true">
         <custom-filter position="REMEMBER_ME_FILTER"
-                           ref="rememberMeFilter" />
+                       ref="rememberMeFilter" />
         <custom-filter position="FORM_LOGIN_FILTER"
-                           ref="umsAuthenticationProcessingFilter" />
+                       ref="umsAuthenticationProcessingFilter" />
 
         <!--custom-filter position="LOGOUT_FILTER" ref="umsLogoutFilter" /-->
 
@@ -60,43 +41,52 @@
 
         <intercept-url pattern="/**" access="permitAll()"/>
 
-        <!--form-login login-page="/main/login" authentication-failure-url="/main/login?error=1"
-        default-target-url="/" login-processing-url="/act/login"/-->
-
-
-        <session-management>
-            <concurrency-control max-sessions="1"    />
+        <session-management  >
+            <concurrency-control error-if-maximum-exceeded="false" max-sessions="10" 
+                                 session-registry-ref="sessionRegistry"/>
         </session-management>
-
         
-        <logout logout-url="/act/logout"  invalidate-session="true" success-handler-ref="umsLogoutHandler"  />
+        <csrf />
+         
+        
+        <headers defaults-disabled="true">
+             
+            <cache-control />
+            <content-type-options />
+            <hsts />
+            <!--frame-options  /-->
+            <xss-protection />
+        </headers> 
+        
+        <logout logout-url="/act/logout"  invalidate-session="true" 
+                success-handler-ref="umsLogoutHandler"  />
 
-     <!--   <remember-me /> -->
+        <!--   <remember-me /> -->
 
     </http>
 
 
-    <beans:bean id="userService"
+    <beans:bean id="userManager"
                 class="uber.paste.manager.UserManagerImpl">
     </beans:bean>
 
     <beans:bean id="rememberMeFilter"
                 class="org.springframework.security.web.authentication.rememberme.RememberMeAuthenticationFilter">
         <!-- custom-filter position="REMEMBER_ME_FILTER"/ -->
-        <beans:property name="authenticationManager" ref="normal-auth-manager" />
-        <beans:property name="rememberMeServices" ref="umsRememberMeServices" />
+        <beans:constructor-arg  ref="normal-auth-manager" />
+        <beans:constructor-arg  ref="umsRememberMeServices" />
     </beans:bean>
 
     <beans:bean id="authenticationEntryPoint"
                 class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
-        <beans:property name="loginFormUrl" value="/main/login" />
+        <beans:constructor-arg value="/main/login" />
     </beans:bean>
 
     <beans:bean id="umsAuthenticationProcessingFilter"
                 class="uber.paste.manager.UserAuthenticationProcessingFilter">
+        <beans:constructor-arg ref="userManager" />
         <beans:property name="authenticationManager" ref="normal-auth-manager" />
-        <beans:property name="userManager" ref="userService" />
-
+        
         <beans:property name="authenticationSuccessHandler">
             <beans:bean id="authenticationSuccessHandler"
                         class="org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler"
@@ -111,77 +101,28 @@
 
     <beans:bean id="umsLogoutHandler"
                 class="uber.paste.manager.UserLogoutSuccessHandler">
-        <beans:property name="userManager" ref="userService" />
+        <beans:constructor-arg ref="userManager" />
 
     </beans:bean>
 
     <authentication-manager alias="normal-auth-manager">
    
-        <authentication-provider user-service-ref="userService">
-            <password-encoder hash="plaintext"/>
+        <authentication-provider user-service-ref="userManager">
+            <password-encoder ref="passwordEncoder" />
         </authentication-provider>
         <authentication-provider ref="rememberMeAuthenticationProvider" />
     </authentication-manager>
 
 
-    <authentication-manager id="remote-auth-manager">
-        <authentication-provider ref="clientProvider"/>
-        <authentication-provider ref="rememberMeAuthenticationProvider" />
-    </authentication-manager>
+    <beans:bean id="passwordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
 
+    <beans:bean id="sessionRegistry" class="org.springframework.security.core.session.SessionRegistryImpl"/>
 
-
-	<!-- common to all clients -->
-    <beans:bean id="clientFilter" class="org.pac4j.springframework.security.web.ClientAuthenticationFilter">
-    	<beans:constructor-arg value="/callback"/>
-        <beans:property name="clients" ref="clients" />
-        <beans:property name="sessionAuthenticationStrategy" ref="sas" />
-        <beans:property name="authenticationManager" ref="remote-auth-manager" />
-    </beans:bean>
-
-    <beans:bean id="clientProvider" class="uber.paste.web.PasteClientAuthProvider">
-        <beans:property name="clients" ref="clients" />
-        <beans:property name="userDetailsService" ref="userService" />
-        
-    </beans:bean>
     
     <beans:bean id="httpSessionRequestCache" class="org.springframework.security.web.savedrequest.HttpSessionRequestCache" />
     
     <beans:bean id="sas" class="org.springframework.security.web.authentication.session.SessionFixationProtectionStrategy" />
-
-     <beans:bean id="googleEntryPoint" class="org.pac4j.springframework.security.web.ClientAuthenticationEntryPoint">
-        <beans:property name="client" ref="googleClient" />
-    </beans:bean>
-    
-    
-     <beans:bean id="linkedinEntryPoint" class="org.pac4j.springframework.security.web.ClientAuthenticationEntryPoint">
-        <beans:property name="client" ref="linkedinClient" />
-    </beans:bean>
-
-  <beans:bean id="googleClient" class="org.pac4j.oauth.client.Google2Client">
-        <beans:property name="key" value="508743441574-eulbpo5grqo35i9ob6scv96d7ag92vpt.apps.googleusercontent.com" />
-        <beans:property name="secret" value="0tR1fouvOhBHOSeTE-j13lzP" />
-    </beans:bean>
-
-
-
-  <beans:bean id="linkedinClient" class="org.pac4j.oauth.client.LinkedIn2Client">
-        <beans:property name="key" value="75klco4z9v62tf" />
-        <beans:property name="secret" value="DOa7v1Ig2nfxv9Vl" />
-    </beans:bean>
-
-
-  <beans:bean id="clients" class="org.pac4j.core.client.Clients">
-        <beans:property name="callbackUrl" value="http://localhost:8080/act/callback" />
-        <beans:property name="clients">
-        	<beans:list>
-        		<beans:ref bean="googleClient" />
-        		<beans:ref bean="linkedinClient" />
-        	</beans:list>
-        </beans:property>
-    </beans:bean>
-
-
+  
 
     <!-- Automatically receives AuthenticationEvent messages -->
     <beans:bean id="loggerListener" class="org.springframework.security.authentication.event.LoggerListener"/>
@@ -189,15 +130,15 @@
     <beans:bean id="rememberMeAuthenticationProvider"
                 class="org.springframework.security.authentication.RememberMeAuthenticationProvider">
         <!-- This ensures that remember-me is added as an authentication provider -->
-        <beans:property name="key" value="1q2w3e4r5t6y7u8i" />
+        <beans:constructor-arg value="1q2w3e4r5t6y7u8i" />
 
     </beans:bean>
 
     <beans:bean id="umsRememberMeServices"
                 class="uber.paste.manager.UserRememberMeService">
-        <beans:property name="userDetailsService" ref="userService" />
-        <beans:property name="cookieName" value="#{userManager.SSOCookieName}" />
-        <beans:property name="key" value="1q2w3e4r5t6y7u8i" />
+        <beans:constructor-arg value="1q2w3e4r5t6y7u8i"/>
+        <beans:constructor-arg ref="userManager" />
+        
 
     </beans:bean>
 

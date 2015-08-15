@@ -20,38 +20,36 @@ import javax.persistence._
 import javax.validation.constraints.NotNull
 import uber.paste.base.SystemInfo
 
+object ConfigProperty extends KeyValueObj[ConfigProperty] {
 
-object ConfigProperty extends KeyValueObj[ConfigProperty]{
-  
-  val IS_INSTALLED = new ConfigProperty("config.property.is-installed","IS_INSTALLED","1")
-  val UPLOADS_DIR = new ConfigProperty("config.property.upload-dir","UPLOAD_DIR","upload")
-  val EXTERNAL_SITE_URL = new ConfigProperty("config.property.external-site-url","EXTERNAL_SITE_URL","http://localhost")
-  val APP_VERSION = new ConfigProperty("config.property.app-version","APP_VERSION","UNDEFINED")
-  val INSTALL_DATE = new ConfigProperty("config.property.install-date","INSTALL_DATE",null)
- 
+  val EXTERNAL_SITE_URL = new ConfigProperty("config.property.external-site-url", 
+                                             "EXTERNAL_SITE_URL", "http://localhost",false)
+  val IS_INSTALLED = new ConfigProperty("config.property.is-installed", "IS_INSTALLED", "1",true)
+  val APP_VERSION = new ConfigProperty("config.property.app-version", "APP_VERSION", "UNDEFINED",true)
+  val INSTALL_DATE = new ConfigProperty("config.property.install-date", "INSTALL_DATE", null,true)
+
   add(EXTERNAL_SITE_URL)
-  
-  
-  def createNew = new Builder(new ConfigProperty)
-  
 
-  class Builder(model:ConfigProperty) extends Named.NamedBuilder[ConfigProperty](model){
-  
-    def addValue(value:String): Builder  = {
-      get.setValue(value); return this
+  def createNew = new Builder(new ConfigProperty(null, null, null,false))
+
+  class Builder(model: ConfigProperty) extends KeyValue.Builder[ConfigProperty](model) {
+
+    def addReadOnly(v: Boolean): Builder = {
+      get.setReadOnly(v); return this
     }
 
   }
 }
 
 @Entity
-class ConfigProperty extends KeyValue with java.io.Serializable {
+class ConfigProperty(name: String, code: String, value: String, vreadOnly:Boolean)
+  extends KeyValue(code, value, name) with java.io.Serializable {
 
-    
-def this(name:String,code:String,value:String) = {
-    this(); setName(name)
-    setCode(code); setValue(value)
-  }
-  
+  private var readOnly: Boolean = vreadOnly
+
+  def this() = this(null, null, null,false)
+
+  def isReadOnly() = readOnly
+  def setReadOnly(b: Boolean) { this.readOnly = b }
   
 }

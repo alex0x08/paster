@@ -114,18 +114,13 @@ object CodeType {
 
 
 @Entity
-class CodeType extends Key with java.io.Serializable{
+class CodeType(name:String,code:String,keditType:String,kbrushFile:String) 
+extends Key(code,name) with java.io.Serializable{
 
-  private var editType:String = null
+  private var editType:String = keditType
 
-  private var brushFile:String = null
+  private var brushFile:String = kbrushFile
   
-def this(name:String,code:String,editType:String,brushFile:String) = {
-    this()
-    setName(name)
-    setCode(code)
-    this.editType=editType; this.brushFile=brushFile
-  }
 
   def getEditType() = editType
   def setEditType(e:String) { this.editType=editType}

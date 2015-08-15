@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletRequest
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation._
 import java.util.{Collections, Locale}
-import uber.paste.model.{KeyValue, Struct, Query}
+import uber.paste.model.{KeyValue, Struct, Query, Key}
 import org.springframework.beans.support.PagedListHolder
 import org.apache.lucene.queryParser.ParseException
 import org.apache.commons.lang.StringUtils
@@ -31,26 +31,16 @@ import scala.collection.JavaConversions._
 /**
  * Search result object
  */
-class SearchResult extends KeyValue{
+class SearchResult(code:String,desc:String,kitemsModel:String) extends Key(code,desc){
 
   /**
    * name of the model (used from web)
    */
-  private var itemsModel:String=null
+  private var itemsModel:String=kitemsModel
 
   //private var resultCount:Int =0 
   
-  def this(code:String,desc:String,itemsModel:String
-           //,totalFound:Int
-  ) = {
-    this()
-    this.itemsModel=itemsModel
-    
-    setCode(code); setName(desc)
-    
-   // this.resultCount=totalFound
-  }
-
+  
   def getItemsModel():String = itemsModel
   def getCodeLowerCase() = super.getCode().toLowerCase
  // def getResultCount() = resultCount
@@ -133,15 +123,21 @@ abstract class SearchController[T <: Struct,QV <: Query ] extends GenericListCon
 
       for (r<-getAvailableResults()) {
 
-       val rout =  processPageListHolder(request,locale,model,page,NPpage,pageSize,sortColumn,sortAsc,new SourceCallback[T]() {
+       val rout =  processPageListHolder(request,
+                                         locale,
+                                         model,
+                                         page,
+                                         NPpage,
+                                         pageSize,
+                                         sortColumn,sortAsc,new SourceCallback[T]() {
 
          override def invokeCreate():PagedListHolder[T]= {
            try {
-             return new PagedListHolder[T](search(query,r).asInstanceOf[java.util.List[T]])
+             new PagedListHolder[T](search(query,r).asInstanceOf[java.util.List[T]])
            } catch {
              case e:ParseException => {
                logger.error(e.getLocalizedMessage,e)
-               return new PagedListHolder[T]()
+               new PagedListHolder[T]()
              }
            }
          }
@@ -154,7 +150,7 @@ abstract class SearchController[T <: Struct,QV <: Query ] extends GenericListCon
           out= rout
           model.addAttribute(GenericController.NODE_LIST_MODEL_PAGE, model.asMap().get(r.getItemsModel()))
           model.addAttribute("result",r.getCodeLowerCase())
-          logger.debug("found "+out.size()+" in "+r.getItemsModel())
+          logger.debug("found {} in {}",out.size(),r.getItemsModel())
          }
       }
 
@@ -180,7 +176,7 @@ abstract class SearchController[T <: Struct,QV <: Query ] extends GenericListCon
 
 
   def search(query:Query,result:SearchResult):java.util.List[_]= {
-    logger.debug("_search "+query.getQuery())
+    logger.debug("_search {}",query.getQuery())
 
     return if(StringUtils.isBlank(query.getQuery()))
       getManagerBySearchResult(result).getList()
@@ -197,7 +193,7 @@ abstract class SearchController[T <: Struct,QV <: Query ] extends GenericListCon
     model.addAttribute("result",result.toLowerCase())
 
     if (logger.isDebugEnabled()) {
-      logger.debug("_listImpl(search) pageSize "+pageSize+", result "+model.asMap().get("result"))
+      logger.debug("_listImpl(search) pageSize {} , result {}",Array(pageSize,model.asMap().get("result")))
     }
     
     return super.listImpl(request,locale,model,page,NPpage,pageSize,sortColumn,sortAsc,getSearchResultByCode(result).getItemsModel())
@@ -244,11 +240,5 @@ abstract class SearchController[T <: Struct,QV <: Query ] extends GenericListCon
                       locale:Locale) = listImpl(request,locale, model, null, "prev", null,null,false,result)
 
 
-  /*@RequestMapping(value = Array("/body/list"), method = Array(RequestMethod.GET,RequestMethod.POST))
-  @ModelAttribute("items")
-  @ResponseBody
-  def searchBody(@ModelAttribute("query") query:Query):java.util.List[T] = {
-    return search(query)
-  }
-    */
+  
 }

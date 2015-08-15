@@ -27,19 +27,28 @@ import java.beans.PropertyEditorSupport
  */
 
 
+object KeyValue extends Key {
+  
+  abstract class Builder[T <: KeyValue](model:T) extends Key.Builder[T](model) {
+
+  def addValue(v:String): Builder[T]  = {
+    get().setValue(v)
+    return this
+  }
+  
+  }
+}
+
 class KeyValueEditor[T <: KeyValue](vobj:KeyValueObj[T]) extends PropertyEditorSupport{
 
   override def setAsText(text:String) {
-    setValue(vobj.valueOf(text.toLowerCase));
+    setValue(vobj.valueOf(text.toLowerCase))
   }
 
   override def getAsText():String = {
-    val s = getValue().asInstanceOf[T]
-    return if (s == null) 
-      null
-     else 
-      s.getCode().toString()
+    if (getValue() == null) return null
     
+     getValue().asInstanceOf[T].getCode()    
   }
 }
 
@@ -48,26 +57,17 @@ class KeyValueObj[T <: KeyValue] extends KeyObj[T]{ }
   
 
 @MappedSuperclass
-class KeyValue extends Key with java.io.Serializable{
+class KeyValue(code:String,kvalue:String,kname:String) extends Key(code,kname) with java.io.Serializable{
   
   @Column(name="pvalue")
-  private var value: String = null
+  private var value: String = kvalue
   
-  def this(code:String) = {
-    this(); setCode(code)
-  }
-
-  def this(code:String,value:String) = {
-    this();  setCode(code); this.value=value
-  }
-   
-  def getValue() : String = value
+  def getValue()= value
   def setValue(f:String)  {value = f }
 
    override def toString():String = Loggered.getNewProtocolBuilder(this)
                 .append("value", value)
                  .toString()+super.toString
   
-  
-  
+    
 }

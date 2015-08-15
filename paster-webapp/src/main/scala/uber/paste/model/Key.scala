@@ -18,6 +18,7 @@ package uber.paste.model
 
 
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute
+import java.beans.PropertyEditorSupport
 import java.io.IOException
 import java.util.Collection
 import java.util.HashMap
@@ -37,6 +38,20 @@ import org.hibernate.validator.constraints.SafeHtml.WhiteListType
 import org.hibernate.validator._
 import javax.validation.constraints.NotNull
 import uber.paste.base.Loggered
+
+
+object Key extends Named {
+  
+  abstract class Builder[T <: Key](model:T) extends Named.Builder[T](model) {
+
+  def addCode(code:String): Builder[T]  = {
+    get().setCode(code)
+    return this
+  }
+  
+  }
+}
+
 
 /**
  * Key structure. The struct which has special uniqie text key
@@ -60,26 +75,41 @@ class KeyObj[T <: Key] {
 }
 
 
+class KeyEditor[T <: Key](vobj:KeyObj[T]) extends PropertyEditorSupport{
+
+  override def setAsText(text:String) {
+    setValue(vobj.valueOf(text.toLowerCase));
+  }
+
+  override def getAsText():String = {
+    val s = getValue().asInstanceOf[T]
+    return if (s == null) 
+      null
+     else 
+      s.getName().toString()
+    
+  }
+}
+
+
+
+
 @MappedSuperclass
-class Key extends Named with java.io.Serializable{
+class Key(kcode:String,kname:String) extends Named(kname) with java.io.Serializable{
   
   @NotNull
   @Column(nullable = false, length = 50,unique=true)
   @XStreamAsAttribute
   @Field(index = Index.YES, store =Store.YES, termVector = TermVector.YES) //,boost=@Boost(2f)
   @SafeHtml(whitelistType=WhiteListType.NONE,message = "{validator.forbidden-symbols}")
-  private var code: String = null  
-  
-  def this(code:String) = {
-    this(); this.code=code
-  }
+  private var code: String = kcode
+   
+  def this() = this(null,null)
 
-  def getCode() : String = code
-  def setCode(f:String) : Unit = {code = f }
-
+  def getCode() = code
+  def setCode(f:String) { code = f }
   
-    
-  
+      
   override def hashCode():Int = {
     var hash:Int = 53*7;
         

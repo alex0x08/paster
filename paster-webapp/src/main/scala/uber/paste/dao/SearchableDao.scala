@@ -60,12 +60,16 @@ object SearchableDaoImpl {
 abstract class SearchableDaoImpl[T <: Struct](model:Class[T])
   extends StructDaoImpl[T](model)  {
     
+  /**
+   * this is needed to be able to reindex all implementations
+   * @see reindex 
+   */
   SearchableDaoImpl.searchableDao.add(this)
   
   @throws(classOf[ParseException])
   protected class FSearch(query:String) extends Loggered{
         
-      logger.debug("searching for "+query)
+      logger.debug("searching for {}",query)
     
     val fsession = getFullTextEntityManager()
 

@@ -24,13 +24,13 @@ class SortColumn(property:String, name:String) {
 
     def getProperty() = property
 
-    override def equals(from:Any):Boolean = {
-      return from.isInstanceOf[SortColumn] && property != null &&
+    override def equals(from:Any) = 
+      from.isInstanceOf[SortColumn] && property != null &&
       property.equals((from.asInstanceOf[SortColumn]).getProperty)
-    }
+    
 
-    override def hashCode():Int = {        
-        return 46 + Objects.hashCode(this.property)
-    }
+    override def hashCode():Int =        
+        42 + Objects.hashCode(this.property)
+    
     
 }

@@ -18,26 +18,24 @@ package uber.paste.model
 
 import org.springframework.security.core.GrantedAuthority
 
-object Role extends KeyValueObj[Role]{
+object Role extends KeyObj[Role]{
 
   val ROLE_ADMIN = new Role("ROLE_ADMIN","role.admin.name")
   val ROLE_USER = new Role("ROLE_USER","role.user.name")
-  val ROLE_REVIEWER = new Role("ROLE_REVIEWER","role.reviewer.name")
-
+  
   add(ROLE_ADMIN)
   add(ROLE_USER)
-  add(ROLE_REVIEWER)
-
+  
 
 }
 
 //@Entity
 //@Searchable
-class Role(code:String,desc:String) extends KeyValue(code,desc)
+class Role(code:String,desc:String) extends Key(code,desc)
                                        with GrantedAuthority with java.io.Serializable{
 
   def getAuthority():String = getCode
 
 }
 
-class RoleEditor extends KeyValueEditor[Role](Role){}
+class RoleEditor extends KeyEditor[Role](Role){}

@@ -17,16 +17,17 @@
 package uber.paste.base
 
 import java.util.Calendar
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
+import org.springframework.stereotype.Component
 import uber.paste.model.AppVersion
 import uber.paste.model.Project
 
-object SystemInfo {  
-  val instance = new SystemInfo
-}
 
-class SystemInfo {
+@Component
+class SystemInfo() {
   
-    private var runtimeVersion:AppVersion = null
+    private var runtimeVersion:AppVersion = _
     
     private var dateStart:java.util.Date = null
     
@@ -34,11 +35,15 @@ class SystemInfo {
   
     private var project:Project =null
   
+   @Autowired
+  def this(@Value("${build.version}") buildVersion:String,
+                 @Value("${build.time}") buildTime:String) {
+          this()                 
+          runtimeVersion = new AppVersion().fillFromParams(buildVersion, buildTime)
+   }
+  
     def getRuntimeVersion() = runtimeVersion
 
-    def setRuntimeVersion(runtimeVersion:AppVersion) {
-        this.runtimeVersion = runtimeVersion
-    }
 
     def getDateStart() =  dateStart
     def setDateStart(date:java.util.Date) {this.dateStart = date}

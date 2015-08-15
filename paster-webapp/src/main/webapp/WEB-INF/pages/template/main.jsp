@@ -6,7 +6,7 @@
         <head>
             <meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, 
                   user-scalable=yes" />
-            <link href="<c:url value='/main/assets/${appVersion}/paster/less/app.css'/>" rel="stylesheet" type="text/css">
+            <link href="<c:url value='/main/assets/${appId}/paster/less/app.css'/>" rel="stylesheet" type="text/css">
             <c:choose>
                 <c:when test="${not empty systemInfo.project.clientImage}">
                     <style>
@@ -20,7 +20,7 @@
                 </c:when>
                 <c:otherwise>
 
-                    <%--    <c:url var="defaultBgUrl" value='/main/static/${appVersion}/images/ninjas/ninja-back.png'/>
+                    <%--    <c:url var="defaultBgUrl" value='/main/static/${appId}/images/ninjas/ninja-back.png'/>
                         
                     <style>
                         body {
@@ -48,71 +48,71 @@
                                 'class': 'in' "
                                 >
                             <span class="visible-xs">Toggle navigation
-                            <i class="fa fa-bars"></i>
-                           </span>
-                           
+                                <i class="fa fa-bars"></i>
+                            </span>
+
                         </button>
                         <a class="navbar-brand" href="<c:url value='/'/>" style="padding-top:15px;padding-right: 0; margin-right: 0;">
                             <span class="i" style="font-size:3em;">/</span>
                         </a>
                         <span class="visible-xs navbar-text" style="font-size:1.5em;margin-top:15px;">
-                                Paster
-                            </span>
+                            Paster
+                        </span>
 
                     </div>
 
                     <div id="bs-js-navbar-collapse" class="collapse navbar-collapse">
 
 
-                        <sec:authorize ifAnyGranted="ROLE_ADMIN">
-                            
-                             <ul class="nav navbar-nav " >
-                            <li class="dropdown" data-behavior="BS.Dropdown">
-                                <a href="#" 
-                                   role="button" class="dropdown-toggle" 
-                                   data-toggle="dropdown" 
-                                   aria-expanded="false" 
-                                   >
-                                    Admin
-                                    <span class="caret"></span>
-                                </a>
-                               
+                        <sec:authorize access="hasRole('ROLE_ADMIN')">
 
-                                <ul class="dropdown-menu" role="menu" 
-                                   >
-                                    <li>
-                                        <a href="<c:url value='/main/user/list'/>">
-                <span class="i">x</span>
-                <fmt:message key='user.list.title'/></a>
-                                        
-                                     
-                                    </li>
-                                    <li>
-                                        
-                                         <a href="<c:url value='/main/admin/settings/edit'/>">
-                <span class="i">B</span>
-                <fmt:message key='settings.edit.title'/></a>
+                            <ul class="nav navbar-nav " >
+                                <li class="dropdown" data-behavior="BS.Dropdown">
+                                    <a href="#" 
+                                       role="button" class="dropdown-toggle" 
+                                       data-toggle="dropdown" 
+                                       aria-expanded="false" 
+                                       >
+                                        Admin
+                                        <span class="caret"></span>
+                                    </a>
 
-                                    </li>
-                                    <li>
-                                         <a href="<c:url value='/main/admin/settings/dbconsole'/>">
-                    <span class="i">B</span>
-                    <fmt:message key="settings.dbconsole.title"/>
-                </a>
 
-                                    </li>
+                                    <ul class="dropdown-menu" role="menu" 
+                                        >
+                                        <li>
+                                            <a href="<c:url value='/main/user/list'/>">
+                                                <span class="i">x</span>
+                                                <fmt:message key='user.list.title'/></a>
 
-                                </ul>
-                            </li>
-                        </ul>
-                        
-                            
+
+                                        </li>
+                                        <li>
+
+                                            <a href="<c:url value='/main/admin/settings/edit'/>">
+                                                <span class="i">B</span>
+                                                <fmt:message key='settings.edit.title'/></a>
+
+                                        </li>
+                                        <li>
+                                            <a href="<c:url value='/main/admin/settings/dbconsole'/>">
+                                                <span class="i">B</span>
+                                                <fmt:message key="settings.dbconsole.title"/>
+                                            </a>
+
+                                        </li>
+
+                                    </ul>
+                                </li>
+                            </ul>
+
+
                         </sec:authorize>
-                        
-                        
-                             <ul class="nav navbar-nav " >
+
+
+                        <ul class="nav navbar-nav " >
                             <li class="dropdown" data-behavior="BS.Dropdown">
-                                <a href="#" 
+                                <a href="#" id="main-menu-dropdown" 
                                    role="button" class="dropdown-toggle" 
                                    data-toggle="dropdown" 
                                    aria-expanded="false" 
@@ -120,7 +120,7 @@
                                     New
                                     <span class="caret"></span>
                                 </a>
-                               
+
 
                                 <ul class="dropdown-menu" role="menu" 
                                     id="pasteNewMenu">
@@ -131,17 +131,17 @@
 
 
                                     </li>
-                                    <li><a href="#">From file..</a></li>
+                                   
 
                                 </ul>
                             </li>
                         </ul>
-                        
-                        
-                                          <tiles:insertAttribute name="search-top" />
 
 
-                        
+                        <tiles:insertAttribute name="search-top" />
+
+
+
                         <ul class="nav navbar-nav">
                             <li >
                                 <a href="/sandbox/about/overview">Help</a>
@@ -149,7 +149,7 @@
                         </ul>
 
                         <p class="navbar-text hidden-sm hidden-xs" style="margin-top:5px;">
-                            
+
                             <c:forEach var="stat" items="${stats.list}">
                                 <a class="i ${stat.priority.cssClass}" style="font-size:2em;"
                                    title="<fmt:message key="${stat.priority.name}"/>. Click to search with same priority."
@@ -159,9 +159,9 @@
 
                             </c:forEach>
                         </p>
-                         
-                        
-                        
+
+
+
                         <ul class="nav navbar-nav navbar-right" >
 
                             <sec:authorize access="!isAuthenticated()" >
@@ -170,7 +170,7 @@
                                         <span  class="i" title="Login here">x</span>
                                         Authentication
                                     </a>
-                                        
+
                                     <%--c:forEach var="server" items="${availableServers}">
                                         <a  class="img-map ${server.icon}" href="<c:url value='/act/openid-login?openid_identifier=${server.code}'/>">
                                         </a>
@@ -179,7 +179,8 @@
                             </sec:authorize>
 
 
-                            <sec:authorize ifAnyGranted="ROLE_USER,ROLE_ADMIN">
+                            <sec:authorize access="hasAnyRole('ROLE_ADMIN','ROLE_USER')" 
+                                           >
                                 <jsp:include
                                     page="/WEB-INF/pages/common/currentUser.jsp">
                                     <jsp:param name="currentUser" value="${currentUser}" />
@@ -196,36 +197,36 @@
                                     <c:out value="${pageContext.response.locale.language}"/>
                                     <span class="caret" ></span>
                                 </a>
-                                    
-                                    <ul class="dropdown-menu" role="menu" 
-                                        >
-                                        <c:forEach items="${availableLocales}" var="locale" >
 
-                                            <li role="presentation">
+                                <ul class="dropdown-menu" role="menu" 
+                                    >
+                                    <c:forEach items="${availableLocales}" var="locale" >
 
-                                                <c:url var="switchLangUrl" value="${request.requestURL}">
-                                                    <c:param name="locale" value="${locale.language}_${locale.country}" />
-                                                    <c:forEach items="${param}" var="currentParam">
-                                                        <c:if test="${currentParam.key ne 'locale'}">
-                                                            <c:param name="${currentParam.key}" value="${currentParam.value}"/>
-                                                        </c:if>
-                                                    </c:forEach>
+                                        <li role="presentation">
 
-                                                </c:url>
+                                            <c:url var="switchLangUrl" value="${request.requestURL}">
+                                                <c:param name="locale" value="${locale.language}_${locale.country}" />
+                                                <c:forEach items="${param}" var="currentParam">
+                                                    <c:if test="${currentParam.key ne 'locale'}">
+                                                        <c:param name="${currentParam.key}" value="${currentParam.value}"/>
+                                                    </c:if>
+                                                </c:forEach>
 
-                                                <a role="menuitem" href="${switchLangUrl}">
-                                                    <span title="<c:out value='${locale.displayLanguage}'/>">
-                                                        <c:out value="${locale.displayLanguage}"/>
-                                                    </span>
-                                                </a>
+                                            </c:url>
 
-                                            </li>
+                                            <a role="menuitem" href="${switchLangUrl}">
+                                                <span title="<c:out value='${locale.displayLanguage}'/>">
+                                                    <c:out value="${locale.displayLanguage}"/>
+                                                </span>
+                                            </a>
 
-                                        </c:forEach>
+                                        </li>
+
+                                    </c:forEach>
 
 
 
-                                    </ul>
+                                </ul>
                             </li>
 
 
@@ -241,7 +242,7 @@
 
             <div class="container-fluid">
 
-             
+
 
                 <div class="row">
                     <div class="col-xs-6 col-sm-8 col-md-12 col-lg-14">

@@ -118,17 +118,12 @@ class PluginUI {
 }
 
 @XStreamAlias("ui-section")
-class UISection extends Key {
+class UISection(name:String,code:String) extends Key(code,name) {
   
   @XStreamImplicit(itemFieldName="element",keyFieldName="code")
   private var elements:Map[String,UIElement] = new HashMap[String,UIElement]()
   
-  def this(name:String,code:String) = {
-    this()
-    setName(name)
-    setCode(code)    
-  }
-
+ 
    def addElement(s:UIElement ) {
     elements.put(s.getCode, s)
   }
@@ -152,16 +147,11 @@ class UISection extends Key {
 }
 
 @XStreamAlias("ui-element")
-class UIElement extends Key{
+class UIElement(name:String,code:String) extends Key(code,name){
   
   @XStreamImplicit(itemFieldName="extension",keyFieldName="code")
   private var extensions:Map[String,UIExtension] = new HashMap[String,UIExtension]()
-  
-  def this(name:String,code:String) = {
-    this()
-    setName(name)
-    setCode(code)    
-  }
+
 
    def addExtension(s:UIExtension ) {
     extensions.put(s.getCode, s)
@@ -187,16 +177,10 @@ class UIElement extends Key{
 }
 
 @XStreamAlias("extension")
-class UIExtension extends Key {
+class UIExtension(name:String,code:String,kjspUrl:String) extends Key(name,code) {
   
-   private var jspUrl:String = null
+   private var jspUrl:String = kjspUrl
 
-def this(name:String,code:String,jspUrl:String) = {
-    this()
-    setName(name)
-    setCode(code)
-    this.jspUrl=jspUrl
-  }
   
   def getJspUrl() = jspUrl
   def setJspUrl(url:String) { this.jspUrl = url}

@@ -19,13 +19,8 @@ object PasteSource extends KeyValueObj[PasteSource] {
 
 }
 
-class PasteSource extends KeyValue{
+class PasteSource(code:String,desc:String) extends KeyValue(code,null,desc){
 
-  def this(code:String,desc:String) = {
-    this()
-    setCode(code)
-    setName(desc)
-  }
-
+ 
    def getCodeLowerCase() = super.getCode().toLowerCase
 }

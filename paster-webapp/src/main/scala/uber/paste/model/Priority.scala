@@ -7,7 +7,7 @@ package uber.paste.model
  * Time: 22:41
  */
 
-object Priority extends KeyValueObj[Priority]{
+object Priority extends KeyObj[Priority]{
 
   val BLOCKER = new Priority("BLOCKER","priority.blocker.name","priority_blocker")
   val NORMAL = new Priority("NORMAL","priority.normal.name","priority_normal")
@@ -20,18 +20,11 @@ object Priority extends KeyValueObj[Priority]{
 }
 
 
-class Priority extends KeyValue with java.io.Serializable{
+class Priority(code:String,desc:String,kcssClass:String) extends Key(code,desc) with java.io.Serializable{
 
-  private var cssClass:String = null
+  private var cssClass:String = kcssClass
 
-def this(code:String,desc:String,cssClass:String) = {
-  this()
-  setCode(code)
-  setName(desc)
 
-  this.cssClass = cssClass
-}
-
-def getCssClass():String = this.cssClass
+def getCssClass() =cssClass
 def setCssClass(css:String) = { this.cssClass =css}
 }

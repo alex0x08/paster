@@ -16,9 +16,7 @@
 
 package uber.paste.controller
 
-import uber.paste.dao.BaseDaoImpl
 import uber.paste.dao.StructDaoImpl
-import uber.paste.model.DBObject
 import org.springframework.web.bind.annotation._
 import uber.paste.model.Struct
 
@@ -31,28 +29,27 @@ object GenericController {
    
 }
 
+/**
+ *  Generic MVC Controller, binded with generic model
+ */
 abstract class GenericController[T <: Struct ] extends AbstractController {
 
-    
+
+  /**
+   * link to list page
+   */
   protected def listPage:String
  
-  protected def editPage:String
+  /**
+   *  edit page
+   */
+  protected def editPage:String 
 
   protected def viewPage:String
 
-
-  def getListPage():String = {
-    return listPage;
-  } 
- 
-  def getEditPage():String = {
-    return editPage;
-  }
-
-  def getViewPage():String = {
-    return viewPage;
-  }
-
+  /**
+   *  binded DAO service
+   */
   protected def manager():StructDaoImpl[T]
 
 }

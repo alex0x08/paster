@@ -45,7 +45,7 @@ class SettingsController extends AbstractController{
   @Autowired
   val projectManager:ProjectDaoImpl= null
 
-  def editPage()="/admin/settings/edit"
+  def editPage="/admin/settings/edit"
  
   
   def manager():ProjectDaoImpl = return projectManager
@@ -55,7 +55,7 @@ class SettingsController extends AbstractController{
     
     model.addAttribute(GenericController.MODEL_KEY, projectManager.getCurrentProject)
     
-    return editPage()
+    return editPage
   }
 
   
@@ -88,7 +88,7 @@ class SettingsController extends AbstractController{
              current.setClientImage(null)
              current.setIconImage(null)
    
-            SystemInfo.instance.setProject(manager.save(current))
+            systemInfo.setProject(manager.save(current))
              
             redirectAttributes.addFlashAttribute("statusMessageKey", "action.settings.reset")
             
@@ -97,7 +97,7 @@ class SettingsController extends AbstractController{
 
     
         if (result.hasErrors()) {
-              logger.debug("form has errors " + result.getErrorCount())
+              logger.debug("form has errors {}", result.getErrorCount())
             
             return editPage
         }
@@ -126,7 +126,7 @@ class SettingsController extends AbstractController{
                                  Base64.encodeBase64String(baar.toByteArray))
         }
         
-      SystemInfo.instance.setProject(manager.save(current))
+      systemInfo.setProject(manager.save(current))
       
       redirectAttributes.addFlashAttribute("statusMessageKey", "action.success")
       

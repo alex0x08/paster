@@ -1,22 +1,17 @@
 package uber.paste.model
 
-import javax.persistence.{Entity, Table}
-import org.hibernate.envers.Audited
-
-/**
- * Created with IntelliJ IDEA.
- * User: achernyshev
- * Date: 19.02.13
- * Time: 21:02
- */
-@Entity
-@Audited
-class SavedSession extends Key with java.io.Serializable{
+import javax.persistence.{ Entity }
+import org.apache.commons.codec.binary.Base64
 
 
-  def this(code:String) = {
-    this()
-    setCode(code)
-  }
+@Entity //@Audited
+class SavedSession(code: String) extends Named(code) with java.io.Serializable {
 
+  def this() = this(null)
+
+  def getBase64Encoded = if (code != null) {
+    Base64.encodeBase64String(code.getBytes)
+  } else { null }
+
+ 
 }

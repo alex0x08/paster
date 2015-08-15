@@ -7,7 +7,7 @@
        
 
 
-        <sec:authorize ifAnyGranted="ROLE_ADMIN">
+        <sec:authorize access="hasRole('ROLE_ADMIN')">
 
 
 

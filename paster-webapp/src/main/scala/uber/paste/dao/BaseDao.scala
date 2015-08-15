@@ -48,7 +48,7 @@ abstract class BaseDaoImpl[T <: java.io.Serializable,PK <:Long ](model:Class[T])
      */
   @Transactional(readOnly = false)
   def save(obj:T):T = {
-    logger.debug("saving obj {0}",obj)
+    logger.debug("saving obj {}",obj)
     val out:T = em.merge(obj)
     em.flush()
     return out
@@ -64,7 +64,7 @@ abstract class BaseDaoImpl[T <: java.io.Serializable,PK <:Long ](model:Class[T])
   }
 
   @Transactional
-  def remove(id:PK):Unit = {
+  def remove(id:PK) {
     
     val obj:T = get(id)
     
@@ -74,8 +74,7 @@ abstract class BaseDaoImpl[T <: java.io.Serializable,PK <:Long ](model:Class[T])
     }
   }
 
-  def get(id:PK):T = em.find(model,id)
-  
+  def get(id:PK) = em.find(model,id)  
 
   def countAll():java.lang.Long = {
 
@@ -84,10 +83,39 @@ abstract class BaseDaoImpl[T <: java.io.Serializable,PK <:Long ](model:Class[T])
     val cq:CriteriaQuery[java.lang.Long] = cr.cb.createQuery(classOf[java.lang.Long])
     cq.select(cr.cb.count(cq.from(model)))
 
-    return em.createQuery[java.lang.Long](cq)
-      .getSingleResult()
+    return em.createQuery[java.lang.Long](cq).getSingleResult()
   }
+  
+   def getSingleByKeyValue(key:String,value:Any,
+                         order:Option[String] = None,
+                         asc:Option[Boolean] = None):T = {
+     val results = getListByKeyValue(key,value,order,asc)
+    if (results.isEmpty()) null.asInstanceOf[T] else results.get(0)
+   }
 
+   def getListByKeyValue(key:String,value:Any,
+                         order:Option[String] = None,
+                         asc:Option[Boolean] = None) : java.util.List[T] = {
+
+    val cr = new CriteriaSet
+
+   em.createQuery[T](cr.cr.where(Array(cr.cb.equal(cr.r.get(key), value)):_*)
+      .select(cr.r)
+      .orderBy(if (order.isDefined) {   
+        
+            if (asc.getOrElse(false)) {
+              (cr.cb.asc(cr.r.get(order.get)))
+            } else {
+              (cr.cb.desc(cr.r.get(order.get)))
+            }
+          
+          } else {
+            (cr.cb.desc(cr.r.get("id")))
+          }
+      ))
+      .setMaxResults(BaseDaoImpl.MAX_RESULTS).getResultList
+  }
+  
   def getList():java.util.List[T] = {
 
     val cr = new CriteriaSet

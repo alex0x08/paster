@@ -93,7 +93,7 @@
                     <form:select path="roles" multiple="true">
                         <c:forEach items="${availableRoles}" var="role">
                             <form:option  value="${role.code}"  >
-                                <fmt:message key="${role.value}"/>
+                                <fmt:message key="${role.name}"/>
                             </form:option>
                         </c:forEach>
                     </form:select> 

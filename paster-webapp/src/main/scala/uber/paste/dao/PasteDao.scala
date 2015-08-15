@@ -31,33 +31,10 @@ import scala.collection.JavaConversions._
 @Transactional(readOnly = true)
 class PasteDaoImpl extends SearchableDaoImpl[Paste](classOf[Paste]) {
 
-  def getByOwner(owner:User) : java.util.List[Paste] = {
-
-    val cr = new CriteriaSet
-
-    val query = em.createQuery[Paste](cr.cr.where(Array(cr.cb.equal(cr.r.get("owner"), owner)):_*)
-      .select(cr.r))
-      .setMaxResults(BaseDaoImpl.MAX_RESULTS)
-    return query.getResultList()
-  }
-
-  def getByRemoteUrl(url:String) : Paste = {
-
-    val cr = new CriteriaSet
-
-    val query:Query = em.createQuery(cr.cr.where(Array(cr.cb.equal(cr.r.get("remoteUrl"), url)):_*)
-      .select(cr.r))
-      .setMaxResults(BaseDaoImpl.MAX_RESULTS)
-    return {
-      val results = query.getResultList().asInstanceOf[java.util.List[Paste]]
-      if (results.isEmpty) {
-        null.asInstanceOf[Paste]
-      } else {
-        results.get(0)
-      }
-    }
-  }
-
+  def getByOwner(owner:User) =  getListByKeyValue("owner",owner)
+   
+  def getByRemoteUrl(url:String) =  getListByKeyValue("remoteUrl",url) 
+  
   def getNextPaste(paste:Paste): Paste =  {
     val out:java.util.List[Paste] =  getNextPreviousPaste(paste,false,1)
     return if (out.isEmpty) null else out.get(0) 
@@ -141,7 +118,6 @@ class PasteDaoImpl extends SearchableDaoImpl[Paste](classOf[Paste]) {
 
   def getBySourceType(sourceType:PasteSource,sortAsc:Boolean) : java.util.List[Paste] = {
 
-    System.out.println("_getBySource "+sourceType.getCode())
     
     val cr = new CriteriaSet
 
@@ -157,15 +133,14 @@ class PasteDaoImpl extends SearchableDaoImpl[Paste](classOf[Paste]) {
     return query.getResultList().asInstanceOf[java.util.List[Paste]]
   }
 
-  override def getList():java.util.List[Paste] = {
-
-    val cr = new CriteriaSet
-
-    val query = em.createQuery[Paste](cr.cr.orderBy(cr.cb.desc(cr.r.get("sticked"))
+  override def getList():java.util.List[Paste] = 
+     { 
+       val cr = new CriteriaSet
+      em.createQuery[Paste](cr.cr.orderBy(cr.cb.desc(cr.r.get("sticked"))
       ,cr.cb.desc(cr.r.get("lastModified"))))
-      .setMaxResults(BaseDaoImpl.MAX_RESULTS)
-    return query.getResultList()
-  }
+      .setMaxResults(BaseDaoImpl.MAX_RESULTS).getResultList
+    }
+  
 
   def getListIntegrated(code:String):java.util.List[Paste] = {
 

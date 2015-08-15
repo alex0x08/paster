@@ -1,7 +1,7 @@
 <%@ include file="/WEB-INF/pages/common/taglibs.jsp"%>
 
   
-<link href="<c:url value='/main/assets/${appVersion}/paster/minified/paster-edit/css/paste-edit-style.min.css'/>" rel="stylesheet" type="text/css">
+<link href="<c:url value='/main/assets/${appId}/paster/minified/paster-edit/css/paste-edit-style.min.css'/>" rel="stylesheet" type="text/css">
 
 <%--
 
@@ -39,5 +39,5 @@ dirty fix with mouse events in Ace & Mootools
 </script>
     
 
-<script type="text/javascript" src="<c:url value="/main/assets/${appVersion}/paster/minified/paster-edit/js/paste-edit-script.min.js"/>"></script>
-<script src="<c:url value='/main/assets/${appVersion}/ace/01.08.2014/src-min-noconflict/ace.js'/>" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" src="<c:url value="/main/assets/${appId}/paster/minified/paster-edit/js/paste-edit-script.min.js"/>"></script>
+<script src="<c:url value='/main/assets/${appId}/ace/01.08.2014/src-min-noconflict/ace.js'/>" type="text/javascript" charset="utf-8"></script>

@@ -24,15 +24,7 @@ import org.springframework.transaction.annotation.Transactional
 @Transactional(readOnly = true)
 abstract class KeyDaoImpl[T <: Key](model:Class[T]) extends StructDaoImpl[T](model) {
 
-  def getByKey(code:String) : T = {
-
-    val cr = new CriteriaSet
-
-    val query= em.createQuery[T](cr.cr.where(Array(cr.cb.equal(cr.r.get("code"), code)):_*).select(cr.r))
-    val results = query.getResultList()
-
-    return if (results.isEmpty()) null.asInstanceOf[T] else results.get(0)
-
-  }
+  def getByKey(code:String) = getSingleByKeyValue("code",code)
+ 
 
 }

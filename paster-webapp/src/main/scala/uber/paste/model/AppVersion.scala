@@ -93,13 +93,12 @@ class AppVersion {
   /**
    * @return appversion object loaded from application manifest
    */
-  def fillFromResource(buildProps:Properties):AppVersion = {
+  def fillFromParams(ver:String, time:String):AppVersion = {
     
-     implVer = buildProps.getProperty("build.version")
-     implBuildNum = AppVersion.MAVEN_TS_FORMAT.parse(buildProps.getProperty("build.time"))
+     implVer = ver; implBuildTime = time        
+     implBuildNum = AppVersion.MAVEN_TS_FORMAT.parse(time)
                                         .getTime.toString
-     implBuildTime = buildProps.getProperty("build.time")                                 
-    
+                              
     return this
   }
   

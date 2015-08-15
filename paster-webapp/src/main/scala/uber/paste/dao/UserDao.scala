@@ -31,9 +31,8 @@ class UserDaoImpl extends StructDaoImpl[User](classOf[User])  {
   def createSession(userId:java.lang.Long):SavedSession = {
       var user:User  = get(userId)
 
-     val session = new SavedSession
-      session.setCode(UUID.randomUUID().toString)
-      session.setName("----")
+     val session = new SavedSession(UUID.randomUUID().toString)
+     
 
     user.getSavedSessions().add(session)
     user  = save(user)
@@ -43,11 +42,12 @@ class UserDaoImpl extends StructDaoImpl[User](classOf[User])  {
       logger.debug("session:"+s)
     }
 
-    return user.getSavedSession(session.getCode())
+    return user.getSavedSession(session.getName())
   }
 
   def getSession(sessionId:String):SavedSession = {
-  val result = em.createQuery("select s from SavedSession s where s.code = :sessionId")
+    
+  val result = em.createQuery("select s from SavedSession s where s.name = :sessionId")
       .setParameter("sessionId", sessionId)
       .getResultList()
 
@@ -68,40 +68,22 @@ class UserDaoImpl extends StructDaoImpl[User](classOf[User])  {
 
   def getUserBySession(sessionId:String):User = {
 
-    val result =  em.createQuery("select u from User u join u.savedSessions as s where s.code = :sessionId")
+    val result =  em.createQuery("select u from User u join u.savedSessions as s where s.name = :sessionId")
       .setParameter("sessionId", sessionId)
       .getResultList()
 
     if (logger.isDebugEnabled)
-      logger.debug("_getUser for session="+sessionId+",results="+result.size());
+      logger.debug("_getUser for session={}, results {}",sessionId,result.size())
 
     return if (result==null || result.isEmpty()) null else result.get(0).asInstanceOf[User]
   }
 
 
-  def getUser(username:String):User = {
+  def getUser(username:String) = getSingleByKeyValue("username", username)
+ 
 
-    val result =  em.createQuery("select u from User u where u.username = :username")
-      .setParameter("username", username)
-      .getResultList()
-
-    if (logger.isDebugEnabled)
-      logger.debug("_getUser for name="+username+",results="+result.size());
-
-    return if (result==null || result.isEmpty()) null else result.get(0).asInstanceOf[User]
-  }
-
-  def getUserByOpenID(openid:String):User = {
-
-    val result = em.createQuery("select u from User u where u.openID = :openid")
-            .setParameter("openid", openid)
-            .getResultList()
-
-    if (logger.isDebugEnabled)
-      logger.debug("_getUser for openid="+openid+",results="+result.size());
-
-    return if (result==null || result.isEmpty()) null else result.get(0).asInstanceOf[User]
-  }
+  def getUserByOpenID(openid:String) = getSingleByKeyValue("openID", openid)
+  
 
 }
 

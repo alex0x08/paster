@@ -41,10 +41,10 @@ class IndexController extends AbstractController{
     errorCode match {
           case 403 |404 |500  => {
               response.setStatus(errorCode)
-              return "/error/"+errorCode
+               "/error/"+errorCode
           }
          case _ => {
-             return "/error/500"
+              "/error/500"
          }
     }
    

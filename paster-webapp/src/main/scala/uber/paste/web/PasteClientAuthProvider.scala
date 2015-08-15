@@ -85,7 +85,7 @@ class PasteClientAuthProvider extends AuthenticationProvider with InitializingBe
       return null
     }*/
     var user =if (currentUser==null) {
-         val user = new User
+         val user = new User("unnamed user")
          user.addRole(Role.ROLE_USER)
          user.setPassword(System.currentTimeMillis() + "_google")
       user

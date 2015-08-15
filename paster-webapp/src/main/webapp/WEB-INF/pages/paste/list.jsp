@@ -10,7 +10,7 @@
              <a  href="<c:url value='/main/paste/list/${sourceType}'/>">
                  <span class="i" style="font-size: 1.5em;">P</span></a>
     
-             <sec:authorize ifAnyGranted="ROLE_ADMIN">
+             <sec:authorize access="hasRole('ROLE_ADMIN')">
              
                  <c:forEach var="source" items="${availableSourceTypes}" varStatus="loopStatus">
 
@@ -109,7 +109,7 @@
                            <c:when test="${not empty paste.thumbImage}">
                                <div class="col-md-4 col-lg-3 hidden-xs col-sm-5" >
 
-                                   <c:url value='/main/resources/${appVersion}/t/${paste.lastModified.time}/${paste.thumbImage}.jpg' var="thumbUrl">
+                                   <c:url value='/main/resources/${appId}/t/${paste.lastModified.time}/${paste.thumbImage}.jpg' var="thumbUrl">
                                    </c:url>
 
                                    <a class="pastePreviewLink" href="<c:url value="/${paste.id}"></c:url>" pasteId="${paste.id}" 

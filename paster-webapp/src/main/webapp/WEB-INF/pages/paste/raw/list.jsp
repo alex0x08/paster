@@ -51,7 +51,7 @@
                 <div class="column grid-4" >
                     
                     
-                      <c:url value='/main/resources/${appVersion}/t/${paste.lastModified.time}/${paste.thumbImage}.jpg' var="thumbUrl">
+                      <c:url value='/main/resources/${appId}/t/${paste.lastModified.time}/${paste.thumbImage}.jpg' var="thumbUrl">
                     </c:url>
                   
                     
@@ -103,7 +103,7 @@
                                 ,<kc:prettyTime date="${paste.lastModified}" locale="${pageContext.response.locale}"/>
                             </small>
 
-                            <sec:authorize ifAnyGranted="ROLE_ADMIN">
+                            <sec:authorize access="hasRole('ROLE_ADMIN')">
                                 |  <a href="<c:url value='/main/paste/delete'><c:param name="id" value="${paste.id}"/> </c:url>"><fmt:message key='button.delete'/></a>
                             </sec:authorize>
 

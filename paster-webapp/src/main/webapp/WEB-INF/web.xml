@@ -33,8 +33,7 @@
         <param-name>javax.servlet.jsp.jstl.fmt.localizationContext</param-name>
         <param-value>messages</param-value>
     </context-param>
-
-    
+   
 
     <filter>
         <filter-name>securityFilter</filter-name>

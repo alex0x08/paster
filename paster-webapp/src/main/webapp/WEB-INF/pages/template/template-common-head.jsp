@@ -19,7 +19,7 @@
         <meta http-equiv="Expires" content="0"/>
      
 
-<link href="<c:url value='/main/assets/${appVersion}/paster/minified/all/css/all-style.min.css'/>" rel="stylesheet" type="text/css">
+<link href="<c:url value='/main/assets/${appId}/paster/minified/all/css/all-style.min.css'/>" rel="stylesheet" type="text/css">
 
 <style>
     @media screen and (min-width: 768px) {
@@ -28,7 +28,7 @@
 
 }
 </style>
-<script src="<c:url value='/main/assets/${appVersion}/paster/minified/all/js/all-script.js'/>"></script>
+<script src="<c:url value='/main/assets/${appId}/paster/minified/all/js/all-script.js'/>"></script>
 
 <script  type="text/javascript">
     

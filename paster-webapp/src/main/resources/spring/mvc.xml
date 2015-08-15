@@ -67,11 +67,11 @@
               p:paramName="locale" />
     </mvc:interceptors>
 
-    <mvc:resources mapping="/assets/${paste.app.version}/**" 
+    <mvc:resources mapping="/assets/${paste.app.id}/**" 
                    location="classpath:/META-INF/resources/webjars/"/>
-    <mvc:resources mapping="/static/${paste.app.version}/**" 
+    <mvc:resources mapping="/static/${paste.app.id}/**" 
                    location="/WEB-INF/static/"/>
-     <mvc:resources mapping="/resources/${paste.app.version}/**" 
+     <mvc:resources mapping="/resources/${paste.app.id}/**" 
                    location="/WEB-INF/resources/"/>
   
 
@@ -100,6 +100,8 @@
                 <value>classpath:/META-INF/resources/tiles-defs/*.xml</value>
             </list>
         </property>
+        
+     <property name="validateDefinitions" value="false"/>
     
                 <!--prop key="org.apache.tiles.evaluator.AttributeEvaluator">org.apache.tiles.el.ELAttributeEvaluator</prop-->
         
@@ -136,7 +138,7 @@
                       class="org.springframework.http.converter.StringHttpMessageConverter"/>
 
                 <bean id="mappingJacksonHttpMessageConverter"
-                      class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter" />
+                      class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter" />
             </list>
         </property>
     </bean>
@@ -156,7 +158,7 @@
         </property>
         <property name="defaultViews">
             <list>
-                <bean class="org.springframework.web.servlet.view.json.MappingJacksonJsonView" >
+                <bean class="org.springframework.web.servlet.view.json.MappingJackson2JsonView" >
                     <property name="contentType" value="application/json" />
                     <property name="prettyPrint" value="true" />
                      
@@ -168,10 +170,20 @@
                     </property>
      
                 </bean>
-                <bean class="org.springframework.web.servlet.view.xml.MarshallingView">
+                
+                 <bean class="uber.paste.controller.view.ConfigurableMarshallingView">
+                    <constructor-arg>
+                        <bean class="org.springframework.oxm.xstream.XStreamMarshaller"
+                              p:autodetectAnnotations="true" p:encoding="UTF-8" />
+                    </constructor-arg>
+                    <property name="contentType" value="application/xml" />
+                    <property name="modelKeys" value="model,items" />
+                    
+                 </bean>
+                <!--bean class="org.springframework.web.servlet.view.xml.MarshallingView">
                     <constructor-arg ref="xstreamMarshaller"/>
                     <property name="contentType" value="application/xml" />
-                </bean>
+                </bean-->
 
                 <!--bean class="uber.paste.controller.view.PasteExcelView">
                     <property name="contentType" value="application/vnd.ms-excel" />

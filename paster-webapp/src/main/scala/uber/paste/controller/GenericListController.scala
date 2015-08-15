@@ -48,6 +48,7 @@ object GenericListController {
    */
   final val LIST_MODE = "listMode"
   
+  
   final val defaultSortColumns:List[SortColumn] = 
             List[SortColumn](new SortColumn("id","struct.id"),
                               new SortColumn("name","struct.name"),
@@ -55,7 +56,8 @@ object GenericListController {
 }
 
 
-class ExtendedPageListHolder[T <: Struct ](source:java.util.List[T]) extends PagedListHolder[T](source) {
+class ExtendedPageListHolder[T <: Struct ](source:java.util.List[T]) 
+                                          extends PagedListHolder[T](source) {
   
   def getFirstElement():T = if 
       (getFirstElementOnPage()>=0) getSource().get(getFirstElementOnPage()) 
@@ -79,8 +81,7 @@ abstract class GenericListController[T <: Struct ] extends GenericController[T] 
    */
   protected val defaultListCallback:SourceCallback[T]  = new SourceCallback[T]() {
     override def invokeCreate():PagedListHolder[T] = 
-     new PagedListHolder[T](manager.getList())
-    
+     new PagedListHolder[T](manager.getList())    
   }
 
 
@@ -135,7 +136,7 @@ abstract class GenericListController[T <: Struct ] extends GenericController[T] 
                 sort.setProperty(sortColumn)
                 sort.setIgnoreCase(false)
                 sort.setAscending(sortAsc)
-                pagedListHolder.resort();
+                pagedListHolder.resort()
             }
       /**
        * NPage is string like NEXT or PREV
@@ -263,12 +264,6 @@ abstract class GenericListController[T <: Struct ] extends GenericController[T] 
   }
 
 
-  @RequestMapping(value = Array("/list/body"))
-  //@ModelAttribute("items")
-  //@ResponseBody
-  def listBody():java.util.List[T] = {
-    return manager.getList()
-  }
 
   protected trait SourceCallback[T ] {
     def invokeCreate():PagedListHolder[T];

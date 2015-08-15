@@ -5,7 +5,7 @@
 
 
 <div class="jumbotron">
-    <img src="<c:url  value='/main/assets/${appVersion}/paster/static/big/paranoia.png'/>" style="width: 128px;height:128px;" 
+    <img src="<c:url  value='/main/assets/${appId}/paster/static/big/paranoia.png'/>" style="width: 128px;height:128px;" 
          class="img-responsive img-rounded" alt="Reponsive image"/>    
     <h1><fmt:message key="error.403.title"/></h1>
     <p>

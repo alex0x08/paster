@@ -141,7 +141,7 @@ class DynamicTilesViewProcessor extends Loggered {
             attributeContext.putAttribute(tilesBodyAttributeName, 
                                           new Attribute(url))
 
-            logger.debug("URL used for Tiles body.  url='{0}'.",url)
+            logger.debug("URL used for Tiles body.  url='{}'.",url)
         }
 
         return definitionName

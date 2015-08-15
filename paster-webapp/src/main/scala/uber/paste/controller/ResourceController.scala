@@ -68,7 +68,7 @@ class ResourceController extends AbstractController{
     }
    
             
-    response.setContentType("image/jpeg");
+    response.setContentType("image/jpeg")
     response.setHeader("Content-Length", String.valueOf(fimg.length()))
     response.setHeader("Content-Disposition", "inline;filename='" + fimg.getName + "'")
     response.setDateHeader("Last-Modified", fimg.lastModified)

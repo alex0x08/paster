@@ -49,7 +49,7 @@ class ResourcePathHelper extends Loggered {
     .replaceAll(",", "/")
     
     if (logger.isDebugEnabled) {
-      logger.debug("file url "+id)
+      logger.debug("file url {}",id)
     }
     
     return FileSystems.getDefault()
@@ -73,7 +73,11 @@ class ResourcePathHelper extends Loggered {
   
   def saveResource(pt:String,b:Paste):String = {
     
-     val fname = "thumbnails/"+ResourcePathHelper.PATH_FORMAT.format(Calendar.getInstance().getTime())+b.getUuid
+     val fname = new StringBuilder()
+     .append("thumbnails/")
+     .append(ResourcePathHelper.PATH_FORMAT.format(Calendar.getInstance().getTime()))
+     .append(b.getUuid)
+     .toString
       
         val fimg = FileSystems.getDefault().getPath(pasteAppHome,"resources",
                                                     pt,

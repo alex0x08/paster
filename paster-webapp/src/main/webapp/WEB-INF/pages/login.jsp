@@ -2,7 +2,7 @@
 
 
 
-<c:url var="url" value='/j_spring_security_check' />
+<c:url var="url" value='/act/doAuth' />
 
 <div class='row'>
     <div class='col-md-offset-3 col-xs-4 col-md-5'>
@@ -23,7 +23,8 @@
                 <div class='col-lg-8 col-md-8'>
                     <div class="input-group">
                         <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
-                        <input class="form-control"  name="j_username" type="text" placeholder="<fmt:message key="login.username"/>">
+                        <input class="form-control"  name="login" 
+                               type="text" placeholder="<fmt:message key="login.username"/>">
                     </div>
                 </div>
             </div>  
@@ -32,7 +33,8 @@
                 <div class='col-lg-8 col-md-8'>
                     <div class="input-group">
                         <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
-                        <input class="form-control"  name="j_password" type="password" placeholder="<fmt:message key="login.password"/>">
+                        <input class="form-control"  name="pwd" 
+                               type="password" placeholder="<fmt:message key="login.password"/>">
                     </div>
                 </div>
             </div>

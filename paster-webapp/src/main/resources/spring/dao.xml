@@ -29,14 +29,14 @@
     <bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">  
       <property name="dataSourceProperties" >
         <props>
-            <prop key="url">${database.url}</prop>
-            <prop key="user">${database.username}</prop>
-            <prop key="password">${database.password}</prop>
+            <prop key="url">${db.url}</prop>
+            <prop key="user">${db.username}</prop>
+            <prop key="password">${db.pwd}</prop>
         </props>
       </property>  
         <property name="connectionTestQuery" value="SELECT 1" />
       <property name="dataSourceClassName"   
-                value="${database.driverClassName}" />  
+                value="${db.driverClassName}" />  
     </bean>  
 
     <bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource" destroy-method="shutdown">  
@@ -55,8 +55,8 @@
         
         <property name="jpaVendorAdapter">
             <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter" >
-                <property name="databasePlatform" value="${database.dialect}"/>
-                <property name="showSql" value="${database.show-sql}"/>
+                <property name="databasePlatform" value="${db.dialect}"/>
+                <property name="showSql" value="${db.show.sql}"  />
                
             </bean>
         </property>
@@ -73,7 +73,10 @@
                        value="true 'Y', false 'N'"/>
                 <entry key="hibernate.cache.use_second_level_cache"		
                        value="true"/>              
-                          
+                 
+                <entry key="net.sf.ehcache.configurationResourceName"		
+                       value="${paste.app.home}/ehcache.xml"/>             
+                 
                
                 <!--entry key="hibernate.search.analyzer"		
                        value="org.apache.lucene.morphology.russian.RussianAnalyzer"/-->

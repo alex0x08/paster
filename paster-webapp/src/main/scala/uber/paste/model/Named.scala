@@ -31,9 +31,9 @@ object Named extends Struct {
    */
   override val terms = super.terms ::: List[String]("name")
   
-  abstract class NamedBuilder[T <: Named](model:T) extends Struct.AbstractBuilder[T](model) {
+  abstract class Builder[T <: Named](model:T) extends Struct.Builder[T](model) {
 
-  def addName(name:String): NamedBuilder[T]  = {
+  def addName(name:String): Builder[T]  = {
     get().setName(name)
     return this
   }
@@ -43,9 +43,8 @@ object Named extends Struct {
 
 @MappedSuperclass
 @Audited
-class Named extends Struct {
-  
-  
+class Named(kname:String) extends Struct {
+   
 
   @NotNull
   @Field
@@ -53,26 +52,30 @@ class Named extends Struct {
   //@Pattern(regexp = "(.+)", message = "{struct.name.validator}")
   @Size(min=3, message = "{struct.name.validator}")
   @XStreamAsAttribute
-  private var name: String = null
+  private var name: String = kname
 
+  def this() = this(null)
+  
   override def terms():List[String] = Named.terms
   
-  /*override def fillFromHits(ch:CompassHighlighter)  {
+  /*
+   override def fillFromHits(ch:CompassHighlighter)  {
     super.fillFromHits(ch)
     
     val f = ch.fragment("name")
     if (f!=null) {
       setName(f)
     }
-  }*/
+  }
+  */
 
  def fillFromDTO(dto:Named) {
    setName(dto.name)
   }
    
   
-  def getName() : String = name
-  def setName(f:String) : Unit = {name = f }
+  def getName()= name
+  def setName(f:String) {name = f }
 
   override def toString():String =  Loggered.getNewProtocolBuilder(this)
                 .append("name", name)

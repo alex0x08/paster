@@ -21,10 +21,11 @@ import javax.validation.constraints.{Size, NotNull}
 
 import net.sf.classifier4J.summariser.SimpleSummariser
 import org.apache.commons.lang.StringUtils
-import org.codehaus.jackson.annotate.JsonIgnore
+
 import javax.xml.bind.annotation._
 import uber.paste.base.Loggered
-import com.google.gson.GsonBuilder
+import com.fasterxml.jackson.annotation.JsonIgnore
+
 import java.util.{Set,HashSet,ArrayList, UUID}
 import org.hibernate.search.annotations.Field
 import org.hibernate.search.annotations.Index
@@ -33,7 +34,7 @@ import org.hibernate.search.annotations.Store
 import org.hibernate.search.annotations.TermVector
 import org.hibernate.search.annotations.Indexed
 import scala.collection.JavaConversions._
-import org.hibernate.envers.{NotAudited, Audited}
+//import org.hibernate.envers.{NotAudited, Audited}
 
 /**
  * paste model constants
@@ -92,7 +93,7 @@ class PasteListener extends Loggered{
     
     obj.commentsCount = obj.getComments().size()
 
-    logger.debug("_comments count= {0}",obj.commentsCount)
+    logger.debug("_comments count= {}",obj.commentsCount)
   }
 }
 
@@ -107,9 +108,13 @@ class PasteListener extends Loggered{
 @Indexed(index = "indexes/pastas")
 @XmlRootElement(name="paste")
 @EntityListeners(Array(classOf[PasteListener]))
-@Audited
-class Paste extends Named with java.io.Serializable{
+//@Audited
+class Paste(title:String) extends Named(title) with java.io.Serializable{
 
+  
+  def this() = this(null)
+  
+  
   /**
    * unique paste id
    */
@@ -204,7 +209,7 @@ class Paste extends Named with java.io.Serializable{
 	//@NotAudited
 //  @Audited
   //(withModifiedFlag = false)
-  @NotAudited
+  //@NotAudited
   @transient
   private var comments:java.util.List[Comment] = new ArrayList[Comment]()
 
@@ -213,7 +218,7 @@ class Paste extends Named with java.io.Serializable{
 
   private var sticked:Boolean = false
 
-  @NotAudited
+  //@NotAudited
   private[model] var commentsCount:java.lang.Integer = null
 
   private var symbolsCount:java.lang.Integer = null
@@ -261,7 +266,7 @@ class Paste extends Named with java.io.Serializable{
 
   def getTags(): Set[String] = tags
 
-  def getTagsAsJson():String = new GsonBuilder().create().toJson(tags)
+//  def getTagsAsJson():String = new GsonBuilder().create().toJson(tags)
   
   def getUuid():String = uuid
   
@@ -311,11 +316,9 @@ class Paste extends Named with java.io.Serializable{
    * Paste's title
    * This field contains small piece of original text, it will be recreated after each object save
    */
-  def getTitle() : String = title
+  def getTitle() = getName()
  
-  def setTitle(f:String) : Unit = {    
-    this.title=f
-  }
+  def setTitle(f:String) = setName(f)
  
   /**
    * Pasta content

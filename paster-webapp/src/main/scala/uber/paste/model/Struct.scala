@@ -34,21 +34,23 @@ import uber.paste.base.Loggered
 
 object Struct {
   
-  val terms = List[String]("id")
+  val terms = List[String]("id","name")
 
   final val DB_DATE_FORMAT_FULL = "dd.MM.yyyy HH:mm:ss"
 
   final val SD_FULL = new SimpleDateFormat(DB_DATE_FORMAT_FULL)
   
-    abstract class AbstractBuilder[T <: java.io.Serializable](obj:T) extends Loggered{
+    abstract class Builder[T <: java.io.Serializable](obj:T) extends Loggered{
   
         def get():T = obj 
   
         }
 }
+/**
+ * Struct model, have lastModified  field
+ */
 
 @MappedSuperclass
-@Audited
 abstract class Struct extends DBObject with SearchObject with  java.io.Serializable{
 
   @Column(name = "last_modified") //, columnDefinition = "datetime"
@@ -56,34 +58,41 @@ abstract class Struct extends DBObject with SearchObject with  java.io.Serializa
   @Field(index = Index.YES)
   @DateBridge(resolution = Resolution.DAY)    
   @XStreamAsAttribute
-  @NotAudited
-  private var lastModified:java.util.Date = null
+  private var lastModified:java.util.Date = _
+
+  
+  @Column(name = "created") //, columnDefinition = "datetime"
+  @Temporal(javax.persistence.TemporalType.TIMESTAMP)
+  @Field(index = Index.YES)
+  @DateBridge(resolution = Resolution.DAY)    
+  @XStreamAsAttribute
+  private var created:java.util.Date = _
 
   
   @PreUpdate
-  @PrePersist
-  def updateTimeStamps() {
-    lastModified = Calendar.getInstance().getTime();
-    // System.out.println("id="+getId+"_lastModified update "+lastModified);
+  private def preUpdate() {
+    lastModified = Calendar.getInstance().getTime()
   }
   
-  def getLastModified():Date =  lastModified
+  @PrePersist
+  private def prePersist() {
+    lastModified = Calendar.getInstance().getTime()
+    created = lastModified
+  }
   
-  def setLastModified(from:Date) = { lastModified = from }
-    
+  def getLastModified= lastModified
   
+  def getCreated = created
+      
   def terms():List[String] = Struct.terms
-  
-    
+      
   def loadFull() {}
   
 
   override def toString():String =  Loggered.getNewProtocolBuilder(this)
     .append("lastModified", lastModified)
+     .append("created", created)
     .append("super",super.toString)
-    .toString()
-  
-  
-  
+    .toString()  
   
 }

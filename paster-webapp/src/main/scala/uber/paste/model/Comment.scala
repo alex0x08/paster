@@ -1,10 +1,11 @@
 package uber.paste.model
 
 import javax.xml.bind.annotation.{XmlTransient, XmlRootElement}
+import com.fasterxml.jackson.annotation.JsonIgnore
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute
 import javax.persistence.{Entity,JoinColumn, FetchType, ManyToOne, Lob,CascadeType, Column}
 import javax.validation.constraints.{Size, NotNull}
-import org.codehaus.jackson.annotate.JsonIgnore
+
 import org.hibernate.envers.Audited
 import org.hibernate.search.annotations.Field
 import org.hibernate.search.annotations.Indexed
@@ -21,7 +22,7 @@ object Comment extends Struct {
 @Entity
 @Indexed(index = "indexes/comments")
 @XmlRootElement(name="comment")
-@Audited
+//@Audited
 class Comment extends Struct  with java.io.Serializable{
 
   @XStreamAsAttribute
