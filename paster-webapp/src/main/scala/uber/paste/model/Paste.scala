@@ -228,6 +228,10 @@ class Paste(title:String) extends Named(title) with java.io.Serializable{
   @transient
   private var thumbData:String = null
   
+  @transient
+  private var reviewImgData:String = null
+  
+  
   override def terms():List[String] = Paste.terms
   
   /**
@@ -280,7 +284,12 @@ class Paste(title:String) extends Named(title) with java.io.Serializable{
   def getThumbImage() = thumbImage
  
   def setThumbImage(img:String) {thumbImage = img}
-
+   
+  @JsonIgnore
+  def getReviewImgData() = this.reviewImgData 
+  def setReviewImgData(img:String) {reviewImgData = img}
+ 
+   
  /* @XmlTransient
   @JsonIgnore
   def getThumbUpload() = thumbUpload

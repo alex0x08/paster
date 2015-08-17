@@ -54,7 +54,7 @@
 
 
     <div class="col-md-10 col-lg-10 ">
-        
+
         <c:if test="${not empty model.commentCount and model.commentCount>0}">
 
             <span style="vertical-align: top;font-size: larger;" class="i" 
@@ -104,17 +104,27 @@
     </div> 
 
     <div id="${model.id}_centerPanel" class="${centerGridSize}" style="min-width:650px;">
-        <div style="width:200px;height:200px;z-index:5000;position:absolute;">
-            <svg xmlns="http://www.w3.org/2000/svg" version="1.1"
-                 width="200px" height="200px">
-            <rect x="0" y="0" width="100%" height="100%"
-                  fill="none" stroke="black"/>
-            <circle cx="100" cy="100" r="50"
-                    style="stroke: black; fill: red;"/>
-            </svg>  
+
+        <a href="javascript:showComments(${model.id});" >comments</a> | <a href="javascript:showDrawArea(${model.id});">draw</a>
+        <div id="${model.id}_drawBlock" style="display:none;">
+            <div class="tools">
+                <a href="#${model.id}_sketch" data-download="png" style=" width: 100px;">Download</a> |
+                <a href="#${model.id}_sketch" data-tool="marker">Marker</a>
+                <a href="#${model.id}_sketch" data-tool="eraser">Eraser</a>
+            </div>
+            <div id="${model.id}_drawArea" style="z-index:5000;position:absolute;background-color:rgba(100,100,0,0.2);">
+
+
+                <canvas id="${model.id}_sketch" with="400" height="200" ></canvas>
+
+
+            </div>
+
         </div>
+
         <pre id="${model.id}_pasteText" class="brush: ${model.codeType.code};toolbar: false; auto-links:false;highlight: [${commentedLinesList}]; " style="display:none; overflow-y: hidden;" >
-            <c:out value="${model.text}" escapeXml="true" /></pre>
+            <c:out value="${model.text}" escapeXml="true" />
+        </pre>
     </div>
 </div>
 
@@ -290,3 +300,4 @@
 
     </div>
 </div>
+

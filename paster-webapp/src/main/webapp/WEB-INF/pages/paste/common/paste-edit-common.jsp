@@ -461,6 +461,7 @@
     var editor;
 
     function readSingleFile(e) {
+        
         var file = e.target.files[0];
        
         if (!file) {
@@ -487,7 +488,6 @@
             var text = e.event.clipboardData.getData('text/plain');
 
             var block = (text.length < max_length - 2) ? text.substring(0, text.length) : text.substring(0, max_length - 2) + '..';
-
 
             var ptitle = $("pname");
 
@@ -533,10 +533,8 @@
         $('select-file-btn').removeEvents("change");
 
         $('select-file-btn').addEvent('change', function (e) {
-         readSingleFile(e);
-        //editor.setTheme(this.getElement(':selected').value);
-            
-        });      
+                    readSingleFile(e);
+             });      
         
           
 
@@ -547,16 +545,12 @@
         //Go to end of the last line
         editor.gotoLine(count, editor.getSession().getLine(count - 1).length);
 
-
         editor.getSession().on('change', function () {
             var text = editor.getSession().getValue();
             textarea.set('value', text);
             counter.getCount(text);
         });
-
-        
-
-
+      
         $('ptheme').addEvent('change', function (event) {
             editor.setTheme(this.getElement(':selected').value);
         });
@@ -577,8 +571,6 @@
         $('fontsize').addEvent('change', function (event) {
             editor.setFontSize(this.getElement(':selected').get("value"));
         });
-
-
 
         $('ptype').addEvent('change', function (event) {
             editor.getSession().setMode("ace/mode/" + this.getElement(':selected').get("editCode"));

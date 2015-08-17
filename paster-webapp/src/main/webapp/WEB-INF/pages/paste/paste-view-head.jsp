@@ -8,4 +8,11 @@
 
 <script src="<c:url value='/main/resources/${appId}/paste-view/shCore.js'/>"></script>
 
+
+<script src="<c:url value='/main/resources/${appId}/paste-view/jquery-latest.js'/>"></script>
+
+
+<script src="<c:url value='/main/resources/${appId}/paste-view/sketch.js'/>"></script>
+
+
 <script src="<c:url value='/main/assets/${appId}/paster/minified/paster-view/js/paste-view-script.js'/>"></script>

@@ -34,7 +34,7 @@
                                     centerPanel = document.getElementById(modelId + '_centerPanel'),
                                     rightPanelCtrl = document.getElementById(modelId + '_rightPanelCtrl');
 
-                            if (rightPanel.getStyle('display') != 'none') {
+                            if (rightPanel.getStyle('display') !== 'none') {
                                 rightPanel.setStyle('display', 'none');
                                 centerPanel.set('class', 'col-md-10');
                                 rightPanelCtrl.getElement('span').set('text', '+');
@@ -151,6 +151,7 @@
                         }
                         bindDeleteDlg(block);
 
+                          initDraw(page);
                       
                         $('pageLoadSpinner').setStyle('display', 'none');
                         $(page + '_pasteText').grab($('pageLoadSpinner'),"after");
@@ -169,3 +170,58 @@
     </div>
     <div id="morePages"></div>
 </c:if>
+
+    
+    
+
+<script type="text/javascript">
+    var $j = jQuery.noConflict();
+
+    function showComments(modelId) {
+
+        $(modelId+"_drawBlock").setStyle("display", "none");
+    }
+
+    function showDrawArea(modelId) {
+
+        var obj = $(modelId+"_pasteText").getComputedSize();
+
+        var h =  parseInt(obj["totalHeight"]), 
+                w = parseInt(obj["totalWidth"]);
+        
+        var area =  $(modelId+"_drawArea"),
+                sketch = $(modelId+"_sketch");
+
+        area.setStyle("height", h);
+        area.setStyle("width", w);
+
+
+        sketch.set("height", h);
+        sketch.set("width", w);
+
+
+        $(modelId+"_drawBlock").setStyle("display", "");
+    }
+
+
+    function initDraw(modelId) {
+  
+           $j.each(['#f00', '#ff0', '#0f0', '#0ff', '#00f', '#f0f', '#000', '#fff'], function () {
+            $j('#'+modelId+'_centerPanel .tools').append("<a href='#"+modelId+"_sketch' data-color='" + this + "' style='width: 10px; border:1px solid black; background: " + this + ";'>&nbsp;&nbsp;&nbsp;&nbsp;</a> ");
+        });
+        $j.each([3, 5, 10, 15], function () {
+            $j('#'+modelId+'_centerPanel .tools')
+                    .append("<a href='#"+modelId+"_sketch' data-size='" + this + "' style='background: #ccc'>" + this + "</a> ");
+        });
+
+        $j('#'+modelId+'_sketch').sketch();
+  
+        
+    }
+
+    window.addEvent('domready', function () {
+        initDraw(${model.id});
+       });
+
+
+</script>
