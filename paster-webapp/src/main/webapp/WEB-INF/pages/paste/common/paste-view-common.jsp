@@ -105,17 +105,53 @@
 
     <div id="${model.id}_centerPanel" class="${centerGridSize}" style="min-width:650px;">
 
-        <a href="javascript:showComments(${model.id});" >comments</a> | <a href="javascript:showDrawArea(${model.id});">draw</a>
+        <c:url var="drawImg" 
+               value='/main/resources/${appId}/r/${model.lastModified.time}/${model.reviewImgData}.png'/>
+
+
+        <a href="javascript:showAll(${model.id});" >all</a> |
+        <a href="javascript:showComments(${model.id});" >comments</a> |
+        <a href="javascript:showDrawArea(${model.id});">draw</a>
+        
+        <div id="${model.id}_all" style="display:none;z-index:5000;position:absolute;pointer-events:none;">
+
+            <canvas id="${model.id}_sketch_ro" with="400" height="200" 
+                    style="pointer-events:none;background: url('${drawImg}') no-repeat top left;" >
+            </canvas>
+
+        </div>
+
         <div id="${model.id}_drawBlock" style="display:none;">
             <div class="tools">
                 <a href="#${model.id}_sketch" data-download="png" style=" width: 100px;">Download</a> |
                 <a href="#${model.id}_sketch" data-tool="marker">Marker</a>
                 <a href="#${model.id}_sketch" data-tool="eraser">Eraser</a>
+
+
+                <c:url var="urlDrawSave" value='/main/paste/saveReviewDraw' />
+
+
+                <form:form cssClass="form-horizontal" 
+                           action="${urlDrawSave}" id="${model.id}_saveReviewDraw"
+
+                           method="POST" >
+                    <input type="hidden" name="pasteId" value="${model.id}"/>
+                    <input id="${model.id}_reviewDrawImg" name="reviewImgData" type="hidden" value=""/>
+
+                    <button id="${model.id}_saveReviewBtn" class='sbtn p-btn-save' type="submit"  >
+                        <span class="i" style="font-size:larger;">S</span>
+                        <span id="btnCaption"><fmt:message key="button.add"/></span>
+                        <i id="btnIcon" style="display:none;" class="fa fa-spinner fa-spin"></i>       
+                    </button>
+
+                </form:form>
             </div>
-            <div id="${model.id}_drawArea" style="z-index:5000;position:absolute;background-color:rgba(100,100,0,0.2);">
+            <div id="${model.id}_drawArea" style="z-index:5000;position:absolute;
+                 background-color:rgba(100,100,0,0.2);">
 
 
-                <canvas id="${model.id}_sketch" with="400" height="200" ></canvas>
+                <canvas id="${model.id}_sketch" with="400" height="200" style="background: url('${drawImg}') no-repeat top left;" >
+                </canvas>
 
 
             </div>

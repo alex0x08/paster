@@ -225,10 +225,10 @@ class Paste(title:String) extends Named(title) with java.io.Serializable{
   
   private var wordsCount:java.lang.Integer = null
   
-  @transient
+  //@transient
   private var thumbData:String = null
   
-  @transient
+  //@transient
   private var reviewImgData:String = null
   
   

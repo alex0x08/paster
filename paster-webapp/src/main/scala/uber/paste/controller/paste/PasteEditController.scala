@@ -181,6 +181,35 @@ class PasteController extends GenericEditController[Paste]   {
     return "redirect:/main/paste/" + pasteId + "#line_" + lineNumber
   }
 
+   @RequestMapping(value = Array("/saveReviewDraw"), method = Array(RequestMethod.POST))
+  def saveReviewDraw(
+    @RequestParam(required = true) pasteId:java.lang.Long,
+    @RequestParam(required = true) reviewImgData:String,
+                    model:Model,locale:Locale):String = {
+   
+     if (!isCurrentUserLoggedIn() && !allowAnonymousCommentsCreate) {
+          return page403
+        }
+    
+      val p = manager.get(pasteId)
+
+        if (p==null) {
+          return page404
+        }
+
+        logger.debug("adding reviewImg to {0}",pasteId)
+        
+       if (reviewImgData!=null) {
+         p.setReviewImgData(reviewImgData)
+      p.setReviewImgData(resourcePathHelper.saveResource("r",p))
+      }
+      
+      manager.save(p);
+    
+     return "redirect:/main/paste/" + pasteId 
+   
+  }
+  
   /**
    * add new comment
    * @param pasteId

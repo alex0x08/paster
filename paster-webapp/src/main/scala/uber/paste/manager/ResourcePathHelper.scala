@@ -30,35 +30,45 @@ import uber.paste.model.Paste
 import uber.paste.model.Project
 
 object ResourcePathHelper {
-   val PATH_FORMAT = new SimpleDateFormat("YYYY/MM/dd/")
-      
+  val PATH_FORMAT = new SimpleDateFormat("YYYY/MM/dd/")
+
 }
 
 @Component("resourcePathHelper")
 class ResourcePathHelper extends Loggered {
 
   @Value("${paste.app.home}")
-  val pasteAppHome:String = null
+  val pasteAppHome: String = null
 
-  def getResource(ptype:String,fid:String): File = {
-    
-       //to avoid relative paths
-    val id = URLDecoder.decode(fid,"UTF-8")
-    .replaceAll("/", "x")
-    .replaceAll("\\.", "x")
-    .replaceAll(",", "/")
-    
+  def getResource(ptype: String, fid: String): File = {
+
+    //to avoid relative paths
+    val id = URLDecoder.decode(fid, "UTF-8")
+      .replaceAll("/", "x")
+      .replaceAll("\\.", "x")
+      .replaceAll(",", "/")
+
     if (logger.isDebugEnabled) {
-      logger.debug("file url {}",id)
+      logger.debug("file url {}", id)
+    }
+
+    val ext = 
+     ptype match {
+      case "r" => {
+          "png"
+      }
+      case _ => {
+        "jpg"
+      }
     }
     
     return FileSystems.getDefault()
-      .getPath(pasteAppHome,"resources",ptype,id+".jpg").toFile
+      .getPath(pasteAppHome, "resources", ptype, id + "."+ext).toFile
   }
- 
-   def saveProjectImages(b:Project):String = {
-    
-   /* val fname = "customer/"+ResourcePathHelper.PATH_FORMAT.format(Calendar.getInstance().getTime())
+
+  def saveProjectImages(b: Project): String = {
+
+    /* val fname = "customer/"+ResourcePathHelper.PATH_FORMAT.format(Calendar.getInstance().getTime())
     +b.getId
       
         val fimg = FileSystems.getDefault().getPath(System.getProperty("paste.app.home"),
@@ -69,25 +79,39 @@ class ResourcePathHelper extends Loggered {
       
      return fname.replaceAll("/", ",")*/
     return null
-   }
-  
-  def saveResource(pt:String,b:Paste):String = {
-    
-     val fname = new StringBuilder()
-     .append("thumbnails/")
-     .append(ResourcePathHelper.PATH_FORMAT.format(Calendar.getInstance().getTime()))
-     .append(b.getUuid)
-     .toString
+  }
+
+  def saveResource(pt: String, b: Paste): String = {
+
+    val fname = new StringBuilder()
+      //.append("thumbnails/")
+      .append(ResourcePathHelper.PATH_FORMAT.format(Calendar.getInstance().getTime()))
+      .append(b.getUuid)
+      .toString
+
+    pt match {
+      case "t" => {
+        val fimg = FileSystems.getDefault().getPath(pasteAppHome, "resources",
+          pt,
+          fname + ".jpg").toFile
+
+        val imgData = b.getThumbImage.substring(b.getThumbImage.indexOf(',') + 1)
+        FileUtils.writeByteArrayToFile(fimg, Base64.decode(imgData.getBytes))
       
-        val fimg = FileSystems.getDefault().getPath(pasteAppHome,"resources",
-                                                    pt,
-                                                    fname+".jpg").toFile
-      
-      val imgData = b.getThumbImage.substring(b.getThumbImage.indexOf(',')+1)
-      //logger.debug(" base64="+imgData)
-      
-        FileUtils.writeByteArrayToFile(fimg,Base64.decode(imgData.getBytes))
-      
-     return fname.replaceAll("/", ",")
+      }
+      case "r" => {
+        val fimg = FileSystems.getDefault().getPath(pasteAppHome, "resources",
+          pt,
+          fname + ".png").toFile
+        val imgData = b.getReviewImgData.substring(b.getReviewImgData.indexOf(',') + 1)
+        FileUtils.writeByteArrayToFile(fimg, Base64.decode(imgData.getBytes))
+      }
+      case _ => {
+        null
+      }
+
+    }
+
+    return fname.replaceAll("/", ",")
   }
 }

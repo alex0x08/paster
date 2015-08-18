@@ -30,56 +30,62 @@ import uber.paste.manager.ResourcePathHelper
 
 @Controller
 @RequestMapping(Array("/resources"))
-class ResourceController extends AbstractController{
+class ResourceController extends AbstractController {
 
-   
   @Autowired
-  private var resourcePathHelper:ResourcePathHelper = null
-  
-  
-  
-  @RequestMapping(value = Array("/{version:[a-zA-Z0-9]+}/{type:[a-z]}/{lastModified:[0-9]+}/{path:[a-z0-9,-]+}"), 
-                  method = Array(RequestMethod.GET))
+  private var resourcePathHelper: ResourcePathHelper = null
+
+  @RequestMapping(
+    value = Array("/{version:[a-zA-Z0-9]+}/{type:[a-z]}/{lastModified:[0-9]+}/{path:[a-z0-9,-]+}"),
+    method = Array(RequestMethod.GET)
+  )
   @ResponseBody
-  def getResource(model:Model,
-                    @PathVariable("lastModified") lastModified:Long,
-                    @PathVariable("path") path:String,
-                    @PathVariable("type") ptype:String,
-                    response:HttpServletResponse):FileSystemResource = {
-     
+  def getResource(
+    model: Model,
+    @PathVariable("lastModified") lastModified: Long,
+    @PathVariable("path") path: String,
+    @PathVariable("type") ptype: String,
+    response: HttpServletResponse
+  ): FileSystemResource = {
+
     //model.asMap.clear()
     ptype match {
-      case "t" |  "a" |  "b" =>  {
-          
+      case "t" | "r" | "a" | "b" => {
+
       }
       case _ => {
-      writeError(response, "uknown type",404)
-      return null
-          
+        writeError(response, "uknown type", 404)
+        return null
+
       }
     }
-    
-    
-    val fimg = resourcePathHelper.getResource(ptype,path)
-    
+
+    val fimg = resourcePathHelper.getResource(ptype, path)
+
     if (!fimg.exists || !fimg.isFile) {
-      writeError(response, "file not found",404)
+      writeError(response, "file not found", 404)
       return null
     }
-   
-            
-    response.setContentType("image/jpeg")
+
+    ptype match {
+      case "r" => {
+        response.setContentType("image/png")
+      }
+      case "t" | "r" | "a" | "b" => {
+        response.setContentType("image/jpeg")
+      }
+    }
+
     response.setHeader("Content-Length", String.valueOf(fimg.length()))
     response.setHeader("Content-Disposition", "inline;filename='" + fimg.getName + "'")
     response.setDateHeader("Last-Modified", fimg.lastModified)
-    response.setDateHeader("Expires", System.currentTimeMillis+
-                           31557600)
-    response.setHeader("Cache-Control","max-age="+31557600+", public")    
+    response.setDateHeader("Expires", System.currentTimeMillis +
+      31557600)
+    response.setHeader("Cache-Control", "max-age=" + 31557600 + ", public")
     response.setHeader("Pragma", "cache")
 
     return new FileSystemResource(fimg)
   }
-  
 @throws(classOf[IOException])
 def writeError(response:HttpServletResponse, msg:String, status:Int)
 {
@@ -87,17 +93,16 @@ def writeError(response:HttpServletResponse, msg:String, status:Int)
   response.setStatus(status);
 
     val out = response.getWriter()
-  
+
     out.println(new StringBuilder()
-                .append("<html><head><title>ERROR: ")
-                .append(msg)
-                .append("</title></head><body><h1>ERROR: ")
-                .append(msg)
-                .append("</h1></body></html>")
-                .toString)
+      .append("<html><head><title>ERROR: ")
+      .append(msg)
+      .append("</title></head><body><h1>ERROR: ")
+      .append(msg)
+      .append("</h1></body></html>")
+      .toString)
     out.flush()
-  
+
   }
 
-  
 }

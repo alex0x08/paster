@@ -65,6 +65,9 @@ var __slice = Array.prototype.slice;
         });
       }
     }
+    Sketch.prototype.getData = function() {
+    return this.el.toDataURL("image/png");
+    };
     Sketch.prototype.download = function(format) {
       var mime;
       format || (format = "png");
