@@ -28,7 +28,7 @@ import scala.collection.JavaConversions._
 
 
 @Repository("pasteDao")
-@Transactional(readOnly = true)
+@Transactional(readOnly = true, rollbackFor = Array(classOf[Exception]))
 class PasteDaoImpl extends SearchableDaoImpl[Paste](classOf[Paste]) {
 
   def getByOwner(owner:User) =  getListByKeyValue("owner",owner)

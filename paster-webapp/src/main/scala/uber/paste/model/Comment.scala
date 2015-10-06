@@ -3,7 +3,8 @@ package uber.paste.model
 import javax.xml.bind.annotation.{XmlTransient, XmlRootElement}
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute
-import javax.persistence.{Entity,JoinColumn, FetchType, ManyToOne, Lob,CascadeType, Column}
+
+import javax.persistence.{Entity,JoinColumn, FetchType, ManyToOne, Lob,CascadeType, Column, Transient}
 import javax.validation.constraints.{Size, NotNull}
 
 import org.hibernate.envers.Audited
@@ -50,8 +51,12 @@ class Comment extends Struct  with java.io.Serializable{
 //  @JoinColumn(name = "paste_ref", insertable = false, updatable = false)
 //  private var paste:Paste = null
 
-
+ @Transient
+  private var thumbImage:String = null
   
+  @JsonIgnore
+  def getThumbImage() = thumbImage
+  def setThumbImage(img:String) {thumbImage = img}
   
   def setPasteId(id:java.lang.Long) {pasteId=id}
   def getPasteId() = pasteId

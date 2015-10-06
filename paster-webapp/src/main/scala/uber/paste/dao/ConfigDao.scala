@@ -23,7 +23,7 @@ import org.springframework.transaction.annotation.Transactional
 
 
 @Repository("configDao")
-@Transactional(readOnly = true)
+@Transactional(readOnly = true, rollbackFor = Array(classOf[Exception]))
 class ConfigDaoImpl extends KeyDaoImpl[ConfigProperty](classOf[ConfigProperty]) {
 
   def getProperty(code:String)  =  getByKey(code)

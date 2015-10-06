@@ -31,9 +31,9 @@ import uber.paste.model.Query
 
 import org.apache.commons.lang3.StringUtils
 import org.apache.lucene.analysis.standard.StandardAnalyzer
-import org.apache.lucene.queryParser.MultiFieldQueryParser
-import org.apache.lucene.queryParser.ParseException
-import org.apache.lucene.queryParser.QueryParser
+import org.apache.lucene.queryparser.classic.QueryParser
+import org.apache.lucene.queryparser.classic.MultiFieldQueryParser
+import org.apache.lucene.queryparser.classic.ParseException
 import org.apache.lucene.search.highlight.Highlighter
 import org.apache.lucene.search.highlight.InvalidTokenOffsetsException
 import org.apache.lucene.search.highlight.QueryScorer
@@ -56,7 +56,7 @@ object SearchableDaoImpl {
 }
 
 
-@Transactional(readOnly = true)
+@Transactional(readOnly = true, rollbackFor = Array(classOf[Exception]))
 abstract class SearchableDaoImpl[T <: Struct](model:Class[T])
   extends StructDaoImpl[T](model)  {
     
@@ -73,9 +73,8 @@ abstract class SearchableDaoImpl[T <: Struct](model:Class[T])
     
     val fsession = getFullTextEntityManager()
 
-        val pparser = new MultiFieldQueryParser(Version.LUCENE_36, 
-                                                getDefaultStartFields(),
-                                                new StandardAnalyzer(Version.LUCENE_36))
+        val pparser = new MultiFieldQueryParser(getDefaultStartFields(),
+                                                new StandardAnalyzer())
         
         
         val luceneQuery:org.apache.lucene.search.Query = pparser.parse(query)

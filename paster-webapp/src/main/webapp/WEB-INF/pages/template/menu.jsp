@@ -3,13 +3,7 @@
 <div class="row">
     <div class="hidden-sm hidden-xs col-md-10 col-lg-10">
 
-
-       
-
-
         <sec:authorize access="hasRole('ROLE_ADMIN')">
-
-
 
             <a href="<c:url value="/main/paste/list"/>">
                 <span class="i">/</span>
@@ -23,11 +17,10 @@
                 <span class="i">B</span>
                 <fmt:message key='settings.edit.title'/></a>
 
-                <a href="<c:url value='/main/admin/settings/dbconsole'/>">
-                    <span class="i">B</span>
-                    <fmt:message key="settings.dbconsole.title"/>
-                </a>
-
+            <a href="<c:url value='/main/admin/settings/dbconsole'/>">
+                <span class="i">B</span>
+                <fmt:message key="settings.dbconsole.title"/>
+            </a>
 
         </sec:authorize>
 

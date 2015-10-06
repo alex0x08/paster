@@ -24,7 +24,7 @@ import java.util.Collection
 import java.util.HashMap
 import javax.persistence._
 
-import org.apache.lucene.queryParser.QueryParser
+import org.apache.lucene.queryparser.classic.QueryParser
 import org.apache.lucene.search.highlight.Highlighter
 import org.hibernate.search.annotations.Boost
 import org.hibernate.search.annotations.DateBridge

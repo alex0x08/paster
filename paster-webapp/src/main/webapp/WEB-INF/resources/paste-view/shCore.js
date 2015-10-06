@@ -422,6 +422,8 @@ var SyntaxHighlighter = function () {
 
             var space = $(sh.vars.modelId + "_numSpace_l" + id),
                     calc_size = parseInt(cl.getComputedSize()["totalHeight"]) + 1;
+            
+            
             space.setStyle("height", calc_size + "px");
             cl.setStyle("height", calc_size + "px");
             if (mode == 1) {

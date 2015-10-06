@@ -44,7 +44,7 @@ import javax.servlet.ServletException
 import org.springframework.security.crypto.codec.Base64
 import org.springframework.security.web.authentication.logout.{SimpleUrlLogoutSuccessHandler, LogoutFilter, LogoutHandler}
 import scala.collection.JavaConversions._
-import org.apache.commons.lang.StringUtils
+import org.apache.commons.lang3.StringUtils
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.security.access.annotation.Secured
 import org.springframework.security.access.prepost.PreAuthorize

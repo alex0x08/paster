@@ -16,6 +16,7 @@
 
 package uber.paste.dao
 
+import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
 import uber.paste.base.Loggered
 import javax.persistence.{Query, EntityManager, PersistenceContext, Tuple}
@@ -28,7 +29,7 @@ object BaseDaoImpl {
    val MAX_RESULTS  = 2000
 }
 
-@Transactional(readOnly = true)
+@Transactional(readOnly = true, rollbackFor = Array(classOf[Exception]))
 abstract class BaseDaoImpl[T <: java.io.Serializable,PK <:Long ](model:Class[T]) extends Loggered 
                                                                                     {
 
@@ -46,9 +47,10 @@ abstract class BaseDaoImpl[T <: java.io.Serializable,PK <:Long ](model:Class[T])
    /**
      * @inheritdoc
      */
-  @Transactional(readOnly = false)
+  @Transactional(readOnly = false, 
+                 rollbackFor = Array(classOf[Exception]),propagation = Propagation.REQUIRED)
   def save(obj:T):T = {
-    logger.debug("saving obj {}",obj)
+    logger.info("saving obj {}",obj)
     val out:T = em.merge(obj)
     em.flush()
     return out

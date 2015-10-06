@@ -316,25 +316,19 @@
                          <div class="tab-pane" id="openRemoteFileTab" >
 
                             <div class="col-xs-4 col-sm-3 col-md-3 col-lg-2">
-
                                                              
                                 <form:label path="codeType" cssClass="control-label" title="Select syntax" >
                                    Enter url
                                 </form:label>
-
-                                    
+                                   
                                 
                                 <p class="help-block"> 
                                     <a class="btn btn-xs" href="#">
                                         <i class="fa fa-check-square-o"></i>Set as default</a>
                                 </p>
                             </div>
-                        </div>
-                                      
-                                
-
+                        </div>    
                     </div>
-
 
                 </div>
                 <div class="col-md-3 col-sm-2 hidden-xs">
@@ -501,7 +495,6 @@
 
     window.addEvent('domready', function () {
 
-
         var counter = new WordCount('wordCount', {
             countWordsTo: $('wordsCount'),
             countSymbolsTo: $('symbolsCount'),
@@ -514,8 +507,6 @@
             liveCount: false, //Whether or not to use the event trigger, set false if you'd like to call the getCount function separately
             eventTrigger: 'keyup'			//The event that triggers the count update
         });
-
-
 
         editor = ace.edit("editor");
         editor.setTheme("ace/theme/chrome");
@@ -592,8 +583,6 @@
 
     function onSave() {
 
-
-
         var thumbImg = document.getElementById('thumbImg');
 
         html2canvas($('editor'), {
@@ -622,8 +611,6 @@
     }
 
     window.addEvent('domready', function () {
-
-
 
         $$('.submitBtn').each(function (el, i) {
 

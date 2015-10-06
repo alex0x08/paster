@@ -142,20 +142,29 @@
             </list>
         </property>
     </bean>
+    
+     
+    <bean id="contentNegotiationManager" class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
+    <property name="favorPathExtension" value="false"/>
+    <property name="mediaTypes">
+        <value>
+            json=application/json
+            xml=application/xml
+            atom=application/atom+xml
+            rss=application/rss+xml
+        </value>
+    </property>
+    <property name="defaultContentType" value="text/html"/>
+       <property name="ignoreAcceptHeader" value="true" />
+</bean>
+    
+    
     <bean
         class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
         <property name="order" value="1" />
-        <property name="mediaTypes">
-            <map>
-                <entry key="json" value="application/json" />
-                <entry key="xml" value="application/xml" />
-                <entry key="atom" value="application/atom+xml"/>
-                <entry key="rss" value="application/rss+xml"/>
-                <!--entry key="xls" value="application/vnd.ms-excel"/>
-                <entry key="docx" value="application/vnd.openxmlformats-officedocument.wordprocessingml.document"/-->
-
-            </map>
-        </property>
+          <property name="contentNegotiationManager" ref="contentNegotiationManager"/>
+       
+      
         <property name="defaultViews">
             <list>
                 <bean class="org.springframework.web.servlet.view.json.MappingJackson2JsonView" >
@@ -208,8 +217,7 @@
           p:suffix=".jsp" />
             </list>
         </property>
-        <property name="defaultContentType" value="text/html" />
-        <property name="ignoreAcceptHeader" value="true" />
+       
     </bean>
 
 

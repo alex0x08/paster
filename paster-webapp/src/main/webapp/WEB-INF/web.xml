@@ -67,31 +67,7 @@
     </filter>
 
 
-    <!--filter>
-           <filter-name>responseCacheFilter</filter-name>
-           <filter-class>com.googlecode.webutilities.filters.ResponseCacheFilter</filter-class>
-    </filter-->
-    <filter>
-        <filter-name>compressionFilter</filter-name>
-        <filter-class>com.googlecode.webutilities.filters.CompressionFilter</filter-class>
-        <init-param> 
-            <param-name>compressionThreshold</param-name>
-            <param-value>1024</param-value> <!-- compress anything above 1kb -->
-        </init-param>
-        <init-param> 
-            <param-name>ignoreURLPattern</param-name>
-            <param-value>.*\.(flv|mp3|mpg)</param-value> <!-- regex -->
-        </init-param>
-        <init-param> 
-            <param-name>ignoreMimes</param-name>
-            <param-value>images/*,video/*, multipart/x-gzip</param-value> <!-- ignore -->
-        </init-param>
-        <init-param> 
-            <param-name>ignoreUserAgentsPattern</param-name>
-            <param-value>.*MSIE.*</param-value> <!-- regex -->
-        </init-param>
-    </filter>
-
+   
     <filter>
         <filter-name>etagFilter</filter-name>
         <filter-class>org.springframework.web.filter.ShallowEtagHeaderFilter</filter-class>
@@ -103,19 +79,7 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
-    <filter-mapping>
-        <filter-name>compressionFilter</filter-name>
-        <url-pattern>/*</url-pattern>
-    </filter-mapping>
- 
- 
-    <!--filter-mapping>
-      <filter-name>responseCacheFilter</filter-name>
-      <url-pattern>/main/assets/*</url-pattern>
-      <url-pattern>/main/static/*</url-pattern>
-    </filter-mapping-->
-
- 
+     
     <filter-mapping>
         <filter-name>etagFilter</filter-name>
         <servlet-name>dispatcher</servlet-name>
@@ -151,11 +115,7 @@
     <listener>
         <listener-class>uber.paste.startup.StartupListener</listener-class>
     </listener>
-   
-
-   
-   
-    
+       
     <servlet>
         <servlet-name>dispatcher</servlet-name>
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>        

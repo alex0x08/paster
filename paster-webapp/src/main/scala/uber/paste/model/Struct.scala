@@ -17,7 +17,7 @@
 package uber.paste.model
 
 import javax.persistence._
-import org.apache.lucene.queryParser.QueryParser
+import org.apache.lucene.queryparser.classic.QueryParser
 import org.apache.lucene.search.highlight.Highlighter
 import org.hibernate.envers.Audited
 import org.hibernate.envers.NotAudited
@@ -59,35 +59,28 @@ abstract class Struct extends DBObject with SearchObject with  java.io.Serializa
   @DateBridge(resolution = Resolution.DAY)    
   @XStreamAsAttribute
   private var lastModified:java.util.Date = _
-
   
   @Column(name = "created") //, columnDefinition = "datetime"
   @Temporal(javax.persistence.TemporalType.TIMESTAMP)
   @Field(index = Index.YES)
   @DateBridge(resolution = Resolution.DAY)    
   @XStreamAsAttribute
-  private var created:java.util.Date = _
+  private var created:java.util.Date = Calendar.getInstance().getTime()
 
-  
-  @PreUpdate
-  private def preUpdate() {
-    lastModified = Calendar.getInstance().getTime()
-  }
-  
+    
   @PrePersist
-  private def prePersist() {
-    lastModified = Calendar.getInstance().getTime()
-    created = lastModified
+  @PreUpdate
+  def touch() {
+    lastModified = Calendar.getInstance.getTime
   }
   
-  def getLastModified= lastModified
+  def getLastModified()= lastModified
   
-  def getCreated = created
+  def getCreated() = created
       
   def terms():List[String] = Struct.terms
       
-  def loadFull() {}
-  
+  def loadFull() {}  
 
   override def toString():String =  Loggered.getNewProtocolBuilder(this)
     .append("lastModified", lastModified)

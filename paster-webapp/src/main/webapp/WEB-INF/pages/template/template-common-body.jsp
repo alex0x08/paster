@@ -1,6 +1,5 @@
 <%@ include file="/WEB-INF/pages/common/taglibs.jsp"%>
-
-  
+ 
 
 <div data-behavior="BS.Popup" class="modal hide" id="deletePopup">
 
@@ -17,28 +16,21 @@
             <div class="modal-footer">
                 <a id="dialogAction" href="" class="btn btn-primary"></a>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                
-                
-                
+               
             </div>
 
         </div>
     </div>
 </div>
 
-   
-
 
 <div data-behavior="BS.Popup" class="modal hide" id="newPasteDialog" >
 
     <div class="modal-dialog">
         <div class="modal-content" style="padding:0;margin:0;">
-
            
-            <div id="dialogMessage" class="modal-body">
-                
-            </div>
-           
+            <div id="dialogMessage" class="modal-body">                
+            </div>          
 
         </div>
     </div>
@@ -54,8 +46,7 @@
 
       
       function showModal(dlg,redirectUrl,action,title,message) {
-          
-                   
+                           
        
          if (title!==null) {
                dlg.getElementById('dialogTitle').set('text',title);
@@ -73,7 +64,6 @@
       
       function bindDeleteDlg(parent) {
 
-
         parent.getElements('.deleteBtn').each(function(el, i) {
                 el.addEvent("click", function(e) {
                 e.stop();
@@ -86,8 +76,7 @@
             });    
 
           
-      };
-      
+      };     
     
       
   </script>

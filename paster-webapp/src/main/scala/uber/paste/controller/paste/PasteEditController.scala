@@ -29,6 +29,7 @@ import org.springframework.ui.Model
 import scala.util.control.Breaks._
 import org.springframework.validation.BindingResult
 import javax.validation.Valid
+import java.util.Calendar
 import java.util.Locale
 import scala.collection.JavaConversions._
 
@@ -185,27 +186,36 @@ class PasteController extends GenericEditController[Paste]   {
   def saveReviewDraw(
     @RequestParam(required = true) pasteId:java.lang.Long,
     @RequestParam(required = true) reviewImgData:String,
+    @RequestParam(required = true) thumbImgData:String,
                     model:Model,locale:Locale):String = {
-   
-     if (!isCurrentUserLoggedIn() && !allowAnonymousCommentsCreate) {
+      
+        if (!isCurrentUserLoggedIn() && !allowAnonymousCommentsCreate) {       
           return page403
         }
     
-      val p = manager.get(pasteId)
+      var p = pasteManager.get(pasteId)
 
         if (p==null) {
           return page404
         }
 
-        logger.debug("adding reviewImg to {0}",pasteId)
-        
-       if (reviewImgData!=null) {
-         p.setReviewImgData(reviewImgData)
-      p.setReviewImgData(resourcePathHelper.saveResource("r",p))
-      }
-      
-      manager.save(p);
+         if (reviewImgData==null ||thumbImgData==null) {
+           return page500
+         }
     
+        logger.info("adding reviewImg to {}, data {}",Array(pasteId,reviewImgData))
+        
+      
+         p.setReviewImgData(reviewImgData)
+         p.setReviewImgData(resourcePathHelper.saveResource("r",p))
+         
+         p.setThumbImage(thumbImgData)
+         p.setThumbImage(resourcePathHelper.saveResource("t",p))
+    
+         p.touch
+         p= manager.save(p);
+      
+     model.asMap().clear()
      return "redirect:/main/paste/" + pasteId 
    
   }
@@ -253,7 +263,13 @@ class PasteController extends GenericEditController[Paste]   {
 
    
     commentManager.save(b)
-    
+
+    if (b.getThumbImage!=null) {
+        p.setThumbImage(b.getThumbImage)
+        p.setThumbImage(resourcePathHelper.saveResource("t",p))
+                    }
+    p.touch
+     manager.save(p)
 
     model.asMap().clear()
 
@@ -335,6 +351,36 @@ class PasteController extends GenericEditController[Paste]   {
       }
 
     
+     b.setTitle(
+       if (b.getText().length>Paste.TITLE_LENGTH) {
+        
+        val summary:String = try {
+          Paste.summariser.summarise(b.getText(), 2)
+        } catch {
+             case e @ ( _ :Exception) => {
+                 if (logger.isDebugEnabled) {
+                   logger.error(e.getLocalizedMessage,e)
+                 }
+               null
+            }
+        }
+        
+        if (summary==null || summary.length<3) 
+          b.getText().substring(0,Paste.TITLE_LENGTH-3)+"..."
+         else {
+          if (summary.length>Paste.TITLE_LENGTH) 
+            summary.substring(0,Paste.TITLE_LENGTH-3)+"..."
+           else 
+          summary   
+        
+        } 
+      } else {
+        b.getText
+      })
+    
+   
+  //  logger.debug("_comments count= {}",obj.commentsCount)
+  
 
       logger.debug("__found thumbnail {0}",b.getThumbImage())
       logger.debug("__found comments {0}",b.getComments().size())

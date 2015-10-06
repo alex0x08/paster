@@ -69,7 +69,8 @@
             });
 
             this.getElementById('btnIcon').setStyle('display', '');
-            $('${model.id}_addCommentForm').submit();
+          //  $('${model.id}_addCommentForm').submit();
+          onSaveComment('${model.id}');
 
         });
 
@@ -143,7 +144,8 @@
                     $(page + '_addCommentBtn').addEvent('click', function () {
                         this.getElementById('btnCaption').set('text', transmitText).disabled = true;
                         this.getElementById('btnIcon').setStyle('display', '');
-                        $(page + "_addCommentForm").submit();
+                        onSaveComment(page);
+                      //  $(page + "_addCommentForm").submit();
                     });
 
                     try {
@@ -175,92 +177,165 @@
 
 
 
+  <c:url var="drawImg" 
+               value='/main/resources/${appId}/r/${model.lastModified.time}/${model.reviewImgData}.png'/>
 
 <script type="text/javascript">
     var $j = jQuery.noConflict();
 
     function getTextSizes(el) {
         var obj = el.getComputedSize();
-    
-      var h = parseInt(obj["totalHeight"]),
+
+        var h = parseInt(obj["totalHeight"]),
                 w = parseInt(obj["totalWidth"]);
-        return [h,w];
+        return [h, w];
     }
 
     function showAll(modelId) {
-        
-          $(modelId + "_drawBlock").setStyle("display", "none");
-          
-             var sizes = getTextSizes($(modelId + "_pasteText"));
-    
-    
-     var sketch = $(modelId + "_sketch_ro");
 
-              sketch.set("height", sizes[0]);
-        sketch.set("width", sizes[1]);
+        $(modelId + "_drawBlock").setStyle("display", "none");
 
-    
-       $(modelId + "_all").setStyle("display", "");
-      
-      
+        var sizes = getTextSizes($(modelId + "_pasteText"));
+
+        var sketch = $(modelId + "_sketch_ro");
+
+        sketch.set({
+            'height': sizes[0],
+            'width': sizes[1]
+        });
+
+        $(modelId + "_all").setStyle("display", "");
     }
 
     function showComments(modelId) {
 
 
         $(modelId + "_drawBlock").setStyle("display", "none");
-           $(modelId + "_all").setStyle("display", "none");
-           
+        $(modelId + "_all").setStyle("display", "none");
+
     }
 
     function showDrawArea(modelId) {
 
- var sizes = getTextSizes($(modelId + "_pasteText"));
-    
+        var sizes = getTextSizes($(modelId + "_pasteText"));
 
         var area = $(modelId + "_drawArea"),
                 sketch = $(modelId + "_sketch");
 
-        area.setStyle("height", sizes[0]);
-        area.setStyle("width", sizes[1]);
+        area.set({
+            styles: {
+                'height': sizes[0],
+                'width': sizes[1]
+            }
+        });
 
+        sketch.set({
+            'height': sizes[0],
+            'width': sizes[1]
+        });
 
-        sketch.set("height", sizes[0]);
-        sketch.set("width", sizes[1]);
+        canvas = document.getElementById( modelId + '_sketch');                
+        ctx  =   canvas.getContext('2d');
 
-
+    img=new Image();
+    img.src="${drawImg}";
+    img.onload=function(){
+        
+        sk = $j('#' + modelId + '_sketch').sketch();
+        
+      
+        ctx.drawImage(img,0,0,img.width,img.height,0,0,sizes[1],sizes[0]);
+   
+    }
+    
+    
         $(modelId + "_drawBlock").setStyle("display", "");
-          $(modelId + "_all").setStyle("display", "none");
+        $(modelId + "_all").setStyle("display", "none");
     }
 
 
     function initDraw(modelId) {
 
-        $j.each(['#f00', '#ff0', '#0f0', '#0ff', '#00f', '#f0f', '#000', '#fff'], function () {
+         $j.each(['#f00', '#ff0', '#0f0', '#0ff', '#00f', '#f0f', '#000', '#fff'], function () {
             $j('#' + modelId + '_centerPanel .tools').append("<a href='#" + modelId + "_sketch' data-color='" + this + "' style='width: 10px; border:1px solid black; background: " + this + ";'>&nbsp;&nbsp;&nbsp;&nbsp;</a> ");
         });
         $j.each([3, 5, 10, 15], function () {
             $j('#' + modelId + '_centerPanel .tools')
                     .append("<a href='#" + modelId + "_sketch' data-size='" + this + "' style='background: #ccc'>" + this + "</a> ");
         });
+        
+        
+ $j('#' + modelId + '_sketch').sketch();
+        
+        
+      
+        $(modelId + '_saveReviewBtn').addEvent('click', function (event) {
 
-        $j('#' + modelId + '_sketch').sketch();
-
-         $(modelId+'_saveReviewBtn').addEvent('click', function (event) {
-     
             event.stop();
             onSaveReviewDraw(modelId);
         });
 
     }
 
+    function onSaveComment(modelId) {
+        console.log('_on save comment '+modelId);
+        
+         var thumbImg = document.getElementById(modelId +'_thumbImgComment');
+       
+         console.log(thumbImg);
+       
+        html2canvas($(modelId + '_centerPanel'), {
+            allowTaint: true,
+            taintTest: false,
+            onrendered: function (canvas) {            
+                var img = Pixastic.process(canvas, "crop", {
+                    rect: {
+                        left: 15, top: 50, width: 400, height: 300
+                    }
+                });
+
+                img = Canvas2Image.saveAsJPEG(img, true, 300, 200);
+                document.body.appendChild(img);
+                thumbImg.set('value', img.src);
+               
+                console.log(img.src);
+                $(modelId + "_addCommentForm").submit();
+            }
+        });
+    }
+
     function onSaveReviewDraw(modelId) {
 
         var reviewImg = document.getElementById(modelId + '_reviewDrawImg');
 
-        reviewImg.set('value', $j('#' + modelId + '_sketch').sketch().getData());
+        var imgData = $j('#' + modelId + '_sketch').sketch().getData();
+        reviewImg.set('value', imgData);
+        
+        
+        var thumbImg = document.getElementById(modelId +'_thumbImg');
+       
+        html2canvas($(modelId + '_centerPanel'), {
+            allowTaint: true,
+            taintTest: false,
+            onrendered: function (canvas) {            
+                var img = Pixastic.process(canvas, "crop", {
+                    rect: {
+                        left: 15, top: 250, width: 400, height: 300
+                    }
+                });
 
-        $(modelId + "_saveReviewDraw").submit();
+                img = Canvas2Image.saveAsJPEG(img, true, 300, 200);
+                document.body.appendChild(img);
+                thumbImg.set('value', img.src);
+               
+              //  console.log(img.src);
+                $(modelId + "_saveReviewDraw").submit();
+            }
+        });
+        
+        
+       // console.log(imgData);
+       
 
     }
 

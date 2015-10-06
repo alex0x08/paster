@@ -123,8 +123,7 @@
 
         <div id="${model.id}_drawBlock" style="display:none;">
             <div class="tools">
-                <a href="#${model.id}_sketch" data-download="png" style=" width: 100px;">Download</a> |
-                <a href="#${model.id}_sketch" data-tool="marker">Marker</a>
+               <a href="#${model.id}_sketch" data-tool="marker">Marker</a> |
                 <a href="#${model.id}_sketch" data-tool="eraser">Eraser</a>
 
 
@@ -138,9 +137,12 @@
                     <input type="hidden" name="pasteId" value="${model.id}"/>
                     <input id="${model.id}_reviewDrawImg" name="reviewImgData" type="hidden" value=""/>
 
+                    <input id="${model.id}_thumbImg" name="thumbImgData" type="hidden" value=""/>
+
+                    
                     <button id="${model.id}_saveReviewBtn" class='sbtn p-btn-save' type="submit"  >
                         <span class="i" style="font-size:larger;">S</span>
-                        <span id="btnCaption"><fmt:message key="button.add"/></span>
+                        <span id="btnCaption"><fmt:message key="button.save"/></span>
                         <i id="btnIcon" style="display:none;" class="fa fa-spinner fa-spin"></i>       
                     </button>
 
@@ -150,7 +152,8 @@
                  background-color:rgba(100,100,0,0.2);">
 
 
-                <canvas id="${model.id}_sketch" with="400" height="200" style="background: url('${drawImg}') no-repeat top left;" >
+                <canvas id="${model.id}_sketch" with="400" height="200" 
+                         >
                 </canvas>
 
 
@@ -263,6 +266,9 @@
                         <form id="${model.id}_addCommentForm" style="display:none;max-width:30em;" >
                             <input type="hidden"  id="lineNumber"/>
                             <input type="hidden"  id="parentId"/>
+                             <input id="${model.id}_thumbImgComment" 
+                                    name="thumbImage" type="hidden" value=""/>
+
                             <fmt:message key="comments.line">
                                 <fmt:param value="<span id='pageNum'></span>"/>
                             </fmt:message>
@@ -282,7 +288,8 @@
                                    method="POST" >
                             <form:hidden path="lineNumber" id="lineNumber"/>
                             <form:hidden path="parentId" id="parentId"/>
-
+                            <input id="${model.id}_thumbImgComment" 
+                                    name="thumbImage" type="hidden" value=""/>
                             <form:hidden path="pasteId"/>
 
                             <div class="form-group" style="margin-bottom:0.1em;">

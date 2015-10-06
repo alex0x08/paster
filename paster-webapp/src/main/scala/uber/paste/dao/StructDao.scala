@@ -20,7 +20,7 @@ import uber.paste.model.Struct
 import org.springframework.transaction.annotation.Transactional
 
 
-@Transactional(readOnly = true)
+@Transactional(readOnly = true, rollbackFor = Array(classOf[Exception]))
 abstract class StructDaoImpl[T <: Struct](model:Class[T])
   extends BaseDaoImpl[T,Long](model)  {
 

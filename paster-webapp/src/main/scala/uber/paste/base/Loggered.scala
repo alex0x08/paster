@@ -18,7 +18,7 @@
 package uber.paste.base
 
 import org.slf4j.{Logger, LoggerFactory}
-import org.apache.commons.lang.builder.{StandardToStringStyle, ToStringBuilder}
+import org.apache.commons.lang3.builder.{StandardToStringStyle, ToStringBuilder}
 import com.fasterxml.jackson.annotation.JsonIgnore
 import javax.jws.WebMethod
 

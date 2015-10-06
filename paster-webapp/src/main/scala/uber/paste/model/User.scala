@@ -31,7 +31,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import scala.collection.JavaConversions._
 import uber.paste.base.Loggered
-import org.apache.commons.lang.StringUtils
+import org.apache.commons.lang3.StringUtils
 import com.fasterxml.jackson.annotation.JsonIgnore
 import java.util
 import javax.xml.bind.annotation.XmlTransient

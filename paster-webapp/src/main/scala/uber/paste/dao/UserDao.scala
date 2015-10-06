@@ -25,7 +25,7 @@ import java.util.UUID
 
 
 @Repository("userDao")
-@Transactional(readOnly = true)
+@Transactional(readOnly = true, rollbackFor = Array(classOf[Exception]))
 class UserDaoImpl extends StructDaoImpl[User](classOf[User])  {
 
   def createSession(userId:java.lang.Long):SavedSession = {

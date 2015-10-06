@@ -23,8 +23,8 @@ import org.springframework.web.bind.annotation._
 import java.util.{Collections, Locale}
 import uber.paste.model.{KeyValue, Struct, Query, Key}
 import org.springframework.beans.support.PagedListHolder
-import org.apache.lucene.queryParser.ParseException
-import org.apache.commons.lang.StringUtils
+import org.apache.lucene.queryparser.classic.ParseException
+import org.apache.commons.lang3.StringUtils
 import scala.collection.JavaConversions._
 
 

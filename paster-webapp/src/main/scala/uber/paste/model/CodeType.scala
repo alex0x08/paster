@@ -121,6 +121,7 @@ extends Key(code,name) with java.io.Serializable{
 
   private var brushFile:String = kbrushFile
   
+  def this() = this(null,null,null,null)
 
   def getEditType() = editType
   def setEditType(e:String) { this.editType=editType}

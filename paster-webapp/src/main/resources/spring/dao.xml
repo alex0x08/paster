@@ -50,7 +50,7 @@
           p:dataSource-ref="dataSource" 
           p:packagesToScan="uber.paste.model,uber.paste.plugin.model"
           p:persistenceUnitName="pasteJPA"
-          p:persistenceProviderClass="org.hibernate.ejb.HibernatePersistence"
+          p:persistenceProviderClass="org.hibernate.jpa.HibernatePersistenceProvider"
           >     
         
         <property name="jpaVendorAdapter">

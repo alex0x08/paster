@@ -21,4 +21,11 @@
                 <activatedProfile>jetty9-paster-run</activatedProfile>
             </activatedProfiles>
         </action>
+        <action>
+            <actionName>CUSTOM-dep-tree</actionName>
+            <displayName>dep-tree</displayName>
+            <goals>
+                <goal>dependency:tree</goal>
+            </goals>
+        </action>
     </actions>

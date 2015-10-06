@@ -26,7 +26,7 @@ import uber.paste.model.Project
 
 
 @Repository("projectDao")
-@Transactional(readOnly = true)
+@Transactional(readOnly = true, rollbackFor = Array(classOf[Exception]))
 class ProjectDaoImpl extends SearchableDaoImpl[Project](classOf[Project]){
 
 @Autowired

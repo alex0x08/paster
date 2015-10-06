@@ -20,7 +20,7 @@ import javax.persistence._
 import javax.validation.constraints.{Size, NotNull}
 
 import net.sf.classifier4J.summariser.SimpleSummariser
-import org.apache.commons.lang.StringUtils
+import org.apache.commons.lang3.StringUtils
 
 import javax.xml.bind.annotation._
 import uber.paste.base.Loggered
@@ -53,49 +53,6 @@ object Paste extends Struct {
   val summariser = new SimpleSummariser()
 }
 
-/**
- * Entity listener for paste 
- */
-class PasteListener extends Loggered{
-
-  /**
-   * regenerate title field on save
-   */
-  @PreUpdate
-  @PrePersist
-  def onUpdate(obj:Paste) {
-    logger.debug("_on update call ")
-    obj.setTitle( if (obj.getText().length>Paste.TITLE_LENGTH) {
-        
-        val summary:String = try {
-          Paste.summariser.summarise(obj.getText(), 2)
-        } catch {
-             case e @ ( _ :Exception) => {
-                 if (logger.isDebugEnabled) {
-                   logger.error(e.getLocalizedMessage,e)
-                 }
-               null
-            }
-        }
-        
-        if (summary==null || summary.length<3) 
-          obj.getText().substring(0,Paste.TITLE_LENGTH-3)+"..."
-         else {
-          if (summary.length>Paste.TITLE_LENGTH) 
-            summary.substring(0,Paste.TITLE_LENGTH-3)+"..."
-           else 
-          summary   
-        
-        } 
-      } else {
-        obj.getText
-      })
-    
-    obj.commentsCount = obj.getComments().size()
-
-    logger.debug("_comments count= {}",obj.commentsCount)
-  }
-}
 
 /**
  * 
@@ -107,7 +64,6 @@ class PasteListener extends Loggered{
 @Entity
 @Indexed(index = "indexes/pastas")
 @XmlRootElement(name="paste")
-@EntityListeners(Array(classOf[PasteListener]))
 //@Audited
 class Paste(title:String) extends Named(title) with java.io.Serializable{
 
@@ -231,6 +187,11 @@ class Paste(title:String) extends Named(title) with java.io.Serializable{
   //@transient
   private var reviewImgData:String = null
   
+  @PrePersist
+  @PreUpdate
+  private def onUpdate() {    
+     commentsCount = getComments().size()
+  } 
   
   override def terms():List[String] = Paste.terms
   
