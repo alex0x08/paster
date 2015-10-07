@@ -103,7 +103,8 @@
         </c:if>
     </div> 
 
-    <div id="${model.id}_centerPanel" class="${centerGridSize}" style="min-width:650px;">
+    <div id="${model.id}_centerPanel" class="${centerGridSize}" 
+         style="min-width:650px;">
 
         <c:url var="drawImg" 
                value='/main/resources/${appId}/r/${model.lastModified.time}/${model.reviewImgData}.png'/>

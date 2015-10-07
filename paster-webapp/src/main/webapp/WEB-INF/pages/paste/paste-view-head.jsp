@@ -21,3 +21,12 @@
 <script type="text/javascript" src="<c:url value="/main/resources/${appId}/paste-view/temp/canvas-to-blob.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/main/resources/${appId}/paste-view/temp/pixastic.core.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/main/resources/${appId}/paste-view/temp/crop.js"/>"></script>
+
+<style>
+*.html2canvasreset{
+    overflow: visible !important;
+    width: auto !important;
+    height: auto !important;
+    max-height: auto !important;
+}
+</style>
