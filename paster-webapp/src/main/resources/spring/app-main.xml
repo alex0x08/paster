@@ -19,7 +19,7 @@
           class="uber.paste.base.MergedPropertyConfigurer">
      <property name="ignoreUnresolvablePlaceholders" value="true"/>
     
-     <property name="ignoreResourceNotFound" value="true"/>     
+     <property name="ignoreResourceNotFound" value="false"/>     
         <property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE"/>
          <property name="locations">
             <list>
@@ -32,7 +32,14 @@
       
     </bean>
     
-     
+      <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource"
+          p:basenames="i18n.messages" />
+
+    <bean id="mimeTypeSource" class="org.springframework.context.support.ResourceBundleMessageSource"
+          p:basenames="mimeType" />
+
+    <bean id="mimeExtSource" class="org.springframework.context.support.ResourceBundleMessageSource"
+          p:basenames="mimeExt" />
 
     <bean id="ui-definitions" class="uber.paste.base.plugins.PluginsLoader" >
         <property name="uiDefs" value="classpath:/paster-ui-definitions.xml"/>

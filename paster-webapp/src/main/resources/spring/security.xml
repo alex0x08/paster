@@ -24,29 +24,33 @@
   
     
     <http realm="Paster Realm" auto-config="false" use-expressions="true" 
-          entry-point-ref="authenticationEntryPoint" authentication-manager-ref="normal-auth-manager"
+           authentication-manager-ref="normal-auth-manager"
           disable-url-rewriting="true">
-        <custom-filter position="REMEMBER_ME_FILTER"
-                       ref="rememberMeFilter" />
-        <custom-filter position="FORM_LOGIN_FILTER"
-                       ref="umsAuthenticationProcessingFilter" />
-
-        <!--custom-filter position="LOGOUT_FILTER" ref="umsLogoutFilter" /-->
-
+        
+        
         <!--anonymous/-->
         <intercept-url pattern="/main/user*"  access="hasRole('ROLE_ADMIN')"/>
         <intercept-url pattern="/main/user/**" access="hasRole('ROLE_ADMIN')"/>
         <intercept-url pattern="/main/admin/**" access="hasRole('ROLE_ADMIN')"/>
-        <intercept-url pattern="/act/admin/**" access="hasRole('ROLE_ADMIN')"/>
-
+        <intercept-url pattern="/act/admin/**" access="hasRole('ROLE_ADMIN')"/> 
+      
         <intercept-url pattern="/**" access="permitAll()"/>
 
+        
+          <form-login login-page="/main/login" 
+        default-target-url='/main/paste/list'
+            always-use-default-target='true'
+                    login-processing-url="/act/doAuth"/>
+        
+        
         <session-management  >
             <concurrency-control error-if-maximum-exceeded="false" max-sessions="10" 
                                  session-registry-ref="sessionRegistry"/>
         </session-management>
         
-        <csrf />
+        <remember-me services-ref="customRememberMeServices"     />
+        
+        <csrf request-matcher-ref="csrfSecurityRequestMatcher"/>
          
         
         <headers defaults-disabled="true">
@@ -58,52 +62,24 @@
             <xss-protection />
         </headers> 
         
-        <logout logout-url="/act/logout"  invalidate-session="true" 
-                success-handler-ref="umsLogoutHandler"  />
+       <logout logout-url="/act/logout" 
+            logout-success-url="/main/login?exit" 
+            delete-cookies="JSESSIONID"
+            invalidate-session="true"  />
 
         <!--   <remember-me /> -->
 
     </http>
 
+    
+
+    <beans:bean id="csrfSecurityRequestMatcher" class="uber.paste.web.CsrfSecurityRequestMatcher"/>
 
     <beans:bean id="userManager"
                 class="uber.paste.manager.UserManagerImpl">
     </beans:bean>
 
-    <beans:bean id="rememberMeFilter"
-                class="org.springframework.security.web.authentication.rememberme.RememberMeAuthenticationFilter">
-        <!-- custom-filter position="REMEMBER_ME_FILTER"/ -->
-        <beans:constructor-arg  ref="normal-auth-manager" />
-        <beans:constructor-arg  ref="umsRememberMeServices" />
-    </beans:bean>
 
-    <beans:bean id="authenticationEntryPoint"
-                class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
-        <beans:constructor-arg value="/main/login" />
-    </beans:bean>
-
-    <beans:bean id="umsAuthenticationProcessingFilter"
-                class="uber.paste.manager.UserAuthenticationProcessingFilter">
-        <beans:constructor-arg ref="userManager" />
-        <beans:property name="authenticationManager" ref="normal-auth-manager" />
-        
-        <beans:property name="authenticationSuccessHandler">
-            <beans:bean id="authenticationSuccessHandler"
-                        class="org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler"
-                        p:alwaysUseDefaultTargetUrl="false" p:defaultTargetUrl="/main/paste/list" />
-        </beans:property>
-        <beans:property name="authenticationFailureHandler">
-            <beans:bean id="authenticationFailureHandler"
-                        class="org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler"
-                        p:defaultFailureUrl="/main/login?authfailed=true" />
-        </beans:property>
-    </beans:bean>
-
-    <beans:bean id="umsLogoutHandler"
-                class="uber.paste.manager.UserLogoutSuccessHandler">
-        <beans:constructor-arg ref="userManager" />
-
-    </beans:bean>
 
     <authentication-manager alias="normal-auth-manager">
    
@@ -114,18 +90,15 @@
     </authentication-manager>
 
 
-    <beans:bean id="passwordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
-
-    <beans:bean id="sessionRegistry" class="org.springframework.security.core.session.SessionRegistryImpl"/>
 
     
-    <beans:bean id="httpSessionRequestCache" class="org.springframework.security.web.savedrequest.HttpSessionRequestCache" />
-    
-    <beans:bean id="sas" class="org.springframework.security.web.authentication.session.SessionFixationProtectionStrategy" />
-  
-
-    <!-- Automatically receives AuthenticationEvent messages -->
-    <beans:bean id="loggerListener" class="org.springframework.security.authentication.event.LoggerListener"/>
+ <beans:bean id="customRememberMeServices"
+                class="uber.paste.web.security.CustomPersistentRememberMeServices">
+        <!-- This ensures that remember-me is added as an authentication provider -->
+        <beans:constructor-arg value="1q2w3e4r5t6y7u8i" />
+        <beans:constructor-arg ref="userManager" />
+        <beans:constructor-arg ref="tokenDao" />
+    </beans:bean>
 
     <beans:bean id="rememberMeAuthenticationProvider"
                 class="org.springframework.security.authentication.RememberMeAuthenticationProvider">
@@ -134,14 +107,21 @@
 
     </beans:bean>
 
-    <beans:bean id="umsRememberMeServices"
-                class="uber.paste.manager.UserRememberMeService">
-        <beans:constructor-arg value="1q2w3e4r5t6y7u8i"/>
-        <beans:constructor-arg ref="userManager" />
-        
 
-    </beans:bean>
+    
+    <beans:bean id="sessionRegistry" class="org.springframework.security.core.session.SessionRegistryImpl"/>
 
+    
+  
+     
+
+     <beans:bean id="passwordEncoder" class="org.springframework.security.crypto.password.StandardPasswordEncoder"/>
+
+    
+    <!-- Automatically receives AuthenticationEvent messages -->
+    <beans:bean id="loggerListener" class="org.springframework.security.authentication.event.LoggerListener"/>
+
+    
 
 
 </beans:beans>

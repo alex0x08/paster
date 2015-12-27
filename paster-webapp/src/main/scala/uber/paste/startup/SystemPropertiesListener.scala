@@ -2,10 +2,8 @@ package uber.paste.startup
 
 import uber.paste.base.Loggered
 import javax.servlet.ServletContextListener
-
 import java.nio.file.FileSystems
 import java.util.Locale
-
 import javax.servlet.ServletContextEvent
 import ch.qos.logback.classic.LoggerContext
 import ch.qos.logback.classic.joran.JoranConfigurator
@@ -17,12 +15,7 @@ import org.apache.commons.io.FileUtils
 import org.slf4j.LoggerFactory
 import scala.collection.JavaConversions._
 
-/**
- * Created with IntelliJ IDEA.
- * User: alex
- * Date: 3/4/13
- * Time: 12:52 AM
- */
+
 
 object SystemConstants {
   
@@ -41,12 +34,16 @@ class SystemPropertiesListener extends ServletContextListener with Loggered {
      
       setupAppHome
       
+      setupConfig
+      
       setupLogger
       
       setupEhcache     
      
       System.setProperty("paste.app.id", System.currentTimeMillis+"")
-     System.setProperty("spring.profiles.active", "main,auth-social")
+      
+      System.setProperty("spring.profiles.active", "main,auth-social")
+      
       logger.info("current locale: {}",Locale.getDefault)
      
       logger.info("application home: {}" , System.getProperty("paste.app.home"))
@@ -80,6 +77,17 @@ class SystemPropertiesListener extends ServletContextListener with Loggered {
           throw new IllegalStateException(
             "Cannot create application home directory " +appHome.getAbsolutePath())
         
+  }
+  
+  def setupConfig() {
+    
+    val appConf = new File(appHome,"app.properties")
+    
+    if (!appConf.exists || !appConf.isFile) {
+        FileUtils.copyURLToFile(getClass().getResource("/default.properties"), appConf)
+    }
+    
+    
   }
   
   def setupLogger() {

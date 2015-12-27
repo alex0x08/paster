@@ -23,7 +23,7 @@
                 <div class='col-lg-8 col-md-8'>
                     <div class="input-group">
                         <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
-                        <input class="form-control"  name="login" 
+                        <input class="form-control"  name="username" 
                                type="text" placeholder="<fmt:message key="login.username"/>">
                     </div>
                 </div>
@@ -33,7 +33,7 @@
                 <div class='col-lg-8 col-md-8'>
                     <div class="input-group">
                         <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
-                        <input class="form-control"  name="pwd" 
+                        <input class="form-control"  name="password" 
                                type="password" placeholder="<fmt:message key="login.password"/>">
                     </div>
                 </div>
@@ -43,7 +43,7 @@
                 <div class='col-lg-8 col-md-8'>        
                     <div class="checkbox">
                         <label>
-                            <input type="checkbox" name="_spring_security_remember_me" id="remember_me" checked="true" /> <fmt:message key="login.rememberMe"/>
+                            <input type="checkbox" name="remember-me" id="remember_me" checked="true" /> <fmt:message key="login.rememberMe"/>
                         </label>
                     </div>
                 </div>

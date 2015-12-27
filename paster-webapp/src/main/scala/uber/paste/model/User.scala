@@ -86,18 +86,7 @@ class User(name: String) extends Named(name) with UserDetails with java.io.Seria
   @XmlTransient
   private var openID: String = null
 
-  @OneToMany(fetch = FetchType.EAGER, cascade = Array(
-    CascadeType.PERSIST,
-    CascadeType.MERGE,
-    CascadeType.REMOVE
-  ))
-  @JoinTable(
-    joinColumns = Array(new JoinColumn(name = "USER_ID")),
-    inverseJoinColumns = Array(new JoinColumn(name = "SESSION_ID"))
-  )
-  @XmlTransient
-  private var savedSessions: java.util.List[SavedSession] = new ArrayList[SavedSession]()
-
+  
   /**
    * pass
    */
@@ -187,21 +176,7 @@ class User(name: String) extends Named(name) with UserDetails with java.io.Seria
   }
 
    
-  @JsonIgnore
-  def getSavedSessions(): java.util.List[SavedSession] = savedSessions
-
-  @JsonIgnore
-  def containsSavedSession(key: String): Boolean = savedSessions.contains(new SavedSession(key))
-
-  @JsonIgnore
-  def getSavedSession(key: String): SavedSession = {
-    for (s <- savedSessions) {
-      if (s.getName().equals(key)) {
-        return s
-      }
-    }
-    return null
-  }
+  
 
   def getTotalPastas() = totalPastas
 

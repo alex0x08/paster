@@ -114,7 +114,7 @@
         <a href="javascript:showComments(${model.id});" >comments</a> |
         <a href="javascript:showDrawArea(${model.id});">draw</a>
         
-        <div id="${model.id}_all" style="display:none;z-index:5000;position:absolute;pointer-events:none;">
+        <div id="${model.id}_all" style="display:none;z-index:500;position:absolute;pointer-events:none;">
 
             <canvas id="${model.id}_sketch_ro" with="400" height="200" 
                     style="pointer-events:none;background: url('${drawImg}') no-repeat top left;" >

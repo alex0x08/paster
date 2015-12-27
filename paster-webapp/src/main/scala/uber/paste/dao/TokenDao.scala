@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Ubersoft, LLC.
+ * Copyright 2015 Ubersoft, LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,23 +16,14 @@
 
 package uber.paste.dao
 
-import uber.paste.model.Struct
+
+import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
+import uber.paste.model.PersistentToken
 
-
+@Repository("tokenDao")
 @Transactional(readOnly = true, rollbackFor = Array(classOf[Exception]))
-abstract class StructDaoImpl[T <: Struct](model:Class[T])
-  extends BaseDaoImpl[T,java.lang.Long](model)  {
+class TokenDaoImpl extends BaseDaoImpl[PersistentToken,java.lang.String](classOf[PersistentToken])  {
 
-  @Transactional
-  def getFull(id:Long):T = {
-    val out:T = get(id)
-    return if (out==null) {
-      null.asInstanceOf[T]
-    } else {
-      out.loadFull
-      out
-    }
 
-  }
 }

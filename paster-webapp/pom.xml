@@ -15,8 +15,8 @@
 
     <properties>
 
-          <spring.version>4.2.1.RELEASE</spring.version>
-        <spring.security.version>4.0.2.RELEASE</spring.security.version>
+          <spring.version>4.2.3.RELEASE</spring.version>
+        <spring.security.version>4.0.3.RELEASE</spring.security.version>
         <hibernate.search.version>5.5.0.Final</hibernate.search.version>
         <hibernate.version>5.0.1.Final</hibernate.version>
         <luceneVersion>5.3.0</luceneVersion>
@@ -1044,7 +1044,7 @@
                     <include>*.csv</include>
                     
                     <include>logging.properties</include>
-                    <include>messages*.properties</include>
+                    <include>i18n/**</include>
                     <include>mime*.properties</include>                
                     <include>Validation*.properties</include>                
                 </includes>

@@ -36,10 +36,12 @@ class H2ConsoleExtendedServlet extends WebServlet with Loggered{
 
   private var dataSource:DataSource = null
   
-  private val server = new ExtendedWebServer
+  private val server = new WebServer
   
    override def init() {         
         
+    logger.debug("h2 servlet init..")
+    
        val ctx:ApplicationContext = WebApplicationContextUtils
                     .getWebApplicationContext(getServletContext())
        
@@ -62,7 +64,7 @@ class H2ConsoleExtendedServlet extends WebServlet with Loggered{
         
                val ss = session.get("sessionId").asInstanceOf[String]
                 
-              logger.debug("h2 sessionId: ",ss);
+              logger.debug("h2 sessionId: {}",ss);
                 
              getServletContext().setAttribute("h2console-session-id",ss);   
             
@@ -81,13 +83,20 @@ class H2ConsoleExtendedServlet extends WebServlet with Loggered{
   @throws(classOf[java.io.IOException])
   override def doGet(req:HttpServletRequest,res:HttpServletResponse) {
   
-    val session =server.getSession("local")
+    val session =server.getSession(
+      getServletContext().getAttribute("h2console-session-id").asInstanceOf[String])
   
     /**
      * refresh connection if closed
      */
-    if (session.getConnection.isClosed) {
-      session.setConnection(dataSource.getConnection)
+    var con = session.getConnection
+    
+    if (con==null ||con.isClosed) {
+      con =dataSource.getConnection
+      
+      session.setConnection(con)
+      session.put("url",con.getMetaData.getURL)
+      //getServletContext().setAttribute("h2console-session-id", session.get("sessionId"))
     }
     
     super.doGet(req,res)

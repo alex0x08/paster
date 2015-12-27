@@ -270,47 +270,27 @@
     function onSaveComment(modelId) {
         console.log('_on save comment ' + modelId);
 
-   
-
         var thumbImg = document.getElementById(modelId + '_thumbImgComment');
 
-        //   var useWidth = document.getElementById(modelId + '_centerPanel').style.width;
-        //   var useHeight = document.getElementById(modelId + '_centerPanel').style.height;
-//highlighter_735490
-
-       // var myOffscreenEl = document.getElementById(document);
-             
-
-
-      //  myOffscreenEl.style.position = 'relative';
-      //  myOffscreenEl.style.top = window.innerHeight + 'px';
-       // myOffscreenEl.style.left = 0;
-
-        //$(modelId + '_centerPanel')
-
+     
         html2canvas(document.getElementById(modelId + '_centerPanel'), {
            logging:true,
             onrendered: function (canvas) {
 
-              //  document.body.appendChild(canvas);
 
                 var img = Pixastic.process(canvas, "crop", {
                     rect: {
-                        left: 350, top: 100, width: 400, height: 300
+                        left: 350, top: 100, width: 600, height: 800
                     }
                 });
 
-                img = Canvas2Image.saveAsJPEG(img, true, 300, 200);
+                img = Canvas2Image.saveAsPNG(img, true, 300, 200);
                 // document.body.appendChild(img);
                 thumbImg.set('value', img.src);
 
                 //     console.log(img.src);
                    $(modelId + "_addCommentForm").submit();
 
-                // restore the old offscreen position
-               // myOffscreenEl.style.position = 'absolute';
-              //  myOffscreenEl.style.top = 0;
-              //  myOffscreenEl.style.left = "-9999px"
             }
 
         });
@@ -322,13 +302,25 @@
 
     function onSaveReviewDraw(modelId) {
 
+        console.log('saving review..');
+
         var reviewImg = document.getElementById(modelId + '_reviewDrawImg');
 
         var imgData = $j('#' + modelId + '_sketch').sketch().getData();
         reviewImg.set('value', imgData);
 
+        console.log(imgData);
 
         var thumbImg = document.getElementById(modelId + '_thumbImg');
+
+        
+
+        showAll(modelId);
+
+        var sketch = $(modelId + "_sketch_ro");
+
+         sketch.setStyle('background-image','url('+imgData+')');
+         
 
         html2canvas($(modelId + '_centerPanel'), {
             allowTaint: true,
@@ -336,21 +328,18 @@
             onrendered: function (canvas) {
                 var img = Pixastic.process(canvas, "crop", {
                     rect: {
-                        left: 15, top: 250, width: 400, height: 300
+                        left: 350, top: 150, width: 600, height: 800
                     }
                 });
+                
+              //console.log(img);
 
-                img = Canvas2Image.saveAsJPEG(img, true, 300, 200);
-                document.body.appendChild(img);
-                thumbImg.set('value', img.src);
+                img2 = Canvas2Image.saveAsPNG(img, true, 300, 200);
+                thumbImg.set('value', img2.src);
 
-                //  console.log(img.src);
                 $(modelId + "_saveReviewDraw").submit();
             }
         });
-
-
-        // console.log(imgData);
 
 
     }

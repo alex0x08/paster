@@ -30,7 +30,7 @@ object BaseDaoImpl {
 }
 
 @Transactional(readOnly = true, rollbackFor = Array(classOf[Exception]))
-abstract class BaseDaoImpl[T <: java.io.Serializable,PK <:Long ](model:Class[T]) extends Loggered 
+abstract class BaseDaoImpl[T <: java.io.Serializable,PK <:java.io.Serializable ](model:Class[T]) extends Loggered 
                                                                                     {
 
 
@@ -138,8 +138,9 @@ abstract class BaseDaoImpl[T <: java.io.Serializable,PK <:Long ](model:Class[T])
     
     cr.multiselect(r.get("id"))
     
-    if (from >0) {
-      cr.where(Array(cb.lt(r.get("id"), from)):_*)
+    
+    if (from.isInstanceOf[Long] && from.asInstanceOf[Long] >0) {
+      cr.where(Array(cb.lt(r.get("id"), from.asInstanceOf[Long])):_*)
     }
     
     val tupleResult:java.util.List[Tuple] = em.createQuery(cr)

@@ -15,6 +15,7 @@ var Canvas2Image = (function() {
 
 	// no canvas, bail out.
 	if (!bHasCanvas) {
+            console.log('no canvas support!');
 		return {
 			saveAsBMP : function(){},
 			saveAsPNG : function(){},
@@ -193,6 +194,7 @@ var Canvas2Image = (function() {
 		},
 
 		saveAsJPEG : function(oCanvas, bReturnImg, iWidth, iHeight) {
+                    console.log("save jpeg "+bHasDataURL);
 			if (!bHasDataURL) {
 				return false;
 			}
@@ -203,9 +205,10 @@ var Canvas2Image = (function() {
 	
 			// check if browser actually supports jpeg by looking for the mime type in the data uri.
 			// if not, return false
-			if (strData.indexOf(strMime) != 5) {
+			/*if (strData.indexOf(strMime) != 5) {
+                            console.log('jpeg not supported');
 				return false;
-			}
+			}*/
 
 			if (bReturnImg) {
 				return makeImageObject(strData);

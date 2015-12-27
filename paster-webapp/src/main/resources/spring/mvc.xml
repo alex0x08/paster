@@ -45,14 +45,7 @@
 
 
     <!--general -->
-    <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource"
-          p:basenames="messages" />
-
-    <bean id="mimeTypeSource" class="org.springframework.context.support.ResourceBundleMessageSource"
-          p:basenames="mimeType" />
-
-    <bean id="mimeExtSource" class="org.springframework.context.support.ResourceBundleMessageSource"
-          p:basenames="mimeExt" />
+   
 
 
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">

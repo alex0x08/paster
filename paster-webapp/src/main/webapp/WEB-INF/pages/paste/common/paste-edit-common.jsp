@@ -592,14 +592,12 @@
 
                 var img = Pixastic.process(canvas, "crop", {
                     rect: {
-                        left: 15, top: 0, width: 400, height: 300
+                        left: 15, top: 0, width: 600, height: 800
                     }
                 });
 
-                //img =Pixastic.process(img, "blurfast", {amount:0.5});
-
-                img = Canvas2Image.saveAsJPEG(img, true, 300, 200);
-                document.body.appendChild(img);
+ 
+                img = Canvas2Image.saveAsPNG(canvas, true, 300, 200);
                 thumbImg.set('value', img.src);
                 $('editForm').submit();
             }
