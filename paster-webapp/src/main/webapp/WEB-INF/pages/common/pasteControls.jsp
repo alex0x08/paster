@@ -58,7 +58,7 @@
         </a> |
         <a class="img-map img-json" href="<c:url value="/main/paste/${model.id}.json"/>" target="${target}" title="View as JSON">
         </a> |
-        <a href="<c:url value="/main/paste/plain/${model.id}"/>" target="${target}" title="View as plain text">
+        <a href="<c:url value="/main/paste/${model.id}.txt"/>" target="${target}" title="View as plain text">
             <span style="font-size: larger;" class="i">k</span>
         </a> |
 

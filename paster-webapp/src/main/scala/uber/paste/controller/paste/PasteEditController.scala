@@ -392,8 +392,8 @@ class PasteController extends GenericEditController[Paste]   {
   //  logger.debug("_comments count= {}",obj.commentsCount)
   
 
-      logger.debug("__found thumbnail {0}",b.getThumbImage())
-      logger.debug("__found comments {0}",b.getComments().size())
+      logger.debug("__found thumbnail {} comments {}",b.getThumbImage(),b.getComments().size())
+      
 
     
     if (b.getThumbImage()!=null) {
@@ -415,8 +415,6 @@ class PasteController extends GenericEditController[Paste]   {
 
   def getMimeExtResource(key:String):String = mimeExtSource.getMessage(key,
     new Array[java.lang.Object](0),null,Locale.getDefault)
-
-  
 
   
   @RequestMapping(value = Array("/raw/view"), method = Array(RequestMethod.GET))
@@ -465,10 +463,10 @@ class PasteController extends GenericEditController[Paste]   {
    * @param locale
    * @return
    */
-  @RequestMapping(value = Array("/plain/{id:[0-9]+}"), method = Array(RequestMethod.GET), produces = Array("text/plain;charset=UTF-8"))
+  @RequestMapping(value = Array("/{id:[0-9]+}.txt"), method = Array(RequestMethod.GET), produces = Array("text/plain;charset=UTF-8"))
   @ResponseBody
   def getBodyPlain(@PathVariable("id") id:java.lang.Long,model:Model,locale:Locale):String = {
-    return loadModel(id).getText();
+    return loadModel(id).getText()
   }
 
   /**
