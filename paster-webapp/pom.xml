@@ -21,7 +21,7 @@
         <hibernate.version>5.0.1.Final</hibernate.version>
         <luceneVersion>5.3.0</luceneVersion>
       
-        
+         
       
         <tiles.version>3.0.5</tiles.version>
        
@@ -53,6 +53,13 @@
             <artifactId>paster-static-resources</artifactId>
             <version>${project.version}</version>   
         </dependency>
+
+         <dependency>
+            <groupId>uber.paster</groupId>
+            <artifactId>paster-oak</artifactId>
+            <version>${project.version}</version>   
+        </dependency>
+
 
         <!-- jdbc drivers -->
       
@@ -449,7 +456,7 @@
 	<groupId>com.zaxxer</groupId>
 	<artifactId>HikariCP</artifactId>
 	<version>2.4.1</version>
-</dependency>
+        </dependency>
 
     
 
@@ -515,7 +522,7 @@
             <version>4.4.1</version>
         </dependency>
 
- <dependency>
+        <dependency>
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
             <version>2.8.2</version>
@@ -634,6 +641,14 @@
             <version>1.5.1</version>
         </dependency>    
      
+
+
+
+
+
+       
+
+
 
     </dependencies>
 
@@ -1045,6 +1060,7 @@
                     
                     <include>logging.properties</include>
                     <include>i18n/**</include>
+                      <include>oak/**</include>
                     <include>mime*.properties</include>                
                     <include>Validation*.properties</include>                
                 </includes>

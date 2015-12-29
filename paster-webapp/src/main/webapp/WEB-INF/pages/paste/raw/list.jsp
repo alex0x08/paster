@@ -51,7 +51,7 @@
                                 <div class="column grid-4" >
 
 
-                                    <c:url value='/main/resources/${appId}/t/${paste.lastModified.time}/${paste.thumbImage}.jpg' var="thumbUrl">
+                                    <c:url value='/main/resources/${appId}/t/${paste.lastModified.time}/${paste.thumbImage}' var="thumbUrl">
                                     </c:url>
 
 

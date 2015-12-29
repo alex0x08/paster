@@ -1,0 +1,4 @@
+<'sf'='http://www.megashareapp.org/jcr/share/1.0'>
+
+[sf:sharedFile] > nt:file
+  - sf:fileSize (LONG)

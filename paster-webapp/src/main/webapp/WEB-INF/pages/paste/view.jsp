@@ -176,7 +176,7 @@
 
 
 <c:url var="drawImg" 
-       value='/main/resources/${appId}/r/${model.lastModified.time}/${model.reviewImgData}.png'/>
+       value='/main/resources/${appId}/r/${model.lastModified.time}/${model.reviewImgData}'/>
 
 <script type="text/javascript">
     var $j = jQuery.noConflict();

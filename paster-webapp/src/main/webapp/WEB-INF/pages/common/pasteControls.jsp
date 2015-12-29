@@ -54,7 +54,7 @@
     
     <div class="col-md-4">
 
-        <a class="img-map img-xml" href="<c:url value="/main/paste/xml/${model.id}"/>" target="${target}" title="View as XML">
+        <a class="img-map img-xml" href="<c:url value="/main/paste/${model.id}.xml"/>" target="${target}" title="View as XML">
         </a> |
         <a class="img-map img-json" href="<c:url value="/main/paste/${model.id}.json"/>" target="${target}" title="View as JSON">
         </a> |

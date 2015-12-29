@@ -24,6 +24,7 @@ import uber.paste.controller.GenericController
 import uber.paste.controller.GenericEditController
 import uber.paste.dao.CommentDaoImpl
 import uber.paste.dao.PasteDaoImpl
+import uber.paste.manager.RepositoryManager
 import uber.paste.manager.ResourcePathHelper
 import org.springframework.ui.Model
 import scala.util.control.Breaks._
@@ -64,7 +65,8 @@ class PasteController extends GenericEditController[Paste]   {
   @Autowired
   val resourcePathHelper:ResourcePathHelper = null
   
-  
+  @Autowired
+  var repoManager:RepositoryManager = null
 
   @Resource(name="mimeTypeSource")
   protected val mimeSource:MessageSource = null
@@ -205,12 +207,18 @@ class PasteController extends GenericEditController[Paste]   {
     
         logger.info("adding reviewImg to {}, data {}",Array(pasteId,reviewImgData))
         
+    
+        val node = repoManager.saveImg(reviewImgData)
       
-         p.setReviewImgData(reviewImgData)
-         p.setReviewImgData(resourcePathHelper.saveResource("r",p))
+         p.setReviewImgData(node.getId)
+      //   p.setReviewImgData(resourcePathHelper.saveResource("r",p))
+        
+        val node2 = repoManager.saveImg(thumbImgData)
+      
+    
+         p.setThumbImage(node2.getId)
          
-         p.setThumbImage(thumbImgData)
-         p.setThumbImage(resourcePathHelper.saveResource("t",p))
+      //   p.setThumbImage(resourcePathHelper.saveResource("t",p))
     
          p.touch
          p= manager.save(p);
@@ -265,8 +273,10 @@ class PasteController extends GenericEditController[Paste]   {
     commentManager.save(b)
 
     if (b.getThumbImage!=null) {
-        p.setThumbImage(b.getThumbImage)
-        p.setThumbImage(resourcePathHelper.saveResource("t",p))
+      
+      
+        p.setThumbImage(repoManager.saveImg(b.getThumbImage).getId)
+      //  p.setThumbImage(resourcePathHelper.saveResource("t",p))
                     }
     p.touch
      manager.save(p)
@@ -387,7 +397,7 @@ class PasteController extends GenericEditController[Paste]   {
 
     
     if (b.getThumbImage()!=null) {
-      b.setThumbImage(resourcePathHelper.saveResource("t",b))
+      b.setThumbImage(repoManager.saveImg(b.getThumbImage).getId)
       }
     
        val out =super.save(cancel,b,result,model,locale,redirectAttributes)

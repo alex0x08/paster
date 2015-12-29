@@ -50,29 +50,29 @@ XML	xml, xhtml, xslt, html, xhtml
  */
 object CodeType {
   
-  val ActionScript = new CodeType("code.type.as3","actionscript3","text","shBrushAS3.js")
-  val Bash = new CodeType("code.type.bash","bash","sh","shBrushBash.js")
-  val ColdFusion = new CodeType("code.type.coldfusion","cf","coldfusion","shBrushColdFusion.js")
-  val CSharp = new CodeType("code.type.csharp","csharp","csharp","shBrushCSharp.js")
-  val CPP = new CodeType("code.type.cpp","cpp","c_cpp","shBrushCpp.js")
-  val CSS = new CodeType("code.type.css","css","css","shBrushCss.js")
-  val Delphi = new CodeType("code.type.delphi","delphi","pascal","shBrushDelphi.js")
-  val Diff = new CodeType("code.type.diff","diff","diff","shBrushDiff.js")
-  val Erlang = new CodeType("code.type.erlang","erlang","text","shBrushErlang.js")
-  val Groovy = new CodeType("code.type.groovy","groovy","groovy","shBrushGroovy.js")
-  val JavaScript = new CodeType("code.type.js","js","javascript","shBrushJScript.js")
-  val Java = new CodeType("code.type.java","java","java","shBrushJava.js")
-  val JavaFX = new CodeType("code.type.javafx","javafx","java","shBrushJavaFX.js")
-  val Perl = new CodeType("code.type.perl","perl","perl","shBrushPerl.js")
-  val Php = new CodeType("code.type.php","php","php","shBrushPhp.js")
-  val Plain = new CodeType("code.type.plain","plain","text","shBrushPlain.js")
-  val PowerShell = new CodeType("code.type.powershell","powershell","powershell","shBrushPowerShell.js")
-  val Python = new CodeType("code.type.py","py","python","shBrushPython.js")
-  val Ruby = new CodeType("code.type.ruby","ruby","ruby","shBrushRuby.js")
-  val Scala = new CodeType("code.type.scala","scala","scala","shBrushScala.js")
-  val Sql = new CodeType("code.type.sql","sql","sql","shBrushSql.js")
-  val VisualBasic = new CodeType("code.type.vb","vb","vbscript","shBrushVb.js")
-  val Xml = new CodeType("code.type.xml","xml","xml","shBrushXml.js")
+  val ActionScript = new CodeType("code.type.as3","actionscript3","text","shBrushAS3.js","as3")
+  val Bash = new CodeType("code.type.bash","bash","sh","shBrushBash.js","sh")
+  val ColdFusion = new CodeType("code.type.coldfusion","cf","coldfusion","shBrushColdFusion.js","cf")
+  val CSharp = new CodeType("code.type.csharp","csharp","csharp","shBrushCSharp.js","cs")
+  val CPP = new CodeType("code.type.cpp","cpp","c_cpp","shBrushCpp.js","cpp")
+  val CSS = new CodeType("code.type.css","css","css","shBrushCss.js","css")
+  val Delphi = new CodeType("code.type.delphi","delphi","pascal","shBrushDelphi.js","pas")
+  val Diff = new CodeType("code.type.diff","diff","diff","shBrushDiff.js","diff")
+  val Erlang = new CodeType("code.type.erlang","erlang","text","shBrushErlang.js","erl")
+  val Groovy = new CodeType("code.type.groovy","groovy","groovy","shBrushGroovy.js","groovy")
+  val JavaScript = new CodeType("code.type.js","js","javascript","shBrushJScript.js","js")
+  val Java = new CodeType("code.type.java","java","java","shBrushJava.js","java")
+  val JavaFX = new CodeType("code.type.javafx","javafx","java","shBrushJavaFX.js","javafx")
+  val Perl = new CodeType("code.type.perl","perl","perl","shBrushPerl.js","pl")
+  val Php = new CodeType("code.type.php","php","php","shBrushPhp.js","php")
+  val Plain = new CodeType("code.type.plain","plain","text","shBrushPlain.js","txt")
+  val PowerShell = new CodeType("code.type.powershell","powershell","powershell","shBrushPowerShell.js","ps")
+  val Python = new CodeType("code.type.py","py","python","shBrushPython.js","py")
+  val Ruby = new CodeType("code.type.ruby","ruby","ruby","shBrushRuby.js","rb")
+  val Scala = new CodeType("code.type.scala","scala","scala","shBrushScala.js","scala")
+  val Sql = new CodeType("code.type.sql","sql","sql","shBrushSql.js","sql")
+  val VisualBasic = new CodeType("code.type.vb","vb","vbscript","shBrushVb.js","vb")
+  val Xml = new CodeType("code.type.xml","xml","xml","shBrushXml.js","xml")
 
   val map = new java.util.LinkedHashMap[String,CodeType]
 
@@ -114,15 +114,19 @@ object CodeType {
 
 
 @Entity
-class CodeType(name:String,code:String,keditType:String,kbrushFile:String) 
+class CodeType(name:String,code:String,keditType:String,kbrushFile:String,kext:String) 
 extends Key(code,name) with java.io.Serializable{
 
   private var editType:String = keditType
 
   private var brushFile:String = kbrushFile
   
-  def this() = this(null,null,null,null)
+  private var ext:String = kext
+  
+  def this() = this(null,null,null,null,null)
 
+  def getExt() = ext
+  def setExt(ext:String) { this.ext=ext }
   def getEditType() = editType
   def setEditType(e:String) { this.editType=editType}
 

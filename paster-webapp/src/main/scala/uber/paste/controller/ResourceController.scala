@@ -17,15 +17,21 @@
 package uber.paste.controller
 
 import java.io.IOException
+import java.net.URLDecoder
+import javax.jcr.Node
+import javax.jcr.Session
 import javax.servlet.http.HttpServletResponse
+import org.apache.jackrabbit.JcrConstants
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.io.FileSystemResource
+import org.springframework.core.io.InputStreamResource
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.ResponseBody
+import uber.paste.manager.RepositoryManager
 import uber.paste.manager.ResourcePathHelper
 
 @Controller
@@ -35,8 +41,11 @@ class ResourceController extends AbstractController {
   @Autowired
   private var resourcePathHelper: ResourcePathHelper = null
 
+  @Autowired
+  private var repositoryManager:RepositoryManager = null
+  
   @RequestMapping(
-    value = Array("/{version:[a-zA-Z0-9]+}/{type:[a-z]}/{lastModified:[0-9]+}/{path:[a-z0-9,-]+}"),
+    value = Array("/{version:[a-zA-Z0-9]+}/{type:[a-z]}/{lastModified:[0-9]+}/paste_content/{path}"),
     method = Array(RequestMethod.GET)
   )
   @ResponseBody
@@ -46,7 +55,7 @@ class ResourceController extends AbstractController {
     @PathVariable("path") path: String,
     @PathVariable("type") ptype: String,
     response: HttpServletResponse
-  ): FileSystemResource = {
+  ): InputStreamResource = {
 
     //model.asMap.clear()
     ptype match {
@@ -60,31 +69,53 @@ class ResourceController extends AbstractController {
       }
     }
 
-    val fimg = resourcePathHelper.getResource(ptype, path)
+   /*val id =  URLDecoder.decode(path, "UTF-8")
+      .replaceAll("/", "x")
+      .replaceAll("\\.", "x")
+      .replaceAll(",", "/")
+    */
+    
+     var  s:Session = repositoryManager.createAdministrativeSession()
+            
+       val node:Node =     s.getNodeByIdentifier("/paste_content/"+path+".png")
 
-    if (!fimg.exists || !fimg.isFile) {
+      
+               
+    
+    
+   // val node:Node = repositoryManager.getNode(path)
+    
+    
+    
+   // val fimg = resourcePathHelper.getResource(ptype, path)
+
+    if (node==null) {
       writeError(response, "file not found", 404)
       return null
     }
 
-    ptype match {
-      case "r" => {
+   
         response.setContentType("image/png")
-      }
-      case "t" | "r" | "a" | "b" => {
-        response.setContentType("image/jpeg")
-      }
-    }
-
-    response.setHeader("Content-Length", String.valueOf(fimg.length()))
-    response.setHeader("Content-Disposition", "inline;filename='" + fimg.getName + "'")
-    response.setDateHeader("Last-Modified", fimg.lastModified)
+   
+    val content_node = node.getNode(JcrConstants.JCR_CONTENT)
+    
+    val content = content_node.getProperty(JcrConstants.JCR_DATA)
+    
+    response.setHeader("Content-Length", String.valueOf(content.getLength))
+    response.setHeader("Content-Disposition", "inline;filename='" + node.getName + "'")
+    response.setDateHeader("Last-Modified", content_node.getProperty(JcrConstants.JCR_LASTMODIFIED).getLong)
     response.setDateHeader("Expires", System.currentTimeMillis +
       31557600)
     response.setHeader("Cache-Control", "max-age=" + 31557600 + ", public")
     response.setHeader("Pragma", "cache")
-
-    return new FileSystemResource(fimg)
+    try {
+     
+    return new InputStreamResource(content.getBinary.getStream)
+    } finally {
+      
+       s.logout()
+          
+    }
   }
 @throws(classOf[IOException])
 def writeError(response:HttpServletResponse, msg:String, status:Int)

@@ -58,13 +58,46 @@
     <modules>
         <module>paster-static-resources</module>
         <module>paster-run</module>
+        <module>paster-oak</module>
         <module>paster-webapp</module>
 	     
     </modules>
    
+       
+    <pluginRepositories>
+        <pluginRepository>
+            <id>alfresco-public-releases</id>
+            <url>http://maven.alfresco.com/nexus/content/groups/public</url>
+        </pluginRepository>
+    </pluginRepositories>
 
-      <repositories>
+    <repositories>
 
+        <repository>
+            <id>alfresco-public-releases</id>
+            <url>http://maven.alfresco.com/nexus/content/groups/public</url>
+        </repository>
+        
+        
+        <repository>
+            <id>jboss-thirdparty</id>
+            <name>jboss-thirdparty</name>
+            <url>http://repository.jboss.org/nexus/content/repositories/thirdparty-releases</url>
+        </repository>
+          
+          
+        <repository>
+            <id>jboss-snapshots</id>
+            <name>jboss snapshots</name>
+            <url>http://snapshots.jboss.org/maven2</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+          
         <repository>
             <id>atlassian-public</id>
             <name>atlassian-public</name>

@@ -137,20 +137,24 @@
     </bean>
     
      
-    <bean id="contentNegotiationManager" class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
-    <property name="favorPathExtension" value="false"/>
-    <property name="mediaTypes">
-        <value>
-            json=application/json
-            xml=application/xml
-            atom=application/atom+xml
-            rss=application/rss+xml
-        </value>
-    </property>
-    <property name="defaultContentType" value="text/html"/>
-       <property name="ignoreAcceptHeader" value="true" />
-</bean>
-    
+        <bean id="contentNegotiationManager" 
+              class="org.springframework.web.accept.ContentNegotiationManager">  
+            <constructor-arg>  
+            <bean  
+                class="org.springframework.web.accept.PathExtensionContentNegotiationStrategy">  
+                <constructor-arg>  
+                    <map>  
+                        <entry key="json" value="application/json" />  
+                        <entry key="xml" value="application/xml" />  
+                        <entry key="atom" value="application/atom+xml" />
+                        <entry key="rss" value="application/rss+xml" />
+                          
+                    </map>  
+                </constructor-arg>  
+            </bean>  
+            </constructor-arg>  
+        </bean>  
+        
     
     <bean
         class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">

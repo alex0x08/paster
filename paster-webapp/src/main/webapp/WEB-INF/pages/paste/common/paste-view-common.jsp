@@ -83,19 +83,19 @@
                 <c:if test="${not empty availableNext and not empty availableNext.thumbImage}">
                     <a href="<c:url value="/${availableNext.id}"/>"  title="<fmt:message key="button.next"/>">
                         <img width="300" height="200" class="img-thumbnail img-responsive p-comment" style="alignment-adjust: middle; width: 200px; height: 100px;"
-                             src="<c:url value='/main/resources/${appId}/t/${availableNext.lastModified.time}/${availableNext.thumbImage}.jpg' >
+                             src="<c:url value='/main/resources/${appId}/t/${availableNext.lastModified.time}/${availableNext.thumbImage}' >
                              </c:url>" />
                     </a>
                 </c:if>
 
                 <img width="300" height="200" class="img-thumbnail img-responsive p-comment" style="border: 1px solid black;alignment-adjust: middle;width: 250px; height: 150px;" 
-                     src="<c:url value='/main/resources/${appId}/t/${model.lastModified.time}/${model.thumbImage}.jpg' >
+                     src="<c:url value='/main/resources/${appId}/t/${model.lastModified.time}/${model.thumbImage}' >
                      </c:url>"/>
 
                 <c:if test="${availablePrev!=null and not empty availablePrev.thumbImage}">
                     <a href="<c:url value="/${availablePrev.id}"/>"  title="<fmt:message key="button.prev"/>">
                         <img width="300" height="200" class="img-thumbnail img-responsive p-comment" style="alignment-adjust: middle; width: 200px; height: 100px;" 
-                             src="<c:url value='/main/resources/${appId}/t/${availablePrev.lastModified.time}/${availablePrev.thumbImage}.jpg' >
+                             src="<c:url value='/main/resources/${appId}/t/${availablePrev.lastModified.time}/${availablePrev.thumbImage}' >
                              </c:url>"/>
                     </a>
                 </c:if>
@@ -107,7 +107,7 @@
          style="min-width:650px;">
 
         <c:url var="drawImg" 
-               value='/main/resources/${appId}/r/${model.lastModified.time}/${model.reviewImgData}.png'/>
+               value='/main/resources/${appId}/r/${model.lastModified.time}/${model.reviewImgData}'/>
 
 
         <a href="javascript:showAll(${model.id});" >all</a> |
