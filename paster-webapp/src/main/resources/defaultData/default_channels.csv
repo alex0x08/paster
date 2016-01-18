@@ -1,0 +1,3 @@
+CODE,DESC,ISDEFAULT
+MAIN,channel.main.name,true
+SUPPORT,channel.support.name,false

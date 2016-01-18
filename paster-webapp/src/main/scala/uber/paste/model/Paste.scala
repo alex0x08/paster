@@ -146,8 +146,11 @@ class Paste(title:String) extends Named(title) with java.io.Serializable{
    * paste's  source, describes where it came from
    */
   @NotNull
-  @Field
-  private var pasteSource:String = PasteSource.FORM.getCode
+  //@Field
+  @ManyToOne(fetch = FetchType.EAGER,cascade= Array(CascadeType.PERSIST,CascadeType.MERGE))
+  @JoinColumn(name = "channel_id")
+  private var channel:Channel = null
+  //PasteSource.FORM.getCode
 
   @Transient
   var tagsAsString:String = null
@@ -265,10 +268,11 @@ class Paste(title:String) extends Named(title) with java.io.Serializable{
   def getRemoteUrl() = remoteUrl
   def setRemoteUrl(url:String) {this.remoteUrl = url}
 
-  def getPasteSource() : PasteSource = PasteSource.valueOf(pasteSource)
+  
+  def getChannel() = channel
 
-  def setPasteSource(s:PasteSource) {
-    pasteSource = s.getCode()
+  def setChannel(s:Channel) {
+    channel = s
   }
 
   /**
@@ -278,7 +282,7 @@ class Paste(title:String) extends Named(title) with java.io.Serializable{
    */
   def getCodeType() : CodeType =CodeType.valueOf(codeType)
   
-  def setCodeType(f:CodeType) : Unit = {
+  def setCodeType(f:CodeType)  {
     codeType = f.getCode
   }
   

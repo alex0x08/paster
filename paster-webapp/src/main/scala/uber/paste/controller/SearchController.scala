@@ -40,6 +40,7 @@ class SearchResult(code:String,desc:String,kitemsModel:String) extends Key(code,
 
   //private var resultCount:Int =0 
   
+ override  def create(code:String) = new SearchResult(code,null,null)
   
   def getItemsModel():String = itemsModel
   def getCodeLowerCase() = super.getCode().toLowerCase

@@ -133,6 +133,8 @@ extends Key(code,name) with java.io.Serializable{
   def getBrushFile() = brushFile
   def setBrushFile(e:String) { this.brushFile=brushFile}
 
+override   def create(code:String) = new CodeType(null,code,null,null,null)
+  
  // def getAvailableCodeTypes() :Collection[CodeType] = CodeType.list
 }
 

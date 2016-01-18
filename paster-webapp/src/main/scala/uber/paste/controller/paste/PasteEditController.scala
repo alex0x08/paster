@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation._
 import uber.paste.model._
 import uber.paste.controller.GenericController
 import uber.paste.controller.GenericEditController
+import uber.paste.dao.ChannelDao
 import uber.paste.dao.CommentDaoImpl
 import uber.paste.dao.PasteDaoImpl
 import uber.paste.manager.RepositoryManager
@@ -56,6 +57,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes
 //@SessionAttributes(Array(GenericController.MODEL_KEY))
 class PasteController extends GenericEditController[Paste]   {
 
+  
+  @Autowired
+  val channelDao:ChannelDao = null
+  
   @Autowired
   val pasteManager:PasteDaoImpl = null
 
@@ -84,6 +89,8 @@ class PasteController extends GenericEditController[Paste]   {
   def initBinder(binder:WebDataBinder):Unit = {
     binder.initDirectFieldAccess()
     binder.registerCustomEditor(classOf[CodeType], new CodeTypeEditor())
+    binder.registerCustomEditor(classOf[Channel], new KeyEditor[Channel](new Channel))
+    
   //  binder.setDisallowedFields("id","lastModified")
   }
   
@@ -107,7 +114,8 @@ class PasteController extends GenericEditController[Paste]   {
     model.addAttribute("availableCodeTypes", CodeType.list)
     model.addAttribute("availablePriorities", Priority.list)
 
-   
+    model.addAttribute("availableChannels", channelDao.getList)
+
     
     if (!obj.getComments.isEmpty) {
       val commentLines = new ArrayList[Long]
@@ -150,6 +158,7 @@ class PasteController extends GenericEditController[Paste]   {
   def getNewModelInstance():Paste = {
     val p = new Paste
     p.setOwner(getCurrentUser)
+    p.setChannel(channelDao.getDefault)
     return p
   }
 
@@ -304,11 +313,17 @@ class PasteController extends GenericEditController[Paste]   {
       if (!b.isBlank()) {
         val current = manager.getFull(b.getId())
         b.getComments().addAll(current.getComments())
-        b.setPasteSource(current.getPasteSource())
+       
         b.setIntegrationCode(current.getIntegrationCode())
        // b.setThumbImg(current.getThumbImg())
       }
 
+    if (b.getChannel==null) {
+      b.setChannel(channelDao.getDefault)
+    } else {
+      b.setChannel(channelDao.getByKey(b.getChannel.getCode))
+    }
+    
      val tags =  b.tagsAsString
 
      if (tags!=null) {

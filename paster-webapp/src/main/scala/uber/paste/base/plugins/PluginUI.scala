@@ -123,6 +123,7 @@ class UISection(name:String,code:String) extends Key(code,name) {
   @XStreamImplicit(itemFieldName="element",keyFieldName="code")
   private var elements:Map[String,UIElement] = new HashMap[String,UIElement]()
   
+  override def create(code:String) = new UISection(null,code)
  
    def addElement(s:UIElement ) {
     elements.put(s.getCode, s)
@@ -152,7 +153,8 @@ class UIElement(name:String,code:String) extends Key(code,name){
   @XStreamImplicit(itemFieldName="extension",keyFieldName="code")
   private var extensions:Map[String,UIExtension] = new HashMap[String,UIExtension]()
 
-
+override def create(code:String) = new UIElement(null,code)
+  
    def addExtension(s:UIExtension ) {
     extensions.put(s.getCode, s)
   }
@@ -181,6 +183,7 @@ class UIExtension(name:String,code:String,kjspUrl:String) extends Key(name,code)
   
    private var jspUrl:String = kjspUrl
 
+ override  def create(code:String) = new UIExtension(null,code,null)
   
   def getJspUrl() = jspUrl
   def setJspUrl(url:String) { this.jspUrl = url}

@@ -1061,6 +1061,8 @@
                     <include>logging.properties</include>
                     <include>i18n/**</include>
                       <include>oak/**</include>
+                      <include>defaultData/**</include>
+                      
                     <include>mime*.properties</include>                
                     <include>Validation*.properties</include>                
                 </includes>

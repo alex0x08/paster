@@ -27,4 +27,6 @@ class Priority(code:String,desc:String,kcssClass:String) extends Key(code,desc) 
 
 def getCssClass() =cssClass
 def setCssClass(css:String) = { this.cssClass =css}
+
+override   def create(code:String) = new Priority(code,null,null)
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Ubersoft, LLC.
+ * Copyright 2016 Ubersoft, LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,16 +16,14 @@
 
 package uber.paste.dao
 
-import uber.paste.model.Key
+import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
+import uber.paste.model.Channel
 
-/**
- *  Dao for objects contain key name (not PK)
- */
+@Repository("channelDao")
 @Transactional(readOnly = true, rollbackFor = Array(classOf[Exception]))
-abstract class KeyDaoImpl[T <: Key](model:Class[T]) extends StructDaoImpl[T](model) {
+class ChannelDao extends KeyDaoImpl[Channel](classOf[Channel]){
 
-  def getByKey(code:String) = getSingleByKeyValue("code",code.toUpperCase)
- 
-
+  
+   def getDefault() = getSingleByKeyValue("default", true)
 }

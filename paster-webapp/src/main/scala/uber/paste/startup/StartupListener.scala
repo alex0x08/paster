@@ -5,6 +5,7 @@ import java.util.Calendar
 import java.util.Properties
 import javax.servlet.{ServletContextListener, ServletContext, ServletContextEvent}
 import org.apache.commons.csv.CSVFormat
+import org.apache.commons.csv.CSVRecord
 import org.springframework.context.ApplicationContext
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
@@ -40,7 +41,9 @@ class StartupListener extends ServletContextListener with Loggered{
     val pasteDao:PasteDaoImpl = ctx.getBean(classOf[PasteDaoImpl])
     val projectDao:ProjectDaoImpl = ctx.getBean(classOf[ProjectDaoImpl])
 
-    
+   
+  val channelDao:ChannelDao = ctx.getBean(classOf[ChannelDao])
+
      /*PluginUI.load(getClass().getResourceAsStream("/paster-ui-definitions.xml"))
       
       val pluginDefs=  
@@ -141,13 +144,8 @@ class StartupListener extends ServletContextListener with Loggered{
 
       setupSecurityContext
       
-      val r = new InputStreamReader(getClass().getResourceAsStream("/default_users.csv"))
-      
-      val records = CSVFormat.DEFAULT.withHeader().parse(r)
-      
-      for (record <- records) {
-        
-         users.save(users.changePassword(
+      loadDefaults("/defaultData/default_users.csv", (record:CSVRecord) => {
+             users.save(users.changePassword(
            User.createNew
         .addRole(if (record.get("ADMIN").toBoolean) 
                   {Role.ROLE_ADMIN} 
@@ -156,12 +154,18 @@ class StartupListener extends ServletContextListener with Loggered{
         .addPassword(record.get("PASSWORD"))
         .addName(record.get("NAME"))
         .get(),record.get("PASSWORD")))
-
-      }
+        })
       
-      r.close
-      
-   
+     
+       loadDefaults("/defaultData/default_channels.csv", (record:CSVRecord) => {           
+          
+        val ch =new Channel(
+              record.get("CODE"),
+              record.get("DESC"),
+              record.get("ISDEFAULT").toBoolean)
+            ch.setTranslated(true)
+            channelDao.save(ch)
+        })
 
       val project = new Project
       project.setName("Sample project")
@@ -202,6 +206,17 @@ class StartupListener extends ServletContextListener with Loggered{
 
   override def contextDestroyed(servletContextEvent:ServletContextEvent) { }
   
+  def loadDefaults(csv:String, callback: CSVRecord => Unit) {
+    
+     val r = new InputStreamReader(getClass().getResourceAsStream(csv))
+      
+      val records = CSVFormat.DEFAULT.withHeader().parse(r)
+      
+      for (record <- records) {
+        callback(record)
+      }
+     r.close
+  }
   
   def setupSecurityContext() {
     val start_user = User.createNew

@@ -16,7 +16,7 @@
 
 package uber.paste.dao
 
-import uber.paste.model.{PasteSource, Paste, User,Priority}
+import uber.paste.model.{Channel, Paste, User,Priority}
 import javax.persistence.Tuple
 import javax.persistence.criteria.CriteriaQuery
 import javax.persistence.criteria.Predicate
@@ -69,7 +69,7 @@ class PasteDaoImpl extends SearchableDaoImpl[Paste](classOf[Paste]) {
       select.add(cb.equal(r.get("integrationCode"), paste.getIntegrationCode))
     }
     
-    select.add(cb.equal(r.get("pasteSource"), paste.getPasteSource.getCode))
+    select.add(cb.equal(r.get("channel"), paste.getChannel))
     select.add(cb.lessThanOrEqualTo(r.get("lastModified")
                                     .as(classOf[java.util.Date]), paste.getLastModified))
     
@@ -100,7 +100,7 @@ class PasteDaoImpl extends SearchableDaoImpl[Paste](classOf[Paste]) {
            select.add(cr.cb.equal(cr.r.get("integrationCode"), paste.getIntegrationCode))
           }
 
-    select.add(cr.cb.equal(cr.r.get("pasteSource"), paste.getPasteSource.getCode))
+    select.add(cr.cb.equal(cr.r.get("channel"), paste.getChannel))
       if (direction) {
         select.add(cr.cb.lessThanOrEqualTo(cr.r.get("lastModified").as(classOf[java.util.Date]), paste.getLastModified))
       } else {
@@ -118,7 +118,7 @@ class PasteDaoImpl extends SearchableDaoImpl[Paste](classOf[Paste]) {
         return query.getResultList()
   }
 
-  def getBySourceType(sourceType:PasteSource,sortAsc:Boolean) : java.util.List[Paste] = {
+  def getByChannel(channel:Channel,sortAsc:Boolean) : java.util.List[Paste] = {
 
     
     val cr = new CriteriaSet
@@ -126,7 +126,7 @@ class PasteDaoImpl extends SearchableDaoImpl[Paste](classOf[Paste]) {
     val query:Query = em.createQuery(
       cr.cr.where(
         Array(
-          cr.cb.equal(cr.r.get("pasteSource"), sourceType.getCode())
+          cr.cb.equal(cr.r.get("channel"), channel)
         ):_*)
         .orderBy(cr.cb.desc(cr.r.get("sticked"))
       ,if (sortAsc) {cr.cb.asc(cr.r.get("lastModified"))} else {cr.cb.desc(cr.r.get("lastModified"))})
@@ -178,7 +178,7 @@ class PasteDaoImpl extends SearchableDaoImpl[Paste](classOf[Paste]) {
    *          
    * @return number of modified or created pastas         
    */
-   def countAllSince(source:PasteSource,dateFrom:java.lang.Long):java.lang.Long = {
+   def countAllSince(channel:Channel,dateFrom:java.lang.Long):java.lang.Long = {
 
      val cb = em.getCriteriaBuilder
      val cq:CriteriaQuery[java.lang.Long] = cb.createQuery(classOf[java.lang.Long])
@@ -192,7 +192,7 @@ class PasteDaoImpl extends SearchableDaoImpl[Paste](classOf[Paste]) {
     cq.where(Array(
         cb.greaterThan(r.get("lastModified")
                        .as(classOf[java.util.Date]), new java.util.Date(dateFrom)),
-        cb.equal(r.get("pasteSource"), source.getCode)):_*)
+        cb.equal(r.get("channel"), channel)):_*)
     return em.createQuery[java.lang.Long](cq).getSingleResult()
   }
 

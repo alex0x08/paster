@@ -25,6 +25,7 @@ import uber.paste.controller.GenericListController
 
 import uber.paste.controller.SearchController
 import uber.paste.controller.SearchResult
+import uber.paste.dao.ChannelDao
 import uber.paste.dao.CommentDaoImpl
 import uber.paste.dao.PasteDaoImpl
 import uber.paste.dao.SearchableDaoImpl
@@ -86,6 +87,9 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
   }
 
  
+  @Autowired
+  val channelDao:ChannelDao = null
+
 
   @Autowired
   val pasteManager:PasteDaoImpl = null
@@ -130,7 +134,7 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
 
     
    
-    model.addAttribute("availableSourceTypes",PasteSource.list)
+    model.addAttribute("availableSourceTypes",channelDao.getList)
     model.addAttribute("splitHelper",new DateSplitHelper(locale))
                     //config.share.integration=1
     //config.share.url=https://dev.iqcard.ru/share
@@ -239,16 +243,17 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
            @RequestParam(required = false)  sortColumn:String,
            @RequestParam(required = false)  sortAsc:Boolean =false):java.util.List[Paste] = {
 
-    return listImpl(request,locale,model,page,NPpage,pageSize,sortColumn,sortAsc,PasteSource.FORM.getCode(),null)
+    return listImpl(request,locale,model,page,NPpage,pageSize,sortColumn,sortAsc,null,null)
   }
 
   @RequestMapping(value = Array( "/count/{source:[a-zA-Z0-9]+}/{since:[0-9]+}"), 
                   method = Array(RequestMethod.GET),produces =Array("application/json")) 
   @ModelAttribute(GenericController.NODE_COUNT_KEY)
-   def countAllSince(@PathVariable("source") source:String, 
+   def countAllSince(@PathVariable("source") channelCode:String, 
                     @PathVariable("since")dateFrom:java.lang.Long):java.lang.Long = {
                //System.out.println("_count all from "+dateFrom)   
-     return pasteManager.countAllSince(PasteSource.valueOf(source.toUpperCase),dateFrom)
+               
+     return pasteManager.countAllSince(channelDao.getByKey(channelCode),dateFrom)
   }
   
 
@@ -258,18 +263,18 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
                      pageSize:java.lang.Integer,
                      sortColumn:String,
                      sortAsc:java.lang.Boolean = false,
-                     sourceType:String,integrationCode:String):java.util.List[Paste] = {
+                     channelCode:String,integrationCode:String):java.util.List[Paste] = {
 
     logger.debug("_paste listImpl, pageSize {}",pageSize)
 
     fillListModel(model,locale)
 
     
-    val ps = if (sourceType!=null) {
-      model.addAttribute("sourceType",sourceType.toLowerCase)
+    val ps = if (channelCode!=null) {
+      model.addAttribute("sourceType",channelCode.toLowerCase)
       model.addAttribute("sortDesc",!sortAsc)
 
-      PasteSource.valueOf(sourceType.toUpperCase)
+      channelDao.getByKey(channelCode)
     } else {null}
 
     return processPageListHolder(request,locale,model,page,NPpage,pageSize,sortColumn,sortAsc,
@@ -292,14 +297,23 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
     return manager.getByOwner(getCurrentUser)
   }
 
-  protected val pasterListCallback:PasteListCallback  = new PasteListCallback(PasteSource.FORM,true,null)
+  protected val pasterListCallback:PasteListCallback  = new PasteListCallback(null,true,null)
 
-  class PasteListCallback(sourceType:PasteSource,sortAsc:Boolean,integrationCode:String) 
+  class PasteListCallback(channel:Channel,sortAsc:Boolean,integrationCode:String) 
           extends SourceCallback[Paste] {
     override def invokeCreate():PagedListHolder[Paste] = {
-      val ph =new ExtendedPageListHolder[Paste](if (integrationCode!=null) {
-        manager.getListIntegrated(integrationCode)} else {
-        manager.getBySourceType(sourceType,sortAsc)})
+      val ph =new ExtendedPageListHolder[Paste](
+            if (integrationCode!=null) {
+              manager.getListIntegrated(integrationCode)
+            } else {
+        
+          if (channel == null) { 
+            manager.getByChannel(channelDao.getDefault,sortAsc) 
+          } else  
+            manager.getByChannel(channel,sortAsc)
+        })
+          
+       
     
       val sort =ph.getSort().asInstanceOf[MutableSortDefinition]
             

@@ -158,6 +158,30 @@
                             </div>
 
 
+                            <div class="col-xs-6 col-sm-4 col-md-4 col-lg-2 " >
+
+
+                                <form:label cssClass="control-label" path="channel">
+                                    <fmt:message key="paste.channel"/>
+
+                                </form:label>
+
+                                <p>
+
+                                    <form:select 
+                                        path="channel" multiple="false" id="pchan">
+                                        <c:forEach items="${availableChannels}" var="channel">
+                                            <form:option value="${channel.code}"  >
+                                                <fmt:message key="${channel.name}"/>
+                                            </form:option>
+                                        </c:forEach>
+                                    </form:select> 
+
+                               
+                                </p>
+
+
+                            </div>        
 
                             <div class="col-md-4 col-xs-10">
                                 <form:label

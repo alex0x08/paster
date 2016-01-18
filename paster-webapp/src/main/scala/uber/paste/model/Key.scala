@@ -75,7 +75,7 @@ class KeyObj[T <: Key] {
 }
 
 
-class KeyEditor[T <: Key](vobj:KeyObj[T]) extends PropertyEditorSupport{
+class KeyEditorEnum[T <: Key](vobj:KeyObj[T]) extends PropertyEditorSupport{
 
   override def setAsText(text:String) {
     setValue(vobj.valueOf(text.toLowerCase));
@@ -86,10 +86,29 @@ class KeyEditor[T <: Key](vobj:KeyObj[T]) extends PropertyEditorSupport{
     return if (s == null) 
       null
      else 
-      s.getName().toString()
+      s.getCode
     
   }
 }
+
+
+class KeyEditor[T <: Key](vobj:Key) extends PropertyEditorSupport{
+
+  override def setAsText(text:String) {
+    
+    setValue(vobj.create(text.toLowerCase))
+  }
+
+  override def getAsText():String = {
+    val s = getValue().asInstanceOf[T]
+    return if (s == null) 
+      null
+     else 
+      s.getCode
+    
+  }
+}
+
 
 
 
@@ -103,12 +122,23 @@ class Key(kcode:String,kname:String) extends Named(kname) with java.io.Serializa
   @Field(index = Index.YES, store =Store.YES, termVector = TermVector.YES) //,boost=@Boost(2f)
   @SafeHtml(whitelistType=WhiteListType.NONE,message = "{validator.forbidden-symbols}")
   private var code: String = kcode
-   
+  
+  @Column(name = "k_translated")
+  private var translated: Boolean = false
+  
   def this() = this(null,null)
 
-  def getCode() = code
-  def setCode(f:String) { code = f }
+  def isTranslated() = translated
+
+  def setTranslated(v: Boolean) { translated = v }
   
+  def getCode() = code
+  def setCode(f:String) { 
+   code = if (f!=null) 
+       f.toUpperCase else null 
+  }
+  
+  def create(code:String): Any = null
       
   override def hashCode():Int = {
     var hash:Int = 53*7;
