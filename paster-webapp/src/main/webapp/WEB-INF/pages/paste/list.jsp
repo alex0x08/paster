@@ -253,8 +253,10 @@
 
         var pageUrl = '${rawPageUrl}';
 
+          var lazy; 
+
         window.addEvent('domready', function () {
-            var lazy = new LazyPagination(document, {
+            lazy = new LazyPagination(document, {
                 url: pageUrl,
                 method: 'get',
                 maxRequests: ${pageItems.pageCount-(pageItems.page+1)},
@@ -267,7 +269,7 @@
                     element: 'morePages',
                     where: 'before'
                 }, beforeLoad: function () {
-                    $('pageLoadSpinner').setStyle('display', '');
+                    $('pageLoadSpinner').toggle();
                 }, afterAppend: function (block, page) {
                     // alert(page);
                     try {
@@ -276,7 +278,7 @@
                     }
                     $('paste_list_' + page).grab($('pageLoadSpinner'), "after");
 
-                    $('pageLoadSpinner').setStyle('display', 'none');
+                    $('pageLoadSpinner').toggle();
                     parseSearchResults(block);
                     bindDeleteDlg(block);
                 }

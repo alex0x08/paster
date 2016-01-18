@@ -44,8 +44,8 @@ class PasteDaoImpl extends SearchableDaoImpl[Paste](classOf[Paste]) {
     return if (out.isEmpty) null else out.get(0) 
   }
   
-  def getPreviousPastas(paste:Paste):java.util.List[Paste] = getNextPreviousPaste(paste,
-                                                                                  true,BaseDaoImpl.MAX_RESULTS)
+  def getPreviousPastas(paste:Paste):java.util.List[Paste] = 
+    getNextPreviousPaste(paste, true,BaseDaoImpl.MAX_RESULTS)
   
   
   def getPreviousPastasIdList(paste:Paste):java.util.List[Long] = {
@@ -70,7 +70,8 @@ class PasteDaoImpl extends SearchableDaoImpl[Paste](classOf[Paste]) {
     }
     
     select.add(cb.equal(r.get("pasteSource"), paste.getPasteSource.getCode))
-    select.add(cb.lessThanOrEqualTo(r.get("lastModified").as(classOf[java.util.Date]), paste.getLastModified))
+    select.add(cb.lessThanOrEqualTo(r.get("lastModified")
+                                    .as(classOf[java.util.Date]), paste.getLastModified))
     
     cr.where(select.toArray(new Array[Predicate](select.size)):_*)
     .orderBy(
@@ -88,7 +89,8 @@ class PasteDaoImpl extends SearchableDaoImpl[Paste](classOf[Paste]) {
   }
   
   
-  private def getNextPreviousPaste(paste:Paste,direction:Boolean,maxResults:Int): java.util.List[Paste] = {
+  private def getNextPreviousPaste(paste:Paste,direction:Boolean,maxResults:Int):
+          java.util.List[Paste] = {
     
      val cr = new CriteriaSet
      val select = new ArrayList[Predicate]   
@@ -169,7 +171,13 @@ class PasteDaoImpl extends SearchableDaoImpl[Paste](classOf[Paste]) {
 
   }
 
-  
+  /**
+   * count all pastas created/modified from specified date
+   * @param dateFrom
+   *          dateTime from start to search
+   *          
+   * @return number of modified or created pastas         
+   */
    def countAllSince(source:PasteSource,dateFrom:java.lang.Long):java.lang.Long = {
 
      val cb = em.getCriteriaBuilder
@@ -182,10 +190,10 @@ class PasteDaoImpl extends SearchableDaoImpl[Paste](classOf[Paste]) {
     val dateFromParam = cb.parameter(classOf[java.util.Date])
     
     cq.where(Array(
-        cb.greaterThan(r.get("lastModified").as(classOf[java.util.Date]), new java.util.Date(dateFrom)),
+        cb.greaterThan(r.get("lastModified")
+                       .as(classOf[java.util.Date]), new java.util.Date(dateFrom)),
         cb.equal(r.get("pasteSource"), source.getCode)):_*)
-    return em.createQuery[java.lang.Long](cq)
-      .getSingleResult()
+    return em.createQuery[java.lang.Long](cq).getSingleResult()
   }
 
 }

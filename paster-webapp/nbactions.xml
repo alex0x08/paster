@@ -28,4 +28,11 @@
                 <goal>dependency:tree</goal>
             </goals>
         </action>
+        <action>
+            <actionName>CUSTOM-scaladoc</actionName>
+            <displayName>scaladoc</displayName>
+            <goals>
+                <goal>scala:doc</goal>
+            </goals>
+        </action>
     </actions>

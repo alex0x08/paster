@@ -148,7 +148,8 @@ abstract class SearchController[T <: Struct,QV <: Query ] extends GenericListCon
 
         if (out==null && !rout.isEmpty) {
           out= rout
-          model.addAttribute(GenericController.NODE_LIST_MODEL_PAGE, model.asMap().get(r.getItemsModel()))
+          model.addAttribute(GenericController.NODE_LIST_MODEL_PAGE, 
+                             model.asMap().get(r.getItemsModel()))
           model.addAttribute("result",r.getCodeLowerCase())
           logger.debug("found {} in {}",out.size(),r.getItemsModel())
          }
@@ -227,7 +228,8 @@ abstract class SearchController[T <: Struct,QV <: Query ] extends GenericListCon
                       request:HttpServletRequest,
                       @PathVariable("result") result:String,
                       model:Model,
-                      locale:Locale) = listImpl(request,locale, model, null, GenericListController.NEXT_PARAM, null,null,false,
+                      locale:Locale) = listImpl(request,locale, model, 
+                                                null, GenericListController.NEXT_PARAM, null,null,false,
                       result)
 
 
@@ -237,7 +239,8 @@ abstract class SearchController[T <: Struct,QV <: Query ] extends GenericListCon
                       request:HttpServletRequest,
                       @PathVariable("result") result:String,
                       model:Model,
-                      locale:Locale) = listImpl(request,locale, model, null, "prev", null,null,false,result)
+                      locale:Locale) = listImpl(request,locale, model, null, 
+                                                "prev", null,null,false,result)
 
 
   

@@ -294,7 +294,8 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
 
   protected val pasterListCallback:PasteListCallback  = new PasteListCallback(PasteSource.FORM,true,null)
 
-  class PasteListCallback(sourceType:PasteSource,sortAsc:Boolean,integrationCode:String) extends SourceCallback[Paste] {
+  class PasteListCallback(sourceType:PasteSource,sortAsc:Boolean,integrationCode:String) 
+          extends SourceCallback[Paste] {
     override def invokeCreate():PagedListHolder[Paste] = {
       val ph =new ExtendedPageListHolder[Paste](if (integrationCode!=null) {
         manager.getListIntegrated(integrationCode)} else {

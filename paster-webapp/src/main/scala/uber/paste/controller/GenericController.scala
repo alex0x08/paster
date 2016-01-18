@@ -31,6 +31,8 @@ object GenericController {
 
 /**
  *  Generic MVC Controller, binded with generic model
+ *  
+ *  param <T> model type
  */
 abstract class GenericController[T <: Struct ] extends AbstractController {
 

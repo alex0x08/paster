@@ -39,6 +39,7 @@
         
           <form-login login-page="/main/login" 
         default-target-url='/main/paste/list'
+             authentication-failure-url="/main/login?authfailed=true"
             always-use-default-target='true'
                     login-processing-url="/act/doAuth"/>
         

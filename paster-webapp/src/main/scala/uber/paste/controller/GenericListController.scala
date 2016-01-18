@@ -265,6 +265,9 @@ abstract class GenericListController[T <: Struct ] extends GenericController[T] 
 
 
 
+  /**
+   * this trait is used for lazy pageholder creation
+   */
   protected trait SourceCallback[T ] {
     def invokeCreate():PagedListHolder[T];
   }

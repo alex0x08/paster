@@ -32,11 +32,16 @@ var __slice = Array.prototype.slice;
       this.el = el;
       this.canvas = $(el);
       this.context = el.getContext('2d');
+      
+      
+      this.lastPoint = {};
+      this.points = [ ];
+      
       this.options = $.extend({
         toolLinks: true,
         defaultTool: 'marker',
-        defaultColor: '#000000',
-        defaultSize: 5
+        defaultColor: '#ff1101',
+        defaultSize: 1
       }, opts);
       this.painting = false;
       this.color = this.options.defaultColor;
@@ -81,8 +86,12 @@ var __slice = Array.prototype.slice;
       this[key] = value;
       return this.canvas.trigger("sketch.change" + key, value);
     };
-    Sketch.prototype.startPainting = function() {
+    Sketch.prototype.startPainting = function(e) {
       this.painting = true;
+      
+      // this.lastPoint = { x: e.clientX, y: e.clientY };
+   //   this.points.push({ x: e.clientX, y: e.clientY });
+      
       return this.action = {
         tool: this.tool,
         color: this.color,
@@ -90,12 +99,15 @@ var __slice = Array.prototype.slice;
         events: []
       };
     };
-    Sketch.prototype.stopPainting = function() {
+    Sketch.prototype.stopPainting = function(e) {
       if (this.action) {
         this.actions.push(this.action);
       }
       this.painting = false;
       this.action = null;
+      
+       this.points.length = 0;
+      
       return this.redraw();
     };
     Sketch.prototype.onEvent = function(e) {
@@ -130,15 +142,15 @@ var __slice = Array.prototype.slice;
     onEvent: function(e) {
       switch (e.type) {
         case 'mousedown':
-        case 'touchstart':
-          this.startPainting();
+        case 'touchstart': 
+          this.startPainting(e);
           break;
         case 'mouseup':
         case 'mouseout':
         case 'mouseleave':
         case 'touchend':
         case 'touchcancel':
-          this.stopPainting();
+          this.stopPainting(e);
       }
       if (this.painting) {
         this.action.events.push({
@@ -153,17 +165,44 @@ var __slice = Array.prototype.slice;
       var event, previous, _i, _len, _ref;
       this.context.lineJoin = "round";
       this.context.lineCap = "round";
+      
+       this.points.push({ x: action.events[0].x, y: action.events[0].y});
+      
       this.context.beginPath();
-      this.context.moveTo(action.events[0].x, action.events[0].y);
+     this.context.moveTo(action.events[0].x, action.events[0].y);
       _ref = action.events;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         event = _ref[_i];
-        this.context.lineTo(event.x, event.y);
+        
+        this.points.push({ x: event.x, y: event.y});
+        
+       // this.context.lineTo(event.x, event.y);
         previous = event;
+       // console.log('event '+event);
+        
+    
+        
       }
+      
+          for (var i = 1; i < this.points.length; i++) {
+    this.context.lineTo(this.points[i].x, this.points[i].y);
+    var nearPoint = this.points[i-8];
+    if (nearPoint) {
+      this.context.moveTo(nearPoint.x, nearPoint.y);
+      this.context.lineTo(this.points[i].x, this.points[i].y);
+    }
+  }
+      
+      
       this.context.strokeStyle = action.color;
       this.context.lineWidth = action.size;
-      return this.context.stroke();
+      
+       this.points=[];
+      
+    return  this.context.stroke();
+     
+    
+     
     }
   };
   return $.sketch.tools.eraser = {

@@ -17,10 +17,11 @@
 package uber.paste.dao
 
 import uber.paste.model.Key
-import javax.persistence.Query
 import org.springframework.transaction.annotation.Transactional
 
-
+/**
+ *  Dao for objects contain key name (not PK)
+ */
 @Transactional(readOnly = true, rollbackFor = Array(classOf[Exception]))
 abstract class KeyDaoImpl[T <: Key](model:Class[T]) extends StructDaoImpl[T](model) {
 

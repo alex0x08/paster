@@ -34,8 +34,8 @@
                 centerPanel = document.getElementById(modelId + '_centerPanel'),
                 rightPanelCtrl = document.getElementById(modelId + '_rightPanelCtrl');
 
-        if (rightPanel.getStyle('display') !== 'none') {
-            rightPanel.setStyle('display', 'none');
+        if (rightPanel.isDisplayed()) {
+            rightPanel.toggle();
             centerPanel.set('class', 'col-md-10');
             rightPanelCtrl.getElement('span').set('text', '+');
         } else {
@@ -50,11 +50,7 @@
 
     window.addEvent('domready', function () {
 
-    <c:if test="${shareIntegration}">
-
-        $(${model.id} + '_shareFrame').setStyle('height', document.body.scrollHeight < 1024 ? '1024px' : document.body.scrollHeight + 'px');
-
-    </c:if>
+    
 
     <c:if test="${not empty currentUser or allowAnonymousCommentsCreate}">
 
@@ -65,10 +61,10 @@
             this.set('disabled', true);
 
             $('${model.id}_addCommentForm').getElements('.disableOnSubmit').each(function (el, i) {
-                el.setStyle('display', 'none');
+                el.toggle();
             });
 
-            this.getElementById('btnIcon').setStyle('display', '');
+            this.getElementById('btnIcon').toggle();
             onSaveComment('${model.id}');
 
         });
@@ -93,7 +89,7 @@
         SyntaxHighlighter.highlight(${model.id}, {}, $('${model.id}_pasteText'), true, true);
 
     <c:if test="${availablePrevList.count > 0}">
-        $('pageLoadSpinner').setStyle('display', 'none');
+        $('pageLoadSpinner').toggle();
         initLazy();
     </c:if>
 
@@ -202,14 +198,14 @@
             'width': sizes[1]
         });
 
-        $(modelId + "_all").setStyle("display", "");
+        $(modelId + "_all").toggle();
     }
 
     function showComments(modelId) {
 
 
-        $(modelId + "_drawBlock").setStyle("display", "none");
-        $(modelId + "_all").setStyle("display", "none");
+        $(modelId + "_drawBlock").toggle();
+        $(modelId + "_all").toggle();
 
     }
 
@@ -241,17 +237,18 @@
             sk = $j('#' + modelId + '_sketch').sketch();
             ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, sizes[1], sizes[0]);
         }
-        $(modelId + "_drawBlock").setStyle("display", "");
-        $(modelId + "_all").setStyle("display", "none");
+        $(modelId + "_drawBlock").toggle();
+        $(modelId + "_all").toggle();
     }
 
 
     function initDraw(modelId) {
 
-        $j.each(['#f00', '#ff0', '#0f0', '#0ff', '#00f', '#f0f', '#000', '#fff'], function () {
-            $j('#' + modelId + '_centerPanel .tools').append("<a href='#" + modelId + "_sketch' data-color='" + this + "' style='width: 10px; border:1px solid black; background: " + this + ";'>&nbsp;&nbsp;&nbsp;&nbsp;</a> ");
+        $j.each(['#ff1101', '#ff0', '#0f0', '#0ff', '#00f', '#f0f', '#000', '#fff'], function () {
+            $j('#' + modelId + '_centerPanel .tools')
+                    .append("<a href='#" + modelId + "_sketch' data-color='" + this + "' style='width: 10px; border:1px solid black; background: " + this + ";'>&nbsp;&nbsp;&nbsp;&nbsp;</a> ");
         });
-        $j.each([3, 5, 10, 15], function () {
+        $j.each([1,3, 5, 10, 15], function () {
             $j('#' + modelId + '_centerPanel .tools')
                     .append("<a href='#" + modelId + "_sketch' data-size='" + this + "' style='background: #ccc'>" + this + "</a> ");
         });

@@ -16,10 +16,11 @@
 
 package uber.paste.dao
 
+
 import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
 import uber.paste.base.Loggered
-import javax.persistence.{Query, EntityManager, PersistenceContext, Tuple}
+import javax.persistence.{EntityManager, PersistenceContext, Tuple}
 import java.util.ArrayList
 import javax.persistence.criteria.CriteriaQuery
 import scala.collection.JavaConversions._
@@ -29,65 +30,116 @@ object BaseDaoImpl {
    val MAX_RESULTS  = 2000
 }
 
+/**
+ * Basic DAO operations
+ * 
+ * @param model model class (generics is not enough)
+ * @param <T> model type
+ * @param <PK> primary key type
+ */
 @Transactional(readOnly = true, rollbackFor = Array(classOf[Exception]))
-abstract class BaseDaoImpl[T <: java.io.Serializable,PK <:java.io.Serializable ](model:Class[T]) extends Loggered 
-                                                                                    {
+abstract class BaseDaoImpl[T <: java.io.Serializable,PK <:java.io.Serializable ](model:Class[T]) 
+            extends Loggered   {
 
 
+  /**
+   *  a wrapper to help work with Criteria API 
+   */
   protected class CriteriaSet {
-    val cb = em.getCriteriaBuilder
-    val cr = cb.createQuery(model);  val r = cr.from(model)
+    
+    val cb = em.getCriteriaBuilder // criteria builder instance
+    val cr = cb.createQuery(model);  val r = cr.from(model) // query and root instances
+    val ct = cb.createTupleQuery() // tuple query
   }
 
+  
   @PersistenceContext
-  protected val em:EntityManager = null
+  protected val em:EntityManager = null // famous JPA entity manager instance, = null is required because of Scala
 
+  /**
+   * @return model class
+   */
   protected def getModel() = model
 
    /**
-     * @inheritdoc
+     * save object in database, nothing new here
+     * 
+     * yes, we need flush because of 2nd level cache usage
+     * 
+     * @param obj 
+     *          object to save
+     *          
+     * @return
+     *          persisted object
      */
   @Transactional(readOnly = false, 
                  rollbackFor = Array(classOf[Exception]),propagation = Propagation.REQUIRED)
   def save(obj:T):T = {
-    logger.info("saving obj {}",obj)
-    val out:T = em.merge(obj)
-    em.flush()
+    logger.debug("saving obj {}",obj)
+    val out:T = em.merge(obj); em.flush()
     return out
   }
 
+  /**
+   * persist new object in database
+   * @param obj
+   *        new (not saved) object
+   */
   @Transactional(readOnly = false)
-  def persist(obj:T):Unit = {
-    em.persist(obj)
-  }
-
-  def exists(id:PK):Boolean = {
-    return em.find(model, id)!=null
-  }
-
+  def persist(obj:T)  =  em.persist(obj)
+  
+  /**
+   * check if object exists in database
+   * 
+   * @param id
+   *          object's unique id (PK type)
+   * @return true/false         
+   */
+  def exists(id:PK) = em.find(model, id)!=null
+  
+  
+  /**
+   *  remove object from database
+   *  @param id 
+   *          object's unique identifier
+   */
   @Transactional
   def remove(id:PK) {
     
     val obj:T = get(id)
     
     if (obj!=null) {
-      em.remove(obj)
-      em.flush()
+      em.remove(obj); em.flush()
+    } else {
+      logger.error("tried to remove non-exist object {}",id)
     }
   }
 
+  /**
+   * retrieves object by id 
+   *  @param id
+   *          object's unique id
+   *  @return object of type T        
+   */
   def get(id:PK) = em.find(model,id)  
 
+  /**
+   *  count all objects of type T
+   *  @return objects count
+   */
   def countAll():java.lang.Long = {
 
     val cr = new CriteriaSet
 
-    val cq:CriteriaQuery[java.lang.Long] = cr.cb.createQuery(classOf[java.lang.Long])
-    cq.select(cr.cb.count(cq.from(model)))
+    val cq:CriteriaQuery[java.lang.Long] = 
+      cr.cb.createQuery(classOf[java.lang.Long]); cq.select(cr.cb.count(cq.from(model)))
 
     return em.createQuery[java.lang.Long](cq).getSingleResult()
   }
   
+   /**
+    * get single object
+    */
    def getSingleByKeyValue(key:String,value:Any,
                          order:Option[String] = None,
                          asc:Option[Boolean] = None):T = {
@@ -95,6 +147,20 @@ abstract class BaseDaoImpl[T <: java.io.Serializable,PK <:java.io.Serializable ]
     if (results.isEmpty()) null.asInstanceOf[T] else results.get(0)
    }
 
+  /**
+   * get list of objects by criteria (key-value)
+   * @param key   
+   *  object's field name
+   * @param value
+   *      object's field value
+   * 
+   * @param order
+   *        sort field
+   * @param asc
+   *        use asc or desc sorting
+   *        
+   * @return list of objects with type T                                         
+   */
    def getListByKeyValue(key:String,value:Any,
                          order:Option[String] = None,
                          asc:Option[Boolean] = None) : java.util.List[T] = {
@@ -112,12 +178,16 @@ abstract class BaseDaoImpl[T <: java.io.Serializable,PK <:java.io.Serializable ]
             }
           
           } else {
-            (cr.cb.desc(cr.r.get("id")))
+            (cr.cb.desc(cr.r.get(key)))
           }
       ))
       .setMaxResults(BaseDaoImpl.MAX_RESULTS).getResultList
   }
   
+  /**
+   * get list of objects T
+   * 
+   */
   def getList():java.util.List[T] = {
 
     val cr = new CriteriaSet
@@ -127,23 +197,22 @@ abstract class BaseDaoImpl[T <: java.io.Serializable,PK <:java.io.Serializable ]
     .getResultList()
   }
   
-  
+  /**
+   * get list of objects ids, starting from FROM argument
+   */
   def getIdList(from:PK):java.util.List[PK] = {
     
     val out = new ArrayList[PK]
-     
-     val cb = em.getCriteriaBuilder; val cr = cb.createTupleQuery()
- 
-    val r = cr.from(model) 
+
+    var cr = new CriteriaSet
     
-    cr.multiselect(r.get("id"))
-    
+    cr.ct.multiselect(cr.r.get("id"))
     
     if (from.isInstanceOf[Long] && from.asInstanceOf[Long] >0) {
-      cr.where(Array(cb.lt(r.get("id"), from.asInstanceOf[Long])):_*)
+      cr.ct.where(Array(cr.cb.lt(cr.r.get("id"), from.asInstanceOf[Long])):_*)
     }
     
-    val tupleResult:java.util.List[Tuple] = em.createQuery(cr)
+    val tupleResult:java.util.List[Tuple] = em.createQuery(cr.ct)
           .setMaxResults(BaseDaoImpl.MAX_RESULTS).getResultList()
     
     for (t<-tupleResult) {

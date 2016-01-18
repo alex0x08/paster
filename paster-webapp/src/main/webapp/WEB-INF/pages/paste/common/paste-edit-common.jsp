@@ -614,7 +614,7 @@
 
             el.addEvent('click', function (event) {
                 this.getElementById('btnCaption').set('text', transmitText).disabled = true;
-                this.getElementById('btnIcon').setStyle('display', '');
+                this.getElementById('btnIcon').toggle();
 
                 event.stop();
                 onSave();

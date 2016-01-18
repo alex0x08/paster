@@ -17,7 +17,6 @@
 package uber.paste.web.security
 
 import java.security.SecureRandom
-
 import java.util.Arrays
 import java.util.Base64
 import java.util.Date
@@ -28,16 +27,11 @@ import org.springframework.dao.DataAccessException
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
-
-
 import org.springframework.security.web.authentication.rememberme.AbstractRememberMeServices
-import org.springframework.security.web.authentication.rememberme.CookieTheftException
 import org.springframework.security.web.authentication.rememberme.InvalidCookieException
 import org.springframework.security.web.authentication.rememberme.RememberMeAuthenticationException
-import org.springframework.transaction.annotation.Transactional
 import uber.paste.base.Loggered
 import uber.paste.dao.TokenDaoImpl
-
 import uber.paste.manager.UserManagerImpl
 import uber.paste.model.PersistentToken
 import uber.paste.model.User
@@ -60,16 +54,15 @@ class CustomPersistentRememberMeServices(key:String,uds:UserDetailsService,token
       extends
         AbstractRememberMeServices(key,uds){
 
-  
-  
   private val log = Loggered.getLogger(getClass())
 
   private val random= new SecureRandom()
   
   
-  
   protected def processAutoLoginCookie(
-      cookieTokens:Array[String], request:HttpServletRequest, response:HttpServletResponse):UserDetails= {
+      cookieTokens:Array[String], 
+      request:HttpServletRequest, 
+      response:HttpServletResponse):UserDetails= {
 
         val token = getPersistentToken(cookieTokens)
         val login = token.getUser.getUsername
@@ -118,7 +111,6 @@ class CustomPersistentRememberMeServices(key:String,uds:UserDetailsService,token
         token.setIpAddress(request.getRemoteAddr())
         token.setUserAgent(request.getHeader("User-Agent"))
         
-    System.out.println("_new token "+token)
     
         try {
             tokenDao.save(token)
@@ -154,7 +146,7 @@ class CustomPersistentRememberMeServices(key:String,uds:UserDetailsService,token
                tokenDao.remove(token.getSeries)
              
                } catch {
-           case e @ (_ : InvalidCookieException
+                  case e @ (_ : InvalidCookieException
                      | _ : RememberMeAuthenticationException 
                     ) => {    
                log.error(e.getLocalizedMessage,e)
@@ -171,8 +163,7 @@ class CustomPersistentRememberMeServices(key:String,uds:UserDetailsService,token
      * Validate the token and return it.
      */
    def getPersistentToken(cookieTokens:Array[String]):PersistentToken = {
-        if (cookieTokens.length != 2) {
-          
+        if (cookieTokens.length != 2) {          
             throw new InvalidCookieException("Cookie token did not contain " + 2 +
                     " tokens, but contained '" + Arrays.asList(cookieTokens) + "'")
         }

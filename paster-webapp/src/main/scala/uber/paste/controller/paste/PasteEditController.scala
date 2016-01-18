@@ -174,7 +174,7 @@ class PasteController extends GenericEditController[Paste]   {
                     model:Model,locale:Locale):String = {
 
     if (logger.isDebugEnabled) {
-      logger.debug("_removeComment commentId={0} , lineNumber ={1} {2}",commentId, lineNumber,"")
+      logger.debug("_removeComment commentId={} , lineNumber ={} {}",commentId, lineNumber,"")
     }
   
     commentManager.remove(commentId)

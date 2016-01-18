@@ -109,8 +109,8 @@
 
                         </sec:authorize>
 
-
-                        <ul class="nav navbar-nav " >
+                        <c:if test="${allowAnonymousCommentsCreate}">
+                                <ul class="nav navbar-nav " >
                             <li class="dropdown" data-behavior="BS.Dropdown">
                                 <a href="#" id="main-menu-dropdown" 
                                    role="button" class="dropdown-toggle" 
@@ -137,6 +137,8 @@
                             </li>
                         </ul>
 
+                        </c:if>
+                    
 
                         <tiles:insertAttribute name="search-top" />
 
