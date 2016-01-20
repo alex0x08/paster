@@ -55,7 +55,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes
 @Controller
 @RequestMapping(Array("/paste"))
 //@SessionAttributes(Array(GenericController.MODEL_KEY))
-class PasteController extends GenericEditController[Paste]   {
+class PasteEditController extends GenericEditController[Paste]   {
 
   
   @Autowired
@@ -175,10 +175,10 @@ class PasteController extends GenericEditController[Paste]   {
 
   
 
-  @RequestMapping(value = Array("/removeComment"), method = Array(RequestMethod.POST,RequestMethod.GET))
+  @RequestMapping(value = Array("/removeComment"), 
+                  method = Array(RequestMethod.POST,RequestMethod.GET))
   def removeComment(@RequestParam(required = true) commentId:java.lang.Long,
-                    @RequestParam(required = true) pasteId:java.lang.Long,
-                    
+                    @RequestParam(required = true) pasteId:java.lang.Long,                    
                     @RequestParam(required = true) lineNumber:java.lang.Long,
                     model:Model,locale:Locale):String = {
 
@@ -281,8 +281,7 @@ class PasteController extends GenericEditController[Paste]   {
    
     commentManager.save(b)
 
-    if (b.getThumbImage!=null) {
-      
+    if (b.getThumbImage!=null) {     
       
         p.setThumbImage(repoManager.saveImg(b.getThumbImage).getId)
       //  p.setThumbImage(resourcePathHelper.saveResource("t",p))

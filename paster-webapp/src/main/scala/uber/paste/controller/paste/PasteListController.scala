@@ -146,7 +146,8 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
 
 
   @RequestMapping(value = Array("/search/{result:[a-z]+}/{page:[0-9]+}",
-                                 "/raw/search/{result:[a-z]+}/{page:[0-9]+}"), method = Array(RequestMethod.GET))
+                                 "/raw/search/{result:[a-z]+}/{page:[0-9]+}"), 
+                   method = Array(RequestMethod.GET))
   @ModelAttribute(GenericController.NODE_LIST_MODEL)
   override def searchByPath(@PathVariable("page") page:java.lang.Integer,
                             @PathVariable("result") result:String,
