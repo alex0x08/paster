@@ -4,6 +4,47 @@
 <jsp:include page="/WEB-INF/pages/common/paste-update-poll.jsp"/>
 
 
+
+<div class="row">
+
+
+    <c:if test="${not empty availableNext and not empty availableNext.thumbImage}">
+        <div class="col-md-2 hidden-sm hidden-xs">
+
+            <a href="<c:url value="/${availableNext.id}"/>"  title="<fmt:message key="button.next"/>">
+                <img width="300" height="200" class="img-thumbnail img-responsive p-comment" style="alignment-adjust: middle; width: 200px; height: 100px;"
+                     src="<c:url value='/main/resources/${appId}/t/${availableNext.lastModified.time}/${availableNext.thumbImage}' >
+                     </c:url>" />
+            </a>
+        </div>
+
+    </c:if>
+        
+
+    <div  class="col-md-8"  >
+        <jsp:include page="/WEB-INF/pages/paste/common/paste-view-top.jsp"/>
+    </div>
+
+
+      
+    <c:if test="${availablePrev!=null and not empty availablePrev.thumbImage}">
+
+        <div class="col-md-2 hidden-sm hidden-xs">
+
+            <a href="<c:url value="/${availablePrev.id}"/>"  title="<fmt:message key="button.prev"/>">
+                <img width="300" height="200" class="img-thumbnail img-responsive p-comment" style="alignment-adjust: middle; width: 200px; height: 100px;" 
+                     src="<c:url value='/main/resources/${appId}/t/${availablePrev.lastModified.time}/${availablePrev.thumbImage}' >
+                     </c:url>"/>
+            </a>
+
+        </div>
+    </c:if>
+        
+
+</div>
+
+
+
 <jsp:include page="/WEB-INF/pages/paste/common/paste-view-common.jsp"/>
 
 
@@ -28,27 +69,11 @@
 <script type="text/javascript">
 
 
-    function toggleRight(modelId) {
-
-        var rightPanel = document.getElementById(modelId + '_rightPanel'),
-                centerPanel = document.getElementById(modelId + '_centerPanel'),
-                rightPanelCtrl = document.getElementById(modelId + '_rightPanelCtrl');
-
-        if (rightPanel.isDisplayed()) {
-            rightPanel.toggle();
-            centerPanel.set('class', 'col-md-10');
-            rightPanelCtrl.getElement('span').set('text', '+');
-        } else {
-            centerPanel.set('class', 'col-md-8');
-            rightPanel.setStyle('display', 'inline');
-            rightPanelCtrl.getElement('span').set('text', '-');
-        }
-    }
-    ;
+   
 
     SyntaxHighlighter.config.tagName = "pre";
 
-    window.addEvent('domready', function () {
+    window.addEvent('load', function () {
 
     
 
@@ -72,18 +97,18 @@
 
     </c:if>
 
-        ZeroClipboard.setDefaults({moviePath: "<c:url value='/main/assets/${appId}/paster/static/ZeroClipboard.swf'/>"});
+     //   ZeroClipboard.config({swfPath: "<c:url value='/main/resources/${appId}/static/ZeroClipboard.swf'/>"});
 
         var clip = new ZeroClipboard(document.id("ctrlc_link"));
 
-        clip.on('complete', function (client, args) {
-            growl.notify(args.text.length + ' symbols copied to clipboard.');
+        clip.on('aftercopy', function (event) {
+            growl.notify(event.data["text/plain"].length + ' symbols copied to clipboard.');
         });
 
         var clipLine = new ZeroClipboard(document.id("ctrlc_line"));
 
-        clipLine.on('complete', function (client, args) {
-            growl.notify(args.text.length + ' symbols copied to clipboard.');
+        clipLine.on('aftercopy', function (event) {
+            growl.notify(event.data["text/plain"].length + ' symbols copied to clipboard.');
         });
 
         SyntaxHighlighter.highlight(${model.id}, {}, $('${model.id}_pasteText'), true, true);
@@ -156,8 +181,7 @@
                 }
 
             });
-        }
-        ;
+        };
 
     </script>
 
@@ -231,12 +255,19 @@
         canvas = document.getElementById(modelId + '_sketch');
         ctx = canvas.getContext('2d');
 
-        img = new Image();
+    <c:if test="${model.reviewImgData!=null}">
+        
+    img = new Image();
         img.src = "${drawImg}";
         img.onload = function () {
             sk = $j('#' + modelId + '_sketch').sketch();
             ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, sizes[1], sizes[0]);
         }
+        
+    
+    </c:if>
+        
+        
         $(modelId + "_drawBlock").toggle();
         $(modelId + "_all").toggle();
     }
@@ -260,8 +291,7 @@
             onSaveReviewDraw(modelId);
         });
 
-    }
-    
+    }    
    
 
     function onSaveComment(modelId) {
@@ -291,7 +321,6 @@
             }
 
         });
-
 
 
 
@@ -342,9 +371,65 @@
     }
 
 
-    window.addEvent('domready', function () {
+marked.setOptions({
+  renderer: new marked.Renderer(),
+  gfm: true,
+  tables: true,
+  breaks: false,
+  pedantic: false,
+  sanitize: true,
+  smartLists: true,
+  smartypants: false
+});
+ 
+
+ <c:url var="epicEditorUrl" value="/main/resources/${appId}/bower_components/EpicEditor/epiceditor"/>
+
+
+    var globalEpicEditorOpts = {
+  container: 'SET-IN-EDITOR',
+  textarea: null,
+  basePath: '${epicEditorUrl}',
+  clientSideStorage: false,
+  localStorageName: 'epiceditor',
+  useNativeFullsreen: true,
+  parser: marked,
+  file: {
+    name: 'epiceditor',
+    defaultContent: '',
+    autoSave: 100
+  },
+  theme: {
+    base: '/themes/base/epiceditor.css',
+    preview: '/themes/preview/bartik.css',
+    editor: '/themes/editor/epic-light.css'
+  },
+  button: {
+    preview: true,
+    fullscreen: true
+  },
+  focusOnLoad: false,
+  shortcut: {
+    modifier: 18,
+    fullscreen: 70,
+    preview: 80
+  },
+  string: {
+    togglePreview: 'Toggle Preview Mode',
+    toggleEdit: 'Toggle Edit Mode',
+    toggleFullscreen: 'Enter Fullscreen'
+  }
+}
+
+    window.addEvent('load', function () {
+        console.log('dom ready');
         initDraw(${model.id});
         showAll(${model.id});
+        
+        
+        
+       
+        
     });
 
 

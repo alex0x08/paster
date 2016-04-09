@@ -255,7 +255,7 @@
 
           var lazy; 
 
-        window.addEvent('domready', function () {
+        window.addEvent('load', function () {
             lazy = new LazyPagination(document, {
                 url: pageUrl,
                 method: 'get',
@@ -313,7 +313,7 @@
 
     var createNewPasteDlg;
 
-    window.addEvent('domready', function () {
+    window.addEvent('load', function () {
         parseSearchResults($('pastas'));
 
     });

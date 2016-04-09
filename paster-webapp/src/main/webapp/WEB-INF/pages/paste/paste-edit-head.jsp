@@ -1,7 +1,45 @@
 <%@ include file="/WEB-INF/pages/common/taglibs.jsp"%>
 
   
-<link href="<c:url value='/main/assets/${appId}/paster/minified/paster-edit/css/paste-edit-style.min.css'/>" rel="stylesheet" type="text/css">
+
+<c:choose>
+    <c:when test="${systemInfo.appProfile.code =='PRODUCTION'}">
+        
+      
+        
+    </c:when>
+    
+    <c:otherwise>
+
+          <link type="text/css" rel="stylesheet"
+      href="<c:url value="/main/resources/${appId}/paster/css/paste-edit/paste-edit.css"/>"/>
+
+   
+          <script src="<c:url value='/main/resources/${appId}/bower_components/ace-builds/src-min-noconflict/ace.js'/>" type="text/javascript" charset="utf-8"></script>
+
+
+<script src="<c:url value='/main/resources/${appId}/local_components/pixastic/base64.js'/>"></script>
+<script src="<c:url value='/main/resources/${appId}/local_components/pixastic/html2canvas.js'/>"></script>
+<script src="<c:url value='/main/resources/${appId}/local_components/pixastic/canvas2image.js'/>"></script>
+<script src="<c:url value='/main/resources/${appId}/local_components/pixastic/canvas-to-blob.js'/>"></script>
+<script src="<c:url value='/main/resources/${appId}/local_components/pixastic/pixastic.core.js'/>"></script>
+<script src="<c:url value='/main/resources/${appId}/local_components/pixastic/crop.js'/>"></script>
+
+
+<script src="<c:url value='/main/resources/${appId}/bower_components/SyntaxHighlighter/scripts/XRegExp.js'/>"></script>
+
+<script src="<c:url value='/main/resources/${appId}/local_components/syntax_highlighter/shCore.js'/>"></script>
+<script src="<c:url value='/main/resources/${appId}/local_components/syntax_highlighter/shLegacy.js'/>"></script>
+<script src="<c:url value='/main/resources/${appId}/local_components/syntax_highlighter/shUber.js'/>"></script>
+
+
+  <script src="<c:url value='/main/resources/${appId}/paster/js/paste-edit/word-count.js'/>" type="text/javascript" charset="utf-8"></script>
+
+        
+    </c:otherwise>
+    
+</c:choose>
+
 
 <%--
 
@@ -38,22 +76,3 @@ dirty fix with mouse events in Ace & Mootools
  
 </script>
     
-
-<script type="text/javascript" src="<c:url value="/main/assets/${appId}/paster/minified/paster-edit/js/paste-edit-script.min.js"/>"></script>
-<script src="<c:url value='/main/assets/${appId}/ace/01.08.2014/src-min-noconflict/ace.js'/>" type="text/javascript" charset="utf-8"></script>
-
-<script type="text/javascript" src="<c:url value="/main/resources/${appId}/paste-view/temp/base64.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/main/resources/${appId}/paste-view/temp/html2canvas.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/main/resources/${appId}/paste-view/temp/canvas2image.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/main/resources/${appId}/paste-view/temp/canvas-to-blob.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/main/resources/${appId}/paste-view/temp/pixastic.core.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/main/resources/${appId}/paste-view/temp/crop.js"/>"></script>
-
-<style>
-*.html2canvasreset{
-    overflow: visible !important;
-    width: auto !important;
-    height: auto !important;
-    max-height: auto !important;
-}
-</style>

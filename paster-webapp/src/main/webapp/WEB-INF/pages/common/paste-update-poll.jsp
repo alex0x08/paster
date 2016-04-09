@@ -38,7 +38,7 @@
 });
 
     
-    window.addEvent('domready', function() {
+    window.addEvent('load', function() {
         
           updatePastasCountRequest.startTimer();
     }); 

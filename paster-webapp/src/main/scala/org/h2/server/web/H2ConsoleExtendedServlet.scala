@@ -55,18 +55,13 @@ class H2ConsoleExtendedServlet extends WebServlet with Loggered{
                     f.setAccessible(true)       
                     f.set(this, server)
                
-                val conn = dataSource.getConnection()
+           //    val session = createAndRegLocalSession()
                 
-               val session = server.createNewSession("local")
-                   session.setShutdownServerOnDisconnect()
-                   session.setConnection(conn)
-                   session.put("url", conn.getMetaData().getURL())
-        
-               val ss = session.get("sessionId").asInstanceOf[String]
+            //   val ss = session.get("sessionId").asInstanceOf[String]
                 
-              logger.debug("h2 sessionId: {}",ss);
+            //  logger.debug("h2 sessionId: {}",ss);
                 
-             getServletContext().setAttribute("h2console-session-id",ss);   
+           //  getServletContext().setAttribute("h2console-session-id",ss);   
             
        } catch {
            case e @ (_ : NoSuchFieldException 
@@ -83,9 +78,14 @@ class H2ConsoleExtendedServlet extends WebServlet with Loggered{
   @throws(classOf[java.io.IOException])
   override def doGet(req:HttpServletRequest,res:HttpServletResponse) {
   
-    val session =server.getSession(
+    var session =  server.getSession(
       getServletContext().getAttribute("h2console-session-id").asInstanceOf[String])
   
+    if (session==null) {
+      session = createAndRegLocalSession()
+    }
+             
+    
     /**
      * refresh connection if closed
      */
@@ -96,9 +96,26 @@ class H2ConsoleExtendedServlet extends WebServlet with Loggered{
       
       session.setConnection(con)
       session.put("url",con.getMetaData.getURL)
-      //getServletContext().setAttribute("h2console-session-id", session.get("sessionId"))
     }
     
     super.doGet(req,res)
+  }
+  
+  private def createAndRegLocalSession():WebSession = {
+    
+     val conn = dataSource.getConnection()
+                
+               val session = server.createNewSession("local")
+                   session.setShutdownServerOnDisconnect()
+                   session.setConnection(conn)
+                   session.put("url", conn.getMetaData().getURL())
+        
+               val ss = session.get("sessionId").asInstanceOf[String]
+                
+              logger.debug("h2 sessionId: {}",ss)
+              
+              getServletContext().setAttribute("h2console-session-id",ss)  
+    
+              return session
   }
 }

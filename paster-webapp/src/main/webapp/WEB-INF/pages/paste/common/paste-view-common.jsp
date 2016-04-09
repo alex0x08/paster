@@ -1,58 +1,9 @@
 <%@ include file="/WEB-INF/pages/common/taglibs.jsp"%>
 
 
-<c:set var="priorTitle"><fmt:message key="${model.priority.name}"/></c:set>
-
-
-    <div class="row">
-        <div class="col-md-12">
-
-            <a href="<c:url value="/main/paste/list"/>" target="${target}"
-           title="<fmt:message key="paste.list.title"/>">
-            <span style="font-size: larger;" class="i">(</span></a>
-
-        <span class="i ${model.priority.cssClass}" style="font-size:2em;" title="${priorTitle}" >/</span>
-        <c:if test="${model.sticked}">
-            <span class="i">]</span>
-        </c:if>
-
-        <a href="<c:url value="/main/paste/edit/${model.id}"/>" 
-           title="<fmt:message key="button.edit"/>">
-            <c:out value="${model.name}" escapeXml="true"/>
-        </a>    
-
-        <tiles:insertDefinition name="/common/deleteLink" >
-            <tiles:putAttribute name="model" value="${model}"/>
-            <tiles:putAttribute name="modelName" value="paste"/>
-            <tiles:putAttribute name="currentUser" value="${currentUser}"/>
-        </tiles:insertDefinition>
-
-
-        <tiles:insertDefinition name="/common/pasteControls" >
-            <tiles:putAttribute name="model" value="${model}"/>
-
-            <c:if test="${not empty availableNext}">
-                <tiles:putAttribute name="next" value="${availableNext}" />
-            </c:if>
-            <c:if test="${availablePrev!=null}">
-                <tiles:putAttribute name="prev" value="${availablePrev}"  />
-            </c:if>
-        </tiles:insertDefinition>
-
-    </div>
-</div>
-
-
 <div class="row">
 
-    <div class="col-md-2 hidden-sm hidden-xs">
-        <a id="${model.id}_rightPanelCtrl" href="javascript:void(0);" 
-           onclick="toggleRight(${model.id});" title="toggle right panel">
-            <span class="i">-</span>
-        </a>
-    </div>
-
-
+   
     <div class="col-md-10 col-lg-10 ">
 
         <c:if test="${not empty model.commentCount and model.commentCount>0}">
@@ -72,38 +23,8 @@
 
 <div class="row">
 
-    <c:set var="centerGridSize" value="col-md-8"/>
-
-    <div id="${model.id}_rightPanel" class="col-md-3 hidden-sm hidden-xs" style="min-width:150px;" >
-
-        <c:if test="${not empty model.thumbImage}">
-
-            <div style="max-width:250px;" >
-
-                <c:if test="${not empty availableNext and not empty availableNext.thumbImage}">
-                    <a href="<c:url value="/${availableNext.id}"/>"  title="<fmt:message key="button.next"/>">
-                        <img width="300" height="200" class="img-thumbnail img-responsive p-comment" style="alignment-adjust: middle; width: 200px; height: 100px;"
-                             src="<c:url value='/main/resources/${appId}/t/${availableNext.lastModified.time}/${availableNext.thumbImage}' >
-                             </c:url>" />
-                    </a>
-                </c:if>
-
-                <img width="300" height="200" class="img-thumbnail img-responsive p-comment" style="border: 1px solid black;alignment-adjust: middle;width: 250px; height: 150px;" 
-                     src="<c:url value='/main/resources/${appId}/t/${model.lastModified.time}/${model.thumbImage}' >
-                     </c:url>"/>
-
-                <c:if test="${availablePrev!=null and not empty availablePrev.thumbImage}">
-                    <a href="<c:url value="/${availablePrev.id}"/>"  title="<fmt:message key="button.prev"/>">
-                        <img width="300" height="200" class="img-thumbnail img-responsive p-comment" style="alignment-adjust: middle; width: 200px; height: 100px;" 
-                             src="<c:url value='/main/resources/${appId}/t/${availablePrev.lastModified.time}/${availablePrev.thumbImage}' >
-                             </c:url>"/>
-                    </a>
-                </c:if>
-            </div>
-        </c:if>
-    </div> 
-
-    <div id="${model.id}_centerPanel" class="${centerGridSize}" 
+  
+    <div id="${model.id}_centerPanel" class="col-md-12" 
          style="min-width:650px;">
 
         <c:url var="drawImg" 
@@ -113,15 +34,19 @@
         <a href="javascript:showAll(${model.id});" >all</a> |
         <a href="javascript:showComments(${model.id});" >comments</a> |
         <a href="javascript:showDrawArea(${model.id});">draw</a>
-        
+   
+          <c:set var="backgroundReviewStyle" 
+                 value="${model.reviewImgData==null ? '' : 'pointer-events:none;background: url('.concat(drawImg).concat(') no-repeat top left;') }"/>
+      
+       
         <div id="${model.id}_all" style="display:none;z-index:500;position:absolute;pointer-events:none;">
-
+          
             <canvas id="${model.id}_sketch_ro" with="400" height="200" 
-                    style="pointer-events:none;background: url('${drawImg}') no-repeat top left;" >
+                    style="${backgroundReviewStyle}" >
             </canvas>
-
         </div>
-
+         
+   
         <div id="${model.id}_drawBlock" style="display:none;">
             <div class="tools">
                <a href="#${model.id}_sketch" data-tool="marker">Marker</a> |
@@ -162,9 +87,13 @@
 
         </div>
 
-        <pre id="${model.id}_pasteText" class="brush: ${model.codeType.code};toolbar: false; auto-links:false;highlight: [${commentedLinesList}]; " style="display:none; overflow-y: hidden;" >
+                         <div>
+        <pre id="${model.id}_pasteText" 
+             class="brush: ${model.codeType.code};toolbar: false; auto-links:false;highlight: [${commentedLinesList}]; " style="display:none; overflow-y: hidden;" >
             <c:out value="${model.text}" escapeXml="true" />
-        </pre>
+        </pre>                     
+                         </div>                  
+        
     </div>
 </div>
 
@@ -190,8 +119,11 @@
 
 
                 <div class="row" >
-                    <div class="col-md-12">
+                    <div class="col-md-12" >
+                        <div id="commentMarkedText">
                         <c:out value=" ${comment.text}" escapeXml="false"/>
+                            
+                        </div>
                     </div>
                 </div>
                 <div class="row">
@@ -280,8 +212,6 @@
                     </c:when>
                     <c:otherwise>
 
-
-
                         <form:form cssClass="form-horizontal" 
                                    action="${url}" id="${model.id}_addCommentForm"
 
@@ -298,8 +228,13 @@
 
 
                                     <form:errors path="text" cssClass="control-label" element="label" for="commentText" /> 
+                                    
+                                    <div id="epiceditor-${model.id}"></div>
+                                    
                                     <form:textarea cssClass="form-control" path="text"
-                                                   id="commentText" cssErrorClass="form-control"                                       
+                                                   id="commentText-${model.id}" 
+                                                   cssStyle="display:none;"
+                                                   cssErrorClass="form-control"                                       
                                                    />
 
                                 </div>

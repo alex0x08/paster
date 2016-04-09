@@ -1,12 +1,16 @@
 <%@ include file="/WEB-INF/pages/common/taglibs.jsp"%>
 <!DOCTYPE html>
-<compress:html enabled="true" 
-               removeComments="true" compressJavaScript="true" compressCss="true" yuiJsDisableOptimizations="false">
+<compress:html enabled="false" 
+               removeComments="true" compressJavaScript="true" 
+               compressCss="true" yuiJsDisableOptimizations="false">
     <html lang="en">
         <head>
             <meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, 
                   user-scalable=yes" />
-            <link href="<c:url value='/main/assets/${appId}/paster/less/app.css'/>" rel="stylesheet" type="text/css">
+            
+             
+            
+            
             <c:choose>
                 <c:when test="${not empty systemInfo.project.clientImage}">
                     <style>
@@ -256,7 +260,7 @@
 
                                 var operationMessage = '<fmt:message key="${statusMessageKey}"/>';
 
-                                window.addEvent('domready', function () {
+                                window.addEvent('load', function () {
                                     growl.notify(operationMessage);
                                 });
 

@@ -3,6 +3,8 @@
 <div id="${model.id}_pagedPaste">
 
     
+    <jsp:include page="/WEB-INF/pages/paste/common/paste-view-top.jsp"/>
+
     <jsp:include page="/WEB-INF/pages/paste/common/paste-view-common.jsp"/>
 
     

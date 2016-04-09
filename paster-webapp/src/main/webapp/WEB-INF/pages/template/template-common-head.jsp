@@ -29,23 +29,65 @@
 <meta http-equiv="Expires" content="0"/>
 
 
-<link href="<c:url value='/main/assets/${appId}/paster/minified/all/css/all-style.min.css'/>" rel="stylesheet" type="text/css">
+<c:choose>
+    <c:when test="${systemInfo.appProfile.code =='PRODUCTION'}">
 
-<style>
-    @media screen and (min-width: 768px) {
+     
+    </c:when>
+    <c:otherwise>
 
-        #newPasteDialog .modal-dialog  {width:1140px;}
+        
+        
+        <link href="<c:url value='/main/resources/${appId}/local_components/behavior_ui/dev/bootstrap/css/behavior-ui-bootstrap.css'/>" 
+              rel="stylesheet" type="text/css"/>
 
-    }
-</style>
-<script src="<c:url value='/main/assets/${appId}/paster/minified/all/js/all-script.js'/>"></script>
+        <link href="<c:url value='/main/resources/${appId}/paster/css/all/mnmlicons.css'/>" 
+              rel="stylesheet" type="text/css"/>
+
+  
+          <link href="<c:url value='/main/resources/${appId}/paster/css/all/app.css'/>" 
+              rel="stylesheet" type="text/css"/>
+
+          <!-- build:css assets/styles/vendor.css -->
+    <!-- bower:css -->
+    <link type="text/css" href="<c:url value='/main/resources/${appId}/bower_components/components-font-awesome/css/font-awesome.css'/>" rel="stylesheet"/>
+    <!-- endbower -->
+    <!-- endbuild -->
+    <!-- build:css assets/styles/main.css -->
+    <!-- endbuild -->
+        
+  
+        
+        
+        <!-- build:js scripts/vendor.js -->
+<!-- bower:js -->
+<script type="text/javascript" src="<c:url value='/main/resources/${appId}/bower_components/mootools/dist/mootools-core.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/main/resources/${appId}/bower_components/mootools/dist/mootools-core-compat.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/main/resources/${appId}/bower_components/zeroclipboard/dist/ZeroClipboard.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/main/resources/${appId}/bower_components/tinycon/tinycon.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/main/resources/${appId}/bower_components/jquery-no-conflict-1.9/jquery.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/main/resources/${appId}/bower_components/EpicEditor/epiceditor/js/epiceditor.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/main/resources/${appId}/bower_components/marked/lib/marked.js'/>"></script>
+<!-- endbower -->
+<!-- endbuild -->
+
+
+         <script type="text/javascript" src="<c:url value='/main/resources/${appId}/local_components/behavior_ui/dev/js/behavior-ui.js'/>"></script>
+
+         <script type="text/javascript" src="<c:url value='/main/resources/${appId}/paster/js/all/LazyPagination.js'/>"></script>
+
+         <script type="text/javascript" src="<c:url value='/main/resources/${appId}/paster/js/all/growler.js'/>"></script>
+
+    </c:otherwise>
+</c:choose>
+
 
 <script  type="text/javascript">
 
 
     var transmitText = '<fmt:message key="action.sending"/>';
     var growl = null;
-    window.addEvent('domready', function () {
+    window.addEvent('load', function () {
         growl = new Growler.init();
     });
 

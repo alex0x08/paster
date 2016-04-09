@@ -15,34 +15,36 @@ import uber.paste.model._
 import uber.paste.dao._
 import java.io.IOException
 import uber.paste.dao.UserExistsException
-import uber.paste.base.{MergedPropertyConfigurer, Loggered, SystemInfo}
+import uber.paste.base.{MergedPropertyConfigurer, Loggered, SystemInfo, AppProfile}
 import java.io.InputStreamReader
 import java.nio.file._
 import scala.collection.JavaConversions._
 
+
+class BootContext(ctx:ApplicationContext) {
+  
+  val systemInfo:SystemInfo = ctx.getBean(classOf[SystemInfo])
+  val configDao:ConfigDaoImpl = ctx.getBean(classOf[ConfigDaoImpl])
+  val pasteDao:PasteDaoImpl = ctx.getBean(classOf[PasteDaoImpl])
+  val projectDao:ProjectDaoImpl = ctx.getBean(classOf[ProjectDaoImpl])
+  val channelDao:ChannelDao = ctx.getBean(classOf[ChannelDao])
+  
+  val users:UserManagerImpl = ctx.getBean(classOf[UserManagerImpl])
+
+  
+  val props:MergedPropertyConfigurer = ctx.getBean("propertyConfigurer-app")
+                                              .asInstanceOf[MergedPropertyConfigurer]
+}
+
 class StartupListener extends ServletContextListener with Loggered{
   
   override def contextInitialized( event:ServletContextEvent) {
-
-    val context:ServletContext = event.getServletContext()
-
-    val  ctx:ApplicationContext =
-      WebApplicationContextUtils.getRequiredWebApplicationContext(context)
-
    
-    var props:MergedPropertyConfigurer =  ctx.getBean("propertyConfigurer-app")
-                                              .asInstanceOf[MergedPropertyConfigurer]
-
-    val systemInfo:SystemInfo = ctx.getBean(classOf[SystemInfo])
-
-      
+   
+    val bootContext = new BootContext(WebApplicationContextUtils
+                                      .getRequiredWebApplicationContext(event.getServletContext()))
     
-    val configDao:ConfigDaoImpl = ctx.getBean(classOf[ConfigDaoImpl])
-    val pasteDao:PasteDaoImpl = ctx.getBean(classOf[PasteDaoImpl])
-    val projectDao:ProjectDaoImpl = ctx.getBean(classOf[ProjectDaoImpl])
-
    
-  val channelDao:ChannelDao = ctx.getBean(classOf[ChannelDao])
 
      /*PluginUI.load(getClass().getResourceAsStream("/paster-ui-definitions.xml"))
       
@@ -64,88 +66,24 @@ class StartupListener extends ServletContextListener with Loggered{
     */
     
 
-    if (configDao.isPropertySet(ConfigProperty.IS_INSTALLED.getCode, "1")) {
+    if (bootContext.configDao.isPropertySet(ConfigProperty.IS_INSTALLED.getCode, "1")) {
 
-      systemInfo.setDateInstall({
-        val installDate=configDao.getProperty(ConfigProperty.INSTALL_DATE)
-        if (installDate!=null && installDate.getValue != null) {
-          new java.util.Date(java.lang.Long.valueOf(installDate.getValue))
-        } else 
-          null        
-        })
-
+        bootInstalled(bootContext)
       
-      val dbVersion = new AppVersion().fillFromConfigProperty(
-        configDao.getProperty(ConfigProperty.APP_VERSION.getCode))
-      
-           
-            if (dbVersion != null) {
-      
-              logger.debug("__currentSettings:" + dbVersion.getFull)
-                
-                val check =  systemInfo.getRuntimeVersion().compareTo(dbVersion)
-                
-                check match {
-           
-                    case 0 => {
-                        logger.info("Application and db versions match.")
-                      }
-                    case 1 => {
-                        logger.warn("DB version is older than application: {} | {} . You can get problems.",
-                                    Array(dbVersion.getFull(),
-                                          systemInfo.getRuntimeVersion().getFull()))
-                    }
-                    case -1 =>   {
-                        logger.warn("Application version is older than database: {} | {}. You can get problems.",
-                                    Array(dbVersion.getFull(),systemInfo.getRuntimeVersion().getFull()))
-                    }
-                     
-                    case _ => {
-                    logger.error("Uncomparable db and application versios: {} | {}. Cannot continue.",
-                                 Array(dbVersion.getFull(),systemInfo.getRuntimeVersion.getFull))
-                    return
-                    }    
-                        
-                }
-                                
-                
-                 logger.info("Loading application ver. {} ,db ver. {} " , 
-                             Array(systemInfo.getRuntimeVersion().getFull(),dbVersion.getFull()))
-               
-            }
-      
-      
-      logger.info("Database already created. skipping db generation stage..")
-
-        systemInfo.setProject(projectDao.getLast)
-        
-      reindex(ctx,props)
-
-
-      
-
-      for(p<-Priority.list) {
-        
-      //  PasteManager.Stats.valueOf(p.getCode).increment(pasteDao.countAll(p).toInt)
-        
-      }
-
-      systemInfo.setDateStart(Calendar.getInstance.getTime)
-
+       bootContext.systemInfo.doLock
+         
       logger.info("completed")
      return
     }
 
 
-    val users:UserManagerImpl = ctx.getBean(classOf[UserManagerImpl])
-
-
     try {
 
-      setupSecurityContext
+      setupSecurityContext // setup security context
       
+      // loading default users
       loadDefaults("/defaultData/default_users.csv", (record:CSVRecord) => {
-             users.save(users.changePassword(
+             bootContext.users.save(bootContext.users.changePassword(
            User.createNew
         .addRole(if (record.get("ADMIN").toBoolean) 
                   {Role.ROLE_ADMIN} 
@@ -164,79 +102,159 @@ class StartupListener extends ServletContextListener with Loggered{
               record.get("DESC"),
               record.get("ISDEFAULT").toBoolean)
             ch.setTranslated(true)
-            channelDao.save(ch)
+            bootContext.channelDao.save(ch)
         })
 
       val project = new Project
       project.setName("Sample project")
       project.setDescription("Full project description")
       
-      projectDao.persist(project)
+      bootContext.projectDao.persist(project)
         
-      configDao.persist(ConfigProperty.IS_INSTALLED)
+      bootContext.configDao.persist(ConfigProperty.IS_INSTALLED)
       
       val installDate = Calendar.getInstance.getTime.getTime
       ConfigProperty.INSTALL_DATE.setValue(installDate+"")
-      configDao.persist(ConfigProperty.INSTALL_DATE)
+      bootContext.configDao.persist(ConfigProperty.INSTALL_DATE)
  
-      systemInfo.setDateInstall(new java.util.Date(installDate))
+      bootContext.systemInfo.setDateInstall(new java.util.Date(installDate))
       
-      ConfigProperty.APP_VERSION.setValue(systemInfo.getRuntimeVersion.toDbString)
-      configDao.persist(ConfigProperty.APP_VERSION)
+      ConfigProperty.APP_VERSION.setValue(bootContext.systemInfo.getRuntimeVersion.toDbString)
+      bootContext.configDao.persist(ConfigProperty.APP_VERSION)
 
       logger.debug("saved version {}",ConfigProperty.APP_VERSION.getValue)
 
-      reindex(ctx,props)
+      reindex(bootContext.props)
    
       logger.info("db generation completed successfully.")
 
-        
+          val appProfile = bootContext.props.getProperty("build.profile")
+    
+      bootContext.systemInfo.setAppProfile(AppProfile.valueOf(appProfile))
+    
 
-        systemInfo.setDateStart(Calendar.getInstance.getTime)
+        bootContext.systemInfo.setDateStart(Calendar.getInstance.getTime)
 
+        bootContext.systemInfo.doLock
       
     } catch {
       case e @ (_ : UserExistsException | _ : java.io.IOException) => {
           logger.error(e.getLocalizedMessage,e)
-
+          throw e; // to stop application
         }
     }  
    
   }
 
-  override def contextDestroyed(servletContextEvent:ServletContextEvent) { }
+  override def contextDestroyed(servletContextEvent:ServletContextEvent) { 
+    // not used
+ }
+ 
+  def bootInstalled(ctx:BootContext) {
+    
+      ctx.systemInfo.setDateInstall({
+        val installDate=ctx.configDao.getProperty(ConfigProperty.INSTALL_DATE)
+        if (installDate!=null && installDate.getValue != null) {
+          new java.util.Date(java.lang.Long.valueOf(installDate.getValue))
+        } else 
+          null        
+        })
+
+      
+      val appProfile = ctx.props.getProperty("build.profile")
+    
+      ctx.systemInfo.setAppProfile(AppProfile.valueOf(appProfile))
+    
+      val dbVersion = new AppVersion().fillFromConfigProperty(
+        ctx.configDao.getProperty(ConfigProperty.APP_VERSION.getCode))
+      
+           
+            if (dbVersion != null) {
+      
+              logger.debug("current version: {}" , dbVersion.getFull)
+                
+                val check =  ctx.systemInfo.getRuntimeVersion().compareTo(dbVersion)
+                
+                check match {
+           
+                    case 0 => {
+                        logger.info("Application and db versions match.")
+                      }
+                    case 1 => {
+                        logger.warn("DB version is older than application: {} | {} . You can get problems.",
+                                    Array(dbVersion.getFull(),
+                                          ctx.systemInfo.getRuntimeVersion().getFull()))
+                    }
+                    case -1 =>   {
+                        logger.warn("Application version is older than database: {} | {}. You can get problems.",
+                                    Array(dbVersion.getFull(),ctx.systemInfo.getRuntimeVersion().getFull()))
+                    }
+                     
+                    case _ => {
+                    logger.error("Uncomparable db and application versios: {} | {}. Cannot continue.",
+                                 Array(dbVersion.getFull(),ctx.systemInfo.getRuntimeVersion.getFull))
+                    return
+                    }    
+                        
+                }
+                                
+                
+                 logger.info("Loading application ver. {} ,db ver. {} " , 
+                             Array(ctx.systemInfo.getRuntimeVersion().getFull(),dbVersion.getFull()))
+               
+            }
+      
+      
+      logger.info("Database already created. skipping db generation stage..")
+
+        ctx.systemInfo.setProject(ctx.projectDao.getLast)
+        
+      reindex(ctx.props)
+
+
+      ctx.systemInfo.setDateStart(Calendar.getInstance.getTime)
+    
+  }
+  
   
   def loadDefaults(csv:String, callback: CSVRecord => Unit) {
     
      val r = new InputStreamReader(getClass().getResourceAsStream(csv))
-      
+      try {
       val records = CSVFormat.DEFAULT.withHeader().parse(r)
       
       for (record <- records) {
         callback(record)
       }
-     r.close
+    } finally {
+      r.close
+    }
+    
+   
   }
   
   def setupSecurityContext() {
+    
     val start_user = User.createNew
-    .addRole(Role.ROLE_ADMIN)
-    .addUsername("start")
-    .addName("Initial scheme creator").get
+                      .addRole(Role.ROLE_ADMIN)
+                      .addUsername("start")
+                      .addName("Initial scheme creator")
+                      .get
     
     
             // log user in automatically
             val auth = new UsernamePasswordAuthenticationToken(
                     "start", "start", start_user.getAuthorities())
             auth.setDetails(start_user)
-            SecurityContextHolder.getContext().setAuthentication(auth);
+            
+            SecurityContextHolder.getContext().setAuthentication(auth)
   }
 
-  def reindex( ctx:ApplicationContext,props:MergedPropertyConfigurer):Unit = {
+  def reindex( props:MergedPropertyConfigurer) {
+    
     if (props.getProperty("config.reindex.enabled").equals("1")) {
       
-      for (d<-SearchableDaoImpl.searchableDao) {
-        
+      for (d<-SearchableDaoImpl.searchableDao) {        
         d.indexAll()
       }
      

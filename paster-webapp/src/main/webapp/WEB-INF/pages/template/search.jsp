@@ -48,7 +48,7 @@
 <script type="text/javascript">
 
     
-    window.addEvent('domready', function() {
+    window.addEvent('load', function() {
     
           $('doSearchBtn').addEvent('click',function(){
                                    this.getElementById('btnCaption').set('text',transmitText).disabled = true;

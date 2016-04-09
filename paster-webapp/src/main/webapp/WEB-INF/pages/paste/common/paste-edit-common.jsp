@@ -517,7 +517,7 @@
         }
     });
 
-    window.addEvent('domready', function () {
+    window.addEvent('load', function () {
 
         var counter = new WordCount('wordCount', {
             countWordsTo: $('wordsCount'),
@@ -632,7 +632,7 @@
         $('pname').set('value', '');
     }
 
-    window.addEvent('domready', function () {
+    window.addEvent('load', function () {
 
         $$('.submitBtn').each(function (el, i) {
 

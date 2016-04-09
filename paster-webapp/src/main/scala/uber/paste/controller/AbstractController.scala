@@ -78,7 +78,7 @@ abstract class AbstractController extends Loggered {
     messageSource.getMessage(key, args.asInstanceOf[Array[java.lang.Object]], locale)
 
   @ExceptionHandler(Array(classOf[Throwable]))
-  protected def handleDAOException(ex: ObjectRetrievalFailureException): String = {
+  protected def handleAllExceptions(ex: ObjectRetrievalFailureException): String = {
     logger.error(ex.getLocalizedMessage(), ex)
     return page500
   }

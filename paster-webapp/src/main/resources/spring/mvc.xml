@@ -60,8 +60,17 @@
               p:paramName="locale" />
     </mvc:interceptors>
 
-    <mvc:resources mapping="/assets/${paste.app.id}/**" 
+	<!-- 
+	<mvc:resources mapping="/assets/${paste.app.id}/**" 
                    location="classpath:/META-INF/resources/webjars/"/>
+	
+	 -->
+    
+
+    <mvc:resources mapping="/assets/${paste.app.id}/**" 
+                   location="/META-INF/resources/webjars/"/>
+
+                   
     <mvc:resources mapping="/static/${paste.app.id}/**" 
                    location="/WEB-INF/static/"/>
      <mvc:resources mapping="/resources/${paste.app.id}/**" 

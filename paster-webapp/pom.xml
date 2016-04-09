@@ -1,45 +1,51 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>    
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
     <parent>
         <groupId>uber.paster</groupId>
         <artifactId>paster-project</artifactId>
         <version>1.2-SNAPSHOT</version>
     </parent>
-    
+
     <artifactId>paster-webapp</artifactId>
     <packaging>war</packaging>
     <name>Paster Application</name>
-   
+
 
     <properties>
 
-          <spring.version>4.2.3.RELEASE</spring.version>
+        <spring.version>4.2.3.RELEASE</spring.version>
         <spring.security.version>4.0.3.RELEASE</spring.security.version>
         <hibernate.search.version>5.5.0.Final</hibernate.search.version>
         <hibernate.version>5.0.1.Final</hibernate.version>
         <luceneVersion>5.3.0</luceneVersion>
       
-         
-      
-        <tiles.version>3.0.5</tiles.version>
-       
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        
+        
+        <paster.app.name>${project.name}</paster.app.name>
+        <paster.app.version>${project.version}</paster.app.version>
+        <paster.app.description>${project.description}</paster.app.description>
+        <paster.app.build.timestamp>${maven.build.timestamp}</paster.app.build.timestamp>
+ 
 
-        <application.name>${project.name}</application.name>
-        <application.version>${project.version}</application.version>
-        <application.description>${project.description}</application.description>
-        <application.build.timestamp>${maven.build.timestamp}</application.build.timestamp>
-                
         <maven.build.timestamp.format>yyyy-MM-dd HH:mm</maven.build.timestamp.format>
-       
+
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
     </properties>
 
 
     <dependencies>
-     
+
+            
+        <dependency>
+            <groupId>org.scala-lang</groupId>
+            <artifactId>scala-library</artifactId>
+            <version>2.11.7</version>
+        </dependency>
+            
         <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-web-api</artifactId>
@@ -47,22 +53,15 @@
             <scope>provided</scope>
         </dependency>
         
-        
         <dependency>
             <groupId>uber.paster</groupId>
-            <artifactId>paster-static-resources</artifactId>
-            <version>${project.version}</version>   
-        </dependency>
-
-         <dependency>
-            <groupId>uber.paster</groupId>
             <artifactId>paster-oak</artifactId>
-            <version>${project.version}</version>   
+            <version>${project.version}</version>
         </dependency>
 
 
         <!-- jdbc drivers -->
-      
+
         <dependency>
             <groupId>postgresql</groupId>
             <artifactId>postgresql</artifactId>
@@ -74,39 +73,39 @@
             <artifactId>jtds</artifactId>
             <version>1.3.1</version>
         </dependency>
-        
+
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>5.1.31</version>
         </dependency>
-            
+
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <version>1.4.179</version>
         </dependency>
 
-        
+
         <!-- google collections -->
-         <dependency>
-	<groupId>com.google.guava</groupId>
-	<artifactId>guava</artifactId>
-	<version>18.0</version>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>18.0</version>
         </dependency>
 
-        <!-- Apache Commons  -->
-        
-         <dependency>
+        <!-- Apache Commons -->
+
+        <dependency>
             <groupId>commons-fileupload</groupId>
             <artifactId>commons-fileupload</artifactId>
             <version>1.3.1</version>
         </dependency>
 
         <dependency>
-	<groupId>commons-codec</groupId>
-	<artifactId>commons-codec</artifactId>
-	<version>1.10</version>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.10</version>
         </dependency>
 
 
@@ -115,29 +114,28 @@
             <artifactId>commons-io</artifactId>
             <version>2.4</version>
         </dependency>
-        
+
         <dependency>
-	<groupId>org.apache.commons</groupId>
-	<artifactId>commons-collections4</artifactId>
-	<version>4.0</version>
-        </dependency>
-        
-       <dependency>
-	<groupId>org.apache.commons</groupId>
-	<artifactId>commons-lang3</artifactId>
-	<version>3.4</version>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-collections4</artifactId>
+            <version>4.0</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.4</version>
+        </dependency>
 
 
         <!-- Logging -->
-       <dependency>
+        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>1.7.12</version>
         </dependency>
 
-          <dependency>
+        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>log4j-over-slf4j</artifactId>
             <version>1.7.12</version>
@@ -149,8 +147,8 @@
             <version>1.1.3</version>
         </dependency>
 
-        <!-- spring -->        
-          <dependency>
+        <!-- spring -->
+        <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
             <version>${spring.version}</version>
@@ -160,7 +158,7 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-oxm</artifactId>
             <version>${spring.version}</version>
-        </dependency>     
+        </dependency>
 
         <dependency>
             <groupId>org.springframework</groupId>
@@ -187,7 +185,7 @@
             <artifactId>spring-core</artifactId>
             <version>${spring.version}</version>
         </dependency>
-       
+
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-orm</artifactId>
@@ -202,7 +200,7 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
             <version>${spring.version}</version>
-        </dependency>      
+        </dependency>
 
         <dependency>
             <groupId>org.springframework.security</groupId>
@@ -216,25 +214,25 @@
             <version>${spring.security.version}</version>
         </dependency>
 
-          <dependency>
+        <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-config</artifactId>
             <version>${spring.security.version}</version>
         </dependency>
-   
 
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
             <version>2.4.1</version>
         </dependency>
+            
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <version>2.4.1</version>
         </dependency>
 
-        
+
         <!-- tiles -->
         <dependency>
             <groupId>org.apache.tiles</groupId>
@@ -254,7 +252,7 @@
         </dependency>
 
 
-        
+
 
         <!-- spring rest dependencies -->
         <dependency>
@@ -263,10 +261,10 @@
             <version>1.4.7</version>
         </dependency>
 
-   
+
 
         <!-- Hibernate -->
-         <dependency>
+        <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-search-orm</artifactId>
             <version>${hibernate.search.version}</version>
@@ -285,89 +283,89 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        
-         <dependency>
-                <groupId>org.hibernate</groupId>
-                <artifactId>hibernate-search-engine</artifactId>
-                <version>${hibernate.search.version}</version>
-            </dependency>
-        
+
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-search-engine</artifactId>
+            <version>${hibernate.search.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
             <version>${hibernate.version}</version>
         </dependency>
-          
-        
-        
+
+
+
         <dependency>
-                <groupId>org.hibernate.javax.persistence</groupId>
-                <artifactId>hibernate-jpa-2.1-api</artifactId>
-                <version>1.0.0.Final</version>
-            </dependency>
-        
+            <groupId>org.hibernate.javax.persistence</groupId>
+            <artifactId>hibernate-jpa-2.1-api</artifactId>
+            <version>1.0.0.Final</version>
+        </dependency>
+
         <dependency>
-                <groupId>org.hibernate.common</groupId>
-                <artifactId>hibernate-commons-annotations</artifactId>
-                <version>5.0.0.Final</version>
-            </dependency>
-            
-            <dependency>
-                <groupId>org.apache.lucene</groupId>
-                <artifactId>lucene-core</artifactId>
-                <version>${luceneVersion}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.lucene</groupId>
-                <artifactId>lucene-backward-codecs</artifactId>
-                <version>${luceneVersion}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.lucene</groupId>
-                <artifactId>lucene-misc</artifactId>
-                <version>${luceneVersion}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.lucene</groupId>
-                <artifactId>lucene-analyzers-common</artifactId>
-                <version>${luceneVersion}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.lucene</groupId>
-                <artifactId>lucene-queryparser</artifactId>
-                <version>${luceneVersion}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.apache.lucene</groupId>
-                        <artifactId>lucene-sandbox</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.lucene</groupId>
-                <artifactId>lucene-analyzers-phonetic</artifactId>
-                <version>${luceneVersion}</version>
-            </dependency>
-          
-            <dependency>
-                <groupId>org.apache.lucene</groupId>
-                <artifactId>lucene-facet</artifactId>
-                <version>${luceneVersion}</version>
-            </dependency>
-        
-          <dependency>
+            <groupId>org.hibernate.common</groupId>
+            <artifactId>hibernate-commons-annotations</artifactId>
+            <version>5.0.0.Final</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.lucene</groupId>
+            <artifactId>lucene-core</artifactId>
+            <version>${luceneVersion}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.lucene</groupId>
+            <artifactId>lucene-backward-codecs</artifactId>
+            <version>${luceneVersion}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.lucene</groupId>
+            <artifactId>lucene-misc</artifactId>
+            <version>${luceneVersion}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.lucene</groupId>
+            <artifactId>lucene-analyzers-common</artifactId>
+            <version>${luceneVersion}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.lucene</groupId>
+            <artifactId>lucene-queryparser</artifactId>
+            <version>${luceneVersion}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.lucene</groupId>
+                    <artifactId>lucene-sandbox</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.lucene</groupId>
+            <artifactId>lucene-analyzers-phonetic</artifactId>
+            <version>${luceneVersion}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.lucene</groupId>
+            <artifactId>lucene-facet</artifactId>
+            <version>${luceneVersion}</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.apache.lucene</groupId>
             <artifactId>lucene-highlighter</artifactId>
             <version>${luceneVersion}</version>
         </dependency>
-       
-               <dependency>
+
+        <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-ehcache</artifactId>
             <version>${hibernate.version}</version>
         </dependency>
-        
-         <dependency>
+
+        <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-entitymanager</artifactId>
             <version>${hibernate.version}</version>
@@ -390,16 +388,16 @@
             <artifactId>validation-api</artifactId>
             <version>1.1.0.Final</version>
         </dependency>
-        
+
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-validator</artifactId>
             <version>5.2.1.Final</version>
         </dependency>
 
-                
-        <!--  for Hibernate @SafeHtml -->
-        
+
+        <!-- for Hibernate @SafeHtml -->
+
         <dependency>
             <groupId>org.jsoup</groupId>
             <artifactId>jsoup</artifactId>
@@ -418,47 +416,15 @@
             <artifactId>imgscalr-lib</artifactId>
             <version>4.2</version>
         </dependency>
-        
-        
-       
-<!--
-        <dependency>
-            <groupId>com.googlecode.webutilities</groupId>
-            <artifactId>webutilities</artifactId>
-            <version>0.0.6</version>
-	
-            <exclusions>
-                <exclusion>
-                    <groupId>javax.servlet</groupId>
-                    <artifactId>jsp-api</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.ant</groupId>
-                    <artifactId>ant</artifactId>
-                </exclusion>
-                <exclusion>                     
-                    <groupId>com.googlecode.jarjar</groupId>
-                    <artifactId>jarjar</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.google.protobuf</groupId>
-                    <artifactId>protobuf-java</artifactId>
-                </exclusion>
-            </exclusions>
 
-
-        </dependency>
-      -->
 
         <!-- jdbc pooling -->
-      
-        <dependency>
-	<groupId>com.zaxxer</groupId>
-	<artifactId>HikariCP</artifactId>
-	<version>2.4.1</version>
-        </dependency>
 
-    
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+            <version>2.4.1</version>
+        </dependency>
 
         <dependency>
             <groupId>org.ocpsoft.prettytime</groupId>
@@ -466,44 +432,12 @@
             <version>3.2.7.Final</version>
         </dependency>
 
-       
-
-       
-        <!--dependency>
-            <groupId>org.apache.tika</groupId>
-            <artifactId>tika-parsers</artifactId>
-            <version>0.10</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>rome</groupId>
-                    <artifactId>rome</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency-->
-
-        <!--dependency>
-            <groupId>org.apache.james</groupId>
-            <artifactId>apache-mime4j-core</artifactId>
-            <version>0.7.2</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.james</groupId>
-            <artifactId>apache-mime4j-dom</artifactId>
-            <version>0.7.2</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.james</groupId>
-            <artifactId>apache-mime4j-storage</artifactId>
-            <version>0.7.2</version>
-        </dependency-->
-
         <!-- RSS -->
         <dependency>
             <groupId>com.rometools</groupId>
             <artifactId>rome</artifactId>
             <version>1.5.0</version>
         </dependency>
-
 
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
@@ -516,6 +450,7 @@
             <artifactId>jackson-dataformat-xml</artifactId>
             <version>2.4.1</version>
         </dependency>
+            
         <dependency>
             <groupId>org.codehaus.woodstox</groupId>
             <artifactId>woodstox-core-asl</artifactId>
@@ -528,18 +463,12 @@
             <version>2.8.2</version>
         </dependency>
 
-      
+
         <dependency>
             <groupId>org.joda</groupId>
             <artifactId>joda-convert</artifactId>
             <version>1.6</version>
         </dependency>
-
-        <!--dependency>
-            <groupId>net.sf.jxls</groupId>
-            <artifactId>jxls-core</artifactId>
-            <version>1.0.3</version>
-        </dependency-->
 
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
@@ -547,18 +476,7 @@
             <version>4.3.1</version>
         </dependency>
 
-        <!--dependency>
-            <groupId>fr.opensagres.xdocreport</groupId>
-            <artifactId>fr.opensagres.xdocreport.document.docx</artifactId>
-            <version>1.0.3</version>
-        </dependency-->
-
-        <!--dependency>
-            <groupId>fr.opensagres.xdocreport</groupId>
-            <artifactId>fr.opensagres.xdocreport.template.velocity</artifactId>
-            <version>1.0.3</version>
-        </dependency-->
-
+      
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-csv</artifactId>
@@ -571,15 +489,14 @@
             <version>0.6</version>
         </dependency>
 
-     
 
         <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>ace</artifactId>
             <version>01.08.2014</version>
         </dependency>
-      
-      <dependency>
+
+        <dependency>
             <groupId>com.googlecode.htmlcompressor</groupId>
             <artifactId>htmlcompressor</artifactId>
             <version>1.4</version>
@@ -610,7 +527,6 @@
             <version>2.4.8-rhino-alfresco-patched</version>
         </dependency>
 
-      
 
         <dependency>
             <groupId>org.pac4j</groupId>
@@ -628,79 +544,215 @@
             <artifactId>pac4j-openid</artifactId>
             <version>1.5.1</version>
         </dependency>
-     
+
         <dependency>
             <groupId>org.pac4j</groupId>
             <artifactId>pac4j-saml</artifactId>
             <version>1.5.1</version>
         </dependency>
-	
+
         <dependency>
             <groupId>org.pac4j</groupId>
             <artifactId>pac4j-http</artifactId>
             <version>1.5.1</version>
-        </dependency>    
-     
-
-
-
-
-
-       
-
+        </dependency>
 
 
     </dependencies>
 
     <profiles>
-
+        
         <profile>
-            <id>tomcat7</id>
-            <build>
-                <finalName>${project.artifactId}-${project.version}-tomcat7</finalName>
-            </build>
-            <dependencies>
-           
-                <dependency>
-                    <groupId>javax.servlet</groupId>
-                    <artifactId>jstl</artifactId>
-                    <version>1.2</version>
-                </dependency>
-
-
-                <!-- scala -->
-                <dependency>
-                    <groupId>org.scala-lang</groupId>
-                    <artifactId>scala-library</artifactId>
-                    <version>2.11.7</version>
-                </dependency>
-
-            </dependencies>
-        </profile>
-
-
-        <profile>
-            <id>jetty9-paster-run</id>
-            <activation>
+            <id>dev</id>
+             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
-            <build>
-                <finalName>${project.artifactId}-${project.version}-standalone</finalName>
-            </build>
-            <dependencies>
-               
-                <!-- scala -->
-                <dependency>
-                    <groupId>org.scala-lang</groupId>
-                    <artifactId>scala-library</artifactId>
-                    <version>2.11.7</version>
-                    <!--scope>provided</scope-->
-                </dependency>
-               
-            </dependencies>
+            <properties>
+                <paster.app.build.profile>DEVELOPMENT</paster.app.build.profile>
+            </properties>    
             
         </profile>
+        
+        <profile>
+            <id>prod</id>
+                
+            <properties>
+                <paster.app.build.profile>PRODUCTION</paster.app.build.profile>
+            </properties>    
+                
+            <build>
+                <plugins>                    
+                    
+                     <plugin>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-jspc-maven-plugin</artifactId>
+                <version>9.3.2.v20150730</version>
+                <executions>
+                    <execution>
+                        <id>jspc</id>
+                        <goals>
+                            <goal>jspc</goal>
+                        </goals>
+                      
+                    </execution>
+                </executions>
+            </plugin>
 
+                        
+                    <plugin>               
+                        <groupId>org.lesscss</groupId>
+                        <artifactId>lesscss-maven-plugin</artifactId>
+                        <version>1.3.3</version>
+                        <configuration>
+                            <compress>true</compress>
+                            <sourceDirectory>${project.basedir}/src/main/webapp/WEB-INF/resources/paster/less</sourceDirectory>
+                            <outputDirectory>${project.basedir}/src/main/webapp/WEB-INF/resources/paster/css/all</outputDirectory>
+                        </configuration>
+            
+                        <executions>
+                            <execution>
+                                <id>Runs in process-sources phase</id>
+                                <phase>generate-resources</phase>
+                                <goals>
+                                    <goal>compile</goal>
+                                </goals>
+                                <configuration>
+                                    <includes>
+                                        <include>*.less</include>                   
+                                    </includes>
+                                </configuration>
+                            </execution>
+                        </executions>
+            
+                    </plugin>
+            
+            
+                <plugin>
+                    <groupId>com.samaxes.maven</groupId>
+                    <artifactId>minify-maven-plugin</artifactId>
+                    <version>1.7.2</version>
+                    <executions>
+                        <execution>
+                            <id>all-minify</id>
+                            <phase>generate-resources</phase><!-- When omitted defaults to <phase>process-resources</phase> -->
+                            <configuration>
+                                <closureLanguage>ECMASCRIPT5</closureLanguage>
+                                <!--language_in>ECMASCRIPT5</language_in-->          
+                                <charset>UTF-8</charset>
+                                <webappSourceDir>${project.basedir}/src/main/webapp/WEB-INF/resources/paster</webappSourceDir>
+                                <webappTargetDir>${project.basedir}/src/main/webapp/WEB-INF/resources/paster-dist</webappTargetDir>
+                                <jsSourceDir>/js/all</jsSourceDir>
+                                <cssSourceDir>/css/all</cssSourceDir>
+                                <jsTargetDir>/all/js</jsTargetDir>
+                                <cssTargetDir>/all/css</cssTargetDir>
+                                <jsSourceFiles>
+                                    <jsSourceFile>behavior-ui.js</jsSourceFile>
+                                    <jsSourceFile>MooTools-More-1.5.1.js</jsSourceFile>
+                                    <jsSourceFile>tinycon.min.js</jsSourceFile>
+                                    <jsSourceFile>growler.js</jsSourceFile>
+                                    <jsSourceFile>LazyPagination.js</jsSourceFile>
+                                    <jsSourceFile>ZeroClipboard.min.js</jsSourceFile>
+                                </jsSourceFiles>
+
+                                <jsFinalFile>all-script.js</jsFinalFile>
+                                <jsEngine>CLOSURE</jsEngine>
+                                <cssSourceFiles>
+                                    <cssSourceFile>behavior-ui-bootstrap.css</cssSourceFile>  
+                                    <cssSourceFile>app.css</cssSourceFile>
+                                    <cssSourceFile>mnmlicons.css</cssSourceFile>
+                                </cssSourceFiles>
+                                <cssFinalFile>all-style.css</cssFinalFile>
+
+                            </configuration>
+                            <goals>
+                                <goal>minify</goal>
+                            </goals>
+                        </execution>
+
+
+                        <execution>
+                            <id>paste-view-minify</id>
+                            <phase>generate-resources</phase><!-- When omitted defaults to <phase>process-resources</phase> -->
+                            <configuration>
+                                <charset>UTF-8</charset>
+                                <webappSourceDir>${project.basedir}/src/main/webapp/WEB-INF/resources/paster</webappSourceDir>
+                                <webappTargetDir>${project.basedir}/src/main/webapp/WEB-INF/resources/paster-dist</webappTargetDir>
+                                <jsSourceDir>/js/paste-view</jsSourceDir>
+                                <cssSourceDir>/css/paste-view</cssSourceDir>
+                                <jsTargetDir>/paster-view/js</jsTargetDir>
+                                <cssTargetDir>/paster-view/css</cssTargetDir>
+                                <jsSourceFiles>
+                                    <!--jsSourceFile>xregexp.js</jsSourceFile-->
+                                    <!--jsSourceFile>shCore.js</jsSourceFile-->
+                                    <jsSourceFile>shLegacy.js</jsSourceFile>
+                                    <jsSourceFile>shUber.js</jsSourceFile>
+
+                                </jsSourceFiles>
+
+                                <jsFinalFile>paste-view-script.js</jsFinalFile>
+                                <jsEngine>CLOSURE</jsEngine>
+
+                                <cssSourceFiles>
+                                    <cssSourceFile>paste-view.css</cssSourceFile>
+                                </cssSourceFiles>
+                                <cssFinalFile>paste-view-style.css</cssFinalFile>
+
+
+                            </configuration>
+                            <goals>
+                                <goal>minify</goal>
+                            </goals>
+                        </execution>
+
+
+                        <execution>
+                            <id>paste-edit-minify</id>
+                            <phase>generate-resources</phase><!-- When omitted defaults to <phase>process-resources</phase> -->
+                            <configuration>
+                                <charset>UTF-8</charset>
+                                <webappSourceDir>${project.basedir}/src/main/webapp/WEB-INF/resources/paster</webappSourceDir>
+                                <webappTargetDir>${project.basedir}/src/main/webapp/WEB-INF/resources/paster-dist</webappTargetDir>
+                                <jsSourceDir>/js/paste-edit</jsSourceDir>
+                                <cssSourceDir>/css/paste-edit</cssSourceDir>
+                                <jsTargetDir>/paster-edit/js</jsTargetDir>
+                                <cssTargetDir>/paster-edit/css</cssTargetDir>
+                                <jsSourceFiles>
+                                    <jsSourceFile>word-count.js</jsSourceFile>
+                                    <jsSourceFile>base64.js</jsSourceFile>
+                                    <jsSourceFile>html2canvas.js</jsSourceFile>
+                                    <jsSourceFile>canvas2image.js</jsSourceFile>
+                                    <jsSourceFile>canvas-to-blob.js</jsSourceFile>
+                                    <jsSourceFile>pixastic.core.js</jsSourceFile>
+                                    <jsSourceFile>crop.js</jsSourceFile>
+                                    <jsSourceFile>blurfast.js</jsSourceFile>
+
+
+                                </jsSourceFiles>
+
+                                <jsFinalFile>paste-edit-script.js</jsFinalFile>
+                                <jsEngine>CLOSURE</jsEngine>
+
+                                <cssSourceFiles>
+                                    <cssSourceFile>paste-edit.css</cssSourceFile>
+                                </cssSourceFiles>
+                                <cssFinalFile>paste-edit-style.css</cssFinalFile>
+                            </configuration>
+                            <goals>
+                                <goal>minify</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+
+
+                        
+                </plugins>
+            </build>
+             
+        </profile>
+            
+        
+      
         <profile>
             <id>all-plugins</id>
             <dependencies>
@@ -727,7 +779,7 @@
         <profile>
             <id>sqlserver</id>
             <properties>
-                <!--hibernate.dialect>org.hibernate.dialect.SQLServerDialect</hibernate.dialect-->
+                <!--hibernate.dialect>org.hibernate.dialect.SQLServerDialect</hibernate.dialect -->
                 <hibernate.dialect>uber.paste.base.ExtendedMSSQLDialect</hibernate.dialect>
                 <jdbc.driverClassName>net.sourceforge.jtds.jdbc.Driver</jdbc.driverClassName>
                 <jdbc.url>jdbc:jtds:sqlserver://localhost:1433/paster</jdbc.url>
@@ -736,14 +788,14 @@
             </properties>
         </profile>
 
-        
+
         <profile>
             <id>oracle-xe</id>
             <properties>
                 <hibernate.dialect>uber.paste.base.ExtendedOracle10gDialect</hibernate.dialect>
-                <!--hibernate.dialect>org.hibernate.dialect.Oracle10gDialect</hibernate.dialect-->
-               
-                
+                <!--hibernate.dialect>org.hibernate.dialect.Oracle10gDialect</hibernate.dialect -->
+
+
                 <jdbc.driverClassName>oracle.jdbc.OracleDriver</jdbc.driverClassName>
                 <jdbc.url>jdbc:oracle:thin:@localhost:1521:XE</jdbc.url>
                 <jdbc.username>system</jdbc.username>
@@ -776,7 +828,7 @@
                 <jdbc.url>jdbc:h2:file:${paste.app.home}/db/pastedb;DB_CLOSE_ON_EXIT=TRUE;LOCK_TIMEOUT=10000</jdbc.url>
                 <jdbc.username>bo</jdbc.username>
                 <jdbc.password>bo</jdbc.password>
-                <jdbc.show-sql>false</jdbc.show-sql>             
+                <jdbc.show-sql>false</jdbc.show-sql>
             </properties>
         </profile>
 
@@ -833,7 +885,10 @@
 
     <build>
         <defaultGoal>package</defaultGoal>
-    
+
+                <finalName>${project.artifactId}-${project.version}</finalName>
+        
+
         <plugins>
 
             <plugin>
@@ -871,44 +926,26 @@
                         <nonFilteredFileExtension>csv</nonFilteredFileExtension>
                     </nonFilteredFileExtensions>
                 </configuration>
-                
+
             </plugin>
 
 
-
-
-            <plugin>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-jspc-maven-plugin</artifactId>
-                <version>9.3.2.v20150730</version>
-                <executions>
-                    <execution>
-                        <id>jspc</id>
-                        <goals>
-                            <goal>jspc</goal>
-                        </goals>
-                        <configuration>
+                  
            
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
                 <version>2.4</version>
 
                 <configuration>
- 
-                    <webXml>${project.build.directory}/web.xml</webXml>
+
                     <attachClasses>true</attachClasses>
                     <classesClassifier>classes</classesClassifier>
-                    <failOnMissingWebXml>false</failOnMissingWebXml>                    
-                    <archive>                    
+                    <failOnMissingWebXml>true</failOnMissingWebXml>
+                    <archive>
                         <manifest>
                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-                        </manifest>                            
+                        </manifest>
                         <manifestEntries>
                             <Paster-Implementation-Version>${project.version}</Paster-Implementation-Version>
                             <Paster-Implementation-Build>${build.buildNumber}</Paster-Implementation-Build>
@@ -916,73 +953,38 @@
                         </manifestEntries>
                     </archive>
                 </configuration>
-           
+
 
             </plugin>
 
-        
+
 
 
             <plugin>
-                
-    	<groupId>org.eclipse.jetty</groupId>
-	<artifactId>jetty-maven-plugin</artifactId>
-	<version>9.3.2.v20150730</version>
-                
-  
+
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-maven-plugin</artifactId>
+                <version>9.3.2.v20150730</version>
+
+
                 <configuration>
-                    <!--jvmArgs>
-                        -Xbootclasspath/p:C:\Users\Alex\.m2\repository\org\mortbay\jetty\npn\npn-boot\1.1.7.v20140316\npn-boot-1.1.7.v20140316.jar
-                        -Dpaste.h2.embedded.server=1
-                    </jvmArgs-->
-                    <!--                         ${settings.localRepository}/org/mortbay/jetty/npn/npn-boot/${npn.version}/npn-boot-${npn.version}.jar
-                    -->
-                    <systemProperties>
+                   <systemProperties>
                         <systemProperty>
                             <name>logback.configurationFile</name>
                             <value>src/main/resources/logback-debug.xml</value>
                         </systemProperty>
                     </systemProperties>
                     <scanIntervalSeconds>0</scanIntervalSeconds>
-                    <webApp> <!--${project.artifactId}-->
-                        <contextPath>/</contextPath>
-                    </webApp>
-                    <!--dumpOnStart>true</dumpOnStart>
-                       <stopPort>8888</stopPort>
-                    <stopKey>quit</stopKey>
-                    <jettyXml>src/main/containers/jetty/spdy.xml</jettyXml-->
-                    <!--webDefaultXml>src/container/jetty/webdefault.xml</webDefaultXml-->
-                </configuration>
+
+                    <webApp>
+                        <contextPath>/${project.artifactId}</contextPath>
+               
+                    </webApp> 
+      </configuration>
 
                 <dependencies>
-                    
-                    <!--dependency>
-                        <groupId>org.eclipse.jetty.spdy</groupId>
-                        <artifactId>spdy-http-server</artifactId>
-                        <version>9.3.2.v20150730</version>
-                    </dependency>
-                    
-                   
-                    <dependency>
-                        <groupId>org.eclipse.jetty</groupId>
-                        <artifactId>jetty-servlet</artifactId>
-                        <version>9.1.4.v20140401</version>
-                    </dependency>
-                    
-                    
-                    <dependency>
-                        <groupId>org.mortbay.jetty.npn</groupId>
-                        <artifactId>npn-boot</artifactId>
-                        <version>1.1.7.v20140316</version>
-                    </dependency-->
-            
-                    
-                    <!--dependency>
-                        <groupId>org.eclipse.jetty</groupId>
-                        <artifactId>jetty-alpn-server</artifactId>
-                        <version>9.2.0.M0</version>
-                    </dependency-->
-                </dependencies>
+
+               </dependencies>
 
             </plugin>
 
@@ -995,23 +997,14 @@
 
 
                     <path>/${project.artifactId}</path>
-                    <!--contextFile>${tomcatConf}</contextFile-->
-                    <!--tomcatLoggingFile>src/main/tomcat/conf/logging.properties</tomcatLoggingFile -->
                     <addContextWarDependencies>true</addContextWarDependencies>
                     <charset>UTF-8</charset>
-                    <port>8081</port>
+                    <port>8080</port>
                     <!--update>true</update -->
                     <uriEncoding>UTF-8</uriEncoding>
                     <systemProperties>
-                        <!--user.language>en</user.language>
-                        <user.region>US</user.region-->
-                        <!--com.sun.management.jmxremote>true</com.sun.management.jmxremote>
-                        <com.sun.management.jmxremote.port>8050</com.sun.management.jmxremote.port>
-                        <com.sun.management.jmxremote.ssl>false</com.sun.management.jmxremote.ssl>
-                        <com.sun.management.jmxremote.authenticate>false</com.sun.management.jmxremote.authenticate>
-                        <logback.ContextSelector>JNDI</logback.ContextSelector -->
-                        <logback.configurationFile>src/main/resources/logback-debug.xml</logback.configurationFile>
-                     
+                       <logback.configurationFile>src/main/resources/logback-debug.xml</logback.configurationFile>
+
                     </systemProperties>
 
                 </configuration>
@@ -1019,6 +1012,13 @@
 
                 <dependencies>
 
+                    <dependency>
+                        <groupId>javax.servlet</groupId>
+                        <artifactId>jstl</artifactId>
+                        <version>1.2</version>
+                    </dependency>
+
+                                    
                     <dependency>
                         <groupId>org.apache.tomcat</groupId>
                         <artifactId>tomcat-juli</artifactId>
@@ -1031,7 +1031,7 @@
 
             <plugin>
                 <artifactId>maven-release-plugin</artifactId>
-                <version>2.5</version>      
+                <version>2.5</version>
             </plugin>
 
         </plugins>
@@ -1046,7 +1046,7 @@
                 <includes>
                     <include>release.properties</include>
                     <include>default.properties</include>
-                    <include>jdbc.properties</include>                
+                    <include>jdbc.properties</include>
                 </includes>
                 <filtering>true</filtering>
             </resource>
@@ -1057,14 +1057,14 @@
                 <includes>
                     <include>*.xml</include>
                     <include>*.csv</include>
-                    
+
                     <include>logging.properties</include>
                     <include>i18n/**</include>
-                      <include>oak/**</include>
-                      <include>defaultData/**</include>
-                      
-                    <include>mime*.properties</include>                
-                    <include>Validation*.properties</include>                
+                    <include>oak/**</include>
+                    <include>defaultData/**</include>
+
+                    <include>mime*.properties</include>
+                    <include>Validation*.properties</include>
                 </includes>
                 <filtering>false</filtering>
             </resource>
@@ -1086,7 +1086,7 @@
                     <include>*.docx</include>
                 </includes>
             </resource>
-            
+
             <resource>
                 <targetPath>META-INF</targetPath>
                 <directory>src/main/resources/META-INF</directory>
