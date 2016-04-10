@@ -245,12 +245,6 @@ class User(name: String) extends Named(name) with UserDetails with java.io.Seria
     getEmail
   }
 
-  override def toString(): String = {
-    return Loggered.getNewProtocolBuilder(this)
-      .append("username", username)
-      .append("roles", roles)
-      .append("super", super.toString())
-      .toString()
-  }
+  
 
 }

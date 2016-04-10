@@ -155,7 +155,7 @@ class PasteEditController extends GenericEditController[Paste]   {
       out.toString }
   }
 
-  def getNewModelInstance():Paste = {
+  override def getNewModelInstance():Paste = {
     val p = new Paste
     p.setOwner(getCurrentUser)
     p.setChannel(channelDao.getDefault)
@@ -265,7 +265,7 @@ class PasteEditController extends GenericEditController[Paste]   {
 
     if (result.hasErrors()) {
       
-      logger.debug("form has errors {0}" , result.getErrorCount())
+      logger.debug("form has errors {}" , result.getErrorCount())
       
       model.addAttribute("comment", b)
       fillEditModel(p,model,locale)

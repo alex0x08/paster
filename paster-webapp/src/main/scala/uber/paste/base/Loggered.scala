@@ -14,27 +14,63 @@
  * limitations under the License.
  */
 
-
 package uber.paste.base
 
-import org.slf4j.{Logger, LoggerFactory}
-import org.apache.commons.lang3.builder.{StandardToStringStyle, ToStringBuilder}
+import org.slf4j.{ Logger, LoggerFactory }
+import org.apache.commons.lang3.builder.{ StandardToStringStyle, ToStringBuilder, ReflectionToStringBuilder }
 import com.fasterxml.jackson.annotation.JsonIgnore
+import java.lang.reflect.Field
 import javax.jws.WebMethod
-
 
 object Loggered {
 
-  val  style = new StandardToStringStyle() {
+  val style = new StandardToStringStyle() {
     setFieldSeparator(", ")
     setUseClassName(false)
     setUseIdentityHashCode(false)
+
+    setArraySeparator(":");
+    setArrayEnd(" ")
+    setArrayStart(" ")
+    setContentStart(" ")
+    setContentEnd(" ")
+    setFieldNameValueSeparator(": ")
+
+    override def append(buffer: java.lang.StringBuffer, 
+                        fieldName: String, 
+                        value: Any, 
+                        fullDetail: java.lang.Boolean) {
+      if (value != null) {
+        super.append(buffer, fieldName, value, fullDetail)
+      }
+    }
   }
 
-  def getNewProtocolBuilder(clazz:AnyRef):ToStringBuilder 
-        = new ToStringBuilder(clazz.getClass.getName, Loggered.style)
+  def toStringSkip(x: Any, fields: Array[String]): String = {
+    return (new ReflectionToStringBuilder(x, style) {
+      override def accept(f: Field): Boolean = {
 
-  def getLogger(clazz:AnyRef):Logger = LoggerFactory.getLogger(clazz.getClass)
+        if (!super.accept(f)) {
+          return false;
+        }
+
+        if (fields == null) {
+          return true;
+        }
+
+        for (field <- fields) {
+          if (f.getName().equals(field)) {
+            return false;
+          }
+        }
+        return true;
+      }
+    }).toString();
+  }
+
+  def getNewProtocolBuilder(clazz: AnyRef): ToStringBuilder = new ToStringBuilder(clazz.getClass.getName, Loggered.style)
+
+  def getLogger(clazz: AnyRef): Logger = LoggerFactory.getLogger(clazz.getClass)
 }
 
 trait Loggered {
@@ -47,6 +83,6 @@ trait Loggered {
   @transient
   @WebMethod(exclude = true)
   @JsonIgnore
-  def getNewProtocolBuilder():ToStringBuilder = new ToStringBuilder(this, Loggered.style)
+  def getNewProtocolBuilder(): ToStringBuilder = new ToStringBuilder(this, Loggered.style)
 
 }

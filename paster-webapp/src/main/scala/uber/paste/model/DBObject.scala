@@ -71,9 +71,7 @@ abstract class DBObject extends java.io.Serializable {
       
   
 
-  override def toString():String =  Loggered.getNewProtocolBuilder(this)
-                .append("id", id)
-                .append("class", getClass().getCanonicalName()).toString()
+  override def toString():String =  Loggered.toStringSkip(this, null)
   
   
 }

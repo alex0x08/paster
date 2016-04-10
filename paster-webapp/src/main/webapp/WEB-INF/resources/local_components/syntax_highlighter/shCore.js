@@ -537,11 +537,12 @@ var SyntaxHighlighter = function () {
 
             nspace.setStyle("display", "");
             
-            sh.vars.editor.load();
             
-            /*setTimeout(function () {
-                cForm.getElementById('commentText').focus();
-            }, 1);*/
+            setTimeout(function () {
+            sh.vars.editor.load();
+           
+                //cForm.getElementById('commentText').focus();
+            }, 1);
 
         }
     }; // end of sh

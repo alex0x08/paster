@@ -82,10 +82,6 @@ abstract class Struct extends DBObject with SearchObject with  java.io.Serializa
       
   def loadFull() {}  
 
-  override def toString():String =  Loggered.getNewProtocolBuilder(this)
-    .append("lastModified", lastModified)
-     .append("created", created)
-    .append("super",super.toString)
-    .toString()  
+  
   
 }

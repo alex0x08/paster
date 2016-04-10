@@ -330,13 +330,11 @@ class Paste(title:String) extends Named(title) with java.io.Serializable{
               }
   }
 
-  override def toString():String = {
-    return Loggered.getNewProtocolBuilder(this)
-    //  .append("title", title)
-    //  .append("text", text)
-      .append("tags", tags)
-      .append("super",super.toString())
-      .toString
-  }
+   
+  override def toString():String =  Loggered.toStringSkip(this, 
+                                                          Array("reviewImgData",
+                                                                "thumbImage",
+                                                                "title",
+                                                                "text"))
   
 }

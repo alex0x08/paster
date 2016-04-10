@@ -6,7 +6,6 @@
         <head>
             <meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, 
                   user-scalable=yes" />
-            <link href="<c:url value='/main/assets/${appId}/paster/less/app.css'/>" rel="stylesheet" type="text/css">
             <c:choose>
                 <c:when test="${not empty systemInfo.project.clientImage}">
                     <style>

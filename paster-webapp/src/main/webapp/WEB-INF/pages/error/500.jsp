@@ -5,7 +5,7 @@
 
 
 <div class="jumbotron">
-    <img src="<c:url  value='/main/assets/${appId}/paster/static/big/backstab.png'/>" 
+    <img src="<c:url  value='/main/resources/${appId}/static/big/backstab.png'/>" 
          style="width: 128px;height:128px;" 
          class="img-responsive img-rounded" alt="<fmt:message key="error.500.haiku"/>"/>    
     <h1><fmt:message key="error.500.title"/></h1>

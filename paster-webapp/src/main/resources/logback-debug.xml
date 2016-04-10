@@ -38,9 +38,13 @@
  
    <logger name="org.h2.server" level="DEBUG" />
   
-  
+   
+   <logger name="uber.paste.tiles2" level="WARN"/>
+ 
+   
    <logger name="uber" level="DEBUG"/>
  
+  
   
   <root level="INFO">
     <appender-ref ref="STDOUT" />

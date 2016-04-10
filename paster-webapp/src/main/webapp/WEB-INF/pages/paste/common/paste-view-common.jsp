@@ -229,7 +229,7 @@
 
                                     <form:errors path="text" cssClass="control-label" element="label" for="commentText" /> 
                                     
-                                    <div id="epiceditor-${model.id}"></div>
+                                    <div class="disableOnSubmit" id="epiceditor-${model.id}"></div>
                                     
                                     <form:textarea cssClass="form-control" path="text"
                                                    id="commentText-${model.id}" 

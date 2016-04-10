@@ -64,13 +64,15 @@ class UserEditController extends GenericEditController[User]{
   }
   
   
-   @RequestMapping(value = Array(GenericEditController.SAVE_ACTION), method = Array(RequestMethod.POST))
+   @RequestMapping(value = Array(GenericEditController.SAVE_ACTION), 
+                   method = Array(RequestMethod.POST))
    override def save(@RequestParam(required = false) cancel:String,
             @Valid @ModelAttribute(GenericController.MODEL_KEY) b:User,
             result:BindingResult, model:Model,locale:Locale,
             redirectAttributes:RedirectAttributes):String = {
 
         if (!isCurrentUserLoggedIn() || !isCurrentUserAdmin()) {
+          logger.warn("user {} is not allowed to save users",getCurrentUser())
           return page403
         }
     
