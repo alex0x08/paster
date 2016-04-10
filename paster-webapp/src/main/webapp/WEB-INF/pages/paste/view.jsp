@@ -201,6 +201,7 @@
 <script type="text/javascript">
     var $j = jQuery.noConflict();
 
+    
     function getTextSizes(el) {
         var obj = el.getComputedSize();
 
@@ -222,14 +223,18 @@
             'width': sizes[1]
         });
 
-        $(modelId + "_all").toggle();
+        $(modelId + "_all").show();
+        
+        $(modelId + "_drawBlock").hide();
+
     }
 
     function showComments(modelId) {
 
 
-        $(modelId + "_drawBlock").toggle();
-        $(modelId + "_all").toggle();
+        $(modelId + "_drawBlock").hide();
+        
+        $(modelId + "_all").hide();
 
     }
 
@@ -268,16 +273,16 @@
     </c:if>
         
         
-        $(modelId + "_drawBlock").toggle();
-        $(modelId + "_all").toggle();
+        $(modelId + "_drawBlock").show();
+        $(modelId + "_all").hide();
     }
 
 
     function initDraw(modelId) {
 
-        $j.each(['#ff1101', '#ff0', '#0f0', '#0ff', '#00f', '#f0f', '#000', '#fff'], function () {
+        $j.each(['#ff1101', '#ff0', '#0f0', '#0ff', '#00f', '#6d47e7', '#000', '#fff'], function () {
             $j('#' + modelId + '_centerPanel .tools')
-                    .append("<a href='#" + modelId + "_sketch' data-color='" + this + "' style='width: 10px; border:1px solid black; background: " + this + ";'>&nbsp;&nbsp;&nbsp;&nbsp;</a> ");
+                    .append("<a href='#" + modelId + "_sketch' class='btn btn-xs' data-color='" + this + "' style='border:1px solid black; background: " + this + ";'>&nbsp;&nbsp;</a> ");
         });
         $j.each([1,3, 5, 10, 15], function () {
             $j('#' + modelId + '_centerPanel .tools')
@@ -371,65 +376,12 @@
     }
 
 
-marked.setOptions({
-  renderer: new marked.Renderer(),
-  gfm: true,
-  tables: true,
-  breaks: false,
-  pedantic: false,
-  sanitize: true,
-  smartLists: true,
-  smartypants: false
-});
  
 
- <c:url var="epicEditorUrl" value="/main/resources/${appId}/bower_components/EpicEditor/epiceditor"/>
-
-
-    var globalEpicEditorOpts = {
-  container: 'SET-IN-EDITOR',
-  textarea: null,
-  basePath: '${epicEditorUrl}',
-  clientSideStorage: false,
-  localStorageName: 'epiceditor',
-  useNativeFullsreen: true,
-  parser: marked,
-  file: {
-    name: 'epiceditor',
-    defaultContent: '',
-    autoSave: 100
-  },
-  theme: {
-    base: '/themes/base/epiceditor.css',
-    preview: '/themes/preview/bartik.css',
-    editor: '/themes/editor/epic-light.css'
-  },
-  button: {
-    preview: true,
-    fullscreen: true
-  },
-  focusOnLoad: false,
-  shortcut: {
-    modifier: 18,
-    fullscreen: 70,
-    preview: 80
-  },
-  string: {
-    togglePreview: 'Toggle Preview Mode',
-    toggleEdit: 'Toggle Edit Mode',
-    toggleFullscreen: 'Enter Fullscreen'
-  }
-}
-
     window.addEvent('load', function () {
-        console.log('dom ready');
         initDraw(${model.id});
         showAll(${model.id});
-        
-        
-        
-       
-        
+      
     });
 
 

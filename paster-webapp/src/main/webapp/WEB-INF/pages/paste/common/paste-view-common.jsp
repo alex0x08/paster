@@ -30,11 +30,41 @@
         <c:url var="drawImg" 
                value='/main/resources/${appId}/r/${model.lastModified.time}/${model.reviewImgData}'/>
 
+        
+        <div class="btn-group" data-toggle="buttons"  
+             data-trigger="removeClass" data-removeclass-options="
+             'class': 'active',
+             'targets': 'label'
+             ">
+            <label class="btn btn-primary active">
+                <input type="radio" name="options" 
+                       id="optionAll"   
+                       onclick="showAll(${model.id});"
+                       data-trigger="toggleClass" data-toggleclass-options="
+                       'class': 'active',
+                       'target': '!label'
+                       "> All
+            </label>
+            <label class="btn btn-primary">
+                <input type="radio" name="options" 
+                       id="optionCommentsOnly" 
+                       onclick="showComments(${model.id});"
+                       data-trigger="toggleClass" data-toggleclass-options="
+                       'class': 'active',
+                       'target': '!label'
+                       "> Comments
+            </label>
+            <label class="btn btn-primary">
+                <input type="radio" name="options" 
+                       id="optionDrawArea"  onclick="showDrawArea(${model.id});"
+                       data-trigger="toggleClass" data-toggleclass-options="
+                       'class': 'active',
+                       'target': '!label'
+                       "> Draw
+            </label>
+        </div>
 
-        <a href="javascript:showAll(${model.id});" >all</a> |
-        <a href="javascript:showComments(${model.id});" >comments</a> |
-        <a href="javascript:showDrawArea(${model.id});">draw</a>
-   
+       
           <c:set var="backgroundReviewStyle" 
                  value="${model.reviewImgData==null ? '' : 'pointer-events:none;background: url('.concat(drawImg).concat(') no-repeat top left;') }"/>
       
@@ -48,12 +78,26 @@
          
    
         <div id="${model.id}_drawBlock" style="display:none;">
-            <div class="tools">
-               <a href="#${model.id}_sketch" data-tool="marker">Marker</a> |
-                <a href="#${model.id}_sketch" data-tool="eraser">Eraser</a>
+            <div class="row">
+                <div class="col-md-4">
+               
+                    <a href="#${model.id}_sketch" data-tool="marker">Marker</a> |
+                    <a href="#${model.id}_sketch" data-tool="eraser">Erase all (click)</a>
 
-
-                <c:url var="urlDrawSave" value='/main/paste/saveReviewDraw' />
+                    <div class="tools">
+                        Colors:
+                   <a href='#${model.id}_sketch' 
+                      class='btn btn-xs button_color_virgins_blood' 
+                      data-color='#D20202' 
+                      title="Virgin's blood" 
+                      >&nbsp;&nbsp;</a>
+                        
+                    </div>
+                      
+                </div>
+                <div class="col-md-4 pull-right">
+                    
+                      <c:url var="urlDrawSave" value='/main/paste/saveReviewDraw' />
 
 
                 <form:form cssClass="form-horizontal" 
@@ -73,6 +117,12 @@
                     </button>
 
                 </form:form>
+                    
+                </div>
+                
+               
+
+              
             </div>
             <div id="${model.id}_drawArea" style="z-index:5000;position:absolute;
                  background-color:rgba(100,70,0,0.1);">

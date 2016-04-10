@@ -28,8 +28,6 @@
             <tiles:putAttribute name="currentUser" value="${currentUser}"/>
         </tiles:insertDefinition>
 
-
-
     </div>
 </div>
 

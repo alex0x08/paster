@@ -3,15 +3,8 @@
 <fmt:message var="submit_button_text" key="button.save"/>
 
 <c:url var="url" value='/main/paste/save' />
-
-<c:choose>
-    <c:when test="${empty param.frameMode}">
-        <c:url var="urlCancel" value='/main/paste/list' />
-    </c:when>
-    <c:otherwise>
-        <c:url var="urlCancel" value='javascript: window.parent.createNewPasteDlg.hide();' />
-    </c:otherwise>
-</c:choose>
+      <c:url var="urlCancel" value='/main/paste/list' />
+  
 
 
 <div class="row">
@@ -21,13 +14,8 @@
                    modelAttribute="model"
                    method="POST" >
 
-            <c:if test="${not empty param.integratedMode}">
-                <input type="hidden" name="integrationMode" value="true"/>
-            </c:if>
+         
 
-            <c:if test="${not empty param.frameMode}">
-                <input type="hidden" name="frameMode" value="true"/>
-            </c:if>
 
 
             <form:input id="thumbImg" path="thumbImage" cssStyle="display:none;"  />
@@ -327,7 +315,7 @@
                                     Select file
                                 </form:label>
 
-                                    <input type="file" id="select-file-btn"/>
+                                    <input type="file" accept="text/*" id="select-file-btn"/>
                                     
                                 
                                 <p class="help-block">

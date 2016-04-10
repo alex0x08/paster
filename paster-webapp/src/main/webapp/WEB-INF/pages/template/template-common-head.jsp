@@ -68,6 +68,11 @@
 <script type="text/javascript" src="<c:url value='/main/resources/${appId}/bower_components/jquery-no-conflict-1.9/jquery.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/main/resources/${appId}/bower_components/EpicEditor/epiceditor/js/epiceditor.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/main/resources/${appId}/bower_components/marked/lib/marked.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/main/resources/${appId}/bower_components/pdfmake/build/pdfmake.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/main/resources/${appId}/bower_components/pdfmake/build/vfs_fonts.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/main/resources/${appId}/bower_components/html2canvas/build/html2canvas.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/main/resources/${appId}/bower_components/canvas2image/canvas2image/canvas2image.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/main/resources/${appId}/bower_components/base64/base64.js'/>"></script>
 <!-- endbower -->
 <!-- endbuild -->
 
@@ -90,5 +95,58 @@
     window.addEvent('load', function () {
         growl = new Growler.init();
     });
+
+
+    
+ <c:url var="epicEditorUrl" value="/main/resources/${appId}/bower_components/EpicEditor/epiceditor"/>
+
+
+        var globalEpicEditorOpts = {
+      container: 'SET-IN-EDITOR',
+      textarea: null,
+      basePath: '${epicEditorUrl}',
+      clientSideStorage: false,
+      localStorageName: 'epiceditor',
+      useNativeFullsreen: true,
+      parser: marked,
+      file: {
+        name: 'epiceditor',
+        defaultContent: '',
+        autoSave: 100
+      },
+      theme: {
+        base: '/themes/base/epiceditor.css',
+        preview: '/themes/preview/bartik.css',
+        editor: '/themes/editor/epic-light.css'
+      },
+      button: {
+        preview: true,
+        fullscreen: true
+      },
+      focusOnLoad: false,
+      shortcut: {
+        modifier: 18,
+        fullscreen: 70,
+        preview: 80
+      },
+      string: {
+        togglePreview: 'Toggle Preview Mode',
+        toggleEdit: 'Toggle Edit Mode',
+        toggleFullscreen: 'Enter Fullscreen'
+      }
+    };
+    
+    
+marked.setOptions({
+  renderer: new marked.Renderer(),
+  gfm: true,
+  tables: true,
+  breaks: false,
+  pedantic: false,
+  sanitize: true,
+  smartLists: true,
+  smartypants: false
+});
+
 
 </script>
