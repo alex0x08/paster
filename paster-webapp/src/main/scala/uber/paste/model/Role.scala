@@ -34,7 +34,9 @@ class Role(code: String, desc: String) extends Key(code, desc)
   with GrantedAuthority with java.io.Serializable {
 
   def getAuthority(): String = getCode
-override   def create(code: String) = new Role(code, null)
+
+  override def create(code: String) = new Role(code, null)
+
 }
 
 class RoleEditor extends KeyEditorEnum[Role](Role) {}

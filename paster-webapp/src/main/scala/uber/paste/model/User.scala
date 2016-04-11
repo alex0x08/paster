@@ -117,7 +117,8 @@ class User(name: String) extends Named(name) with UserDetails with java.io.Seria
   private var totalComments: Int = _
 
   /**
-   * if object editable
+   * if this user is editable
+   * useful for openid/oauth/ldap generated users
    */
   private var editable: Boolean = true
 
@@ -245,6 +246,9 @@ class User(name: String) extends Named(name) with UserDetails with java.io.Seria
     getEmail
   }
 
+  override def toString():String =  Loggered.toStringSkip(this, 
+                                                          Array("password","passwordRepeat"
+                                                               ))
   
 
 }

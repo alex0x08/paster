@@ -317,7 +317,12 @@
                                     Select file
                                 </form:label>
 
-                                    <input type="file" accept="text/*" id="select-file-btn"/>
+                                    <span class="btn btn-primary btn-file">
+                                        Browse 
+                                        <input type="file" accept="text/*" id="select-file-btn"/>
+
+                                    </span>
+                                    
                                     
                                 
                                 <p class="help-block">
@@ -611,7 +616,7 @@
                 });
 
  
-                img = Canvas2Image.saveAsPNG(canvas, true, 300, 200);
+                img = Canvas2Image.convertToPNG(canvas, true, 300, 200);
                 thumbImg.set('value', img.src);
                 
                 $('editForm').submit();
