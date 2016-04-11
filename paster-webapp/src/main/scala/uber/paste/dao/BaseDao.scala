@@ -197,6 +197,15 @@ abstract class BaseDaoImpl[T <: java.io.Serializable,PK <:java.io.Serializable ]
     .getResultList()
   }
   
+  def getAll():java.util.List[T] = {
+
+    val cr = new CriteriaSet
+
+    return em.createQuery[T](cr.cr)
+    .setMaxResults(BaseDaoImpl.MAX_RESULTS)
+    .getResultList()
+  }
+  
   /**
    * get list of objects ids, starting from FROM argument
    */

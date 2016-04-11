@@ -201,6 +201,7 @@
 <script type="text/javascript">
     var $j = jQuery.noConflict();
 
+
     
     function getTextSizes(el) {
         var obj = el.getComputedSize();
@@ -316,7 +317,7 @@
                     }
                 });
 
-                img = Canvas2Image.saveAsPNG(img, true, 300, 200);
+                img = Canvas2Image.convertToPNG(img, true, 300, 200);
                 // document.body.appendChild(img);
                 thumbImg.set('value', img.src);
 
@@ -365,7 +366,7 @@
                 
               //console.log(img);
 
-                img2 = Canvas2Image.saveAsPNG(img, true, 300, 200);
+                img2 = Canvas2Image.convertToPNG(img, true, 300, 200);
                 thumbImg.set('value', img2.src);
 
                 $(modelId + "_saveReviewDraw").submit();

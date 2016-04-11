@@ -14,9 +14,6 @@
                    modelAttribute="model"
                    method="POST" >
 
-         
-
-
 
             <form:input id="thumbImg" path="thumbImage" cssStyle="display:none;"  />
             <form:input id="wordsCount" path="wordsCount" cssStyle="display:none;"  />
@@ -177,7 +174,12 @@
                                     <span  class="i" >T</span><fmt:message key="paste.tags"/>
                                 </form:label>
 
-                                <form:input cssClass="form-control" 
+                                    <c:url var="tagsUrl" value='/main/paste/tags/names.json'/>
+                                    
+                                    <form:input cssClass="form-control" 
+                                            data-behavior="Autocomplete" 
+                                            data-autocomplete-url="${tagsUrl}"
+                                            data-autocomplete-options="'allowDupes':false"
                                             id="ptags" path="tagsAsString" maxlength="155" 
                                             />
                             </div>
@@ -611,6 +613,7 @@
  
                 img = Canvas2Image.saveAsPNG(canvas, true, 300, 200);
                 thumbImg.set('value', img.src);
+                
                 $('editForm').submit();
             }
         });

@@ -60,7 +60,7 @@ class ResourceController extends AbstractController {
     //model.asMap.clear()
     ptype match {
       case "t" | "r" | "a" | "b" => {
-
+          //allow
       }
       case _ => {
         writeError(response, "uknown type", 404)

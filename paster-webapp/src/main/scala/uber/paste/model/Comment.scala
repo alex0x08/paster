@@ -108,14 +108,5 @@ class Comment extends Struct  with java.io.Serializable{
     getText
   }
 
-  override def toString():String = {
-    return Loggered.getNewProtocolBuilder(this)
-      .append("lineNumber", lineNumber)
-      .append("parentId", parentId)
-      .append("text", text)
-      .append("owner", owner)
-      .append("super",super.toString())
-      .toString
-  }
 
 }

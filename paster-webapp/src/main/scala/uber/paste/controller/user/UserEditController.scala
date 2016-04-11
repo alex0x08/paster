@@ -30,7 +30,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes
 import uber.paste.controller.GenericController
 import uber.paste.controller.GenericEditController
 import uber.paste.dao.UserDaoImpl
-import uber.paste.manager.UserManager
 import org.springframework.ui.Model
 import uber.paste.model.Role
 import uber.paste.model.RoleEditor

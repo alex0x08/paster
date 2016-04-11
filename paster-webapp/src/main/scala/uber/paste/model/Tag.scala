@@ -14,17 +14,15 @@ import org.hibernate.search.annotations.IndexedEmbedded
 @Entity
 @Indexed
 @XmlRootElement(name="tag")
-class Tag {
+class Tag(tagString:String) extends Named(tagString){
 
-  @Id
- // @SearchableId(name="id")
-  @GeneratedValue
-  private var id:java.lang.Long = null
+    @transient
+    private var total:Int = 0
+  
+  
+    def this() = this(null)
 
-  @Column(name="tag_text")
-  private var key:String = null
-
-  def getKey():String  = key
-  def setKey(k:String) { key =k}
-
+    def getTotal() = total
+    def setTotal(i:Int) {total = i}
+  
 }

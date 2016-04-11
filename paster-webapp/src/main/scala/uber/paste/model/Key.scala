@@ -156,12 +156,4 @@ class Key(kcode:String,kname:String) extends Named(kname) with java.io.Serializa
   
 
   
-   override def toString():String = 
-     Loggered.getNewProtocolBuilder(this)
-                .append("code", code)
-                .append("super",super.toString)
-                 .toString()
-  
-  
-  
 }

@@ -25,6 +25,7 @@ import uber.paste.controller.GenericEditController
 import uber.paste.dao.ChannelDao
 import uber.paste.dao.CommentDaoImpl
 import uber.paste.dao.PasteDaoImpl
+import uber.paste.dao.TagDao
 import uber.paste.manager.RepositoryManager
 import uber.paste.manager.ResourcePathHelper
 import org.springframework.ui.Model
@@ -57,6 +58,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes
 //@SessionAttributes(Array(GenericController.MODEL_KEY))
 class PasteEditController extends GenericEditController[Paste]   {
 
+  
+  @Autowired
+  val tagDao:TagDao = null
   
   @Autowired
   val channelDao:ChannelDao = null
@@ -144,15 +148,7 @@ class PasteEditController extends GenericEditController[Paste]   {
 
     //  obj.tagsAsString = for (s<-obj.getTags()) yield s+" "
 
-    /**
-     * concatenate all model tags objects to one string
-     */
-    obj.tagsAsString={
-      val out =new StringBuilder
-      for (s<-obj.getTags()) {
-        out.append(s).append(" ")
-      }
-      out.toString }
+   
   }
 
   override def getNewModelInstance():Paste = {
@@ -323,16 +319,22 @@ class PasteEditController extends GenericEditController[Paste]   {
       b.setChannel(channelDao.getByKey(b.getChannel.getCode))
     }
     
-     val tags =  b.tagsAsString
-
-     if (tags!=null) {
-       b.getTags().clear()
-       for (s<-tags.split(" ")) {
-         if (!StringUtils.isBlank(s)) {
-           b.getTags().add(s)
-         }
-       }
-     }
+      /**
+     * concatenate all model tags objects to one string
+     */
+    b.getTagsMap.clear
+    
+    val allTags = tagDao.getTagsMap
+    
+    for (s<-b.getTagsAsString.split(" ")) {
+      if (!StringUtils.isBlank(s)) {
+        
+        if (allTags.containsKey(s)) {
+            b.getTagsMap.put(s,allTags.get(s))
+        } else {b.getTagsMap.put(s,new Tag(s))}
+        
+      }
+    }
 
       /**
        * check if normalized was set
@@ -469,6 +471,25 @@ class PasteEditController extends GenericEditController[Paste]   {
   def getAvailableCodeTypes():java.util.Collection[CodeType] = {
               return CodeType.list
   }
+  
+  @RequestMapping(value = Array("/tags/all"), method = Array(RequestMethod.GET))
+  @ResponseBody
+  @JsonIgnore
+  def getAvailableTags() =  tagDao.getTags
+  
+  @RequestMapping(value = Array("/tags/names"), method = Array(RequestMethod.GET,RequestMethod.POST))
+  @ResponseBody
+  @JsonIgnore
+  def getAvailableTagsNames():java.util.List[String] = {
+      val out = new ArrayList[String]
+      
+      for (s<-tagDao.getAll) {
+        out.add(s.getName)
+      }
+    
+    return out
+  }
+  
 
   /**
    * return plain paste text
@@ -477,9 +498,12 @@ class PasteEditController extends GenericEditController[Paste]   {
    * @param locale
    * @return
    */
-  @RequestMapping(value = Array("/{id:[0-9]+}.txt"), method = Array(RequestMethod.GET), produces = Array("text/plain;charset=UTF-8"))
+  @RequestMapping(value = Array("/{id:[0-9]+}.txt"), 
+                  method = Array(RequestMethod.GET), produces = Array("text/plain;charset=UTF-8"))
   @ResponseBody
-  def getBodyPlain(@PathVariable("id") id:java.lang.Long,model:Model,locale:Locale):String = {
+  def getBodyPlain(@PathVariable("id") id:java.lang.Long,
+                   model:Model,
+                   locale:Locale):String = {
     return loadModel(id).getText()
   }
 

@@ -77,13 +77,6 @@ class Named(kname:String) extends Struct {
   def getName()= name
   def setName(f:String) {name = f }
 
-  override def toString():String =  Loggered.getNewProtocolBuilder(this)
-                .append("name", name)
-                .append("super",super.toString)
-                .toString()
-  
-  
-
   
   
 }

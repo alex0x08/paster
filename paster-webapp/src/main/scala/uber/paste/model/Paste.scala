@@ -54,6 +54,7 @@ object Paste extends Struct {
 }
 
 
+
 /**
  * 
  * This is entity object implements "pasta" : piece of code with id,title and text
@@ -65,6 +66,7 @@ object Paste extends Struct {
 @Indexed(index = "indexes/pastas")
 @XmlRootElement(name="paste")
 //@Audited
+//@org.hibernate.annotations.Entity(dynamicUpdate = true)
 class Paste(title:String) extends Named(title) with java.io.Serializable{
 
   
@@ -134,14 +136,7 @@ class Paste(title:String) extends Named(title) with java.io.Serializable{
    */
   private var remoteUrl:String = null
 
-  /**
-   * related tags
-   */
-  @ElementCollection(fetch = FetchType.EAGER)
-  @IndexedEmbedded
-  //@NotAudited
-  private var tags:Set[String] = new HashSet[String]()
-
+ 
   /**
    * paste's  source, describes where it came from
    */
@@ -152,8 +147,9 @@ class Paste(title:String) extends Named(title) with java.io.Serializable{
   private var channel:Channel = null
   //PasteSource.FORM.getCode
 
-  @Transient
-  var tagsAsString:String = null
+  //@Transient
+  @Field(name="tags",index = Index.YES, store =Store.YES, termVector = TermVector.YES) //,boost=@Boost(2f)
+  private var tagsAsString:String = null
 
   private var normalized:Boolean = false
 
@@ -189,11 +185,22 @@ class Paste(title:String) extends Named(title) with java.io.Serializable{
   
   //@transient
   private var reviewImgData:String = null
+
+  
+ /**
+   * related tags
+   */
+ 
+  @MapKey(name="name")
+  @ManyToMany(fetch=FetchType.EAGER,cascade= Array(CascadeType.ALL))
+  private[model] var tagsMap:java.util.Map[String,Tag] = new java.util.HashMap
   
   @PrePersist
   @PreUpdate
   private def onUpdate() {    
      commentsCount = getComments().size()
+     
+    
   } 
   
   override def terms():List[String] = Paste.terms
@@ -217,6 +224,9 @@ class Paste(title:String) extends Named(title) with java.io.Serializable{
   def setWordsCount(c:java.lang.Integer) { this.wordsCount = c}
   
   
+  def getTagsAsString() = tagsAsString
+  def setTagsAsString(str:String) { this.tagsAsString=str}
+  
   /**
    *  paste's owner
    *  Can be null when saved by anonymous user
@@ -232,9 +242,9 @@ class Paste(title:String) extends Named(title) with java.io.Serializable{
   def getIntegrationCode(): String = integrationCode
   def setIntegrationCode(code:String) { integrationCode = code}
 
-  def getTags(): Set[String] = tags
-
-//  def getTagsAsJson():String = new GsonBuilder().create().toJson(tags)
+  def getTags(): java.util.Set[String] = tagsMap.keySet
+  
+  def getTagsMap():java.util.Map[String,Tag] = tagsMap
   
   def getUuid():String = uuid
   

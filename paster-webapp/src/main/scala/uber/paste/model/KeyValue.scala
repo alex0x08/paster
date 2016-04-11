@@ -57,7 +57,8 @@ class KeyValueObj[T <: KeyValue] extends KeyObj[T]{ }
   
 
 @MappedSuperclass
-class KeyValue(code:String,kvalue:String,kname:String) extends Key(code,kname) with java.io.Serializable{
+class KeyValue(code:String,kvalue:String,kname:String) 
+          extends Key(code,kname) with java.io.Serializable{
   
   @Column(name="pvalue")
   private var value: String = kvalue
@@ -65,9 +66,5 @@ class KeyValue(code:String,kvalue:String,kname:String) extends Key(code,kname) w
   def getValue()= value
   def setValue(f:String)  {value = f }
 
-   override def toString():String = Loggered.getNewProtocolBuilder(this)
-                .append("value", value)
-                 .toString()+super.toString
-  
     
 }

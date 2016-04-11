@@ -16,44 +16,50 @@
 
 package uber.paste.dao.hibernate
 
+import org.hibernate.boot.model.naming.Identifier
+import org.hibernate.boot.model.naming.PhysicalNamingStrategy
+import org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
 import org.hibernate.cfg.ImprovedNamingStrategy
+import org.hibernate.engine.jdbc.env.spi.JdbcEnvironment
 
 object PasterNamingStrategy {
   
    private val TABLE_PREFIX="P_"
 }
 
-class PasterNamingStrategy  extends ImprovedNamingStrategy{
+class PasterNamingStrategy  extends PhysicalNamingStrategyStandardImpl with PhysicalNamingStrategy{
 
+  
+        override def toPhysicalColumnName(name:Identifier, context:JdbcEnvironment):Identifier = {
+		return super.toPhysicalColumnName(transform(name), context)
+	}
+
+	override def toPhysicalCatalogName(name:Identifier,context:JdbcEnvironment):Identifier = {
+		return super.toPhysicalCatalogName(transform(name), context)
+	}
+
+	override def toPhysicalSchemaName(name:Identifier, context:JdbcEnvironment):Identifier = {
+		return super.toPhysicalSchemaName(transform(name), context)
+	}
+
+	override def toPhysicalSequenceName(name:Identifier, context:JdbcEnvironment):Identifier = {
+		return super.toPhysicalSequenceName(transform(name), context)
+	}
+
+	override def toPhysicalTableName(name:Identifier, context:JdbcEnvironment):Identifier = {
+		return super.toPhysicalTableName(transform(name), context)
+	}
+  
+  
     /**
-     * Transforms class names to table names by using the described naming conventions.
-     * @param className
-     * @return  The constructed table name.
-     */
-    override def classToTableName(className:String):String = {
-        return transform(super.classToTableName(className))
-    }
-    
-   override def collectionTableName(ownerEntity:String,
-            ownerEntityTable:String, 
-            associatedEntity:String,
-            associatedEntityTable:String, 
-            propertyName:String):String = 
-         transform(super.collectionTableName(ownerEntity,
-                ownerEntityTable, associatedEntity, associatedEntityTable,
-                propertyName))
-    
-
-    override def logicalCollectionTableName(tableName:String,
-            ownerEntityTable:String,
-            associatedEntityTable:String,
-            propertyName:String):String = 
-        this.transform(super.logicalCollectionTableName(tableName,
-                ownerEntityTable, associatedEntityTable, propertyName))
-    
-
-    def transform(tableName:String):String =
-       PasterNamingStrategy.TABLE_PREFIX+tableName.toLowerCase
+     *  append default prefix to all paster's tables and columns to avoid 
+     *  issues with reserved keywords
+     */    
+    def transform(i:Identifier):Identifier =
+         return if (i==null )  null
+          else
+            Identifier.toIdentifier(
+              (PasterNamingStrategy.TABLE_PREFIX+i.render()).toLowerCase,i.isQuoted())
    
   
 }

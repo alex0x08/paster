@@ -22,7 +22,7 @@ import org.springframework.transaction.annotation.Transactional
 
 @Transactional(readOnly = true, rollbackFor = Array(classOf[Exception]))
 abstract class StructDaoImpl[T <: Struct](model:Class[T])
-  extends BaseDaoImpl[T,java.lang.Long](model)  {
+            extends BaseDaoImpl[T,java.lang.Long](model)  {
 
   @Transactional
   def getFull(id:Long):T = {

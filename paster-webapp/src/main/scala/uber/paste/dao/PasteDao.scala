@@ -16,7 +16,7 @@
 
 package uber.paste.dao
 
-import uber.paste.model.{Channel, Paste, User,Priority}
+import uber.paste.model.{Channel, Paste, Tag, User,Priority}
 import javax.persistence.Tuple
 import javax.persistence.criteria.CriteriaQuery
 import javax.persistence.criteria.Predicate
@@ -34,6 +34,10 @@ class PasteDaoImpl extends SearchableDaoImpl[Paste](classOf[Paste]) {
   def getByOwner(owner:User) =  getListByKeyValue("owner",owner)
    
   def getByRemoteUrl(url:String) =  getListByKeyValue("remoteUrl",url) 
+  
+  
+  
+
   
   def getNextPaste(paste:Paste): Paste =  {
     val out:java.util.List[Paste] =  getNextPreviousPaste(paste,false,1)
