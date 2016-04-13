@@ -257,7 +257,7 @@ class PasteEditController extends GenericEditController[Paste]   {
         }
 
  
-        logger.debug("adding comment {0}",b)
+        logger.debug("adding comment {}",b)
 
     if (result.hasErrors()) {
       
@@ -292,7 +292,7 @@ class PasteEditController extends GenericEditController[Paste]   {
 
   
 
-    @RequestMapping(value = Array("/save"), method = Array(RequestMethod.POST))
+   @RequestMapping(value = Array("/save"), method = Array(RequestMethod.POST))
    override def save(@RequestParam(required = false) cancel:String,                      
            @Valid @ModelAttribute(GenericController.MODEL_KEY) b:Paste,
            result:BindingResult, model:Model,locale:Locale,
@@ -327,8 +327,9 @@ class PasteEditController extends GenericEditController[Paste]   {
     val allTags = tagDao.getTagsMap
     
     for (s<-b.getTagsAsString.split(" ")) {
-      if (!StringUtils.isBlank(s)) {
-        
+      if (!StringUtils.isBlank(s) 
+          && s.length>=3 // name min size
+          ) {
         if (allTags.containsKey(s)) {
             b.getTagsMap.put(s,allTags.get(s))
         } else {b.getTagsMap.put(s,new Tag(s))}

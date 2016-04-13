@@ -22,7 +22,6 @@ import uber.paste.model._
 import uber.paste.controller.ExtendedPageListHolder
 import uber.paste.controller.GenericController
 import uber.paste.controller.GenericListController
-
 import uber.paste.controller.SearchController
 import uber.paste.controller.SearchResult
 import uber.paste.dao.ChannelDao
@@ -132,8 +131,6 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
     super.fillListModel(model,locale)
     model.addAttribute("title","Pastas")
 
-    
-   
     model.addAttribute("availableSourceTypes",channelDao.getList)
     model.addAttribute("splitHelper",new DateSplitHelper(locale))
                     //config.share.integration=1

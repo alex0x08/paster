@@ -71,7 +71,6 @@
 <script type="text/javascript" src="<c:url value='/main/resources/${appId}/bower_components/pdfmake/build/pdfmake.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/main/resources/${appId}/bower_components/pdfmake/build/vfs_fonts.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/main/resources/${appId}/bower_components/html2canvas/build/html2canvas.js'/>"></script>
-<script type="text/javascript" src="<c:url value='/main/resources/${appId}/bower_components/canvas2image/canvas2image/canvas2image.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/main/resources/${appId}/bower_components/base64/base64.js'/>"></script>
 <!-- endbower -->
 <!-- endbuild -->

@@ -616,7 +616,7 @@
                 });
 
  
-                img = Canvas2Image.convertToPNG(canvas, true, 300, 200);
+                img = Canvas2Image.saveAsPNG(canvas, true, 300, 200);
                 thumbImg.set('value', img.src);
                 
                 $('editForm').submit();
