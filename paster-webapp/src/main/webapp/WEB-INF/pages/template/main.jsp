@@ -258,10 +258,10 @@
                         <c:if test="${not empty statusMessageKey}">
                             <script type="text/javascript">
 
-                                var operationMessage = '<fmt:message key="${statusMessageKey}"/>';
-
+                              
                                 window.addEvent('load', function () {
-                                    growl.notify(operationMessage);
+                                    
+                                    pasterApp.showNotify('<fmt:message key="${statusMessageKey}"/>');
                                 });
 
 

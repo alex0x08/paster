@@ -37,51 +37,5 @@
 </div>
 
    
-
-  <script  type="text/javascript">
-      
-       window.addEvent('load', function() {
-           
-         
-            bindDeleteDlg(document.body);
-        });
-
-      
-      function showModal(dlg,redirectUrl,action,title,message) {
-                           
-       
-         if (title!==null) {
-               dlg.getElementById('dialogTitle').set('text',title);
-         }
-         
-        if (action!==null) {
-             dlg.getElementById('dialogAction').set('text',action).set('href',redirectUrl);
-         }
-         
-         dlg.getElementById('dialogMessage').set('html',message);
-         
-          new Bootstrap.Popup(dlg, {animate:false,closeOnEsc:true}).show();
-      
-      };
-      
-      function bindDeleteDlg(parent) {
-
-        parent.getElements('.deleteBtn').each(function(el, i) {
-                el.addEvent("click", function(e) {
-                e.stop();
-                        var source = e.target || e.srcElement;
-                        showModal($('deletePopup'),source.parentElement.href,
-                                  '<fmt:message key='button.delete'/>',
-                                  '<fmt:message key='dialog.confirm.remove'/>',
-                                        source.parentElement.getElementById('dialogMsg').innerHTML);
-                });
-            });    
-
-          
-      };     
-    
-      
-  </script>
-  
        
   

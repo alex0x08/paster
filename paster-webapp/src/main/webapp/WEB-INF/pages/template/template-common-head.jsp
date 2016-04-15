@@ -82,18 +82,14 @@
 
          <script type="text/javascript" src="<c:url value='/main/resources/${appId}/paster/js/all/growler.js'/>"></script>
 
+           <script type="text/javascript" src="<c:url value='/main/resources/${appId}/paster/js/all/paster-app.js'/>"></script>
+
+         
     </c:otherwise>
 </c:choose>
 
 
 <script  type="text/javascript">
-
-
-    var transmitText = '<fmt:message key="action.sending"/>';
-    var growl = null;
-    window.addEvent('load', function () {
-        growl = new Growler.init();
-    });
 
 
     
@@ -136,7 +132,7 @@
     };
     
     
-marked.setOptions({
+    marked.setOptions({
   renderer: new marked.Renderer(),
   gfm: true,
   tables: true,
@@ -149,3 +145,46 @@ marked.setOptions({
 
 
 </script>
+
+
+
+  <script  type="text/javascript">
+      
+      // This will create a shortcut for `extend()`.
+Class.Mutators.Static = function(members) {
+    this.extend(members);
+};
+
+      
+      var PasterI18n = new Class({
+          Static: {
+        
+             text:  {
+                        notify: {
+                          transmitMessage: '<fmt:message key="action.sending"/>'
+                        },
+                        dialog: {
+                            removal: {
+                                title: '<fmt:message key='button.delete'/>',
+                                message: '<fmt:message key='dialog.confirm.remove'/>'
+                            }
+                        
+                        }   
+                    }
+        
+            }
+      });
+     
+      
+    
+      
+      var pasterApp = new PasterApp();
+      
+       window.addEvent('load', function() {
+           
+           pasterApp.appInit(document.body);
+        });
+
+      
+  </script>
+  

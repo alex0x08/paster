@@ -69,20 +69,40 @@
 <script type="text/javascript">
 
 
-   
 
-    SyntaxHighlighter.config.tagName = "pre";
+var PasterView = new Class({
+    initialize: function () {
+        
+        SyntaxHighlighter.config.tagName = "pre";
 
-    window.addEvent('load', function () {
 
+        this.clip = undefined;
+        this.clipLine = undefined;
+        this.lazyPaging = undefined;
+    },
+    init: function () {
+        
+        this.clip = new ZeroClipboard(document.id("ctrlc_link"));
+
+        this.clip.on('aftercopy', function (event) {
+            pasterApp.showNotify(event.data["text/plain"].length + ' symbols copied to clipboard.');
+        });
+
+        this.clipLine = new ZeroClipboard(document.id("ctrlc_line"));
+
+        this.clipLine.on('aftercopy', function (event) {
+            pasterApp.showNotify(event.data["text/plain"].length + ' symbols copied to clipboard.');
+        });
+
+        SyntaxHighlighter.highlight(${model.id}, {}, $('${model.id}_pasteText'), true, true);
+
+    },
+    setupCommentsAdd: function () {
     
-
-    <c:if test="${not empty currentUser or allowAnonymousCommentsCreate}">
-
         $('${model.id}_addCommentBtn').addEvent('click', function (event) {
             event.stop();
 
-            this.getElementById('btnCaption').set('text', transmitText);
+            this.getElementById('btnCaption').set('text', PasterI18n.text.notify.transmitMessage);
             this.set('disabled', true);
 
             $('${model.id}_addCommentForm').getElements('.disableOnSubmit').each(function (el, i) {
@@ -93,59 +113,21 @@
             onSaveComment('${model.id}');
 
         });
-
-
-    </c:if>
-
-     //   ZeroClipboard.config({swfPath: "<c:url value='/main/resources/${appId}/static/ZeroClipboard.swf'/>"});
-
-        var clip = new ZeroClipboard(document.id("ctrlc_link"));
-
-        clip.on('aftercopy', function (event) {
-            growl.notify(event.data["text/plain"].length + ' symbols copied to clipboard.');
-        });
-
-        var clipLine = new ZeroClipboard(document.id("ctrlc_line"));
-
-        clipLine.on('aftercopy', function (event) {
-            growl.notify(event.data["text/plain"].length + ' symbols copied to clipboard.');
-        });
-
-        SyntaxHighlighter.highlight(${model.id}, {}, $('${model.id}_pasteText'), true, true);
-
-    <c:if test="${availablePrevList.count > 0}">
-        $('pageLoadSpinner').toggle();
-        initLazy();
-    </c:if>
-
-    });
-
-</script>
-
-
-<c:if test="${availablePrevList.count > 0}">
-
-
-    <c:url var="rawPageUrl" value="/main/paste/raw/view"/>
-    <c:url var="userPageUrl" value="/main/paste"/>
-
-    <script type="text/javascript">
-
-        var userPageUrl = '${userPageUrl}', pageUrl = '${rawPageUrl}';
-
-        function initLazy() {
-            new LazyPagination(document, {
+    
+    },
+    setupLazy: function(pageUrl,userPageUrl,maxRequests,modelId,idSet) {
+         this.lazyPaging = new LazyPagination(document, {
                 url: pageUrl,
                 method: 'get',
-                maxRequests: ${availablePrevList.count},
+                maxRequests: maxRequests,
                 buffer: 100,
                 pageDataIndex: 'page',
                 idMode: true,
                 data: {
                     page: 0,
-                    id: ${model.id}
+                    id: modelId
                 },
-                idSet: [${availablePrevList.itemsAsString}],
+                idSet: idSet,
                 inject: {
                     element: 'morePages',
                     where: 'before'
@@ -162,7 +144,8 @@
                     //ptext.setStyle('display', 'none');
 
                     $(page + '_addCommentBtn').addEvent('click', function () {
-                        this.getElementById('btnCaption').set('text', transmitText).disabled = true;
+                        this.getElementById('btnCaption').set('text', 
+                                PasterI18n.text.notify.transmitMessage).disabled = true;
                         this.getElementById('btnIcon').setStyle('display', '');
                         onSaveComment(page);
                     });
@@ -171,7 +154,7 @@
                         history.pushState({id: page}, "Page " + page, userPageUrl + "/" + page);
                     } catch (e) {
                     }
-                    bindDeleteDlg(block);
+                    pasterApp.bindDeleteDlg(block);
 
                     initDraw(page);
                     showAll(page);
@@ -181,10 +164,47 @@
                 }
 
             });
-        };
+        }
 
-    </script>
+            
+                
+});
+   
 
+
+               var pasterView = new PasterView();
+    
+    window.addEvent('load', function () {
+
+        pasterView.init();
+
+    <c:if test="${not empty currentUser or allowAnonymousCommentsCreate}">
+
+        pasterView.setupCommentsAdd();
+
+    </c:if>
+
+    
+
+    <c:if test="${availablePrevList.count > 0}">
+        $('pageLoadSpinner').toggle();
+        
+    pasterView.setupLazy('<c:url value="/main/paste/raw/view"/>',
+                         '<c:url value="/main/paste"/>',
+                         ${availablePrevList.count},
+                         ${model.id},
+                         [${availablePrevList.itemsAsString}]);
+        
+    </c:if>
+
+    });
+
+</script>
+
+
+<c:if test="${availablePrevList.count > 0}">
+
+ 
     <div id="pageLoadSpinner" >
         <i class="fa fa-spinner"></i>
 
@@ -199,8 +219,9 @@
        value='/main/resources/${appId}/r/${model.lastModified.time}/${model.reviewImgData}'/>
 
 <script type="text/javascript">
-    var $j = jQuery.noConflict();
+   
 
+var $j = jQuery.noConflict();
 
     
     function getTextSizes(el) {
@@ -266,7 +287,8 @@
     img = new Image();
         img.src = "${drawImg}";
         img.onload = function () {
-            sk = $j('#' + modelId + '_sketch').sketch();
+            sk = $j('#' + modelId + '_sketch')
+                     .sketch();
             ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, sizes[1], sizes[0]);
         }
         
@@ -280,6 +302,9 @@
 
 
     function initDraw(modelId) {
+
+     var $j = jQuery.noConflict();
+    
 
         $j.each(['#ff1101', '#ff0', '#0f0', '#0ff', '#00f', '#6d47e7', '#000', '#fff'], function () {
             $j('#' + modelId + '_centerPanel .tools')
