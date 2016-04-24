@@ -90,7 +90,8 @@ var SyntaxHighlighter = function () {
             modelId: null,
             lineNumbers: {},
             currentEditLine: null, currentEditModel: null,
-            showComments: {}
+            showComments: {},
+            editor: []
         },
         /** This object is populated by user included external brush files. */
         brushes: {},
@@ -281,8 +282,15 @@ var SyntaxHighlighter = function () {
             sh.vars.editorOpts.textarea = 'commentText-'+modelId;
             
             
-            sh.vars.editor =  new EpicEditor(sh.vars.editorOpts);
+            sh.vars.editor[modelId] =  new EpicEditor(sh.vars.editorOpts);
  
+ 
+ // This setups up live previews by triggering preview() IF in fullscreen on keyup
+  //  sh.vars.editor[modelId].addEventListener('keyup', function (event) {
+      
+  //    console.log('event',event);
+    
+   // });
 
             sh.vars.modelId = modelId;
 
@@ -462,14 +470,17 @@ var SyntaxHighlighter = function () {
                 sh.vars.currentEditLine = null;
             }
             
-             sh.vars.editor.unload();
+             sh.vars.editor[modelId].unload();
            
 
 
         }, insertEditForm: function (modelId, lineNumber, parentId) {
             
-            if (sh.vars.editor.is('loaded')) {
-             sh.vars.editor.unload();
+            
+        
+            if (sh.vars.editor[modelId].is('loaded')) {
+             sh.vars.editor[modelId].unload();
+            console.log('editor unloaded');
                 
             }
              
@@ -539,7 +550,7 @@ var SyntaxHighlighter = function () {
             
             
             setTimeout(function () {
-            sh.vars.editor.load();
+            sh.vars.editor[modelId].load();
            
                 //cForm.getElementById('commentText').focus();
             }, 1);
