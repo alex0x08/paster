@@ -56,11 +56,9 @@
     
     
     <modules>
-        <module>paster-static-resources</module>
         <module>paster-run</module>
         <module>paster-oak</module>
-        <module>paster-webapp</module>
-	     
+        <module>paster-webapp</module>	     
     </modules>
    
        
@@ -104,11 +102,7 @@
             <url>https://maven.atlassian.com/content/groups/public</url>
         </repository> 
         
-        <!--repository>
-            <id>codehaus</id>
-            <name>Codehaus</name>
-            <url>http://repository.codehaus.org</url>
-        </repository-->
+       
 
         <repository>
             <id>scala</id>

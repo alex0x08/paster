@@ -65,10 +65,11 @@ object Loggered {
         }
         return true;
       }
-    }).toString();
+    }).toString()
   }
 
-  def getNewProtocolBuilder(clazz: AnyRef): ToStringBuilder = new ToStringBuilder(clazz.getClass.getName, Loggered.style)
+  def getNewProtocolBuilder(clazz: AnyRef): ToStringBuilder = 
+            new ToStringBuilder(clazz.getClass.getName, Loggered.style)
 
   def getLogger(clazz: AnyRef): Logger = LoggerFactory.getLogger(clazz.getClass)
 }
