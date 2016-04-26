@@ -1,5 +1,14 @@
 <%@ include file="/WEB-INF/pages/common/taglibs.jsp"%>
 
+
+
+        <%--
+
+        Common logic for paste's edit page
+        
+        --%>    
+
+
 <fmt:message var="submit_button_text" key="button.save"/>
 
 <c:url var="url" value='/main/paste/save' />

@@ -1,5 +1,14 @@
 <%@ include file="/WEB-INF/pages/common/taglibs.jsp"%>
 
+
+
+        <%--
+
+        Renders [delete] button for pastas
+        
+        
+        --%>    
+
 <tiles:importAttribute name="model" />
 <tiles:importAttribute name="modelName" />
 <tiles:importAttribute name="currentUser" ignore="true" />

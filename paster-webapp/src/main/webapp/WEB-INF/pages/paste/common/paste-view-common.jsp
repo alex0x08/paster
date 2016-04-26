@@ -1,12 +1,24 @@
 <%@ include file="/WEB-INF/pages/common/taglibs.jsp"%>
 
 
-<div class="row">
+<%--
 
-   
-    <div class="col-md-10 col-lg-10 ">
+    Shared logic (between normal and raw output) of paste's view page
 
-        <c:if test="${not empty model.commentCount and model.commentCount>0}">
+--%>
+
+
+<c:if test="${not empty model.commentCount and model.commentCount>0}">
+
+    
+<%--
+
+    show comments' toggle switch if paste has any comments
+--%>
+
+    <div class="row">
+
+        <div class="col-md-10 col-lg-10 ">
 
             <span style="vertical-align: top;font-size: larger;" class="i" 
                   title="<fmt:message key="comments.title"/>">C</span>
@@ -15,14 +27,20 @@
                title="<fmt:message key="button.hide"/>">
                 <span  class="i" >-</span>
             </a>
-        </c:if>
+        </div>
+
     </div>
+</c:if>
 
-</div>
 
 
+
+<%--
+
+    Paste's view main block
+    
+--%>
 <div class="row">
-
   
     <div id="${model.id}_centerPanel" class="col-md-12" 
          style="min-width:650px;">
@@ -30,6 +48,13 @@
         <c:url var="drawImg" 
                value='/main/resources/${appId}/r/${model.lastModified.time}/${model.reviewImgData}'/>
 
+
+        
+<%--
+
+        All |Comments|Draw top toggle
+   
+--%>
         
         <div class="btn-group" data-toggle="buttons"  
              data-trigger="removeClass" data-removeclass-options="
@@ -65,6 +90,13 @@
         </div>
 
        
+         
+<%--
+
+    Review image render (if exist)
+   
+--%>              
+                       
           <c:set var="backgroundReviewStyle" 
                  value="${model.reviewImgData==null ? '' : 'pointer-events:none;background: url('.concat(drawImg).concat(') no-repeat top left;') }"/>
       
@@ -77,6 +109,15 @@
         </div>
          
    
+            
+            
+        
+<%--
+
+    
+    Draw mode, paint options
+
+--%>    
         <div id="${model.id}_drawBlock" style="display:none;">
             <div class="row">
                 <div class="col-md-4">
@@ -119,11 +160,15 @@
                 </form:form>
                     
                 </div>
-                
-               
-
               
             </div>
+                      
+               
+            
+<%--
+
+    Draw mode, draw area
+--%>          
             <div id="${model.id}_drawArea" style="z-index:5000;position:absolute;
                  background-color:rgba(100,70,0,0.1);">
 
@@ -137,17 +182,33 @@
 
         </div>
 
-                         <div>
-        <pre id="${model.id}_pasteText" 
-             class="brush: ${model.codeType.code};toolbar: false; auto-links:false;highlight: [${commentedLinesList}]; " style="display:none; overflow-y: hidden;" >
-            <c:out value="${model.text}" escapeXml="true" />
-        </pre>                     
-                         </div>                  
+                         
+                         
+         
+<%--
+
+        Paste's content
+  
+--%>                
+                <div>
+                    <pre id="${model.id}_pasteText" 
+                         class="brush: ${model.codeType.code};toolbar: false; auto-links:false;highlight: [${commentedLinesList}]; " style="display:none; overflow-y: hidden;" >
+                        <c:out value="${model.text}" escapeXml="true" />
+                    </pre>                     
+                </div>                  
         
     </div>
 </div>
 
 
+        
+  
+<%--
+
+    Comments
+
+
+--%>      
 <div id="${model.id}_commentsList" style="display:none;">
 
     <c:forEach var="comment" items="${model.comments}" varStatus="loopStatus">
@@ -155,8 +216,6 @@
         <div id="${model.id}_numSpace_l${comment.id}" class="line" >
             <a href="#comment_l${comment.id}" title="<c:out value="${comment.id}"/>">#</a>
         </div>
-
-
 
         <div id="${model.id}_comment_l${comment.id}"  
              class="commentBlock ${comment.parentId==null ? 'parentComment' :'subComment'}" 

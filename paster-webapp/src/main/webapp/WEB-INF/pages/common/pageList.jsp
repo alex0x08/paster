@@ -1,5 +1,12 @@
 <%@ include file="/WEB-INF/pages/common/taglibs.jsp"%>
 
+
+        <%--
+
+        Generic paginated and sortable list
+        
+        --%>    
+
 <tiles:importAttribute name="listMode" />
 <tiles:importAttribute name="pageItems" />
 <tiles:importAttribute name="sortDesc" />

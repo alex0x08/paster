@@ -1,5 +1,14 @@
 <%@ include file="/WEB-INF/pages/common/taglibs.jsp"%>
 
+
+
+        <%--
+
+            Renders tags list
+        
+        --%>    
+
+
 <tiles:importAttribute name="model" />
 <tiles:importAttribute name="modelName" />
 

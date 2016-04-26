@@ -1,4 +1,13 @@
 <%@ include file="/WEB-INF/pages/common/taglibs.jsp"%>
+
+
+        <%--
+
+        Template for error pages
+        
+        --%>    
+
+
 <!DOCTYPE html>
 <compress:html enabled="true" 
                removeComments="true" compressJavaScript="true" compressCss="true" yuiJsDisableOptimizations="false">

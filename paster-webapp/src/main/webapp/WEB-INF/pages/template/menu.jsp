@@ -1,9 +1,17 @@
 <%@ include file="/WEB-INF/pages/common/taglibs.jsp"%>
 
-<div class="row">
-    <div class="hidden-sm hidden-xs col-md-10 col-lg-10">
 
-        <sec:authorize access="hasRole('ROLE_ADMIN')">
+        <%--
+
+       Admin's menu
+        
+        --%>    
+
+<sec:authorize access="hasRole('ROLE_ADMIN')">
+
+    <div class="row">
+        <div class="hidden-sm hidden-xs col-md-10 col-lg-10">
+
 
             <a href="<c:url value="/main/paste/list"/>">
                 <span class="i">/</span>
@@ -22,8 +30,9 @@
                 <fmt:message key="settings.dbconsole.title"/>
             </a>
 
-        </sec:authorize>
+
+        </div>
 
     </div>
 
-</div>
+</sec:authorize>

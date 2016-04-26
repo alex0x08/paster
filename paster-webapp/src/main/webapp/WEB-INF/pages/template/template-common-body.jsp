@@ -1,6 +1,13 @@
 <%@ include file="/WEB-INF/pages/common/taglibs.jsp"%>
  
 
+        <%--
+
+        Common content for all pages (will be attached to bottom of body)
+
+        
+        --%>    
+
 <div data-behavior="BS.Popup" class="modal hide" id="deletePopup">
 
     <div class="modal-dialog">

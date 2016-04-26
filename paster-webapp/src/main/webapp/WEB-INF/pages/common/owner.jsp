@@ -1,5 +1,12 @@
 <%@ include file="/WEB-INF/pages/common/taglibs.jsp"%>
 
+
+        <%--
+
+        Renders paste's owner
+        
+        --%>    
+
 <tiles:importAttribute name="model" />
 <tiles:importAttribute name="modelName" />
 

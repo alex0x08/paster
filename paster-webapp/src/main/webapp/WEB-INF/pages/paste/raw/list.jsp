@@ -1,5 +1,11 @@
 <%@ include file="/WEB-INF/pages/common/taglibs.jsp"%>
 
+<%--
+
+    Render paged list of pastas without template (raw)
+
+--%>
+
 <div id="paste_list_${param.page}" class="page">
     <h4 class="f-h4">
         <fmt:formatDate pattern="${dateTimePattern}" var="fromDate" value="${pageItems.firstElement.lastModified}" />

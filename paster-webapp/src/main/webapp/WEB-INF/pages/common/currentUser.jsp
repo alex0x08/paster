@@ -1,6 +1,12 @@
 <%@ include file="/WEB-INF/pages/common/taglibs.jsp"%>
 
 
+        <%--
+
+        Curent user (top right) dropdown
+        
+        --%>    
+
     <li class="dropdown" data-behavior="BS.Dropdown">
         <a href="#" id="userProfileSwitch" role="button" 
            class="dropdown-toggle" data-toggle="dropdown" >

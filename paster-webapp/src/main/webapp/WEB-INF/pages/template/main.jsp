@@ -1,4 +1,13 @@
 <%@ include file="/WEB-INF/pages/common/taglibs.jsp"%>
+
+
+        <%--
+
+        Main template
+        
+        --%>    
+
+
 <!DOCTYPE html>
 <compress:html enabled="false" 
                removeComments="true" compressJavaScript="true" 
