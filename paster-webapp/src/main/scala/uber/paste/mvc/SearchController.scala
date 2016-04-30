@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package uber.paste.controller
+package uber.paste.mvc
 
 import uber.paste.dao.SearchableDaoImpl
 import javax.servlet.http.HttpServletRequest
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation._
 import java.util.{Collections, Locale}
-import uber.paste.model.{KeyValue, Struct, Query, Key}
+import uber.paste.model.{Struct, Query, Key}
 import org.springframework.beans.support.PagedListHolder
 import org.apache.lucene.queryparser.classic.ParseException
 import org.apache.commons.lang3.StringUtils

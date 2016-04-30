@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uber.paste.controller
+package uber.paste.mvc
 
 import uber.paste.base.plugins.PluginUI
 import uber.paste.base.{ Loggered, SystemInfo }

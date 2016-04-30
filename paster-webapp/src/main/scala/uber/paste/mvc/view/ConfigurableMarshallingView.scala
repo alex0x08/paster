@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uber.paste.controller.view
+package uber.paste.mvc.view
 
 import org.springframework.oxm.Marshaller
 import org.springframework.web.servlet.view.xml.MarshallingView

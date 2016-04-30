@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uber.paste.controller
+package uber.paste.mvc
 
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping

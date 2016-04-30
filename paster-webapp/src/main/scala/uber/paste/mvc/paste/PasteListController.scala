@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-package uber.paste.controller.paste
+package uber.paste.mvc.paste
 
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation._
 import uber.paste.model._
-import uber.paste.controller.ExtendedPageListHolder
-import uber.paste.controller.GenericController
-import uber.paste.controller.GenericListController
-import uber.paste.controller.SearchController
-import uber.paste.controller.SearchResult
+import uber.paste.mvc.ExtendedPageListHolder
+import uber.paste.mvc.GenericController
+import uber.paste.mvc.GenericListController
+import uber.paste.mvc.SearchController
+import uber.paste.mvc.SearchResult
 import uber.paste.dao.ChannelDao
 import uber.paste.dao.CommentDaoImpl
 import uber.paste.dao.PasteDaoImpl

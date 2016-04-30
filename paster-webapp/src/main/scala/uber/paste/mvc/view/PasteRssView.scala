@@ -1,9 +1,9 @@
-package uber.paste.controller.view
+package uber.paste.mvc.view
 
 import org.springframework.web.servlet.view.feed.AbstractRssFeedView
 import scala.collection.JavaConversions._
 import javax.servlet.http.{HttpServletResponse, HttpServletRequest}
-import uber.paste.controller.GenericController
+import uber.paste.mvc.GenericController
 import uber.paste.model.Paste
 import com.rometools.rome.feed.rss.Channel
 import com.rometools.rome.feed.rss.Content

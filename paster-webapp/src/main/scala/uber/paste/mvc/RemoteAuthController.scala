@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Ubersoft, LLC.
+ * Copyright 2014 Ubersoft, LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,29 +14,20 @@
  * limitations under the License.
  */
 
-package uber.paste.controller.user
+package uber.paste.mvc
 
 import org.springframework.stereotype.Controller
+import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.RequestMapping
-import uber.paste.model.User
-import uber.paste.controller.GenericListController
-import uber.paste.dao.UserDaoImpl
-import uber.paste.manager.UserManager
-import org.springframework.beans.factory.annotation.Autowired
-
 
 @Controller
-@RequestMapping(Array("/user"))
-class UserListController extends GenericListController[User]{
+@RequestMapping(Array("/auth"))
+class RemoteAuthController {
 
-  @Autowired
-  private val userManager:UserDaoImpl = null
+  @RequestMapping(value = Array("/google","/linkedin"))
+  def index(model:Model) = {
+    model.asMap().clear()
+    "redirect:/main/paste/list"
+  }
   
-  def listPage="redirect:/main/user/list"
-  def editPage="/user/edit"
-  def viewPage="/user/view"
-
-
-  def manager() = userManager
- 
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uber.paste.controller
+package uber.paste.mvc
 
 import uber.paste.dao.StructDaoImpl
 import org.springframework.web.bind.annotation._

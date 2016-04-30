@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uber.paste.controller
+package uber.paste.mvc
 
 
 import java.awt.image.BufferedImage

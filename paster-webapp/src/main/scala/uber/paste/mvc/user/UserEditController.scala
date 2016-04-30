@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uber.paste.controller.user
+package uber.paste.mvc.user
 
 import org.springframework.stereotype.Controller
 import org.springframework.validation.BindingResult
@@ -27,8 +27,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
-import uber.paste.controller.GenericController
-import uber.paste.controller.GenericEditController
+import uber.paste.mvc.GenericController
+import uber.paste.mvc.GenericEditController
 import uber.paste.dao.UserDaoImpl
 import org.springframework.ui.Model
 import uber.paste.model.Role
