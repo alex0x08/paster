@@ -64,7 +64,7 @@
             <label class="btn btn-primary active">
                 <input type="radio" name="options" 
                        id="optionAll"   
-                       onclick="showAll(${model.id});"
+                       onclick="pasterView.showAll(${model.id});"
                        data-trigger="toggleClass" data-toggleclass-options="
                        'class': 'active',
                        'target': '!label'
@@ -73,15 +73,32 @@
             <label class="btn btn-primary">
                 <input type="radio" name="options" 
                        id="optionCommentsOnly" 
-                       onclick="showComments(${model.id});"
+                       onclick="pasterView.showComments(${model.id});"
                        data-trigger="toggleClass" data-toggleclass-options="
                        'class': 'active',
                        'target': '!label'
                        "> Comments
             </label>
             <label class="btn btn-primary">
+                
+                
+
+                <c:choose>
+                    <c:when test="${model.reviewImgData!=null}">
+<c:url var="drawImg" 
+       value='/main/resources/${appId}/r/${model.lastModified.time}/${model.reviewImgData}'/>
+                        
+                    </c:when>
+                    <c:otherwise>
+                        <c:set var="drawImg" value=""/>
+                    </c:otherwise>
+                </c:choose>
+
+
+
                 <input type="radio" name="options" 
-                       id="optionDrawArea"  onclick="showDrawArea(${model.id});"
+                       id="optionDrawArea"  
+                       onclick="pasterView.showDrawArea(${model.id},'${drawImg}');"
                        data-trigger="toggleClass" data-toggleclass-options="
                        'class': 'active',
                        'target': '!label'
@@ -190,7 +207,7 @@
         Paste's content
   
 --%>                
-                <div>
+                <div id="${model.id}_pasteBodyContent">
                     <pre id="${model.id}_pasteText" 
                          class="brush: ${model.codeType.code};toolbar: false; auto-links:false;highlight: [${commentedLinesList}]; " style="display:none; overflow-y: hidden;" >
                         <c:out value="${model.text}" escapeXml="true" />

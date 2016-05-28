@@ -60,11 +60,13 @@ abstract class GenericEditController[T <: Struct ] extends GenericController[T] 
   @RequestMapping(value = Array("/edit/{id:[0-9]+}"), method = Array(RequestMethod.GET))
   def editWithId(model:Model,@PathVariable("id") id:Long,locale:Locale):String= {
 
-      if (id==0) page404      
-    
+      if (id==0) {
+       return page404      
+      }
+      
       fillEditModel(loadModel(id),model,locale)
 
-    editPage
+    return editPage
   }
 
 
@@ -119,14 +121,15 @@ abstract class GenericEditController[T <: Struct ] extends GenericController[T] 
 
     val m = loadModel(id)
 
-    if (m==null)
+    if (m==null) {
      return page404
-
+    }
+    
     model.addAttribute(GenericController.MODEL_KEY, m)
 
     fillEditModel(m,model,locale)
 
-   viewPage
+   return viewPage
   }
 
 

@@ -8,7 +8,8 @@
     "src/main/webapp/WEB-INF/resources/bower_components"
   ],
   "dependencies": {
-    "bower": "^1.6.3"
+    "bower": "^1.6.3",
+    "jimp": "^0.2.24"
   },
   "devDependencies": {
     "event-stream": "3.3.1",

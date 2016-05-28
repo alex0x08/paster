@@ -26,10 +26,7 @@ class ConfigurableMarshallingView(marshaller:Marshaller) extends MarshallingView
    
     def getModelKeys():Array[String] = modelKeys
     
-
-    def setModelKeys(m:Array[String]) {
-        this.modelKeys = m
-    }
+    def setModelKeys(m:Array[String]) {  this.modelKeys = m    }
     
     override protected 
     def locateToBeMarshalled(model:java.util.Map[String,Object]):Object = {        

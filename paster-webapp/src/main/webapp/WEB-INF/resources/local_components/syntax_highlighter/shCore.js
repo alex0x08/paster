@@ -421,7 +421,7 @@ var SyntaxHighlighter = function () {
 
                     var textEl = cl.getElementById('commentMarkedText');
             
-            console.log('el',textEl,'html:',textEl.get('html'));
+           // console.log('el',textEl,'html:',textEl.get('html'));
             
             textEl.set('html',marked(textEl.get('html')));
 

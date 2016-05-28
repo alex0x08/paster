@@ -31,6 +31,8 @@
 
         <script src="<c:url value='/main/resources/${appId}/paster/js/paste-view/sketch.js'/>"></script>
 
+          <script src="<c:url value='/main/resources/${appId}/paster/js/paste-view/paste-view.js'/>"></script>
+
 
     </c:otherwise>
 
