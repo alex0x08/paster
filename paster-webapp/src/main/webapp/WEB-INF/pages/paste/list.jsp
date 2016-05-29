@@ -4,6 +4,9 @@
 <jsp:include page="/WEB-INF/pages/common/paste-update-poll.jsp"/>
 
 
+    <script src="<c:url value='/main/resources/${appId}/paster/js/paste-list/paste-list.js'/>"></script>
+
+
 <div class="row">
     <div class="col-md-8">
 
@@ -249,41 +252,18 @@
 
     <script type="text/javascript">
 
-        var userPageUrl = '${userPageUrl}';
 
-        var pageUrl = '${rawPageUrl}';
+        var pasterList = new PasterList();
 
-          var lazy; 
+
 
         window.addEvent('load', function () {
-            lazy = new LazyPagination(document, {
-                url: pageUrl,
-                method: 'get',
-                maxRequests: ${pageItems.pageCount-(pageItems.page+1)},
-                buffer: 250,
-                pageDataIndex: 'page',
-                data: {
-                    page: ${pageItems.page} + 2
-                },
-                inject: {
-                    element: 'morePages',
-                    where: 'before'
-                }, beforeLoad: function () {
-                    $('pageLoadSpinner').toggle();
-                }, afterAppend: function (block, page) {
-                    // alert(page);
-                    try {
-                        history.pushState({page: page}, "Page " + page, userPageUrl + "/" + page);
-                    } catch (e) {
-                    }
-                    $('paste_list_' + page).grab($('pageLoadSpinner'), "after");
 
-                    $('pageLoadSpinner').toggle();
-                    parseSearchResults(block);
-                    bindDeleteDlg(block);
-                }
+            pasterList.init('${rawPageUrl}', '${userPageUrl}',
+        ${pageItems.pageCount-(pageItems.page+1)},
+        ${pageItems.page} + 2);
 
-            });
+
         });
 
     </script>
@@ -296,25 +276,3 @@
 
 
 
-<script type="text/javascript">
-
-    var viewUrl = '${ctx}/main/paste', 
-            createUrl = '${ctx}/main/paste/newFrame?frameMode=1';
-
-    function parseSearchResults(parent) {
-        parent.getElements('.pasteTitle').each(function (el, i)
-        {
-            el.set(
-                    'html', el.get('html').replace(/\[result[^\]]*\]([\s\S]*?)\[\/result\]/gi,
-            "<span style='background-color: #e3e658; '>$1</span>")
-                    );
-        });
-    }
-
-    var createNewPasteDlg;
-
-    window.addEvent('load', function () {
-        parseSearchResults($('pastas'));
-
-    });
-</script>

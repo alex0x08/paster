@@ -53,17 +53,17 @@ var PasterView = new Class({
 
     },
     setupCommentsAdd: function (modelId) {
-        console.log('setup comments add ',modelId);
-        
+        console.log('setup comments add ', modelId);
+
         mainThis = this;
-        
-        $(modelId+'_addCommentBtn').addEvent('click', function (event) {
+
+        $(modelId + '_addCommentBtn').addEvent('click', function (event) {
             event.stop();
 
             this.getElementById('btnCaption').set('text', PasterI18n.text.notify.transmitMessage);
             this.set('disabled', true);
 
-            $(modelId+'_addCommentForm').getElements('.disableOnSubmit').each(function (el, i) {
+            $(modelId + '_addCommentForm').getElements('.disableOnSubmit').each(function (el, i) {
                 el.toggle();
             });
 
@@ -74,9 +74,9 @@ var PasterView = new Class({
 
     },
     setupLazy: function (pageUrl, userPageUrl, maxRequests, modelId, idSet) {
-        
+
         mainThis = this;
-        
+
         this.lazyPaging = new LazyPagination(document, {
             url: pageUrl,
             method: 'get',
@@ -152,7 +152,7 @@ var PasterView = new Class({
 
         $(modelId + "_drawBlock").hide();
 
-   },
+    },
     init: function (modelId) {
 
 
@@ -170,7 +170,7 @@ var PasterView = new Class({
 
         SyntaxHighlighter.highlight(modelId, {}, $(modelId + '_pasteText'), true, true);
 
-       this.setupDraw(modelId);
+        this.setupDraw(modelId);
         this.showAll(modelId);
 
     },
@@ -205,15 +205,15 @@ var PasterView = new Class({
         ctx = canvas.getContext('2d');
 
 
-        if (drawReviewData!='') {
+        if (drawReviewData != '') {
 
             img = new Image();
             img.src = drawReviewData;
             img.onload = function () {
-                
-                   var $j = jQuery.noConflict();
 
-                
+                var $j = jQuery.noConflict();
+
+
                 sk = $j('#' + modelId + '_sketch')
                         .sketch();
                 ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, sizes[1], sizes[0]);
@@ -231,43 +231,11 @@ var PasterView = new Class({
         var thumbImg = document.getElementById(modelId + '_thumbImgComment');
 
 
-        html2canvas(document.getElementById(modelId + '_pasteBodyContent'), {
-            logging: true,
-            onrendered: function (canvas) {
+        pasterApp.takeScreenshot(document.getElementById(modelId + '_pasteBodyContent'), function (img) {
+            thumbImg.set('value', img.src);
 
-                var img = document.createElement("canvas");
-                img.width = canvas.width;
-                img.height = canvas.height;
-
-
-                window.pica.resizeCanvas(canvas, img, {
-                    quality: 3,
-                    alpha: true,
-                    unsharpAmount: 150,
-                    unsharpRadius: 0.7,
-                    unsharpThreshold: 245,
-                    transferable: true
-                }, function (err) {
-
-                    // console.log(err);
-
-                });
-
-
-
-
-                img = Canvas2Image.saveAsPNG(img, true, 300, 200);
-                // document.body.appendChild(img);
-                thumbImg.set('value', img.src);
-
-                // console.log(img.src);
-                $(modelId + "_addCommentForm").submit();
-
-            }
-
+            $(modelId + "_addCommentForm").submit();
         });
-
-
 
     },
     onSaveReviewDraw: function (modelId) {
@@ -290,37 +258,13 @@ var PasterView = new Class({
 
         sketch.setStyle('background-image', 'url(' + imgData + ')');
 
+        pasterApp.takeScreenshot($(modelId + '_centerPanel'), function (img) {
+            thumbImg.set('value', img.src);
 
-        html2canvas($(modelId + '_centerPanel'), {
-            allowTaint: true,
-            taintTest: false,
-            onrendered: function (canvas) {
-
-
-                var img = document.createElement("canvas");
-                img.width = canvas.width;
-                img.height = canvas.height;
-
-
-                window.pica.resizeCanvas(canvas, img, {
-                    quality: 3,
-                    alpha: true,
-                    unsharpAmount: 150,
-                    unsharpRadius: 0.7,
-                    unsharpThreshold: 245,
-                    transferable: true
-                }, function (err) {
-
-                    // console.log(err);
-
-                });
-
-                img2 = Canvas2Image.saveAsPNG(img, true, 300, 200);
-                thumbImg.set('value', img2.src);
-
-                $(modelId + "_saveReviewDraw").submit();
-            }
+            $(modelId + "_saveReviewDraw").submit();
         });
+
+
 
 
     }

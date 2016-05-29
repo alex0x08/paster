@@ -18,9 +18,7 @@
         <script src="<c:url value='/main/resources/${appId}/local_components/pixastic/canvas2image.js'/>"></script>
 
         <script src="<c:url value='/main/resources/${appId}/local_components/pixastic/canvas-to-blob.js'/>"></script>
-        <script src="<c:url value='/main/resources/${appId}/local_components/pixastic/pixastic.core.js'/>"></script>
-        <script src="<c:url value='/main/resources/${appId}/local_components/pixastic/crop.js'/>"></script>
-
+      
 
         <script src="<c:url value='/main/resources/${appId}/bower_components/SyntaxHighlighter/scripts/XRegExp.js'/>"></script>
 

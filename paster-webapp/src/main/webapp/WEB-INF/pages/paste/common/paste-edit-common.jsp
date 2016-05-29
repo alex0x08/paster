@@ -2,18 +2,18 @@
 
 
 
-        <%--
+<%--
 
         Common logic for paste's edit page
         
-        --%>    
+--%>    
 
 
 <fmt:message var="submit_button_text" key="button.save"/>
 
 <c:url var="url" value='/main/paste/save' />
-      <c:url var="urlCancel" value='/main/paste/list' />
-  
+<c:url var="urlCancel" value='/main/paste/list' />
+
 
 
 <div class="row">
@@ -66,8 +66,8 @@
                                 </li>
                             </ul>
                         </li>
-                        
-                         <li  class="dropdown">
+
+                        <li  class="dropdown">
                             <a class="dropdown-toggle"
 
                                data-toggle="dropdown" >
@@ -171,7 +171,7 @@
                                         </c:forEach>
                                     </form:select> 
 
-                               
+
                                 </p>
 
 
@@ -183,9 +183,9 @@
                                     <span  class="i" >T</span><fmt:message key="paste.tags"/>
                                 </form:label>
 
-                                    <c:url var="tagsUrl" value='/main/paste/tags/names.json'/>
-                                    
-                                    <form:input cssClass="form-control" 
+                                <c:url var="tagsUrl" value='/main/paste/tags/names.json'/>
+
+                                <form:input cssClass="form-control" 
                                             data-behavior="Autocomplete" 
                                             data-autocomplete-url="${tagsUrl}"
                                             data-autocomplete-options="'allowDupes':false"
@@ -316,40 +316,40 @@
                             </div>
 
                         </div>
-                                
-                          <div class="tab-pane" id="openLocalFileTab" >
+
+                        <div class="tab-pane" id="openLocalFileTab" >
 
                             <div class="col-xs-4 col-sm-3 col-md-3 col-lg-2">
 
-                                                             
+
                                 <form:label path="codeType" cssClass="control-label" title="Select syntax" >
                                     Select file
                                 </form:label>
 
-                                    <span class="btn btn-primary btn-file">
-                                        Browse 
-                                        <input type="file" accept="text/*" id="select-file-btn"/>
+                                <span class="btn btn-primary btn-file">
+                                    Browse 
+                                    <input type="file" accept="text/*" id="select-file-btn"/>
 
-                                    </span>
-                                    
-                                    
-                                
+                                </span>
+
+
+
                                 <p class="help-block">
                                     Supported extensions: .txt, .java
-                                  
+
                                 </p>
                             </div>
                         </div>
-                              
-                         <div class="tab-pane" id="openRemoteFileTab" >
+
+                        <div class="tab-pane" id="openRemoteFileTab" >
 
                             <div class="col-xs-4 col-sm-3 col-md-3 col-lg-2">
-                                                             
+
                                 <form:label path="codeType" cssClass="control-label" title="Select syntax" >
-                                   Enter url
+                                    Enter url
                                 </form:label>
-                                   
-                                
+
+
                                 <p class="help-block"> 
                                     <a class="btn btn-xs" href="#">
                                         <i class="fa fa-check-square-o"></i>Set as default</a>
@@ -478,178 +478,19 @@
 
 <script type="text/javascript">
 
-    var max_length = 100;
-
-    var editor;
-
-    function readSingleFile(e) {
-        
-        var file = e.target.files[0];
-       
-        if (!file) {
-            return;
-        }
-        var reader = new FileReader();
-        reader.onload = function (e) {
-            var contents = e.target.result;
-            displayContents(contents);
-        };
-        reader.readAsText(file);
-    }
-
-    function displayContents(contents) {
-        editor.getSession().setValue(contents);
-    }
-
-
-    window.addEvent('paste', function (e) {
-        if (e.event.clipboardData) {
-
-            /*console.log(e.event.clipboardData);*/
-
-            var text = e.event.clipboardData.getData('text/plain');
-
-            var block = (text.length < max_length - 2) ? text.substring(0, text.length) : text.substring(0, max_length - 2) + '..';
-
-            var ptitle = $("pname");
-
-            if (ptitle.get('value') == '') {
-                ptitle.set('value', block);
-            }
-
-            //e.stop();
-        }
-    });
+    var pasterEdit = new PasterEdit();
 
     window.addEvent('load', function () {
 
-        var counter = new WordCount('wordCount', {
-            countWordsTo: $('wordsCount'),
-            countSymbolsTo: $('symbolsCount'),
-            inputName: null, //The input name from which text should be retrieved, defaults null
-            countWords: true, //Whether or not to count words
-            countChars: true, //Whether or not to count characters
-            charText: '<fmt:message key="paste.edit.word.counter.charText"/>', //The text that follows the number of characters
-            wordText: '<fmt:message key="paste.edit.word.counter.wordText"/>', //The text that follows the number of words
-            separator: ', ', //The text that separates the number of words and the number of characters
-            liveCount: false, //Whether or not to use the event trigger, set false if you'd like to call the getCount function separately
-            eventTrigger: 'keyup'			//The event that triggers the count update
+        pasterEdit.init('${model.codeType.editType}');
+
+        window.addEvent('paste', function (e) {
+
+            pasterEdit.onPaste(e);
         });
 
-        editor = ace.edit("editor");
-        editor.setTheme("ace/theme/chrome");
-        editor.setOptions({
-            autoScrollEditorIntoView: true
-        });
-        editor.getSession().setMode("ace/mode/${model.codeType.editType}");
-
-        var textarea = document.getElementById("ptext");
-
-        editor.getSession().setValue(textarea.get('value'));
-        counter.getCount(textarea.get('value'));
-
-    
-        $('select-file-btn').removeEvents("change");
-
-        $('select-file-btn').addEvent('change', function (e) {
-                    readSingleFile(e);
-             });      
-        
-          
-
-        //To focus the ace editor
-       // editor.focus();
-        //Get the number of lines
-        var count = editor.getSession().getLength();
-        //Go to end of the last line
-        editor.gotoLine(count, editor.getSession().getLine(count - 1).length);
-
-        editor.getSession().on('change', function () {
-            var text = editor.getSession().getValue();
-            textarea.set('value', text);
-            counter.getCount(text);
-        });
-      
-        $('ptheme').addEvent('change', function (event) {
-            editor.setTheme(this.getElement(':selected').value);
-        });
-        
-        $('normalized').addEvent('click', function () {
-            if (this.get('checked')) {
-                var col = 80;
-                editor.getSession().setUseWrapMode(true);
-                editor.getSession().setWrapLimitRange(col, col);
-                editor.renderer.setPrintMarginColumn(col);
-            } else {
-                editor.getSession().setUseWrapMode(false);
-                editor.renderer.setPrintMarginColumn(80);
-            }
-        });
-
-
-        $('fontsize').addEvent('change', function (event) {
-            editor.setFontSize(this.getElement(':selected').get("value"));
-        });
-
-        $('ptype').addEvent('change', function (event) {
-            editor.getSession().setMode("ace/mode/" + this.getElement(':selected').get("editCode"));
-        });
-
-        $('pprior').addEvent('change', function (event) {
-            var prPreview = $('priorPreview');
-            prPreview.erase('class');
-            prPreview.addClass('i');
-            prPreview.addClass(this.getElement(':selected').get("x-css-class-name"));
-        });
-    });
-
-
-</script>
-
-
-<script type="text/javascript">
-
-    function onSave() {
-
-        var thumbImg = document.getElementById('thumbImg');
-
-        html2canvas($('editor'), {
-            allowTaint: true,
-            taintTest: false,
-            onrendered: function (canvas) {
-
-                var img = Pixastic.process(canvas, "crop", {
-                    rect: {
-                        left: 15, top: 0, width: 600, height: 800
-                    }
-                });
-
- 
-                img = Canvas2Image.saveAsPNG(canvas, true, 300, 200);
-                thumbImg.set('value', img.src);
-                
-                $('editForm').submit();
-            }
-        });
-    }
-
-    function cleanTitle() {
-        $('pname').set('value', '');
-    }
-
-    window.addEvent('load', function () {
-
-        $$('.submitBtn').each(function (el, i) {
-
-            el.addEvent('click', function (event) {
-                this.getElementById('btnCaption').set('text', transmitText).disabled = true;
-                this.getElementById('btnIcon').toggle();
-
-                event.stop();
-                onSave();
-            });
-        });
     });
 
 </script>
+
 

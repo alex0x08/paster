@@ -68,6 +68,40 @@ var PasterApp = new Class({
                 });
 
 
+    },
+    takeScreenshot: function(source, onComplete) {
+        
+        
+        
+        html2canvas(source, {
+            allowTaint: true,
+            taintTest: false,
+            onrendered: function (canvas) {
+
+
+                var img = document.createElement("canvas");
+                img.width = canvas.width;
+                img.height = canvas.height;
+
+
+                window.pica.resizeCanvas(canvas, img, {
+                    quality: 3,
+                    alpha: true,
+                    unsharpAmount: 150,
+                    unsharpRadius: 0.7,
+                    unsharpThreshold: 245,
+                    transferable: true
+                }, function (err) {
+
+                    // console.log(err);
+
+                });
+
+                img2 = Canvas2Image.saveAsPNG(img, true, 300, 200);
+                
+                onComplete(img2);
+            }
+        });
     }
 
 });
