@@ -26,8 +26,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.crypto.codec.Base64
 import org.springframework.stereotype.Component
 import uber.paste.base.Loggered
-import uber.paste.model.Paste
-import uber.paste.model.Project
+import uber.paste.model.{Comment, Paste, Project}
 
 object ResourcePathHelper {
   val PATH_FORMAT = new SimpleDateFormat("YYYY/MM/dd/")
@@ -81,6 +80,24 @@ class ResourcePathHelper extends Loggered {
     return null
   }
 
+
+  def saveResource(pt: String, b: Comment,p:Paste): String = {
+
+    val fname = new StringBuilder()
+      //.append("thumbnails/")
+      .append(ResourcePathHelper.PATH_FORMAT.format(Calendar.getInstance().getTime()))
+      .append(p.getUuid)
+      .toString
+
+    val fimg = FileSystems.getDefault().getPath(pasteAppHome, "resources",
+      pt,
+      fname + ".jpg").toFile
+
+    val imgData = b.getThumbImage.substring(b.getThumbImage.indexOf(',') + 1)
+    FileUtils.writeByteArrayToFile(fimg, Base64.decode(imgData.getBytes))
+    fname.replaceAll("/", ",")
+
+  }
   def saveResource(pt: String, b: Paste): String = {
 
     val fname = new StringBuilder()
@@ -112,6 +129,6 @@ class ResourcePathHelper extends Loggered {
 
     }
 
-    return fname.replaceAll("/", ",")
+    fname.replaceAll("/", ",")
   }
 }

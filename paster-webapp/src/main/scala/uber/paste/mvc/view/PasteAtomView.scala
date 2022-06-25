@@ -5,7 +5,8 @@ import javax.servlet.http.{HttpServletResponse, HttpServletRequest}
 import com.rometools.rome.feed.atom.{Content, Entry, Feed}
 import uber.paste.mvc.GenericController
 import uber.paste.model.Paste
-import scala.collection.JavaConversions._
+import  scala.jdk.CollectionConverters._
+
 import java.util.Collections
 
 /**
@@ -24,7 +25,7 @@ class PasteAtomView extends AbstractAtomFeedView{
 
     val contentList =model.get(GenericController.NODE_LIST_MODEL).asInstanceOf[java.util.List[Paste]]
 
-    for (e:Paste<- contentList) {
+    for (e:Paste<- contentList.asScala) {
       val date = e.getLastModified
       if (feed.getUpdated() == null || date.compareTo(feed.getUpdated()) > 0) 
         feed.setUpdated(date)
@@ -45,7 +46,7 @@ class PasteAtomView extends AbstractAtomFeedView{
 
     val entries:java.util.List[Entry] = new java.util.ArrayList[Entry](contentList.size())
 
-    for (e:Paste<- contentList) {
+    for (e:Paste<- contentList.asScala) {
 
       val entry = new Entry()
       val date = String.format("%1$tY-%1$tm-%1$td", e.getLastModified)

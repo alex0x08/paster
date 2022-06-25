@@ -1,25 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:aop="http://www.springframework.org/schema/aop"
          xmlns:p="http://www.springframework.org/schema/p"
-       xmlns:context="http://www.springframework.org/schema/context"
-       xmlns:jee="http://www.springframework.org/schema/jee"
        xmlns:tx="http://www.springframework.org/schema/tx"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/aop
-       http://www.springframework.org/schema/aop/spring-aop.xsd
-       http://www.springframework.org/schema/beans
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans.xsd
-       http://www.springframework.org/schema/context
-       http://www.springframework.org/schema/context/spring-context.xsd
-       http://www.springframework.org/schema/jee
-       http://www.springframework.org/schema/jee/spring-jee.xsd
-       http://www.springframework.org/schema/tx
+     http://www.springframework.org/schema/tx
        http://www.springframework.org/schema/tx/spring-tx.xsd">
 
 
    
-    <tx:annotation-driven transaction-manager="transactionManager" proxy-target-class = "true" />
+    <tx:annotation-driven proxy-target-class = "true" />
 
     <bean class="org.springframework.orm.jpa.JpaTransactionManager" id="transactionManager">
         <property name="entityManagerFactory" ref="entityManagerFactory"/>
@@ -39,7 +30,7 @@
                 value="${db.driverClassName}" />  
     </bean>  
 
-    <bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource" destroy-method="shutdown">  
+    <bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource" >
           <constructor-arg ref="hikariConfig" />  
     </bean>  
     
@@ -60,11 +51,11 @@
                
             </bean>
         </property>
+
         <property name="jpaPropertyMap">
             <map>
                 <entry key="hibernate.physical_naming_strategy" value="uber.paste.dao.hibernate.PasterNamingStrategy" />
 
-                
                 <entry key="hibernate.search.default.indexBase" value="${paste.app.home}/index"/>
                 <!--entry key="hibernate.search.default.directory_provider"		
                        value="org.hibernate.search.store.FSDirectoryProvider"/-->
@@ -75,9 +66,11 @@
                  <entry key="hibernate.query.substitutions"		
                        value="true 'Y', false 'N'"/>
                 <entry key="hibernate.cache.use_second_level_cache"		
-                       value="true"/>              
-                 
-                <entry key="net.sf.ehcache.configurationResourceName"		
+                       value="true"/>
+                <entry key="hibernate.cache.region.factory_class"
+                       value="org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory"/>
+
+                <entry key="net.sf.ehcache.configurationResourceName"
                        value="${paste.app.home}/ehcache.xml"/>             
                  
                
@@ -91,6 +84,6 @@
     
     <bean class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor"/>
   
-    <bean class="org.springframework.orm.hibernate4.HibernateExceptionTranslator"/>
+    <bean class="org.springframework.orm.hibernate5.HibernateExceptionTranslator"/>
 
 </beans>

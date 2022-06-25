@@ -270,7 +270,7 @@ class JettyEmbedded {
                 webapp.setExtractWAR(true)
             
             server.setHandler(webapp)
-            server.addLifeCycleListener(new AbstractLifeCycle.AbstractLifeCycleListener() {
+          server.addEventListener(new AbstractLifeCycle.AbstractLifeCycleListener() {
               override def lifeCycleStarted(event:LifeCycle) {
                 cmdProgressExecutor.shutdown
               }

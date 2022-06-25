@@ -16,26 +16,19 @@
 
 package uber.paste.model
 
-import javax.persistence._
-import java.util.HashSet
-import java.util.ArrayList
-import java.util.Collection
-import java.util.Set
-import javax.validation.constraints.NotNull
-
-import org.hibernate.envers.Audited
-import org.hibernate.search.annotations.Field
-import org.hibernate.search.annotations.Indexed
-import org.hibernate.validator.constraints.Length;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import scala.collection.JavaConversions._
-import uber.paste.base.Loggered
-import org.apache.commons.lang3.StringUtils
 import com.fasterxml.jackson.annotation.JsonIgnore
-import java.util
-import javax.xml.bind.annotation.XmlTransient
 import org.apache.commons.codec.digest.DigestUtils
+import org.apache.commons.lang3.StringUtils
+import org.hibernate.search.annotations.{Field, Indexed}
+import org.hibernate.validator.constraints.Length
+import org.springframework.security.core.GrantedAuthority
+import org.springframework.security.core.userdetails.UserDetails
+import uber.paste.base.Loggered
+import java.util.{ArrayList, Collection, HashSet, Set}
+import javax.persistence._
+import javax.validation.constraints.NotNull
+import javax.xml.bind.annotation.XmlTransient
+import scala.jdk.CollectionConverters._
 
 object User extends Named(null) {
 
@@ -235,7 +228,7 @@ class User(name: String) extends Named(name) with UserDetails with java.io.Seria
     if (roles == null)
       return out
 
-    for (r <- roles) {
+    for (r <- roles.asScala) {
       out.add(Role.valueOf(r).asInstanceOf[GrantedAuthority])
     }
     return out

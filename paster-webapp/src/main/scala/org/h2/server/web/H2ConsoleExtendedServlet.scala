@@ -10,7 +10,7 @@ import javax.sql.DataSource
 import org.springframework.context.ApplicationContext
 import org.springframework.web.context.support.WebApplicationContextUtils
 import uber.paste.base.Loggered
-import scala.collection.JavaConversions._
+
 /**
  * This is extended version of JDBC Database Console Servlet,
  * packed with H2 Driver

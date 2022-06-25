@@ -25,7 +25,8 @@ import uber.paste.model.{Struct, Query, Key}
 import org.springframework.beans.support.PagedListHolder
 import org.apache.lucene.queryparser.classic.ParseException
 import org.apache.commons.lang3.StringUtils
-import scala.collection.JavaConversions._
+import  scala.jdk.CollectionConverters._
+
 
 
 /**
@@ -122,7 +123,7 @@ abstract class SearchController[T <: Struct,QV <: Query ] extends GenericListCon
 
    //   var totalFound:Int =0
 
-      for (r<-getAvailableResults()) {
+      for (r<-getAvailableResults().asScala) {
 
        val rout =  processPageListHolder(request,
                                          locale,

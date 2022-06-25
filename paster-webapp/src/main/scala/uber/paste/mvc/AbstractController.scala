@@ -16,28 +16,23 @@
 
 package uber.paste.mvc
 
-import uber.paste.base.plugins.PluginUI
-import uber.paste.base.{ Loggered, SystemInfo }
-import org.springframework.orm.ObjectRetrievalFailureException
-import org.springframework.web.bind.annotation.ExceptionHandler
-import uber.paste.model.User
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Value
-import org.springframework.context.MessageSource
-import javax.annotation.Resource
 import com.fasterxml.jackson.annotation.JsonIgnore
-import java.util.Locale
-import scala.collection.JavaConversions._
-import uber.paste.manager.UserManager
-
+import org.springframework.beans.factory.annotation.{Autowired, Value}
+import org.springframework.context.MessageSource
+import org.springframework.orm.ObjectRetrievalFailureException
 import org.springframework.web.bind.annotation._
+import uber.paste.base.{Loggered, SystemInfo}
+import uber.paste.manager.UserManager
+import uber.paste.model.User
+
+import java.util.Locale
 
 object LocaleConstants {
 
-  val availableLocales = Array(
+  val availableLocales: Array[Locale] =Array(
     Locale.US,
     new Locale("ru", "RU")
-  ).toList
+  )
 }
 
 abstract class AbstractController extends Loggered {
@@ -48,7 +43,7 @@ abstract class AbstractController extends Loggered {
 
   protected val page500 = "/error/500"
 
-  @Resource(name = "messageSource")
+  @Autowired//(name = "messageSource")
   protected val messageSource: MessageSource = null
 
   @Autowired
@@ -83,9 +78,6 @@ abstract class AbstractController extends Loggered {
     return page500
   }
 
-  @ModelAttribute("pluginUI")
-  def getPluginUI() = PluginUI.getInstance
-
   @ModelAttribute("appId")
   def getAppId() = appId
 
@@ -93,7 +85,7 @@ abstract class AbstractController extends Loggered {
   def getSystemInfo() = systemInfo
 
   @ModelAttribute("availableLocales")
-  def getAvailableLocales(): java.util.List[Locale] = LocaleConstants.availableLocales
+  def getAvailableLocales(): Array[Locale] = LocaleConstants.availableLocales
 
   @JsonIgnore
   @ModelAttribute("currentUser")

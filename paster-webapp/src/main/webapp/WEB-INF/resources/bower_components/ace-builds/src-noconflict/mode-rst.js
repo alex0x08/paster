@@ -234,16 +234,24 @@ var TextMode = require("./text").Mode;
 var RSTHighlightRules = require("./rst_highlight_rules").RSTHighlightRules;
 
 var Mode = function() {
-  this.HighlightRules = RSTHighlightRules;
+    this.HighlightRules = RSTHighlightRules;
 };
 oop.inherits(Mode, TextMode);
 
 (function() {
-  this.type = "text";
+    this.type = "text";
 
-  this.$id = "ace/mode/rst";
+    this.$id = "ace/mode/rst";
+    this.snippetFileId = "ace/snippets/rst";
 }).call(Mode.prototype);
 
 exports.Mode = Mode;
 
-});
+});                (function() {
+                    ace.require(["ace/mode/rst"], function(m) {
+                        if (typeof module == "object" && typeof exports == "object" && module) {
+                            module.exports = m;
+                        }
+                    });
+                })();
+            

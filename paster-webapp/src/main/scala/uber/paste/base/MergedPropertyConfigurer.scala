@@ -1,11 +1,8 @@
 package uber.paste.base
 
-import java.util.Properties
-import org.springframework.beans.factory.config.{ConfigurableListableBeanFactory, PropertyPlaceholderConfigurer}
 import org.springframework.beans.BeansException
-import scala.collection.JavaConversions._
-
-
+import org.springframework.beans.factory.config.{ConfigurableListableBeanFactory, PropertyPlaceholderConfigurer}
+import  scala.jdk.CollectionConverters._
 class MergedPropertyConfigurer extends PropertyPlaceholderConfigurer{
 
   private val propertiesMap:java.util.Map[String, String] = new java.util.HashMap[String, String]()
@@ -21,7 +18,7 @@ class MergedPropertyConfigurer extends PropertyPlaceholderConfigurer{
   override protected def processProperties(beanFactory:ConfigurableListableBeanFactory ,  props:java.util.Properties)  {
     super.processProperties(beanFactory, props)
 
-    for ( key:Object <- props.keySet()) {
+    for ( key:Object <- props.keySet().asScala) {
       val keyStr = key.toString
       val valueStr = resolvePlaceholder(keyStr, props, springSystemPropertiesMode);
       propertiesMap.put(keyStr, valueStr);

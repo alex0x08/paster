@@ -18,37 +18,18 @@ package uber.paste.model
 
 
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute
+import org.hibernate.search.annotations.{Field, Index, Store, TermVector}
 import java.beans.PropertyEditorSupport
-import java.io.IOException
-import java.util.Collection
-import java.util.HashMap
+import java.util.{Collection, HashMap}
 import javax.persistence._
-
-import org.apache.lucene.queryparser.classic.QueryParser
-import org.apache.lucene.search.highlight.Highlighter
-import org.hibernate.search.annotations.Boost
-import org.hibernate.search.annotations.DateBridge
-import org.hibernate.search.annotations.Field
-import org.hibernate.search.annotations.Index
-import org.hibernate.search.annotations.Resolution
-import org.hibernate.search.annotations.Store
-import org.hibernate.search.annotations.TermVector
-import org.hibernate.validator.constraints.SafeHtml
-import org.hibernate.validator.constraints.SafeHtml.WhiteListType
-import org.hibernate.validator._
 import javax.validation.constraints.NotNull
-import uber.paste.base.Loggered
-
 
 object Key extends Named {
-  
-  abstract class Builder[T <: Key](model:T) extends Named.Builder[T](model) {
-
-  def addCode(code:String): Builder[T]  = {
-    get().setCode(code)
-    return this
-  }
-  
+  abstract class Builder[T <: Key](model: T) extends Named.Builder[T](model) {
+    def addCode(code: String): Builder[T] = {
+      get().setCode(code)
+      return this
+    }
   }
 }
 
@@ -59,101 +40,100 @@ object Key extends Named {
 
 class KeyObj[T <: Key] {
 
-  val map = new HashMap[String,T]
+  val map = new HashMap[String, T]
 
-   def add(c:T) {
-    map.put(c.getCode,c)
+  def add(c: T) {
+    map.put(c.getCode, c)
   }
 
-  def getList:Collection[T] = list 
-  
-  def list:Collection[T] =  map.values
-  
-  def valueOf(key:String):T = 
+  def getList: Collection[T] = list
+
+  def list: Collection[T] = map.values
+
+  def valueOf(key: String): T =
     if (map.containsKey(key)) map.get(key) else null.asInstanceOf[T]
-  
+
 }
 
 
-class KeyEditorEnum[T <: Key](vobj:KeyObj[T]) extends PropertyEditorSupport{
+class KeyEditorEnum[T <: Key](vobj: KeyObj[T]) extends PropertyEditorSupport {
 
-  override def setAsText(text:String) {
+  override def setAsText(text: String) {
     setValue(vobj.valueOf(text.toLowerCase));
   }
 
-  override def getAsText():String = {
+  override def getAsText(): String = {
     val s = getValue().asInstanceOf[T]
-    return if (s == null) 
+    return if (s == null)
       null
-     else 
+    else
       s.getCode
-    
+
   }
 }
 
 
-class KeyEditor[T <: Key](vobj:Key) extends PropertyEditorSupport{
+class KeyEditor[T <: Key](vobj: Key) extends PropertyEditorSupport {
 
-  override def setAsText(text:String) {
-    
+  override def setAsText(text: String) {
+
     setValue(vobj.create(text.toLowerCase))
   }
 
-  override def getAsText():String = {
+  override def getAsText(): String = {
     val s = getValue().asInstanceOf[T]
-    return if (s == null) 
+    return if (s == null)
       null
-     else 
+    else
       s.getCode
-    
+
   }
 }
 
 
-
-
-
 @MappedSuperclass
-class Key(kcode:String,kname:String) extends Named(kname) with java.io.Serializable{
-  
+class Key(kcode: String, kname: String) extends Named(kname) with java.io.Serializable {
+
   @NotNull
-  @Column(nullable = false, length = 50,unique=true)
+  @Column(nullable = false, length = 50, unique = true)
   @XStreamAsAttribute
-  @Field(index = Index.YES, store =Store.YES, termVector = TermVector.YES) //,boost=@Boost(2f)
-  @SafeHtml(whitelistType=WhiteListType.NONE,message = "{validator.forbidden-symbols}")
+  @Field(index = Index.YES, store = Store.YES, termVector = TermVector.YES) //,boost=@Boost(2f)
+  //@SafeHtml(whitelistType=WhiteListType.NONE,message = "{validator.forbidden-symbols}")
   private var code: String = kcode
-  
+
   @Column(name = "k_translated")
   private var translated: Boolean = false
-  
-  def this() = this(null,null)
+
+  def this() = this(null, null)
 
   def isTranslated() = translated
 
-  def setTranslated(v: Boolean) { translated = v }
-  
-  def getCode() = code
-  def setCode(f:String) { 
-   code = if (f!=null) 
-       f.toUpperCase else null 
+  def setTranslated(v: Boolean) {
+    translated = v
   }
-  
-  def create(code:String): Any = null
-      
-  override def hashCode():Int = {
-    var hash:Int = 53*7;
-        
+
+  def getCode() = code
+
+  def setCode(f: String) {
+    code = if (f != null)
+      f.toUpperCase else null
+  }
+
+  def create(code: String): Any = null
+
+  override def hashCode(): Int = {
+    var hash: Int = 53 * 7;
+
     // if (id != null) 
     //   hash+=id.hashCode();
-    if (code != null) 
-      hash+=code.hashCode();
-        
+    if (code != null)
+      hash += code.hashCode();
+
     return hash;
   }
 
-  override def equals(from:Any):Boolean =  (from.isInstanceOf[Key] && getCode != null 
-                                            && from.asInstanceOf[Key].getCode().equals(code))
-  
+  override def equals(from: Any): Boolean = (from.isInstanceOf[Key] && getCode != null
+    && from.asInstanceOf[Key].getCode().equals(code))
 
-  
+
 }

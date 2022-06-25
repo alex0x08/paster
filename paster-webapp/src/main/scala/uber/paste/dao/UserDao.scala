@@ -16,27 +16,19 @@
 
 package uber.paste.dao
 
-import scala.collection.JavaConversions._
+import scala.jdk.CollectionConverters._
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
 import uber.paste.model.{User}
 
-
-
 @Repository("userDao")
 @Transactional(readOnly = true, rollbackFor = Array(classOf[Exception]))
-class UserDaoImpl extends StructDaoImpl[User](classOf[User])  {
+class UserDaoImpl extends StructDaoImpl[User](classOf[User]) {
 
-  
-
-  def getUser(username:String) = getSingleByKeyValue("username", username)
- 
-
-  def getUserByOpenID(openid:String) = getSingleByKeyValue("openID", openid)
-  
-
+  def getUser(username: String) = getSingleByKeyValue("username", username)
+  def getUserByOpenID(openid: String) = getSingleByKeyValue("openID", openid)
 }
 
-class UserExistsException extends Exception with java.io.Serializable{
+class UserExistsException extends Exception with java.io.Serializable {
 
 }

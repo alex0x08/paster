@@ -23,7 +23,7 @@ import uber.paste.base.Loggered
 import javax.persistence.{EntityManager, PersistenceContext, Tuple}
 import java.util.ArrayList
 import javax.persistence.criteria.CriteriaQuery
-import scala.collection.JavaConversions._
+import  scala.jdk.CollectionConverters._
 
 
 object BaseDaoImpl {
@@ -224,7 +224,7 @@ abstract class BaseDaoImpl[T <: java.io.Serializable,PK <:java.io.Serializable ]
     val tupleResult:java.util.List[Tuple] = em.createQuery(cr.ct)
           .setMaxResults(BaseDaoImpl.MAX_RESULTS).getResultList()
     
-    for (t<-tupleResult) {
+    for (t<-tupleResult.asScala) {
       out.add(t.get(0).asInstanceOf[PK])
     }
     return out

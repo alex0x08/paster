@@ -65,7 +65,7 @@
     <pluginRepositories>
         <pluginRepository>
             <id>alfresco-public-releases</id>
-            <url>http://maven.alfresco.com/nexus/content/groups/public</url>
+            <url>https://maven.alfresco.com/nexus/content/groups/public</url>
         </pluginRepository>
     </pluginRepositories>
 
@@ -73,21 +73,21 @@
 
         <repository>
             <id>alfresco-public-releases</id>
-            <url>http://maven.alfresco.com/nexus/content/groups/public</url>
+            <url>https://maven.alfresco.com/nexus/content/groups/public</url>
         </repository>
         
         
         <repository>
             <id>jboss-thirdparty</id>
             <name>jboss-thirdparty</name>
-            <url>http://repository.jboss.org/nexus/content/repositories/thirdparty-releases</url>
+            <url>https://repository.jboss.org/nexus/content/repositories/thirdparty-releases</url>
         </repository>
           
           
         <repository>
             <id>jboss-snapshots</id>
             <name>jboss snapshots</name>
-            <url>http://snapshots.jboss.org/maven2</url>
+            <url>https://snapshots.jboss.org/maven2</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
@@ -107,13 +107,13 @@
         <repository>
             <id>scala</id>
             <name>Scala tools</name>
-            <url>http://scala-tools.org/repo</url>
+            <url>https://scala-tools.org/repo</url>
         </repository>
             
         <repository>
             <id>spring</id>
             <name>Spring Release</name>
-            <url>http://maven.springframework.org/release</url>
+            <url>https://maven.springframework.org/release</url>
         </repository>
             
 

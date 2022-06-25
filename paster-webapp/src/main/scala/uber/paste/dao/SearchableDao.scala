@@ -16,35 +16,19 @@
 
 package uber.paste.dao
 
-import org.springframework.transaction.annotation.Transactional
-import org.apache.lucene.util.Version
-import org.hibernate.CacheMode
-
-import org.hibernate.search.jpa.FullTextEntityManager
-import org.hibernate.search.jpa.FullTextQuery
-import org.hibernate.search.jpa.Search
-import org.springframework.beans.factory.annotation.Autowired
-import uber.paste.model.Struct
-
-import uber.paste.model.Key
-import uber.paste.model.Query
-
 import org.apache.commons.lang3.StringUtils
 import org.apache.lucene.analysis.standard.StandardAnalyzer
-import org.apache.lucene.queryparser.classic.QueryParser
-import org.apache.lucene.queryparser.classic.MultiFieldQueryParser
-import org.apache.lucene.queryparser.classic.ParseException
-import org.apache.lucene.search.highlight.Highlighter
-import org.apache.lucene.search.highlight.InvalidTokenOffsetsException
-import org.apache.lucene.search.highlight.QueryScorer
-import org.apache.lucene.search.highlight.SimpleHTMLFormatter
-import org.apache.lucene.search.highlight.SimpleSpanFragmenter
-
-import java.io.IOException
-import java.io.StringReader
-import java.util.ArrayList
-import scala.collection.JavaConversions._
+import org.apache.lucene.queryparser.classic.{MultiFieldQueryParser, ParseException, QueryParser}
+import org.apache.lucene.search.highlight.{Highlighter, QueryScorer, SimpleHTMLFormatter, SimpleSpanFragmenter}
+import org.hibernate.{CacheMode, Session}
+import org.hibernate.search.jpa.{FullTextEntityManager, FullTextQuery, Search}
+import org.springframework.transaction.annotation.Transactional
 import uber.paste.base.Loggered
+import uber.paste.model.Struct
+
+import scala.jdk.CollectionConverters._
+import java.util.ArrayList
+import javax.persistence.EntityManager
 
 object SearchableDaoImpl {
   
@@ -66,12 +50,12 @@ abstract class SearchableDaoImpl[T <: Struct](model:Class[T])
    */
   SearchableDaoImpl.searchableDao.add(this)
   
-  @throws(classOf[ParseException])
+  //@throws(classOf[ParseException])
   protected class FSearch(query:String) extends Loggered{
         
       logger.debug("searching for {}",query)
     
-    val fsession = getFullTextEntityManager()
+    val fsession: FullTextEntityManager = getFullTextEntityManager()
 
         val pparser = new MultiFieldQueryParser(getDefaultStartFields(),
                                                 new StandardAnalyzer())
@@ -89,8 +73,8 @@ abstract class SearchableDaoImpl[T <: Struct](model:Class[T])
         def getResults() = fillHighlighted(highlighter, pparser, fquery.getResultList())
         
     }
-  
-   def getFullTextEntityManager() = Search.getFullTextEntityManager(em)
+
+  def getFullTextEntityManager() = Search.getFullTextEntityManager(em)
 
    def getDefaultStartFields():Array[String] = {
         return SearchableDaoImpl.DEFAULT_START_FIELDS
@@ -99,13 +83,14 @@ abstract class SearchableDaoImpl[T <: Struct](model:Class[T])
    def fillHighlighted(highlighter:Highlighter,
             pparser:QueryParser,
             results:java.util.List[_]):java.util.List[T] = {
-        for (obj <- results) {
+        for (obj <- results.asScala) {
           fillHighlighted(highlighter, pparser, obj.asInstanceOf[T])
         }
         return results.asInstanceOf[java.util.List[T]]
      }
   
    def indexAll() {
+
         val fsession = getFullTextEntityManager()
         try {
           

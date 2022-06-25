@@ -18,26 +18,17 @@ package uber.paste.manager
 
 
 
-  
 
-import org.pac4j.core.credentials.Credentials
-import org.pac4j.springframework.security.authentication.ClientAuthenticationToken
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Qualifier
+import org.springframework.beans.factory.annotation.{Autowired, Qualifier}
 import org.springframework.dao.DataAccessException
 import org.springframework.security.access.annotation.Secured
 import org.springframework.security.access.prepost.PreAuthorize
-
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.session.SessionRegistry
-import org.springframework.security.core.userdetails.AuthenticationUserDetailsService
-import org.springframework.security.core.userdetails.UserDetails
-import org.springframework.security.core.userdetails.UserDetailsService
-import org.springframework.security.core.userdetails.UsernameNotFoundException
+import org.springframework.security.core.userdetails.{UserDetails, UserDetailsService, UsernameNotFoundException}
 import org.springframework.security.crypto.password.PasswordEncoder
 import uber.paste.base.Loggered
-import uber.paste.dao.UserDaoImpl
-import uber.paste.dao.UserExistsException
+import uber.paste.dao.{UserDaoImpl, UserExistsException}
 import uber.paste.model.User
 
 object UserManager extends Loggered{
@@ -71,8 +62,7 @@ object UserManager extends Loggered{
 
 
 //@Service("userManager")
-class UserManagerImpl extends UserDetailsService 
-                         with AuthenticationUserDetailsService[ClientAuthenticationToken] with Loggered{
+class UserManagerImpl extends UserDetailsService  with Loggered{
 
   @Autowired
   val userDao:UserDaoImpl = null
@@ -119,14 +109,6 @@ class UserManagerImpl extends UserDetailsService
     userDao.remove(u.getId)
   }
 
-  @throws(classOf[UsernameNotFoundException])
-  override def loadUserDetails(token:ClientAuthenticationToken):UserDetails = {
-    val out = userDao.getUserByOpenID(token.getCredentials.asInstanceOf[Credentials].getClientName)
-   //if (out==null )
-    //  throw new UsernameNotFoundException("User not found (oauth)")
-    return out
-    
-  }
   
   @throws(classOf[UsernameNotFoundException])
   @throws(classOf[DataAccessException])

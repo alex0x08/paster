@@ -16,11 +16,11 @@
 
 package uber.paste.base
 
-import org.slf4j.{ Logger, LoggerFactory }
-import org.apache.commons.lang3.builder.{ StandardToStringStyle, ToStringBuilder, ReflectionToStringBuilder }
 import com.fasterxml.jackson.annotation.JsonIgnore
+import org.apache.commons.lang3.builder.{ReflectionToStringBuilder, StandardToStringStyle, ToStringBuilder}
+import org.slf4j.{Logger, LoggerFactory}
+
 import java.lang.reflect.Field
-import javax.jws.WebMethod
 
 object Loggered {
 
@@ -47,7 +47,7 @@ object Loggered {
   }
 
   def toStringSkip(x: Any, fields: Array[String]): String = {
-    return (new ReflectionToStringBuilder(x, style) {
+    return new ReflectionToStringBuilder(x, style) {
       override def accept(f: Field): Boolean = {
 
         if (!super.accept(f)) {
@@ -65,7 +65,7 @@ object Loggered {
         }
         return true;
       }
-    }).toString()
+    }.toString()
   }
 
   def getNewProtocolBuilder(clazz: AnyRef): ToStringBuilder = 
@@ -77,12 +77,12 @@ object Loggered {
 trait Loggered {
 
   @transient
-  @WebMethod(exclude = true)
+ // @WebMethod(exclude = true)
   @JsonIgnore
   def logger = LoggerFactory.getLogger(getClass.getName)
 
   @transient
-  @WebMethod(exclude = true)
+ // @WebMethod(exclude = true)
   @JsonIgnore
   def getNewProtocolBuilder(): ToStringBuilder = new ToStringBuilder(this, Loggered.style)
 

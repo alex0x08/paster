@@ -22,7 +22,7 @@ import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
 import uber.paste.model.Channel
 import uber.paste.model.Tag
-import scala.collection.JavaConversions._
+import  scala.jdk.CollectionConverters._
 
 
 @Repository("channelDao")
@@ -40,7 +40,7 @@ class TagDao extends StructDaoImpl[Tag](classOf[Tag]){
   def getTagsMap():java.util.Map[String,Tag] = {
     val out = new HashMap[String,Tag]
     
-    for (t <- getAll) {
+    for (t <- getAll.asScala) {
         out.put(t.getName,t)
     }
     
@@ -55,7 +55,7 @@ class TagDao extends StructDaoImpl[Tag](classOf[Tag]){
    val l =  em.createQuery("select t, count(t) from Paste p join p.tagsMap t group by t")
    .getResultList
     
-    for (o<-l) {
+    for (o<-l.asScala) {
      val oo = o.asInstanceOf[Array[Object]]
       
       val tag = oo(0).asInstanceOf[Tag]

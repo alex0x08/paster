@@ -1,19 +1,18 @@
 package uber.paste.startup
 
-import uber.paste.base.Loggered
-import javax.servlet.ServletContextListener
-import java.nio.file.FileSystems
-import java.util.Locale
-import javax.servlet.ServletContextEvent
 import ch.qos.logback.classic.LoggerContext
 import ch.qos.logback.classic.joran.JoranConfigurator
 import ch.qos.logback.classic.util.ContextInitializer
 import ch.qos.logback.core.joran.spi.JoranException
 import ch.qos.logback.core.util.StatusPrinter
-import java.io.{IOException, File}
 import org.apache.commons.io.FileUtils
 import org.slf4j.LoggerFactory
-import scala.collection.JavaConversions._
+import uber.paste.base.Loggered
+
+import java.io.{File, IOException}
+import java.nio.file.FileSystems
+import java.util.Locale
+import javax.servlet.{ServletContextEvent, ServletContextListener}
 
 
 

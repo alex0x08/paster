@@ -16,25 +16,15 @@
 
 package uber.paste.model
 
-import javax.persistence._
-import javax.validation.constraints.{Size, NotNull}
-
-import net.sf.classifier4J.summariser.SimpleSummariser
-import org.apache.commons.lang3.StringUtils
-
-import javax.xml.bind.annotation._
-import uber.paste.base.Loggered
 import com.fasterxml.jackson.annotation.JsonIgnore
-
-import java.util.{Set,HashSet,ArrayList, UUID}
-import org.hibernate.search.annotations.Field
-import org.hibernate.search.annotations.Index
-import org.hibernate.search.annotations.IndexedEmbedded
-import org.hibernate.search.annotations.Store
-import org.hibernate.search.annotations.TermVector
-import org.hibernate.search.annotations.Indexed
-import scala.collection.JavaConversions._
-//import org.hibernate.envers.{NotAudited, Audited}
+import net.sf.classifier4J.summariser.SimpleSummariser
+import org.hibernate.search.annotations.{Index, _}
+import uber.paste.base.Loggered
+import java.util.{ArrayList, UUID}
+import javax.persistence._
+import javax.validation.constraints.{NotNull, Size}
+import javax.xml.bind.annotation._
+import scala.jdk.CollectionConverters._
 
 /**
  * paste model constants
@@ -335,7 +325,7 @@ class Paste(title:String) extends Named(title) with java.io.Serializable{
         getOwner.loadFull
       }
       getText
-              for (c<-comments) {
+              for (c<-comments.asScala) {
                       c.loadFull()
               }
   }

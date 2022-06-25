@@ -1,15 +1,13 @@
 package uber.paste.mvc.view
 
+import com.rometools.rome.feed.rss.{Channel, Content, Description, Item}
 import org.springframework.web.servlet.view.feed.AbstractRssFeedView
-import scala.collection.JavaConversions._
-import javax.servlet.http.{HttpServletResponse, HttpServletRequest}
-import uber.paste.mvc.GenericController
 import uber.paste.model.Paste
-import com.rometools.rome.feed.rss.Channel
-import com.rometools.rome.feed.rss.Content
-import com.rometools.rome.feed.rss.Description
-import com.rometools.rome.feed.rss.Item
+import uber.paste.mvc.GenericController
+import  scala.jdk.CollectionConverters._
+
 import java.util.Collections
+import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
 
 /**
  * Created with IntelliJ IDEA.
@@ -49,7 +47,7 @@ class PasteRssView extends AbstractRssFeedView{
 
     val entries:java.util.List[Item] = new java.util.ArrayList[Item](contentList.size())
 
-    for (e:Paste<- contentList) {
+    for (e:Paste<- contentList.asScala) {
 
       val entry = new Item()
 

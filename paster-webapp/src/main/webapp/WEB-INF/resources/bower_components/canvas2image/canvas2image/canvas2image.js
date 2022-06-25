@@ -198,10 +198,7 @@ var Canvas2Image = function () {
 	 * @param {Number} [optional] png height
 	 */
 	var saveAsImage = function (canvas, width, height, type) {
-		
-            console.log('canvas',$support.canvas,'dataURL',$support.dataURL);
-            
-            if ($support.canvas && $support.dataURL) {
+		if ($support.canvas && $support.dataURL) {
 			if (typeof canvas == "string") { canvas = document.getElementById(canvas); }
 			if (type == undefined) { type = 'png'; }
 			type = fixType(type);

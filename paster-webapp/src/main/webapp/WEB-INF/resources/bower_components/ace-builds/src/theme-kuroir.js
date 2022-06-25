@@ -57,5 +57,12 @@ background-color:rgba(191, 97, 51, 0.051);}.ace-kuroir .ace_markup.ace_list{colo
 ";
 
 var dom = require("../lib/dom");
-dom.importCssString(exports.cssText, exports.cssClass);
-});
+dom.importCssString(exports.cssText, exports.cssClass, false);
+});                (function() {
+                    window.require(["ace/theme/kuroir"], function(m) {
+                        if (typeof module == "object" && typeof exports == "object" && module) {
+                            module.exports = m;
+                        }
+                    });
+                })();
+            
