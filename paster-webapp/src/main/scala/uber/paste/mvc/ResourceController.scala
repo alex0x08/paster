@@ -30,7 +30,7 @@ import javax.servlet.http.HttpServletResponse
 class ResourceController extends AbstractController {
 
   @Autowired
-  private var resourcePathHelper: ResourcePathHelper = null
+  private val resourcePathHelper: ResourcePathHelper = null
 
   @RequestMapping(
     value = Array("/{version:[a-zA-Z0-9]+}/{type:[a-z]}/{lastModified:[0-9]+}/paste_content/{path}"),
@@ -45,22 +45,14 @@ class ResourceController extends AbstractController {
                    response: HttpServletResponse
                  ): InputStreamResource = {
 
-    //model.asMap.clear()
+
     ptype match {
-      case "t" | "r" | "a" | "b" => {
+      case "t" | "r" | "a" | "b" =>
         //allow
-      }
-      case _ => {
+      case _ =>
         writeError(response, "uknown type", 404)
         return null
-      }
     }
-
-    /*val id =  URLDecoder.decode(path, "UTF-8")
-       .replaceAll("/", "x")
-       .replaceAll("\\.", "x")
-       .replaceAll(",", "/")
-     */
 
 
     val fimg = resourcePathHelper.getResource(ptype, path)
@@ -88,9 +80,7 @@ class ResourceController extends AbstractController {
   def writeError(response: HttpServletResponse, msg: String, status: Int) {
     response.setContentType("text/html;charset=UTF-8");
     response.setStatus(status);
-
     val out = response.getWriter()
-
     out.println(new StringBuilder()
       .append("<html><head><title>ERROR: ")
       .append(msg)
@@ -99,7 +89,6 @@ class ResourceController extends AbstractController {
       .append("</h1></body></html>")
       .toString)
     out.flush()
-
   }
 
 }

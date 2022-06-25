@@ -36,12 +36,12 @@ class PasteDaoImpl extends SearchableDaoImpl[Paste](classOf[Paste]) {
 
   def getNextPaste(paste: Paste): Paste = {
     val out: java.util.List[Paste] = getNextPreviousPaste(paste, false, 1)
-    return if (out.isEmpty) null else out.get(0)
+    if (out.isEmpty) null else out.get(0)
   }
 
   def getPreviousPaste(paste: Paste): Paste = {
     val out: java.util.List[Paste] = getNextPreviousPaste(paste, true, 1)
-    return if (out.isEmpty) null else out.get(0)
+    if (out.isEmpty) null else out.get(0)
   }
 
   def getPreviousPastas(paste: Paste): java.util.List[Paste] =
@@ -67,20 +67,16 @@ class PasteDaoImpl extends SearchableDaoImpl[Paste](classOf[Paste]) {
     select.add(cb.equal(r.get("channel"), paste.getChannel))
     select.add(cb.lessThanOrEqualTo(r.get("lastModified")
       .as(classOf[java.util.Date]), paste.getLastModified))
-
     cr.where(select.toArray(new Array[Predicate](select.size)): _*)
       .orderBy(
         cb.desc(r.get("lastModified"))
       )
-
     val tupleResult: java.util.List[Tuple] = em.createQuery(cr)
-
       .setMaxResults(BaseDaoImpl.MAX_RESULTS).getResultList()
-
     for (t <- tupleResult.asScala) {
       out.add(t.get(0).asInstanceOf[Long])
     }
-    return out
+    out
   }
 
 
@@ -110,14 +106,11 @@ class PasteDaoImpl extends SearchableDaoImpl[Paste](classOf[Paste]) {
           cr.cb.asc(cr.r.get("lastModified"))
         }))
       .setMaxResults(maxResults)
-    return query.getResultList()
+    query.getResultList()
   }
 
   def getByChannel(channel: Channel, sortAsc: Boolean): java.util.List[Paste] = {
-
-
     val cr = new CriteriaSet
-
     val query: Query = em.createQuery(
       cr.cr.where(
         Array(
@@ -131,7 +124,7 @@ class PasteDaoImpl extends SearchableDaoImpl[Paste](classOf[Paste]) {
           })
         .select(cr.r))
       .setMaxResults(BaseDaoImpl.MAX_RESULTS)
-    return query.getResultList().asInstanceOf[java.util.List[Paste]]
+    query.getResultList().asInstanceOf[java.util.List[Paste]]
   }
 
   override def getList(): java.util.List[Paste] = {
@@ -141,17 +134,14 @@ class PasteDaoImpl extends SearchableDaoImpl[Paste](classOf[Paste]) {
       .setMaxResults(BaseDaoImpl.MAX_RESULTS).getResultList
   }
 
-
   def getListIntegrated(code: String): java.util.List[Paste] = {
-
     val cr = new CriteriaSet
-
     val query = em.createQuery[Paste](
       cr.cr.where(Array(cr.cb.equal(cr.r.get("integrationCode"), code)): _*)
         .orderBy(cr.cb.desc(cr.r.get("sticked"))
           , cr.cb.desc(cr.r.get("lastModified"))))
       .setMaxResults(BaseDaoImpl.MAX_RESULTS)
-    return query.getResultList()
+    query.getResultList()
   }
 
   def countAll(p: Priority): java.lang.Long = {
@@ -164,7 +154,7 @@ class PasteDaoImpl extends SearchableDaoImpl[Paste](classOf[Paste]) {
     cq.select(cb.count(r))
     cq.where(Array(cb.equal(r.get("priority"), p.getCode)): _*)
 
-    return em.createQuery[java.lang.Long](cq)
+    em.createQuery[java.lang.Long](cq)
       .getSingleResult
 
   }
@@ -185,13 +175,11 @@ class PasteDaoImpl extends SearchableDaoImpl[Paste](classOf[Paste]) {
 
     cq.select(cb.count(r))
 
-    val dateFromParam = cb.parameter(classOf[java.util.Date])
-
     cq.where(Array(
       cb.greaterThan(r.get("lastModified")
         .as(classOf[java.util.Date]), new java.util.Date(dateFrom)),
       cb.equal(r.get("channel"), channel)): _*)
-    return em.createQuery[java.lang.Long](cq).getSingleResult()
+    em.createQuery[java.lang.Long](cq).getSingleResult()
   }
 
 }

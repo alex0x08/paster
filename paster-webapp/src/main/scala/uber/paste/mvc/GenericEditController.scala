@@ -29,110 +29,103 @@ object GenericEditController {
 
   final val EDIT_ACTION = "/edit"
   final val VIEW_ACTION = "/view"
-  final val SAVE_ACTION= "/save"
-  final val NEW_ACTION= "/new"
-  final val DELETE_ACTION= "/delete"
+  final val SAVE_ACTION = "/save"
+  final val NEW_ACTION = "/new"
+  final val DELETE_ACTION = "/delete"
 
 }
 
-abstract class GenericEditController[T <: Struct ] extends GenericController[T] {    
-  
-  
-    protected def getNewModelInstance():T
+abstract class GenericEditController[T <: Struct] extends GenericController[T] {
 
-    protected def fillEditModel(obj:T,model:Model,locale:Locale) {
-      model.addAttribute(GenericController.MODEL_KEY, obj)
-    }
 
-    def loadModel(id:java.lang.Long) =manager.getFull(id)
-      
+  protected def getNewModelInstance(): T
+
+  protected def fillEditModel(obj: T, model: Model, locale: Locale) {
+    model.addAttribute(GenericController.MODEL_KEY, obj)
+  }
+
+  def loadModel(id: java.lang.Long) = manager.getFull(id)
+
 
   @RequestMapping(value = Array(GenericEditController.NEW_ACTION), method = Array(RequestMethod.GET))
   @ResponseStatus(HttpStatus.CREATED)
-  def createNew(model:Model,locale:Locale):String = {
+  def createNew(model: Model, locale: Locale): String = {
 
-    fillEditModel(getNewModelInstance(),model,locale)
+    fillEditModel(getNewModelInstance(), model, locale)
 
     editPage
   }
 
 
   @RequestMapping(value = Array("/edit/{id:[0-9]+}"), method = Array(RequestMethod.GET))
-  def editWithId(model:Model,@PathVariable("id") id:Long,locale:Locale):String= {
+  def editWithId(model: Model, @PathVariable("id") id: Long, locale: Locale): String = {
 
-      if (id==0) {
-       return page404      
-      }
-      
-      fillEditModel(loadModel(id),model,locale)
+    if (id == 0) {
+      return page404
+    }
 
-    return editPage
+    fillEditModel(loadModel(id), model, locale)
+
+    editPage
   }
 
 
-    @RequestMapping(value = Array(GenericEditController.SAVE_ACTION), method = Array(RequestMethod.POST))
-    def save(@RequestParam(required = false) cancel:String,
-            @Valid @ModelAttribute(GenericController.MODEL_KEY) b:T,
-            result:BindingResult, model:Model,locale:Locale,
-            redirectAttributes:RedirectAttributes):String = {
+  @RequestMapping(value = Array(GenericEditController.SAVE_ACTION), method = Array(RequestMethod.POST))
+  def save(@RequestParam(required = false) cancel: String,
+           @Valid @ModelAttribute(GenericController.MODEL_KEY) b: T,
+           result: BindingResult, model: Model, locale: Locale,
+           redirectAttributes: RedirectAttributes): String = {
 
-        if (cancel != null) {
-            redirectAttributes.addFlashAttribute("statusMessageKey", "action.cancelled")
-            return listPage
-        }
-
-        if (result.hasErrors()) {
-              logger.debug("form has errors {}", result.getErrorCount())
-              
-             fillEditModel(b,model,locale)
-           /* for ( f:FieldError : result.getFieldErrors()) {
-                getLogger().debug("field=" + f.getField() + ",rejected value=" + f.getRejectedValue()+",message="+f.getDefaultMessage());
-            }*/
-            return editPage
-        }
-
-     
-    
-        val r:T = manager.save(b)
-
-        // set id from create
-        if (b.isBlank) {
-            b.setId(r.getId())
-        }
-
-      redirectAttributes.addFlashAttribute("statusMessageKey", "action.success")
-
+    if (cancel != null) {
+      redirectAttributes.addFlashAttribute("statusMessageKey", "action.cancelled")
       return listPage
     }
 
-   
+    if (result.hasErrors()) {
+      logger.debug("form has errors {}", result.getErrorCount())
 
-    @RequestMapping(value = Array(GenericEditController.DELETE_ACTION), 
-                    method = Array(RequestMethod.GET,RequestMethod.POST,RequestMethod.DELETE))
-    def delete(@RequestParam(required = false) id:Long,
-            model:Model):String = {
-        manager.remove(id); listPage
+      fillEditModel(b, model, locale)
+      return editPage
     }
 
 
+    val r: T = manager.save(b)
 
-  @RequestMapping(value = Array("/{id:[0-9]+}"), method = Array(RequestMethod.GET))
-  def getByPath(@PathVariable("id") id:java.lang.Long,model:Model,locale:Locale):String = {
-
-    val m = loadModel(id)
-
-    if (m==null) {
-     return page404
+    // set id from create
+    if (b.isBlank) {
+      b.setId(r.getId())
     }
-    
-    model.addAttribute(GenericController.MODEL_KEY, m)
 
-    fillEditModel(m,model,locale)
+    redirectAttributes.addFlashAttribute("statusMessageKey", "action.success")
 
-   return viewPage
+    listPage
   }
 
 
-  
+  @RequestMapping(value = Array(GenericEditController.DELETE_ACTION),
+    method = Array(RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE))
+  def delete(@RequestParam(required = false) id: Long,
+             model: Model): String = {
+    manager.remove(id);
+    listPage
+  }
+
+
+  @RequestMapping(value = Array("/{id:[0-9]+}"), method = Array(RequestMethod.GET))
+  def getByPath(@PathVariable("id") id: java.lang.Long, model: Model, locale: Locale): String = {
+
+    val m = loadModel(id)
+
+    if (m == null) {
+      return page404
+    }
+
+    model.addAttribute(GenericController.MODEL_KEY, m)
+
+    fillEditModel(m, model, locale)
+
+    viewPage
+  }
+
 
 }

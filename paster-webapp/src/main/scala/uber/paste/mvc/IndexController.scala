@@ -36,30 +36,18 @@ class IndexController extends AbstractController{
   @RequestMapping(Array("/error/{errorCode:[0-9_]+}"))
   def error(model:Model,
             response:HttpServletResponse,
-            @PathVariable("errorCode") errorCode:Int):String = {
-  
-    errorCode match {
-          case 403 |404 |500  => {
-              response.setStatus(errorCode)
-               "/error/"+errorCode
-          }
-         case _ => {
-              "/error/500"
-         }
-    }
-   
+            @PathVariable("errorCode") errorCode:Int):String = errorCode match {
+                case 403 |404 |500  =>
+                  response.setStatus(errorCode)
+                  "/error/"+errorCode
+                case _ =>
+                  "/error/500"
   }
-  
-  
+
   @RequestMapping(Array("/login"))
-  def login(model:Model):String = {
-    return if (isCurrentUserLoggedIn) {
-      index(model)
-    } else {
-    model.addAttribute("query", new GenericQuery)
-    "/login"
-    }
+  def login(model:Model):String = if (isCurrentUserLoggedIn) index(model) else {
+  model.addAttribute("query", new GenericQuery)
+  "/login"
   }
-  
-  
+
 }

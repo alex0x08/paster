@@ -101,12 +101,9 @@ class User(name: String) extends Named(name) with UserDetails with java.io.Seria
   /**
    * if this user account is expired
    */
-  private var accountExpired: Boolean = _
-
-  private var credentialsExpired: Boolean = _
-
+  private val accountExpired: Boolean = false
+  private val credentialsExpired: Boolean = false
   private var totalPastas: Int = _
-
   private var totalComments: Int = _
 
   /**
@@ -148,13 +145,11 @@ class User(name: String) extends Named(name) with UserDetails with java.io.Seria
   override def isAccountNonLocked()= !isAccountLocked()
   
   def isCredentialsExpired() =  credentialsExpired
-  
 
   /**
    * @see org.springframework.security.userdetails.UserDetails#isCredentialsNonExpired()
    */
   override def isCredentialsNonExpired() =  !credentialsExpired
-  
 
   def getEmail() = email
   
@@ -168,15 +163,8 @@ class User(name: String) extends Named(name) with UserDetails with java.io.Seria
   def setPassword(password: String) {
     this.password = password 
   }
-
-   
-  
-
   def getTotalPastas() = totalPastas
-
   def getTotalComments() = totalComments
-
-   
   def increaseTotalPastas() {
     totalPastas += 1
   }
@@ -231,7 +219,7 @@ class User(name: String) extends Named(name) with UserDetails with java.io.Seria
     for (r <- roles.asScala) {
       out.add(Role.valueOf(r).asInstanceOf[GrantedAuthority])
     }
-    return out
+    out
   }
 
   override def loadFull() {

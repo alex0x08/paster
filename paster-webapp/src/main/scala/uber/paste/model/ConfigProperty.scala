@@ -35,7 +35,7 @@ object ConfigProperty extends KeyValueObj[ConfigProperty] {
   class Builder(model: ConfigProperty) extends KeyValue.Builder[ConfigProperty](model) {
 
     def addReadOnly(v: Boolean): Builder = {
-      get.setReadOnly(v); return this
+      get.setReadOnly(v); this
     }
 
   }

@@ -36,30 +36,26 @@ import org.springframework.beans.support.MutableSortDefinition
 import org.springframework.beans.support.PagedListHolder
 import org.joda.time.{DateTime, Days}
 
-
 object PasteSearchResult extends KeyObj[SearchResult] {
 
-  val PASTE = new SearchResult("paste","result.paste.name","pasteItems")
-  val COMMENT = new SearchResult("comment","result.comment.name","commentItems")
+  val PASTE = new SearchResult("paste", "result.paste.name", "pasteItems")
+  val COMMENT = new SearchResult("comment", "result.comment.name", "commentItems")
 
-  add(PASTE); add(COMMENT)
+  add(PASTE);
+  add(COMMENT)
 }
 
 
 @Controller
-@RequestMapping(value=Array("/paste"))
-class PasteListController extends SearchController[Paste,OwnerQuery] {
-
-  class DateSplitHelper(locale:Locale) {
-
-    var prevDate:java.util.Date =null
-    var curDate:java.util.Date = null
-    var total:Int =0
-    var title:String =null
-
-    def setCurDate(date:java.util.Date) {
+@RequestMapping(value = Array("/paste"))
+class PasteListController extends SearchController[Paste, OwnerQuery] {
+  class DateSplitHelper(locale: Locale) {
+    var prevDate: java.util.Date = null
+    var curDate: java.util.Date = null
+    var total: Int = 0
+    var title: String = null
+    def setCurDate(date: java.util.Date) {
       curDate = date
-
       if (prevDate == null) {
         prevDate = curDate
       }
@@ -67,262 +63,231 @@ class PasteListController extends SearchController[Paste,OwnerQuery] {
     }
 
     def getSplitTitle() = title
-
-    def isSplit():Boolean = {
-
+    def isSplit(): Boolean = {
       val d = Days.daysBetween(new DateTime(prevDate), new DateTime(curDate))
-  
-      return if ( scala.math.abs(d.getDays())>14 )  {
-        title=  PasteListController.this.getResource("paste.list.slider.title",
-                                                     Array(curDate,prevDate,total),locale)
+      if (scala.math.abs(d.getDays()) > 14) {
+        title = PasteListController.this.getResource("paste.list.slider.title",
+          Array(curDate, prevDate, total), locale)
         prevDate = curDate
-        total =0
-
+        total = 0
         true
-        } else false     
-
+      } else false
     }
-
   }
 
- 
   @Autowired
-  val channelDao:ChannelDao = null
-
+  val channelDao: ChannelDao = null
 
   @Autowired
-  val pasteManager:PasteDaoImpl = null
+  val pasteManager: PasteDaoImpl = null
 
   @Autowired
-  val commentManager:CommentDaoImpl = null
+  val commentManager: CommentDaoImpl = null
 
-  override def listPage="redirect:/main/paste/list"
-  override def editPage="/paste/edit"
-  override def viewPage="/paste/view"
+  override def listPage = "redirect:/main/paste/list"
+  override def editPage = "/paste/edit"
+  override def viewPage = "/paste/view"
 
-  def manager():PasteDaoImpl = pasteManager
-
-  def getAvailableResults():java.util.Collection[SearchResult] = PasteSearchResult.list
-
-  def getSearchResultByCode(code:String):SearchResult = {
+  def manager(): PasteDaoImpl = pasteManager
+  def getAvailableResults(): java.util.Collection[SearchResult] = PasteSearchResult.list
+  def getSearchResultByCode(code: String): SearchResult = {
     val out = PasteSearchResult.valueOf(code.toLowerCase)
-    return if (out==null) 
-      PasteSearchResult.PASTE 
-          else out
+    if (out == null)
+      PasteSearchResult.PASTE
+    else out
   }
 
-  def getManagerBySearchResult(result:SearchResult):SearchableDaoImpl[_] = return result match {
-      case PasteSearchResult.PASTE => manager()
-      case PasteSearchResult.COMMENT => commentManager
-    }
-  
+  def getManagerBySearchResult(result: SearchResult): SearchableDaoImpl[_] = return result match {
+    case PasteSearchResult.PASTE => manager()
+    case PasteSearchResult.COMMENT => commentManager
+  }
+
 
   @ModelAttribute("query")
-   def newQuery():OwnerQuery = {
-     val out =new OwnerQuery
-   //  if (!isCurrentUserAdmin) {
-   //    out.setOwnerId(getCurrentUser.getId)
-   // }
-    return out
+  def newQuery(): OwnerQuery = new OwnerQuery
+
+  protected override def fillListModel(model: Model, locale: Locale) {
+    super.fillListModel(model, locale)
+    model.addAttribute("title", "Pastas")
+    model.addAttribute("availableSourceTypes", channelDao.getList)
+    model.addAttribute("splitHelper", new DateSplitHelper(locale))
+    model.addAttribute("sortDesc", false)
   }
-  
-  
-  protected override def fillListModel(model:Model,locale:Locale) {
-    super.fillListModel(model,locale)
-    model.addAttribute("title","Pastas")
-
-    model.addAttribute("availableSourceTypes",channelDao.getList)
-    model.addAttribute("splitHelper",new DateSplitHelper(locale))
-                    //config.share.integration=1
-    //config.share.url=https://dev.iqcard.ru/share
-
-    model.addAttribute("sortDesc",false)
-  }
-
-  
 
 
   @RequestMapping(value = Array("/search/{result:[a-z]+}/{page:[0-9]+}",
-                                 "/raw/search/{result:[a-z]+}/{page:[0-9]+}"), 
-                   method = Array(RequestMethod.GET))
+    "/raw/search/{result:[a-z]+}/{page:[0-9]+}"),
+    method = Array(RequestMethod.GET))
   @ModelAttribute(GenericController.NODE_LIST_MODEL)
-  override def searchByPath(@PathVariable("page") page:java.lang.Integer,
-                            @PathVariable("result") result:String,
-                            request:HttpServletRequest,
-                            model:Model,
-                            locale:Locale) =  listImpl(request,locale, model, page, null, null,null,false,null, result)
-  
+  override def searchByPath(@PathVariable("page") page: java.lang.Integer,
+                            @PathVariable("result") result: String,
+                            request: HttpServletRequest,
+                            model: Model,
+                            locale: Locale) = listImpl(request, locale,
+    model, page, null, null, null, false, null, result)
+
   @RequestMapping(value = Array(
-       "/raw/search/{result:[a-z]+}"), method = Array(RequestMethod.GET))
+    "/raw/search/{result:[a-z]+}"), method = Array(RequestMethod.GET))
   @ModelAttribute(GenericController.NODE_LIST_MODEL)
-  def searchByPathParam(@RequestParam(required = false) page:java.lang.Integer,
-                        @PathVariable("result") result:String,
-                        request:HttpServletRequest,
-                        model:Model,
-                        locale:Locale) =  listImpl(request,locale, model, page, null, null,null,false, null, result)
-  
-  
-  
+  def searchByPathParam(@RequestParam(required = false) page: java.lang.Integer,
+                        @PathVariable("result") result: String,
+                        request: HttpServletRequest,
+                        model: Model,
+                        locale: Locale) = listImpl(request, locale,
+    model, page, null, null, null, false, null, result)
+
   @RequestMapping(value = Array("/list/{source:[a-zA-Z0-9]+}/{page:[0-9]+}",
-                                "/raw/list/{source:[a-zA-Z0-9]+}/{page:[0-9]+}"), 
-                  method = Array(RequestMethod.GET))
+    "/raw/list/{source:[a-zA-Z0-9]+}/{page:[0-9]+}"),
+    method = Array(RequestMethod.GET))
   @ModelAttribute(GenericController.NODE_LIST_MODEL)
-  def listByPathSource(@PathVariable("page") page:java.lang.Integer,
-                       @PathVariable("source") source:String,
-                       request:HttpServletRequest,
-                       model:Model,
-                       locale:Locale) =  listImpl(request,locale, model, page, null, null,"lastModified",false,source,null)
-  
-  
-  @RequestMapping(value = Array("/list/{source:[a-zA-Z0-9]+}/limit/{pageSize:[0-9]+}"), 
-                  method = Array(RequestMethod.GET))
+  def listByPathSource(@PathVariable("page") page: java.lang.Integer,
+                       @PathVariable("source") source: String,
+                       request: HttpServletRequest,
+                       model: Model,
+                       locale: Locale) = listImpl(request, locale, model, page, null,
+    null, "lastModified", false, source, null)
+
+
+  @RequestMapping(value = Array("/list/{source:[a-zA-Z0-9]+}/limit/{pageSize:[0-9]+}"),
+    method = Array(RequestMethod.GET))
   @ModelAttribute(GenericController.NODE_LIST_MODEL)
-  def listByPathSizeSource(@PathVariable("pageSize") pageSize:java.lang.Integer,
-                           @PathVariable("source") source:String,
-                           request:HttpServletRequest,
-                           model:Model,
-                           locale:Locale)= listImpl(request,locale, model, null, null, pageSize,"lastModified",false,source,null)
-  
-  
+  def listByPathSizeSource(@PathVariable("pageSize") pageSize: java.lang.Integer,
+                           @PathVariable("source") source: String,
+                           request: HttpServletRequest,
+                           model: Model,
+                           locale: Locale) = listImpl(request, locale, model, null,
+    null, pageSize, "lastModified", false, source, null)
+
+
   @RequestMapping(value = Array("/list/{source:[a-zA-Z0-9]+}/next"), method = Array(RequestMethod.GET))
   @ModelAttribute(GenericController.NODE_LIST_MODEL)
   def listByPathNextSource(
-                      request:HttpServletRequest,
-                      @PathVariable("source") source:String,
-                      model:Model,
-                      locale:Locale) = listImpl(request,locale, model, null, GenericListController.NEXT_PARAM, null,"lastModified",false,source,null)
+                            request: HttpServletRequest,
+                            @PathVariable("source") source: String,
+                            model: Model,
+                            locale: Locale) = listImpl(request, locale, model, null,
+    GenericListController.NEXT_PARAM, null, "lastModified", false, source, null)
 
 
   @RequestMapping(value = Array("/list/{source:[a-zA-Z0-9]+}/prev"), method = Array(RequestMethod.GET))
   @ModelAttribute(GenericController.NODE_LIST_MODEL)
   def listByPathPrevSource(
-                      request:HttpServletRequest,
-                      @PathVariable("source") source:String,
-                      model:Model,
-                      locale:Locale) = listImpl(request,locale, model, null, "prev", null,"lastModified",false,source,null)
+                            request: HttpServletRequest,
+                            @PathVariable("source") source: String,
+                            model: Model,
+                            locale: Locale) = listImpl(request, locale, model, null,
+    "prev", null, "lastModified", false, source, null)
 
   @RequestMapping(value = Array("/list/{source:[a-zA-Z0-9]+}",
-                                "/raw/list/{source:[a-zA-Z0-9]+}",
-                                "/list/{source:[a-zA-Z0-9]+}/earlier"),method = Array(RequestMethod.GET))
+    "/raw/list/{source:[a-zA-Z0-9]+}",
+    "/list/{source:[a-zA-Z0-9]+}/earlier"), method = Array(RequestMethod.GET))
   @ModelAttribute(GenericController.NODE_LIST_MODEL)
-  def listSource( request:HttpServletRequest,
-                           @PathVariable("source") source:String,
-                           locale:Locale,
-                           model:Model,
-                     @RequestParam(required = false)  page:java.lang.Integer,
-                     @RequestParam(required = false)  NPpage:String,
-                     @RequestParam(required = false)  pageSize:java.lang.Integer):java.util.List[Paste] = {
+  def listSource(request: HttpServletRequest,
+                 @PathVariable("source") source: String,
+                 locale: Locale,
+                 model: Model,
+                 @RequestParam(required = false) page: java.lang.Integer,
+                 @RequestParam(required = false) NPpage: String,
+                 @RequestParam(required = false) pageSize: java.lang.Integer): java.util.List[Paste] = {
 
-    return listImpl(request,locale,model,page,NPpage,pageSize,null,false,source,null)
+    listImpl(request, locale, model, page, NPpage, pageSize, null, false, source, null)
   }
 
 
-  @RequestMapping(value = Array("/list/{source:[a-zA-Z0-9]+}/older"),method = Array(RequestMethod.GET))
+  @RequestMapping(value = Array("/list/{source:[a-zA-Z0-9]+}/older"), method = Array(RequestMethod.GET))
   @ModelAttribute(GenericController.NODE_LIST_MODEL)
-  def listSourceOlder( request:HttpServletRequest,
-                  @PathVariable("source") source:String,
-                  locale:Locale,
-                  model:Model,
-                  @RequestParam(required = false)  page:java.lang.Integer,
-                  @RequestParam(required = false)  NPpage:String,
-                  @RequestParam(required = false)  pageSize:java.lang.Integer):java.util.List[Paste] = {
+  def listSourceOlder(request: HttpServletRequest,
+                      @PathVariable("source") source: String,
+                      locale: Locale,
+                      model: Model,
+                      @RequestParam(required = false) page: java.lang.Integer,
+                      @RequestParam(required = false) NPpage: String,
+                      @RequestParam(required = false) pageSize: java.lang.Integer): java.util.List[Paste] = {
 
-    return listImpl(request,locale,model,page,NPpage,pageSize,"lastModified",true,source,null)
+    return listImpl(request, locale, model, page, NPpage, pageSize, "lastModified", true,
+      source, null)
   }
 
   @RequestMapping(value = Array("/list",
-                                "/raw/list"),
-                  method = Array(RequestMethod.GET))
+    "/raw/list"),
+    method = Array(RequestMethod.GET))
   @ModelAttribute(GenericController.NODE_LIST_MODEL)
-  override def list( request:HttpServletRequest, locale:Locale,  model:Model,
-           @RequestParam(required = false)  page:java.lang.Integer,
-           @RequestParam(required = false)  NPpage:String,
-           @RequestParam(required = false)  pageSize:java.lang.Integer,
-           @RequestParam(required = false)  sortColumn:String,
-           @RequestParam(required = false)  sortAsc:Boolean =false):java.util.List[Paste] = {
-
-    return listImpl(request,locale,model,page,NPpage,pageSize,sortColumn,sortAsc,null,null)
+  override def list(request: HttpServletRequest, locale: Locale, model: Model,
+                    @RequestParam(required = false) page: java.lang.Integer,
+                    @RequestParam(required = false) NPpage: String,
+                    @RequestParam(required = false) pageSize: java.lang.Integer,
+                    @RequestParam(required = false) sortColumn: String,
+                    @RequestParam(required = false) sortAsc: Boolean = false): java.util.List[Paste] = {
+    listImpl(request, locale, model, page, NPpage, pageSize,
+      sortColumn, sortAsc, null, null)
   }
 
-  @RequestMapping(value = Array( "/count/{source:[a-zA-Z0-9]+}/{since:[0-9]+}"), 
-                  method = Array(RequestMethod.GET),produces =Array("application/json")) 
+  @RequestMapping(value = Array("/count/{source:[a-zA-Z0-9]+}/{since:[0-9]+}"),
+    method = Array(RequestMethod.GET), produces = Array("application/json"))
   @ModelAttribute(GenericController.NODE_COUNT_KEY)
-   def countAllSince(@PathVariable("source") channelCode:String, 
-                    @PathVariable("since")dateFrom:java.lang.Long):java.lang.Long = {
-               //System.out.println("_count all from "+dateFrom)   
-               
-     return pasteManager.countAllSince(channelDao.getByKey(channelCode),dateFrom)
+  def countAllSince(@PathVariable("source") channelCode: String,
+                    @PathVariable("since") dateFrom: java.lang.Long): java.lang.Long = {
+    pasteManager.countAllSince(channelDao.getByKey(channelCode), dateFrom)
   }
-  
 
-  def listImpl( request:HttpServletRequest, locale:Locale,  model:Model,
-                     page:java.lang.Integer,
-                     NPpage:String,
-                     pageSize:java.lang.Integer,
-                     sortColumn:String,
-                     sortAsc:java.lang.Boolean = false,
-                     channelCode:String,integrationCode:String):java.util.List[Paste] = {
-
-    logger.debug("_paste listImpl, pageSize {}",pageSize)
-
-    fillListModel(model,locale)
-
-    
-    val ps = if (channelCode!=null) {
-      model.addAttribute("sourceType",channelCode.toLowerCase)
-      model.addAttribute("sortDesc",!sortAsc)
-
+  def listImpl(request: HttpServletRequest, locale: Locale, model: Model,
+               page: java.lang.Integer,
+               NPpage: String,
+               pageSize: java.lang.Integer,
+               sortColumn: String,
+               sortAsc: java.lang.Boolean = false,
+               channelCode: String, integrationCode: String): java.util.List[Paste] = {
+    logger.debug("_paste listImpl, pageSize {}", pageSize)
+    fillListModel(model, locale)
+    val ps = if (channelCode != null) {
+      model.addAttribute("sourceType", channelCode.toLowerCase)
+      model.addAttribute("sortDesc", !sortAsc)
       channelDao.getByKey(channelCode)
-    } else {null}
+    } else null
 
-    return processPageListHolder(request,locale,model,page,NPpage,pageSize,sortColumn,sortAsc,
-      if (ps==null) {
-            pasterListCallback
-                    } else {
-              new PasteListCallback(ps,sortAsc,integrationCode)
-        }, GenericController.NODE_LIST_MODEL_PAGE)      
+    processPageListHolder(request, locale, model, page, NPpage, pageSize, sortColumn, sortAsc,
+      if (ps == null) pasterListCallback else {
+        new PasteListCallback(ps, sortAsc, integrationCode)
+      }, GenericController.NODE_LIST_MODEL_PAGE)
   }
 
   @RequestMapping(value = Array("/own/list"))
   @ModelAttribute("items")
-  def listOwn(model:Model,locale:Locale):java.util.List[Paste] = {
-    return manager.getByOwner(getCurrentUser)
+  def listOwn(model: Model, locale: Locale): java.util.List[Paste] = {
+    manager.getByOwner(getCurrentUser)
   }
+
   @RequestMapping(value = Array("/own/list/body"), method = Array(RequestMethod.GET))
   @ModelAttribute("items")
   @ResponseBody
-  def listOwnBody():java.util.List[Paste] = {
-    return manager.getByOwner(getCurrentUser)
+  def listOwnBody(): java.util.List[Paste] = {
+    manager.getByOwner(getCurrentUser)
   }
 
-  protected val pasterListCallback:PasteListCallback  = new PasteListCallback(null,true,null)
+  protected val pasterListCallback: PasteListCallback = new PasteListCallback(null, true, null)
 
-  class PasteListCallback(channel:Channel,sortAsc:Boolean,integrationCode:String) 
-          extends SourceCallback[Paste] {
-    override def invokeCreate():PagedListHolder[Paste] = {
-      val ph =new ExtendedPageListHolder[Paste](
-            if (integrationCode!=null) {
-              manager.getListIntegrated(integrationCode)
-            } else {
-        
-          if (channel == null) { 
-            manager.getByChannel(channelDao.getDefault,sortAsc) 
-          } else  
-            manager.getByChannel(channel,sortAsc)
+  class PasteListCallback(channel: Channel, sortAsc: Boolean, integrationCode: String)
+    extends SourceCallback[Paste] {
+    override def invokeCreate(): PagedListHolder[Paste] = {
+      val ph = new ExtendedPageListHolder[Paste](
+        if (integrationCode != null) {
+          manager.getListIntegrated(integrationCode)
+        } else {
+          if (channel == null) {
+            manager.getByChannel(channelDao.getDefault, sortAsc)
+          } else
+            manager.getByChannel(channel, sortAsc)
         })
-          
-       
-    
-      val sort =ph.getSort().asInstanceOf[MutableSortDefinition]
-            
-                /**
-                 * default sort
-                 */
-                sort.setProperty("lastModified")
-		sort.setIgnoreCase(false)
-                sort.setAscending(sortAsc)
-      
-      return ph
+
+      val sort = ph.getSort().asInstanceOf[MutableSortDefinition]
+      /**
+       * default sort
+       */
+      sort.setProperty("lastModified")
+      sort.setIgnoreCase(false)
+      sort.setAscending(sortAsc)
+
+      ph
     }
   }
 

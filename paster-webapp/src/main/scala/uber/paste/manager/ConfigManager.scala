@@ -16,11 +16,9 @@
 
 package uber.paste.manager
 
-import uber.paste.dao.ConfigDaoImpl
-import uber.paste.model.ConfigProperty
-import org.springframework.beans.factory.annotation.Qualifier
+import org.springframework.beans.factory.annotation.{Autowired, Qualifier}
 import org.springframework.stereotype.Service
-import org.springframework.beans.factory.annotation.Autowired
+import uber.paste.dao.ConfigDaoImpl
 
 @Service("configManager")
 class ConfigManagerImpl {
@@ -32,8 +30,6 @@ class ConfigManagerImpl {
   protected def getDao:ConfigDaoImpl = configDao
 
   def getProperty(code:String) = configDao.getProperty(code)
- 
   def isPropertySet(code:String,value:String) = configDao.isPropertySet(code, value)
- 
-  
+
 }

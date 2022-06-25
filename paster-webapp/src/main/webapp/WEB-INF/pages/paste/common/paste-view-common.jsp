@@ -46,7 +46,7 @@
          style="min-width:650px;">
 
         <c:url var="drawImg" 
-               value='/main/resources/${appId}/r/${model.lastModified.time}/${model.reviewImgData}'/>
+               value='/main/resources/${appId}/r/${model.lastModified.time}/paste_content/${model.reviewImgData}'/>
 
 
         

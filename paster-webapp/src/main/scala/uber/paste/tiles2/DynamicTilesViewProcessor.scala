@@ -32,166 +32,147 @@ import org.springframework.web.servlet.support.RequestContext
 import org.springframework.web.servlet.support.RequestContextUtils
 import uber.paste.base.Loggered
 
-
-
 class DynamicTilesViewProcessor extends Loggered {
 
-   /**
-     * Keeps Tiles definition to use once derived.
-     */
-    private var derivedDefinitionName:String =null
-    
-    private var tilesDefinitionName =  ""
-    
-    private var tilesBodyAttributeName = "content"
-    private var tilesDefinitionDelimiter = "."
+  /**
+   * Keeps Tiles definition to use once derived.
+   */
+  private var derivedDefinitionName: String = null
+  private var tilesDefinitionName = ""
+  private var tilesBodyAttributeName = "content"
+  private var tilesDefinitionDelimiter = "."
 
-    /**
-     * Main template name.  The default is 'mainTemplate'.
-     * 
-     * @param 	tilesDefinitionName		Main template name used to lookup definitions.
-     */
-    def setTilesDefinitionName(tilesDefinitionName:String) {
-        this.tilesDefinitionName = tilesDefinitionName
-    }
+  /**
+   * Main template name.  The default is 'mainTemplate'.
+   *
+   * @param tilesDefinitionName Main template name used to lookup definitions.
+   */
+  def setTilesDefinitionName(tilesDefinitionName: String) {
+    this.tilesDefinitionName = tilesDefinitionName
+  }
 
-    /**
-     * Tiles body attribute name.  The default is 'body'.
-     * 
-     * @param 	tilesBodyAttributeName		Tiles body attribute name.
-     */
-    def setTilesBodyAttributeName(tilesBodyAttributeName:String) {
-        this.tilesBodyAttributeName = tilesBodyAttributeName;
-    }
+  /**
+   * Tiles body attribute name.  The default is 'body'.
+   *
+   * @param tilesBodyAttributeName Tiles body attribute name.
+   */
+  def setTilesBodyAttributeName(tilesBodyAttributeName: String) {
+    this.tilesBodyAttributeName = tilesBodyAttributeName;
+  }
 
-    /**
-     * Sets Tiles definition delimiter.  For example, instead of using 
-     * the request 'info/about' to lookup the template definition 
-     * 'info/mainTemplate', the default delimiter of '.' 
-     * would look for '.info.mainTemplate' 
-     * 
-     * @param 	tilesDefinitionDelimiter	Optional delimiter to replace '/' in a url.
-     */
-    def setTilesDefinitionDelimiter(tilesDefinitionDelimiter:String) {
-        this.tilesDefinitionDelimiter = tilesDefinitionDelimiter;
-    }
+  /**
+   * Sets Tiles definition delimiter.  For example, instead of using
+   * the request 'info/about' to lookup the template definition
+   * 'info/mainTemplate', the default delimiter of '.'
+   * would look for '.info.mainTemplate'
+   *
+   * @param tilesDefinitionDelimiter Optional delimiter to replace '/' in a url.
+   */
+  def setTilesDefinitionDelimiter(tilesDefinitionDelimiter: String) {
+    this.tilesDefinitionDelimiter = tilesDefinitionDelimiter;
+  }
 
-    /**
-     * Renders output using Tiles.
-     */
-    @throws(classOf[java.lang.Exception])
-    def renderMergedOutputModel(bName:String, url:String,
-             servletContext:ServletContext,
-             request:HttpServletRequest,  response:HttpServletResponse,
-             container:TilesContainer)
-             {
+  /**
+   * Renders output using Tiles.
+   */
+  @throws(classOf[java.lang.Exception])
+  def renderMergedOutputModel(bName: String, url: String,
+                              servletContext: ServletContext,
+                              request: HttpServletRequest, response: HttpServletResponse,
+                              container: TilesContainer) {
 
     val tilesRequest = createTilesRequest(ServletUtil.getApplicationContext(servletContext),
-                                          request, response);
-	
-    
-               var beanName:String = bName.replaceAll("//","/")
+      request, response);
 
-               if (!beanName.startsWith("/")) {
-                 beanName= "/"+beanName
-               }
 
-      
-              while (!container.isValidDefinition(beanName, tilesRequest)) {
-                
-              val pos = beanName.lastIndexOf("/")
-              if (pos<1) 
-                 throw new TilesException("No defintion of found for "
-                            + "'" + beanName + "'")
- 
-                beanName = beanName.substring(0,pos)
-              }
-    
-    
-        JstlUtils.exposeLocalizationContext(new RequestContext(request, servletContext));
+    var beanName: String = bName.replaceAll("//", "/")
 
-        val definitionName:String = startDynamicDefinition(beanName, url, tilesRequest, container)
-
-      
-        container.render(definitionName, tilesRequest)
-
-        endDynamicDefinition(definitionName, beanName, tilesRequest, container)
+    if (!beanName.startsWith("/")) {
+      beanName = "/" + beanName
+    }
+    while (!container.isValidDefinition(beanName, tilesRequest)) {
+      val pos = beanName.lastIndexOf("/")
+      if (pos < 1)
+        throw new TilesException("No defintion of found for "
+          + "'" + beanName + "'")
+      beanName = beanName.substring(0, pos)
     }
 
+    JstlUtils.exposeLocalizationContext(new RequestContext(request, servletContext))
 
- 
+    val definitionName: String = startDynamicDefinition(beanName, url, tilesRequest, container)
 
-    /**
-     * Starts processing the dynamic Tiles definition by creating a temporary definition for rendering.
-     */
-    @throws(classOf[TilesException])
-    protected def startDynamicDefinition(beanName:String, 
-                                         url:String,
-                                         tilesRequest:Request,
-                                         container:TilesContainer):String =
-            {
-        
-      val definitionName:String = processTilesDefinitionName(beanName, container,
-                tilesRequest)
-        // create a temporary context and render using the incoming url as the
-        // body attribute
-        if (!definitionName.equals(beanName)) {
-           
-            val attributeContext:AttributeContext = container.startContext(tilesRequest)
-            attributeContext.putAttribute(tilesBodyAttributeName, 
-                                          new Attribute(url))
+    container.render(definitionName, tilesRequest)
+    endDynamicDefinition(definitionName, beanName, tilesRequest, container)
+  }
 
-            logger.debug("URL used for Tiles body.  url='{}'.",url)
-        }
 
-        return definitionName
+  /**
+   * Starts processing the dynamic Tiles definition by creating a temporary definition for rendering.
+   */
+  @throws(classOf[TilesException])
+  protected def startDynamicDefinition(beanName: String,
+                                       url: String,
+                                       tilesRequest: Request,
+                                       container: TilesContainer): String = {
+
+    val definitionName: String = processTilesDefinitionName(beanName, container,
+      tilesRequest)
+    // create a temporary context and render using the incoming url as the
+    // body attribute
+    if (!definitionName.equals(beanName)) {
+
+      val attributeContext: AttributeContext = container.startContext(tilesRequest)
+      attributeContext.putAttribute(tilesBodyAttributeName,
+        new Attribute(url))
+
+      logger.debug("URL used for Tiles body.  url='{}'.", url)
     }
 
-    /**
-     * Closes the temporary Tiles definition.
-     */
-    protected def endDynamicDefinition(definitionName:String,
-                                       beanName:String,
-                                       tilesRequest:Request,
-                                        container:TilesContainer) {
-        if (!definitionName.equals(beanName)) {
-            container.endContext(tilesRequest)
-        }
+    definitionName
+  }
+
+  /**
+   * Closes the temporary Tiles definition.
+   */
+  protected def endDynamicDefinition(definitionName: String,
+                                     beanName: String,
+                                     tilesRequest: Request,
+                                     container: TilesContainer) {
+    if (!definitionName.equals(beanName)) {
+      container.endContext(tilesRequest)
     }
+  }
 
-    /**
-     * Processes values to get tiles template definition name.  First 
-     * a Tiles definition matching the url is checked, then a 
-     * url specific template is checked, and then just the 
-     * default root definition is used.
-     * 
-     * @throws 	TilesException		If no valid Tiles definition is found. 
-     */
-    @throws(classOf[TilesException])
-    protected def processTilesDefinitionName(beanName:String,
-             container:TilesContainer,
-             tilesRequest:Request):String =
-             {
-        // if definition already derived use it, otherwise 
-        // check if url (bean name) is a template definition, then 
-        // check for main template
-        return if (derivedDefinitionName != null) {
-            derivedDefinitionName
-        } else if (container.isValidDefinition(beanName, tilesRequest)) {
+  /**
+   * Processes values to get tiles template definition name.  First
+   * a Tiles definition matching the url is checked, then a
+   * url specific template is checked, and then just the
+   * default root definition is used.
+   *
+   * @throws TilesException If no valid Tiles definition is found.
+   */
+  @throws(classOf[TilesException])
+  protected def processTilesDefinitionName(beanName: String,
+                                           container: TilesContainer,
+                                           tilesRequest: Request): String = {
+    // if definition already derived use it, otherwise
+    // check if url (bean name) is a template definition, then
+    // check for main template
+    if (derivedDefinitionName != null) {
+      derivedDefinitionName
+    } else if (container.isValidDefinition(beanName, tilesRequest)) {
+      derivedDefinitionName = beanName;
+      beanName
+    } else {
+      throw new TilesException("No defintion of found for "
+        + "'" + beanName + "'")
+    }
+  }
 
-            derivedDefinitionName = beanName ;  beanName
-        }   else {
-                    throw new TilesException("No defintion of found for "
-                            + "'" + beanName + "'")
-                }
-            }
-
-   
-    protected def createTilesRequest(applicationContext:ApplicationContext,
-                                     request:HttpServletRequest, response:HttpServletResponse):Request = 
-	 new org.apache.tiles.request.servlet.ServletRequest(applicationContext, request, response) {
-			override def getRequestLocale():Locale = {
-				return RequestContextUtils.getLocale(request)
-			}
-		}  
+  protected def createTilesRequest(applicationContext: ApplicationContext,
+                                   request: HttpServletRequest, response: HttpServletResponse): Request =
+    new org.apache.tiles.request.servlet.ServletRequest(applicationContext, request, response) {
+      override def getRequestLocale(): Locale = RequestContextUtils.getLocale(request)
+    }
 }

@@ -16,34 +16,22 @@
 
 package uber.paste.model
 
-import javax.persistence._
-import org.apache.lucene.queryparser.classic.QueryParser
-import org.apache.lucene.search.highlight.Highlighter
-import org.hibernate.envers.Audited
-import org.hibernate.envers.NotAudited
-import org.hibernate.search.annotations.DateBridge
-import org.hibernate.search.annotations.Field
-import org.hibernate.search.annotations.Index
-import org.hibernate.search.annotations.Resolution
-import org.hibernate.validator._
-import javax.validation.constraints.{Size, NotNull}
-import java.util.{Calendar,Date}
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute
-import java.text.SimpleDateFormat
+import org.hibernate.search.annotations.{DateBridge, Field, Index, Resolution}
 import uber.paste.base.Loggered
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import javax.persistence._
 
 object Struct {
   
   val terms = List[String]("id","name")
 
   final val DB_DATE_FORMAT_FULL = "dd.MM.yyyy HH:mm:ss"
-
   final val SD_FULL = new SimpleDateFormat(DB_DATE_FORMAT_FULL)
   
     abstract class Builder[T <: java.io.Serializable](obj:T) extends Loggered{
-  
-        def get():T = obj 
-  
+        def get():T = obj
         }
 }
 /**
@@ -67,7 +55,6 @@ abstract class Struct extends DBObject with SearchObject with  java.io.Serializa
   @XStreamAsAttribute
   private var created:java.util.Date = Calendar.getInstance().getTime()
 
-    
   @PrePersist
   @PreUpdate
   def touch() {
@@ -82,6 +69,5 @@ abstract class Struct extends DBObject with SearchObject with  java.io.Serializa
       
   def loadFull() {}  
 
-  
   
 }

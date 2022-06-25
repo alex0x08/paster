@@ -20,10 +20,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import net.sf.classifier4J.summariser.SimpleSummariser
 import org.hibernate.search.annotations.{Index, _}
 import uber.paste.base.Loggered
+
 import java.util.{ArrayList, UUID}
 import javax.persistence._
 import javax.validation.constraints.{NotNull, Size}
 import javax.xml.bind.annotation._
+import scala.annotation.unused
 import scala.jdk.CollectionConverters._
 
 /**
@@ -169,14 +171,9 @@ class Paste(title:String) extends Named(title) with java.io.Serializable{
   private var symbolsCount:java.lang.Integer = null
   
   private var wordsCount:java.lang.Integer = null
-  
-  //@transient
-  private var thumbData:String = null
-  
-  //@transient
+
   private var reviewImgData:String = null
 
-  
  /**
    * related tags
    */
@@ -187,26 +184,13 @@ class Paste(title:String) extends Named(title) with java.io.Serializable{
   
   @PrePersist
   @PreUpdate
+  @unused
   private def onUpdate() {    
      commentsCount = getComments().size()
-     
-    
-  } 
+  }
   
   override def terms():List[String] = Paste.terms
-  
-  /**
-   * this function will fill object fields from highlighter.
-   * This needed to proper display highlighted text in result
-   */
-  /*override def fillFromHits(ch:CompassHighlighter)  {
-      super.fillFromHits(ch)
-    val t = ch.fragment("text")
-      if (!StringUtils.isBlank(t)) {
-        setTitle(t)
-      }
-  }*/
-  
+
   def getSymbolsCount() = symbolsCount
   def setSymbolsCount(c:java.lang.Integer) { this.symbolsCount = c}
   
@@ -253,12 +237,7 @@ class Paste(title:String) extends Named(title) with java.io.Serializable{
   def getReviewImgData() = this.reviewImgData 
   def setReviewImgData(img:String) {reviewImgData = img}
  
-   
- /* @XmlTransient
-  @JsonIgnore
-  def getThumbUpload() = thumbUpload
-  def setThumbUpload(file:MultipartFile) {thumbUpload = file}
-   */
+
   def isSticked() = sticked
   def setSticked(b:Boolean) {this.sticked=b}
 

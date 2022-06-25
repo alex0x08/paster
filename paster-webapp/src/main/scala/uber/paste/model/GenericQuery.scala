@@ -20,6 +20,7 @@ package uber.paste.model
 /**
  * Query trait
  */
+
 import org.hibernate.search.query.dsl.QueryBuilder
 
 trait Query {
@@ -27,54 +28,54 @@ trait Query {
   /**
    * if this query empty
    */
-  def isEmpty():Boolean
+  def isEmpty(): Boolean
+
   /**
    * @return query string
    */
-  def getQuery():String
-  def setQuery(query:String)
+  def getQuery(): String
+
+  def setQuery(query: String)
 
   /**
    * @return current page
    */
-  def getPage():Int
-  def setPage(page:Int)
+  def getPage(): Int
+
+  def setPage(page: Int)
 
   /**
    * build CompassQuery from CompassSession
    */
-  def fillQuery(qb:QueryBuilder):org.apache.lucene.search.Query 
+  def fillQuery(qb: QueryBuilder): org.apache.lucene.search.Query
 
 }
 
 
 class GenericQuery extends Query {
 
-  protected var query:String =null
-  
-  protected var page:Int = 1
-  
-  def setPage(page:Int)  { this.page = page }
-  def getPage() = page
-  
-  def isEmpty():Boolean = {
-   return query == null || query.equals("*") 
+  protected var query: String = null
+  protected var page: Int = 1
+
+  def setPage(page: Int) {
+    this.page = page
   }
-  
-  def getQuery():String = query
-  def setQuery(query:String) { this.query = query }
-  
-  def fillQuery(qb:QueryBuilder):org.apache.lucene.search.Query = {
-    
-    if (query == null || query.trim.length == 0) {
-        query = "*"
-    }
-    
-    return qb
+
+  def getPage() = page
+  def isEmpty(): Boolean = query == null || query.equals("*")
+  def getQuery(): String = query
+
+  def setQuery(query: String) {
+    this.query = query
+  }
+
+  def fillQuery(qb: QueryBuilder): org.apache.lucene.search.Query = {
+    if (query == null || query.trim.length == 0) query = "*"
+    qb
       .keyword()
       .onFields("title", "subtitle", "authors.name")
-  .matching(query)
-  .createQuery()
-    
+      .matching(query)
+      .createQuery()
+
   }
 }

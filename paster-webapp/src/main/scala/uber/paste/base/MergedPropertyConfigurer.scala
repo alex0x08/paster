@@ -6,7 +6,7 @@ import  scala.jdk.CollectionConverters._
 class MergedPropertyConfigurer extends PropertyPlaceholderConfigurer{
 
   private val propertiesMap:java.util.Map[String, String] = new java.util.HashMap[String, String]()
- 
+
   private var springSystemPropertiesMode:Int = PropertyPlaceholderConfigurer.SYSTEM_PROPERTIES_MODE_FALLBACK
 
   override def setSystemPropertiesMode(systemPropertiesMode:Int) {

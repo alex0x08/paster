@@ -20,138 +20,124 @@ import org.apache.commons.lang3.StringUtils
 import org.apache.lucene.analysis.standard.StandardAnalyzer
 import org.apache.lucene.queryparser.classic.{MultiFieldQueryParser, ParseException, QueryParser}
 import org.apache.lucene.search.highlight.{Highlighter, QueryScorer, SimpleHTMLFormatter, SimpleSpanFragmenter}
-import org.hibernate.{CacheMode, Session}
+import org.hibernate.CacheMode
 import org.hibernate.search.jpa.{FullTextEntityManager, FullTextQuery, Search}
 import org.springframework.transaction.annotation.Transactional
 import uber.paste.base.Loggered
 import uber.paste.model.Struct
-
-import scala.jdk.CollectionConverters._
 import java.util.ArrayList
-import javax.persistence.EntityManager
+import scala.jdk.CollectionConverters._
 
 object SearchableDaoImpl {
-  
-  val FORMATTER = new SimpleHTMLFormatter("[result]", "[/result]")
 
+  val FORMATTER = new SimpleHTMLFormatter("[result]", "[/result]")
   val DEFAULT_START_FIELDS = Array[String]("name")
-  
   val searchableDao = new ArrayList[SearchableDaoImpl[_]]()
 }
 
-
 @Transactional(readOnly = true, rollbackFor = Array(classOf[Exception]))
-abstract class SearchableDaoImpl[T <: Struct](model:Class[T])
-  extends StructDaoImpl[T](model)  {
-    
+abstract class SearchableDaoImpl[T <: Struct](model: Class[T])
+  extends StructDaoImpl[T](model) {
+
   /**
    * this is needed to be able to reindex all implementations
+   *
    * @see reindex 
    */
   SearchableDaoImpl.searchableDao.add(this)
-  
-  //@throws(classOf[ParseException])
-  protected class FSearch(query:String) extends Loggered{
-        
-      logger.debug("searching for {}",query)
-    
-    val fsession: FullTextEntityManager = getFullTextEntityManager()
 
-        val pparser = new MultiFieldQueryParser(getDefaultStartFields(),
-                                                new StandardAnalyzer())
-        
-        
-        val luceneQuery:org.apache.lucene.search.Query = pparser.parse(query)
-        val scorer:QueryScorer = new QueryScorer(luceneQuery)
-        val highlighter:Highlighter = new Highlighter(SearchableDaoImpl.FORMATTER, scorer)
-        
-            highlighter.setTextFragmenter(new SimpleSpanFragmenter(scorer, 100))
-    
-        val fquery:FullTextQuery = fsession.createFullTextQuery(luceneQuery, model)
-               
-        
-        def getResults() = fillHighlighted(highlighter, pparser, fquery.getResultList())
-        
-    }
+  protected class FSearch(query: String) extends Loggered {
+    logger.debug("searching for {}", query)
+
+    val fsession: FullTextEntityManager = getFullTextEntityManager()
+    val pparser = new MultiFieldQueryParser(getDefaultStartFields(),
+      new StandardAnalyzer())
+
+    val luceneQuery: org.apache.lucene.search.Query = pparser.parse(query)
+    val scorer: QueryScorer = new QueryScorer(luceneQuery)
+    val highlighter: Highlighter = new Highlighter(SearchableDaoImpl.FORMATTER, scorer)
+    highlighter.setTextFragmenter(new SimpleSpanFragmenter(scorer, 100))
+    val fquery: FullTextQuery = fsession.createFullTextQuery(luceneQuery, model)
+
+    def getResults() = fillHighlighted(highlighter, pparser, fquery.getResultList())
+
+  }
 
   def getFullTextEntityManager() = Search.getFullTextEntityManager(em)
 
-   def getDefaultStartFields():Array[String] = {
-        return SearchableDaoImpl.DEFAULT_START_FIELDS
+  def getDefaultStartFields(): Array[String] = SearchableDaoImpl.DEFAULT_START_FIELDS
+
+  def fillHighlighted(highlighter: Highlighter,
+                      pparser: QueryParser,
+                      results: java.util.List[_]): java.util.List[T] = {
+    for (obj <- results.asScala) {
+      fillHighlighted(highlighter, pparser, obj.asInstanceOf[T])
     }
-  
-   def fillHighlighted(highlighter:Highlighter,
-            pparser:QueryParser,
-            results:java.util.List[_]):java.util.List[T] = {
-        for (obj <- results.asScala) {
-          fillHighlighted(highlighter, pparser, obj.asInstanceOf[T])
-        }
-        return results.asInstanceOf[java.util.List[T]]
+    results.asInstanceOf[java.util.List[T]]
+  }
+
+  def indexAll() {
+
+    val fsession = getFullTextEntityManager()
+    try {
+
+      fsession.createIndexer(model)
+        .batchSizeToLoadObjects(25)
+        .cacheMode(CacheMode.NORMAL)
+        .threadsToLoadObjects(1)
+        .threadsForSubsequentFetching(2)
+        .startAndWait()
+
+    } catch {
+      case e: InterruptedException => {
+        throw new RuntimeException(e)
+      }
+    }
+  }
+
+  def fillHighlighted(highlighter: Highlighter,
+                      pparser: QueryParser,
+                      model: T) {
+    /* try {
+         val hl = highlighter
+                 .getBestFragments(pparser.getAnalyzer()
+                         .tokenStream("code", new StringReader(model.getCode())),
+                         model.getName(), 3, " ...");
+
+         if (hl != null && hl.trim().length() > 0) {
+             model.setCode(hl);
+         }
+
+
+ } catch {
+   case e @ (_ : IOException  | _ : InvalidTokenOffsetsException) => {
+       logger.error(e.getLocalizedMessage,e)
      }
-  
-   def indexAll() {
+ }*/
 
-        val fsession = getFullTextEntityManager()
-        try {
-          
-            fsession.createIndexer(model)
-                    .batchSizeToLoadObjects(25)
-                    .cacheMode(CacheMode.NORMAL)
-                    .threadsToLoadObjects(1)
-                    .threadsForSubsequentFetching(2)
-                    .startAndWait()
-        
-    } catch {
-      case e:InterruptedException =>
-       {
-         throw new RuntimeException(e)
-        }             
-    }    
-   }
-  
-   def fillHighlighted(highlighter:Highlighter,
-            pparser:QueryParser,
-            model:T) {
-       /* try {
-            val hl = highlighter
-                    .getBestFragments(pparser.getAnalyzer()
-                            .tokenStream("code", new StringReader(model.getCode())),
-                            model.getName(), 3, " ...");
+  }
 
-            if (hl != null && hl.trim().length() > 0) {
-                model.setCode(hl);
-            }          
-      
-        
-    } catch {
-      case e @ (_ : IOException  | _ : InvalidTokenOffsetsException) => {
-          logger.error(e.getLocalizedMessage,e)
-        }
-    }*/
-  
-   }
-  
 
   @throws(classOf[ParseException])
-  def search(query:String):java.util.List[T] = {
+  def search(query: String): java.util.List[T] = {
 
-        /**
-         * ignore empty queries
-         */
-        if (StringUtils.isBlank(query) || query.trim().equals("*")) {
-          return getList()
-        }
-        
-        /**
-         * added for stupid users
-         */
-        return new FSearch(
-          if (!query.contains(":") && !query.contains("*")) 
-           (query+"*") else 
-            query
-          ).getResults()
+    /**
+     * ignore empty queries
+     */
+    if (StringUtils.isBlank(query) || query.trim().equals("*")) {
+      return getList()
+    }
+
+    /**
+     * added for stupid users
+     */
+    new FSearch(
+      if (!query.contains(":") && !query.contains("*"))
+        query + "*" else
+        query
+    ).getResults()
   }
-   
+
 
 }
 

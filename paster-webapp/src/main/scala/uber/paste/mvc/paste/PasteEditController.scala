@@ -17,8 +17,7 @@
 package uber.paste.mvc.paste
 
 import com.fasterxml.jackson.annotation.JsonIgnore
-import org.apache.commons.lang3.text.WordUtils
-import org.apache.commons.lang3.{StringUtils}
+import org.apache.commons.lang3.StringUtils
 import org.springframework.beans.factory.annotation.{Autowired, Qualifier}
 import org.springframework.context.MessageSource
 import org.springframework.stereotype.Controller
@@ -32,10 +31,10 @@ import uber.paste.manager.ResourcePathHelper
 import uber.paste.model._
 import uber.paste.mvc.{GenericController, GenericEditController}
 import org.apache.commons.text.StringEscapeUtils
+import org.apache.commons.text.WordUtils
 import java.util.{ArrayList, Locale}
 import javax.validation.Valid
 import scala.jdk.CollectionConverters._
-
 
 /**
  * Paste model controller
@@ -45,7 +44,6 @@ import scala.jdk.CollectionConverters._
 @RequestMapping(Array("/paste"))
 //@SessionAttributes(Array(GenericController.MODEL_KEY))
 class PasteEditController extends GenericEditController[Paste] {
-
 
   @Autowired
   val tagDao: TagDao = null
@@ -62,21 +60,16 @@ class PasteEditController extends GenericEditController[Paste] {
   @Autowired
   val resourcePathHelper: ResourcePathHelper = null
 
-  //@Resource(name="mimeTypeSource")
   @Autowired
   @Qualifier("mimeTypeSource")
   protected val mimeSource: MessageSource = null
-
-  //@Resource(name="mimeExtSource")
 
   @Autowired
   @Qualifier("mimeExtSource")
   protected val mimeExtSource: MessageSource = null
 
   def listPage = "redirect:/main/paste/list"
-
   def editPage = "paste/edit"
-
   def viewPage = "paste/view"
 
   def manager = pasteManager
@@ -109,9 +102,7 @@ class PasteEditController extends GenericEditController[Paste] {
     }
     model.addAttribute("availableCodeTypes", CodeType.list)
     model.addAttribute("availablePriorities", Priority.list)
-
     model.addAttribute("availableChannels", channelDao.getList)
-
 
     if (!obj.getComments.isEmpty) {
       val commentLines = new ArrayList[Long]
@@ -123,7 +114,6 @@ class PasteEditController extends GenericEditController[Paste] {
     }
 
     if (!obj.isBlank()) {
-
       val pnext = manager.getNextPaste(obj)
       val pprev = manager.getPreviousPaste(obj)
 
@@ -135,30 +125,20 @@ class PasteEditController extends GenericEditController[Paste] {
       model.addAttribute("availableNext", null)
       model.addAttribute("availablePrev", null)
     }
-
-
-
-    //  obj.tagsAsString = for (s<-obj.getTags()) yield s+" "
-
-
   }
 
   override def getNewModelInstance(): Paste = {
     val p = new Paste
     p.setOwner(getCurrentUser)
     p.setChannel(channelDao.getDefault)
-    return p
+    p
   }
 
-  //@ModelAttribute("comment")
   def getNewCommentInstance(pp: Paste, model: Model): Comment = {
-
     val p = new Comment
-
     p.setOwner(getCurrentUser)
     p.setPasteId(pp.getId)
-
-    return p
+    p
   }
 
 
@@ -169,15 +149,11 @@ class PasteEditController extends GenericEditController[Paste] {
                     @RequestParam(required = true) lineNumber: java.lang.Long,
                     model: Model, locale: Locale): String = {
 
-    if (logger.isDebugEnabled) {
-      logger.debug("_removeComment commentId={} , lineNumber ={} {}", commentId, lineNumber, "")
-    }
+    if (logger.isDebugEnabled) logger.debug("_removeComment commentId={} , lineNumber ={} {}", commentId, lineNumber, "")
 
     commentManager.remove(commentId)
-
     model.asMap().clear()
-
-    return "redirect:/main/paste/" + pasteId + "#line_" + lineNumber
+    "redirect:/main/paste/" + pasteId + "#line_" + lineNumber
   }
 
   @RequestMapping(value = Array("/saveReviewDraw"), method = Array(RequestMethod.POST))
@@ -187,34 +163,24 @@ class PasteEditController extends GenericEditController[Paste] {
                       @RequestParam(required = true) thumbImgData: String,
                       model: Model, locale: Locale): String = {
 
-    if (!isCurrentUserLoggedIn() && !allowAnonymousCommentsCreate) {
-      return page403
-    }
+    if (!isCurrentUserLoggedIn() && !allowAnonymousCommentsCreate) return page403
 
     var p = pasteManager.get(pasteId)
 
-    if (p == null) {
-      return page404
-    }
+    if (p == null) return page404
 
-    if (reviewImgData == null || thumbImgData == null) {
-      return page500
-    }
+    if (reviewImgData == null || thumbImgData == null) return page500
 
     logger.info("adding reviewImg to {}, data {}", Array(pasteId, reviewImgData))
 
-
-    p.setReviewImgData(resourcePathHelper.saveResource("r", p))
-
-
-    p.setThumbImage(resourcePathHelper.saveResource("t", p))
+    p.setReviewImgData(resourcePathHelper.saveResource("r", p.getUuid(),reviewImgData))
+    p.setThumbImage(resourcePathHelper.saveResource("t", p.getUuid(),thumbImgData))
 
     p.touch
     p = manager.save(p);
 
     model.asMap().clear()
-    return "redirect:/main/paste/" + pasteId
-
+    "redirect:/main/paste/" + pasteId
   }
 
   /**
@@ -231,26 +197,18 @@ class PasteEditController extends GenericEditController[Paste] {
   def saveComment(@Valid b: Comment,
                   result: BindingResult, model: Model, locale: Locale): String = {
 
-    if (!isCurrentUserLoggedIn() && !allowAnonymousCommentsCreate) {
-      return page403
-    }
+    if (!isCurrentUserLoggedIn() && !allowAnonymousCommentsCreate) return page403
 
     val p = manager.get(b.getPasteId)
 
-    if (p == null) {
-      return page404
-    }
-
+    if (p == null) return page404
 
     logger.debug("adding comment {}", b)
 
     if (result.hasErrors()) {
-
       logger.debug("form has errors {}", result.getErrorCount())
-
       model.addAttribute("comment", b)
       fillEditModel(p, model, locale)
-
       return viewPage
     }
 
@@ -258,20 +216,13 @@ class PasteEditController extends GenericEditController[Paste] {
       b.setOwner(getCurrentUser())
       b.getOwner().increaseTotalComments()
     }
-
-
     commentManager.save(b)
 
-    if (b.getThumbImage != null) {
-
-      p.setThumbImage(resourcePathHelper.saveResource("t", b,p))
-    }
+    if (b.getThumbImage != null) p.setThumbImage(resourcePathHelper.saveResource("t", p.getUuid(),b.getThumbImage()))
     p.touch
     manager.save(p)
-
     model.asMap().clear()
-
-    return "redirect:/main/paste/" + b.getPasteId + "#line_" + b.getLineNumber
+    "redirect:/main/paste/" + b.getPasteId + "#line_" + b.getLineNumber
   }
 
 
@@ -281,9 +232,7 @@ class PasteEditController extends GenericEditController[Paste] {
                     result: BindingResult, model: Model, locale: Locale,
                     redirectAttributes: RedirectAttributes): String = {
 
-    if (!isCurrentUserLoggedIn() && !allowAnonymousPasteCreate) {
-      return page403
-    }
+    if (!isCurrentUserLoggedIn() && !allowAnonymousPasteCreate) return page403
 
     /**
      * copy fields not filled in form
@@ -291,16 +240,14 @@ class PasteEditController extends GenericEditController[Paste] {
     if (!b.isBlank()) {
       val current = manager.getFull(b.getId())
       b.getComments().addAll(current.getComments())
-
       b.setIntegrationCode(current.getIntegrationCode())
       // b.setThumbImg(current.getThumbImg())
     }
 
-    if (b.getChannel == null) {
-      b.setChannel(channelDao.getDefault)
-    } else {
-      b.setChannel(channelDao.getByKey(b.getChannel.getCode))
-    }
+    if (b.getChannel == null)
+          b.setChannel(channelDao.getDefault)
+        else
+          b.setChannel(channelDao.getByKey(b.getChannel.getCode))
 
     /**
      * concatenate all model tags objects to one string
@@ -312,14 +259,7 @@ class PasteEditController extends GenericEditController[Paste] {
     for (s <- b.getTagsAsString.split(" ")) {
       if (!StringUtils.isBlank(s)
         && s.length >= 3 // name min size
-      ) {
-        if (allTags.containsKey(s)) {
-          b.getTagsMap.put(s, allTags.get(s))
-        } else {
-          b.getTagsMap.put(s, new Tag(s))
-        }
-
-      }
+      ) if (allTags.containsKey(s)) b.getTagsMap.put(s, allTags.get(s)) else b.getTagsMap.put(s, new Tag(s))
     }
 
     /**
@@ -344,65 +284,55 @@ class PasteEditController extends GenericEditController[Paste] {
               }
             }*/
         }
-        case CodeType.Plain => {
+        case CodeType.Plain =>
           /**
            * set word wrap for plain
            */
+
           b.setText(WordUtils.wrap(b.getText(), 80))
-        }
-        case _ => {}
+        case _ =>
       }
     }
 
-    if (b.isBlank()) {
-      if (isCurrentUserLoggedIn()) {
-        b.setOwner(getCurrentUser())
-        b.getOwner().increaseTotalPastas()
-
-      }
+    if (b.isBlank()) if (isCurrentUserLoggedIn()) {
+      b.setOwner(getCurrentUser())
+      b.getOwner().increaseTotalPastas()
     }
 
 
     b.setTitle(
-      if (b.getText().length > Paste.TITLE_LENGTH) {
+      f = if (b.getText().length > Paste.TITLE_LENGTH) {
 
         val summary: String = try {
           Paste.summariser.summarise(b.getText(), 2)
         } catch {
-          case e@(_: Exception) => {
+          case e@(_: Exception) =>
             if (logger.isDebugEnabled) {
               logger.error(e.getLocalizedMessage, e)
             }
             null
-          }
         }
 
         if (summary == null || summary.length < 3)
           b.getText().substring(0, Paste.TITLE_LENGTH - 3) + "..."
-        else {
-          if (summary.length > Paste.TITLE_LENGTH)
-            summary.substring(0, Paste.TITLE_LENGTH - 3) + "..."
-          else
-            summary
-
-        }
-      } else {
-        b.getText
-      })
+        else if (summary.length > Paste.TITLE_LENGTH)
+          summary.substring(0, Paste.TITLE_LENGTH - 3) + "..."
+        else
+          summary
+      } else b.getText)
 
     logger.debug("__found thumbnail {} comments {}", b.getThumbImage(), b.getComments().size())
 
     if (b.getThumbImage() != null) {
-      b.setThumbImage(resourcePathHelper.saveResource("t", b))
+      b.setThumbImage(resourcePathHelper.saveResource("t", b.getUuid(),b.getThumbImage()))
     }
 
     val out = super.save(cancel, b, result, model, locale, redirectAttributes)
-    return if (out.equals(listPage)) {
+    if (out.equals(listPage)) {
       model.asMap().clear();
       "redirect:/main/paste/" + b.getId()
     } else
       out
-
   }
 
   def getMimeResource(key: String): String = mimeSource.getMessage(key,
@@ -410,7 +340,6 @@ class PasteEditController extends GenericEditController[Paste] {
 
   def getMimeExtResource(key: String): String = mimeExtSource.getMessage(key,
     new Array[java.lang.Object](0), null, Locale.getDefault)
-
 
   @RequestMapping(value = Array("/raw/view"), method = Array(RequestMethod.GET))
   def getByPathRaw(@RequestParam(required = true) id: java.lang.Long, model: Model, locale: Locale): String = {
@@ -445,9 +374,7 @@ class PasteEditController extends GenericEditController[Paste] {
   @RequestMapping(value = Array("/codetypes"), method = Array(RequestMethod.GET))
   @ResponseBody
   @JsonIgnore
-  def getAvailableCodeTypes(): java.util.Collection[CodeType] = {
-    return CodeType.list
-  }
+  def getAvailableCodeTypes(): java.util.Collection[CodeType] = CodeType.list
 
   @RequestMapping(value = Array("/tags/all"), method = Array(RequestMethod.GET))
   @ResponseBody
@@ -464,7 +391,7 @@ class PasteEditController extends GenericEditController[Paste] {
       out.add(s.getName)
     }
 
-    return out
+    out
   }
 
 
@@ -481,31 +408,20 @@ class PasteEditController extends GenericEditController[Paste] {
   @ResponseBody
   def getBodyPlain(@PathVariable("id") id: java.lang.Long,
                    model: Model,
-                   locale: Locale): String = {
-    return loadModel(id).getText()
-  }
+                   locale: Locale): String = return loadModel(id).getText()
 
   /**
    *
    * @return new search query object
    */
   @ModelAttribute("query")
-  def newQuery(): OwnerQuery = {
-    val out = new OwnerQuery
-    //  if (!isCurrentUserAdmin) {
-    //    out.setOwnerId(getCurrentUser.getId)
-    // }
-    return out
-  }
-
+  def newQuery(): OwnerQuery = new OwnerQuery
 }
 
 class IdList(list: java.util.List[Long]) {
 
   def getCount = list.size
-
   def getItems = list
-
   def getItemsAsString = StringUtils.join(list, ",")
 
 }

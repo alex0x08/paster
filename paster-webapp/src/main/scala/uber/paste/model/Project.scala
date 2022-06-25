@@ -16,23 +16,15 @@
 
 package uber.paste.model
 
-
 import com.fasterxml.jackson.annotation.JsonIgnore
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.Lob
-import javax.xml.bind.annotation.XmlRootElement
-import javax.xml.bind.annotation.XmlTransient
-
-import org.hibernate.envers.Audited
-import org.hibernate.search.annotations.Field
-import org.hibernate.search.annotations.Indexed
+import org.hibernate.search.annotations.{Field, Indexed}
 import org.springframework.web.multipart.MultipartFile
+import javax.persistence.{Column, Entity, Lob}
+import javax.xml.bind.annotation.{XmlRootElement, XmlTransient}
 
 @Entity
 @Indexed(index = "indexes/projects")
 @XmlRootElement(name="project")
-//@Audited
 class Project(name:String) extends Named(name) with java.io.Serializable{
 
   @Lob
@@ -54,9 +46,7 @@ class Project(name:String) extends Named(name) with java.io.Serializable{
   @transient
   @XmlTransient
   private var iconImageFile:MultipartFile = null
- 
-  
-  
+
   def this() = this(null)
   
   def getDescription() = description

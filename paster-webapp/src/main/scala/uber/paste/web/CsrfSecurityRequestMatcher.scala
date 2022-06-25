@@ -21,18 +21,15 @@ import javax.servlet.http.HttpServletRequest
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher
 import org.springframework.security.web.util.matcher.RequestMatcher
 
-class CsrfSecurityRequestMatcher extends RequestMatcher{
+class CsrfSecurityRequestMatcher extends RequestMatcher {
 
- val allowedMethods = Pattern.compile("^(GET|POST|HEAD|TRACE|OPTIONS)$")
- 
-   private val unprotectedMatcher = new AntPathRequestMatcher("/act/admin/dbconsole/**")
+  val allowedMethods = Pattern.compile("^(GET|POST|HEAD|TRACE|OPTIONS)$")
 
-   override def matches(request:HttpServletRequest):Boolean = {  
-     
-        if(allowedMethods.matcher(request.getMethod()).matches()){
-            return false;
-        }
-        return !unprotectedMatcher.matches(request);
-    }
-  
+  private val unprotectedMatcher = new AntPathRequestMatcher("/act/admin/dbconsole/**")
+
+  override def matches(request: HttpServletRequest): Boolean = {
+    if (allowedMethods.matcher(request.getMethod()).matches()) return false
+    !unprotectedMatcher.matches(request)
+  }
+
 }

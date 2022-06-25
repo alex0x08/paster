@@ -16,14 +16,12 @@
 
 package uber.paste.mvc.user
 
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestMapping
+import uber.paste.dao.UserDaoImpl
 import uber.paste.model.User
 import uber.paste.mvc.GenericListController
-import uber.paste.dao.UserDaoImpl
-import uber.paste.manager.UserManager
-import org.springframework.beans.factory.annotation.Autowired
-
 
 @Controller
 @RequestMapping(Array("/user"))
@@ -35,7 +33,6 @@ class UserListController extends GenericListController[User]{
   def listPage="redirect:/main/user/list"
   def editPage="/user/edit"
   def viewPage="/user/view"
-
 
   def manager() = userManager
  

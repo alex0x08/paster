@@ -17,12 +17,9 @@
 package uber.paste.model
 
 import org.springframework.security.core.GrantedAuthority
-
 object Role extends KeyObj[Role] {
-
   val ROLE_ADMIN = new Role("ROLE_ADMIN", "role.admin.name")
   val ROLE_USER = new Role("ROLE_USER", "role.user.name")
-
   add(ROLE_ADMIN)
   add(ROLE_USER)
 
@@ -32,11 +29,8 @@ object Role extends KeyObj[Role] {
 //@Searchable
 class Role(code: String, desc: String) extends Key(code, desc)
   with GrantedAuthority with java.io.Serializable {
-
   def getAuthority(): String = getCode
-
   override def create(code: String) = new Role(code, null)
-
 }
 
 class RoleEditor extends KeyEditorEnum[Role](Role) {}

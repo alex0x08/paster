@@ -16,55 +16,45 @@
 
 package uber.paste.model
 
-import javax.persistence._
-import org.hibernate.validator._
-import uber.paste.base.Loggered
 import java.beans.PropertyEditorSupport
+import javax.persistence._
 
 /**
- *  The structure with key and value
- * 
+ * The structure with key and value
+ *
  */
 
 
 object KeyValue extends Key {
-  
-  abstract class Builder[T <: KeyValue](model:T) extends Key.Builder[T](model) {
 
-  def addValue(v:String): Builder[T]  = {
-    get().setValue(v)
-    return this
-  }
-  
+  abstract class Builder[T <: KeyValue](model: T) extends Key.Builder[T](model) {
+    def addValue(v: String): Builder[T] = {
+      get().setValue(v)
+      this
+    }
   }
 }
 
-class KeyValueEditor[T <: KeyValue](vobj:KeyValueObj[T]) extends PropertyEditorSupport{
-
-  override def setAsText(text:String) {
+class KeyValueEditor[T <: KeyValue](vobj: KeyValueObj[T]) extends PropertyEditorSupport {
+  override def setAsText(text: String) {
     setValue(vobj.valueOf(text.toLowerCase))
   }
-
-  override def getAsText():String = {
+  override def getAsText(): String = {
     if (getValue() == null) return null
-    
-     getValue().asInstanceOf[T].getCode()    
+    getValue().asInstanceOf[T].getCode()
   }
 }
 
-
-class KeyValueObj[T <: KeyValue] extends KeyObj[T]{ }
-  
+class KeyValueObj[T <: KeyValue] extends KeyObj[T] {}
 
 @MappedSuperclass
-class KeyValue(code:String,kvalue:String,kname:String) 
-          extends Key(code,kname) with java.io.Serializable{
-  
-  @Column(name="pvalue")
+class KeyValue(code: String, kvalue: String, kname: String)
+  extends Key(code, kname) with java.io.Serializable {
+  @Column(name = "pvalue")
   private var value: String = kvalue
-  
-  def getValue()= value
-  def setValue(f:String)  {value = f }
+  def getValue() = value
+  def setValue(f: String) {
+    value = f
+  }
 
-    
 }

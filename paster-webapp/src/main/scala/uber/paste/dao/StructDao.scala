@@ -19,7 +19,6 @@ package uber.paste.dao
 import uber.paste.model.Struct
 import org.springframework.transaction.annotation.Transactional
 
-
 @Transactional(readOnly = true, rollbackFor = Array(classOf[Exception]))
 abstract class StructDaoImpl[T <: Struct](model:Class[T])
             extends BaseDaoImpl[T,java.lang.Long](model)  {
@@ -27,9 +26,7 @@ abstract class StructDaoImpl[T <: Struct](model:Class[T])
   @Transactional
   def getFull(id:Long):T = {
     val out:T = get(id)
-    return if (out==null) {
-      null.asInstanceOf[T]
-    } else {
+    if (out==null) null.asInstanceOf[T] else {
       out.loadFull
       out
     }

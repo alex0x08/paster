@@ -183,7 +183,7 @@ abstract class GenericListController[T <: Struct ] extends GenericController[T] 
 
     model.addAttribute(GenericListController.PAGE_SET, GenericListController.pageSet)
 
-    return pagedListHolder.getPageList()
+    pagedListHolder.getPageList()
     }
     
     @ModelAttribute("availableSortColumns")
@@ -256,11 +256,8 @@ abstract class GenericListController[T <: Struct ] extends GenericController[T] 
               sortColumn:String,sortAsc:Boolean,result:String):java.util.List[T] = {
 
     fillListModel(model,locale)
-    // putListModel(model);
-
-    return processPageListHolder(request,locale,model,page,NPpage,pageSize,sortColumn,sortAsc,defaultListCallback,
+    processPageListHolder(request,locale,model,page,NPpage,pageSize,sortColumn,sortAsc,defaultListCallback,
       result)
-    // return manager.getAll();
   }
 
 

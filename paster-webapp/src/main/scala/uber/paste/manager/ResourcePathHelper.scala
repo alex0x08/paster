@@ -16,21 +16,18 @@
 
 package uber.paste.manager
 
+import org.apache.commons.io.FileUtils
+import org.springframework.beans.factory.annotation.Value
+import org.springframework.stereotype.Component
+import uber.paste.base.Loggered
 import java.io.File
 import java.net.URLDecoder
 import java.nio.file.FileSystems
 import java.text.SimpleDateFormat
-import java.util.Calendar
-import org.apache.commons.io.FileUtils
-import org.springframework.beans.factory.annotation.Value
-import org.springframework.security.crypto.codec.Base64
-import org.springframework.stereotype.Component
-import uber.paste.base.Loggered
-import uber.paste.model.{Comment, Paste, Project}
+import java.util.{Base64, Calendar}
 
 object ResourcePathHelper {
   val PATH_FORMAT = new SimpleDateFormat("YYYY/MM/dd/")
-
 }
 
 @Component("resourcePathHelper")
@@ -47,88 +44,35 @@ class ResourcePathHelper extends Loggered {
       .replaceAll("\\.", "x")
       .replaceAll(",", "/")
 
-    if (logger.isDebugEnabled) {
-      logger.debug("file url {}", id)
-    }
+    if (logger.isDebugEnabled) logger.debug("file url {}", id)
 
-    val ext = 
-     ptype match {
-      case "r" => {
-          "png"
-      }
-      case _ => {
-        "jpg"
-      }
-    }
-    
-    return FileSystems.getDefault()
-      .getPath(pasteAppHome, "resources", ptype, id + "."+ext).toFile
-  }
-
-  def saveProjectImages(b: Project): String = {
-
-    /* val fname = "customer/"+ResourcePathHelper.PATH_FORMAT.format(Calendar.getInstance().getTime())
-    +b.getId
-      
-        val fimg = FileSystems.getDefault().getPath(System.getProperty("paste.app.home"),
-                                                    "images",
-                                                    fname+".png").toFile
-      
-        FileUtils.writeByteArrayToFile(fimg,Base64.decode(imgData.getBytes))
-      
-     return fname.replaceAll("/", ",")*/
-    return null
+    FileSystems.getDefault()
+      .getPath(pasteAppHome, "resources", ptype, id + "."+getExtFor(ptype)).toFile
   }
 
 
-  def saveResource(pt: String, b: Comment,p:Paste): String = {
-
+  def saveResource(pt: String, objId :String,imgData:String): String = {
     val fname = new StringBuilder()
-      //.append("thumbnails/")
       .append(ResourcePathHelper.PATH_FORMAT.format(Calendar.getInstance().getTime()))
-      .append(p.getUuid)
+      .append(objId)
+      .append('.')
+      .append(getExtFor(pt))
       .toString
 
     val fimg = FileSystems.getDefault().getPath(pasteAppHome, "resources",
       pt,
-      fname + ".jpg").toFile
+      fname).toFile
+    val imgData2 = imgData.substring(imgData.indexOf(',') + 1)
+    FileUtils.writeByteArrayToFile(fimg, Base64.getDecoder().decode(imgData2.getBytes))
 
-    val imgData = b.getThumbImage.substring(b.getThumbImage.indexOf(',') + 1)
-    FileUtils.writeByteArrayToFile(fimg, Base64.decode(imgData.getBytes))
     fname.replaceAll("/", ",")
 
   }
-  def saveResource(pt: String, b: Paste): String = {
-
-    val fname = new StringBuilder()
-      //.append("thumbnails/")
-      .append(ResourcePathHelper.PATH_FORMAT.format(Calendar.getInstance().getTime()))
-      .append(b.getUuid)
-      .toString
-
-    pt match {
-      case "t" => {
-        val fimg = FileSystems.getDefault().getPath(pasteAppHome, "resources",
-          pt,
-          fname + ".jpg").toFile
-
-        val imgData = b.getThumbImage.substring(b.getThumbImage.indexOf(',') + 1)
-        FileUtils.writeByteArrayToFile(fimg, Base64.decode(imgData.getBytes))
-      
-      }
-      case "r" => {
-        val fimg = FileSystems.getDefault().getPath(pasteAppHome, "resources",
-          pt,
-          fname + ".png").toFile
-        val imgData = b.getReviewImgData.substring(b.getReviewImgData.indexOf(',') + 1)
-        FileUtils.writeByteArrayToFile(fimg, Base64.decode(imgData.getBytes))
-      }
-      case _ => {
-        null
-      }
-
-    }
-
-    fname.replaceAll("/", ",")
+  def getExtFor(ptype:String) = ptype match {
+    case "r" =>
+      "png"
+    case _ =>
+      "jpg"
   }
+
 }

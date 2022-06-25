@@ -63,7 +63,7 @@ class PasteAtomView extends AbstractAtomFeedView{
       entries.add(entry)
     }
 
-    return entries
+    entries
 
   }
 

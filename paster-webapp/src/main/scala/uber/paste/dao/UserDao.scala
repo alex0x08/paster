@@ -16,10 +16,9 @@
 
 package uber.paste.dao
 
-import scala.jdk.CollectionConverters._
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
-import uber.paste.model.{User}
+import uber.paste.model.User
 
 @Repository("userDao")
 @Transactional(readOnly = true, rollbackFor = Array(classOf[Exception]))

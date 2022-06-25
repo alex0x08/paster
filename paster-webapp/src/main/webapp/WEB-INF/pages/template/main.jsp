@@ -16,10 +16,7 @@
         <head>
             <meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, 
                   user-scalable=yes" />
-            
-             
-            
-            
+
             <c:choose>
                 <c:when test="${not empty systemInfo.project.clientImage}">
                     <style>

@@ -112,7 +112,7 @@
                             <c:when test="${not empty paste.thumbImage}">
                                 <div class="col-md-4 col-lg-3 hidden-xs col-sm-5" >
 
-                                    <c:url value='/main/resources/${appId}/t/${paste.lastModified.time}/${paste.thumbImage}' var="thumbUrl">
+                                    <c:url value='/main/resources/${appId}/t/${paste.lastModified.time}/paste_content/${paste.thumbImage}' var="thumbUrl">
                                     </c:url>
 
                                     <a class="pastePreviewLink" href="<c:url value="/${paste.id}"></c:url>" pasteId="${paste.id}" 

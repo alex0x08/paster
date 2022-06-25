@@ -25,7 +25,6 @@ import uber.paste.base.Loggered
 
 
 @MappedSuperclass
-//@Audited
 abstract class DBObject extends java.io.Serializable {
 
   @Id
@@ -33,18 +32,13 @@ abstract class DBObject extends java.io.Serializable {
   @GenericGenerator(name = "AllSequenceStyleGenerator", 
                    strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator"
  )
-  //@GeneratedValue(strategy = GenerationType.IDENTITY)
-  //@SearchableId(name="id")
-  //@Index(name="ddesc_index",columnNames = Array("id desc"))
   @XStreamAsAttribute
   private var id:java.lang.Long = null
     
   @XStreamAsAttribute
   private var disabled:Boolean = _
 
-  
   def isDisabled() = disabled
-  
 
   def setDisabled(disabled:Boolean) { this.disabled = disabled  }
 
@@ -62,7 +56,7 @@ abstract class DBObject extends java.io.Serializable {
     if (id != null) 
       hash+=id.hashCode()
         
-    return hash;
+    hash
   }
 
   override def equals(from:Any) =

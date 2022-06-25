@@ -22,30 +22,23 @@
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:oxm="http://www.springframework.org/schema/oxm"
        xmlns:mvc="http://www.springframework.org/schema/mvc"
-      xsi:schemaLocation="http://www.springframework.org/schema/beans
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
                           http://www.springframework.org/schema/beans/spring-beans.xsd
                           http://www.springframework.org/schema/mvc
                           http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
-    
 
-    <mvc:annotation-driven />
+    <mvc:annotation-driven content-negotiation-manager="contentNegotiationManager" >
+        <mvc:path-matching suffix-pattern="true"/>
+    </mvc:annotation-driven>
 
-     <!--bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping"/>
-	
-     <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter"/-->
-
-    <!--oxm:jaxb2-marshaller id="jaxbMarshaller">
-         <oxm:class-to-be-bound name="uber.paste.model.Paste" />
-    </oxm:jaxb2-marshaller-->
 
 
     <!--general -->
-   
 
 
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-        <property name="order" value="2" />
+        <property name="order" value="2"/>
         <property name="exposeContextBeansAsAttributes" value="true"/>
     </bean>
 
@@ -53,40 +46,40 @@
     <!-- i18n -->
     <mvc:interceptors>
         <bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor"
-              p:paramName="locale" />
+              p:paramName="locale"/>
     </mvc:interceptors>
 
-	<!-- 
-	<mvc:resources mapping="/assets/${paste.app.id}/**" 
+    <!--
+    <mvc:resources mapping="/assets/${paste.app.id}/**"
                    location="classpath:/META-INF/resources/webjars/"/>
-	
-	 -->
-    
 
-    <mvc:resources mapping="/assets/${paste.app.id}/**" 
+     -->
+
+
+    <mvc:resources mapping="/assets/${paste.app.id}/**"
                    location="/META-INF/resources/webjars/"/>
 
-                   
-    <mvc:resources mapping="/static/${paste.app.id}/**" 
+
+    <mvc:resources mapping="/static/${paste.app.id}/**"
                    location="/WEB-INF/static/"/>
-     <mvc:resources mapping="/resources/${paste.app.id}/**" 
+    <mvc:resources mapping="/resources/${paste.app.id}/**"
                    location="/WEB-INF/resources/"/>
-  
+
 
     <mvc:interceptors>
-    <mvc:interceptor>
-        <mvc:mapping path="/static/**"/>
-        <mvc:mapping path="/assets/**"/>
-        <bean id="webContentInterceptor" class="uber.paste.web.StaticResourcesContentInterceptor">
-            <property name="cacheSeconds" value="31557600"/>
-            <property name="useExpiresHeader" value="true"/>
-            <property name="useCacheControlHeader" value="true"/>
-            <property name="useCacheControlNoStore" value="false"/>
-        </bean>
-    </mvc:interceptor>
-</mvc:interceptors>    
+        <mvc:interceptor>
+            <mvc:mapping path="/static/**"/>
+            <mvc:mapping path="/assets/**"/>
+            <bean id="webContentInterceptor" class="uber.paste.web.StaticResourcesContentInterceptor">
+                <property name="cacheSeconds" value="31557600"/>
+                <property name="useExpiresHeader" value="true"/>
+                <property name="useCacheControlHeader" value="true"/>
+                <property name="useCacheControlNoStore" value="false"/>
+            </bean>
+        </mvc:interceptor>
+    </mvc:interceptors>
 
-    <bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver" />
+    <bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver"/>
 
     <!-- tiles-->
 
@@ -98,11 +91,11 @@
                 <value>classpath:/META-INF/resources/tiles-defs/*.xml</value>
             </list>
         </property>
-        
-     <property name="validateDefinitions" value="false"/>
-    
-                <!--prop key="org.apache.tiles.evaluator.AttributeEvaluator">org.apache.tiles.el.ELAttributeEvaluator</prop-->
-        
+
+        <property name="validateDefinitions" value="false"/>
+
+        <!--prop key="org.apache.tiles.evaluator.AttributeEvaluator">org.apache.tiles.el.ELAttributeEvaluator</prop-->
+
         <!--property name="tilesProperties">
 
         <props>
@@ -111,104 +104,88 @@
     </property-->
     </bean>
 
-     <!-- file upload -->
+    <!-- file upload -->
     <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
         <property name="maxUploadSize" value="30000000"/>
 
     </bean>
 
     <bean id="xstreamMarshaller" class="org.springframework.oxm.xstream.XStreamMarshaller"
-          p:autodetectAnnotations="true" />
+          p:autodetectAnnotations="true"/>
 
     <bean id="marshallingConverter" class="org.springframework.http.converter.xml.MarshallingHttpMessageConverter">
-        <constructor-arg ref="xstreamMarshaller" />
+        <constructor-arg ref="xstreamMarshaller"/>
         <property name="supportedMediaTypes" value="application/xml"/>
     </bean>
 
+    <bean name="handlerMapping" class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping">
+        <property name="useSuffixPatternMatch" value="false"></property>
+    </bean>
 
 
-    <bean
-        class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+    <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
         <property name="messageConverters">
             <list>
-                <ref bean="marshallingConverter" />
-                 <bean id="stringHttpMessageConverter"
+                <ref bean="marshallingConverter"/>
+                <bean id="stringHttpMessageConverter"
                       class="org.springframework.http.converter.StringHttpMessageConverter"/>
 
                 <bean id="mappingJacksonHttpMessageConverter"
-                      class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter" />
+                      class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"/>
             </list>
         </property>
     </bean>
-    
-     
-        <bean id="contentNegotiationManager" 
-              class="org.springframework.web.accept.ContentNegotiationManager">  
-            <constructor-arg>  
-            <bean  
-                class="org.springframework.web.accept.PathExtensionContentNegotiationStrategy">  
-                <constructor-arg>  
-                    <map>  
-                        <entry key="json" value="application/json" />  
-                        <entry key="xml" value="application/xml" />  
-                        <entry key="atom" value="application/atom+xml" />
-                        <entry key="rss" value="application/rss+xml" />
-                          
-                    </map>  
-                </constructor-arg>  
-            </bean>  
-            </constructor-arg>  
-        </bean>  
-        
-    
-    <bean
-        class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
-        <property name="order" value="1" />
-          <property name="contentNegotiationManager" ref="contentNegotiationManager"/>
-       
-      
+
+    <bean id="contentNegotiationManager"
+          class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
+        <property name="favorPathExtension" value="true" />
+        <property name="favorParameter" value="true" />
+        <property name="ignoreAcceptHeader" value="true" />
+        <property name="defaultContentType" value="text/html"/>
+        <property name="useJaf" value="false"/>
+        <property name="mediaTypes">
+            <map>
+                <entry key="json" value="application/json"/>
+                <entry key="xml" value="application/xml"/>
+                <entry key="atom" value="application/atom+xml"/>
+                <entry key="rss" value="application/rss+xml"/>
+            </map>
+        </property>
+    </bean>
+
+    <bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+        <property name="order" value="1"/>
+        <property name="contentNegotiationManager" ref="contentNegotiationManager"/>
         <property name="defaultViews">
             <list>
-                <bean class="org.springframework.web.servlet.view.json.MappingJackson2JsonView" >
-                    <property name="contentType" value="application/json" />
-                    <property name="prettyPrint" value="true" />
-                     
+                <bean class="org.springframework.web.servlet.view.json.MappingJackson2JsonView">
+                    <property name="contentType" value="application/json"/>
+                    <property name="prettyPrint" value="true"/>
                     <property name="modelKeys">
                         <set>
                             <value>model</value>
                             <value>items</value>
                         </set>
                     </property>
-     
                 </bean>
-                
-                 <bean class="uber.paste.mvc.view.ConfigurableMarshallingView">
+
+                <bean class="uber.paste.mvc.view.ConfigurableMarshallingView">
                     <constructor-arg>
                         <bean class="org.springframework.oxm.xstream.XStreamMarshaller"
-                              p:autodetectAnnotations="true" p:encoding="UTF-8" />
+                              p:autodetectAnnotations="true" p:encoding="UTF-8"/>
                     </constructor-arg>
-                    <property name="contentType" value="application/xml" />
-                    <property name="modelKeys" value="model,items" />
-                    
-                 </bean>
-                <!--bean class="org.springframework.web.servlet.view.xml.MarshallingView">
-                    <constructor-arg ref="xstreamMarshaller"/>
-                    <property name="contentType" value="application/xml" />
-                </bean-->
+                    <property name="contentType" value="application/xml"/>
+                    <property name="modelKeys" value="model,items"/>
+                </bean>
 
-                <!--bean class="uber.paste.controller.view.PasteExcelView">
-                    <property name="contentType" value="application/vnd.ms-excel" />
-                </bean-->
                 <bean class="uber.paste.mvc.view.PasteAtomView">
-                    <property name="contentType" value="application/atom+xml" />
+                    <property name="contentType" value="application/atom+xml"/>
                 </bean>
                 <bean class="uber.paste.mvc.view.PasteRssView">
-                    <property name="contentType" value="application/rss+xml" />
-                    <property name="externalUrl" value="${config.external-site-url}" />
+                    <property name="contentType" value="application/rss+xml"/>
+                    <property name="externalUrl" value="${config.external-site-url}"/>
                 </bean>
-                <!--bean class="uber.paste.controller.view.PasteDocxView">
-                    <property name="contentType" value="application/vnd.openxmlformats-officedocument.wordprocessingml.document" />
-                </bean-->
+
             </list>
         </property>
         <property name="viewResolvers">
@@ -216,13 +193,10 @@
                 <bean class="org.springframework.web.servlet.view.BeanNameViewResolver"/>
                 <bean class="org.springframework.web.servlet.view.UrlBasedViewResolver"
                       p:viewClass="uber.paste.tiles2.DynamicTilesView" p:prefix="/WEB-INF/pages"
-          p:suffix=".jsp" />
+                      p:suffix=".jsp"/>
             </list>
         </property>
-       
     </bean>
-
-
 
 
 </beans>

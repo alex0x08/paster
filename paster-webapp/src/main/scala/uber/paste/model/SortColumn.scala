@@ -21,16 +21,13 @@ import java.util.Objects
 class SortColumn(property:String, name:String) {
     
     def getName() = name
-
     def getProperty() = property
 
     override def equals(from:Any) = 
       from.isInstanceOf[SortColumn] && property != null &&
       property.equals((from.asInstanceOf[SortColumn]).getProperty)
-    
 
     override def hashCode():Int =        
         42 + Objects.hashCode(this.property)
-    
     
 }

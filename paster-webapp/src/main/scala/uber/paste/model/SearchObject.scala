@@ -17,7 +17,5 @@
 package uber.paste.model
 
 trait SearchObject {
-
   def terms():List[String]
-  
 }

@@ -75,7 +75,7 @@ abstract class AbstractController extends Loggered {
   @ExceptionHandler(Array(classOf[Throwable]))
   protected def handleAllExceptions(ex: ObjectRetrievalFailureException): String = {
     logger.error(ex.getLocalizedMessage(), ex)
-    return page500
+    page500
   }
 
   @ModelAttribute("appId")
@@ -97,7 +97,7 @@ abstract class AbstractController extends Loggered {
   @JsonIgnore
   def isCurrentUserAdmin(): Boolean = {
     val u: User = UserManager.getCurrentUser
-    return u != null && u.isAdmin()
+    u != null && u.isAdmin()
   }
 
 }

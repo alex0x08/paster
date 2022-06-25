@@ -27,15 +27,12 @@ import org.springframework.transaction.annotation.Transactional
 class ConfigDaoImpl extends KeyDaoImpl[ConfigProperty](classOf[ConfigProperty]) {
 
   def getProperty(code:String)  =  getByKey(code)
-  
   def getProperty(obj:ConfigProperty) = getByKey(obj.getCode)
-  
 
-   def isPropertySet(code:String,value:String) : Boolean = {
-    return em.createQuery("SELECT count(c) FROM ConfigProperty c WHERE c.code = :code and c.value = :value")
-      .setParameter("code", code)
-      .setParameter("value", value)
-      .getSingleResult().asInstanceOf[Long].intValue() > 0
-  }
+   def isPropertySet(code:String,value:String) : Boolean = em
+     .createQuery("SELECT count(c) FROM ConfigProperty c WHERE c.code = :code and c.value = :value")
+     .setParameter("code", code)
+     .setParameter("value", value)
+     .getSingleResult().asInstanceOf[Long].intValue() > 0
 
 }

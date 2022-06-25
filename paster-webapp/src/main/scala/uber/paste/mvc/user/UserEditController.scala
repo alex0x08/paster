@@ -45,12 +45,10 @@ class UserEditController extends GenericEditController[User] {
   private val userManager: UserDaoImpl = null
 
   override def listPage = "redirect:/main/user/list"
-
   override def editPage = "/user/edit"
-
   override def viewPage = "/user/view"
 
-  def manager(): UserDaoImpl = return userManager
+  def manager(): UserDaoImpl = userManager
 
   @InitBinder
   def initBinder(binder: WebDataBinder): Unit = {
@@ -64,7 +62,6 @@ class UserEditController extends GenericEditController[User] {
     model.addAttribute("availableRoles", Role.list)
   }
 
-
   @RequestMapping(value = Array(GenericEditController.SAVE_ACTION),
     method = Array(RequestMethod.POST))
   override def save(@RequestParam(required = false) cancel: String,
@@ -77,18 +74,14 @@ class UserEditController extends GenericEditController[User] {
       return page403
     }
 
-
     if (cancel != null) {
       redirectAttributes.addFlashAttribute("statusMessageKey", "action.cancelled")
       return listPage
     }
 
     if (result.hasErrors()) {
-
       for (f <- result.getFieldErrors().asScala) {
-
         if (!f.getField().equals("username") && !f.getField().equals("password")) {
-
           logger.debug("field={} ,rejected value= {} ,message= {} ",
             f.getField(),
             f.getRejectedValue(),
@@ -96,7 +89,6 @@ class UserEditController extends GenericEditController[User] {
 
           fillEditModel(b, model, locale)
           return editPage
-
         }
       }
     }
@@ -113,12 +105,9 @@ class UserEditController extends GenericEditController[User] {
       return editPage
     }
 
-
     if (!b.isBlank) {
       val old = manager.getFull(b.getId)
-
       if (!old.isRemoteUser) {
-
         old.setEmail(b.getEmail)
         old.setName(b.getName)
         old.setRoles(b.getRoles)
@@ -139,7 +128,7 @@ class UserEditController extends GenericEditController[User] {
 
     redirectAttributes.addFlashAttribute("statusMessageKey", "action.success")
 
-    return listPage
+    listPage
   }
 
 
@@ -147,14 +136,9 @@ class UserEditController extends GenericEditController[User] {
     method = Array(RequestMethod.GET, RequestMethod.POST))
   override def delete(@RequestParam(required = false) id: Long,
                       model: Model): String = {
-
-    if (!isCurrentUserLoggedIn() || !isCurrentUserAdmin()) {
-      return page403
-    }
-    return super.delete(id, model)
+    if (!isCurrentUserLoggedIn() || !isCurrentUserAdmin()) return page403
+    super.delete(id, model)
   }
 
-
-  def getNewModelInstance(): User = return new User("Unnamed User")
-
+  def getNewModelInstance(): User = new User("Unnamed User")
 }

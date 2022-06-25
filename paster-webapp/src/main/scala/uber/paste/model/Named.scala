@@ -17,47 +17,42 @@
 package uber.paste.model
 
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute
-import javax.validation.constraints.{Size, NotNull}
-import javax.persistence.Column
-import javax.persistence.MappedSuperclass
 import org.hibernate.envers.Audited
 import org.hibernate.search.annotations.Field
-import uber.paste.base.Loggered
+import javax.persistence.{Column, MappedSuperclass}
+import javax.validation.constraints.{NotNull, Size}
 
 object Named extends Struct {
-  
+
   /**
-   *  a set of properties to search by default (without field prefix)
+   * a set of properties to search by default (without field prefix)
    */
   override val terms = super.terms ::: List[String]("name")
-  
-  abstract class Builder[T <: Named](model:T) extends Struct.Builder[T](model) {
 
-  def addName(name:String): Builder[T]  = {
-    get().setName(name)
-    return this
-  }
-  
+  abstract class Builder[T <: Named](model: T) extends Struct.Builder[T](model) {
+    def addName(name: String): Builder[T] = {
+      get().setName(name)
+      this
+    }
   }
 }
 
 @MappedSuperclass
 @Audited
-class Named(kname:String) extends Struct {
-   
+class Named(kname: String) extends Struct {
 
   @NotNull
   @Field
-  @Column(length=256)
+  @Column(length = 256)
   //@Pattern(regexp = "(.+)", message = "{struct.name.validator}")
-  @Size(min=3, message = "{struct.name.validator}")
+  @Size(min = 3, message = "{struct.name.validator}")
   @XStreamAsAttribute
   private var name: String = kname
 
   def this() = this(null)
-  
-  override def terms():List[String] = Named.terms
-  
+
+  override def terms(): List[String] = Named.terms
+
   /*
    override def fillFromHits(ch:CompassHighlighter)  {
     super.fillFromHits(ch)
@@ -69,14 +64,14 @@ class Named(kname:String) extends Struct {
   }
   */
 
- def fillFromDTO(dto:Named) {
-   setName(dto.name)
+  def fillFromDTO(dto: Named) {
+    setName(dto.name)
   }
-   
-  
-  def getName()= name
-  def setName(f:String) {name = f }
 
-  
-  
+  def getName() = name
+
+  def setName(f: String) {
+    name = f
+  }
+
 }

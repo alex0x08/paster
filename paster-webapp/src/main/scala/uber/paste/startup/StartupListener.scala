@@ -39,14 +39,9 @@ class StartupListener extends ServletContextListener with Loggered {
     val bootContext = new BootContext(WebApplicationContextUtils
       .getRequiredWebApplicationContext(event.getServletContext()))
 
-
-
     if (bootContext.configDao.isPropertySet(ConfigProperty.IS_INSTALLED.getCode, "1")) {
-
       bootInstalled(bootContext)
-
       bootContext.systemInfo.doLock
-
       logger.info("completed")
       return
     }
@@ -141,69 +136,45 @@ class StartupListener extends ServletContextListener with Loggered {
     val dbVersion = new AppVersion().fillFromConfigProperty(
       ctx.configDao.getProperty(ConfigProperty.APP_VERSION.getCode))
 
-
     if (dbVersion != null) {
-
       logger.debug("current version: {}", dbVersion.getFull)
-
       val check = ctx.systemInfo.getRuntimeVersion().compareTo(dbVersion)
-
       check match {
-
-        case 0 => {
+        case 0 =>
           logger.info("Application and db versions match.")
-        }
-        case 1 => {
+        case 1 =>
           logger.warn("DB version is older than application: {} | {} . You can get problems.",
             Array(dbVersion.getFull(),
               ctx.systemInfo.getRuntimeVersion().getFull()))
-        }
-        case -1 => {
+        case -1 =>
           logger.warn("Application version is older than database: {} | {}. You can get problems.",
             Array(dbVersion.getFull(), ctx.systemInfo.getRuntimeVersion().getFull()))
-        }
-
-        case _ => {
+        case _ =>
           logger.error("Uncomparable db and application versios: {} | {}. Cannot continue.",
             Array(dbVersion.getFull(), ctx.systemInfo.getRuntimeVersion.getFull))
           return
-        }
-
       }
-
 
       logger.info("Loading application ver. {} ,db ver. {} ",
         Array(ctx.systemInfo.getRuntimeVersion().getFull(), dbVersion.getFull()))
-
     }
 
 
     logger.info("Database already created. skipping db generation stage..")
-
     ctx.systemInfo.setProject(ctx.projectDao.getLast)
-
     reindex(ctx.props)
-
-
     ctx.systemInfo.setDateStart(Calendar.getInstance.getTime)
-
   }
 
 
   def loadDefaults(csv: String, callback: CSVRecord => Unit) {
-
     val r = new InputStreamReader(getClass().getResourceAsStream(csv))
     try {
       val records = CSVFormat.DEFAULT.withHeader().parse(r)
-
       for (record <- records.asScala) {
         callback(record)
       }
-    } finally {
-      r.close
-    }
-
-
+    } finally r.close
   }
 
   def setupSecurityContext() {
@@ -224,7 +195,6 @@ class StartupListener extends ServletContextListener with Loggered {
   }
 
   def reindex(props: MergedPropertyConfigurer) {
-
     if (props.getProperty("config.reindex.enabled").equals("1")) {
 
       for (d <- SearchableDaoImpl.searchableDao.asScala) {

@@ -26,6 +26,5 @@ import org.springframework.transaction.annotation.Transactional
 abstract class KeyDaoImpl[T <: Key](model:Class[T]) extends StructDaoImpl[T](model) {
 
   def getByKey(code:String) = getSingleByKeyValue("code",code.toUpperCase)
- 
 
 }

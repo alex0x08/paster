@@ -13,16 +13,15 @@ import org.hibernate.search.annotations.IndexedEmbedded
  */
 @Entity
 @Indexed
-@XmlRootElement(name="tag")
-class Tag(tagString:String) extends Named(tagString){
+@XmlRootElement(name = "tag")
+class Tag(tagString: String) extends Named(tagString) {
 
-    @transient
-    private var total:Int = 0
-  
-  
-    def this() = this(null)
+  @transient
+  private var total: Int = 0
+  def this() = this(null)
+  def getTotal() = total
+  def setTotal(i: Int) {
+    total = i
+  }
 
-    def getTotal() = total
-    def setTotal(i:Int) {total = i}
-  
 }

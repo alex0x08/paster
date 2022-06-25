@@ -7,11 +7,11 @@ package uber.paste.model
  * Time: 22:41
  */
 
-object Priority extends KeyObj[Priority]{
+object Priority extends KeyObj[Priority] {
 
-  val BLOCKER = new Priority("BLOCKER","priority.blocker.name","priority_blocker")
-  val NORMAL = new Priority("NORMAL","priority.normal.name","priority_normal")
-  val TRIVIAL = new Priority("TRIVIAL","priority.trivial.name","priority_trivial")
+  val BLOCKER = new Priority("BLOCKER", "priority.blocker.name", "priority_blocker")
+  val NORMAL = new Priority("NORMAL", "priority.normal.name", "priority_normal")
+  val TRIVIAL = new Priority("TRIVIAL", "priority.trivial.name", "priority_trivial")
 
   add(BLOCKER)
   add(NORMAL)
@@ -20,13 +20,15 @@ object Priority extends KeyObj[Priority]{
 }
 
 
-class Priority(code:String,desc:String,kcssClass:String) extends Key(code,desc) with java.io.Serializable{
+class Priority(code: String, desc: String, kcssClass: String) extends Key(code, desc) with java.io.Serializable {
 
-  private var cssClass:String = kcssClass
+  private var cssClass: String = kcssClass
 
+  def getCssClass() = cssClass
 
-def getCssClass() =cssClass
-def setCssClass(css:String) = { this.cssClass =css}
+  def setCssClass(css: String) = {
+    this.cssClass = css
+  }
 
-override   def create(code:String) = new Priority(code,null,null)
+  override def create(code: String) = new Priority(code, null, null)
 }

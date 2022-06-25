@@ -17,7 +17,6 @@
 package uber.paste.model
 
 import java.util.Date
-
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.Id
@@ -26,15 +25,11 @@ import javax.persistence.Table
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder
 import org.joda.time.format.DateTimeFormat
 import javax.persistence.Temporal
-import javax.validation.constraints.{ Size, NotNull }
-
+import javax.validation.constraints.{Size, NotNull}
 
 object PersistentToken {
-
   val DATE_TIME_FORMATTER = DateTimeFormat.forPattern("d MMMM yyyy")
-
   val MAX_USER_AGENT_LEN = 255
-
 }
 
 @Entity
@@ -68,14 +63,17 @@ class PersistentToken extends java.io.Serializable {
 
   def getSeries() = series
 
-  def setSeries(series: String) { this.series = series }
+  def setSeries(series: String) {
+    this.series = series
+  }
 
   def getTokenValue() = tokenValue
 
   def setTokenValue(tokenValue: String) {
     this.tokenValue = tokenValue
   }
-  def getTokenDate:Date = tokenDate
+
+  def getTokenDate: Date = tokenDate
 
   def setTokenDate(tokenDate: Date) {
     this.tokenDate = tokenDate;
@@ -91,33 +89,26 @@ class PersistentToken extends java.io.Serializable {
   }
 
   def getUserAgent = userAgent
-    
+
   def setUserAgent(userAgent: String) {
     if (userAgent.length() >= PersistentToken.MAX_USER_AGENT_LEN) {
       this.userAgent = userAgent.substring(0, PersistentToken.MAX_USER_AGENT_LEN - 1)
     } else {
       this.userAgent = userAgent
-        }
     }
+  }
 
   def getUser = user
-  
+
   def setUser(user: User) {
     this.user = user
   }
 
   override def equals(o: Any): Boolean = {
-    if (this == o) {
-      return true;
-    }
-  
+    if (this == o) return true
     val that = o.asInstanceOf[PersistentToken]
-
-    if (!series.equals(that.series)) {
-      return false;
-    }
-
-    return true;
+    if (!series.equals(that.series)) return false
+    true
   }
 
   override def hashCode() = series.hashCode()
