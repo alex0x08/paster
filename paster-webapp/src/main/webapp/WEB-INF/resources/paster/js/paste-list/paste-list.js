@@ -15,14 +15,11 @@
  */
 
 
-
-var PasterList = new Class({
-    initialize: function () {
-
+class PasterList {
+    initialize() {
         this.lazy = undefined;
-
-    },
-    init: function (pageUrl, userPageUrl, maxRequests, currentPage) {
+    }
+    init(pageUrl, userPageUrl, maxRequests, currentPage) {
 
         var mainThis = this;
 
@@ -39,35 +36,34 @@ var PasterList = new Class({
                 element: 'morePages',
                 where: 'before'
             }, beforeLoad: function () {
-                $('pageLoadSpinner').toggle();
+                document.getElementById('pageLoadSpinner').style.display = '';
             }, afterAppend: function (block, page) {
-                // alert(page);
                 try {
-                    history.pushState({page: page}, "Page " + page, userPageUrl + "/" + page);
+                    history.pushState({ page: page }, "Page " + page, userPageUrl + "/" + page);
                 } catch (e) {
                 }
-                $('paste_list_' + page).grab($('pageLoadSpinner'), "after");
+                const elSpinner = document.getElementById('pageLoadSpinner');
+                const newPage = document.getElementById('paste_list_' + page);
 
-                $('pageLoadSpinner').toggle();
+                elSpinner.insertAdjacentHTML('afterEnd', newPage);
+                elSpinner.style.display = 'none';
+
                 mainThis.parseSearchResults(block);
                 pasterApp.bindDeleteDlg(block);
             }
         });
-
-
-        this.parseSearchResults($('pastas'));
-
-    },
-    parseSearchResults: function (parent) {
-
-        parent.getElements('.pasteTitle').each(function (el, i)
-        {
-            el.set(
-                    'html', el.get('html').replace(/\[result[^\]]*\]([\s\S]*?)\[\/result\]/gi,
-                    "<span style='background-color: #e3e658; '>$1</span>")
-                    );
-        });
+        this.parseSearchResults(document.getElementById('pastas'));
+    }
+    parseSearchResults(parent) {
+        Array.from(parent.getElementsByClassName('pasteTitle')).forEach(
+            function (el, i, array) {
+                el.set('html', el.get('html')
+                    .replace(/\[result[^\]]*\]([\s\S]*?)\[\/result\]/gi,
+                        "<span style='background-color: #e3e658; '>$1</span>")
+                );
+            }
+        );
 
     }
 
-});
+};

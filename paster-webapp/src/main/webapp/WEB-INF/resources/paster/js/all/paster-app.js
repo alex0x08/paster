@@ -15,26 +15,20 @@
  */
 
 
-var PasterApp = new Class({
-    initialize: function () {
-        //this.age = age;
-
+class PasterApp {
+    initialize() {
         this.growl = undefined;
-
         this.modalDlg = undefined;
-
-
-
-    },
-    appInit: function () {
+    }
+    appInit() {
         this.growl = new Growler.init();
         this.bindDeleteDlg(document.body);
 
-    },
-    showNotify: function (message) {
+    }
+    showNotify(message) {
         this.growl.notify(message);
-    },
-    showModal: function (dlg, redirectUrl, action, title, message) {
+    }
+    showModal(dlg, redirectUrl, action, title, message) {
 
         if (title !== null) {
             dlg.getElementById('dialogTitle').set('text', title);
@@ -47,42 +41,38 @@ var PasterApp = new Class({
         dlg.getElementById('dialogMessage').set('html', message);
 
         if (!this.modalDlg) {
-            this.modalDlg = new Bootstrap.Popup(dlg, {animate: false, closeOnEsc: true});
+            this.modalDlg = new Bootstrap.Popup(dlg, { animate: false, closeOnEsc: true });
         }
         this.modalDlg.show();
-    },
-    bindDeleteDlg: function (parent) {
+    }
+    bindDeleteDlg(parent) {
 
         var $paster = this;
 
-        parent.getElements('.deleteBtn')
-                .each(function (el, i) {
-                    el.addEvent("click", function (e) {
-                        e.stop();
-                        var source = e.target || e.srcElement;
-                        $paster.showModal($('deletePopup'), source.parentElement.href,
-                                PasterI18n.text.dialog.removal.title,
-                                PasterI18n.text.dialog.removal.message,
-                                source.parentElement.getElementById('dialogMsg').innerHTML);
-                    });
+
+        Array.from(parent.getElementsByClassName('deleteBtn')).forEach(
+            function (el, i, array) {
+                el.addEventListener("click", function (e) {
+                    e.preventDefault();
+                    var source = e.target || e.srcElement;
+                    $paster.showModal(document.getElementById('deletePopup'), source.parentElement.href,
+                        PasterI18n.text.dialog.removal.title,
+                        PasterI18n.text.dialog.removal.message,
+                        source.parentElement.getElementById('dialogMsg').innerHTML);
                 });
+            });
 
 
-    },
-    takeScreenshot: function(source, onComplete) {
-        
-        
-        
+    }
+    takeScreenshot(source, onComplete) {
+
         html2canvas(source, {
             allowTaint: true,
             taintTest: false,
             onrendered: function (canvas) {
-
-
                 var img = document.createElement("canvas");
                 img.width = canvas.width;
                 img.height = canvas.height;
-
 
                 window.pica.resizeCanvas(canvas, img, {
                     quality: 3,
@@ -92,17 +82,13 @@ var PasterApp = new Class({
                     unsharpThreshold: 245,
                     transferable: true
                 }, function (err) {
-
                     // console.log(err);
-
                 });
 
-                img2 = Canvas2Image.saveAsPNG(img, true, 300, 200);
-                
+                const img2 = Canvas2Image.saveAsPNG(img, true, 300, 200);
                 onComplete(img2);
             }
         });
     }
 
-});
-      
+};

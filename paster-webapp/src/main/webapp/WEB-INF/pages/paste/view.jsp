@@ -64,6 +64,7 @@
 
 <script type="text/javascript">
 
+
     window.pica.debug = console.log.bind(console);
     window.pica.WEBGL = true;
 

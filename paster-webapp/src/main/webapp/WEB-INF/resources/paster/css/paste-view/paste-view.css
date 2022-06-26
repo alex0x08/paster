@@ -366,16 +366,16 @@
     overflow: visible !important;
     white-space: normal;
     position: relative;
-    max-width: 35em;
+    max-width: 60em;
     min-width: 5em;
     width: auto;
   /*  height: 4em;*/
    /* max-height: 4em;*/
     padding:0;margin:0;
-
+    background-color: #bbbbbb;
 }
 .commentInner {
-    background-color: #f8f8f8;
+    background-color: #afafaf;
 }
 
 .commentCurrent {

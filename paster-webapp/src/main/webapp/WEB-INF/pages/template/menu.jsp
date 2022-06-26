@@ -13,7 +13,7 @@
         <div class="hidden-sm hidden-xs col-md-10 col-lg-10">
 
 
-            <a href="<c:url value="/main/paste/list"/>">
+            <a href="<c:url value='/main/paste/list'/>">
                 <span class="i">/</span>
                 <fmt:message key="paste.list.title"/></a> 
 

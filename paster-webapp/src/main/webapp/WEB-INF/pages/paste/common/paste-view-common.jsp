@@ -86,7 +86,7 @@
                 <c:choose>
                     <c:when test="${model.reviewImgData!=null}">
 <c:url var="drawImg" 
-       value='/main/resources/${appId}/r/${model.lastModified.time}/${model.reviewImgData}'/>
+       value='/main/resources/${appId}/r/${model.lastModified.time}/paste_content/${model.reviewImgData}'/>
                         
                     </c:when>
                     <c:otherwise>
@@ -142,7 +142,7 @@
                     <a href="#${model.id}_sketch" data-tool="marker">Marker</a> |
                     <a href="#${model.id}_sketch" data-tool="eraser">Erase all (click)</a>
 
-                    <div class="tools">
+                    <div id="${model.id}_tools" class="tools">
                         Colors:
                    <a href='#${model.id}_sketch' 
                       class='btn btn-xs button_color_virgins_blood' 
@@ -310,7 +310,7 @@
 <c:url var="url" value='/main/paste/saveComment' />
 
 
-<div id="${model.id}_commentForm" class="row  p-comment"  style="display:none;max-width: 60em;margin-left:-10px;">
+<div id="${model.id}_commentForm" class="row p-comment"  style="display:none;max-width: 60em;margin-left:-10px;">
     <div class="col-md-11"  >
 
         <div class="panel panel-info" style="margin-bottom:0;">

@@ -18,15 +18,14 @@
 // Begin anonymous function. This is used to contain local scope variables without polutting global scope.
 //
 var SyntaxHighlighter = function () {
-// CommonJS
-    if (typeof (require) != 'undefined' && typeof (XRegExp) == 'undefined')
-    {
+    // CommonJS
+    if (typeof (require) != 'undefined' && typeof (XRegExp) == 'undefined') {
         XRegExp = require('XRegExp').XRegExp;
     }
 
-// Shortcut object which will be assigned to the SyntaxHighlighter variable.
-// This is a shorthand for local reference in order to avoid long namespace 
-// references to SyntaxHighlighter.whatever...
+    // Shortcut object which will be assigned to the SyntaxHighlighter variable.
+    // This is a shorthand for local reference in order to avoid long namespace 
+    // references to SyntaxHighlighter.whatever...
     var sh = {
         defaults: {
             /** Additional CSS class names to be added to highlighter elements. */
@@ -107,11 +106,11 @@ var SyntaxHighlighter = function () {
             xmlComments: /(&lt;|<)!--[\s\S]*?--(&gt;|>)/gm,
             url: /\w+:\/\/[\w-.\/?%&=:@;]*/g,
             /** <?= ?> tags. */
-            phpScriptTags: {left: /(&lt;|<)\?=?/g, right: /\?(&gt;|>)/g},
+            phpScriptTags: { left: /(&lt;|<)\?=?/g, right: /\?(&gt;|>)/g },
             /** <%= %> tags. */
-            aspScriptTags: {left: /(&lt;|<)%=?/g, right: /%(&gt;|>)/g},
+            aspScriptTags: { left: /(&lt;|<)%=?/g, right: /%(&gt;|>)/g },
             /** <script></script> tags. */
-            scriptScriptTags: {left: /(&lt;|<)\s*script.*?(&gt;|>)/gi, right: /(&lt;|<)\/\s*script\s*(&gt;|>)/gi}
+            scriptScriptTags: { left: /(&lt;|<)\s*script.*?(&gt;|>)/gi, right: /(&lt;|<)\/\s*script\s*(&gt;|>)/gi }
         },
         toolbar: {
             /**
@@ -119,15 +118,13 @@ var SyntaxHighlighter = function () {
              * @param {Highlighter} highlighter Highlighter instance.
              * @return {String} Returns HTML markup.
              */
-            getHtml: function (highlighter)
-            {
+            getHtml: function (highlighter) {
                 var html = '<div class="toolbar">',
-                        items = sh.toolbar.items,
-                        list = items.list
-                        ;
+                    items = sh.toolbar.items,
+                    list = items.list
+                    ;
 
-                function defaultGetHtml(highlighter, name)
-                {
+                function defaultGetHtml(highlighter, name) {
                     return sh.toolbar.getButtonHtml(highlighter, name, sh.config.strings[name]);
                 }
                 ;
@@ -146,36 +143,33 @@ var SyntaxHighlighter = function () {
              * @param {String} label			Label text to display.
              * @return {String}					Returns HTML markup.
              */
-            getButtonHtml: function (highlighter, commandName, label)
-            {
+            getButtonHtml: function (highlighter, commandName, label) {
                 return '<span><a href="#" class="toolbar_item'
-                        + ' command_' + commandName
-                        + ' ' + commandName
-                        + '">' + label + '</a></span>'
-                        ;
+                    + ' command_' + commandName
+                    + ' ' + commandName
+                    + '">' + label + '</a></span>'
+                    ;
             },
             /**
              * Event handler for a toolbar anchor.
              */
-            handler: function (e)
-            {
+            handler: function (e) {
                 var target = e.target,
-                        className = target.className || ''
-                        ;
+                    className = target.className || ''
+                    ;
 
-                function getValue(name)
-                {
+                function getValue(name) {
                     var r = new RegExp(name + '_(\\w+)'),
-                            match = r.exec(className)
-                            ;
+                        match = r.exec(className)
+                        ;
 
                     return match ? match[1] : null;
                 }
                 ;
 
                 var highlighter = getHighlighterById(findParentElement(target, '.syntaxhighlighter').id),
-                        commandName = getValue('command')
-                        ;
+                    commandName = getValue('command')
+                    ;
 
                 // execute the toolbar command
                 if (highlighter && commandName)
@@ -189,27 +183,24 @@ var SyntaxHighlighter = function () {
                 // Ordered lis of items in the toolbar. Can't expect `for (var n in items)` to be consistent.
                 list: ['expandSource', 'help'],
                 expandSource: {
-                    getHtml: function (highlighter)
-                    {
+                    getHtml: function (highlighter) {
                         if (highlighter.getParam('collapse') != true)
                             return '';
 
                         var title = highlighter.getParam('title');
                         return sh.toolbar.getButtonHtml(highlighter, 'expandSource', title ? title : sh.config.strings.expandSource);
                     },
-                    execute: function (highlighter)
-                    {
+                    execute: function (highlighter) {
                         var div = getHighlighterDivById(highlighter.id);
                         removeClass(div, 'collapsed');
                     }
                 },
                 /** Command to display the about dialog window. */
                 help: {
-                    execute: function (highlighter)
-                    {
+                    execute: function (highlighter) {
                         var wnd = popup('', '_blank', 500, 250, 'scrollbars=0'),
-                                doc = wnd.document
-                                ;
+                            doc = wnd.document
+                            ;
 
                         doc.write(sh.config.strings.aboutDialog);
                         doc.close();
@@ -230,12 +221,11 @@ var SyntaxHighlighter = function () {
          *
          * @return {Array}	Returns list of <code>{ target: DOMElement, params: Object }</code> objects.
          */
-        findElements: function (globalParams, element)
-        {
+        findElements: function (globalParams, element) {
             var elements = element ? [element] : toArray(document.getElementsByTagName(sh.config.tagName)),
-                    conf = sh.config,
-                    result = []
-                    ;
+                conf = sh.config,
+                result = []
+                ;
 
             // support for <SCRIPT TYPE="syntaxhighlighter" /> feature
             if (conf.useScriptTags)
@@ -244,8 +234,7 @@ var SyntaxHighlighter = function () {
             if (elements.length === 0)
                 return result;
 
-            for (var i = 0; i < elements.length; i++)
-            {
+            for (var i = 0; i < elements.length; i++) {
                 var item = {
                     target: elements[i],
                     // local params take precedence over globals
@@ -271,60 +260,43 @@ var SyntaxHighlighter = function () {
          * 							provided, all elements in the current document 
          * 							are highlighted.
          */
-        highlight: function (modelId, globalParams, element, scrollToLine, showEditForm)
-        {
+        highlight: function (modelId, globalParams, element, scrollToLine, showEditForm) {
+            sh.vars.editorOpts = JSON.parse(JSON.stringify(globalEpicEditorOpts));
 
-            // alert(modelId);
+            sh.vars.editorOpts.container = 'epiceditor-' + modelId;
+            sh.vars.editorOpts.textarea = 'commentText-' + modelId;
 
-            sh.vars.editorOpts =  JSON.parse(JSON.stringify(globalEpicEditorOpts));
-            
-            sh.vars.editorOpts.container = 'epiceditor-'+modelId;
-            sh.vars.editorOpts.textarea = 'commentText-'+modelId;
-            
-            
-            sh.vars.editor[modelId] =  new EpicEditor(sh.vars.editorOpts);
- 
- 
- // This setups up live previews by triggering preview() IF in fullscreen on keyup
-  //  sh.vars.editor[modelId].addEventListener('keyup', function (event) {
-      
-  //    console.log('event',event);
-    
-   // });
+            sh.vars.editor[modelId] = new EpicEditor(sh.vars.editorOpts);
 
             sh.vars.modelId = modelId;
-
             sh.vars.showComments[modelId] = true;
 
             var elements = this.findElements(globalParams, element),
-                    propertyName = 'innerHTML',
-                    highlighter = null,
-                    conf = sh.config
-                    ;
+                propertyName = 'innerHTML',
+                highlighter = null,
+                conf = sh.config
+                ;
 
-            if (elements.length === 0)
+            if (elements.length === 0) {
                 return;
-
-            for (var i = 0; i < elements.length; i++)
-            {
+            }
+            for (var i = 0; i < elements.length; i++) {
                 var element = elements[i],
-                        target = element.target,
-                        params = element.params,
-                        brushName = params.brush,
-                        code
-                        ;
+                    target = element.target,
+                    params = element.params,
+                    brushName = params.brush,
+                    code
+                    ;
 
                 if (brushName == null)
                     continue;
 
                 // Instantiate a brush
-                if (params['html-script'] == 'true' || sh.defaults['html-script'] == true)
-                {
+                if (params['html-script'] == 'true' || sh.defaults['html-script'] == true) {
                     highlighter = new sh.HtmlScript(brushName);
                     brushName = 'htmlscript';
                 }
-                else
-                {
+                else {
                     var brush = findBrush(brushName);
 
                     if (brush)
@@ -354,21 +326,30 @@ var SyntaxHighlighter = function () {
                 target.parentNode.replaceChild(element, target);
 
                 //var roots = []
-                $(sh.vars.modelId + '_commentsList').getElements('div.parentComment').each(function (el, index) {
-                    sh.insertComment(el, 0, index);
-                });
+                Array.from(document.getElementById(sh.vars.modelId + '_commentsList')
+                    .getElementsByClassName('parentComment')).forEach(
+                        function (el, i, array) {
+                            sh.insertComment(el, 0, i);
+                        });
 
-                $(sh.vars.modelId + '_commentsList').getElements('div.subComment').each(function (el, index) {
-                    sh.insertComment(el, 1, index);
-                });
+                Array.from(document.getElementById(sh.vars.modelId + '_commentsList')
+                    .getElementsByClassName('subComment')).forEach(
+                        function (el, i, array) {
+                            sh.insertComment(el, 1, i);
+                        });
 
-                var ln = document.getElementById('lineNumber').value;
+                const ln = document.getElementById('lineNumber').value;
                 if (!ln || 0 === ln.length) {
-
                     if (scrollToLine) {
-                        var loc = window.location.hash.replace("#", "");
+                        const loc = window.location.hash.replace("#", "");
                         if (loc != "") {
-                            new Fx.Scroll(window).toElement(sh.vars.modelId + '_' + loc);
+                            const element = document.getElementById(sh.vars.modelId + '_' + loc);
+                            if (element) {
+                                window.scrollTo({ top: element.offsetTop, behavior: 'smooth' });
+                            } else {
+                                console.log('cannot scroll to ', sh.vars.modelId + '_' + loc);
+                            }
+
                         }
                     }
                 } else {
@@ -384,108 +365,105 @@ var SyntaxHighlighter = function () {
          * Main entry point for the SyntaxHighlighter.
          * @param {Object} params Optional params to apply to all highlighted elements.
          */
-        all: function (modelId, params)
-        {
+        all: function (modelId, params) {
             attachEvent(
-                    window,
-                    'load',
-                    function () {
-                        sh.highlight(modelId, params);
-                    }
+                window,
+                'load',
+                function () {
+                    sh.highlight(modelId, params);
+                }
             );
-        }, toggleComments: function (modelId, ctrl) {
-
+        },
+        toggleComments: function (modelId, ctrl) {
 
             sh.vars.showComments[modelId] = !sh.vars.showComments[modelId];
 
             ctrl.getElement('span').set('text', sh.vars.showComments[modelId] ? '-' : '+');
 
+            const tbEl = document.getElementById('tb_' + modelId);
 
-            $('tb_' + modelId).getElements('div.commentBlock').each(function (el) {
-                el.setStyle('display', sh.vars.showComments[modelId] == false ? 'none' : '');
-            });
-            $('tb_' + modelId).getElements('div.listSpace').each(function (el) {
-                el.setStyle('display', sh.vars.showComments[modelId] == false ? 'none' : '');
-            });
-        }, recurseCommentReply: function (roots) {
-            var sroots = []
+            Array.from(tbEl.getElementsByClassName('commentBlock')).forEach(
+                function (el, i, array) {
+                    el.style.display = sh.vars.showComments[modelId] == false ? 'none' : '';
+                });
+
+            Array.from(tbEl.getElementsByClassName('listSpace')).forEach(
+                function (el, i, array) {
+                    el.style.display = sh.vars.showComments[modelId] == false ? 'none' : '';
+                });
+
+        },
+        recurseCommentReply: function (roots) {
+            const sroots = []
             Array.each(roots, function (el, index) {
                 sh.insertComment(el, 1, index);
                 sroots.push(el);
             });
 
-        }, insertComment: function (cl, mode, count) {
-            // alert(mode+' sub '+id);
-            var lineNumber = parseInt(cl.getAttribute('lineNumber')),
-                    id = cl.getAttribute('commentId');
+        },
+        insertComment: function (cl, mode, count) {
+            const lineNumber = parseInt(cl.getAttribute('lineNumber')),
+                id = cl.getAttribute('commentId');
 
-                    var textEl = cl.getElementById('commentMarkedText');
-            
-           // console.log('el',textEl,'html:',textEl.get('html'));
-            
-            textEl.set('html',marked(textEl.get('html')));
-
+            const textEl = cl.getElementById('commentMarkedText');
+            textEl.innerHTML = marked(textEl.get('html'));
 
             if (mode == 1) {
-
-                cl.setStyle('padding-left', '20px');
-                // $(sh.vars.modelId+'_comment_l'+cl.getAttribute('parentCommentId')).grab(cl,"after");
-                var ln = lineNumber + 1;
-                $(sh.vars.modelId + '_cl_' + ln).grab(cl, "before");
+                cl.style['padding-left'] = '20px';
+                const ln = lineNumber + 1;
+                const el = document.getElementById(sh.vars.modelId + '_cl_' + ln);
+                el.parentNode.insertBefore(cl, el);
 
             } else {
-
-                $(sh.vars.modelId + '_cl_' + lineNumber).grab(cl, "after");
-
+                const el = document.getElementById(sh.vars.modelId + '_cl_' + lineNumber);
+                if (el) {
+                    el.parentNode.insertBefore(cl, el.nextSibling);
+                }
             }
 
-            cl.setStyle("display", "");
+            cl.style.display = '';
 
-            var space = $(sh.vars.modelId + "_numSpace_l" + id),
-                    calc_size = parseInt(cl.getComputedSize()["totalHeight"]) + 1;
-            
-            
-            space.setStyle("height", calc_size + "px");
-            cl.setStyle("height", calc_size + "px");
+            const space = document.getElementById(sh.vars.modelId + "_numSpace_l" + id),
+                calc_size = parseInt(cl.getComputedSize()["totalHeight"]) + 1;
+
+
+            space.style['height'] = calc_size + 'px';
+            cl.style['height'] = calc_size + "px";
+
             if (mode == 1) {
-                $(sh.vars.modelId + '_ln_' + ln).grab(space, "before");
+                const ln = lineNumber + 1;
+                const el = document.getElementById(sh.vars.modelId + '_ln_' + ln);
+                el.parentNode.insertBefore(space, el);
+
             } else {
-                $(sh.vars.modelId + '_ln_' + lineNumber).grab(space, "after");
+                const el = document.getElementById(sh.vars.modelId + '_ln_' + lineNumber);
+                if (el) {
+                    el.parentNode.insertBefore(space, el.nextSibling);
+                }
             }
+        },
+        hideEditForm: function (modelId) {
 
-            
-
-            /*
-             $('cl_lineHtml_'+lineNumber).setStyle('background-color','yellow');
-             
-             */
-        }, hideEditForm: function (modelId) {
-
-            $(modelId + '_commentForm').setStyle("display", "none");
-            $("numSpace").setStyle("display", "none");
+            document.getElementById(modelId + '_commentForm').style.display = 'none';
+            document.getElementById("numSpace").style.display = 'none';
 
             if (sh.vars.currentEditLine != null) {
-                $(modelId + '_cl_lineHtml_' + sh.vars.currentEditLine).setStyle("display", "");
-                $(modelId + '_cl_linePlain_' + sh.vars.currentEditLine).setStyle("display", "none");
+                document.getElementById(modelId + '_cl_lineHtml_' + sh.vars.currentEditLine).style.display = '';
+                document.getElementById(modelId + '_cl_linePlain_' + sh.vars.currentEditLine).style.display = 'none';
                 sh.vars.currentEditLine = null;
             }
-            
-             sh.vars.editor[modelId].unload();
-           
+            sh.vars.editor[modelId].unload();
+        },
 
-
-        }, insertEditForm: function (modelId, lineNumber, parentId) {
-            
-            
-        
+        insertEditForm: function (modelId, lineNumber, parentId) {
+            console.log('insert edit form for ', modelId, lineNumber, parentId);
             if (sh.vars.editor[modelId].is('loaded')) {
-             sh.vars.editor[modelId].unload();
-            console.log('editor unloaded');
-                
+                sh.vars.editor[modelId].unload();
+                console.log('editor unloaded');
             }
-             
-            var cForm = $(modelId + '_commentForm'),
-                    nspace = $("numSpace");
+
+            const cForm = document.getElementById(modelId + '_commentForm'),
+                nspace = document.getElementById("numSpace");
 
             cForm.getElementById('pageNum').set("text", lineNumber);
             cForm.getElementById('lineNumber').set("value", lineNumber);
@@ -493,66 +471,56 @@ var SyntaxHighlighter = function () {
             if (parentId > 0) {
                 // alert(parentId);
                 cForm.getElementById('parentId').set("value", parentId);
-
-                //alert(cForm.getElementById('parentId').get('value'));
             }
 
-           
+            cForm.style.position = "relative";
+            cForm.style['max-width'] = window.innerWidth - 100;
+            cForm.style.display = "";
 
-           // cForm.getElementById('commentText').set("value", "");
-            cForm.setStyle("position", "relative");
-            cForm.setStyle("max-width", window.innerWidth - 100);
-
-            cForm.setStyle("display", "");
-            
-           
-            
             if (sh.vars.currentEditLine != null) {
                 // alert('hide prev '+sh.vars.currentEditModel+'|line='+sh.vars.currentEditLine);
-                $(sh.vars.currentEditModel + '_cl_lineHtml_' + sh.vars.currentEditLine).setStyle("display", "");
-                $(sh.vars.currentEditModel + '_cl_linePlain_' + sh.vars.currentEditLine).setStyle("display", "none");
+                document.getElementById(sh.vars.currentEditModel + '_cl_lineHtml_' + sh.vars.currentEditLine).style.display = "";
+                document.getElementById(sh.vars.currentEditModel + '_cl_linePlain_' + sh.vars.currentEditLine).style.display = "none";
                 sh.vars.currentEditLine = null;
             } else {
-                //  alert('show new '+modelId+'|line='+lineNumber);
-
-                $(modelId + '_cl_lineHtml_' + lineNumber).setStyle("display", "none");
-                $(modelId + '_cl_linePlain_' + lineNumber).setStyle("display", "");
+                document.getElementById(modelId + '_cl_lineHtml_' + lineNumber).style.display = "none";
+                document.getElementById(modelId + '_cl_linePlain_' + lineNumber).style.display = "";
 
                 sh.vars.currentEditLine = lineNumber;
                 sh.vars.currentEditModel = modelId;
 
             }
-            $("pasteLineCopyBtn").setStyle("display", "inline-block");
-            $('pasteLineToCopy').set('html', $(modelId + '_cl_linePlainCode_' + lineNumber).get("html"));
-            $(modelId + '_cl_linePlain_' + lineNumber).grab($("pasteLineCopyBtn"), 'top');
+            document.getElementById("pasteLineCopyBtn").style.display = "inline-block";
+            document.getElementById('pasteLineToCopy').innerHTML = document.getElementById(modelId + '_cl_linePlainCode_' + lineNumber).innerHTML;
 
-
-            if (parentId > 0) {
-                $(modelId + '_comment_l' + parentId).grab(cForm, "after");
-            } else {
-                $(modelId + '_cl_' + lineNumber).grab(cForm, "after");
-            }
-
-
-            var calc_size = parseInt(cForm.getComputedSize()["totalHeight"]) + 1;
-
-            nspace.setStyle("height", calc_size);
-
-            cForm.setStyle("height", calc_size + " !important");
+            const ell = document.getElementById(modelId + '_cl_linePlain_' + lineNumber);
+            ell.parentNode.insertBefore(document.getElementById("pasteLineCopyBtn"), ell);
 
             if (parentId > 0) {
-                $(modelId + "_numSpace_l" + parentId).grab(nspace, "after");
+                const el = document.getElementById(modelId + '_comment_l' + parentId);
+                el.parentNode.insertBefore(cForm, el.nextSibling);
             } else {
-                $(modelId + '_ln_' + lineNumber).grab(nspace, "after");
+                const el = document.getElementById(modelId + '_cl_' + lineNumber);
+                el.parentNode.insertBefore(cForm, el.nextSibling);
             }
 
-            nspace.setStyle("display", "");
-            
-            
+            const calc_size = parseInt(cForm.getComputedSize()["totalHeight"]) + 1;
+
+            nspace.style['height'] = calc_size;
+            cForm.style['height'] = calc_size + " !important";
+
+            if (parentId > 0) {
+                const el = document.getElementById(modelId + "_numSpace_l" + parentId);
+                el.parentNode.insertBefore(nspace, el.nextSibling);
+            } else {
+                const el = document.getElementById(modelId + '_ln_' + lineNumber);
+                el.parentNode.insertBefore(nspace, el.nextSibling);
+            }
+
+            nspace.style.display = "";
+
             setTimeout(function () {
-            sh.vars.editor[modelId].load();
-           
-                //cForm.getElementById('commentText').focus();
+                sh.vars.editor[modelId].load();
             }, 1);
 
         }
@@ -572,8 +540,7 @@ var SyntaxHighlighter = function () {
      * @param {String} className Name of the CSS class to check for.
      * @return {Boolean} Returns true if class name is present, false otherwise.
      */
-    function hasClass(target, className)
-    {
+    function hasClass(target, className) {
         return target.className.indexOf(className) != -1;
     }
     ;
@@ -583,8 +550,7 @@ var SyntaxHighlighter = function () {
      * @param {DOMElement} target Target DOM element.
      * @param {String} className New CSS class to add.
      */
-    function addClass(target, className)
-    {
+    function addClass(target, className) {
         if (!hasClass(target, className))
             target.className += ' ' + className;
     }
@@ -595,8 +561,7 @@ var SyntaxHighlighter = function () {
      * @param {DOMElement} target Target DOM element.
      * @param {String} className CSS class to remove.
      */
-    function removeClass(target, className)
-    {
+    function removeClass(target, className) {
         target.className = target.className.replace(className, '');
     }
     ;
@@ -607,8 +572,7 @@ var SyntaxHighlighter = function () {
      * @param {List} source Source list.
      * @return {Array} Returns array.
      */
-    function toArray(source)
-    {
+    function toArray(source) {
         var result = [];
 
         for (var i = 0; i < source.length; i++)
@@ -623,8 +587,7 @@ var SyntaxHighlighter = function () {
      * @param {String} block Block of text.
      * @return {Array} Returns array of lines.
      */
-    function splitLines(block)
-    {
+    function splitLines(block) {
         return block.split('\n');
     }
 
@@ -633,8 +596,7 @@ var SyntaxHighlighter = function () {
      * @param {String} highlighterId Highlighter ID.
      * @return {String} Returns HTML ID.
      */
-    function getHighlighterId(id)
-    {
+    function getHighlighterId(id) {
         var prefix = 'highlighter_';
         return id.indexOf(prefix) == 0 ? id : prefix + id;
     }
@@ -645,8 +607,7 @@ var SyntaxHighlighter = function () {
      * @param {String} highlighterId Highlighter ID.
      * @return {Highlighter} Returns instance of the highlighter.
      */
-    function getHighlighterById(id)
-    {
+    function getHighlighterById(id) {
         return sh.vars.highlighters[getHighlighterId(id)];
     }
     ;
@@ -656,8 +617,7 @@ var SyntaxHighlighter = function () {
      * @param {String} highlighterId Highlighter ID.
      * @return {Element} Returns highlighter's DIV element.
      */
-    function getHighlighterDivById(id)
-    {
+    function getHighlighterDivById(id) {
         return document.getElementById(getHighlighterId(id));
     }
     ;
@@ -667,8 +627,7 @@ var SyntaxHighlighter = function () {
      * highlighter must call this method to preserve itself.
      * @param {Highilghter} highlighter Highlighter instance.
      */
-    function storeHighlighter(highlighter)
-    {
+    function storeHighlighter(highlighter) {
         sh.vars.highlighters[getHighlighterId(highlighter.id)] = highlighter;
     }
     ;
@@ -681,21 +640,20 @@ var SyntaxHighlighter = function () {
      * @param {Boolean} reverse If set to true, will go up the node tree instead of down.
      * @return {Element} Returns found child or parent element on null.
      */
-    function findElement(target, search, reverse /* optional */)
-    {
+    function findElement(target, search, reverse /* optional */) {
         if (target == null)
             return null;
 
         var nodes = reverse != true ? target.childNodes : [target.parentNode],
-                propertyToFind = {'#': 'id', '.': 'className'}[search.substr(0, 1)] || 'nodeName',
-                expectedValue,
-                found
-                ;
+            propertyToFind = { '#': 'id', '.': 'className' }[search.substr(0, 1)] || 'nodeName',
+            expectedValue,
+            found
+            ;
 
         expectedValue = propertyToFind != 'nodeName'
-                ? search.substr(1)
-                : search.toUpperCase()
-                ;
+            ? search.substr(1)
+            : search.toUpperCase()
+            ;
 
         // main return of the found node
         if ((target[propertyToFind] || '').indexOf(expectedValue) != -1)
@@ -715,8 +673,7 @@ var SyntaxHighlighter = function () {
      * @param {String} className Class name to look for.
      * @return {Element} Returns found parent element on null.
      */
-    function findParentElement(target, className)
-    {
+    function findParentElement(target, className) {
         return findElement(target, className, true);
     }
     ;
@@ -728,8 +685,7 @@ var SyntaxHighlighter = function () {
      * @param {Number} fromIndex
      * @return {Number} Returns index of element if found; -1 otherwise.
      */
-    function indexOf(array, searchElement, fromIndex)
-    {
+    function indexOf(array, searchElement, fromIndex) {
         fromIndex = Math.max(fromIndex || 0, 0);
 
         for (var i = fromIndex; i < array.length; i++)
@@ -743,8 +699,7 @@ var SyntaxHighlighter = function () {
     /**
      * Generates a unique element ID.
      */
-    function guid(prefix)
-    {
+    function guid(prefix) {
         return (prefix || '') + Math.round(Math.random() * 1000000).toString();
     }
     ;
@@ -756,8 +711,7 @@ var SyntaxHighlighter = function () {
      * @param {Object} obj2 Second object.
      * @return {Object} Returns combination of both objects.
      */
-    function merge(obj1, obj2)
-    {
+    function merge(obj1, obj2) {
         var result = {}, name;
 
         for (name in obj1)
@@ -775,9 +729,8 @@ var SyntaxHighlighter = function () {
      * @param {String} value Input string.
      * @return {Boolean} Returns true if input was "true", false if input was "false" and value otherwise.
      */
-    function toBoolean(value)
-    {
-        var result = {"true": true, "false": false}[value];
+    function toBoolean(value) {
+        var result = { "true": true, "false": false }[value];
         return result == null ? value : result;
     }
     ;
@@ -791,17 +744,16 @@ var SyntaxHighlighter = function () {
      * @param {String} options	window.open() options.
      * @return {Window}			Returns window instance.
      */
-    function popup(url, name, width, height, options)
-    {
+    function popup(url, name, width, height, options) {
         var x = (screen.width - width) / 2,
-                y = (screen.height - height) / 2
-                ;
+            y = (screen.height - height) / 2
+            ;
 
         options += ', left=' + x +
-                ', top=' + y +
-                ', width=' + width +
-                ', height=' + height
-                ;
+            ', top=' + y +
+            ', width=' + width +
+            ', height=' + height
+            ;
         options = options.replace(/^,/, '');
 
         var win = window.open(url, name, options);
@@ -816,19 +768,15 @@ var SyntaxHighlighter = function () {
      * @param {String} type		Name of the event.
      * @param {Function} func	Handling function.
      */
-    function attachEvent(obj, type, func, scope)
-    {
+    function attachEvent(obj, type, func, scope) {
 
         //alert("_attachEvent "+obj+" type"+type);
-        function handler(e)
-        {
+        function handler(e) {
             e = e || window.event;
 
-            if (!e.target)
-            {
+            if (!e.target) {
                 e.target = e.srcElement;
-                e.preventDefault = function ()
-                {
+                e.preventDefault = function () {
                     this.returnValue = false;
                 };
             }
@@ -837,12 +785,10 @@ var SyntaxHighlighter = function () {
         }
         ;
 
-        if (obj.attachEvent)
-        {
+        if (obj.attachEvent) {
             obj.attachEvent('on' + type, handler);
         }
-        else
-        {
+        else {
             obj.addEventListener(type, handler, false);
         }
     }
@@ -852,8 +798,7 @@ var SyntaxHighlighter = function () {
      * Displays an alert.
      * @param {String} str String to display.
      */
-    function alert(str)
-    {
+    function alert(str) {
         window.alert(sh.config.strings.alert + str);
     }
     ;
@@ -867,22 +812,19 @@ var SyntaxHighlighter = function () {
      */
 
 
-    function findBrush(alias, showAlert, recurse)
-    {
+    function findBrush(alias, showAlert, recurse) {
         var brushes = sh.vars.discoveredBrushes,
-                result = null
-                ;
+            result = null
+            ;
 
-        if (brushes == null)
-        {
+        if (brushes == null) {
             brushes = {};
 
             // Find all brushes
-            for (var brush in sh.brushes)
-            {
+            for (var brush in sh.brushes) {
                 var info = sh.brushes[brush],
-                        aliases = info.aliases
-                        ;
+                    aliases = info.aliases
+                    ;
 
                 if (aliases == null)
                     continue;
@@ -915,8 +857,7 @@ var SyntaxHighlighter = function () {
      * @param {Object} str			Input string.
      * @param {Object} callback		Callback function taking one string argument and returning a string.
      */
-    function eachLine(str, callback)
-    {
+    function eachLine(str, callback) {
         var lines = splitLines(str);
 
         for (var i = 0; i < lines.length; i++)
@@ -933,8 +874,7 @@ var SyntaxHighlighter = function () {
      * @param {String} str   Input string
      * @return {String}      Returns string without empty first and last lines.
      */
-    function trimFirstAndLastLines(str)
-    {
+    function trimFirstAndLastLines(str) {
         return str.replace(/^[ ]*[\n]+|[\n]*[ ]*$/g, '');
     }
     ;
@@ -954,33 +894,30 @@ var SyntaxHighlighter = function () {
      * @param {String} str    Input string.
      * @return {Object}       Returns deserialized object.
      */
-    function parseParams(str)
-    {
+    function parseParams(str) {
         var match,
-                result = {},
-                arrayRegex = new XRegExp("^\\[(?<values>(.*?))\\]$"),
-                regex = new XRegExp(
-                        "(?<name>[\\w-]+)" +
-                        "\\s*:\\s*" +
-                        "(?<value>" +
-                        "[\\w-%#]+|" + // word
-                        "\\[.*?\\]|" + // [] array
-                        '".*?"|' + // "" string
-                        "'.*?'" + // '' string
-                        ")\\s*;?",
-                        "g"
-                        )
+            result = {},
+            arrayRegex = new XRegExp("^\\[(?<values>(.*?))\\]$"),
+            regex = new XRegExp(
+                "(?<name>[\\w-]+)" +
+                "\\s*:\\s*" +
+                "(?<value>" +
+                "[\\w-%#]+|" + // word
+                "\\[.*?\\]|" + // [] array
+                '".*?"|' + // "" string
+                "'.*?'" + // '' string
+                ")\\s*;?",
+                "g"
+            )
+            ;
+
+        while ((match = regex.exec(str)) != null) {
+            var value = match.value
+                .replace(/^['"]|['"]$/g, '') // strip quotes from end of strings
                 ;
 
-        while ((match = regex.exec(str)) != null)
-        {
-            var value = match.value
-                    .replace(/^['"]|['"]$/g, '') // strip quotes from end of strings
-                    ;
-
             // try to parse array value
-            if (value != null && arrayRegex.test(value))
-            {
+            if (value != null && arrayRegex.test(value)) {
                 var m = arrayRegex.exec(value);
                 value = m.values.length > 0 ? m.values.split(/\s*,\s*/) : [];
             }
@@ -999,16 +936,14 @@ var SyntaxHighlighter = function () {
      * @param {String} css   Style name to apply to the string.
      * @return {String}      Returns input string with each line surrounded by <span/> tag.
      */
-    function wrapLinesWithCode(str, css)
-    {
+    function wrapLinesWithCode(str, css) {
         if (str == null || str.length == 0 || str == '\n')
             return str;
 
         str = str.replace(/</g, '&lt;');
 
         // Replace two or more sequential spaces with &nbsp; leaving last space untouched.
-        str = str.replace(/ {2,}/g, function (m)
-        {
+        str = str.replace(/ {2,}/g, function (m) {
             var spaces = '';
 
             for (var i = 0; i < m.length - 1; i++)
@@ -1020,15 +955,13 @@ var SyntaxHighlighter = function () {
         // Split each line and apply <span class="...">...</span> to them so that
         // leading spaces aren't included.
         if (css != null)
-            str = eachLine(str, function (line)
-            {
+            str = eachLine(str, function (line) {
                 if (line.length == 0)
                     return '';
 
                 var spaces = '';
 
-                line = line.replace(/^(&nbsp;| )+/, function (s)
-                {
+                line = line.replace(/^(&nbsp;| )+/, function (s) {
                     spaces = s;
                     return '';
                 });
@@ -1050,8 +983,7 @@ var SyntaxHighlighter = function () {
      * @param {Number} length	Max string length with.
      * @return {String}			Returns a string padded with proper amount of '0'.
      */
-    function padNumber(number, length)
-    {
+    function padNumber(number, length) {
         var result = number.toString();
 
         while (result.length < length)
@@ -1068,8 +1000,7 @@ var SyntaxHighlighter = function () {
      * @param {Number} tabSize	Size of the tab.
      * @return {String}			Returns code with all tabs replaces by spaces.
      */
-    function processTabs(code, tabSize)
-    {
+    function processTabs(code, tabSize) {
         var tab = '';
 
         for (var i = 0; i < tabSize; i++)
@@ -1086,12 +1017,11 @@ var SyntaxHighlighter = function () {
      * @param {Number} tabSize Number of spaces in a column.
      * @return {String}        Returns code with all tabs replaces with roper amount of spaces.
      */
-    function processSmartTabs(code, tabSize)
-    {
+    function processSmartTabs(code, tabSize) {
         var lines = splitLines(code),
-                tab = '\t',
-                spaces = ''
-                ;
+            tab = '\t',
+            spaces = ''
+            ;
 
         // Create a string with 1000 spaces to copy spaces from... 
         // It's assumed that there would be no indentation longer than that.
@@ -1100,25 +1030,22 @@ var SyntaxHighlighter = function () {
 
         // This function inserts specified amount of spaces in the string
         // where a tab is while removing that given tab.
-        function insertSpaces(line, pos, count)
-        {
+        function insertSpaces(line, pos, count) {
             return line.substr(0, pos)
-                    + spaces.substr(0, count)
-                    + line.substr(pos + 1, line.length) // pos + 1 will get rid of the tab
-                    ;
+                + spaces.substr(0, count)
+                + line.substr(pos + 1, line.length) // pos + 1 will get rid of the tab
+                ;
         }
         ;
 
         // Go through all the lines and do the 'smart tabs' magic.
-        code = eachLine(code, function (line)
-        {
+        code = eachLine(code, function (line) {
             if (line.indexOf(tab) == -1)
                 return line;
 
             var pos = 0;
 
-            while ((pos = line.indexOf(tab)) != -1)
-            {
+            while ((pos = line.indexOf(tab)) != -1) {
                 // This is pretty much all there is to the 'smart tabs' logic.
                 // Based on the position within the line and size of a tab,
                 // calculate the amount of spaces we need to insert.
@@ -1136,8 +1063,7 @@ var SyntaxHighlighter = function () {
     /**
      * Performs various string fixes based on configuration.
      */
-    function fixInputString(str)
-    {
+    function fixInputString(str) {
         var br = /<br\s*\/?>|&lt;br\s*\/?&gt;/gi;
 
         if (sh.config.bloggerMode == true)
@@ -1156,8 +1082,7 @@ var SyntaxHighlighter = function () {
      * @param {String} str   String to trim.
      * @return {String}      Returns string without leading and following white space characters.
      */
-    function trim(str)
-    {
+    function trim(str) {
         return str.replace(/^\s+|\s+$/g, '');
     }
     ;
@@ -1167,17 +1092,15 @@ var SyntaxHighlighter = function () {
      * @param {String} str   Text to unindent.
      * @return {String}      Returns unindented text block.
      */
-    function unindent(str)
-    {
+    function unindent(str) {
         var lines = splitLines(fixInputString(str)),
-                indents = new Array(),
-                regex = /^\s*/,
-                min = 1000
-                ;
+            indents = new Array(),
+            regex = /^\s*/,
+            min = 1000
+            ;
 
         // go through every line and check for common number of indents
-        for (var i = 0; i < lines.length && min > 0; i++)
-        {
+        for (var i = 0; i < lines.length && min > 0; i++) {
             var line = lines[i];
 
             if (trim(line).length == 0)
@@ -1210,15 +1133,13 @@ var SyntaxHighlighter = function () {
      * @param {Match} m2    Right object.
      * @return {Number}     Returns -1, 0 or -1 as a comparison result.
      */
-    function matchesSortCallback(m1, m2)
-    {
+    function matchesSortCallback(m1, m2) {
         // sort matches by index first
         if (m1.index < m2.index)
             return -1;
         else if (m1.index > m2.index)
             return 1;
-        else
-        {
+        else {
             // if index is the same, sort by length
             if (m1.length < m2.length)
                 return -1;
@@ -1238,22 +1159,19 @@ var SyntaxHighlighter = function () {
      * @param {Object} regex   Regular expression item info from <code>regexList</code> collection.
      * @return {Array}         Returns a list of Match objects.
      */
-    function getMatches(code, regexInfo)
-    {
-        function defaultAdd(match, regexInfo)
-        {
+    function getMatches(code, regexInfo) {
+        function defaultAdd(match, regexInfo) {
             return match[0];
         }
         ;
 
         var index = 0,
-                match = null,
-                matches = [],
-                func = regexInfo.func ? regexInfo.func : defaultAdd
-                ;
+            match = null,
+            matches = [],
+            func = regexInfo.func ? regexInfo.func : defaultAdd
+            ;
 
-        while ((match = regexInfo.regex.exec(code)) != null)
-        {
+        while ((match = regexInfo.regex.exec(code)) != null) {
             var resultMatch = func(match, regexInfo);
 
             if (typeof (resultMatch) == 'string')
@@ -1271,22 +1189,19 @@ var SyntaxHighlighter = function () {
      * @param {String} code Input code.
      * @return {String} Returns code with </a> tags.
      */
-    function processUrls(code)
-    {
+    function processUrls(code) {
         var gt = /(.*)((&gt;|&lt;).*)/;
 
-        return code.replace(sh.regexLib.url, function (m)
-        {
+        return code.replace(sh.regexLib.url, function (m) {
             var suffix = '',
-                    match = null
-                    ;
+                match = null
+                ;
 
             // We include &lt; and &gt; in the URL for the common cases like <http://google.com>
             // The problem is that they get transformed into &lt;http://google.com&gt;
             // Where as &gt; easily looks like part of the URL string.
 
-            if (match = gt.exec(m))
-            {
+            if (match = gt.exec(m)) {
                 m = match[1];
                 suffix = match[2];
             }
@@ -1300,11 +1215,10 @@ var SyntaxHighlighter = function () {
      * Finds all <SCRIPT TYPE="syntaxhighlighter" /> elementss.
      * @return {Array} Returns array of all found SyntaxHighlighter tags.
      */
-    function getSyntaxHighlighterScriptTags()
-    {
+    function getSyntaxHighlighterScriptTags() {
         var tags = document.getElementsByTagName('script'),
-                result = []
-                ;
+            result = []
+            ;
 
         for (var i = 0; i < tags.length; i++)
             if (tags[i].type == 'syntaxhighlighter')
@@ -1320,27 +1234,24 @@ var SyntaxHighlighter = function () {
      * @param {String} original	Input code.
      * @return {String} Returns code without leading <![CDATA[]]> tags.
      */
-    function stripCData(original)
-    {
+    function stripCData(original) {
         var left = '<![CDATA[',
-                right = ']]>',
-                // for some reason IE inserts some leading blanks here
-                copy = trim(original),
-                changed = false,
-                leftLength = left.length,
-                rightLength = right.length
-                ;
+            right = ']]>',
+            // for some reason IE inserts some leading blanks here
+            copy = trim(original),
+            changed = false,
+            leftLength = left.length,
+            rightLength = right.length
+            ;
 
-        if (copy.indexOf(left) == 0)
-        {
+        if (copy.indexOf(left) == 0) {
             copy = copy.substring(leftLength);
             changed = true;
         }
 
         var copyLength = copy.length;
 
-        if (copy.indexOf(right) == copyLength - rightLength)
-        {
+        if (copy.indexOf(right) == copyLength - rightLength) {
             copy = copy.substring(0, copyLength - rightLength);
             changed = true;
         }
@@ -1353,16 +1264,14 @@ var SyntaxHighlighter = function () {
     /**
      * Quick code mouse double click handler.
      */
-    function quickCodeHandler(e)
-    {
+    function quickCodeHandler(e) {
     }
     ;
 
     /**
      * Match object.
      */
-    sh.Match = function (value, index, css)
-    {
+    sh.Match = function (value, index, css) {
         this.value = value;
         this.index = index;
         this.length = value.length;
@@ -1370,8 +1279,7 @@ var SyntaxHighlighter = function () {
         this.brushName = null;
     };
 
-    sh.Match.prototype.toString = function ()
-    {
+    sh.Match.prototype.toString = function () {
         return this.value;
     };
 
@@ -1380,15 +1288,14 @@ var SyntaxHighlighter = function () {
      * 
      * @param {String} scriptBrushName Brush name of the scripting language.
      */
-    sh.HtmlScript = function (scriptBrushName)
-    {
+    sh.HtmlScript = function (scriptBrushName) {
         var brushClass = findBrush(scriptBrushName),
-                scriptBrush,
-                xmlBrush = new sh.brushes.Xml(),
-                bracketsRegex = null,
-                ref = this,
-                methodsToExpose = 'getDiv getHtml init'.split(' ')
-                ;
+            scriptBrush,
+            xmlBrush = new sh.brushes.Xml(),
+            bracketsRegex = null,
+            ref = this,
+            methodsToExpose = 'getDiv getHtml init'.split(' ')
+            ;
 
         if (brushClass == null)
             return;
@@ -1400,57 +1307,50 @@ var SyntaxHighlighter = function () {
             (function () {
                 var name = methodsToExpose[i];
 
-                ref[name] = function ()
-                {
+                ref[name] = function () {
                     return xmlBrush[name].apply(xmlBrush, arguments);
                 };
             })();
 
-        if (scriptBrush.htmlScript == null)
-        {
+        if (scriptBrush.htmlScript == null) {
             alert(sh.config.strings.brushNotHtmlScript + scriptBrushName);
             return;
         }
 
         xmlBrush.regexList.push(
-                {regex: scriptBrush.htmlScript.code, func: process}
+            { regex: scriptBrush.htmlScript.code, func: process }
         );
 
-        function offsetMatches(matches, offset)
-        {
+        function offsetMatches(matches, offset) {
             for (var j = 0; j < matches.length; j++)
                 matches[j].index += offset;
         }
 
-        function process(match, info)
-        {
+        function process(match, info) {
             var code = match.code,
-                    matches = [],
-                    regexList = scriptBrush.regexList,
-                    offset = match.index + match.left.length,
-                    htmlScript = scriptBrush.htmlScript,
-                    result
-                    ;
+                matches = [],
+                regexList = scriptBrush.regexList,
+                offset = match.index + match.left.length,
+                htmlScript = scriptBrush.htmlScript,
+                result
+                ;
 
             // add all matches from the code
-            for (var i = 0; i < regexList.length; i++)
-            {
+            for (var i = 0; i < regexList.length; i++) {
                 result = getMatches(code, regexList[i]);
                 offsetMatches(result, offset);
                 matches = matches.concat(result);
             }
 
             // add left script bracket
-            if (htmlScript.left != null && match.left != null)
-            {
+            if (htmlScript.left != null && match.left != null) {
                 result = getMatches(match.left, htmlScript.left);
                 offsetMatches(result, match.index);
                 matches = matches.concat(result);
             }
 
             // add right script bracket
-            if (htmlScript.right != null && match.right != null)
-            {
+            if (htmlScript.right != null && match.right != null) {
                 result = getMatches(match.right, htmlScript.right);
                 offsetMatches(result, match.index + match[0].lastIndexOf(match.right));
                 matches = matches.concat(result);
@@ -1467,8 +1367,7 @@ var SyntaxHighlighter = function () {
      * Main Highlither class.
      * @constructor
      */
-    sh.Highlighter = function ()
-    {
+    sh.Highlighter = function () {
         // not putting any code in here because of the prototype inheritance
     };
 
@@ -1479,8 +1378,7 @@ var SyntaxHighlighter = function () {
          * @param {Object} defaultValue		Default value.
          * @return {Object}					Returns found value or default value otherwise.
          */
-        getParam: function (name, defaultValue)
-        {
+        getParam: function (name, defaultValue) {
             var result = this.params[name];
             return toBoolean(result == null ? defaultValue : result);
         },
@@ -1489,8 +1387,7 @@ var SyntaxHighlighter = function () {
          * @param {String} name		Name of the element to create (DIV, A, etc).
          * @return {HTMLElement}	Returns new HTML element.
          */
-        create: function (name)
-        {
+        create: function (name) {
             return document.createElement(name);
         },
         /**
@@ -1500,8 +1397,7 @@ var SyntaxHighlighter = function () {
          * @param {String} code			Source code.
          * @return {Array}				Returns list of matches.
          */
-        findMatches: function (regexList, code)
-        {
+        findMatches: function (regexList, code) {
             var result = [];
 
             if (regexList != null)
@@ -1518,20 +1414,17 @@ var SyntaxHighlighter = function () {
          * This process would get rid of highligted strings inside comments, 
          * keywords inside strings and so on.
          */
-        removeNestedMatches: function (matches)
-        {
+        removeNestedMatches: function (matches) {
             // Optimized by Jose Prado (http://joseprado.com)
-            for (var i = 0; i < matches.length; i++)
-            {
+            for (var i = 0; i < matches.length; i++) {
                 if (matches[i] === null)
                     continue;
 
                 var itemI = matches[i],
-                        itemIEndPos = itemI.index + itemI.length
-                        ;
+                    itemIEndPos = itemI.index + itemI.length
+                    ;
 
-                for (var j = i + 1; j < matches.length && matches[i] !== null; j++)
-                {
+                for (var j = i + 1; j < matches.length && matches[i] !== null; j++) {
                     var itemJ = matches[j];
 
                     if (itemJ === null)
@@ -1551,14 +1444,12 @@ var SyntaxHighlighter = function () {
          * Creates an array containing integer line numbers starting from the 'first-line' param.
          * @return {Array} Returns array of integers.
          */
-        figureOutLineNumbers: function (code)
-        {
+        figureOutLineNumbers: function (code) {
             var lines = [],
-                    firstLine = parseInt(this.getParam('first-line'))
-                    ;
+                firstLine = parseInt(this.getParam('first-line'))
+                ;
 
-            eachLine(code, function (line, index)
-            {
+            eachLine(code, function (line, index) {
                 lines.push(index + firstLine);
             });
 
@@ -1567,8 +1458,7 @@ var SyntaxHighlighter = function () {
         /**
          * Determines if specified line number is in the highlighted list.
          */
-        isLineHighlighted: function (lineNumber)
-        {
+        isLineHighlighted: function (lineNumber) {
             var list = this.getParam('highlight', []);
 
             if (typeof (list) != 'object' && list.push == null)
@@ -1582,8 +1472,7 @@ var SyntaxHighlighter = function () {
          * @param {String} code Line	HTML markup.
          * @return {String}				Returns HTML markup.
          */
-        getLineHtml: function (lineIndex, lineNumber, code, mode)
-        {
+        getLineHtml: function (lineIndex, lineNumber, code, mode) {
             var classes = [
                 'line',
                 'number' + lineNumber,
@@ -1618,24 +1507,22 @@ var SyntaxHighlighter = function () {
          * @param {Array} lineNumbers	Calculated line numbers.
          * @return {String}				Returns HTML markup.
          */
-        getLineNumbersHtml: function (code, lineNumbers)
-        {
+        getLineNumbersHtml: function (code, lineNumbers) {
             var html = '',
-                    count = splitLines(code).length,
-                    firstLine = parseInt(this.getParam('first-line')),
-                    pad = this.getParam('pad-line-numbers')
-                    ;
+                count = splitLines(code).length,
+                firstLine = parseInt(this.getParam('first-line')),
+                pad = this.getParam('pad-line-numbers')
+                ;
 
             if (pad == true)
                 pad = (firstLine + count - 1).toString().length;
             else if (isNaN(pad) == true)
                 pad = 0;
 
-            for (var i = 0; i < count; i++)
-            {
+            for (var i = 0; i < count; i++) {
                 var lineNumber = lineNumbers ? lineNumbers[i] : firstLine + i,
-                        code = lineNumber == 0 ? sh.config.space : padNumber(lineNumber, pad)
-                        ;
+                    code = lineNumber == 0 ? sh.config.space : padNumber(lineNumber, pad)
+                    ;
                 html += this.getLineHtml(i, lineNumber, code, 1);
             }
 
@@ -1647,27 +1534,24 @@ var SyntaxHighlighter = function () {
          * @param {Array} lineNumbers	Calculated line numbers.
          * @return {String}				Returns highlighted code in HTML form.
          */
-        getCodeLinesHtml: function (html, lineNumbers)
-        {
+        getCodeLinesHtml: function (html, lineNumbers) {
             html = trim(html);
 
             var lines = splitLines(html),
-                    padLength = this.getParam('pad-line-numbers'),
-                    firstLine = parseInt(this.getParam('first-line')),
-                    html = '',
-                    brushName = this.getParam('brush')
-                    ;
-
-            for (var i = 0; i < lines.length; i++)
-            {
-                var line = lines[i],
-                        indent = /^(&nbsp;|\s)+/.exec(line),
-                        spaces = null,
-                        lineNumber = lineNumbers ? lineNumbers[i] : firstLine + i;
+                padLength = this.getParam('pad-line-numbers'),
+                firstLine = parseInt(this.getParam('first-line')),
+                html = '',
+                brushName = this.getParam('brush')
                 ;
 
-                if (indent != null)
-                {
+            for (var i = 0; i < lines.length; i++) {
+                var line = lines[i],
+                    indent = /^(&nbsp;|\s)+/.exec(line),
+                    spaces = null,
+                    lineNumber = lineNumbers ? lineNumbers[i] : firstLine + i;
+                ;
+
+                if (indent != null) {
                     spaces = indent[0].toString();
                     line = line.substr(spaces.length);
                     spaces = spaces.replace(' ', sh.config.space);
@@ -1679,11 +1563,11 @@ var SyntaxHighlighter = function () {
                     line = sh.config.space;
 
                 html += this.getLineHtml(
-                        i,
-                        lineNumber,
-                        (spaces != null ? '<code class="' + brushName + ' spaces">' + spaces + '</code>' : '') + line
-                        , 0
-                        );
+                    i,
+                    lineNumber,
+                    (spaces != null ? '<code class="' + brushName + ' spaces">' + spaces + '</code>' : '') + line
+                    , 0
+                );
             }
 
             return html;
@@ -1691,8 +1575,7 @@ var SyntaxHighlighter = function () {
         /**
          * Returns HTML for the table title or empty string if title is null.
          */
-        getTitleHtml: function (title)
-        {
+        getTitleHtml: function (title) {
             return title ? '<caption>' + title + '</caption>' : '';
         },
         /**
@@ -1701,15 +1584,13 @@ var SyntaxHighlighter = function () {
          * @param {Array} matches	Discovered regex matches.
          * @return {String} Returns formatted HTML with processed mathes.
          */
-        getMatchesHtml: function (code, matches)
-        {
+        getMatchesHtml: function (code, matches) {
             var pos = 0,
-                    result = '',
-                    brushName = this.getParam('brush', '')
-                    ;
+                result = '',
+                brushName = this.getParam('brush', '')
+                ;
 
-            function getBrushNameCss(match)
-            {
+            function getBrushNameCss(match) {
                 var result = match ? (match.brushName || brushName) : brushName;
                 return result ? result + ' ' : '';
             }
@@ -1717,11 +1598,10 @@ var SyntaxHighlighter = function () {
 
             // Finally, go through the final list of matches and pull the all
             // together adding everything in between that isn't a match.
-            for (var i = 0; i < matches.length; i++)
-            {
+            for (var i = 0; i < matches.length; i++) {
                 var match = matches[i],
-                        matchBrushName
-                        ;
+                    matchBrushName
+                    ;
 
                 if (match === null || match.length === 0)
                     continue;
@@ -1729,8 +1609,8 @@ var SyntaxHighlighter = function () {
                 matchBrushName = getBrushNameCss(match);
 
                 result += wrapLinesWithCode(code.substr(pos, match.index - pos), matchBrushName + 'plain')
-                        + wrapLinesWithCode(match.value, matchBrushName + match.css)
-                        ;
+                    + wrapLinesWithCode(match.value, matchBrushName + match.css)
+                    ;
 
                 pos = match.index + match.length + (match.offset || 0);
             }
@@ -1745,14 +1625,13 @@ var SyntaxHighlighter = function () {
          * @param {String} code Source code.
          * @return {String} Returns HTML markup.
          */
-        getHtml: function (code)
-        {
+        getHtml: function (code) {
             var html = '',
-                    classes = ['syntaxhighlighter'],
-                    tabSize,
-                    matches,
-                    lineNumbers
-                    ;
+                classes = ['syntaxhighlighter'],
+                tabSize,
+                matches,
+                lineNumbers
+                ;
 
             // process light mode
             if (this.getParam('light') == true)
@@ -1773,16 +1652,16 @@ var SyntaxHighlighter = function () {
             classes.push(this.getParam('brush'));
 
             code = trimFirstAndLastLines(code)
-                    .replace(/\r/g, ' ') // IE lets these buggers through
-                    ;
+                .replace(/\r/g, ' ') // IE lets these buggers through
+                ;
 
             tabSize = this.getParam('tab-size');
 
             // replace tabs with spaces
             code = this.getParam('smart-tabs') == true
-                    ? processSmartTabs(code, tabSize)
-                    : processTabs(code, tabSize)
-                    ;
+                ? processSmartTabs(code, tabSize)
+                : processTabs(code, tabSize)
+                ;
 
             // unindent code by the common indentation
             code = unindent(code);
@@ -1805,23 +1684,23 @@ var SyntaxHighlighter = function () {
                 classes.push('ie');
 
             html =
-                    '<div id="' + getHighlighterId(this.id) + '" class="' + classes.join(' ') + '">'
-                    + (this.getParam('toolbar') ? sh.toolbar.getHtml(this) : '')
-                    + '<table id="tb_' + sh.vars.modelId + '" border="0" cellpadding="0" cellspacing="0">'
-                    + this.getTitleHtml(this.getParam('title'))
-                    + '<tbody>'
-                    + '<tr>'
-                    + (gutter ? '<td class="gutter">' + this.getLineNumbersHtml(code) + '</td>' : '')
-                    + '<td class="code">'
-                    + '<div class="hg_container">'
-                    + html
-                    + '</div>'
-                    + '</td>'
-                    + '</tr>'
-                    + '</tbody>'
-                    + '</table>'
-                    + '</div>'
-                    ;
+                '<div id="' + getHighlighterId(this.id) + '" class="' + classes.join(' ') + '">'
+                + (this.getParam('toolbar') ? sh.toolbar.getHtml(this) : '')
+                + '<table id="tb_' + sh.vars.modelId + '" border="0" cellpadding="0" cellspacing="0">'
+                + this.getTitleHtml(this.getParam('title'))
+                + '<tbody>'
+                + '<tr>'
+                + (gutter ? '<td class="gutter">' + this.getLineNumbersHtml(code) + '</td>' : '')
+                + '<td class="code">'
+                + '<div class="hg_container">'
+                + html
+                + '</div>'
+                + '</td>'
+                + '</tr>'
+                + '</tbody>'
+                + '</table>'
+                + '</div>'
+                ;
 
             sh.vars.lineNumbers = lineNumbers;
 
@@ -1834,8 +1713,7 @@ var SyntaxHighlighter = function () {
          * @param {String} code     Code to highlight.
          * @return {Element}        Returns container DIV element with all markup.
          */
-        getDiv: function (code)
-        {
+        getDiv: function (code) {
             if (code === null)
                 code = '';
 
@@ -1866,8 +1744,7 @@ var SyntaxHighlighter = function () {
          *
          * @param {Hash} params Highlighter parameters.
          */
-        init: function (params)
-        {
+        init: function (params) {
             this.id = guid();
 
             // register this instance in the highlighters list
@@ -1885,12 +1762,11 @@ var SyntaxHighlighter = function () {
          * @param {String} str    Space separated keywords.
          * @return {String}       Returns regular expression string.
          */
-        getKeywords: function (str)
-        {
+        getKeywords: function (str) {
             str = str
-                    .replace(/^\s+|\s+$/g, '')
-                    .replace(/\s+/g, '|')
-                    ;
+                .replace(/^\s+|\s+$/g, '')
+                .replace(/\s+/g, '|')
+                ;
 
             return '\\b(?:' + str + ')\\b';
         },
@@ -1898,17 +1774,16 @@ var SyntaxHighlighter = function () {
          * Makes a brush compatible with the `html-script` functionality.
          * @param {Object} regexGroup Object containing `left` and `right` regular expressions.
          */
-        forHtmlScript: function (regexGroup)
-        {
+        forHtmlScript: function (regexGroup) {
             this.htmlScript = {
-                left: {regex: regexGroup.left, css: 'script'},
-                right: {regex: regexGroup.right, css: 'script'},
+                left: { regex: regexGroup.left, css: 'script' },
+                right: { regex: regexGroup.right, css: 'script' },
                 code: new XRegExp(
-                        "(?<left>" + regexGroup.left.source + ")" +
-                        "(?<code>.*?)" +
-                        "(?<right>" + regexGroup.right.source + ")",
-                        "sgi"
-                        )
+                    "(?<left>" + regexGroup.left.source + ")" +
+                    "(?<code>.*?)" +
+                    "(?<right>" + regexGroup.right.source + ")",
+                    "sgi"
+                )
             };
         }
     }; // end of Highlighter

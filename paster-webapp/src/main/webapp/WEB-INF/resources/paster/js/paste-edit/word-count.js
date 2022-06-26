@@ -14,11 +14,9 @@ provides: [WordCount]
 
 ...
 */
-var WordCount = new Class ({
+class WordCount {
 
-	Implements: [Events, Options],
-
-	options: {
+	options = {
                 countWordsTo: null,
                 countSymbolsTo: null,                
 		inputName: null,				//The input name from which text should be retrieved, defaults null
@@ -29,11 +27,12 @@ var WordCount = new Class ({
 		separator: ', ',				//The text that separates the number of words and the number of characters
 		liveCount: false,				//Whether or not to use the event trigger, set false if you'd like to call the getCount function separately
 		eventTrigger: 'keyup'			//The event that triggers the count update
-	},
+	}
 
-	initialize: function(targetId, options){
-		this.setOptions(options);	
-		this.target = $(targetId);
+
+	initialize(targetId, options){
+		 this.options = options;
+		this.target = document.getElementById(targetId);
 		
 		if ((this.options.liveCount)&&(this.options.inputName)){
 			var input = $(document.body).getElement('[name='+this.options.inputName+']');
@@ -41,9 +40,9 @@ var WordCount = new Class ({
 				this.getCount(input.get('value'));
 			}.bind(this));
 		}
-	}, 
+	}
 	
-	getCount: function(text){
+	getCount(text){
 		var numChars = text.length;
 		var numWords = (numChars != 0) ? text.clean().split(' ').length : 0;
                 
@@ -62,4 +61,4 @@ var WordCount = new Class ({
 		} 
 		if (insertText){ this.target.set('html', insertText); }	
 	}
-});
+};

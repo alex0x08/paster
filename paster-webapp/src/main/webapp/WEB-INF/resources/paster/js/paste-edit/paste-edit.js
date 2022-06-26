@@ -14,26 +14,20 @@
  * limitations under the License.
  */
 
+class PasterEdit {
 
-
-var PasterEdit = new Class({
-    
-    initialize: function () {
-
+    initialize() {
         this.max_length = 100;
-
         this.editor = undefined;
-
         this.counter = undefined;
+    }
 
-    },
-    init: function (codeType) {
-
-        var mainThis = this;
-
-        this.counter = new WordCount('wordCount', {
-            countWordsTo: $('wordsCount'),
-            countSymbolsTo: $('symbolsCount'),
+    init(codeType) {
+        const mainThis = this;
+        this.counter = new WordCount();
+        this.counter.initialize('wordsCount', {
+            countWordsTo: document.getElementById('wordsCount'),
+            countSymbolsTo: document.getElementById('symbolsCount'),
             inputName: null, //The input name from which text should be retrieved, defaults null
             countWords: true, //Whether or not to count words
             countChars: true, //Whether or not to count characters
@@ -42,32 +36,34 @@ var PasterEdit = new Class({
             separator: ', ', //The text that separates the number of words and the number of characters
             liveCount: false, //Whether or not to use the event trigger, set false if you'd like to call the getCount function separately
             eventTrigger: 'keyup'			//The event that triggers the count update
-        });
-        
+        })
+
         var counter = this.counter;
 
         this.editor = ace.edit("editor");
-        
+
         var editor = this.editor;
-        
+
         editor.setTheme("ace/theme/chrome");
         editor.setOptions({
             autoScrollEditorIntoView: true
         });
-        
-        editor.getSession().setMode("ace/mode/"+codeType);
 
-        var textarea = document.getElementById("ptext");
+        editor.getSession().setMode("ace/mode/" + codeType);
+
+        const textarea = document.getElementById("ptext");
 
         editor.getSession().setValue(textarea.get('value'));
-        
-         counter.getCount(textarea.get('value'));
+
+        counter.getCount(textarea.get('value'));
+
+        const elSelectFileBtn = document.getElementById('select-file-btn');
 
 
-        $('select-file-btn').removeEvents("change");
+        elSelectFileBtn.addEventListener('change', function (e) {
 
-        $('select-file-btn').addEvent('change', function (e) {
             mainThis.readLocalFile(e);
+
         });
 
 
@@ -80,16 +76,16 @@ var PasterEdit = new Class({
         editor.gotoLine(count, editor.getSession().getLine(count - 1).length);
 
         editor.getSession().on('change', function () {
-            var text = editor.getSession().getValue();
+            const text = editor.getSession().getValue();
             textarea.set('value', text);
             counter.getCount(text);
         });
 
-        $('ptheme').addEvent('change', function (event) {
+        document.getElementById('ptheme').addEventListener('change', function (event) {
             editor.setTheme(this.getElement(':selected').value);
         });
 
-        $('normalized').addEvent('click', function () {
+        document.getElementById('normalized').addEventListener('click', function (event) {
             if (this.get('checked')) {
                 var col = 80;
                 editor.getSession().setUseWrapMode(true);
@@ -102,88 +98,81 @@ var PasterEdit = new Class({
         });
 
 
-        $('fontsize').addEvent('change', function (event) {
+        document.getElementById('fontsize').addEventListener('change', function (event) {
             editor.setFontSize(this.getElement(':selected').get("value"));
         });
 
-        $('ptype').addEvent('change', function (event) {
+        document.getElementById('ptype').addEventListener('change', function (event) {
             editor.getSession()
-                    .setMode("ace/mode/" + this.getElement(':selected').get("editCode"));
+                .setMode("ace/mode/" + this.getElement(':selected').get("editCode"));
         });
 
-        $('pprior').addEvent('change', function (event) {
-            var prPreview = $('priorPreview');
+        document.getElementById('pprior').addEventListener('change', function (event) {
+            var prPreview = document.getElementById('priorPreview');
             prPreview.erase('class');
             prPreview.addClass('i');
             prPreview.addClass(this.getElement(':selected').get("x-css-class-name"));
         });
 
+        Array.from(document.getElementsByClassName('submitBtn')).forEach(
+            function (el, i, array) {
+                el.addEventListener('click', function (event) {
+                    this.getElementById('btnCaption').set('text', PasterI18n.text.notify.transmitMessage).disabled = true;
+                    this.getElementById('btnIcon').style.display = '';
 
-        $$('.submitBtn').each(function (el, i) {
-
-            el.addEvent('click', function (event) {
-                this.getElementById('btnCaption').set('text', PasterI18n.text.notify.transmitMessage).disabled = true;
-                this.getElementById('btnIcon').toggle();
-
-                event.stop();
-                mainThis.onSave();
+                    event.preventDefault();
+                    mainThis.onSave();
+                });
             });
-        });
 
-    },
-    clearTitle: function () {
 
-        $('pname').set('value', '');
-   },
-    readLocalFile: function (e) {
-        
-        var file = e.target.files[0];
+    }
+    clearTitle() {
+        document.getElementById('pname').set('value', '');
+    }
+    readLocalFile(e) {
+
+        const file = e.target.files[0];
 
         if (!file) {
             return;
         }
-        
-        mainThis = this;
-        
-        var reader = new FileReader();
-        reader.onload = function (e) {
-            var contents = e.target.result;
-            mainThis.editor.getSession().setValue(contents);
+
+        const mainThis = this;
+
+        const freader = new FileReader();
+        freader.onload = function (e) {
+            mainThis.editor.getSession().setValue(e.target.result);
         };
-        reader.readAsText(file);
-
-   },
-    onPaste: function (e) {
-
-        if (e.event.clipboardData) {
-
-            /*console.log(e.event.clipboardData);*/
-
-            var text = e.event.clipboardData.getData('text/plain');
-
-            var block = (text.length < this.max_length - 2) 
-                        ? text.substring(0, text.length) : 
-                                text.substring(0, this.max_length - 2) + '..';
-
-            var ptitle = $("pname");
-
-            if (ptitle.get('value') == '') {
-                ptitle.set('value', block);
-            }
-
-            //e.stop();
-        }
-    },
-    onSave: function () {
-
-        var thumbImg = document.getElementById('thumbImg');
-
-          pasterApp.takeScreenshot($('editor'), function (img) {
-            thumbImg.set('value', img.src);
-
-            $('editForm').submit();
-        });
-
+        freader.readAsText(file);
 
     }
-});
+    onPaste(e) {
+
+        if (e.event.clipboardData) {
+            const text = e.event.clipboardData.getData('text/plain');
+            if (text) {
+                const block = (text.length < this.max_length - 2)
+                    ? text.substring(0, text.length) :
+                    text.substring(0, this.max_length - 2) + '..';
+
+                const ptitleEl = document.getElementById('pname');
+
+                if (ptitleEl.get('value') == '') {
+                    ptitleEl.set('value', block);
+                }
+            }
+        }
+    }
+    onSave() {
+        const thumbImg = document.getElementById('thumbImg');
+        const editorEl = document.getElementById('editor');
+
+        pasterApp.takeScreenshot(editorEl, function (img) {
+            thumbImg.set('value', img.src);
+            document.getElementById('editForm').submit();
+        });
+
+    }
+}
+

@@ -17,52 +17,59 @@
 
 
 
-var PasterView = new Class({
-    initialize: function () {
-
+class PasterView {
+    initialize() {
         SyntaxHighlighter.config.tagName = "pre";
-
-
         this.clip = undefined;
         this.clipLine = undefined;
         this.lazyPaging = undefined;
 
-    },
-    setupDraw: function (modelId) {
-
-
+    }
+    setupDraw(modelId) {
         var $j = jQuery.noConflict();
-
         var mainThis = this;
 
-        $j.each(['#ff1101', '#ff0', '#0f0', '#0ff', '#00f', '#6d47e7', '#000', '#fff'], function () {
-            $j('#' + modelId + '_centerPanel .tools')
-                    .append("<a href='#" + modelId + "_sketch' class='btn btn-xs' data-color='" + this + "' style='border:1px solid black; background: " + this + ";'>&nbsp;&nbsp;</a> ");
-        });
-        $j.each([1, 3, 5, 10, 15], function () {
-            $j('#' + modelId + '_centerPanel .tools')
-                    .append("<a href='#" + modelId + "_sketch' data-size='" + this + "' style='background: #ccc'>" + this + "</a> ");
+        const colors_array = ['#ff1101', '#ff0', '#0f0', '#0ff', '#00f', '#6d47e7', '#000', '#fff'];
+
+        var toolsEl =document.getElementById(modelId + '_tools')
+
+        colors_array.forEach(c => {
+
+            const htmlBlock =  "<a href='#" + modelId
+                                + "_sketch' class='btn btn-xs' data-color='" + c
+                                + "' style='border:1px solid black; background: " + c
+                                + ";'>&nbsp;&nbsp;</a> ";
+
+                toolsEl.insertAdjacentHTML( 'beforeend', htmlBlock );
+         });
+
+
+        const sz_array = [1, 3, 5, 10, 15];
+
+        sz_array.forEach(c => {
+
+            const htmlBlock =  "<a href='#" + modelId + "_sketch' data-size='" + c
+                                + "' style='background: #ccc'>" + c + "</a> ";
+                toolsEl.insertAdjacentHTML( 'beforeend', htmlBlock );
         });
 
         $j('#' + modelId + '_sketch').sketch();
-        $(modelId + '_saveReviewBtn').addEvent('click', function (event) {
 
-            event.stop();
-            mainThis.onSaveReviewDraw(modelId);
-        });
+       document.getElementById(modelId + '_saveReviewBtn')
+                .addEventListener("click", function(event){
+                event.preventDefault();
+                mainThis.onSaveReviewDraw(modelId);
+       });
 
-    },
-    setupCommentsAdd: function (modelId) {
+    }
+    setupCommentsAdd(modelId) {
         console.log('setup comments add ', modelId);
 
-        mainThis = this;
-
-        $(modelId + '_addCommentBtn').addEvent('click', function (event) {
-            event.stop();
-
+        var mainThis = this;
+        document.getElementById(modelId + '_addCommentBtn').addEventListener('click', function (event) {
+            event.preventDefault();
             this.getElementById('btnCaption').set('text', PasterI18n.text.notify.transmitMessage);
             this.set('disabled', true);
-
             $(modelId + '_addCommentForm').getElements('.disableOnSubmit').each(function (el, i) {
                 el.toggle();
             });
@@ -72,10 +79,10 @@ var PasterView = new Class({
 
         });
 
-    },
-    setupLazy: function (pageUrl, userPageUrl, maxRequests, modelId, idSet) {
+    }
+    setupLazy(pageUrl, userPageUrl, maxRequests, modelId, idSet) {
 
-        mainThis = this;
+        var mainThis = this;
 
         this.lazyPaging = new LazyPagination(document, {
             url: pageUrl,
@@ -125,8 +132,8 @@ var PasterView = new Class({
             }
 
         });
-    },
-    getTextSizes: function (el) {
+    }
+    getTextSizes(el) {
 
         var obj = el.getComputedSize();
 
@@ -134,8 +141,8 @@ var PasterView = new Class({
                 w = parseInt(obj["totalWidth"]);
         return [h, w];
 
-    },
-    showAll: function (modelId) {
+    }
+    showAll(modelId) {
 
         $(modelId + "_drawBlock").setStyle("display", "none");
 
@@ -152,18 +159,14 @@ var PasterView = new Class({
 
         $(modelId + "_drawBlock").hide();
 
-    },
-    init: function (modelId) {
-
+    }
+    init(modelId) {
 
         this.clip = new ZeroClipboard(document.id("ctrlc_link"));
-
         this.clip.on('aftercopy', function (event) {
             pasterApp.showNotify(event.data["text/plain"].length + ' symbols copied to clipboard.');
         });
-
         this.clipLine = new ZeroClipboard(document.id("ctrlc_line"));
-
         this.clipLine.on('aftercopy', function (event) {
             pasterApp.showNotify(event.data["text/plain"].length + ' symbols copied to clipboard.');
         });
@@ -172,23 +175,16 @@ var PasterView = new Class({
 
         this.setupDraw(modelId);
         this.showAll(modelId);
-
-    },
-    showComments: function (modelId) {
-
-
+    }
+    showComments(modelId) {
         $(modelId + "_drawBlock").hide();
-
         $(modelId + "_all").hide();
-
-    },
-    showDrawArea: function (modelId, drawReviewData) {
+    }
+    showDrawArea(modelId, drawReviewData) {
 
         var sizes = this.getTextSizes($(modelId + "_pasteText"));
-
         var area = $(modelId + "_drawArea"),
                 sketch = $(modelId + "_sketch");
-
         area.set({
             styles: {
                 'height': sizes[0],
@@ -201,35 +197,27 @@ var PasterView = new Class({
             'width': sizes[1]
         });
 
-        canvas = document.getElementById(modelId + '_sketch');
-        ctx = canvas.getContext('2d');
-
+        const canvas = document.getElementById(modelId + '_sketch');
+        const ctx = canvas.getContext('2d');
 
         if (drawReviewData != '') {
-
-            img = new Image();
+           const img = new Image();
             img.src = drawReviewData;
             img.onload = function () {
-
                 var $j = jQuery.noConflict();
 
-
-                sk = $j('#' + modelId + '_sketch')
+                const sk = $j('#' + modelId + '_sketch')
                         .sketch();
                 ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, sizes[1], sizes[0]);
             };
         }
-
-
-
         $(modelId + "_drawBlock").show();
         $(modelId + "_all").hide();
-    },
-    onSaveComment: function (modelId) {
+    }
+    onSaveComment(modelId) {
         console.log('_on save comment: ', modelId);
 
         var thumbImg = document.getElementById(modelId + '_thumbImgComment');
-
 
         pasterApp.takeScreenshot(document.getElementById(modelId + '_pasteBodyContent'), function (img) {
             thumbImg.set('value', img.src);
@@ -237,16 +225,11 @@ var PasterView = new Class({
             $(modelId + "_addCommentForm").submit();
         });
 
-    },
-    onSaveReviewDraw: function (modelId) {
-
+    }
+    onSaveReviewDraw(modelId) {
         console.log('saving review..');
-
         var $j = jQuery.noConflict();
-
-
         var reviewImg = document.getElementById(modelId + '_reviewDrawImg');
-
         var imgData = $j('#' + modelId + '_sketch').sketch().getData();
         reviewImg.set('value', imgData);
 
@@ -261,17 +244,10 @@ var PasterView = new Class({
         pasterApp.takeScreenshot($(modelId + '_centerPanel'), function (img) {
             thumbImg.set('value', img.src);
 
-            $(modelId + "_saveReviewDraw").submit();
+            document.getElementById(modelId + "_saveReviewDraw").submit();
         });
-
-
-
 
     }
 
-
-
-
-
-});
+}
    
