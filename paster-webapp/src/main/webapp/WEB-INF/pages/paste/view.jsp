@@ -65,13 +65,9 @@
 <script type="text/javascript">
 
 
-    window.pica.debug = console.log.bind(console);
-    window.pica.WEBGL = true;
-
-
     var pasterView = new PasterView();
 
-    window.addEvent('load', function () {
+    window.addEventListener('load', function () {
 
         pasterView.init(${model.id});
 
@@ -84,8 +80,7 @@
 
 
     <c:if test="${availablePrevList.count > 0}">
-        $('pageLoadSpinner').toggle();
-
+        document.getElementById('pageLoadSpinner').style.display='';
         pasterView.setupLazy('<c:url value="/main/paste/raw/view"/>',
                 '<c:url value="/main/paste"/>',
         ${availablePrevList.count},

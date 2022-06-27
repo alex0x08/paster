@@ -34,14 +34,14 @@
     </div>
     <div class="col-md-2 hidden-sm hidden-xs">
 
-        <a class="img-map img-xml" href="<c:url value="/main/paste/list/body.xml"/>" title="xml" alt="xml">
+        <a class="img-map img-xml" href="<c:url value="/main/paste/list/body.xml"/>" title="xml" alt="xml" target="blank">
         </a> |
-        <a class="img-map img-json" href="<c:url value="/main/paste/list/body.json"/>" title="json" alt="json">
+        <a class="img-map img-json" href="<c:url value="/main/paste/list/body.json"/>" title="json" alt="json" target="blank">
         </a> |
-        <a class="img-map img-rss" href="<c:url value="/main/paste/list.rss"/>" title="rss" alt="rss">
+        <a class="img-map img-rss" href="<c:url value="/main/paste/list.rss"/>" title="rss" alt="rss" target="blank">
         </a>
         |
-        <a class="img-map img-atom" href="<c:url value="/main/paste/list.atom"/>" title="atom" alt="atom">
+        <a class="img-map img-atom" href="<c:url value="/main/paste/list.atom"/>" title="atom" alt="atom" target="blank">
         </a> 
 
     </div>
@@ -251,19 +251,11 @@
     </c:choose>
 
     <script type="text/javascript">
-
-
-        var pasterList = new PasterList();
-
-
-
-        window.addEvent('load', function () {
-
+        const pasterList = new PasterList();
+        window.addEventListener('load', function () {
             pasterList.init('${rawPageUrl}', '${userPageUrl}',
-        ${pageItems.pageCount-(pageItems.page+1)},
-        ${pageItems.page} + 2);
-
-
+                    ${pageItems.pageCount-(pageItems.page+1)},
+                    ${pageItems.page} + 2);
         });
 
     </script>

@@ -24,7 +24,7 @@
             if (xmlhttp.readyState == XMLHttpRequest.DONE) {
                if (xmlhttp.status == 200) {
 
-                  const obj = JSON.decode(xmlhttp.responseText, true);
+                  const obj = JSON.parse(xmlhttp.responseText, true);
                         const pcount = obj['count'];
                         if (pcount>0) {
                             cb = document.getElementById('newPastasCountBlock');
@@ -43,8 +43,8 @@
         xmlhttp.send();
     }
 
-    
-    window.addEvent('load', function() {
+
+    window.addEventListener('load', function() {
             setInterval(checkNewPastas,10000);
 
     }); 

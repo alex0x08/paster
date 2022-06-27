@@ -21,34 +21,36 @@ class PasterApp {
         this.modalDlg = undefined;
     }
     appInit() {
-        this.growl = new Growler.init();
+//        this.growl = new Growler.init();
         this.bindDeleteDlg(document.body);
 
     }
     showNotify(message) {
-        this.growl.notify(message);
+       // this.growl.notify(message);
+       console.log('notify ',message)
     }
     showModal(dlg, redirectUrl, action, title, message) {
 
-        if (title !== null) {
-            dlg.getElementById('dialogTitle').set('text', title);
+        if (title) {
+            dlg.querySelector('#dialogTitle').text = title;
         }
 
-        if (action !== null) {
-            dlg.getElementById('dialogAction').set('text', action).set('href', redirectUrl);
+        if (action) {
+            const el = dlg.querySelector('#dialogAction');
+            el.text = action;
+            el.href = redirectUrl;
         }
 
-        dlg.getElementById('dialogMessage').set('html', message);
+        dlg.querySelector('#dialogMessage').innerHTML =  message;
 
         if (!this.modalDlg) {
-            this.modalDlg = new Bootstrap.Popup(dlg, { animate: false, closeOnEsc: true });
+            this.modalDlg = new bootstrap.Modal(dlg, { animate: false, closeOnEsc: true });
         }
         this.modalDlg.show();
     }
     bindDeleteDlg(parent) {
 
         var $paster = this;
-
 
         Array.from(parent.getElementsByClassName('deleteBtn')).forEach(
             function (el, i, array) {
@@ -58,37 +60,40 @@ class PasterApp {
                     $paster.showModal(document.getElementById('deletePopup'), source.parentElement.href,
                         PasterI18n.text.dialog.removal.title,
                         PasterI18n.text.dialog.removal.message,
-                        source.parentElement.getElementById('dialogMsg').innerHTML);
+                        source.parentElement.querySelector('#dialogMsg').innerHTML);
                 });
             });
 
 
     }
     takeScreenshot(source, onComplete) {
-
+        console.log('taking screenshot for ',source)
         html2canvas(source, {
-            allowTaint: true,
-            taintTest: false,
-            onrendered: function (canvas) {
-                var img = document.createElement("canvas");
-                img.width = canvas.width;
-                img.height = canvas.height;
+                    allowTaint: true,
+                    taintTest: false,
+                    onrendered: function (canvas) {
+                        console.log('rendered..')
+                        const img = document.createElement("canvas");
+                        img.width = canvas.width;
+                        img.height = canvas.height;
 
-                window.pica.resizeCanvas(canvas, img, {
-                    quality: 3,
-                    alpha: true,
-                    unsharpAmount: 150,
-                    unsharpRadius: 0.7,
-                    unsharpThreshold: 245,
-                    transferable: true
-                }, function (err) {
-                    // console.log(err);
+                        window.pica.resizeCanvas(canvas, img, {
+                            quality: 3,
+                            alpha: true,
+                            unsharpAmount: 150,
+                            unsharpRadius: 0.7,
+                            unsharpThreshold: 245,
+                            transferable: true
+                        }, function (err) {
+                             console.log( 'error on creating img', err);
+                        });
+                        console.log('resized..');
+                        const img2 = Canvas2Image.saveAsPNG(img, true, 300, 200);
+
+                        onComplete(img2);
+                    }
                 });
 
-                const img2 = Canvas2Image.saveAsPNG(img, true, 300, 200);
-                onComplete(img2);
-            }
-        });
     }
 
 };

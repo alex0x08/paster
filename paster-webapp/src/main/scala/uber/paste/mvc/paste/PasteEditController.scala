@@ -234,6 +234,8 @@ class PasteEditController extends GenericEditController[Paste] {
 
     if (!isCurrentUserLoggedIn() && !allowAnonymousPasteCreate) return page403
 
+    logger.debug("saving paste..")
+
     /**
      * copy fields not filled in form
      */
@@ -303,15 +305,7 @@ class PasteEditController extends GenericEditController[Paste] {
     b.setTitle(
       f = if (b.getText().length > Paste.TITLE_LENGTH) {
 
-        val summary: String = try {
-          Paste.summariser.summarise(b.getText(), 2)
-        } catch {
-          case e@(_: Exception) =>
-            if (logger.isDebugEnabled) {
-              logger.error(e.getLocalizedMessage, e)
-            }
-            null
-        }
+        val summary: String = b.getText()
 
         if (summary == null || summary.length < 3)
           b.getText().substring(0, Paste.TITLE_LENGTH - 3) + "..."

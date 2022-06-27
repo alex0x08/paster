@@ -22,8 +22,6 @@ import java.io.ByteArrayOutputStream
 import java.util.Locale
 import javax.imageio.ImageIO
 import javax.validation.Valid
-import org.imgscalr.Scalr
-import org.imgscalr.Scalr.Mode
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -99,11 +97,9 @@ class SettingsController extends AbstractController {
       val img: BufferedImage = ImageIO.read(b.getClientImageFile.getInputStream)
       val baar = new ByteArrayOutputStream()
 
-      ImageIO.write(if (scaleClientImg) {
-        Scalr.resize(img, Mode.AUTOMATIC, 640, 640)
-      } else {
+      ImageIO.write(
         img
-      }
+
         , "JPEG", baar)
       current.setClientImage("data:image/jpeg;base64," +
         Base64.encodeBase64String(baar.toByteArray))
@@ -112,7 +108,7 @@ class SettingsController extends AbstractController {
       val img: BufferedImage = ImageIO.read(b.getIconImageFile.getInputStream)
       val baar = new ByteArrayOutputStream()
 
-      ImageIO.write(Scalr.resize(img, Mode.FIT_EXACT, 32, 32), "JPEG", baar)
+      ImageIO.write(img, "JPEG", baar)
       current.setIconImage("data:image/jpeg;base64," +
         Base64.encodeBase64String(baar.toByteArray))
     }

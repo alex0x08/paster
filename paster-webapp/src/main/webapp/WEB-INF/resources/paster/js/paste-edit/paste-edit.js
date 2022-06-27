@@ -53,9 +53,9 @@ class PasterEdit {
 
         const textarea = document.getElementById("ptext");
 
-        editor.getSession().setValue(textarea.get('value'));
+        editor.getSession().setValue(textarea.value);
 
-        counter.getCount(textarea.get('value'));
+        counter.getCount(textarea.value);
 
         const elSelectFileBtn = document.getElementById('select-file-btn');
 
@@ -77,16 +77,16 @@ class PasterEdit {
 
         editor.getSession().on('change', function () {
             const text = editor.getSession().getValue();
-            textarea.set('value', text);
+            textarea.value =  text;
             counter.getCount(text);
         });
 
         document.getElementById('ptheme').addEventListener('change', function (event) {
-            editor.setTheme(this.getElement(':selected').value);
+            editor.setTheme(this.querySelector('option:selected').value);
         });
 
         document.getElementById('normalized').addEventListener('click', function (event) {
-            if (this.get('checked')) {
+            if (this.getAttribute('checked')) {
                 var col = 80;
                 editor.getSession().setUseWrapMode(true);
                 editor.getSession().setWrapLimitRange(col, col);
@@ -99,26 +99,29 @@ class PasterEdit {
 
 
         document.getElementById('fontsize').addEventListener('change', function (event) {
-            editor.setFontSize(this.getElement(':selected').get("value"));
+            editor.setFontSize(this.querySelector('option:checked').getAttribute("value"));
         });
 
         document.getElementById('ptype').addEventListener('change', function (event) {
             editor.getSession()
-                .setMode("ace/mode/" + this.getElement(':selected').get("editCode"));
+                .setMode("ace/mode/" + this.querySelector('option:checked').getAttribute("editCode"));
         });
 
         document.getElementById('pprior').addEventListener('change', function (event) {
+            console.log('selected: ',this.querySelector('option:checked'))
+
             var prPreview = document.getElementById('priorPreview');
-            prPreview.erase('class');
-            prPreview.addClass('i');
-            prPreview.addClass(this.getElement(':selected').get("x-css-class-name"));
+            
+            prPreview.className= 'i ' + this.querySelector('option:checked').getAttribute("x-css-class-name");
         });
 
         Array.from(document.getElementsByClassName('submitBtn')).forEach(
             function (el, i, array) {
                 el.addEventListener('click', function (event) {
-                    this.getElementById('btnCaption').set('text', PasterI18n.text.notify.transmitMessage).disabled = true;
-                    this.getElementById('btnIcon').style.display = '';
+                    const el2 = document.getElementById('btnCaption');
+                    el2.text = PasterI18n.text.notify.transmitMessage;
+                    el2.disabled = true;
+                    document.getElementById('btnIcon').style.display = '';
 
                     event.preventDefault();
                     mainThis.onSave();
@@ -128,7 +131,7 @@ class PasterEdit {
 
     }
     clearTitle() {
-        document.getElementById('pname').set('value', '');
+        document.getElementById('pname').setValue('value', '');
     }
     readLocalFile(e) {
 
@@ -158,8 +161,8 @@ class PasterEdit {
 
                 const ptitleEl = document.getElementById('pname');
 
-                if (ptitleEl.get('value') == '') {
-                    ptitleEl.set('value', block);
+                if (ptitleEl.getAttribute('value') == '') {
+                    ptitleEl.setAttribute('value', block);
                 }
             }
         }
@@ -169,7 +172,7 @@ class PasterEdit {
         const editorEl = document.getElementById('editor');
 
         pasterApp.takeScreenshot(editorEl, function (img) {
-            thumbImg.set('value', img.src);
+            thumbImg.setAttribute('value', img.src);
             document.getElementById('editForm').submit();
         });
 

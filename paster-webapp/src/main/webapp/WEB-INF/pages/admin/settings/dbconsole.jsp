@@ -11,11 +11,8 @@
 <script type="text/javascript">
 
 
-    window.addEvent('load', function(){
-    
-    $('dbconsoleFrame').setStyle('height',document.body.scrollHeight);
-    
-    
+    window.addEventListener('load', function(){
+        $('dbconsoleFrame').setStyle('height',document.body.scrollHeight);
     });
 
 </script>

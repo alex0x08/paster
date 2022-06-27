@@ -22,7 +22,6 @@ import java.util.Base64
 import java.util.Date
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
-import org.joda.time.LocalDate
 import org.springframework.dao.DataAccessException
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.userdetails.UserDetails
@@ -35,6 +34,8 @@ import uber.paste.dao.TokenDaoImpl
 import uber.paste.manager.UserManagerImpl
 import uber.paste.model.PersistentToken
 import uber.paste.model.User
+
+import java.time.{LocalDate, ZoneId}
 
 object CPRConstants {
 
@@ -154,7 +155,7 @@ class CustomPersistentRememberMeServices(key: String, uds: UserDetailsService, t
       throw new RememberMeAuthenticationException("Invalid remember-me token (Series/token) mismatch. Implies previous cookie theft attack.")
     }
 
-    if (new LocalDate(token.getTokenDate)
+    if (LocalDate.ofInstant(token.getTokenDate.toInstant,ZoneId.systemDefault())
       .plusDays(CPRConstants.TOKEN_VALIDITY_DAYS).isBefore(LocalDate.now())) {
       tokenDao.remove(token.getSeries)
       throw new RememberMeAuthenticationException("Remember-me login has expired")

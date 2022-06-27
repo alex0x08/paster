@@ -28,13 +28,13 @@ import uber.paste.dao.ChannelDao
 import uber.paste.dao.CommentDaoImpl
 import uber.paste.dao.PasteDaoImpl
 import uber.paste.dao.SearchableDaoImpl
+import java.util.concurrent.TimeUnit
 import javax.servlet.http.HttpServletRequest
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.ui.Model
 import java.util.Locale
 import org.springframework.beans.support.MutableSortDefinition
 import org.springframework.beans.support.PagedListHolder
-import org.joda.time.{DateTime, Days}
 
 object PasteSearchResult extends KeyObj[SearchResult] {
 
@@ -64,8 +64,14 @@ class PasteListController extends SearchController[Paste, OwnerQuery] {
 
     def getSplitTitle() = title
     def isSplit(): Boolean = {
-      val d = Days.daysBetween(new DateTime(prevDate), new DateTime(curDate))
-      if (scala.math.abs(d.getDays()) > 14) {
+
+      if (curDate ==null || prevDate==null) {
+        return false
+      }
+      val diff = curDate.getTime - prevDate.getTime
+      val d= TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS)
+
+      if (scala.math.abs(d) > 14) {
         title = PasteListController.this.getResource("paste.list.slider.title",
           Array(curDate, prevDate, total), locale)
         prevDate = curDate

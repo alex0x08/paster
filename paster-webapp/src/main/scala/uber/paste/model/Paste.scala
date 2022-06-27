@@ -17,10 +17,8 @@
 package uber.paste.model
 
 import com.fasterxml.jackson.annotation.JsonIgnore
-import net.sf.classifier4J.summariser.SimpleSummariser
 import org.hibernate.search.annotations.{Index, _}
 import uber.paste.base.Loggered
-
 import java.util.{ArrayList, UUID}
 import javax.persistence._
 import javax.validation.constraints.{NotNull, Size}
@@ -41,8 +39,7 @@ object Paste extends Struct {
    *  max title length, if greater - will be cut
    */
   val TITLE_LENGTH=256
-  
-  val summariser = new SimpleSummariser()
+
 }
 
 

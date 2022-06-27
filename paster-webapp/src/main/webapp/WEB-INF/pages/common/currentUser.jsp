@@ -7,9 +7,10 @@
         
         --%>    
 
-    <li class="dropdown" data-behavior="BS.Dropdown">
+    <li class="nav-item dropdown" >
         <a href="#" id="userProfileSwitch" role="button" 
-           class="dropdown-toggle" data-toggle="dropdown" >
+            class="nav-link dropdown-toggle"
+            data-bs-toggle="dropdown" >
 
             <c:out value="${currentUser.name}"/>
             <b class="caret"></b>

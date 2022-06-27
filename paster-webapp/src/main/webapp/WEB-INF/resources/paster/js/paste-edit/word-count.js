@@ -31,27 +31,27 @@ class WordCount {
 
 
 	initialize(targetId, options){
-		 this.options = options;
+		this.options = options;
 		this.target = document.getElementById(targetId);
 		
 		if ((this.options.liveCount)&&(this.options.inputName)){
-			var input = $(document.body).getElement('[name='+this.options.inputName+']');
-			input.addEvent(this.options.eventTrigger, function(){
-				this.getCount(input.get('value'));
+			var input = document.getElementsByName(this.options.inputName);
+			input.addEventListener(this.options.eventTrigger, function(){
+				this.getCount(input.getAttribute('value'));
 			}.bind(this));
 		}
 	}
 	
 	getCount(text){
 		var numChars = text.length;
-		var numWords = (numChars != 0) ? text.clean().split(' ').length : 0;
+		var numWords = (numChars != 0) ? text.split(' ').length : 0;
                 
                 if (this.options.countWordsTo!=null) {
-                    this.options.countWordsTo.set('value',numWords);
+                    this.options.countWordsTo.value =  numWords;
                 }
                 
                  if (this.options.countSymbolsTo!=null) {
-                    this.options.countSymbolsTo.set('value',numChars);
+                    this.options.countSymbolsTo.value =numChars;
                 }
                 
 		if ((this.options.countWords) && (this.options.countChars)) {
@@ -59,6 +59,6 @@ class WordCount {
 		} else {
 			var insertText = (this.options.countWords) ? numWords + ' ' + this.options.wordText : numChars + ' ' + this.options.charText;
 		} 
-		if (insertText){ this.target.set('html', insertText); }	
+		if (insertText){ this.target.innerHTML = insertText; }
 	}
 };

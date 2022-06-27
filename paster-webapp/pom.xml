@@ -366,11 +366,7 @@
             <version>${luceneVersion}</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-ehcache</artifactId>
-            <version>5.6.9.Final</version>
-        </dependency>
+
 
         <dependency>
             <groupId>org.hibernate</groupId>
@@ -403,14 +399,6 @@
         </dependency>
 
 
-        <!-- for Hibernate @SafeHtml -->
-
-        <dependency>
-            <groupId>org.jsoup</groupId>
-            <artifactId>jsoup</artifactId>
-            <version>1.14.3</version>
-        </dependency>
-
 
         <dependency>
             <groupId>org.tuckey</groupId>
@@ -418,11 +406,6 @@
             <version>4.0.4</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.imgscalr</groupId>
-            <artifactId>imgscalr-lib</artifactId>
-            <version>4.2</version>
-        </dependency>
 
 
         <!-- jdbc pooling -->
@@ -452,50 +435,12 @@
             <version>2.13.3</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.fasterxml.jackson.dataformat</groupId>
-            <artifactId>jackson-dataformat-xml</artifactId>
-            <version>2.13.3</version>
-        </dependency>
-            
-        <dependency>
-            <groupId>org.codehaus.woodstox</groupId>
-            <artifactId>woodstox-core-asl</artifactId>
-            <version>4.4.1</version>
-        </dependency>
 
-        <dependency>
-            <groupId>joda-time</groupId>
-            <artifactId>joda-time</artifactId>
-            <version>2.10.14</version>
-        </dependency>
-
-
-        <dependency>
-            <groupId>org.joda</groupId>
-            <artifactId>joda-convert</artifactId>
-            <version>2.2.2</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-            <version>4.5.13</version>
-        </dependency>
-
-      
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-csv</artifactId>
             <version>1.9.0</version>
         </dependency>
-
-        <dependency>
-            <groupId>classifier4j</groupId>
-            <artifactId>classifier4j</artifactId>
-            <version>0.6</version>
-        </dependency>
-
 
         <dependency>
             <groupId>org.webjars</groupId>
@@ -504,37 +449,21 @@
         </dependency>
 
         <dependency>
-            <groupId>com.googlecode.htmlcompressor</groupId>
-            <artifactId>htmlcompressor</artifactId>
-            <version>1.5.2</version>
+            <groupId>org.webjars</groupId>
+            <artifactId>bootstrap</artifactId>
+            <version>5.1.3</version>
         </dependency>
 
         <dependency>
-            <groupId>com.google.javascript</groupId>
-            <artifactId>closure-compiler</artifactId>
-            <version>v20220601</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.apache.ant</groupId>
-                    <artifactId>ant</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>junit</groupId>
-                    <artifactId>junit</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.google.protobuf</groupId>
-                    <artifactId>protobuf-java</artifactId>
-                </exclusion>
-            </exclusions>
+            <groupId>org.webjars</groupId>
+            <artifactId>jquery</artifactId>
+            <version>3.6.0</version>
         </dependency>
         <dependency>
-            <groupId>com.yahoo.platform.yui</groupId>
-            <artifactId>yuicompressor</artifactId>
-            <version>2.4.8-rhino-alfresco-patched</version>
+            <groupId>org.webjars</groupId>
+            <artifactId>font-awesome</artifactId>
+            <version>4.7.0</version>
         </dependency>
-
-
 
         <dependency>
             <groupId>javax.xml.bind</groupId>
@@ -584,150 +513,6 @@
             </plugin>
 
                         
-                    <plugin>               
-                        <groupId>org.lesscss</groupId>
-                        <artifactId>lesscss-maven-plugin</artifactId>
-                        <version>1.3.3</version>
-                        <configuration>
-                            <compress>true</compress>
-                            <sourceDirectory>${project.basedir}/src/main/webapp/WEB-INF/resources/paster/less</sourceDirectory>
-                            <outputDirectory>${project.basedir}/src/main/webapp/WEB-INF/resources/paster/css/all</outputDirectory>
-                        </configuration>
-            
-                        <executions>
-                            <execution>
-                                <id>Runs in process-sources phase</id>
-                                <phase>generate-resources</phase>
-                                <goals>
-                                    <goal>compile</goal>
-                                </goals>
-                                <configuration>
-                                    <includes>
-                                        <include>*.less</include>                   
-                                    </includes>
-                                </configuration>
-                            </execution>
-                        </executions>
-            
-                    </plugin>
-            
-            
-                <plugin>
-                    <groupId>com.samaxes.maven</groupId>
-                    <artifactId>minify-maven-plugin</artifactId>
-                    <version>1.7.2</version>
-                    <executions>
-                        <execution>
-                            <id>all-minify</id>
-                            <phase>generate-resources</phase><!-- When omitted defaults to <phase>process-resources</phase> -->
-                            <configuration>
-                                <closureLanguage>ECMASCRIPT5</closureLanguage>
-                                <!--language_in>ECMASCRIPT5</language_in-->          
-                                <charset>UTF-8</charset>
-                                <webappSourceDir>${project.basedir}/src/main/webapp/WEB-INF/resources/paster</webappSourceDir>
-                                <webappTargetDir>${project.basedir}/src/main/webapp/WEB-INF/resources/paster-dist</webappTargetDir>
-                                <jsSourceDir>/js/all</jsSourceDir>
-                                <cssSourceDir>/css/all</cssSourceDir>
-                                <jsTargetDir>/all/js</jsTargetDir>
-                                <cssTargetDir>/all/css</cssTargetDir>
-                                <jsSourceFiles>
-                                    <jsSourceFile>behavior-ui.js</jsSourceFile>
-                                    <jsSourceFile>MooTools-More-1.5.1.js</jsSourceFile>
-                                    <jsSourceFile>tinycon.min.js</jsSourceFile>
-                                    <jsSourceFile>growler.js</jsSourceFile>
-                                    <jsSourceFile>LazyPagination.js</jsSourceFile>
-                                    <jsSourceFile>ZeroClipboard.min.js</jsSourceFile>
-                                </jsSourceFiles>
-
-                                <jsFinalFile>all-script.js</jsFinalFile>
-                                <jsEngine>CLOSURE</jsEngine>
-                                <cssSourceFiles>
-                                    <cssSourceFile>behavior-ui-bootstrap.css</cssSourceFile>  
-                                    <cssSourceFile>app.css</cssSourceFile>
-                                    <cssSourceFile>mnmlicons.css</cssSourceFile>
-                                </cssSourceFiles>
-                                <cssFinalFile>all-style.css</cssFinalFile>
-
-                            </configuration>
-                            <goals>
-                                <goal>minify</goal>
-                            </goals>
-                        </execution>
-
-
-                        <execution>
-                            <id>paste-view-minify</id>
-                            <phase>generate-resources</phase><!-- When omitted defaults to <phase>process-resources</phase> -->
-                            <configuration>
-                                <charset>UTF-8</charset>
-                                <webappSourceDir>${project.basedir}/src/main/webapp/WEB-INF/resources/paster</webappSourceDir>
-                                <webappTargetDir>${project.basedir}/src/main/webapp/WEB-INF/resources/paster-dist</webappTargetDir>
-                                <jsSourceDir>/js/paste-view</jsSourceDir>
-                                <cssSourceDir>/css/paste-view</cssSourceDir>
-                                <jsTargetDir>/paster-view/js</jsTargetDir>
-                                <cssTargetDir>/paster-view/css</cssTargetDir>
-                                <jsSourceFiles>
-                                    <!--jsSourceFile>xregexp.js</jsSourceFile-->
-                                    <!--jsSourceFile>shCore.js</jsSourceFile-->
-                                    <jsSourceFile>shLegacy.js</jsSourceFile>
-                                    <jsSourceFile>shUber.js</jsSourceFile>
-
-                                </jsSourceFiles>
-
-                                <jsFinalFile>paste-view-script.js</jsFinalFile>
-                                <jsEngine>CLOSURE</jsEngine>
-
-                                <cssSourceFiles>
-                                    <cssSourceFile>paste-view.css</cssSourceFile>
-                                </cssSourceFiles>
-                                <cssFinalFile>paste-view-style.css</cssFinalFile>
-
-
-                            </configuration>
-                            <goals>
-                                <goal>minify</goal>
-                            </goals>
-                        </execution>
-
-
-                        <execution>
-                            <id>paste-edit-minify</id>
-                            <phase>generate-resources</phase><!-- When omitted defaults to <phase>process-resources</phase> -->
-                            <configuration>
-                                <charset>UTF-8</charset>
-                                <webappSourceDir>${project.basedir}/src/main/webapp/WEB-INF/resources/paster</webappSourceDir>
-                                <webappTargetDir>${project.basedir}/src/main/webapp/WEB-INF/resources/paster-dist</webappTargetDir>
-                                <jsSourceDir>/js/paste-edit</jsSourceDir>
-                                <cssSourceDir>/css/paste-edit</cssSourceDir>
-                                <jsTargetDir>/paster-edit/js</jsTargetDir>
-                                <cssTargetDir>/paster-edit/css</cssTargetDir>
-                                <jsSourceFiles>
-                                    <jsSourceFile>word-count.js</jsSourceFile>
-                                    <jsSourceFile>base64.js</jsSourceFile>
-                                    <jsSourceFile>html2canvas.js</jsSourceFile>
-                                    <jsSourceFile>canvas2image.js</jsSourceFile>
-                                    <jsSourceFile>canvas-to-blob.js</jsSourceFile>
-                                    <jsSourceFile>pixastic.core.js</jsSourceFile>
-                                    <jsSourceFile>crop.js</jsSourceFile>
-                                    <jsSourceFile>blurfast.js</jsSourceFile>
-
-
-                                </jsSourceFiles>
-
-                                <jsFinalFile>paste-edit-script.js</jsFinalFile>
-                                <jsEngine>CLOSURE</jsEngine>
-
-                                <cssSourceFiles>
-                                    <cssSourceFile>paste-edit.css</cssSourceFile>
-                                </cssSourceFiles>
-                                <cssFinalFile>paste-edit-style.css</cssFinalFile>
-                            </configuration>
-                            <goals>
-                                <goal>minify</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
 
 
                         

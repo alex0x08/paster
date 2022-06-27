@@ -9,8 +9,6 @@
 
 
 <!DOCTYPE html>
-<compress:html enabled="true" 
-               removeComments="true" compressJavaScript="true" compressCss="true" yuiJsDisableOptimizations="false">
     <html lang="en">
         <head>
             <meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, 
@@ -110,4 +108,3 @@
         </body>
 
     </html>
-</compress:html>

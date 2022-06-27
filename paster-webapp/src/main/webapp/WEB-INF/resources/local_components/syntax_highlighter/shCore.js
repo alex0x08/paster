@@ -405,8 +405,8 @@ var SyntaxHighlighter = function () {
             const lineNumber = parseInt(cl.getAttribute('lineNumber')),
                 id = cl.getAttribute('commentId');
 
-            const textEl = cl.getElementById('commentMarkedText');
-            textEl.innerHTML = marked(textEl.get('html'));
+            const textEl = cl.querySelector('#commentMarkedText');
+            textEl.innerHTML = marked(textEl.innerHTML);
 
             if (mode == 1) {
                 cl.style['padding-left'] = '20px';
@@ -424,7 +424,7 @@ var SyntaxHighlighter = function () {
             cl.style.display = '';
 
             const space = document.getElementById(sh.vars.modelId + "_numSpace_l" + id),
-                calc_size = parseInt(cl.getComputedSize()["totalHeight"]) + 1;
+                calc_size = parseInt(cl.offsetHeight) + 1;
 
 
             space.style['height'] = calc_size + 'px';
@@ -465,12 +465,12 @@ var SyntaxHighlighter = function () {
             const cForm = document.getElementById(modelId + '_commentForm'),
                 nspace = document.getElementById("numSpace");
 
-            cForm.getElementById('pageNum').set("text", lineNumber);
-            cForm.getElementById('lineNumber').set("value", lineNumber);
+            cForm.querySelector('#pageNum').text = lineNumber;
+            cForm.querySelector('#lineNumber').value = lineNumber;
 
             if (parentId > 0) {
                 // alert(parentId);
-                cForm.getElementById('parentId').set("value", parentId);
+                cForm.querySelector('#parentId').value =  parentId;
             }
 
             cForm.style.position = "relative";
@@ -504,7 +504,7 @@ var SyntaxHighlighter = function () {
                 el.parentNode.insertBefore(cForm, el.nextSibling);
             }
 
-            const calc_size = parseInt(cForm.getComputedSize()["totalHeight"]) + 1;
+            const calc_size = parseInt(cForm.offsetHeight) + 1;
 
             nspace.style['height'] = calc_size;
             cForm.style['height'] = calc_size + " !important";

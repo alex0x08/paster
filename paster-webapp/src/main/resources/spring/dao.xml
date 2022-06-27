@@ -8,8 +8,6 @@
      http://www.springframework.org/schema/tx
        http://www.springframework.org/schema/tx/spring-tx.xsd">
 
-
-   
     <tx:annotation-driven proxy-target-class = "true" />
 
     <bean class="org.springframework.orm.jpa.JpaTransactionManager" id="transactionManager">
@@ -65,16 +63,7 @@
                        value="update"/>              
                  <entry key="hibernate.query.substitutions"		
                        value="true 'Y', false 'N'"/>
-                <entry key="hibernate.cache.use_second_level_cache"		
-                       value="true"/>
-                <entry key="hibernate.cache.region.factory_class"
-                       value="org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory"/>
-
-                <entry key="net.sf.ehcache.configurationResourceName"
-                       value="${paste.app.home}/ehcache.xml"/>             
-                 
-               
-                <!--entry key="hibernate.search.analyzer"		
+                <!--entry key="hibernate.search.analyzer"
                        value="org.apache.lucene.morphology.russian.RussianAnalyzer"/-->
             </map>		
         </property>

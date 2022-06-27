@@ -23,12 +23,13 @@ import javax.persistence.Id
 import javax.persistence.ManyToOne
 import javax.persistence.Table
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder
-import org.joda.time.format.DateTimeFormat
+
+import java.text.SimpleDateFormat
 import javax.persistence.Temporal
-import javax.validation.constraints.{Size, NotNull}
+import javax.validation.constraints.{NotNull, Size}
 
 object PersistentToken {
-  val DATE_TIME_FORMATTER = DateTimeFormat.forPattern("d MMMM yyyy")
+  val DATE_TIME_FORMATTER = new SimpleDateFormat("d MMMM yyyy")
   val MAX_USER_AGENT_LEN = 255
 }
 
@@ -80,7 +81,7 @@ class PersistentToken extends java.io.Serializable {
   }
 
   def getFormattedTokenDate =
-    PersistentToken.DATE_TIME_FORMATTER.print(this.tokenDate.getTime())
+    PersistentToken.DATE_TIME_FORMATTER.format(this.tokenDate.getTime())
 
   def getIpAddress = ipAddress
 

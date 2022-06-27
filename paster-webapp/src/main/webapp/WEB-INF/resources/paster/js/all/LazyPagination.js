@@ -45,18 +45,14 @@ var LazyPagination = new Class({
 		this.element = document.id(element);
 		this.bound = this.measure.bind(this);
 		this.requests = 0;
-		
-                
-		this.addEvent('onComplete',function(response,html){
-                        //alert("event!");
-                    
-			(this.options.inject) ? this.inject(html[0]) : this.adopt(html[0]);
+
+		this.addEventListener('onComplete',function(response,html){
+         	(this.options.inject) ? this.inject(html[0]) : this.adopt(html[0]);
 			this.increment();
 			this.measure();
 		});
 		
 		if(this.options.navigation) document.id(this.options.navigation).destroy();
-		
 		this.attach();
 		this.measure();
 	},
@@ -94,8 +90,8 @@ var LazyPagination = new Class({
 	},
 	
 	attach: function(){
-		window.addEvent('resize',this.bound);
-		this.element.addEvent('scroll',this.bound);
+		window.addEventListener('resize',this.bound);
+		this.element.addEventListener('scroll',this.bound);
 		return this;
 	},
 	
