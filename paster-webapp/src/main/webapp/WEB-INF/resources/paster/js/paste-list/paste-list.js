@@ -57,10 +57,10 @@ class PasterList {
     parseSearchResults(parent) {
         Array.from(parent.getElementsByClassName('pasteTitle')).forEach(
             function (el, i, array) {
-                el.set('html', el.get('html')
+                el.innerHTML =  el.innerHTML
                     .replace(/\[result[^\]]*\]([\s\S]*?)\[\/result\]/gi,
                         "<span style='background-color: #e3e658; '>$1</span>")
-                );
+                ;
             }
         );
 

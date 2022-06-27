@@ -378,7 +378,7 @@ var SyntaxHighlighter = function () {
 
             sh.vars.showComments[modelId] = !sh.vars.showComments[modelId];
 
-            ctrl.getElement('span').set('text', sh.vars.showComments[modelId] ? '-' : '+');
+            ctrl.getElement('span').textContent =  sh.vars.showComments[modelId] ? '-' : '+';
 
             const tbEl = document.getElementById('tb_' + modelId);
 
@@ -465,7 +465,7 @@ var SyntaxHighlighter = function () {
             const cForm = document.getElementById(modelId + '_commentForm'),
                 nspace = document.getElementById("numSpace");
 
-            cForm.querySelector('#pageNum').text = lineNumber;
+            cForm.querySelector('#pageNum').textContent = lineNumber;
             cForm.querySelector('#lineNumber').value = lineNumber;
 
             if (parentId > 0) {

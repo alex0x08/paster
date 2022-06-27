@@ -16,7 +16,7 @@
       
 <sec:authorize access="${currentUser !=null and (currentUser.admin or ( model.hasOwner  and model.owner eq currentUser)) }">
     
-    <a class="btn btn-danger btn-xs deleteBtn"  id="deleteBtn_${model.id}" 
+    <a class="btn btn-danger btn-sm deleteBtn"  id="deleteBtn_${model.id}" 
        href="<c:url value='/main/${modelName}/delete'><c:param name="id" value="${model.id}"/> </c:url>"
           title="<fmt:message key='button.delete'/>">
         <span  class="i">d</span>

@@ -25,7 +25,7 @@
 
 <div  class="row">
      
-    <div class="col-md-6">
+    <div class="col-md-10">
         
          <span style="font-weight: normal; font-size: 12px;">
 
@@ -59,7 +59,7 @@
         
     </div>
     
-    <div class="col-md-4">
+    <div class="col-md-2">
 
         <a class="img-map img-xml" href="<c:url value="/main/paste/${model.id}.xml"/>" target="${target}" title="View as XML">
         </a> |

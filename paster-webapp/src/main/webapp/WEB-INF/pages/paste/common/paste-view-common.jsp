@@ -48,7 +48,6 @@
             value='/main/resources/${appId}/r/${model.lastModified.time}/paste_content/${model.reviewImgData}' />
 
 
-
         <%--
 
         All |Comments|Draw top toggle
