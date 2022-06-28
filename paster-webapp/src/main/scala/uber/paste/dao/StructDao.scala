@@ -27,7 +27,7 @@ abstract class StructDaoImpl[T <: Struct](model:Class[T])
   def getFull(id:Long):T = {
     val out:T = get(id)
     if (out==null) null.asInstanceOf[T] else {
-      out.loadFull
+      out.loadFull()
       out
     }
 

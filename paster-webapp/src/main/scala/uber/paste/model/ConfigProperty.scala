@@ -35,7 +35,7 @@ object ConfigProperty extends KeyValueObj[ConfigProperty] {
   class Builder(model: ConfigProperty) extends KeyValue.Builder[ConfigProperty](model) {
 
     def addReadOnly(v: Boolean): Builder = {
-      get.setReadOnly(v); this
+      get().setReadOnly(v); this
     }
 
   }
@@ -50,7 +50,7 @@ class ConfigProperty(name: String, code: String, value: String, vreadOnly:Boolea
   def this() = this(null, null, null,false)
 
   def isReadOnly() = readOnly
-  def setReadOnly(b: Boolean) { this.readOnly = b }
+  def setReadOnly(b: Boolean) : Unit =  { this.readOnly = b }
   
 override   def create(code:String) = new ConfigProperty(null,code,null,false)
 }

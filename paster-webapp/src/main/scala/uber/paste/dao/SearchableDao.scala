@@ -76,7 +76,7 @@ abstract class SearchableDaoImpl[T <: Struct](model: Class[T])
     results.asInstanceOf[java.util.List[T]]
   }
 
-  def indexAll() {
+  def indexAll(): Unit =  {
 
     val fsession = getFullTextEntityManager()
     try {
@@ -97,7 +97,7 @@ abstract class SearchableDaoImpl[T <: Struct](model: Class[T])
 
   def fillHighlighted(highlighter: Highlighter,
                       pparser: QueryParser,
-                      model: T) {
+                      model: T): Unit =  {
     /* try {
          val hl = highlighter
                  .getBestFragments(pparser.getAnalyzer()

@@ -41,7 +41,7 @@ class KeyObj[T <: Key] {
 
   val map = new HashMap[String, T]
 
-  def add(c: T) {
+  def add(c: T): Unit =  {
     map.put(c.getCode, c)
   }
 
@@ -52,7 +52,7 @@ class KeyObj[T <: Key] {
 }
 
 class KeyEditorEnum[T <: Key](vobj: KeyObj[T]) extends PropertyEditorSupport {
-  override def setAsText(text: String) {
+  override def setAsText(text: String): Unit =  {
     setValue(vobj.valueOf(text.toLowerCase));
   }
   override def getAsText(): String = {
@@ -60,14 +60,14 @@ class KeyEditorEnum[T <: Key](vobj: KeyObj[T]) extends PropertyEditorSupport {
     if (s == null)
       null
     else
-      s.getCode
+      s.getCode()
   }
 }
 
 
 class KeyEditor[T <: Key](vobj: Key) extends PropertyEditorSupport {
 
-  override def setAsText(text: String) {
+  override def setAsText(text: String): Unit =  {
     setValue(vobj.create(text.toLowerCase))
   }
   override def getAsText(): String = {
@@ -75,7 +75,7 @@ class KeyEditor[T <: Key](vobj: Key) extends PropertyEditorSupport {
     if (s == null)
       null
     else
-      s.getCode
+      s.getCode()
   }
 }
 
@@ -122,7 +122,7 @@ class Key(kcode: String, kname: String) extends Named(kname) with java.io.Serial
   }
 
   override def equals(from: Any): Boolean = {
-    from.isInstanceOf[Key] && getCode != null && from.asInstanceOf[Key].getCode().equals(code)
+    from.isInstanceOf[Key] && getCode() != null && from.asInstanceOf[Key].getCode().equals(code)
   }
 
 }

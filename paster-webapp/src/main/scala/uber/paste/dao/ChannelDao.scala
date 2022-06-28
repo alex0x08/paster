@@ -38,7 +38,7 @@ class TagDao extends StructDaoImpl[Tag](classOf[Tag]) {
   def getTagsMap(): java.util.Map[String, Tag] = {
     val out = new HashMap[String, Tag]
 
-    for (t <- getAll.asScala) {
+    for (t <- getAll().asScala) {
       out.put(t.getName, t)
     }
 
@@ -50,7 +50,7 @@ class TagDao extends StructDaoImpl[Tag](classOf[Tag]) {
 
     val out = new ArrayList[Tag]
     val l = em.createQuery("select t, count(t) from Paste p join p.tagsMap t group by t")
-      .getResultList
+      .getResultList()
 
     for (o <- l.asScala) {
       val oo = o.asInstanceOf[Array[Object]]

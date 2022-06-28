@@ -29,11 +29,11 @@ class ProjectDaoImpl extends SearchableDaoImpl[Project](classOf[Project]) {
   @Autowired
   protected val systemInfo: SystemInfo = null
 
-  def getCurrentProject() = systemInfo.getProject
+  def getCurrentProject() = systemInfo.getProject()
 
   def getLast(): Project = {
-    val cr = new CriteriaSet
+    val cr = new CriteriaSet()
     em.createQuery[Project](cr.cr.orderBy(cr.cb.desc(cr.r.get("lastModified"))))
-      .setMaxResults(1).getSingleResult
+      .setMaxResults(1).getSingleResult()
   }
 }

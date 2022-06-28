@@ -33,7 +33,7 @@ class Channel(code: String, desc: String, p_default: Boolean) extends KeyValue(c
 
   def isDefault() = default
 
-  def setDefault(v: Boolean) { default = v }
+  def setDefault(v: Boolean): Unit =  { default = v }
 
   override def create(code:String) = new Channel(code,null,false)
 

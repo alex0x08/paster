@@ -57,7 +57,7 @@ class GenericQuery extends Query {
   protected var query: String = null
   protected var page: Int = 1
 
-  def setPage(page: Int) {
+  def setPage(page: Int): Unit =  {
     this.page = page
   }
 
@@ -65,7 +65,7 @@ class GenericQuery extends Query {
   def isEmpty(): Boolean = query == null || query.equals("*")
   def getQuery(): String = query
 
-  def setQuery(query: String) {
+  def setQuery(query: String): Unit =  {
     this.query = query
   }
 

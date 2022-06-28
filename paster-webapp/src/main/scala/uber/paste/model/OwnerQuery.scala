@@ -26,7 +26,7 @@ class OwnerQuery extends GenericQuery with Query {
   
   def getOwnerId():java.lang.Long = ownerId
   
-  def setOwnerId(ownerId:java.lang.Long) { this.ownerId = ownerId}
+  def setOwnerId(ownerId:java.lang.Long) : Unit =  { this.ownerId = ownerId}
   
   /*override def fillQuery(qb:QueryBuilder):org.apache.lucene.search.Query = {
     

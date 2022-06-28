@@ -249,6 +249,9 @@ var SyntaxHighlighter = function () {
 
             return result;
         },
+        getEditor(modelId) {
+            return sh.vars.editor[modelId];
+        },
         /**
          * Shorthand to highlight all elements on the page that are marked as 
          * SyntaxHighlighter source code.
@@ -264,7 +267,7 @@ var SyntaxHighlighter = function () {
             sh.vars.editorOpts = JSON.parse(JSON.stringify(globalEpicEditorOpts));
 
             sh.vars.editorOpts.container = 'epiceditor-' + modelId;
-            sh.vars.editorOpts.textarea = 'commentText-' + modelId;
+          //  sh.vars.editorOpts.textarea = 'commentText-' + modelId;
 
             sh.vars.editor[modelId] = new EpicEditor(sh.vars.editorOpts);
 
@@ -406,7 +409,10 @@ var SyntaxHighlighter = function () {
                 id = cl.getAttribute('commentId');
 
             const textEl = cl.querySelector('#commentMarkedText');
-            textEl.innerHTML = marked(textEl.innerHTML);
+            
+           let mtext =  marked.parse('\n' +textEl.textContent);
+  
+           textEl.innerHTML = mtext;
 
             if (mode == 1) {
                 cl.style['padding-left'] = '20px';
@@ -423,13 +429,14 @@ var SyntaxHighlighter = function () {
 
             cl.style.display = '';
 
-            const space = document.getElementById(sh.vars.modelId + "_numSpace_l" + id),
-                calc_size = parseInt(cl.offsetHeight) + 1;
+            const space = document.getElementById(sh.vars.modelId + "_numSpace_l" + id);
+            const calc_size = parseInt(cl.offsetHeight) + 1;
 
+            console.log('cacl size:',calc_size);
 
             space.style['height'] = calc_size + 'px';
             cl.style['height'] = calc_size + "px";
-
+         
             if (mode == 1) {
                 const ln = lineNumber + 1;
                 const el = document.getElementById(sh.vars.modelId + '_ln_' + ln);
@@ -441,6 +448,8 @@ var SyntaxHighlighter = function () {
                     el.parentNode.insertBefore(space, el.nextSibling);
                 }
             }
+
+
         },
         hideEditForm: function (modelId) {
 

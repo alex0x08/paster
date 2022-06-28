@@ -16,11 +16,11 @@
 
 class PasterEdit {
 
-    initialize() {
-        this.max_length = 100;
-        this.editor = undefined;
-        this.counter = undefined;
-    }
+    MAX_TITLE_LENGTH = 100;
+
+    editor = undefined;
+    counter = undefined;
+
 
     init(codeType) {
         const mainThis = this;
@@ -77,7 +77,7 @@ class PasterEdit {
 
         editor.getSession().on('change', function () {
             const text = editor.getSession().getValue();
-            textarea.value =  text;
+            textarea.value = text;
             counter.getCount(text);
         });
 
@@ -108,11 +108,11 @@ class PasterEdit {
         });
 
         document.getElementById('pprior').addEventListener('change', function (event) {
-            console.log('selected: ',this.querySelector('option:checked'))
+            console.log('selected: ', this.querySelector('option:checked'))
 
             var prPreview = document.getElementById('priorPreview');
-            
-            prPreview.className= 'i ' + this.querySelector('option:checked').getAttribute("x-css-class-name");
+
+            prPreview.className = 'i ' + this.querySelector('option:checked').getAttribute("x-css-class-name");
         });
 
         Array.from(document.getElementsByClassName('submitBtn')).forEach(
@@ -150,22 +150,24 @@ class PasterEdit {
         freader.readAsText(file);
 
     }
-    onPaste(e) {
+    onPaste(event) {
 
-        if (e.event.clipboardData) {
-            const text = e.event.clipboardData.getData('text/plain');
-            if (text) {
-                const block = (text.length < this.max_length - 2)
-                    ? text.substring(0, text.length) :
-                    text.substring(0, this.max_length - 2) + '..';
+        let text = (event.clipboardData || window.clipboardData).getData('text/plain');
 
-                const ptitleEl = document.getElementById('pname');
+        console.log('paste event: ',text)
 
-                if (ptitleEl.getAttribute('value') == '') {
-                    ptitleEl.setAttribute('value', block);
-                }
+        if (text) {
+            const block = (text.length < this.MAX_TITLE_LENGTH - 2)
+                ? text.substring(0, text.length) :
+                text.substring(0, this.MAX_TITLE_LENGTH - 2) + '..';
+
+            const ptitleEl = document.getElementById('pname');
+
+            if (ptitleEl.getAttribute('value') == '') {
+                ptitleEl.setAttribute('value', block);
             }
         }
+
     }
     onSave() {
         const thumbImg = document.getElementById('thumbImg');

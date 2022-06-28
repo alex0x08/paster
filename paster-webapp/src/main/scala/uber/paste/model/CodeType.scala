@@ -120,19 +120,19 @@ class CodeType(name: String, code: String, keditType: String, kbrushFile: String
 
   def getExt() = ext
 
-  def setExt(ext: String) {
+  def setExt(ext: String): Unit = {
     this.ext = ext
   }
 
   def getEditType() = editType
 
-  def setEditType(e: String) {
+  def setEditType(e: String): Unit = {
     this.editType = editType
   }
 
   def getBrushFile() = brushFile
 
-  def setBrushFile(e: String) {
+  def setBrushFile(e: String): Unit = {
     this.brushFile = brushFile
   }
 

@@ -18,13 +18,7 @@
 
 
 class PasterView {
-    initialize() {
-        SyntaxHighlighter.config.tagName = "pre";
-        this.clip = undefined;
-        this.clipLine = undefined;
-        this.lazyPaging = undefined;
-
-    }
+ 
     setupDraw(modelId) {
         var mainThis = this;
         const colors_array = ['#ff1101', '#ff0', '#0f0', '#0ff', '#00f', '#6d47e7', '#000', '#fff'];
@@ -58,6 +52,23 @@ class PasterView {
         console.log('setup comments add ', modelId);
 
         var mainThis = this;
+
+        const commentsParent = document.getElementById(modelId +'_commentsList');
+
+        Array.from(commentsParent.getElementsByClassName('pInsertCommentTrigger')).forEach(
+            function (el, i, array) {
+                el.addEventListener("click", function (e) {
+                        e.preventDefault();
+
+                        const ln = el.getAttribute('plineNumber');
+                        const commentId = el.getAttribute('pCommentId');
+
+                        SyntaxHighlighter.insertEditForm(modelId,ln,commentId);
+                        
+                    });
+            });
+
+
         document.getElementById(modelId + '_addCommentBtn').addEventListener('click', function (event) {
             event.preventDefault();
             this.querySelector('#btnCaption').text =  PasterI18n.text.notify.transmitMessage;
@@ -101,6 +112,8 @@ class PasterView {
     }
     init(modelId) {
 
+        var mainThis = this;
+
         /*this.clip = new ZeroClipboard(document.id("ctrlc_link"));
         this.clip.on('aftercopy', function (event) {
             pasterApp.showNotify(event.data["text/plain"].length + ' symbols copied to clipboard.');
@@ -110,7 +123,29 @@ class PasterView {
             pasterApp.showNotify(event.data["text/plain"].length + ' symbols copied to clipboard.');
         });*/
 
+        
         SyntaxHighlighter.highlight(modelId, {}, document.getElementById(modelId + '_pasteText'), true, true);
+
+        document.getElementById(modelId + '_btnShowAll')
+            .addEventListener("click", function(event){
+                    event.preventDefault();
+                    mainThis.showAll(modelId);
+        });
+
+        document.getElementById(modelId + '_btnShowComments')
+        .addEventListener("click", function(event){
+                event.preventDefault();
+                mainThis.showComments(modelId);
+        });
+
+        document.getElementById(modelId + '_btnShowDraw')
+            .addEventListener("click", function(event){
+                event.preventDefault();
+
+                const drawImg = document.getElementById(modelId + '_drawImg').textContent;
+
+                mainThis.showDrawArea(modelId,drawImg);
+        });
 
         this.setupDraw(modelId);
         this.showAll(modelId);
@@ -144,11 +179,32 @@ class PasterView {
         document.getElementById(modelId + "_drawBlock").style.display='';
         document.getElementById(modelId + "_all").style.display='none';
     }
+    /**
+     * Handles additional fields on comment save
+     * Note that trasfer of text from editor to textarea is done by epiceditor itself on form submit.
+     * 
+     * @param {*} modelId 
+     */
     onSaveComment(modelId) {
         console.log('_on save comment: ', modelId);
 
-        const thumbImg = document.getElementById(modelId + '_thumbImgComment');
+        const ed =SyntaxHighlighter.getEditor(modelId);
 
+        var ptext = ed.exportFile();
+
+        ptext=ptext.replace(/\r\n|\r/g, '\n')
+        .replace(/\t/g, '    ')
+        .replace(/\u2424/g, '\n');
+
+
+        console.log('text: ',ptext);
+
+
+        const commentArea = document.getElementById('commentText-' + modelId);
+        commentArea.innerHTML = ptext;
+
+        const thumbImg = document.getElementById(modelId + '_thumbImgComment');
+       
         pasterApp.takeScreenshot(document.getElementById(modelId + '_pasteBodyContent'), function (img) {
             thumbImg.value = img.src;
             document.getElementById(modelId + "_addCommentForm").submit();

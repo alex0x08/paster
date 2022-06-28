@@ -12,7 +12,7 @@
             class="nav-link dropdown-toggle"
             data-bs-toggle="dropdown" >
 
-            <c:out value="${currentUser.name}"/>
+            <c:out value='${currentUser.name}'/>
             <b class="caret"></b>
         </a>
              <span class="dropdown-arrow"></span>

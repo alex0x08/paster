@@ -1,10 +1,6 @@
 <%@ include file="/WEB-INF/pages/common/taglibs.jsp"%>
 
 
-<jsp:include page="/WEB-INF/pages/common/paste-update-poll.jsp"/>
-
-
-    <script src="<c:url value='/main/resources/${appId}/paster/js/paste-list/paste-list.js'/>"></script>
 
 
 <div class="row">
@@ -22,7 +18,7 @@
                         <span style="font-size: 14px; font-weight: bold; "><fmt:message key="${source.name}"/> </span>
                     </c:when>
                     <c:otherwise>
-                        <a href="<c:url value="/main/paste/list/${source.codeLowerCase}"/>"><fmt:message key="${source.name}"/></a>
+                        <a href="<c:url value='/main/paste/list/${source.codeLowerCase}'/>"><fmt:message key="${source.name}"/></a>
                     </c:otherwise>
                 </c:choose>
 
@@ -34,14 +30,14 @@
     </div>
     <div class="col-md-2 hidden-sm hidden-xs">
 
-        <a class="img-map img-xml" href="<c:url value="/main/paste/list/body.xml"/>" title="xml" alt="xml" target="blank">
+        <a class="img-map img-xml" href="<c:url value='/main/paste/list/body.xml'/>" title="xml" alt="xml" target="blank">
         </a> |
-        <a class="img-map img-json" href="<c:url value="/main/paste/list/body.json"/>" title="json" alt="json" target="blank">
+        <a class="img-map img-json" href="<c:url value='/main/paste/list/body.json'/>" title="json" alt="json" target="blank">
         </a> |
-        <a class="img-map img-rss" href="<c:url value="/main/paste/list.rss"/>" title="rss" alt="rss" target="blank">
+        <a class="img-map img-rss" href="<c:url value='/main/paste/list.rss'/>" title="rss" alt="rss" target="blank">
         </a>
         |
-        <a class="img-map img-atom" href="<c:url value="/main/paste/list.atom"/>" title="atom" alt="atom" target="blank">
+        <a class="img-map img-atom" href="<c:url value='/main/paste/list.atom'/>" title="atom" alt="atom" target="blank">
         </a> 
 
     </div>
@@ -74,8 +70,7 @@
 
 
 <div class="row">
-    <div id="pastas" class="col-md-8 col-lg-10 col-sm-10" >
-
+    <div id="pastas" class="col-md-12" >
 
         <c:forEach var="paste" items="${pageItems.pageList}" varStatus="status">
 
@@ -87,54 +82,38 @@
 
                     <c:set var="priorTitle"><fmt:message key="${paste.priority.name}"/></c:set>
 
-                        <div class="row">
+                  
+                    <div class="row justify-content-start" >
 
-                            <div class="col-sm-12 col-xs-12 col-md-10">
+                        <div class="col-md-2" style="padding-bottom: 0.5em;">
 
-                            <c:if test="${paste.sticked}">
-                                <span class="i" title="Paste sticked">]</span>
-                            </c:if>
+                            <c:url value='/main/resources/${appId}/t/${paste.lastModified.time}/paste_content/${paste.thumbImage}' var="thumbUrl">
+                            </c:url>
 
-                            <a class="i ${paste.priority.cssClass}" style="font-size:2em;"
-                               title="<c:out value="${paste.id}"/>: ${priorTitle}. Click to search with same priority."
-                               href="<c:url value='/main/paste/list/search?query=priority:${paste.priority.code}'/>">/</a>
-
-                            <a href="<c:url value="/${paste.id}"></c:url>" title="Click to view paste vol. ${paste.id}">
-                                <span  class="pasteTitle"><c:out value="${paste.name}" escapeXml="true"  /></span>
+                            <a class="pastePreviewLink" href="<c:url value='/${paste.id}'></c:url>" pasteId="${paste.id}" 
+                               title="Click to view paste vol. ${paste.id}">
+                                <img src="${thumbUrl}"  
+                                     class="img-thumbnail img-responsive p-comment"  />
                             </a>
+
                         </div>
-                    </div>
+                       
 
-                    <div class="row" >
-
-
-                        <c:choose>
-                            <c:when test="${not empty paste.thumbImage}">
-                                <div class="col-md-4 col-lg-3 hidden-xs col-sm-5" >
-
-                                    <c:url value='/main/resources/${appId}/t/${paste.lastModified.time}/paste_content/${paste.thumbImage}' var="thumbUrl">
-                                    </c:url>
-
-                                    <a class="pastePreviewLink" href="<c:url value="/${paste.id}"></c:url>" pasteId="${paste.id}" 
-                                       title="Click to view paste vol. ${paste.id}">
-                                        <img src="${thumbUrl}"  
-                                             class="img-thumbnail img-responsive p-comment"  />
-                                    </a>
-
-                                </div>
-                                <c:set var="currentRowSize" value="8"/>
-                            </c:when>
-                            <c:otherwise>
-                                <c:set var="currentRowSize" value="10"/>
-                            </c:otherwise>
-                        </c:choose>
-
-
-                        <div class="col-md-${currentRowSize} col-sm-6" >
+                        <div class="col-md-10" >
                             <div class="row">
                                 <div class="pasteTitle col-lg-10 col-md-12 col-xs-12">
                                     <div class="pasteTitle" style="padding: 1em;">
-                                        <a class="listLinkLine" href="<c:url value="/${paste.id}"></c:url>" 
+
+                                        <c:if test="${paste.sticked}">
+                                            <span class="i" title="Paste sticked">]</span>
+                                        </c:if>
+            
+                                        <a class="i ${paste.priority.cssClass}" style="font-size:2em;"
+                                           title="<c:out value="${paste.id}"/>: ${priorTitle}. Click to search with same priority."
+                                           href="<c:url value='/main/paste/list/search?query=priority:${paste.priority.code}'/>">/</a>
+            
+
+                                        <a class="listLinkLine" href="<c:url value='/${paste.id}'></c:url>" 
                                            pasteId="${paste.id}" title="Click to view paste vol. ${paste.id}">
                                             <c:out value="${paste.title}"  escapeXml="true"/></a>
                                     </div>
@@ -142,7 +121,7 @@
                             </div>
 
                             <div class="row">
-                                <div class="col-md-10">
+                                <div class="col-md-12">
                                     <tiles:insertDefinition name="/common/tags" >
                                         <tiles:putAttribute name="model" value="${paste}"/>
                                         <tiles:putAttribute name="modelName" value="paste"/>
@@ -176,14 +155,11 @@
                                         ,<kc:prettyTime date="${paste.lastModified}" locale="${pageContext.response.locale}"/>
                                     </small>
 
-                                    <tiles:insertDefinition name="/common/deleteLink" >
-                                        <tiles:putAttribute name="model" value="${paste}"/>
-                                        <tiles:putAttribute name="modelName" value="paste"/>
-                                        <tiles:putAttribute name="currentUser" value="${currentUser}"/>
-                                    </tiles:insertDefinition>
+                                
 
                                 </div>
                             </div>
+                           
                         </div>
                     </div>
 
@@ -192,7 +168,7 @@
 
                     <c:set property="curDate" value="${paste.lastModified}" target="${splitHelper}"/>
 
-                    <a href="<c:url value="/${paste.id}"></c:url>" title="Click to view paste vol. ${paste.id}">
+                    <a href="<c:url value='/${paste.id}'></c:url>" title="Click to view paste vol. ${paste.id}">
                         <span  class="pasteTitle"><c:out value="${paste.text}" escapeXml="true"  /></span>
                     </a>
 
@@ -250,15 +226,7 @@
         </c:otherwise>
     </c:choose>
 
-    <script type="text/javascript">
-        const pasterList = new PasterList();
-        window.addEventListener('load', function () {
-            pasterList.init('${rawPageUrl}', '${userPageUrl}',
-                    ${pageItems.pageCount-(pageItems.page+1)},
-                    ${pageItems.page} + 2);
-        });
-
-    </script>
+    
     <div id="pageLoadSpinner" style="display:none;">
         <i  class="fa fa-spinner fa-spin"></i>       
         <fmt:message key="action.loading"/>

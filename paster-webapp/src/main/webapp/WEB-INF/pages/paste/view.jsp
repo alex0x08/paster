@@ -2,13 +2,8 @@
 
 
 
-<jsp:include page="/WEB-INF/pages/common/paste-update-poll.jsp"/>
 
 <jsp:include page="/WEB-INF/pages/paste/common/paste-view-top.jsp"/>
-   
-
-
-
 <jsp:include page="/WEB-INF/pages/paste/common/paste-view-common.jsp"/>
 
 
@@ -29,39 +24,6 @@
 
 
 
-
-<script type="text/javascript">
-
-
-    var pasterView = new PasterView();
-
-    window.addEventListener('load', function () {
-
-        pasterView.init(${model.id});
-
-    <c:if test="${not empty currentUser or allowAnonymousCommentsCreate}">
-
-        pasterView.setupCommentsAdd(${model.id});
-
-    </c:if>
-
-
-
-    <c:if test="${availablePrevList.count > 0}">
-        document.getElementById('pageLoadSpinner').style.display='';
-        pasterView.setupLazy('<c:url value="/main/paste/raw/view"/>',
-                '<c:url value="/main/paste"/>',
-        ${availablePrevList.count},
-        ${model.id},
-                [${availablePrevList.itemsAsString}]);
-
-    </c:if>
-
-    });
-
-</script>
-
-
 <c:if test="${availablePrevList.count > 0}">
     <div id="pageLoadSpinner" >
         <i class="fa fa-spinner"></i>
@@ -70,3 +32,17 @@
     <div id="morePages"></div>
 </c:if>
 
+
+<c:choose>
+    <c:when test="${model.reviewImgData!=null}">
+        <c:url var="drawImg"
+            value='/main/resources/${appId}/r/${model.lastModified.time}/paste_content/${model.reviewImgData}' />
+    </c:when>
+    <c:otherwise>
+        <c:set var="drawImg" value="" />
+    </c:otherwise>
+</c:choose>
+
+<span id="${model.id}_drawImg" style="display:none">
+    <c:out value="${drawImg}"/>
+</span>

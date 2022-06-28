@@ -123,11 +123,11 @@ class AppVersion {
     val current = new MavenVersion(implVer)
     val compare = new MavenVersion(o.implVer)
 
-    if (!current.getMod.equals(compare.getMod) || current.getMajor != compare.getMajor) {
+    if (!current.getMod().equals(compare.getMod()) || current.getMajor() != compare.getMajor()) {
       return -2
     }
 
-    if (current.getMinor > compare.getMinor) -1 else 1
+    if (current.getMinor() > compare.getMinor()) -1 else 1
   }
 
 }

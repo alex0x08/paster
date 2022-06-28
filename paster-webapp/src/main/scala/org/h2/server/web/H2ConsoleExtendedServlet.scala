@@ -25,7 +25,7 @@ class H2ConsoleExtendedServlet extends WebServlet with Loggered {
 
   private val server = new WebServer
 
-  override def init() {
+  override def init(): Unit = {
 
     logger.debug("h2 servlet init..")
 
@@ -51,11 +51,11 @@ class H2ConsoleExtendedServlet extends WebServlet with Loggered {
       //  getServletContext().setAttribute("h2console-session-id",ss);   
 
     } catch {
-      case e @ (_: NoSuchFieldException
-        | _: IllegalAccessException
-        | _: SQLException
-        | _: SecurityException
-        | _: IllegalArgumentException) => {
+      case e@(_: NoSuchFieldException
+              | _: IllegalAccessException
+              | _: SQLException
+              | _: SecurityException
+              | _: IllegalArgumentException) => {
         logger.error(e.getLocalizedMessage, e)
       }
     }
@@ -65,8 +65,8 @@ class H2ConsoleExtendedServlet extends WebServlet with Loggered {
   @throws(classOf[java.io.IOException])
   override def doGet(req: HttpServletRequest, res: HttpServletResponse) {
 
-    
-    val h2console_db_session_id = getH2SessionIdFromContext() 
+
+    val h2console_db_session_id = getH2SessionIdFromContext()
 
     var session: WebSession = null
 
@@ -77,7 +77,7 @@ class H2ConsoleExtendedServlet extends WebServlet with Loggered {
       if (session == null) {
         session = createAndRegLocalSession()
       } else {
-        logger.debug("using existing session {}",h2console_db_session_id)        
+        logger.debug("using existing session {}", h2console_db_session_id)
       }
 
     } else {
@@ -86,7 +86,7 @@ class H2ConsoleExtendedServlet extends WebServlet with Loggered {
 
     /**
      * refresh connection if closed
-
+     *
      */
     var con = session.getConnection
 
@@ -97,99 +97,90 @@ class H2ConsoleExtendedServlet extends WebServlet with Loggered {
       session.put("url", con.getMetaData.getURL)
       logger.debug("reopened connection to db")
     }
-    
-    
-    
+
+
     /**
-     *  attributes are filled from both httpservlet attributes and params
+     * attributes are filled from both httpservlet attributes and params
      * so easy solution like
-     * 
-     *   //req.g.setAttribute("jsessionid", h2console_db_session_id)
-    
-          will not work
-     * 
-     *  WebSession session = null;
-        String sessionId = attributes.getProperty("jsessionid");
-        if (sessionId != null) {
-            session = server.getSession(sessionId);
-        }
+     *
+     * //req.g.setAttribute("jsessionid", h2console_db_session_id)
+     *
+     * will not work
+     *
+     * WebSession session = null;
+     * String sessionId = attributes.getProperty("jsessionid");
+     * if (sessionId != null) {
+     * session = server.getSession(sessionId);
+     * }
      */
-     
-    
-     
-    val map = new HashMap[String,String]()
-    map.put("jsessionid",getH2SessionIdFromContext() )
-    
-    super.doGet(new ExtendedHttpServletRequestWrapper(req,map), res)
+
+
+    val map = new HashMap[String, String]()
+    map.put("jsessionid", getH2SessionIdFromContext())
+
+    super.doGet(new ExtendedHttpServletRequestWrapper(req, map), res)
   }
 
   private def getH2SessionIdFromContext() = getServletContext()
-      .getAttribute("h2console-session-id").asInstanceOf[String]
-  
-  private def  createAndRegLocalSession(): WebSession = {
+    .getAttribute("h2console-session-id").asInstanceOf[String]
+
+  private def createAndRegLocalSession(): WebSession = {
 
     this.synchronized {
-      
-    
       val conn = dataSource.getConnection()
+      val session = server.createNewSession("local")
+      session.setShutdownServerOnDisconnect()
+      session.setConnection(conn)
+      session.put("url", conn.getMetaData().getURL())
 
-    val session = server.createNewSession("local")
-    session.setShutdownServerOnDisconnect()
-    session.setConnection(conn)
-    session.put("url", conn.getMetaData().getURL())
+      /**
+       *
+       * sessionId here is INTERNAL id, not container's jsessionId
+       *
+       * WebSession createNewSession(String hostAddr) {
+       * String newId;
+       * do {
+       * newId = generateSessionId();
+       * } while (sessions.get(newId) != null);
+       * WebSession session = new WebSession(this);
+       * session.lastAccess = System.currentTimeMillis();
+       * session.put("sessionId", newId);
+       *
+       */
 
-    /**
-     *
-     *  sessionId here is INTERNAL id, not container's jsessionId
-     *
-     * WebSession createNewSession(String hostAddr) {
-     * String newId;
-     * do {
-     * newId = generateSessionId();
-     * } while (sessions.get(newId) != null);
-     * WebSession session = new WebSession(this);
-     * session.lastAccess = System.currentTimeMillis();
-     * session.put("sessionId", newId);
-     *
-     */
+      val ss = session.get("sessionId").asInstanceOf[String]
 
-    val ss = session.get("sessionId").asInstanceOf[String]
+      logger.debug("created h2 session {}", ss)
 
-    logger.debug("created h2 session {}", ss)
+      getServletContext().setAttribute("h2console-session-id", ss)
 
-    getServletContext().setAttribute("h2console-session-id", ss)
-
-        return session
+      return session
     }
-    
-    
-  
+
+
   }
-  
-  
-  class ExtendedHttpServletRequestWrapper(req:HttpServletRequest, params:java.util.Map[String,String]) 
-            extends HttpServletRequestWrapper(req) {
 
-    
-           
-    
-    override def getParameter(name:String):String = {
-     
-           // if we added one, return that one
-          val out = if ( params.containsKey( name ) ) {
-                 params.get( name )
-           } else {
-           // otherwise return what's in the original request
-           super.getParameter( name ) 
-             
-           }
-           
-       System.out.println("name="+name+" val="+out)
-       return out
-   }
 
-   
- 
+  class ExtendedHttpServletRequestWrapper(req: HttpServletRequest, params: java.util.Map[String, String])
+    extends HttpServletRequestWrapper(req) {
+
+
+    override def getParameter(name: String): String = {
+
+      // if we added one, return that one
+      val out = if (params.containsKey(name)) {
+        params.get(name)
+      } else {
+        // otherwise return what's in the original request
+        super.getParameter(name)
+
+      }
+
+      System.out.println("name=" + name + " val=" + out)
+      return out
+    }
+
+
   }
 
 }

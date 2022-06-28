@@ -38,11 +38,11 @@ class Comment extends Struct with java.io.Serializable {
   @JsonIgnore
   def getThumbImage() = thumbImage
 
-  def setThumbImage(img: String) {
+  def setThumbImage(img: String): Unit =  {
     thumbImage = img
   }
 
-  def setPasteId(id: java.lang.Long) {
+  def setPasteId(id: java.lang.Long): Unit =  {
     pasteId = id
   }
 
@@ -52,7 +52,7 @@ class Comment extends Struct with java.io.Serializable {
   @JsonIgnore
   def getOwner(): User = owner
 
-  def setOwner(u: User) {
+  def setOwner(u: User): Unit =  {
     owner = u
   }
 
@@ -60,29 +60,29 @@ class Comment extends Struct with java.io.Serializable {
 
   def getText = text
 
-  def setText(f: String) {
+  def setText(f: String): Unit =  {
     this.text = f
   }
 
   def getParentId(): java.lang.Long = parentId
-  def setParentId(n: java.lang.Long) {
+  def setParentId(n: java.lang.Long): Unit =  {
     parentId = n
   }
 
   def getLineNumber(): java.lang.Long = lineNumber
 
-  def setLineNumber(n: java.lang.Long) {
+  def setLineNumber(n: java.lang.Long): Unit =  {
     lineNumber = n
   }
 
   override def terms(): List[String] = Comment.terms
 
-  override def loadFull() {
+  override def loadFull(): Unit =  {
 
     if (owner != null) {
-      getOwner.loadFull
+      getOwner().loadFull()
     }
-    getText
+
   }
 
 

@@ -106,7 +106,7 @@ abstract class BaseDaoImpl[T <: java.io.Serializable, PK <: java.io.Serializable
    * object's unique identifier
    */
   @Transactional
-  def remove(id: PK) {
+  def remove(id: PK):Unit = {
 
     val obj: T = get(id)
 

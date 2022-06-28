@@ -49,9 +49,8 @@
 <body>
     <nav class="navbar navbar-expand-md">
         <div class="container-fluid">
-            <a class="navbar-brand" href="<c:url value='/'/>"
-               >
-                <span class="i" >/</span>
+            <a class="navbar-brand" href="<c:url value='/'/>">
+                <span class="i">/</span>
                 Paster
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
@@ -99,12 +98,9 @@
                     </ul>
                 </sec:authorize>
                 <ul class="nav navbar-nav me-auto">
-                    <li class="nav-item dropdown" >
-                        <a href="#" id="main-menu-dropdown" 
-                            role="button" 
-                            class="nav-link dropdown-toggle" 
-                            data-bs-toggle="dropdown"
-                            aria-expanded="false">
+                    <li class="nav-item dropdown">
+                        <a href="#" id="main-menu-dropdown" role="button" class="nav-link dropdown-toggle"
+                            data-bs-toggle="dropdown" aria-expanded="false">
                             New
                             <span class="caret"></span>
                         </a>
@@ -112,9 +108,9 @@
 
                         <ul class="dropdown-menu" role="menu" id="pasteNewMenu">
                             <li>
-                                <a role="menuitem" id="createNewBtn" class="mainLinkLine" 
-                                        href="<c:url value='/main/paste/new'></c:url>" 
-                                        title="<fmt:message key='paste.create.new' />">
+                                <a role="menuitem" id="createNewBtn" class="mainLinkLine"
+                                    href="<c:url value='/main/paste/new'></c:url>"
+                                    title="<fmt:message key='paste.create.new' />">
                                     <fmt:message key='paste.create.new' />
                                 </a>
                             </li>
@@ -162,10 +158,8 @@
                     </sec:authorize>
 
 
-                    <li class="nav-item dropdown" >
-                        <a href="#" role="button"                         
-                        class="nav-link dropdown-toggle" 
-                        data-bs-toggle="dropdown">
+                    <li class="nav-item dropdown">
+                        <a href="#" role="button" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                             <c:out value="${pageContext.response.locale.language}" />
                             <span class="caret"></span>
                         </a>
@@ -264,7 +258,7 @@
 
         <div class="row">
             <div class="col-md-10 offset2">
-                <p title="<c:out value=" ${systemInfo.runtimeVersion.full}" />">
+                <p title="<c:out value='${systemInfo.runtimeVersion.full}' />">
                 <c:out value="${systemInfo.runtimeVersion.implVersion}" />
                 </p>
 
@@ -284,9 +278,13 @@
             </div>
         </div>
 
-        <jsp:include page="/WEB-INF/pages/template/template-common-body.jsp" />
-        <tiles:insertAttribute name="footer" />
+
     </div>
+
+    <jsp:include page="/WEB-INF/pages/template/template-common-body.jsp" />
+
+
+    <tiles:insertAttribute name="footer" />
 </body>
 
 </html>

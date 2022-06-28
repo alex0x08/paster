@@ -32,7 +32,7 @@
                         <span style="font-size: larger; "><c:out value="${page}"/> </span>
                     </c:when>
                     <c:otherwise>
-                        <a href="<c:url value="/main/paste/list/search/${result}/limit/${page}"/>">${page}</a>
+                        <a href="<c:url value='/main/paste/list/search/${result}/limit/${page}'/>">${page}</a>
                     </c:otherwise>
                 </c:choose>
 
@@ -48,11 +48,11 @@
             <c:choose>
                 <c:when test="${pageItems.sort.ascending == false}">
                     <span style="font-size: larger; "> &#x2191; </span>
-                    <a href="<c:url value="/main/paste/list/${sourceType}/older"/>"> &#8595;</a>
+                    <a href="<c:url value='/main/paste/list/${sourceType}/older'/>"> &#8595;</a>
                 </c:when>
                 <c:otherwise>
                     <span style="font-size: larger; "> &#8595; </span>
-                    <a href="<c:url value="/main/paste/list/${sourceType}/earlier"/>">&#x2191; </a>
+                    <a href="<c:url value='/main/paste/list/${sourceType}/earlier'/>">&#x2191; </a>
                 </c:otherwise>
             </c:choose>
         </span>
@@ -64,7 +64,7 @@
                         <span style="font-size: larger; "><c:out value="${page}"/> </span>
                     </c:when>
                     <c:otherwise>
-                        <a href="<c:url value="/main/paste/list/${sourceType}/limit/${page}"/>">${page}</a>
+                        <a href="<c:url value='/main/paste/list/${sourceType}/limit/${page}'/>">${page}</a>
                     </c:otherwise>
                 </c:choose>
 
@@ -92,7 +92,7 @@
         <c:when test="${listMode eq 'search' }">
            
             <c:if test="${!pageItems.firstPage}">
-                <a href="<c:url value="/main/paste/list/search/${result}/prev"/>">&#8592;</a>
+                <a href="<c:url value='/main/paste/list/search/${result}/prev'/>">&#8592;</a>
             </c:if>
             <c:if test="${pageItems.pageCount > 1}">
                 <c:forEach begin="1" end="${pageItems.pageCount}" step="1" var="pnumber">
@@ -136,7 +136,7 @@
           
             <br/>
              <c:if test="${!pageItems.firstPage}">
-                <a href="<c:url value="/main/paste/list/${sourceType}/prev"/>">&#8592;</a>
+                <a href="<c:url value='/main/paste/list/${sourceType}/prev'/>">&#8592;</a>
             </c:if>           
                 <span style="font-weight: bold"><c:out value='${pageItems.page+1}'/></span>
             <c:if test="${!pageItems.lastPage}">

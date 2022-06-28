@@ -40,13 +40,13 @@ abstract class DBObject extends java.io.Serializable {
 
   def isDisabled() = disabled
 
-  def setDisabled(disabled:Boolean) { this.disabled = disabled  }
+  def setDisabled(disabled:Boolean): Unit =  { this.disabled = disabled  }
 
   def isBlank() = (id == null)
  
   def getId() = id
  
-  def setId(id:java.lang.Long) {
+  def setId(id:java.lang.Long): Unit =  {
     this.id=id
   }
 

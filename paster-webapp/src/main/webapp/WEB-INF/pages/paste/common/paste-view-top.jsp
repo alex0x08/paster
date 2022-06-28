@@ -13,14 +13,14 @@
 
 
 <div class="row">
-    <div class="col-md-11">
+    <div class="col-md-10">
 
         <%--
 
             back to list button
         --%>
 
-        <a href="<c:url value=" /main/paste/list" />" target="${target}"
+        <a href="<c:url value='/main/paste/list'/>" target="${target}"
         title="
         <fmt:message key="paste.list.title" />">
         <span style="font-size: larger;" class="i">(</span>
@@ -46,21 +46,31 @@
 
         --%>
 
-        <a href="<c:url value=" /main/paste/edit/${model.id}" />"
-        title="
-        <fmt:message key="button.edit" />">
         <c:out value="${model.name}" escapeXml="true" />
-        </a>
-
+      
+      
     </div>
 
-    <div class='col-md-1'>
+    <div class='col-md-2'>
 
-        <tiles:insertDefinition name="/common/deleteLink">
+
+        <div class="btn-group" style="padding-top: 0.8em;">
+
+            <a class="btn btn-primary" href="<c:url value='/main/paste/edit/${model.id}'/>"
+            title="<fmt:message key='button.edit' />">
+                <fmt:message key='button.edit' />
+            </a>
+    
+
+            <tiles:insertDefinition name="/common/deleteLink">
             <tiles:putAttribute name="model" value="${model}" />
             <tiles:putAttribute name="modelName" value="paste" />
             <tiles:putAttribute name="currentUser" value="${currentUser}" />
         </tiles:insertDefinition>
+
+
+        </div>
+      
     </div>
 
 

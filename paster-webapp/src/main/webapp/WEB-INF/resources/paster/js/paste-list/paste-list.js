@@ -16,9 +16,8 @@
 
 
 class PasterList {
-    initialize() {
-        this.lazy = undefined;
-    }
+   
+    
     init(pageUrl, userPageUrl, maxRequests, currentPage) {
 
         var mainThis = this;

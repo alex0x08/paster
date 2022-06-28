@@ -16,13 +16,12 @@
 
 
 class PasterApp {
-    initialize() {
-        this.growl = undefined;
-        this.modalDlg = undefined;
-    }
+  
     appInit() {
 //        this.growl = new Growler.init();
         this.bindDeleteDlg(document.body);
+        this.resizer = window.pica({features: ['all']
+        });
 
     }
     showNotify(message) {
@@ -67,31 +66,37 @@ class PasterApp {
 
     }
     takeScreenshot(source, onComplete) {
+
+        var $paster = this;
+
         console.log('taking screenshot for ',source)
         html2canvas(source, {
                     allowTaint: true,
-                    taintTest: false,
-                    onrendered: function (canvas) {
-                        console.log('rendered..')
-                        const img = document.createElement("canvas");
-                        img.width = canvas.width;
-                        img.height = canvas.height;
+                    taintTest: false                 
+                }).then(function(canvas) {
+                    console.log('rendered..',canvas)
+                    const img = document.createElement("canvas");
+                    img.width = canvas.width;
+                    img.height = canvas.height;
 
-                        window.pica.resizeCanvas(canvas, img, {
-                            quality: 3,
-                            alpha: true,
-                            unsharpAmount: 150,
-                            unsharpRadius: 0.7,
-                            unsharpThreshold: 245,
-                            transferable: true
-                        }, function (err) {
-                             console.log( 'error on creating img', err);
-                        });
+                    $paster.resizer.resize(canvas, img, {
+                        quality: 3,
+                        alpha: true,
+                        unsharpAmount: 150,
+                        unsharpRadius: 0.7,
+                        unsharpThreshold: 245,
+                        transferable: true
+                    }, function (err) {
+                         console.log( 'error on creating img', err);
+                    }).then(result => {
                         console.log('resized..');
-                        const img2 = Canvas2Image.saveAsPNG(img, true, 300, 200);
-
+                        const img2 = Canvas2Image.convertToPNG(result, 300, 200);
+    
                         onComplete(img2);
-                    }
+    
+                    });
+
+                 
                 });
 
     }

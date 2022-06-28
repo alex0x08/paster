@@ -104,7 +104,7 @@ class UserManagerImpl extends UserDetailsService with Loggered {
   def changePassword(user: User, newPassword: String): User = {
     logger.debug("changing password for user {}", user.getName)
     val encodedPass = passwordEncoder.encode(newPassword)
-    if (user.isBlank || user.isPasswordEmpty || !user.getPassword.equals(encodedPass)) user.setPassword(encodedPass)
+    if (user.isBlank() || user.isPasswordEmpty() || !user.getPassword.equals(encodedPass)) user.setPassword(encodedPass)
     user
   }
 

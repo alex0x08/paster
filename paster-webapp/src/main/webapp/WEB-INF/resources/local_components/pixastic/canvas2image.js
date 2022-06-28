@@ -1,239 +1,326 @@
-/*
- * Canvas2Image v0.1
- * Copyright (c) 2008 Jacob Seidelin, jseidelin@nihilogic.dk
- * MIT License [http://www.opensource.org/licenses/mit-license.php]
+/**
+ * covert canvas to image
+ * and save the image file
  */
+const Canvas2Image = (function () {
+    // check if support sth.
+    const $support = (function () {
+        const canvas = document.createElement("canvas"),
+            ctx = canvas.getContext("2d");
 
-var Canvas2Image = (function() {
+        return {
+            canvas: !!ctx,
+            imageData: !!ctx.getImageData,
+            dataURL: !!canvas.toDataURL,
+            btoa: !!window.btoa,
+        };
+    })();
 
-	// check if we have canvas support
-	var bHasCanvas = false;
-	var oCanvas = document.createElement("canvas");
-	if (oCanvas.getContext("2d")) {
-		bHasCanvas = true;
-	}
+    const downloadMime = "image/octet-stream";
 
-	// no canvas, bail out.
-	if (!bHasCanvas) {
-            console.log('no canvas support!');
-		return {
-			saveAsBMP : function(){},
-			saveAsPNG : function(){},
-			saveAsJPEG : function(){}
-		}
-	}
+    function scaleCanvas(canvas, width, height) {
+        const w = canvas.width,
+            h = canvas.height;
+        if (width === undefined) {
+            width = w;
+        }
+        if (height === undefined) {
+            height = h;
+        }
 
-	var bHasImageData = !!(oCanvas.getContext("2d").getImageData);
-	var bHasDataURL = !!(oCanvas.toDataURL);
-	var bHasBase64 = !!(window.btoa);
+        let retCanvas = document.createElement("canvas");
+        let retCtx = retCanvas.getContext("2d");
+        retCanvas.width = width;
+        retCanvas.height = height;
+        retCtx.drawImage(canvas, 0, 0, w, h, 0, 0, width, height);
+        return retCanvas;
+    }
 
-	var strDownloadMime = "image/octet-stream";
+    function getDataURL(canvas, type, width, height) {
+        canvas = scaleCanvas(canvas, width, height);
+        return canvas.toDataURL(type);
+    }
 
-	// ok, we're good
-	var readCanvasData = function(oCanvas) {
-		var iWidth = parseInt(oCanvas.width);
-		var iHeight = parseInt(oCanvas.height);
-		return oCanvas.getContext("2d").getImageData(0,0,iWidth,iHeight);
-	}
+    // save file to local with file name and file type
+    function saveFile(strData, fileType, fileName = "name") {
+        // document.location.href = strData;
+        let saveLink = document.createElement("a");
+        // download file name
+        saveLink.download = fileName + "." + fileType;
+        // download file data
+        saveLink.href = strData;
+        // start download
+        saveLink.click();
+    }
 
-	// base64 encodes either a string or an array of charcodes
-	var encodeData = function(data) {
-		var strData = "";
-		if (typeof data == "string") {
-			strData = data;
-		} else {
-			var aData = data;
-			for (var i=0;i<aData.length;i++) {
-				strData += String.fromCharCode(aData[i]);
-			}
-		}
-		return btoa(strData);
-	}
+    function genImage(strData) {
+        let img = document.createElement("img");
+        img.src = strData;
+        return img;
+    }
 
-	// creates a base64 encoded string containing BMP data
-	// takes an imagedata object as argument
-	var createBMP = function(oData) {
-		var aHeader = [];
-	
-		var iWidth = oData.width;
-		var iHeight = oData.height;
+    function fixType(type) {
+        type = type.toLowerCase().replace(/jpg/i, "jpeg");
+        const r = type.match(/png|jpeg|bmp|gif/)[0];
+        return "image/" + r;
+    }
 
-		aHeader.push(0x42); // magic 1
-		aHeader.push(0x4D); 
-	
-		var iFileSize = iWidth*iHeight*3 + 54; // total header size = 54 bytes
-		aHeader.push(iFileSize % 256); iFileSize = Math.floor(iFileSize / 256);
-		aHeader.push(iFileSize % 256); iFileSize = Math.floor(iFileSize / 256);
-		aHeader.push(iFileSize % 256); iFileSize = Math.floor(iFileSize / 256);
-		aHeader.push(iFileSize % 256);
+    function encodeData(data) {
+        if (!window.btoa) {
+            // eslint-disable-next-line no-throw-literal
+            throw "btoa undefined";
+        }
+        let str = "";
+        if (typeof data == "string") {
+            str = data;
+        } else {
+            for (let i = 0; i < data.length; i++) {
+                str += String.fromCharCode(data[i]);
+            }
+        }
 
-		aHeader.push(0); // reserved
-		aHeader.push(0);
-		aHeader.push(0); // reserved
-		aHeader.push(0);
+        return btoa(str);
+    }
 
-		aHeader.push(54); // dataoffset
-		aHeader.push(0);
-		aHeader.push(0);
-		aHeader.push(0);
+    function getImageData(canvas) {
+        const w = canvas.width,
+            h = canvas.height;
+        return canvas.getContext("2d").getImageData(0, 0, w, h);
+    }
 
-		var aInfoHeader = [];
-		aInfoHeader.push(40); // info header size
-		aInfoHeader.push(0);
-		aInfoHeader.push(0);
-		aInfoHeader.push(0);
+    function makeURI(strData, type) {
+        return "data:" + type + ";base64," + strData;
+    }
 
-		var iImageWidth = iWidth;
-		aInfoHeader.push(iImageWidth % 256); iImageWidth = Math.floor(iImageWidth / 256);
-		aInfoHeader.push(iImageWidth % 256); iImageWidth = Math.floor(iImageWidth / 256);
-		aInfoHeader.push(iImageWidth % 256); iImageWidth = Math.floor(iImageWidth / 256);
-		aInfoHeader.push(iImageWidth % 256);
-	
-		var iImageHeight = iHeight;
-		aInfoHeader.push(iImageHeight % 256); iImageHeight = Math.floor(iImageHeight / 256);
-		aInfoHeader.push(iImageHeight % 256); iImageHeight = Math.floor(iImageHeight / 256);
-		aInfoHeader.push(iImageHeight % 256); iImageHeight = Math.floor(iImageHeight / 256);
-		aInfoHeader.push(iImageHeight % 256);
-	
-		aInfoHeader.push(1); // num of planes
-		aInfoHeader.push(0);
-	
-		aInfoHeader.push(24); // num of bits per pixel
-		aInfoHeader.push(0);
-	
-		aInfoHeader.push(0); // compression = none
-		aInfoHeader.push(0);
-		aInfoHeader.push(0);
-		aInfoHeader.push(0);
-	
-		var iDataSize = iWidth*iHeight*3; 
-		aInfoHeader.push(iDataSize % 256); iDataSize = Math.floor(iDataSize / 256);
-		aInfoHeader.push(iDataSize % 256); iDataSize = Math.floor(iDataSize / 256);
-		aInfoHeader.push(iDataSize % 256); iDataSize = Math.floor(iDataSize / 256);
-		aInfoHeader.push(iDataSize % 256); 
-	
-		for (var i=0;i<16;i++) {
-			aInfoHeader.push(0);	// these bytes not used
-		}
-	
-		var iPadding = (4 - ((iWidth * 3) % 4)) % 4;
+    /**
+     * create bitmap image
+     * 按照规则生成图片响应头和响应体
+     */
+    const genBitmapImage = function (oData) {
+        //
+        // BITMAPFILEHEADER: http://msdn.microsoft.com/en-us/library/windows/desktop/dd183374(v=vs.85).aspx
+        // BITMAPINFOHEADER: http://msdn.microsoft.com/en-us/library/dd183376.aspx
+        //
 
-		var aImgData = oData.data;
+        const biWidth = oData.width;
+        const biHeight = oData.height;
+        const biSizeImage = biWidth * biHeight * 3;
+        const bfSize = biSizeImage + 54; // total header size = 54 bytes
 
-		var strPixelData = "";
-		var y = iHeight;
-		do {
-			var iOffsetY = iWidth*(y-1)*4;
-			var strPixelRow = "";
-			for (var x=0;x<iWidth;x++) {
-				var iOffsetX = 4*x;
+        //
+        //  typedef struct tagBITMAPFILEHEADER {
+        //  	WORD bfType;
+        //  	DWORD bfSize;
+        //  	WORD bfReserved1;
+        //  	WORD bfReserved2;
+        //  	DWORD bfOffBits;
+        //  } BITMAPFILEHEADER;
+        //
+        const BITMAPFILEHEADER = [
+            // WORD bfType -- The file type signature; must be "BM"
+            0x42,
+            0x4d,
+            // DWORD bfSize -- The size, in bytes, of the bitmap file
+            bfSize & 0xff,
+            (bfSize >> 8) & 0xff,
+            (bfSize >> 16) & 0xff,
+            (bfSize >> 24) & 0xff,
+            // WORD bfReserved1 -- Reserved; must be zero
+            0,
+            0,
+            // WORD bfReserved2 -- Reserved; must be zero
+            0,
+            0,
+            // DWORD bfOffBits -- The offset, in bytes, from the beginning of the BITMAPFILEHEADER structure to the bitmap bits.
+            54,
+            0,
+            0,
+            0,
+        ];
 
-				strPixelRow += String.fromCharCode(aImgData[iOffsetY+iOffsetX+2]);
-				strPixelRow += String.fromCharCode(aImgData[iOffsetY+iOffsetX+1]);
-				strPixelRow += String.fromCharCode(aImgData[iOffsetY+iOffsetX]);
-			}
-			for (var c=0;c<iPadding;c++) {
-				strPixelRow += String.fromCharCode(0);
-			}
-			strPixelData += strPixelRow;
-		} while (--y);
+        //
+        //  typedef struct tagBITMAPINFOHEADER {
+        //  	DWORD biSize;
+        //  	LONG  biWidth;
+        //  	LONG  biHeight;
+        //  	WORD  biPlanes;
+        //  	WORD  biBitCount;
+        //  	DWORD biCompression;
+        //  	DWORD biSizeImage;
+        //  	LONG  biXPelsPerMeter;
+        //  	LONG  biYPelsPerMeter;
+        //  	DWORD biClrUsed;
+        //  	DWORD biClrImportant;
+        //  } BITMAPINFOHEADER, *PBITMAPINFOHEADER;
+        //
+        const BITMAPINFOHEADER = [
+            // DWORD biSize -- The number of bytes required by the structure
+            40,
+            0,
+            0,
+            0,
+            // LONG biWidth -- The width of the bitmap, in pixels
+            biWidth & 0xff,
+            (biWidth >> 8) & 0xff,
+            (biWidth >> 16) & 0xff,
+            (biWidth >> 24) & 0xff,
+            // LONG biHeight -- The height of the bitmap, in pixels
+            biHeight & 0xff,
+            (biHeight >> 8) & 0xff,
+            (biHeight >> 16) & 0xff,
+            (biHeight >> 24) & 0xff,
+            // WORD biPlanes -- The number of planes for the target device. This value must be set to 1
+            1,
+            0,
+            // WORD biBitCount -- The number of bits-per-pixel, 24 bits-per-pixel -- the bitmap
+            // has a maximum of 2^24 colors (16777216, Truecolor)
+            24,
+            0,
+            // DWORD biCompression -- The type of compression, BI_RGB (code 0) -- uncompressed
+            0,
+            0,
+            0,
+            0,
+            // DWORD biSizeImage -- The size, in bytes, of the image. This may be set to zero for BI_RGB bitmaps
+            biSizeImage & 0xff,
+            (biSizeImage >> 8) & 0xff,
+            (biSizeImage >> 16) & 0xff,
+            (biSizeImage >> 24) & 0xff,
+            // LONG biXPelsPerMeter, unused
+            0,
+            0,
+            0,
+            0,
+            // LONG biYPelsPerMeter, unused
+            0,
+            0,
+            0,
+            0,
+            // DWORD biClrUsed, the number of color indexes of palette, unused
+            0,
+            0,
+            0,
+            0,
+            // DWORD biClrImportant, unused
+            0,
+            0,
+            0,
+            0,
+        ];
 
-		var strEncoded = encodeData(aHeader.concat(aInfoHeader)) + encodeData(strPixelData);
+        const iPadding = (4 - ((biWidth * 3) % 4)) % 4;
 
-		return strEncoded;
-	}
+        const aImgData = oData.data;
 
+        let strPixelData = "";
+        const biWidth4 = biWidth << 2;
+        let y = biHeight;
+        const fromCharCode = String.fromCharCode;
 
-	// sends the generated file to the client
-	var saveFile = function(strData) {
-		document.location.href = strData;
-	}
+        do {
+            const iOffsetY = biWidth4 * (y - 1);
+            let strPixelRow = "";
+            for (let x = 0; x < biWidth; x++) {
+                const iOffsetX = x << 2;
+                strPixelRow +=
+                    fromCharCode(aImgData[iOffsetY + iOffsetX + 2]) +
+                    fromCharCode(aImgData[iOffsetY + iOffsetX + 1]) +
+                    fromCharCode(aImgData[iOffsetY + iOffsetX]);
+            }
 
-	var makeDataURI = function(strData, strMime) {
-		return "data:" + strMime + ";base64," + strData;
-	}
+            for (let c = 0; c < iPadding; c++) {
+                strPixelRow += String.fromCharCode(0);
+            }
 
-	// generates a <img> object containing the imagedata
-	var makeImageObject = function(strSource) {
-		var oImgElement = document.createElement("img");
-       // oImgElement.crossOrigin = "Anonymous";
-		oImgElement.src = strSource;
-		return oImgElement;
-	}
+            strPixelData += strPixelRow;
+        } while (--y);
 
-	var scaleCanvas = function(oCanvas, iWidth, iHeight) {
-		if (iWidth && iHeight) {
-			var oSaveCanvas = document.createElement("canvas");
-			oSaveCanvas.width = iWidth;
-			oSaveCanvas.height = iHeight;
-			oSaveCanvas.style.width = iWidth+"px";
-			oSaveCanvas.style.height = iHeight+"px";
+        return (
+            encodeData(BITMAPFILEHEADER.concat(BITMAPINFOHEADER)) +
+            encodeData(strPixelData)
+        );
+    };
 
-			var oSaveCtx = oSaveCanvas.getContext("2d");
+    /**
+     * saveAsImage
+     * @param canvas canvasElement
+     * @param width {String} image type
+     * @param height {Number} [optional] png width
+     * @param type {string} [optional] png height
+     * @param fileName {String} image name
+     */
+    const saveAsImage = function (canvas, width, height, type, fileName) {
+        // save file type
+        const fileType = type;
+        if ($support.canvas && $support.dataURL) {
+            if (typeof canvas == "string") {
+                canvas = document.getElementById(canvas);
+            }
+            if (type === undefined) {
+                type = "png";
+            }
+            type = fixType(type);
+            if (/bmp/.test(type)) {
+                const data = getImageData(scaleCanvas(canvas, width, height));
+                const strData = genBitmapImage(data);
+                // use new parameter: fileType
+                saveFile(makeURI(strData, downloadMime), fileType, fileName);
+            } else {
+                const strData = getDataURL(canvas, type, width, height);
+                // use new parameter: fileType
+                saveFile(strData.replace(type, downloadMime), fileType, fileName);
+            }
+        }
+    };
 
-			oSaveCtx.drawImage(oCanvas, 0, 0, oCanvas.width, oCanvas.height, 0, 0, iWidth, iHeight);
-			return oSaveCanvas;
-		}
-		return oCanvas;
-	}
+    const convertToImage = function (canvas, width, height, type) {
+        if ($support.canvas && $support.dataURL) {
+            if (typeof canvas == "string") {
+                canvas = document.getElementById(canvas);
+            }
+            if (type === undefined) {
+                type = "png";
+            }
+            type = fixType(type);
 
-	return {
+            if (/bmp/.test(type)) {
+                const data = getImageData(scaleCanvas(canvas, width, height));
+                const strData = genBitmapImage(data);
+                return genImage(makeURI(strData, "image/bmp"));
+            } else {
+                const strData = getDataURL(canvas, type, width, height);
+                return genImage(strData);
+            }
+        }
+    };
 
-		saveAsPNG : function(oCanvas, bReturnImg, iWidth, iHeight) {
-			if (!bHasDataURL) {
-				return false;
-			}
-			var oScaledCanvas = scaleCanvas(oCanvas, iWidth, iHeight);
-			var strData = oScaledCanvas.toDataURL("image/png");
-			if (bReturnImg) {
-				return makeImageObject(strData);
-			} else {
-				saveFile(strData.replace("image/png", strDownloadMime));
-			}
-			return true;
-		},
+    return {
+        saveAsImage: saveAsImage,
+        saveAsPNG: function (canvas, width, height, fileName) {
+            return saveAsImage(canvas, width, height, "png", fileName);
+        },
+        saveAsJPEG: function (canvas, width, height, fileName) {
+            return saveAsImage(canvas, width, height, "jpeg", fileName);
+        },
+        saveAsGIF: function (canvas, width, height, fileName) {
+            return saveAsImage(canvas, width, height, "gif", fileName);
+        },
+        saveAsBMP: function (canvas, width, height, fileName) {
+            return saveAsImage(canvas, width, height, "bmp", fileName);
+        },
 
-		saveAsJPEG : function(oCanvas, bReturnImg, iWidth, iHeight) {
-                    console.log("save jpeg "+bHasDataURL);
-			if (!bHasDataURL) {
-				return false;
-			}
-
-			var oScaledCanvas = scaleCanvas(oCanvas, iWidth, iHeight);
-			var strMime = "image/jpeg";
-			var strData = oScaledCanvas.toDataURL(strMime);
-	
-			// check if browser actually supports jpeg by looking for the mime type in the data uri.
-			// if not, return false
-			/*if (strData.indexOf(strMime) != 5) {
-                            console.log('jpeg not supported');
-				return false;
-			}*/
-
-			if (bReturnImg) {
-				return makeImageObject(strData);
-			} else {
-				saveFile(strData.replace(strMime, strDownloadMime));
-			}
-			return true;
-		},
-
-		saveAsBMP : function(oCanvas, bReturnImg, iWidth, iHeight) {
-			if (!(bHasImageData && bHasBase64)) {
-				return false;
-			}
-
-			var oScaledCanvas = scaleCanvas(oCanvas, iWidth, iHeight);
-
-			var oData = readCanvasData(oScaledCanvas);
-			var strImgData = createBMP(oData);
-			if (bReturnImg) {
-				return makeImageObject(makeDataURI(strImgData, "image/bmp"));
-			} else {
-				saveFile(makeDataURI(strImgData, strDownloadMime));
-			}
-			return true;
-		}
-	};
-
+        convertToImage: convertToImage,
+        convertToPNG: function (canvas, width, height) {
+            return convertToImage(canvas, width, height, "png");
+        },
+        convertToJPEG: function (canvas, width, height) {
+            return convertToImage(canvas, width, height, "jpeg");
+        },
+        convertToGIF: function (canvas, width, height) {
+            return convertToImage(canvas, width, height, "gif");
+        },
+        convertToBMP: function (canvas, width, height) {
+            return convertToImage(canvas, width, height, "bmp");
+        },
+    };
 })();

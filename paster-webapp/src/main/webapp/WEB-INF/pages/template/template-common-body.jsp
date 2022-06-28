@@ -42,7 +42,54 @@
         </div>
     </div>
 </div>
-
    
        
-  
+<script type="text/javascript" src="<c:url value='/main/assets/${appId}/jquery/3.6.0/jquery.min.js'/>"></script>
+<script type="text/javascript"
+    src="<c:url value='/main/assets/${appId}/bootstrap/5.1.3/js/bootstrap.bundle.min.js'/>"></script>
+
+
+<script type="text/javascript"
+    src="<c:url value='/main/resources/${appId}/local_components/tinyicon/tinycon.js'/>"></script>
+    
+<script src="<c:url value='/main/resources/${appId}/local_components/pixastic/canvas-to-blob.js'/>"></script>
+
+<script src="<c:url value='/main/resources/${appId}/local_components/pixastic/html2canvas.js'/>"></script>
+<script src="<c:url value='/main/resources/${appId}/local_components/pixastic/canvas2image.js'/>"></script>
+<script src="<c:url value='/main/resources/${appId}/local_components/pixastic/pica.min.js'/>"></script>
+
+<script type="text/javascript" src="<c:url value='/main/resources/${appId}/paster/js/all/paster-app.js'/>"></script>
+
+
+<script type="text/javascript">
+
+
+    window.pica.prototype.debug = console.log.bind(console);
+
+
+    class PasterI18nClass {
+        text = {
+            notify: {
+                transmitMessage: '<fmt:message key="action.sending"/>'
+            },
+            dialog: {
+                removal: {
+                    title: '<fmt:message key='button.delete'/>',
+                    message: '<fmt:message key='dialog.confirm.remove'/>'
+                    }
+
+            }
+        }
+    }
+
+    const PasterI18n = new PasterI18nClass();
+
+
+    var pasterApp = new PasterApp();
+
+    window.addEventListener('load', function () {
+        pasterApp.appInit(document.body);
+    });
+
+
+</script>

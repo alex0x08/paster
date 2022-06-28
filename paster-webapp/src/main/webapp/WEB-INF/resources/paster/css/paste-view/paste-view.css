@@ -240,7 +240,7 @@
   background-color: white !important;
 }
 .syntaxhighlighter .line.highlighted.alt1, .syntaxhighlighter .line.highlighted.alt2 {
-  background-color: #e0e0e0 !important;
+  background-color: #afafaf  !important;
 }
 .syntaxhighlighter .line.highlighted.number {
   color: black !important;
@@ -361,21 +361,20 @@
 }
 
 
-
 .commentBlock {
     overflow: visible !important;
     white-space: normal;
     position: relative;
-    max-width: 60em;
+    max-width: 80em;
     min-width: 5em;
     width: auto;
-  /*  height: 4em;*/
-   /* max-height: 4em;*/
-    padding:0;margin:0;
-    background-color: #bbbbbb;
+    height: auto;
+    padding:0;
+    margin:0;
+    
 }
 .commentInner {
-    background-color: #afafaf;
+    background-color: #e0e0e0;
 }
 
 .commentCurrent {

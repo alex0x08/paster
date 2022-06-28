@@ -64,13 +64,13 @@ class Named(kname: String) extends Struct {
   }
   */
 
-  def fillFromDTO(dto: Named) {
+  def fillFromDTO(dto: Named): Unit = {
     setName(dto.name)
   }
 
   def getName() = name
 
-  def setName(f: String) {
+  def setName(f: String): Unit = {
     name = f
   }
 

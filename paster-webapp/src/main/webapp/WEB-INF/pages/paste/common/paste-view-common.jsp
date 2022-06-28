@@ -8,32 +8,6 @@
 --%>
 
 
-<c:if test="${not empty model.commentCount and model.commentCount>0}">
-
-
-    <%--
-
-    show comments' toggle switch if paste has any comments
---%>
-
-    <div class="row">
-
-        <div class="col-md-10 col-lg-10 ">
-
-            <span style="vertical-align: top;font-size: larger;" class="i" title="<fmt:message key="
-                comments.title" />">C</span>
-            <a id="toggleCommentsCtl" href="javascript:void(0);"
-                onclick="SyntaxHighlighter.toggleComments(${model.id}, this);" title="<fmt:message key="
-                button.hide" />">
-            <span class="i">-</span>
-            </a>
-        </div>
-
-    </div>
-</c:if>
-
-
-
 
 <%--
 
@@ -47,60 +21,22 @@
         <c:url var="drawImg"
             value='/main/resources/${appId}/r/${model.lastModified.time}/paste_content/${model.reviewImgData}' />
 
-
-        <%--
+<%--
 
         All |Comments|Draw top toggle
    
 --%>
 
-        <div class="btn-group" data-toggle="buttons" data-trigger="removeClass" data-removeclass-options="
-             'class': 'active',
-             'targets': 'label'
-             ">
-            <label class="btn btn-primary active">
-                <input type="radio" name="options" id="optionAll" onclick="pasterView.showAll(${model.id});"
-                    data-trigger="toggleClass" data-toggleclass-options="
-                       'class': 'active',
-                       'target': '!label'
-                       "> All
-            </label>
-            <label class="btn btn-primary">
-                <input type="radio" name="options" id="optionCommentsOnly"
-                    onclick="pasterView.showComments(${model.id});" data-trigger="toggleClass" data-toggleclass-options="
-                       'class': 'active',
-                       'target': '!label'
-                       "> Comments
-            </label>
-            <label class="btn btn-primary">
+<div class="btn-group" role="group" aria-label="Controls">
+    <button id="${model.id}_btnShowAll" type="button" class="btn btn-primary">All</button>
+    <button id="${model.id}_btnShowComments" type="button" class="btn btn-primary">Comments</button>
+    <button id="${model.id}_btnShowDraw" type="button" class="btn btn-primary">Draw</button>
+  </div>
+
+    
 
 
-
-                <c:choose>
-                    <c:when test="${model.reviewImgData!=null}">
-                        <c:url var="drawImg"
-                            value='/main/resources/${appId}/r/${model.lastModified.time}/paste_content/${model.reviewImgData}' />
-
-                    </c:when>
-                    <c:otherwise>
-                        <c:set var="drawImg" value="" />
-                    </c:otherwise>
-                </c:choose>
-
-
-
-                <input type="radio" name="options" id="optionDrawArea"
-                    onclick="pasterView.showDrawArea(${model.id},'${drawImg}');" data-trigger="toggleClass"
-                    data-toggleclass-options="
-                       'class': 'active',
-                       'target': '!label'
-                       "> Draw
-            </label>
-        </div>
-
-
-
-        <%--
+<%--
 
     Review image render (if exist)
    
@@ -109,18 +45,14 @@
         <c:set var="backgroundReviewStyle"
             value="${model.reviewImgData==null ? '' : 'pointer-events:none;background: url('.concat(drawImg).concat(') no-repeat top left;') }" />
 
-
         <div id="${model.id}_all" style="display:none;z-index:500;position:absolute;pointer-events:none;">
-
             <canvas id="${model.id}_sketch_ro" with="400" height="200" style="${backgroundReviewStyle}">
             </canvas>
         </div>
 
 
 
-
-
-        <%--
+<%--
 
     
     Draw mode, paint options
@@ -154,7 +86,7 @@
                         <input id="${model.id}_thumbImg" name="thumbImgData" type="hidden" value="" />
 
 
-                        <button id="${model.id}_saveReviewBtn" class='sbtn p-btn-save' type="submit">
+                        <button id="${model.id}_saveReviewBtn" class='btn btn-danger p-btn-save' type="submit">
                             <span class="i" style="font-size:larger;">S</span>
                             <span id="btnCaption">
                                 <fmt:message key="button.save" /></span>
@@ -169,7 +101,7 @@
 
 
 
-            <%--
+<%--
 
     Draw mode, draw area
 --%>
@@ -188,7 +120,7 @@
 
 
 
-        <%--
+<%--
 
         Paste's content
   
@@ -225,18 +157,13 @@
             class="commentBlock ${comment.parentId==null ? 'parentComment' :'subComment'}" commentId="${comment.id}"
             lineNumber="${comment.lineNumber}" parentCommentId="${comment.parentId}">
             <div id="innerBlock" class="commentInner p-comment">
-
-
                 <div class="row">
                     <div class="col-md-12">
-                        <div id="commentMarkedText">
-                            <c:out value=" ${comment.text}" escapeXml="false" />
-
-                        </div>
+                        <%--  should be exact inside div! otherwise marked will fail to parse --%>
+                        <div id="commentMarkedText" class="previewer"><c:out value="${comment.text}" escapeXml="false" /></div>
                     </div>
                 </div>
-                <div class="row">
-
+                <div class="row justify-content-between">
                     <div class="col-md-8">
                         <small>
                             <tiles:insertDefinition name="/common/owner">
@@ -248,35 +175,34 @@
                         </small>
                     </div>
 
-                    <div class="col-md-2 pull-right" style="text-align:right;margin-right: 0.5em;">
+                    <div class="col-auto" style="padding-right: 1em;" >
 
-                        <c:if test="${comment.parentId==null}">
-                            <a href="javascript:void(0);" class="linkLine" title="<fmt:message key=" comments.sub" />"
-                            onclick="SyntaxHighlighter.insertEditForm(${model.id},${comment.lineNumber},${comment.id});"><span
-                                class="i">C</span></a>
+                        <c:if test="${(not empty currentUser or allowAnonymousCommentsCreate) && comment.parentId==null}">
+                         
+                            <a href="#" class="linkLine pInsertCommentTrigger" title="<fmt:message key=" comments.sub" />"
+                                plineNumber="${comment.lineNumber}" 
+                                pCommentId="${comment.id}" >
+                                <span class="i">C</span>
+                            </a>
                         </c:if>
                         <sec:authorize
                             access="${currentUser !=null and (currentUser.admin or ( comment.hasOwner  and comment.owner eq currentUser)) }">
 
 
                             <a class="deleteBtn" id="deleteCommentBtn_${model.id}_${comment.id}" href="<c:url value='/main/paste/removeComment'>
-                                   <c:param name=" pasteId" value="${model.id}" />
-
-                            <c:param name="commentId" value="${comment.id}" />
-                            <c:param name="lineNumber" value="${comment.lineNumber}" />
+                                   <c:param name='pasteId' value='${model.id}' />
+                            <c:param name='commentId' value='${comment.id}' />
+                            <c:param name='lineNumber' value='${comment.lineNumber}' />
                             </c:url>"
-                            title="
-                            <fmt:message key='button.delete' />">
-                            <span style="font-size: larger;" class="i">d</span>
+                            title="<fmt:message key='button.delete' />">
+                            <span style="font-size: larger;" class="i">d</span>                          
+                            </a>
 
                             <div style="display:none;" id="dialogMsg">
-
-
                                 <fmt:message key="dialog.confirm.paste.remove.comment">
                                     <fmt:param value="${model.id}" />
                                 </fmt:message>
                             </div>
-                            </a>
 
 
                         </sec:authorize>

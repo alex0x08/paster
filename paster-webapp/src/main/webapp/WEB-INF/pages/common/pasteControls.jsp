@@ -61,11 +61,11 @@
     
     <div class="col-md-2">
 
-        <a class="img-map img-xml" href="<c:url value="/main/paste/${model.id}.xml"/>" target="${target}" title="View as XML">
+        <a class="img-map img-xml" href="<c:url value='/main/paste/${model.id}.xml'/>" target="${target}" title="View as XML">
         </a> |
-        <a class="img-map img-json" href="<c:url value="/main/paste/${model.id}.json"/>" target="${target}" title="View as JSON">
+        <a class="img-map img-json" href="<c:url value='/main/paste/${model.id}.json'/>" target="${target}" title="View as JSON">
         </a> |
-        <a href="<c:url value="/main/paste/${model.id}.txt"/>" target="${target}" title="View as plain text">
+        <a href="<c:url value='/main/paste/${model.id}.txt'/>" target="${target}" title="View as plain text">
             <span style="font-size: larger;" class="i">k</span>
         </a> |
 
@@ -83,13 +83,13 @@
     <div class="col-md-2">
   
         <c:if test="${mode ne 'raw' and not empty prev}">
-            <a href="<c:url value="/${prev.id}"/>" target="${target}" title="<fmt:message key="button.prev"/>">&#8592;</a>
+            <a href="<c:url value='/${prev.id}'/>" target="${target}" title="<fmt:message key="button.prev"/>">&#8592;</a>
         </c:if>
        
         <span class="f-h4">${model.id}</span>
 
         <c:if test="${mode ne 'raw' and not empty next}">
-            <a href="<c:url value="/${next.id}"/>" target="${target}" title="<fmt:message key="button.next"/>">&#8594;</a>
+            <a href="<c:url value='/${next.id}'/>" target="${target}" title="<fmt:message key="button.next"/>">&#8594;</a>
         </c:if>
 
     </div>

@@ -11,7 +11,7 @@
         <fmt:formatDate pattern="${dateTimePattern}" var="fromDate" value="${pageItems.firstElement.lastModified}" />
         <fmt:formatDate pattern="${dateTimePattern}" var="toDate" value="${pageItems.lastElement.lastModified}" />
 
-        <a href="<c:url value="/main/paste/list/${sourceType}/${param.page}"/>">
+        <a href="<c:url value='/main/paste/list/${sourceType}/${param.page}'/>">
 
             <fmt:message key='common.list.page'>
                 <fmt:param value="${param.page}"/>
@@ -41,7 +41,7 @@
                            title="<c:out value="${paste.id}"/>: ${priorTitle}. Click to search with same priority."
                            href="<c:url value='/main/paste/list/search?query=priority:${paste.priority.code}'/>">/</a>
 
-                        <a href="<c:url value="/main/paste/${paste.id}"></c:url>" title="Click to view paste vol. ${paste.id}">
+                        <a href="<c:url value='/main/paste/${paste.id}'></c:url>" title="Click to view paste vol. ${paste.id}">
                             <span  class="pasteTitle"><c:out value="${paste.name}" escapeXml="true"  /></span>
                         </a>
                     </div>
@@ -50,7 +50,7 @@
                 <div class="row">
 
 
-                    <a class="pastePreviewLink" href="<c:url value="/${paste.id}"></c:url>" pasteId="${paste.id}" title="Click to view paste vol. ${paste.id}">
+                    <a class="pastePreviewLink" href="<c:url value='/${paste.id}'></c:url>" pasteId="${paste.id}" title="Click to view paste vol. ${paste.id}">
 
                         <c:choose>
                             <c:when test="${not empty paste.thumbImage}">
@@ -78,7 +78,7 @@
                         <div class="row">
                             <div class="column grid-10">
                                 <div class="pasteTitle" style="padding: 1em;">
-                                    <a class="listLinkLine" href="<c:url value="/main/paste/${paste.id}"></c:url>" pasteId="${paste.id}" title="Click to view paste vol. ${paste.id}"><c:out value="${paste.title}"  escapeXml="true"/></a>
+                                    <a class="listLinkLine" href="<c:url value='/main/paste/${paste.id}'></c:url>" pasteId="${paste.id}" title="Click to view paste vol. ${paste.id}"><c:out value="${paste.title}"  escapeXml="true"/></a>
                                     </div>
                                 </div>
                             </div>
