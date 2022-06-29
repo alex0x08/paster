@@ -112,6 +112,7 @@
 
 
     <definition name="/common/pageList" template="/WEB-INF/pages/common/pageList.jsp" >
+        <put-attribute name="sourceType" value="" />
         <put-attribute name="listMode" value="" />
         <put-attribute name="pageItems" value="" />
         <put-attribute name="result" value="" />

@@ -75,25 +75,31 @@
                 </div>
                 <div class="col-md-4 pull-right">
 
-                    <c:url var="urlDrawSave" value='/main/paste/saveReviewDraw' />
+                    <c:if test="${not empty currentUser or allowAnonymousCommentsCreate}">
+
+                        <c:url var="urlDrawSave" value='/main/paste/saveReviewDraw' />
 
 
-                    <form:form cssClass="form-horizontal" action="${urlDrawSave}" id="${model.id}_saveReviewDraw"
-                        method="POST">
-                        <input type="hidden" name="pasteId" value="${model.id}" />
-                        <input id="${model.id}_reviewDrawImg" name="reviewImgData" type="hidden" value="" />
+                        <form:form cssClass="form-horizontal" action="${urlDrawSave}" id="${model.id}_saveReviewDraw"
+                            method="POST">
+                            <input type="hidden" name="pasteId" value="${model.id}" />
+                            <input id="${model.id}_reviewDrawImg" name="reviewImgData" type="hidden" value="" />
+    
+                            <input id="${model.id}_thumbImg" name="thumbImgData" type="hidden" value="" />
+    
+    
+                            <button id="${model.id}_saveReviewBtn" class='btn btn-danger p-btn-save' type="submit">
+                                <span class="i" style="font-size:larger;">S</span>
+                                <span id="btnCaption">
+                                    <fmt:message key="button.save" /></span>
+                                <i id="btnIcon" style="display:none;" class="fa fa-spinner fa-spin"></i>
+                            </button>
+    
+                        </form:form>
 
-                        <input id="${model.id}_thumbImg" name="thumbImgData" type="hidden" value="" />
-
-
-                        <button id="${model.id}_saveReviewBtn" class='btn btn-danger p-btn-save' type="submit">
-                            <span class="i" style="font-size:larger;">S</span>
-                            <span id="btnCaption">
-                                <fmt:message key="button.save" /></span>
-                            <i id="btnIcon" style="display:none;" class="fa fa-spinner fa-spin"></i>
-                        </button>
-
-                    </form:form>
+                    </c:if>
+                    
+                   
 
                 </div>
 

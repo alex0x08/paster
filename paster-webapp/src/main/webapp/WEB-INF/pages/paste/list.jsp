@@ -3,9 +3,8 @@
 
 
 
-<div class="row">
+<div class="row justify-content-between">
     <div class="col-md-8">
-
         <a  href="<c:url value='/main/paste/list/${sourceType}'/>">
             <span class="i" style="font-size: 1.5em;">P</span></a>
 
@@ -29,18 +28,31 @@
 
     </div>
     <div class="col-md-2 hidden-sm hidden-xs">
-
-        <a class="img-map img-xml" href="<c:url value='/main/paste/list/body.xml'/>" title="xml" alt="xml" target="blank">
+        
+        <a class="img-map img-xml" href="<c:url value='/main/paste/list/body.xml'/>" title="xml" alt="xml" target="_blank">
         </a> |
-        <a class="img-map img-json" href="<c:url value='/main/paste/list/body.json'/>" title="json" alt="json" target="blank">
+        <a class="img-map img-json" href="<c:url value='/main/paste/list/body.json'/>" title="json" alt="json" target="_blank">
         </a> |
-        <a class="img-map img-rss" href="<c:url value='/main/paste/list.rss'/>" title="rss" alt="rss" target="blank">
+        <a class="img-map img-rss" href="<c:url value='/main/paste/list.rss'/>" title="rss" alt="rss" target="_blank">
         </a>
         |
-        <a class="img-map img-atom" href="<c:url value='/main/paste/list.atom'/>" title="atom" alt="atom" target="blank">
+        <a class="img-map img-atom" href="<c:url value='/main/paste/list.atom'/>" title="atom" alt="atom" target="_blank">
         </a> 
 
     </div>
+
+
+    <div class="col-auto">
+        <tiles:insertDefinition name="/common/pageList" >
+            <tiles:putAttribute name="listMode" value="${listMode}"/>
+            <tiles:putAttribute name="pageItems" value="${pageItems}"/>
+            <tiles:putAttribute name="sourceType" value="${sourceType == null ? 'main' : sourceType }"/>
+           
+            <c:if test="${listMode eq 'search'}">
+                <tiles:putAttribute name="result" value="${result}"/>
+            </c:if>
+        </tiles:insertDefinition>
+    </div>     
 </div>
 
 
@@ -201,16 +213,7 @@
         </c:if>
 
     </div>    
-    <div class="col-md-2 col-sm-2 hidden-xs col-lg-2">
-        <tiles:insertDefinition name="/common/pageList" >
-            <tiles:putAttribute name="listMode" value="${listMode}"/>
-            <tiles:putAttribute name="pageItems" value="${pageItems}"/>
-
-            <c:if test="${listMode eq 'search'}">
-                <tiles:putAttribute name="result" value="${result}"/>
-            </c:if>
-        </tiles:insertDefinition>
-    </div>     
+   
 </div>
 
 <c:if test="${pageItems.nrOfElements > 5 and pageItems.page < pageItems.pageCount-1}">

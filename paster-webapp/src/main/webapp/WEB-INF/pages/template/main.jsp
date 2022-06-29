@@ -5,7 +5,7 @@
 
         Main template
         
-        --%>
+--%>
 
 
 <!DOCTYPE html>
@@ -34,7 +34,8 @@
                         body {
                             background: url('${defaultBgUrl}') no-repeat;
                         }
-                    </style> --%>
+                    </style> 
+                    --%>
         </c:otherwise>
     </c:choose>
 
@@ -57,7 +58,7 @@
                 aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse  justify-content-between" id="navbarCollapse">
+            <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
 
                 <sec:authorize access="hasRole('ROLE_ADMIN')">
 
@@ -135,21 +136,60 @@
                     </c:forEach>
                 </p>
 
+                <sec:authorize access="!isAuthenticated()">
 
+
+                    <ul class="nav navbar-nav">
+
+                        <li class="nav-item dropdown">
+                            <a href="#" role="button" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                                <c:out value="${pageContext.response.locale.language}" />
+                                <span class="caret"></span>
+                            </a>
+    
+                            <ul class="dropdown-menu" role="menu">
+                                <c:forEach items="${availableLocales}" var="locale">
+    
+                                    <li role="presentation">
+    
+                                        <c:url var="switchLangUrl" value="${request.requestURL}">
+                                            <c:param name="locale" value="${locale.language}_${locale.country}" />
+                                            <c:forEach items="${param}" var="currentParam">
+                                                <c:if test="${currentParam.key ne 'locale'}">
+                                                    <c:param name="${currentParam.key}" value="${currentParam.value}" />
+                                                </c:if>
+                                            </c:forEach>
+    
+                                        </c:url>
+    
+                                        <a role="menuitem" href="${switchLangUrl}">
+                                            <span title="<c:out value='${locale.displayLanguage}'/>">
+                                                <c:out value="${locale.displayLanguage}" />
+                                            </span>
+                                        </a>
+    
+                                    </li>
+    
+                                </c:forEach>
+    
+    
+    
+                            </ul>
+                        </li>
+    
+
+                    </ul>
+
+                    <p class="navbar-text hidden-sm hidden-xs" style="padding:0; margin:0;" >
+                        <a href="<c:url value='/main/login'/>">
+                            <span class="i" title="Login here">x</span>
+                            Sign in
+                        </a>
+                    </p>
+                </sec:authorize>
 
                 <ul class="nav navbar-nav">
-
-                    <sec:authorize access="!isAuthenticated()">
-                        <li>
-                            <a href="<c:url value='/main/login'/>">
-                                <span class="i" title="Login here">x</span>
-                                Authentication
-                            </a>
-
-                        </li>
-                    </sec:authorize>
-
-
+                   
                     <sec:authorize access="hasAnyRole('ROLE_ADMIN','ROLE_USER')">
                         <jsp:include page="/WEB-INF/pages/common/currentUser.jsp">
                             <jsp:param name="currentUser" value="${currentUser}" />
@@ -158,42 +198,7 @@
                     </sec:authorize>
 
 
-                    <li class="nav-item dropdown">
-                        <a href="#" role="button" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                            <c:out value="${pageContext.response.locale.language}" />
-                            <span class="caret"></span>
-                        </a>
-
-                        <ul class="dropdown-menu" role="menu">
-                            <c:forEach items="${availableLocales}" var="locale">
-
-                                <li role="presentation">
-
-                                    <c:url var="switchLangUrl" value="${request.requestURL}">
-                                        <c:param name="locale" value="${locale.language}_${locale.country}" />
-                                        <c:forEach items="${param}" var="currentParam">
-                                            <c:if test="${currentParam.key ne 'locale'}">
-                                                <c:param name="${currentParam.key}" value="${currentParam.value}" />
-                                            </c:if>
-                                        </c:forEach>
-
-                                    </c:url>
-
-                                    <a role="menuitem" href="${switchLangUrl}">
-                                        <span title="<c:out value='${locale.displayLanguage}'/>">
-                                            <c:out value="${locale.displayLanguage}" />
-                                        </span>
-                                    </a>
-
-                                </li>
-
-                            </c:forEach>
-
-
-
-                        </ul>
-                    </li>
-
+                 
 
                 </ul>
 

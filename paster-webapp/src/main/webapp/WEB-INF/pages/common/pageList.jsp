@@ -10,6 +10,7 @@
 <tiles:importAttribute name="listMode" />
 <tiles:importAttribute name="pageItems" />
 <tiles:importAttribute name="sortDesc" />
+<tiles:importAttribute name="sourceType" />
 
 <c:if test="${listMode eq 'search'}">
     <tiles:importAttribute name="result" />
@@ -19,8 +20,7 @@
 <%-- processing elements per page and sort setup --%>
 
 <div class="paging"  >
-    
-    
+        
     
     <c:choose>
         <c:when test="${listMode eq 'search' }">

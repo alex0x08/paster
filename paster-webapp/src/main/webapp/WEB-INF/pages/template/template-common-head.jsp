@@ -40,7 +40,7 @@
 <%--
         <link href="<c:url value='/main/assets/${appId}/bootstrap/5.1.3/css/bootstrap.min.css'/>"
               rel="stylesheet" type="text/css"/>
-        --%>
+--%>
 
 <link href="<c:url value='/main/resources/${appId}/paster/css/all/bootstrap.min.css'/>" rel="stylesheet"
     type="text/css" />

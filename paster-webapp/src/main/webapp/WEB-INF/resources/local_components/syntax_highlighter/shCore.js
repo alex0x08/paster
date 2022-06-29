@@ -264,13 +264,15 @@ var SyntaxHighlighter = function () {
          * 							are highlighted.
          */
         highlight: function (modelId, globalParams, element, scrollToLine, showEditForm) {
-            sh.vars.editorOpts = JSON.parse(JSON.stringify(globalEpicEditorOpts));
+            console.log('highlight , show edit form: ',showEditForm)
+            if (showEditForm) {
+                sh.vars.editorOpts = JSON.parse(JSON.stringify(globalEpicEditorOpts));
 
-            sh.vars.editorOpts.container = 'epiceditor-' + modelId;
-          //  sh.vars.editorOpts.textarea = 'commentText-' + modelId;
-
-            sh.vars.editor[modelId] = new EpicEditor(sh.vars.editorOpts);
-
+                sh.vars.editorOpts.container = 'epiceditor-' + modelId;
+              //  sh.vars.editorOpts.textarea = 'commentText-' + modelId;
+                    sh.vars.editor[modelId] = new EpicEditor(sh.vars.editorOpts);
+          
+            }
             sh.vars.modelId = modelId;
             sh.vars.showComments[modelId] = true;
 
@@ -356,7 +358,6 @@ var SyntaxHighlighter = function () {
                         }
                     }
                 } else {
-                    //  alert(ln);
                     if (showEditForm) {
                         sh.insertEditForm(sh.vars.modelId, ln);
                     }
@@ -364,19 +365,7 @@ var SyntaxHighlighter = function () {
 
             }
         },
-        /**
-         * Main entry point for the SyntaxHighlighter.
-         * @param {Object} params Optional params to apply to all highlighted elements.
-         */
-        all: function (modelId, params) {
-            attachEvent(
-                window,
-                'load',
-                function () {
-                    sh.highlight(modelId, params);
-                }
-            );
-        },
+       
         toggleComments: function (modelId, ctrl) {
 
             sh.vars.showComments[modelId] = !sh.vars.showComments[modelId];
@@ -466,7 +455,7 @@ var SyntaxHighlighter = function () {
 
         insertEditForm: function (modelId, lineNumber, parentId) {
             console.log('insert edit form for ', modelId, lineNumber, parentId);
-            if (sh.vars.editor[modelId].is('loaded')) {
+            if (sh.vars.editor[modelId] && sh.vars.editor[modelId].is('loaded')) {
                 sh.vars.editor[modelId].unload();
                 console.log('editor unloaded');
             }
@@ -500,7 +489,8 @@ var SyntaxHighlighter = function () {
 
             }
             document.getElementById("pasteLineCopyBtn").style.display = "inline-block";
-            document.getElementById('pasteLineToCopy').innerHTML = document.getElementById(modelId + '_cl_linePlainCode_' + lineNumber).innerHTML;
+            document.getElementById('pasteLineToCopy').innerHTML = document
+                                .getElementById(modelId + '_cl_linePlainCode_' + lineNumber).innerHTML;
 
             const ell = document.getElementById(modelId + '_cl_linePlain_' + lineNumber);
             ell.parentNode.insertBefore(document.getElementById("pasteLineCopyBtn"), ell);
@@ -527,10 +517,12 @@ var SyntaxHighlighter = function () {
             }
 
             nspace.style.display = "";
-
-            setTimeout(function () {
-                sh.vars.editor[modelId].load();
-            }, 1);
+            if (sh.vars.editor[modelId]) {
+                setTimeout(function () {
+                    sh.vars.editor[modelId].load();
+                }, 1);
+            }
+           
 
         }
     }; // end of sh

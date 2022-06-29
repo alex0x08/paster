@@ -18,8 +18,10 @@
 
 
 class PasterView {
+
+    
  
-    setupDraw(modelId) {
+    setupDraw(modelId,allowEdit) {
         var mainThis = this;
         const colors_array = ['#ff1101', '#ff0', '#0f0', '#0ff', '#00f', '#6d47e7', '#000', '#fff'];
         var toolsEl =document.getElementById(modelId + '_tools')
@@ -41,11 +43,14 @@ class PasterView {
         var $j = jQuery.noConflict();
         $j('#' + modelId + '_sketch').sketch();
 
-       document.getElementById(modelId + '_saveReviewBtn')
+    
+        if (allowEdit) {
+            document.getElementById(modelId + '_saveReviewBtn')
                 .addEventListener("click", function(event){
-                event.preventDefault();
-                mainThis.onSaveReviewDraw(modelId);
-       });
+                    event.preventDefault();
+                    mainThis.onSaveReviewDraw(modelId);
+        });
+        }
 
     }
     setupCommentsAdd(modelId) {
@@ -85,6 +90,8 @@ class PasterView {
             mainThis.onSaveComment(modelId);
         });
 
+      
+
     }
     setupLazy(pageUrl, userPageUrl, maxRequests, modelId, idSet) {
 
@@ -110,7 +117,7 @@ class PasterView {
         document.getElementById(modelId + "_drawBlock").style.display='none';
 
     }
-    init(modelId) {
+    init(modelId,allowEdit) {
 
         var mainThis = this;
 
@@ -124,7 +131,7 @@ class PasterView {
         });*/
 
         
-        SyntaxHighlighter.highlight(modelId, {}, document.getElementById(modelId + '_pasteText'), true, true);
+        SyntaxHighlighter.highlight(modelId, {}, document.getElementById(modelId + '_pasteText'), true, allowEdit);
 
         document.getElementById(modelId + '_btnShowAll')
             .addEventListener("click", function(event){
@@ -147,7 +154,7 @@ class PasterView {
                 mainThis.showDrawArea(modelId,drawImg);
         });
 
-        this.setupDraw(modelId);
+        this.setupDraw(modelId,allowEdit);
         this.showAll(modelId);
     }
     showComments(modelId) {
