@@ -3,12 +3,11 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-   <parent>
-        <groupId>uber.paster</groupId>
+    <parent>
+        <groupId>com.Ox08.paster.webapp</groupId>
         <artifactId>paster-project</artifactId>
-        <version>1.2-SNAPSHOT</version>
+        <version>${revision}</version>
     </parent>
-
 
     <artifactId>paster-run</artifactId>
     <packaging>jar</packaging>
@@ -17,14 +16,7 @@
 
     <repositories>
 
-        
-        
-        <repository>
-            <id>maven2 Artifacts</id>
-            <name>maven2-releases</name>
-            <url>https://repo1.maven.org/maven2</url>
 
-        </repository>
 
     </repositories>
 

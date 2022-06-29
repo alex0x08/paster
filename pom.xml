@@ -3,9 +3,9 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>uber.paster</groupId>
+    <groupId>com.Ox08.paster.webapp</groupId>
     <artifactId>paster-project</artifactId>
-    <version>1.2-SNAPSHOT</version>
+    <version>${revision}</version>
     <packaging>pom</packaging>
     <name>Paster Project</name>
     <url>https://github.com/alex0x08/paster</url>
@@ -33,7 +33,7 @@
     </developers>
         
     <organization>
-        <name>Ubersoft, LLC</name>
+        <name>0x08 Software</name>
         <url>http://0x08.tk</url>
     </organization>
     <licenses>
@@ -50,14 +50,14 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding> 
         <netbeans.hint.license>apache20</netbeans.hint.license>
+        <revision>2.1.04-CURRENT</revision>
+        <main.basedir>${basedir}</main.basedir>
     </properties>
 
     
     
-    
     <modules>
         <module>paster-run</module>
-        <module>paster-oak</module>
         <module>paster-webapp</module>	     
     </modules>
    
@@ -84,18 +84,7 @@
         </repository>
           
           
-        <repository>
-            <id>jboss-snapshots</id>
-            <name>jboss snapshots</name>
-            <url>https://snapshots.jboss.org/maven2</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-          
+
         <repository>
             <id>atlassian-public</id>
             <name>atlassian-public</name>
@@ -120,6 +109,36 @@
     
     </repositories>
 
+    <build>
+        <plugins>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>flatten-maven-plugin</artifactId>
+                <version>1.2.7</version>
+                <executions>
+                    <execution>
+                        <!-- Tidy up all POMs before they are published -->
+                        <id>flatten</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>flatten</goal>
+                        </goals>
+                        <configuration>
+                            <updatePomFile>true</updatePomFile>
+                            <flattenMode>oss</flattenMode>
+                            <pomElements>
+                                <parent>expand</parent>
+                                <distributionManagement>remove</distributionManagement>
+                                <repositories>remove</repositories>
+                            </pomElements>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
+    </build>
   
 
 </project>

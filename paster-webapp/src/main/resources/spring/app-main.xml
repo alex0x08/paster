@@ -9,14 +9,14 @@
                            http://www.springframework.org/schema/context/spring-context.xsd">
 
 
-    <context:component-scan base-package="uber.paste" />
+    <context:component-scan base-package="com.Ox08.paster.webapp" />
 
     <!-- Activates annotation-based bean configuration -->
     <context:annotation-config />
 
 
     <bean id="propertyConfigurer-app"
-          class="uber.paste.base.MergedPropertyConfigurer">
+          class="com.Ox08.paster.webapp.base.MergedPropertyConfigurer">
      <property name="ignoreUnresolvablePlaceholders" value="true"/>
     
      <property name="ignoreResourceNotFound" value="false"/>     

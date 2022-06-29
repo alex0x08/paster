@@ -4,9 +4,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>uber.paster</groupId>
+        <groupId>com.Ox08.paster.webapp</groupId>
         <artifactId>paster-project</artifactId>
-        <version>1.2-SNAPSHOT</version>
+        <version>${revision}</version>
     </parent>
 
     <artifactId>paster-webapp</artifactId>
@@ -21,9 +21,7 @@
         <hibernate.search.version>5.11.10.Final</hibernate.search.version>
         <hibernate.version>5.6.9.Final</hibernate.version>
         <luceneVersion>5.5.5</luceneVersion>
-      
-        
-        
+
         <paster.app.name>${project.name}</paster.app.name>
         <paster.app.version>${project.version}</paster.app.version>
         <paster.app.description>${project.description}</paster.app.description>
@@ -39,7 +37,6 @@
 
     <dependencies>
 
-            
         <dependency>
             <groupId>org.scala-lang</groupId>
             <artifactId>scala-library</artifactId>
@@ -251,9 +248,6 @@
                 </exclusion>
             </exclusions>
         </dependency>
-
-
-
 
         <!-- spring rest dependencies -->
         <dependency>
@@ -523,96 +517,7 @@
             
 
 
-        <profile>
-            <id>mysql</id>
-            <properties>
-                <hibernate.dialect>org.hibernate.dialect.MySQL5InnoDBDialect</hibernate.dialect>
-                <jdbc.driverClassName>com.mysql.jdbc.Driver</jdbc.driverClassName>
-                <jdbc.url>jdbc:mysql://localhost:3306/paster?createDatabaseIfNotExist=true&amp;amp;useUnicode=true&amp;amp;characterEncoding=utf-8</jdbc.url>
-                <jdbc.username>root</jdbc.username>
-                <jdbc.password>qwerty</jdbc.password>
-            </properties>
-        </profile>
 
-        <profile>
-            <id>sqlserver</id>
-            <properties>
-                <!--hibernate.dialect>org.hibernate.dialect.SQLServerDialect</hibernate.dialect -->
-                <hibernate.dialect>uber.paste.base.ExtendedMSSQLDialect</hibernate.dialect>
-                <jdbc.driverClassName>net.sourceforge.jtds.jdbc.Driver</jdbc.driverClassName>
-                <jdbc.url>jdbc:jtds:sqlserver://localhost:1433/paster</jdbc.url>
-                <jdbc.username>paster</jdbc.username>
-                <jdbc.password>paster</jdbc.password>
-            </properties>
-        </profile>
-
-
-
-
-        <profile>
-            <id>h2</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-
-            <properties>
-                <hibernate.dialect>org.hibernate.dialect.H2Dialect</hibernate.dialect>
-                <jdbc.driverClassName>org.h2.jdbcx.JdbcDataSource</jdbc.driverClassName>
-                <jdbc.url>jdbc:h2:file:${paste.app.home}/db/pastedb;DB_CLOSE_ON_EXIT=TRUE;LOCK_TIMEOUT=10000</jdbc.url>
-                <jdbc.username>bo</jdbc.username>
-                <jdbc.password>bo</jdbc.password>
-                <jdbc.show-sql>false</jdbc.show-sql>
-            </properties>
-        </profile>
-
-        <profile>
-            <id>mysql-openshift</id>
-
-            <properties>
-
-                <jdbc.groupId>mysql</jdbc.groupId>
-                <jdbc.artifactId>mysql-connector-java</jdbc.artifactId>
-                <jdbc.version>5.1.13</jdbc.version>
-
-                <hibernate.dialect>org.hibernate.dialect.MySQL5InnoDBDialect</hibernate.dialect>
-                <jdbc.driverClassName>com.mysql.jdbc.jdbc2.optional.MysqlDataSource</jdbc.driverClassName>
-
-                <jdbc.url>jdbc:mysql://${appHost}:${appPort}/paster?useUnicode=true&amp;amp;characterEncoding=utf8</jdbc.url>
-                <jdbc.username>adminrTlKFqN</jdbc.username>
-                <jdbc.password>9T5nre_cQRg-</jdbc.password>
-                <jdbc.show-sql>true</jdbc.show-sql>
-
-            </properties>
-        </profile>
-
-        <profile>
-            <id>postgresql</id>
-            <properties>
-                <hibernate.dialect>org.hibernate.dialect.PostgreSQLDialect</hibernate.dialect>
-                <jdbc.driverClassName>org.postgresql.Driver</jdbc.driverClassName>
-                <jdbc.url>jdbc:postgresql://localhost/paster</jdbc.url>
-                <jdbc.username>postgres</jdbc.username>
-                <jdbc.password>qwerty</jdbc.password>
-            </properties>
-        </profile>
-
-        <profile>
-
-            <id>db2</id>
-
-
-            <properties>
-
-                <hibernate.dialect>org.hibernate.dialect.DB2Dialect</hibernate.dialect>
-                <jdbc.driverClassName>com.ibm.db2.jcc.DB2Driver</jdbc.driverClassName>
-
-                <jdbc.url>jdbc:db2://localhost:50000&gt;/testdb</jdbc.url>
-                <jdbc.username>bpmadmin</jdbc.username>
-                <jdbc.password>bpmadmin</jdbc.password>
-                <jdbc.show-sql>true</jdbc.show-sql>
-
-            </properties>
-        </profile>
 
     </profiles>
 
@@ -717,7 +622,7 @@
                         <contextPath>/${project.artifactId}</contextPath>
                
                     </webApp> 
-      </configuration>
+                </configuration>
 
                 <dependencies>
 
@@ -728,16 +633,10 @@
 
             <plugin>
                 <artifactId>maven-release-plugin</artifactId>
-                <version>2.5.3</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
-                <configuration>
-                    <source>8</source>
-                    <target>8</target>
-                </configuration>
             </plugin>
 
         </plugins>

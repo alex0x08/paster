@@ -31,13 +31,12 @@
     <bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource" >
           <constructor-arg ref="hikariConfig" />  
     </bean>  
-    
-    
+
     		
     <bean id="entityManagerFactory" 
           class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
           p:dataSource-ref="dataSource" 
-          p:packagesToScan="uber.paste.model,uber.paste.plugin.model"
+          p:packagesToScan="com.Ox08.paster.webapp.model"
           p:persistenceUnitName="pasteJPA"
           p:persistenceProviderClass="org.hibernate.jpa.HibernatePersistenceProvider"
           >     
@@ -52,7 +51,7 @@
 
         <property name="jpaPropertyMap">
             <map>
-                <entry key="hibernate.physical_naming_strategy" value="uber.paste.dao.hibernate.PasterNamingStrategy" />
+                <entry key="hibernate.physical_naming_strategy" value="com.Ox08.paster.webapp.dao.hibernate.PasterNamingStrategy" />
 
                 <entry key="hibernate.search.default.indexBase" value="${paste.app.home}/index"/>
                 <!--entry key="hibernate.search.default.directory_provider"		

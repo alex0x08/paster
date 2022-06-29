@@ -1,6 +1,7 @@
 
 package org.h2.server.web
 
+import com.Ox08.paster.webapp.base.Loggered
 import java.sql.SQLException
 import java.util.HashMap
 import javax.servlet.http.HttpServletRequest
@@ -9,7 +10,6 @@ import javax.servlet.http.HttpServletResponse
 import javax.sql.DataSource
 import org.springframework.context.ApplicationContext
 import org.springframework.web.context.support.WebApplicationContextUtils
-import uber.paste.base.Loggered
 
 /**
  * This is extended version of JDBC Database Console Servlet,

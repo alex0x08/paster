@@ -74,10 +74,10 @@
 
     
 
-    <beans:bean id="csrfSecurityRequestMatcher" class="uber.paste.web.CsrfSecurityRequestMatcher"/>
+    <beans:bean id="csrfSecurityRequestMatcher" class="com.Ox08.paster.webapp.web.CsrfSecurityRequestMatcher"/>
 
     <beans:bean id="userManager"
-                class="uber.paste.manager.UserManagerImpl">
+                class="com.Ox08.paster.webapp.manager.UserManagerImpl">
     </beans:bean>
 
 
@@ -94,7 +94,7 @@
 
     
  <beans:bean id="customRememberMeServices"
-                class="uber.paste.web.security.CustomPersistentRememberMeServices">
+                class="com.Ox08.paster.webapp.web.security.CustomPersistentRememberMeServices">
         <!-- This ensures that remember-me is added as an authentication provider -->
         <beans:constructor-arg value="1q2w3e4r5t6y7u8i" />
         <beans:constructor-arg ref="userManager" />

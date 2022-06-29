@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app metadata-complete="true" version="3.1" 
          xmlns="http://xmlns.jcp.org/xml/ns/javaee" 
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
  
     <absolute-ordering>
         <!-- Empty absolute ordering is necessary to completely disable classpath scanning -->
@@ -43,14 +44,6 @@
         </init-param>
     </filter>
 
-    <filter>
-        <filter-name>rewriteFilter</filter-name>
-        <filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</filter-class>
-        <init-param>
-            <param-name>logLevel</param-name>
-            <param-value>log4j</param-value>
-        </init-param>
-    </filter>
 
 
    
@@ -77,15 +70,9 @@
     </filter-mapping>
 
 
-    <filter-mapping>
-        <filter-name>rewriteFilter</filter-name>
-        <url-pattern>/*</url-pattern>
-        <dispatcher>REQUEST</dispatcher>
-        <dispatcher>FORWARD</dispatcher>
-    </filter-mapping>
 
     <listener>
-        <listener-class>uber.paste.startup.SystemPropertiesListener</listener-class>
+        <listener-class>com.Ox08.paster.webapp.startup.SystemPropertiesListener</listener-class>
     </listener>
 
     <listener>
@@ -99,7 +86,7 @@
     </listener>
     
     <listener>
-        <listener-class>uber.paste.startup.StartupListener</listener-class>
+        <listener-class>com.Ox08.paster.webapp.startup.StartupListener</listener-class>
     </listener>
        
     <servlet>
@@ -112,12 +99,6 @@
         <load-on-startup>1</load-on-startup>
        
     </servlet>
-
-    <!--servlet>
-        <servlet-name>CXFServlet</servlet-name>
-        <servlet-class>org.apache.cxf.transport.servlet.CXFServlet</servlet-class>
-        <load-on-startup>1</load-on-startup>
-    </servlet-->
 
     <servlet>
         <servlet-name>H2Console</servlet-name>
@@ -133,12 +114,6 @@
         <servlet-name>dispatcher</servlet-name>
         <url-pattern>/main/*</url-pattern>
     </servlet-mapping>
-
-
-    <!--servlet-mapping>
-        <servlet-name>CXFServlet</servlet-name>
-        <url-pattern>/ws/*</url-pattern>
-    </servlet-mapping-->
 
 
     <session-config>
