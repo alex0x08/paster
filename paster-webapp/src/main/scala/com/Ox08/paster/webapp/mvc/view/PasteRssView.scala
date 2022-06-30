@@ -44,7 +44,7 @@ class PasteRssView extends AbstractRssFeedView{
       entry.setTitle(e.getName())
       entry.setLink(externalUrl+"/main/paste/"+e.getId())
       entry.setPubDate(e.getLastModified)
-          entry.setAuthor( if (e.getOwner()!=null) { e.getOwner().getUsername()} else { "Anonymous"})
+          entry.setAuthor( if (e.getOwner()!=null) { e.getOwner()} else { "Anonymous"})
       val d = new Description
       d.setValue(e.getTitle())
       entry.setDescription(d)

@@ -41,7 +41,7 @@ abstract class GenericEditController[T <: Struct] extends GenericController[T] {
 
   protected def getNewModelInstance(): T
 
-  protected def fillEditModel(obj: T, model: Model, locale: Locale) {
+  protected def fillEditModel(obj: T, model: Model, locale: Locale): Unit = {
     model.addAttribute(GenericController.MODEL_KEY, obj)
   }
 

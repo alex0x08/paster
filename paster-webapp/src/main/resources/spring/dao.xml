@@ -53,7 +53,7 @@
             <map>
                 <entry key="hibernate.physical_naming_strategy" value="com.Ox08.paster.webapp.dao.hibernate.PasterNamingStrategy" />
 
-                <entry key="hibernate.search.default.indexBase" value="${paste.app.home}/index"/>
+                <entry key="hibernate.search.default.indexBase" value="${paster.app.home}/index"/>
                 <!--entry key="hibernate.search.default.directory_provider"		
                        value="org.hibernate.search.store.FSDirectoryProvider"/-->
                 <entry key="hibernate.search.lucene_version"		

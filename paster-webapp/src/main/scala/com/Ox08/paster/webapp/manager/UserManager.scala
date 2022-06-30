@@ -16,9 +16,10 @@
 
 package com.Ox08.paster.webapp.manager
 
-import com.Ox08.paster.webapp.base.Loggered
-import com.Ox08.paster.webapp.dao.{UserDaoImpl, UserExistsException}
-import com.Ox08.paster.webapp.model.User
+
+import com.Ox08.paster.webapp.base.{Boot, Loggered}
+import com.Ox08.paster.webapp.model.{Role, User}
+import org.apache.commons.csv.{CSVFormat, CSVRecord}
 import org.springframework.beans.factory.annotation.{Autowired, Qualifier}
 import org.springframework.dao.DataAccessException
 import org.springframework.security.access.annotation.Secured
@@ -27,6 +28,10 @@ import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.session.SessionRegistry
 import org.springframework.security.core.userdetails.{UserDetails, UserDetailsService, UsernameNotFoundException}
 import org.springframework.security.crypto.password.PasswordEncoder
+
+import java.io.{File, FileReader, InputStreamReader}
+import java.util
+import scala.jdk.CollectionConverters._
 
 object UserManager extends Loggered {
 
@@ -50,8 +55,7 @@ object UserManager extends Loggered {
 
 class UserManagerImpl extends UserDetailsService with Loggered {
 
-  @Autowired
-  val userDao: UserDaoImpl = null
+  val users: util.Map[String,User] = new util.HashMap
 
   @Autowired
   @Qualifier("sessionRegistry")
@@ -60,51 +64,89 @@ class UserManagerImpl extends UserDetailsService with Loggered {
   @Autowired
   val passwordEncoder: PasswordEncoder = null
 
-  @PreAuthorize("isAuthenticated()")
-  def save(u: User) = userDao.save(u)
+  def loadUsers(): Unit = {
+
+    val csv = new File(Boot.BOOT.getSystemInfo.getAppHome,"users.csv")
+
+    loadDefaults(csv, (record: CSVRecord) => {
+      logger.debug("processing record : {}",record)
+      save(changePassword(
+        User.createNew
+          .addRole(if (record.get("ADMIN").toBoolean) {
+            Role.ROLE_ADMIN
+          }
+          else {
+            Role.ROLE_USER
+          })
+          .addUsername(record.get("USERNAME"))
+          .addPassword(record.get("PASSWORD"))
+          .addName(record.get("NAME"))
+          .get(), record.get("PASSWORD")))
+    })
+
+  }
+
+
+  def loadDefaults(csv: File, callback: CSVRecord => Unit) {
+    val r = new FileReader(csv)
+    try {
+      val records = CSVFormat.DEFAULT.withHeader().parse(r)
+      for (record <- records.asScala) {
+        callback(record)
+      }
+    } finally r.close
+  }
+
+  //@PreAuthorize("isAuthenticated()")
+  def save(u: User): Unit = {
+    users.put(u.getUsername(),u)
+
+    logger.debug("saved {} - {}",u,u.getUsername())
+
+  }
 
   @Override
-  def getUser(userId: String) = userDao.get(java.lang.Long.valueOf(userId));
+  def getUser(username: String): User = {
+      if (users.containsKey(username)) {
+        users.get(username)
+      } else null
+  }
 
   @Override
   @throws(classOf[UsernameNotFoundException])
-  def getUserByUsername(username: String) = userDao.getUser(username)
-
-  def getUserByOpenID(openid: String) = userDao.getUserByOpenID(openid)
+  def getUserByUsername(username: String) = getUser(username)
 
   @PreAuthorize("isAuthenticated()")
-  def getUsers = userDao.getList()
+  def getUsers = users.values()
 
   @PreAuthorize("isAuthenticated()")
   def getAllLoggedInUsers() = sessionRegistry.getAllPrincipals()
 
-  @throws(classOf[UserExistsException])
   @PreAuthorize("isAuthenticated()")
-  def saveUser(user: User) = userDao.save(user)
+  def saveUser(user: User) = save(user)
+
 
   @Secured(Array("ROLE_ADMIN"))
-  def remove(id: Long) = userDao.remove(id)
-
-  @Secured(Array("ROLE_ADMIN"))
-  def removeUser(userId: String) = {
-    val u: User = userDao.get(java.lang.Long.valueOf(userId))
-    userDao.remove(u.getId)
+  def removeUser(username: String) = {
+    users.remove(username)
   }
 
   @throws(classOf[UsernameNotFoundException])
   @throws(classOf[DataAccessException])
   override def loadUserByUsername(username: String): UserDetails = {
-    val out: User = getUserByUsername(username)
-    logger.debug("loaded by username {} , user {}", Array(username, out))
+    val out: User = getUser(username)
+    logger.debug("loaded by username {} , user {}", username,out)
     if (out == null)
       throw new UsernameNotFoundException(String.format("User %s not found", username))
     out
   }
 
   def changePassword(user: User, newPassword: String): User = {
-    logger.debug("changing password for user {}", user.getName)
     val encodedPass = passwordEncoder.encode(newPassword)
-    if (user.isBlank() || user.isPasswordEmpty() || !user.getPassword.equals(encodedPass)) user.setPassword(encodedPass)
+   // if (user.isPasswordEmpty() || !user.getPassword.equals(encodedPass))
+        logger.debug("changing password for user {}", user.getName)
+        user.setPassword(encodedPass)
+
     user
   }
 

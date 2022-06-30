@@ -16,11 +16,13 @@
 
 package com.Ox08.paster.webapp.dao
 
-import com.Ox08.paster.webapp.model.{Channel, Tag}
+import com.Ox08.paster.webapp.base.Loggered
+import com.Ox08.paster.webapp.model.Tag
 import org.apache.commons.csv.{CSVFormat, CSVRecord}
+import org.apache.commons.lang3.StringUtils
+import org.springframework.beans.factory.annotation.Value
 
-import java.util.ArrayList
-import java.util.HashMap
+import java.util.{ArrayList, Collections, HashMap}
 import org.springframework.stereotype.{Repository, Service}
 import org.springframework.transaction.annotation.Transactional
 
@@ -28,44 +30,25 @@ import java.io.{File, FileReader, InputStreamReader}
 import java.util
 import scala.jdk.CollectionConverters._
 
-//@Repository("channelDao")
-//@Transactional(readOnly = true, rollbackFor = Array(classOf[Exception]))
+
 @Service
-class ChannelDao extends KeyDaoImpl[Channel](classOf[Channel]) {
+class ChannelDao( @Value("${paster.channels:null}")
+                  channelsString: String) extends Loggered {
 
-  val channels: util.Map[String,Channel] = new util.LinkedHashMap()
+  val channels: util.Set[String] = new util.TreeSet[String]()
 
-  def reload(src: File): Int = {
+    if (StringUtils.isBlank(channelsString))
+      channels.add("Default") else
+        for (ch <- channelsString.split(",")) {
+            channels.add(ch)
+        }
 
-    channels.clear()
+  def getAvailableChannels() = Collections.unmodifiableSet(channels)
 
-    loadDefaults(src, (record: CSVRecord) => {
-      val ch = new Channel(
-        record.get("CODE"),
-        record.get("DESC"),
-        record.get("ISDEFAULT").toBoolean)
-        ch.setTranslated(true)
+  def getDefault() = channels.iterator().next()
 
-      channels.put(ch.getCode().toLowerCase(),ch)
+  def exist(name:String) = channels.contains(name)
 
-    })
-
-    channels.size()
-  }
-
-  override def getByKey(code: String): Channel = if (channels.containsKey(code)) channels.get(code) else null
-
-  def loadDefaults(csv: File, callback: CSVRecord => Unit) {
-    val r = new FileReader(csv)
-    try {
-      val records = CSVFormat.DEFAULT.withHeader().parse(r)
-      for (record <- records.asScala) {
-        callback(record)
-      }
-    } finally r.close
-  }
-
-  def getDefault() = getByKey("default")
 }
 
 @Repository("tagDao")

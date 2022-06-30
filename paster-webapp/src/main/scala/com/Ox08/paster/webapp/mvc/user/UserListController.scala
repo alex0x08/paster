@@ -16,7 +16,7 @@
 
 package com.Ox08.paster.webapp.mvc.user
 
-import com.Ox08.paster.webapp.dao.UserDaoImpl
+import com.Ox08.paster.webapp.manager.UserManagerImpl
 import com.Ox08.paster.webapp.model.User
 import com.Ox08.paster.webapp.mvc.GenericListController
 import org.springframework.beans.factory.annotation.Autowired
@@ -28,12 +28,13 @@ import org.springframework.web.bind.annotation.RequestMapping
 class UserListController extends GenericListController[User]{
 
   @Autowired
-  private val userManager:UserDaoImpl = null
+  private val userManager:UserManagerImpl = null
   
   def listPage="redirect:/main/user/list"
   def editPage="/user/edit"
   def viewPage="/user/view"
 
-  def manager() = userManager
+  def manager() = null
+//  def manager() = userManager
  
 }

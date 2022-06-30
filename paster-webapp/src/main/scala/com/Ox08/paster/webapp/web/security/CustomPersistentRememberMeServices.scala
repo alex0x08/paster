@@ -59,7 +59,7 @@ class CustomPersistentRememberMeServices(key: String, uds: UserDetailsService, t
                                         request: HttpServletRequest,
                                         response: HttpServletResponse): UserDetails = {
     val token = getPersistentToken(cookieTokens)
-    val login = token.getUser.getUsername
+    val login = token.getUser()
 
     // Token also matches, so login is valid. Update the token value, keeping the *same* series number.
     log.debug("Refreshing persistent login token for user '{}', series '{}'",
@@ -91,7 +91,7 @@ class CustomPersistentRememberMeServices(key: String, uds: UserDetailsService, t
     val user = getUserDetailsService().loadUserByUsername(login).asInstanceOf[User]
     val token = new PersistentToken()
     token.setSeries(generateSeriesData())
-    token.setUser(user)
+    token.setUser(user.getUsername())
     token.setTokenValue(generateTokenData())
     token.setTokenDate(new Date())
     token.setIpAddress(request.getRemoteAddr())

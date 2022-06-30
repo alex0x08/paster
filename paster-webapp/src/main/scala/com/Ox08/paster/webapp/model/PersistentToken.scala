@@ -59,8 +59,8 @@ class PersistentToken extends java.io.Serializable {
   private var userAgent: String = null
 
   //  @JsonIgnore
-  @ManyToOne
-  private var user: User = null
+  //@ManyToOne
+  private var user: String = null
 
   def getSeries() = series
 
@@ -99,9 +99,9 @@ class PersistentToken extends java.io.Serializable {
     }
   }
 
-  def getUser = user
+  def getUser() = user
 
-  def setUser(user: User) {
+  def setUser(user: String): Unit = {
     this.user = user
   }
 

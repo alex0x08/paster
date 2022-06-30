@@ -16,7 +16,6 @@
 
 package com.Ox08.paster.webapp.mvc.user
 
-import com.Ox08.paster.webapp.dao.UserDaoImpl
 import com.Ox08.paster.webapp.model.{Role, RoleEditor, User}
 import com.Ox08.paster.webapp.mvc.{GenericController, GenericEditController}
 import org.springframework.stereotype.Controller
@@ -40,14 +39,16 @@ import scala.jdk.CollectionConverters._
 @RequestMapping(Array("/user"))
 class UserEditController extends GenericEditController[User] {
 
-  @Autowired
-  private val userManager: UserDaoImpl = null
+//  @Autowired
+//  private val userManager: UserDaoImpl = null
 
   override def listPage = "redirect:/main/user/list"
   override def editPage = "/user/edit"
   override def viewPage = "/user/view"
 
-  def manager(): UserDaoImpl = userManager
+  def manager() = null
+
+  //def manager(): UserDaoImpl = userManager
 
   @InitBinder
   def initBinder(binder: WebDataBinder): Unit = {
@@ -55,12 +56,12 @@ class UserEditController extends GenericEditController[User] {
     binder.registerCustomEditor(classOf[Role], new RoleEditor())
   }
 
-  override def fillEditModel(obj: User, model: Model, locale: Locale) {
+  override def fillEditModel(obj: User, model: Model, locale: Locale): Unit = {
     obj.setPassword(null)
     super.fillEditModel(obj, model, locale)
     model.addAttribute("availableRoles", Role.list)
   }
-
+/*
   @RequestMapping(value = Array(GenericEditController.SAVE_ACTION),
     method = Array(RequestMethod.POST))
   override def save(@RequestParam(required = false) cancel: String,
@@ -92,32 +93,31 @@ class UserEditController extends GenericEditController[User] {
       }
     }
 
-    if (b.isBlank && b.isPasswordEmpty) {
+    if (b.isBlank() && b.isPasswordEmpty()) {
       result.rejectValue("password", "error.password.required")
       fillEditModel(b, model, locale)
       return editPage
     }
 
-    if (!b.isPasswordEmpty() && !b.getPassword.equals(b.getPasswordRepeat)) {
+    if (!b.isPasswordEmpty() && !b.getPassword().equals(b.getPasswordRepeat())) {
       result.rejectValue("password", "error.password.missmatch")
       fillEditModel(b, model, locale)
       return editPage
     }
 
-    if (!b.isBlank) {
-      val old = manager.getFull(b.getId)
-      if (!old.isRemoteUser) {
-        old.setEmail(b.getEmail)
-        old.setName(b.getName)
-        old.setRoles(b.getRoles)
-
+    if (!b.isBlank()) {
+      val old = manager.getFull(b.getId())
+      if (!old.isRemoteUser()) {
+        old.setEmail(b.getEmail())
+        old.setName(b.getName())
+        old.setRoles(b.getRoles())
       }
 
 
-      old.setDisabled(b.isDisabled)
+      old.setDisabled(b.isDisabled())
 
-      if (!b.isPasswordEmpty() && b.getPassword.equals(b.getPasswordRepeat)) {
-        old.setPassword(b.getPassword)
+      if (!b.isPasswordEmpty() && b.getPassword().equals(b.getPasswordRepeat)) {
+        old.setPassword(b.getPassword())
       }
 
       manager.save(old)
@@ -129,7 +129,7 @@ class UserEditController extends GenericEditController[User] {
 
     listPage
   }
-
+*/
 
   @RequestMapping(value = Array(GenericEditController.DELETE_ACTION),
     method = Array(RequestMethod.GET, RequestMethod.POST))

@@ -18,10 +18,13 @@ package com.Ox08.paster.webapp.model
 
 import com.Ox08.paster.webapp.base.Loggered
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute
+
 import java.io.Serializable
 import javax.persistence._
 import org.hibernate.annotations.GenericGenerator
 import org.hibernate.envers.Audited
+
+import java.util.Objects
 
 
 @MappedSuperclass
@@ -54,7 +57,7 @@ abstract class DBObject extends java.io.Serializable {
     var hash:Int = 53*7
         
     if (id != null) 
-      hash+=id.hashCode()
+      hash+=Objects.hashCode(id)
         
     hash
   }
@@ -62,8 +65,7 @@ abstract class DBObject extends java.io.Serializable {
   override def equals(from:Any) =
       (from.isInstanceOf[DBObject] && !isBlank() 
        && from.asInstanceOf[DBObject].getId().equals(id)) 
-      
-  
+
 
   override def toString():String =  Loggered.toStringSkip(this, null)
   

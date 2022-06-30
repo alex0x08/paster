@@ -51,8 +51,8 @@ object User extends Named(null) {
 
 }
 
-@Entity
-@Indexed(index = "indexes/users") //@Audited
+//@Entity
+//@Indexed(index = "indexes/users") //@Audited
 class User(name: String) extends Named(name) with UserDetails with java.io.Serializable {
 
   def this() = this(null)

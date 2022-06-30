@@ -16,7 +16,7 @@
 
 package com.Ox08.paster.webapp.mvc
 
-import com.Ox08.paster.webapp.model.{SortColumn, Struct}
+import com.Ox08.paster.webapp.model.Struct
 
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpSession
@@ -53,6 +53,22 @@ object GenericListController {
             List[SortColumn](new SortColumn("id","struct.id"),
                               new SortColumn("name","struct.name"),
                               new SortColumn("lastModified","struct.lastModified"))
+}
+
+import java.util.Objects
+
+class SortColumn(property:String, name:String) {
+
+  def getName() = name
+  def getProperty() = property
+
+  override def equals(from:Any) =
+    from.isInstanceOf[SortColumn] && property != null &&
+      property.equals((from.asInstanceOf[SortColumn]).getProperty)
+
+  override def hashCode():Int =
+    42 + Objects.hashCode(this.property)
+
 }
 
 

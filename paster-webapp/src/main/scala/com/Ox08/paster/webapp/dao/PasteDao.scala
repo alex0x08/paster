@@ -16,14 +16,13 @@
 
 package com.Ox08.paster.webapp.dao
 
-import com.Ox08.paster.webapp.model.{Channel, Paste, Priority, Tag, User}
-import javax.persistence.Tuple
-import javax.persistence.criteria.CriteriaQuery
-import javax.persistence.criteria.Predicate
+import com.Ox08.paster.webapp.model.{Paste, Priority, User}
 import org.springframework.stereotype.Repository
-import java.util.ArrayList
-import javax.persistence.Query
 import org.springframework.transaction.annotation.Transactional
+
+import java.util.ArrayList
+import javax.persistence.{Query, Tuple}
+import javax.persistence.criteria.{CriteriaQuery, Predicate}
 import scala.jdk.CollectionConverters._
 
 @Repository("pasteDao")
@@ -58,7 +57,7 @@ class PasteDaoImpl extends SearchableDaoImpl[Paste](classOf[Paste]) {
     cr.multiselect(r.get("id"))
 
     val select = new ArrayList[Predicate]
-    select.add(cb.notEqual(r.get("id"), paste.getId))
+    select.add(cb.notEqual(r.get("id"), paste.getId()))
 
     if (paste.getIntegrationCode() != null) {
       select.add(cb.equal(r.get("integrationCode"), paste.getIntegrationCode()))
@@ -109,7 +108,7 @@ class PasteDaoImpl extends SearchableDaoImpl[Paste](classOf[Paste]) {
     query.getResultList()
   }
 
-  def getByChannel(channel: Channel, sortAsc: Boolean): java.util.List[Paste] = {
+  def getByChannel(channel: String, sortAsc: Boolean): java.util.List[Paste] = {
     val cr = new CriteriaSet()
     val query: Query = em.createQuery(
       cr.cr.where(
@@ -165,7 +164,7 @@ class PasteDaoImpl extends SearchableDaoImpl[Paste](classOf[Paste]) {
    * dateTime from start to search
    * @return number of modified or created pastas         
    */
-  def countAllSince(channel: Channel, dateFrom: java.lang.Long): java.lang.Long = {
+  def countAllSince(channel: String, dateFrom: java.lang.Long): java.lang.Long = {
 
     val cb = em.getCriteriaBuilder
     val cq: CriteriaQuery[java.lang.Long] = cb.createQuery(classOf[java.lang.Long])

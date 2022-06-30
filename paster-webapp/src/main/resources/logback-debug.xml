@@ -35,7 +35,7 @@
     <logger name="uber.paste.tiles2" level="WARN"/>
 
 
-    <logger name="uber" level="DEBUG"/>
+    <logger name="com.Ox08" level="DEBUG"/>
 
 
     <root level="INFO">

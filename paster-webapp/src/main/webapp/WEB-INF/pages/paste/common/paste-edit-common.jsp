@@ -165,8 +165,8 @@
 
                                     <form:select path="channel" multiple="false" id="pchan"  cssClass="form-control">
                                         <c:forEach items="${availableChannels}" var="channel">
-                                            <form:option value="${channel.code}">
-                                                <fmt:message key="${channel.name}" />
+                                            <form:option value="${channel}">
+                                                <fmt:message key="${channel}" />
                                             </form:option>
                                         </c:forEach>
                                     </form:select>

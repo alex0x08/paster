@@ -38,6 +38,12 @@ object Struct {
  * Struct model, have lastModified  field
  */
 
+
+trait SearchObject {
+  def terms():List[String]
+}
+
+
 @MappedSuperclass
 abstract class Struct extends DBObject with SearchObject with  java.io.Serializable{
 

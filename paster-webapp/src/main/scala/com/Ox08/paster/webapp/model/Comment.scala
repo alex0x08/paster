@@ -26,9 +26,9 @@ class Comment extends Struct with java.io.Serializable {
   @Size(min = 3, message = "{struct.name.validator}")
   private var text: String = null
 
-  @ManyToOne(fetch = FetchType.EAGER, cascade = Array(CascadeType.PERSIST, CascadeType.MERGE))
-  @JoinColumn(name = "owner_id")
-  private var owner: User = null
+  //@ManyToOne(fetch = FetchType.EAGER, cascade = Array(CascadeType.PERSIST, CascadeType.MERGE))
+  //@JoinColumn(name = "owner_id")
+  private var owner: String = null
   private var lineNumber: java.lang.Long = null
   private var parentId: java.lang.Long = null
 
@@ -50,9 +50,9 @@ class Comment extends Struct with java.io.Serializable {
 
   @XmlTransient
   @JsonIgnore
-  def getOwner(): User = owner
+  def getOwner(): String = owner
 
-  def setOwner(u: User): Unit =  {
+  def setOwner(u: String): Unit =  {
     owner = u
   }
 
@@ -76,14 +76,6 @@ class Comment extends Struct with java.io.Serializable {
   }
 
   override def terms(): List[String] = Comment.terms
-
-  override def loadFull(): Unit =  {
-
-    if (owner != null) {
-      getOwner().loadFull()
-    }
-
-  }
 
 
 }

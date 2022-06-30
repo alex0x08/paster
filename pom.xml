@@ -137,6 +137,30 @@
                 </executions>
             </plugin>
 
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+
+
+                    <!--debug>true</debug>
+                    <debuglevel>none</debuglevel-->
+                    <showWarnings>true</showWarnings>
+                    <showDeprecation>true</showDeprecation>
+                    <compilerArgs>
+                        <!--arg>-Werror</arg-->
+                        <arg>-Xlint:all,-processing</arg>
+                        <arg>-Xlint:-serial</arg>
+                    </compilerArgs>
+
+                </configuration>
+            </plugin>
+
+
         </plugins>
     </build>
   

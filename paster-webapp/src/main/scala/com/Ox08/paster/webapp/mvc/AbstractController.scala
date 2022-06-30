@@ -16,7 +16,8 @@
 
 package com.Ox08.paster.webapp.mvc
 
-import com.Ox08.paster.webapp.base.{Loggered, SystemInfo}
+
+import com.Ox08.paster.webapp.base.{Boot, Loggered}
 import com.Ox08.paster.webapp.manager.UserManager
 import com.Ox08.paster.webapp.model.User
 import com.fasterxml.jackson.annotation.JsonIgnore
@@ -46,8 +47,8 @@ abstract class AbstractController extends Loggered {
   @Autowired//(name = "messageSource")
   protected val messageSource: MessageSource = null
 
-  @Autowired
-  protected val systemInfo: SystemInfo = null
+  //@Autowired
+  protected val systemInfo = Boot.BOOT.getSystemInfo
   
   @Value("${config.comments.allow-anonymous.create}")
   val allowAnonymousCommentsCreate: Boolean = false
@@ -89,14 +90,14 @@ abstract class AbstractController extends Loggered {
 
   @JsonIgnore
   @ModelAttribute("currentUser")
-  def getCurrentUser() = UserManager.getCurrentUser
+  def getCurrentUser() = UserManager.getCurrentUser()
 
   @JsonIgnore
-  def isCurrentUserLoggedIn() = UserManager.getCurrentUser != null
+  def isCurrentUserLoggedIn() = UserManager.getCurrentUser() != null
 
   @JsonIgnore
   def isCurrentUserAdmin(): Boolean = {
-    val u: User = UserManager.getCurrentUser
+    val u: User = UserManager.getCurrentUser()
     u != null && u.isAdmin()
   }
 

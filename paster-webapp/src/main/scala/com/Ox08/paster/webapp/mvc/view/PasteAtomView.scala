@@ -54,7 +54,7 @@ class PasteAtomView extends AbstractAtomFeedView{
       // see http://diveintomark.org/archives/2004/05/28/howto-atom-id#other
       entry.setId(String.format("tag:springsource.com,%s:%d", date, e.getId()))
       entry.setTitle(String.format("On %s, %s wrote", date,
-        if (e.getOwner()!=null) { e.getOwner().getUsername()} else { "Anonymous"}))
+        if (e.getOwner()!=null) { e.getOwner()} else { "Anonymous"}))
       entry.setUpdated(e.getLastModified)
 
       val summary = new Content()

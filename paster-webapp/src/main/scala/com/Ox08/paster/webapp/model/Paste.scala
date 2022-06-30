@@ -53,8 +53,6 @@ object Paste extends Struct {
 @Entity
 @Indexed(index = "indexes/pastas")
 @XmlRootElement(name = "paste")
-//@Audited
-//@org.hibernate.annotations.Entity(dynamicUpdate = true)
 class Paste(title: String) extends Named(title) with java.io.Serializable {
 
 
@@ -67,7 +65,7 @@ class Paste(title: String) extends Named(title) with java.io.Serializable {
   @NotNull(message = "{validator.not-null}")
   @Column(nullable = false, unique = true, length = 255, updatable = false)
   @Field(index = Index.NO, store = Store.YES, termVector = TermVector.NO)
-  private var uuid = UUID.randomUUID().toString()
+  private val uuid = UUID.randomUUID().toString()
 
   /**
    * paste's body
@@ -102,10 +100,7 @@ class Paste(title: String) extends Named(title) with java.io.Serializable {
   /**
    * paste owner (author)
    */
-  @ManyToOne(fetch = FetchType.EAGER, cascade = Array(CascadeType.PERSIST, CascadeType.MERGE))
-  @JoinColumn(name = "owner_id")
-  //@NotAudited
-  private var owner: User = null
+  private var owner: String = null
 
   /**
    * type of paste, used almost to highlight it correctly
@@ -124,18 +119,12 @@ class Paste(title: String) extends Named(title) with java.io.Serializable {
    */
   private var remoteUrl: String = null
 
-
   /**
    * paste's  source, describes where it came from
    */
   @NotNull
-  //@Field
-  @ManyToOne(fetch = FetchType.EAGER, cascade = Array(CascadeType.PERSIST, CascadeType.MERGE))
-  @JoinColumn(name = "channel_id")
-  private var channel: Channel = null
-  //PasteSource.FORM.getCode
+  private var channel: String = null
 
-  //@Transient
   @Field(name = "tags", index = Index.YES, store = Store.YES, termVector = TermVector.YES) //,boost=@Boost(2f)
   private var tagsAsString: String = null
 
@@ -144,15 +133,6 @@ class Paste(title: String) extends Named(title) with java.io.Serializable {
   /**
    * comments relation
    */
-  // @OneToMany(fetch = FetchType.LAZY,
-  // cascade = Array(CascadeType.PERSIST,CascadeType.MERGE,CascadeType.REMOVE),
-  // orphanRemoval = true)
-  // @JoinColumn(name = "paste_ref")
-  // @AuditMappedBy(mappedBy = "paste")
-  //@NotAudited
-  //  @Audited
-  //(withModifiedFlag = false)
-  //@NotAudited
   @transient
   private var comments: java.util.List[Comment] = new ArrayList[Comment]()
 
@@ -161,7 +141,6 @@ class Paste(title: String) extends Named(title) with java.io.Serializable {
 
   private var sticked: Boolean = false
 
-  //@NotAudited
   private[model] var commentsCount: java.lang.Integer = null
 
   private var symbolsCount: java.lang.Integer = null
@@ -214,9 +193,9 @@ class Paste(title: String) extends Named(title) with java.io.Serializable {
    */
   @XmlTransient
   @JsonIgnore
-  def getOwner(): User = owner
+  def getOwner(): String = owner
 
-  def setOwner(u: User): Unit = {
+  def setOwner(u: String): Unit = {
     owner = u
   }
 
@@ -228,7 +207,7 @@ class Paste(title: String) extends Named(title) with java.io.Serializable {
     integrationCode = code
   }
 
-  def getTags(): java.util.Set[String] = tagsMap.keySet
+  def getTags(): java.util.Set[String] = tagsMap.keySet()
 
   def getTagsMap(): java.util.Map[String, Tag] = tagsMap
 
@@ -276,7 +255,7 @@ class Paste(title: String) extends Named(title) with java.io.Serializable {
 
   def getChannel() = channel
 
-  def setChannel(s: Channel): Unit = {
+  def setChannel(s: String): Unit = {
     channel = s
   }
 
@@ -326,11 +305,7 @@ class Paste(title: String) extends Named(title) with java.io.Serializable {
    * MUST be called with opened hibernate session
    */
   override def loadFull(): Unit = {
-    //    System.out.println("_loadFull paste "+owner)
 
-    if (owner != null) {
-      getOwner.loadFull
-    }
     getText
     for (c <- comments.asScala) {
       c.loadFull()

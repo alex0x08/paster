@@ -140,6 +140,18 @@
         </dependency>
 
         <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jul-to-slf4j</artifactId>
+            <version>1.7.36</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jcl-over-slf4j</artifactId>
+            <version>1.7.36</version>
+        </dependency>
+
+        <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <version>1.2.11</version>
@@ -524,10 +536,94 @@
     <build>
         <defaultGoal>package</defaultGoal>
 
-                <finalName>${project.artifactId}-${project.version}</finalName>
-        
+        <finalName>${project.artifactId}-${project.version}.${buildNumber}</finalName>
+
 
         <plugins>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>buildnumber-maven-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <id>buildnumber</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>create</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <format>{0,number}</format>
+                    <items>
+                        <item>buildNumber</item>
+                    </items>
+                    <doCheck>false</doCheck>
+                    <doUpdate>false</doUpdate>
+                    <revisionOnScmFailure>unknownbuild</revisionOnScmFailure>
+                </configuration>
+            </plugin>
+
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>timestamp-property</id>
+                        <goals>
+                            <goal>timestamp-property</goal>
+                        </goals>
+                        <configuration>
+                            <name>build.time</name>
+                            <pattern>dd.MM.yyyy HH:mm</pattern>
+                            <locale>ru_RU</locale>
+                            <timeZone>Europe/Moscow</timeZone>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>pl.project13.maven</groupId>
+                <artifactId>git-commit-id-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>revision</goal>
+                        </goals>
+                    </execution>
+                </executions>
+
+                <configuration>
+                    <!--
+                        If you'd like to tell the plugin where your .git directory is,
+                        use this setting, otherwise we'll perform a search trying to
+                        figure out the right directory. It's better to add it explicite IMHO.
+                    -->
+                    <!--dotGitDirectory>${project.basedir}/../.git</dotGitDirectory-->
+
+                    <skip>false</skip>
+                    <failOnNoGitDirectory>true</failOnNoGitDirectory>
+                    <generateGitPropertiesFilename>${project.build.outputDirectory}/git.properties</generateGitPropertiesFilename>
+
+                    <!-- Denotes the format to save properties in. Valid options are "properties" (default) and "json".
+                    Properties will be saved to the generateGitPropertiesFilename if generateGitPropertiesFile is set to `true`. -->
+                    <format>properties</format>
+                    <generateGitPropertiesFile>true</generateGitPropertiesFile>
+                    <dateFormat>dd.MM.yyyy HH:mm:ss</dateFormat>
+                    <dateFormatTimeZone>${user.timezone}</dateFormatTimeZone>
+
+                    <!--useNativeGit>true</useNativeGit-->
+
+                    <excludeProperties>
+                        <excludeProperty>^git.local.branch.*$</excludeProperty>
+                    </excludeProperties>
+                </configuration>
+
+            </plugin>
+
 
             <plugin>
                 <groupId>net.alchim31.maven</groupId>
@@ -590,7 +686,7 @@
                         </manifest>
                         <manifestEntries>
                             <Paster-Implementation-Version>${project.version}</Paster-Implementation-Version>
-                            <Paster-Implementation-Build>${build.buildNumber}</Paster-Implementation-Build>
+                            <Paster-Implementation-Build>${buildNumber}</Paster-Implementation-Build>
                             <Paster-Implementation-Build-Time>${maven.build.timestamp}</Paster-Implementation-Build-Time>
                         </manifestEntries>
                     </archive>
@@ -637,6 +733,10 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>11</source>
+                    <target>11</target>
+                </configuration>
             </plugin>
 
         </plugins>
@@ -651,7 +751,6 @@
                 <includes>
                     <include>release.properties</include>
                     <include>default.properties</include>
-                    <include>jdbc.properties</include>
                 </includes>
                 <filtering>true</filtering>
             </resource>
@@ -665,8 +764,8 @@
 
                     <include>logging.properties</include>
                     <include>i18n/**</include>
-                    <include>oak/**</include>
-                    <include>defaultData/**</include>
+                    <include>default/**</include>
+                    <include>bundles/**</include>
 
                     <include>mime*.properties</include>
                     <include>Validation*.properties</include>
@@ -683,14 +782,6 @@
                 </includes>
             </resource>
 
-            <resource>
-                <targetPath>templates</targetPath>
-                <directory>src/main/resources/templates</directory>
-                <includes>
-                    <include>*.xls</include>
-                    <include>*.docx</include>
-                </includes>
-            </resource>
 
             <resource>
                 <targetPath>META-INF</targetPath>

@@ -17,7 +17,7 @@
 package com.Ox08.paster.webapp.mvc.paste
 
 import com.Ox08.paster.webapp.dao.{ChannelDao, CommentDaoImpl, PasteDaoImpl, SearchableDaoImpl}
-import com.Ox08.paster.webapp.model.{Channel, KeyObj, OwnerQuery, Paste}
+import com.Ox08.paster.webapp.model.{KeyObj, OwnerQuery, Paste}
 import com.Ox08.paster.webapp.mvc.{ExtendedPageListHolder, GenericController, GenericListController, SearchController, SearchResult}
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation._
@@ -26,7 +26,6 @@ import java.util.concurrent.TimeUnit
 import javax.servlet.http.HttpServletRequest
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.ui.Model
-
 import java.util.Locale
 import org.springframework.beans.support.MutableSortDefinition
 import org.springframework.beans.support.PagedListHolder
@@ -49,7 +48,7 @@ class PasteListController extends SearchController[Paste, OwnerQuery] {
     var curDate: java.util.Date = null
     var total: Int = 0
     var title: String = null
-    def setCurDate(date: java.util.Date) {
+    def setCurDate(date: java.util.Date): Unit = {
       curDate = date
       if (prevDate == null) {
         prevDate = curDate
@@ -107,10 +106,10 @@ class PasteListController extends SearchController[Paste, OwnerQuery] {
   @ModelAttribute("query")
   def newQuery(): OwnerQuery = new OwnerQuery
 
-  protected override def fillListModel(model: Model, locale: Locale) {
+  protected override def fillListModel(model: Model, locale: Locale): Unit = {
     super.fillListModel(model, locale)
     model.addAttribute("title", "Pastas")
-    model.addAttribute("availableSourceTypes", channelDao.getList)
+    model.addAttribute("availableSourceTypes", channelDao.getAvailableChannels())
     model.addAttribute("splitHelper", new DateSplitHelper(locale))
     model.addAttribute("sortDesc", false)
   }
@@ -228,7 +227,7 @@ class PasteListController extends SearchController[Paste, OwnerQuery] {
   @ModelAttribute(GenericController.NODE_COUNT_KEY)
   def countAllSince(@PathVariable("source") channelCode: String,
                     @PathVariable("since") dateFrom: java.lang.Long): java.lang.Long = {
-    pasteManager.countAllSince(channelDao.getByKey(channelCode), dateFrom)
+    pasteManager.countAllSince(channelCode, dateFrom)
   }
 
   def listImpl(request: HttpServletRequest, locale: Locale, model: Model,
@@ -240,10 +239,10 @@ class PasteListController extends SearchController[Paste, OwnerQuery] {
                channelCode: String, integrationCode: String): java.util.List[Paste] = {
     logger.debug("_paste listImpl, pageSize {}", pageSize)
     fillListModel(model, locale)
-    val ps = if (channelCode != null) {
+    val ps = if (channelCode != null && channelDao.exist(channelCode)) {
       model.addAttribute("sourceType", channelCode.toLowerCase)
       model.addAttribute("sortDesc", !sortAsc)
-      channelDao.getByKey(channelCode)
+      channelCode
     } else null
 
     processPageListHolder(request, locale, model, page, NPpage, pageSize, sortColumn, sortAsc,
@@ -255,19 +254,19 @@ class PasteListController extends SearchController[Paste, OwnerQuery] {
   @RequestMapping(value = Array("/own/list"))
   @ModelAttribute("items")
   def listOwn(model: Model, locale: Locale): java.util.List[Paste] = {
-    manager.getByOwner(getCurrentUser)
+    manager.getByOwner(getCurrentUser())
   }
 
   @RequestMapping(value = Array("/own/list/body"), method = Array(RequestMethod.GET))
   @ModelAttribute("items")
   @ResponseBody
   def listOwnBody(): java.util.List[Paste] = {
-    manager.getByOwner(getCurrentUser)
+    manager.getByOwner(getCurrentUser())
   }
 
   protected val pasterListCallback: PasteListCallback = new PasteListCallback(null, true, null)
 
-  class PasteListCallback(channel: Channel, sortAsc: Boolean, integrationCode: String)
+  class PasteListCallback(channel: String, sortAsc: Boolean, integrationCode: String)
     extends SourceCallback[Paste] {
     override def invokeCreate(): PagedListHolder[Paste] = {
       val ph = new ExtendedPageListHolder[Paste](
@@ -275,7 +274,7 @@ class PasteListController extends SearchController[Paste, OwnerQuery] {
           manager.getListIntegrated(integrationCode)
         } else {
           if (channel == null) {
-            manager.getByChannel(channelDao.getDefault, sortAsc)
+            manager.getByChannel(channelDao.getDefault(), sortAsc)
           } else
             manager.getByChannel(channel, sortAsc)
         })

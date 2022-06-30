@@ -13,11 +13,11 @@
             <c:forEach var="source" items="${availableSourceTypes}" varStatus="loopStatus">
 
                 <c:choose>
-                    <c:when test="${source.codeLowerCase eq sourceType}">
-                        <span style="font-size: 14px; font-weight: bold; "><fmt:message key="${source.name}"/> </span>
+                    <c:when test="${source eq sourceType}">
+                        <span style="font-size: 14px; font-weight: bold; "><fmt:message key="${source}"/> </span>
                     </c:when>
                     <c:otherwise>
-                        <a href="<c:url value='/main/paste/list/${source.codeLowerCase}'/>"><fmt:message key="${source.name}"/></a>
+                        <a href="<c:url value='/main/paste/list/${source}'/>"><fmt:message key="${source}"/></a>
                     </c:otherwise>
                 </c:choose>
 

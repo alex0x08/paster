@@ -16,46 +16,38 @@
 
 package com.Ox08.paster.webapp.mvc
 
-import com.Ox08.paster.webapp.base.SystemInfo
-import com.Ox08.paster.webapp.dao.ProjectDaoImpl
-import com.Ox08.paster.webapp.model.Project
+import org.springframework.stereotype.Controller
+import org.springframework.ui.Model
+import org.springframework.validation.BindingResult
+import org.springframework.web.bind.annotation.{ModelAttribute, RequestMapping, RequestMethod, RequestParam}
+import org.springframework.web.servlet.mvc.support.RedirectAttributes
 
 import java.awt.image.BufferedImage
 import java.io.ByteArrayOutputStream
 import java.util.Locale
 import javax.imageio.ImageIO
 import javax.validation.Valid
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Controller
-import org.springframework.ui.Model
-import org.springframework.validation.BindingResult
-import org.springframework.web.bind.annotation.ModelAttribute
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestMethod
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.servlet.mvc.support.RedirectAttributes
-import org.apache.commons.codec.binary.Base64
 
 @Controller
 @RequestMapping(Array("/admin/settings"))
 class SettingsController extends AbstractController {
 
-  @Autowired
-  val projectManager: ProjectDaoImpl = null
+  //@Autowired
+  //val projectManager: ProjectDaoImpl = null
 
   def editPage = "/admin/settings/edit"
-  def manager(): ProjectDaoImpl = projectManager
+  def manager() = null
 
   @RequestMapping(value = Array(GenericEditController.EDIT_ACTION), method = Array(RequestMethod.GET))
   def edit(model: Model, locale: Locale): String = {
-    model.addAttribute(GenericController.MODEL_KEY, projectManager.getCurrentProject)
+   // model.addAttribute(GenericController.MODEL_KEY, projectManager.getCurrentProject)
     editPage
   }
 
 
   @RequestMapping(value = Array("/dbconsole"), method = Array(RequestMethod.GET))
   def dbconsole(model: Model, locale: Locale): String = {
-    model.addAttribute(GenericController.MODEL_KEY, projectManager.getCurrentProject)
+    //model.addAttribute(GenericController.MODEL_KEY, projectManager.getCurrentProject)
     "/admin/settings/dbconsole"
   }
 
@@ -63,7 +55,7 @@ class SettingsController extends AbstractController {
   def save(@RequestParam(required = false) cancel: String,
            @RequestParam(required = false) reset: String,
            @RequestParam(required = false) scaleClientImg: Boolean,
-           @Valid @ModelAttribute(GenericController.MODEL_KEY) b: Project,
+          // @Valid @ModelAttribute(GenericController.MODEL_KEY) b: Project,
            result: BindingResult, model: Model, locale: Locale,
            redirectAttributes: RedirectAttributes): String = {
     if (cancel != null) {
@@ -72,14 +64,16 @@ class SettingsController extends AbstractController {
     }
 
     if (reset != null) {
-      val current: Project = manager.getCurrentProject()
+    /*  val current: Project = manager.getCurrentProject()
       current.setName(getResource("project.name.default", locale))
       current.setDescription(getResource("project.description.default", locale))
       current.setClientImage(null)
       current.setIconImage(null)
 
       systemInfo.setProject(manager.save(current))
+      */
       redirectAttributes.addFlashAttribute("statusMessageKey", "action.settings.reset")
+
 
       return editPage
     }
@@ -89,11 +83,11 @@ class SettingsController extends AbstractController {
       return editPage
     }
 
-    val current: Project = manager.getCurrentProject
+    /*val current: Project = manager.getCurrentProject
     current.setName(b.getName())
     current.setDescription(b.getDescription())
-
-    if (b.getClientImageFile() != null && !b.getClientImageFile().isEmpty()) {
+    */
+    /*if (b.getClientImageFile() != null && !b.getClientImageFile().isEmpty()) {
       val img: BufferedImage = ImageIO.read(b.getClientImageFile().getInputStream())
       val baar = new ByteArrayOutputStream()
 
@@ -101,19 +95,19 @@ class SettingsController extends AbstractController {
         img
 
         , "JPEG", baar)
-      current.setClientImage("data:image/jpeg;base64," +
-        Base64.encodeBase64String(baar.toByteArray()))
+    //  current.setClientImage("data:image/jpeg;base64," +
+     //   Base64.encodeBase64String(baar.toByteArray()))
     }
     if (b.getIconImageFile != null && !b.getIconImageFile().isEmpty()) {
       val img: BufferedImage = ImageIO.read(b.getIconImageFile().getInputStream())
       val baar = new ByteArrayOutputStream()
 
       ImageIO.write(img, "JPEG", baar)
-      current.setIconImage("data:image/jpeg;base64," +
-        Base64.encodeBase64String(baar.toByteArray()))
-    }
+     // current.setIconImage("data:image/jpeg;base64," +
+     //   Base64.encodeBase64String(baar.toByteArray()))
+    }*/
 
-    systemInfo.setProject(manager.save(current))
+    //systemInfo.setProject(manager.save(current))
     redirectAttributes.addFlashAttribute("statusMessageKey", "action.success")
     "redirect:/main" + editPage
   }

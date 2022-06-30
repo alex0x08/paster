@@ -13,28 +13,6 @@
         <head>
             <meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, 
                   user-scalable=yes" />
-            <c:choose>
-                <c:when test="${not empty systemInfo.project.clientImage}">
-                    <style>
-                        body {
-                            background: url('${systemInfo.project.clientImage}') no-repeat;
-                            background-position: right bottom;
-                            background-attachment: fixed;
-
-                        }
-                    </style>
-                </c:when>
-                <c:otherwise>
-
-                    <%--    <c:url var="defaultBgUrl" value='/main/static/${appId}/images/ninjas/ninja-back.png'/>
-                        
-                    <style>
-                        body {
-                            background: url('${defaultBgUrl}') no-repeat;
-                        }
-                    </style> --%>
-                </c:otherwise>
-            </c:choose>
 
             <jsp:include page="/WEB-INF/pages/template/template-common-head.jsp"/>
 
@@ -88,14 +66,6 @@
                         <fmt:formatDate pattern="${datePattern}" var="startDate" 
                                         value="${systemInfo.dateStart}" />
 
-                        <fmt:formatDate pattern="${datePattern}" var="installDate" 
-                                        value="${systemInfo.dateInstall}" />
-                        <p>
-                            <fmt:message key='system.installed.title'>
-                                <fmt:param value="${startDate}"/>
-                                <fmt:param value="${installDate}"/>
-                            </fmt:message>   
-                        </p>
 
 
                         <small><fmt:message key="site.footer"/></small>
