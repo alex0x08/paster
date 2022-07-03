@@ -46,6 +46,7 @@
     </licenses>
 
     <properties>
+        <java.version>18</java.version>
         <scalaVersion>2.13.8</scalaVersion>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <netbeans.hint.license>apache20</netbeans.hint.license>
@@ -54,9 +55,10 @@
     </properties>
 
     <modules>
-        <module>paster-run</module>
+        <module>libs</module>        
         <module>paster-webapp</module>
-    </modules>
+        <module>paster-run</module>
+      </modules>
 
 
     <pluginRepositories>

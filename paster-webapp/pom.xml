@@ -34,6 +34,19 @@
     <dependencies>
 
         <dependency>
+            <groupId>com.Ox08.paster.webapp</groupId>
+            <artifactId>paster-tiles-jakarta</artifactId>
+            <version>${parent.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.Ox08.paster.webapp</groupId>
+            <artifactId>paster-spring-tiles3-jakarta</artifactId>
+            <version>${parent.version}</version>
+        </dependency>
+
+
+        <dependency>
             <groupId>org.scala-lang</groupId>
             <artifactId>scala-library</artifactId>
             <version>${scalaVersion}</version>
@@ -47,27 +60,6 @@
         </dependency>
 
 
-
-        <dependency>
-            <groupId>org.glassfish.web</groupId>
-            <artifactId>jakarta.servlet.jsp.jstl</artifactId>
-            <version>2.0.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>jakarta.servlet</groupId>
-            <artifactId>jakarta.servlet-api</artifactId>
-            <version>6.0.0</version>
-            <scope>provided</scope>
-        </dependency>
-
-
-
-        <dependency>
-            <groupId>jakarta.servlet.jsp.jstl</groupId>
-            <artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
-            <version>2.0.0</version>
-        </dependency>
 
         <!--dependency>
             <groupId>jakarta.persistence</groupId>
@@ -271,7 +263,7 @@
 
         -->
 
-
+    <!--
         <dependency>
             <groupId>org.apache.tiles</groupId>
             <artifactId>tiles-api</artifactId>
@@ -346,7 +338,7 @@
 
     </exclusions>
         </dependency>
-
+    -->
 
 
         <!-- spring rest dependencies -->
