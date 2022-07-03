@@ -17,11 +17,12 @@
 package com.Ox08.paster.webapp.dao
 
 import com.Ox08.paster.webapp.base.Loggered
+import jakarta.persistence.criteria.CriteriaQuery
+import jakarta.persistence.{EntityManager, PersistenceContext, Tuple}
 import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
-import javax.persistence.{EntityManager, PersistenceContext, Tuple}
+
 import java.util.ArrayList
-import javax.persistence.criteria.CriteriaQuery
 import scala.jdk.CollectionConverters._
 
 

@@ -16,9 +16,10 @@
 
 package com.Ox08.paster.webapp.model
 
+import jakarta.persistence.Entity
+
 import java.beans.PropertyEditorSupport
 import java.util.Collection
-import javax.persistence._
 
 /**
  * Brush aliases	File name

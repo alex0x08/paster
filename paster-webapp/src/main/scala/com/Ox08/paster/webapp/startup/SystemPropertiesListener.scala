@@ -1,11 +1,9 @@
 package com.Ox08.paster.webapp.startup
 
 import com.Ox08.paster.webapp.base.Loggered
-
+import jakarta.servlet.{ServletContextEvent, ServletContextListener}
 import java.io.{File, IOException}
 import java.util.Locale
-import javax.servlet.{ServletContextEvent, ServletContextListener}
-
 
 object SystemConstants {
   val APP_BASE: String = ".apps"

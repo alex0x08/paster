@@ -16,15 +16,15 @@
 
 package com.Ox08.paster.webapp.web
 
-import javax.servlet.ServletException
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
+import jakarta.servlet.ServletException
 import org.springframework.web.servlet.mvc.WebContentInterceptor
+import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
 
 class StaticResourcesContentInterceptor extends WebContentInterceptor {
 
   @throws(classOf[ServletException])
-  override def preHandle(request: HttpServletRequest, response: HttpServletResponse, handler: Object): Boolean = {
+  override def preHandle(request: HttpServletRequest, response:
+  HttpServletResponse, handler: Object): Boolean = {
     super.preHandle(request, response, handler)
     val h = response.getHeader("Cache-Control")
     if (h != null) {

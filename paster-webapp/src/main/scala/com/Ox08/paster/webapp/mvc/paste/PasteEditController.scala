@@ -21,6 +21,7 @@ import com.Ox08.paster.webapp.manager.ResourcePathHelper
 import com.Ox08.paster.webapp.model.{CodeType, CodeTypeEditor, Comment, KeyEditor, OwnerQuery, Paste, Tag}
 import com.Ox08.paster.webapp.mvc.{GenericController, GenericEditController}
 import com.fasterxml.jackson.annotation.JsonIgnore
+import jakarta.validation.Valid
 import org.apache.commons.lang3.StringUtils
 import org.springframework.beans.factory.annotation.{Autowired, Qualifier}
 import org.springframework.context.MessageSource
@@ -34,7 +35,6 @@ import org.apache.commons.text.StringEscapeUtils
 import org.apache.commons.text.WordUtils
 
 import java.util.{ArrayList, Locale}
-import javax.validation.Valid
 import scala.jdk.CollectionConverters._
 
 /**
@@ -114,12 +114,12 @@ class PasteEditController extends GenericEditController[Paste] {
     }
 
     if (!obj.isBlank()) {
-      val pnext = manager.getNextPaste(obj)
-      val pprev = manager.getPreviousPaste(obj)
+      val pnext = manager().getNextPaste(obj)
+      val pprev = manager().getPreviousPaste(obj)
 
       model.addAttribute("availableNext", pnext)
       model.addAttribute("availablePrev", pprev)
-      model.addAttribute("availablePrevList", new IdList(manager.getPreviousPastasIdList(obj)))
+      model.addAttribute("availablePrevList", new IdList(manager().getPreviousPastasIdList(obj)))
 
     } else {
       model.addAttribute("availableNext", null)
@@ -176,7 +176,7 @@ class PasteEditController extends GenericEditController[Paste] {
     p.setReviewImgData(resourcePathHelper.saveResource("r", p.getUuid(),reviewImgData))
     p.setThumbImage(resourcePathHelper.saveResource("t", p.getUuid(),thumbImgData))
 
-    p.touch
+    p.touch()
     p = manager.save(p);
 
     model.asMap().clear()

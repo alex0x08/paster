@@ -19,13 +19,14 @@ package com.Ox08.paster.webapp.mvc.paste
 import com.Ox08.paster.webapp.dao.{ChannelDao, CommentDaoImpl, PasteDaoImpl, SearchableDaoImpl}
 import com.Ox08.paster.webapp.model.{KeyObj, OwnerQuery, Paste}
 import com.Ox08.paster.webapp.mvc.{ExtendedPageListHolder, GenericController, GenericListController, SearchController, SearchResult}
+import jakarta.servlet.http.HttpServletRequest
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation._
 
 import java.util.concurrent.TimeUnit
-import javax.servlet.http.HttpServletRequest
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.ui.Model
+
 import java.util.Locale
 import org.springframework.beans.support.MutableSortDefinition
 import org.springframework.beans.support.PagedListHolder

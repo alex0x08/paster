@@ -20,8 +20,6 @@ package com.Ox08.paster.webapp.model
  * Query trait
  */
 
-import org.hibernate.search.query.dsl.QueryBuilder
-
 trait Query {
 
   /**
@@ -46,7 +44,7 @@ trait Query {
   /**
    * build CompassQuery from CompassSession
    */
-  def fillQuery(qb: QueryBuilder): org.apache.lucene.search.Query
+  //def fillQuery(qb: QueryBuilder): org.apache.lucene.search.Query
 
 }
 
@@ -68,7 +66,7 @@ class GenericQuery extends Query {
     this.query = query
   }
 
-  def fillQuery(qb: QueryBuilder): org.apache.lucene.search.Query = {
+ /* def fillQuery(qb: QueryBuilder): org.apache.lucene.search.Query = {
     if (query == null || query.trim.length == 0) query = "*"
     qb
       .keyword()
@@ -76,5 +74,5 @@ class GenericQuery extends Query {
       .matching(query)
       .createQuery()
 
-  }
+  }*/
 }

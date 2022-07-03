@@ -2,12 +2,10 @@ package com.Ox08.paster.webapp.model
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute
-import org.hibernate.search.annotations.{Field, Indexed}
-
-import javax.persistence._
-import javax.validation.constraints.{NotNull, Size}
-import javax.xml.bind.annotation.{XmlRootElement, XmlTransient}
-import scala.collection.immutable.List
+import jakarta.persistence.{Column, Entity, Lob, Transient}
+import jakarta.validation.constraints.{NotNull, Size}
+import jakarta.xml.bind.annotation.{XmlRootElement, XmlTransient}
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.{FullTextField, Indexed}
 
 
 @Entity
@@ -21,7 +19,7 @@ class Comment extends Struct with java.io.Serializable {
 
   @Lob
   @NotNull
-  @Field
+  @FullTextField
   @Size(min = 3, message = "{struct.name.validator}")
   private var text: String = null
 

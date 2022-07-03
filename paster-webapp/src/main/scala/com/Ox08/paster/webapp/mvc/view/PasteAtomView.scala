@@ -4,7 +4,7 @@ import com.Ox08.paster.webapp.model.Paste
 import com.Ox08.paster.webapp.mvc.GenericController
 import org.springframework.web.servlet.view.feed.AbstractAtomFeedView
 
-import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
+import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
 import com.rometools.rome.feed.atom.{Content, Entry, Feed}
 
 import scala.jdk.CollectionConverters._

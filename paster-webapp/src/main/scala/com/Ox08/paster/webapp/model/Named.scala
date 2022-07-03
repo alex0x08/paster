@@ -17,10 +17,9 @@
 package com.Ox08.paster.webapp.model
 
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute
-import org.hibernate.envers.Audited
-import org.hibernate.search.annotations.Field
-import javax.persistence.{Column, MappedSuperclass}
-import javax.validation.constraints.{NotNull, Size}
+import jakarta.persistence.{Column, MappedSuperclass}
+import jakarta.validation.constraints.{NotNull, Size}
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField
 
 object Named extends Struct {
 
@@ -33,11 +32,11 @@ object Named extends Struct {
 }
 
 @MappedSuperclass
-@Audited
+//@Audited
 class Named(kname: String) extends Struct {
 
   @NotNull
-  @Field
+  @FullTextField
   @Column(length = 256)
   //@Pattern(regexp = "(.+)", message = "{struct.name.validator}")
   @Size(min = 3, message = "{struct.name.validator}")

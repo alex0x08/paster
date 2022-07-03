@@ -17,12 +17,12 @@
 package com.Ox08.paster.webapp.model
 
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute
-import org.hibernate.search.annotations.{Field, Index, Store, TermVector}
+import jakarta.persistence.{Column, MappedSuperclass}
+import jakarta.validation.constraints.NotNull
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.KeywordField
 
 import java.beans.PropertyEditorSupport
 import java.util.{Collection, HashMap, Objects}
-import javax.persistence._
-import javax.validation.constraints.NotNull
 
 object Key extends Named {
   abstract class Builder[T <: Key](model: T) extends Named.Builder[T](model) {
@@ -86,7 +86,8 @@ class Key(kcode: String, kname: String) extends Named(kname) with java.io.Serial
   @NotNull
   @Column(nullable = false, length = 50, unique = true)
   @XStreamAsAttribute
-  @Field(index = Index.YES, store = Store.YES, termVector = TermVector.YES) //,boost=@Boost(2f)
+  @KeywordField
+  //(index = Index.YES, store = Store.YES, termVector = TermVector.YES) //,boost=@Boost(2f)
   //@SafeHtml(whitelistType=WhiteListType.NONE,message = "{validator.forbidden-symbols}")
   private var code: String = kcode
 

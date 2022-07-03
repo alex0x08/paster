@@ -1,15 +1,17 @@
 
 package org.h2.server.web
 
+
 import com.Ox08.paster.webapp.base.Loggered
+import jakarta.servlet.http.HttpServletRequestWrapper
+
 import java.sql.SQLException
 import java.util.HashMap
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletRequestWrapper
-import javax.servlet.http.HttpServletResponse
 import javax.sql.DataSource
 import org.springframework.context.ApplicationContext
 import org.springframework.web.context.support.WebApplicationContextUtils
+
+import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
 
 /**
  * This is extended version of JDBC Database Console Servlet,
@@ -63,11 +65,9 @@ class H2ConsoleExtendedServlet extends WebServlet with Loggered {
   }
 
   @throws(classOf[java.io.IOException])
-  override def doGet(req: HttpServletRequest, res: HttpServletResponse) {
-
+  override def doGet(req: HttpServletRequest, res: HttpServletResponse): Unit = {
 
     val h2console_db_session_id = getH2SessionIdFromContext()
-
     var session: WebSession = null
 
     if (h2console_db_session_id != null) {

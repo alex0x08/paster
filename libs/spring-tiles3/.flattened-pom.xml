@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.Ox08.paster.webapp</groupId>
+    <artifactId>paster-libs</artifactId>
+    <version>2.1.04-CURRENT</version>
+  </parent>
+  <groupId>com.Ox08.paster.webapp</groupId>
+  <artifactId>paster-spring-tiles3-jakarta</artifactId>
+  <version>2.1.04-CURRENT</version>
+  <name>Paster : Spring Tiles3 View with Jakarta, Stripped</name>
+  <url>http://maven.apache.org</url>
+  <inceptionYear>2011</inceptionYear>
+  <organization>
+    <name>0x08 Software</name>
+    <url>http://0x08.tk</url>
+  </organization>
+  <licenses>
+    <license>
+      <name>Apache License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+      <comments>Lift Example is licensed under Apache License, Version 2.0</comments>
+    </license>
+  </licenses>
+  <developers>
+    <developer>
+      <name>Alex Chernyshev</name>
+      <timezone>GMT+4</timezone>
+    </developer>
+  </developers>
+  <scm>
+    <connection>scm:git:https://github.com/alex0x08/paster.git/paster-libs/paster-spring-tiles3-jakarta</connection>
+    <url>scm:git:https://github.com/alex0x08/paster.git/paster-libs/paster-spring-tiles3-jakarta</url>
+  </scm>
+  <dependencies>
+    <dependency>
+      <groupId>com.Ox08.paster.webapp</groupId>
+      <artifactId>paster-tiles-jakarta</artifactId>
+      <version>2.1.04-CURRENT</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>jakarta.platform</groupId>
+      <artifactId>jakarta.jakartaee-web-api</artifactId>
+      <version>9.1.0</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-web</artifactId>
+      <version>6.0.0-M4</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-webmvc</artifactId>
+      <version>6.0.0-M4</version>
+      <scope>compile</scope>
+    </dependency>
+  </dependencies>
+</project>

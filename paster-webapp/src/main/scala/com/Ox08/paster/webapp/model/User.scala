@@ -17,21 +17,10 @@
 package com.Ox08.paster.webapp.model
 
 import com.Ox08.paster.webapp.base.Loggered
-import com.fasterxml.jackson.annotation.JsonIgnore
-import org.apache.commons.codec.digest.DigestUtils
 import org.apache.commons.lang3.StringUtils
-import org.hibernate.search.annotations.{Field, Indexed}
-import org.hibernate.validator.constraints.Length
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
-
 import java.util
-import java.util.{ArrayList, Collection, HashSet, Set}
-import javax.persistence._
-import javax.validation.constraints.NotNull
-import javax.xml.bind.annotation.XmlTransient
-import scala.jdk.CollectionConverters._
-
 
 class User(var name: String,
            username:String,
