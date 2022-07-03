@@ -16,17 +16,11 @@
 
 package com.Ox08.paster.webapp.model
 
-import java.util.{Date, Objects}
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.Id
-import javax.persistence.ManyToOne
-import javax.persistence.Table
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder
+import jakarta.persistence.{Column, Entity, Id, Table, Temporal, TemporalType}
+import jakarta.validation.constraints.{NotNull, Size}
 
 import java.text.SimpleDateFormat
-import javax.persistence.Temporal
-import javax.validation.constraints.{NotNull, Size}
+import java.util.{Date, Objects}
 
 object SessionToken {
   val DATE_TIME_FORMATTER = new SimpleDateFormat("d MMMM yyyy")
@@ -45,7 +39,7 @@ class SessionToken extends java.io.Serializable {
   private var tokenValue: String = null
 
   @Column(name = "token_dt")
-  @Temporal(javax.persistence.TemporalType.TIMESTAMP)
+  @Temporal(TemporalType.TIMESTAMP)
   private var tokenDate: Date = null
 
   //an IPV6 address max length is 39 characters

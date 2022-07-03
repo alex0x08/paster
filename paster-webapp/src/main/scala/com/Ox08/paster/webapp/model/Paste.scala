@@ -18,11 +18,12 @@ package com.Ox08.paster.webapp.model
 
 import com.Ox08.paster.webapp.base.Loggered
 import com.fasterxml.jackson.annotation.JsonIgnore
-import org.hibernate.search.annotations.{Index, _}
+import jakarta.persistence.{CascadeType, Column, Entity, FetchType, Lob, ManyToMany, MapKey, PrePersist, PreUpdate}
+import jakarta.validation.constraints.{NotNull, Size}
+import jakarta.xml.bind.annotation.{XmlRootElement, XmlTransient}
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.{FullTextField, Indexed, KeywordField}
+
 import java.util.{ArrayList, UUID}
-import javax.persistence._
-import javax.validation.constraints.{NotNull, Size}
-import javax.xml.bind.annotation._
 import scala.annotation.unused
 import scala.jdk.CollectionConverters._
 
@@ -75,7 +76,8 @@ class Paste(ptitle: String) extends Named(ptitle) with java.io.Serializable {
    */
   @NotNull(message = "{validator.not-null}")
   @Column(nullable = false, unique = true, length = 255, updatable = false)
-  @Field(index = Index.NO, store = Store.YES, termVector = TermVector.NO)
+  @KeywordField
+  //(index = Index.NO, store = Store.YES, termVector = TermVector.NO)
   private val uuid = UUID.randomUUID().toString()
 
   /**
@@ -83,7 +85,7 @@ class Paste(ptitle: String) extends Named(ptitle) with java.io.Serializable {
    */
   @Lob
   @NotNull
-  @Field
+  @FullTextField
   @Size(min = 3, message = "{struct.name.validator}")
   @Column(length = Integer.MAX_VALUE)
   private var text: String = null
@@ -92,7 +94,7 @@ class Paste(ptitle: String) extends Named(ptitle) with java.io.Serializable {
    * link to preview image
    */
   @XmlTransient
-  @Field(store = Store.YES, index = Index.NO)
+  //@Field(store = Store.YES, index = Index.NO)
   private var thumbImage: String = null
 
 
@@ -102,7 +104,7 @@ class Paste(ptitle: String) extends Named(ptitle) with java.io.Serializable {
   //@NotNull
   @Column(name="title",length = 256)
   @Size(min = 3, max = 256, message = "{struct.name.validator}")
-  @Field
+  @FullTextField
   private var title: String = null
 
   /**
@@ -114,7 +116,7 @@ class Paste(ptitle: String) extends Named(ptitle) with java.io.Serializable {
    * type of paste, used almost to highlight it correctly
    */
   @NotNull
-  @Field
+  @KeywordField
   private var codeType: String = CodeType.Plain.getCode()
 
   /**
@@ -133,7 +135,8 @@ class Paste(ptitle: String) extends Named(ptitle) with java.io.Serializable {
   @NotNull
   private var channel: String = null
 
-  @Field(name = "tags", index = Index.YES, store = Store.YES, termVector = TermVector.YES) //,boost=@Boost(2f)
+ // @Field(name = "tags", index = Index.YES, store = Store.YES, termVector = TermVector.YES) //,boost=@Boost(2f)
+  @KeywordField
   private var tagsAsString: String = null
 
   private var normalized: Boolean = false
@@ -144,7 +147,7 @@ class Paste(ptitle: String) extends Named(ptitle) with java.io.Serializable {
   @transient
   private var comments: java.util.List[Comment] = new ArrayList[Comment]()
 
-  @Field
+  @KeywordField
   private var priority: String = null
 
   private var sticked: Boolean = false

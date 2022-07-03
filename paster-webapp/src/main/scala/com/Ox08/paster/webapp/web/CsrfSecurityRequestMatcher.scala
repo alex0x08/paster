@@ -20,7 +20,7 @@ import java.util.regex.Pattern
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher
 import org.springframework.security.web.util.matcher.RequestMatcher
 
-import javax.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletRequest
 
 class CsrfSecurityRequestMatcher extends RequestMatcher {
 

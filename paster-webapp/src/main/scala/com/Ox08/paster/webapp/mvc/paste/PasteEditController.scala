@@ -21,6 +21,7 @@ import com.Ox08.paster.webapp.manager.ResourcePathHelper
 import com.Ox08.paster.webapp.model.{CodeType, CodeTypeEditor, Comment, KeyEditor, OwnerQuery, Paste, Tag}
 import com.Ox08.paster.webapp.mvc.{GenericController, GenericEditController}
 import com.fasterxml.jackson.annotation.JsonIgnore
+import jakarta.validation.Valid
 import org.apache.commons.lang3.StringUtils
 import org.springframework.beans.factory.annotation.{Autowired, Qualifier}
 import org.springframework.context.MessageSource
@@ -34,7 +35,6 @@ import org.apache.commons.text.StringEscapeUtils
 import org.apache.commons.text.WordUtils
 
 import java.util.{ArrayList, Locale}
-import javax.validation.Valid
 import scala.jdk.CollectionConverters._
 
 /**

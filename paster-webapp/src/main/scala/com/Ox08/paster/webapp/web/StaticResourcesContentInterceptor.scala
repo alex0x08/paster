@@ -16,10 +16,9 @@
 
 package com.Ox08.paster.webapp.web
 
+import jakarta.servlet.ServletException
 import org.springframework.web.servlet.mvc.WebContentInterceptor
-
-import javax.servlet.ServletException
-import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
+import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
 
 class StaticResourcesContentInterceptor extends WebContentInterceptor {
 

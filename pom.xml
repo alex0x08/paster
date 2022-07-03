@@ -60,33 +60,80 @@
 
 
     <pluginRepositories>
+
         <pluginRepository>
-            <id>alfresco-public-releases</id>
-            <url>https://maven.alfresco.com/nexus/content/groups/public</url>
+            <id>MavenCentral</id>
+            <name>Maven repository</name>
+            <url>https://repo1.maven.org/maven2</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
         </pluginRepository>
+
+        <pluginRepository>
+            <id>spring-milestones</id>
+            <name>Spring Milestones</name>
+            <url>https://repo.spring.io/milestone</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </pluginRepository>
+        <pluginRepository>
+            <id>spring-snapshots</id>
+            <name>Spring Snapshots</name>
+            <url>https://repo.spring.io/snapshot</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+        </pluginRepository>
+
     </pluginRepositories>
 
     <repositories>
 
         <repository>
-            <id>alfresco-public-releases</id>
-            <url>https://maven.alfresco.com/nexus/content/groups/public</url>
+            <id>MavenCentral</id>
+            <name>Maven repository</name>
+            <url>https://repo1.maven.org/maven2</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+
+        <repository>
+            <id>spring-milestones</id>
+            <name>Spring Milestones</name>
+            <url>https://repo.spring.io/milestone</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
         </repository>
         <repository>
+            <id>spring-snapshots</id>
+            <name>Spring Snapshots</name>
+            <url>https://repo.spring.io/snapshot</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+        </repository>
+
+
+        <!--repository>
             <id>jboss-thirdparty</id>
             <name>jboss-thirdparty</name>
             <url>https://repository.jboss.org/nexus/content/repositories/thirdparty-releases</url>
-        </repository>
-        <repository>
-            <id>atlassian-public</id>
-            <name>atlassian-public</name>
-            <url>https://maven.atlassian.com/content/groups/public</url>
-        </repository>
-        <repository>
+        </repository-->
+        <!--repository>
             <id>scala</id>
             <name>Scala tools</name>
             <url>https://scala-tools.org/repo</url>
-        </repository>
+        </repository-->
 
         <repository>
             <id>spring</id>

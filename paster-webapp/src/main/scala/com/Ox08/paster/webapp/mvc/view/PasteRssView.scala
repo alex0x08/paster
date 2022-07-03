@@ -6,7 +6,7 @@ import com.rometools.rome.feed.rss.{Channel, Content, Description, Item}
 import org.springframework.web.servlet.view.feed.AbstractRssFeedView
 import scala.jdk.CollectionConverters._
 import java.util.Collections
-import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
+import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
 
 /**
  * Created with IntelliJ IDEA.
@@ -42,9 +42,9 @@ class PasteRssView extends AbstractRssFeedView{
       val entry = new Item()
       entry.setTitle(e.getName())
       entry.setLink(externalUrl+"/main/paste/"+e.getId())
-      entry.setPubDate(e.getLastModified)
+      entry.setPubDate(e.getLastModified())
           entry.setAuthor( if (e.getOwner()!=null) { e.getOwner()} else { "Anonymous"})
-      val d = new Description
+      val d = new Description()
       d.setValue(e.getTitle())
       entry.setDescription(d)
 

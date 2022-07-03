@@ -18,14 +18,9 @@ package com.Ox08.paster.webapp.model
 
 import com.Ox08.paster.webapp.base.Loggered
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute
-
-import java.io.Serializable
-import javax.persistence._
+import jakarta.persistence.{GeneratedValue, Id, MappedSuperclass}
 import org.hibernate.annotations.GenericGenerator
-import org.hibernate.envers.Audited
-
 import java.util.Objects
-
 
 @MappedSuperclass
 abstract class DBObject extends java.io.Serializable {

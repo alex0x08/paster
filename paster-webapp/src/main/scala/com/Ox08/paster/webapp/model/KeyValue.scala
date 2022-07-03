@@ -16,8 +16,9 @@
 
 package com.Ox08.paster.webapp.model
 
+import jakarta.persistence.{Column, MappedSuperclass}
+
 import java.beans.PropertyEditorSupport
-import javax.persistence._
 
 /**
  * The structure with key and value

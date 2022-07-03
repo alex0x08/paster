@@ -51,9 +51,10 @@
 
         <property name="jpaPropertyMap">
             <map>
-                <entry key="hibernate.search.default.indexBase" value="${paster.app.home}/index"/>
+                <!--entry key="hibernate.search.default.indexBase" value="${paster.app.home}/index"/>
                 <entry key="hibernate.search.lucene_version"
-                       value="LUCENE_35"/>              
+                       value="LUCENE_35"/-->
+
                 <entry key="hibernate.hbm2ddl.auto"		
                        value="update"/>              
 

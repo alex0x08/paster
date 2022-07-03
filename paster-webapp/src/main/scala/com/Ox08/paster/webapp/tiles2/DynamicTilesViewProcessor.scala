@@ -17,6 +17,7 @@
 package com.Ox08.paster.webapp.tiles2
 
 import com.Ox08.paster.webapp.base.Loggered
+import jakarta.servlet.ServletContext
 
 import java.util.Locale
 import org.apache.tiles.Attribute
@@ -29,9 +30,9 @@ import org.apache.tiles.request.servlet.ServletUtil
 import org.springframework.web.servlet.support.JstlUtils
 import org.springframework.web.servlet.support.RequestContext
 import org.springframework.web.servlet.support.RequestContextUtils
+import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
 
-import javax.servlet.ServletContext
-import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
+import java.io.IOException
 
 class DynamicTilesViewProcessor extends Loggered {
 
@@ -103,7 +104,14 @@ class DynamicTilesViewProcessor extends Loggered {
 
     val definitionName: String = startDynamicDefinition(beanName, url, tilesRequest, container)
 
-    container.render(definitionName, tilesRequest)
+    try {
+      container.render(definitionName, tilesRequest)
+
+    } catch {
+      case e: Exception =>
+        e.printStackTrace()
+    }
+
     endDynamicDefinition(definitionName, beanName, tilesRequest, container)
   }
 

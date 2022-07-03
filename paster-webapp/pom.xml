@@ -15,11 +15,11 @@
     <name>Paster Application</name>
 
     <properties>
-        <spring.version>5.3.21</spring.version>
-        <spring.security.version>5.7.2</spring.security.version>
+        <spring.version>6.0.0-M4</spring.version>
+        <spring.security.version>6.0.0-M4</spring.security.version>
         <hibernate.search.version>5.11.10.Final</hibernate.search.version>
-        <hibernate.version>5.6.9.Final</hibernate.version>
-        <luceneVersion>5.5.5</luceneVersion>
+        <hibernate.version>6.1.0.Final</hibernate.version>
+        <luceneVersion>8.11.1</luceneVersion>
 
         <paster.app.name>${project.name}</paster.app.name>
         <paster.app.version>${project.version}</paster.app.version>
@@ -45,6 +45,35 @@
             <version>9.1.0</version>
             <scope>provided</scope>
         </dependency>
+
+
+
+        <dependency>
+            <groupId>org.glassfish.web</groupId>
+            <artifactId>jakarta.servlet.jsp.jstl</artifactId>
+            <version>2.0.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <version>6.0.0</version>
+            <scope>provided</scope>
+        </dependency>
+
+
+
+        <dependency>
+            <groupId>jakarta.servlet.jsp.jstl</groupId>
+            <artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
+            <version>2.0.0</version>
+        </dependency>
+
+        <!--dependency>
+            <groupId>jakarta.persistence</groupId>
+            <artifactId>jakarta.persistence-api</artifactId>
+            <version>3.1.0</version>
+        </dependency-->
 
         <dependency>
             <groupId>com.h2database</groupId>
@@ -216,21 +245,39 @@
         <!--
             still required by Tiles and H2 Webconsole
         -->
-        <dependency>
+        <!--dependency>
             <groupId>org.glassfish</groupId>
             <artifactId>javax.servlet</artifactId>
             <version>3.0</version>
             <scope>provided</scope>
-        </dependency>
+        </dependency-->
 
 
 
         <!-- tiles -->
+
+        <!--
+        dependencySet(group: 'org.apache.tiles', version: '3.0.8') {
+				entry 'tiles-api'
+				entry('tiles-core', withoutJclOverSlf4j)
+				entry('tiles-servlet', withoutJclOverSlf4j)
+				entry('tiles-jsp', withoutJclOverSlf4j)
+				entry('tiles-el', withoutJclOverSlf4j)
+				entry('tiles-extras') {
+					exclude group: "org.springframework", name: "spring-web"
+					exclude group: "org.slf4j", name: "jcl-over-slf4j"
+				}
+			}
+
+        -->
+
+
         <dependency>
             <groupId>org.apache.tiles</groupId>
-            <artifactId>tiles-jsp</artifactId>
+            <artifactId>tiles-api</artifactId>
             <version>3.0.8</version>
         </dependency>
+
         <dependency>
             <groupId>org.apache.tiles</groupId>
             <artifactId>tiles-core</artifactId>
@@ -243,6 +290,65 @@
             </exclusions>
         </dependency>
 
+
+        <dependency>
+            <groupId>org.apache.tiles</groupId>
+            <artifactId>tiles-servlet</artifactId>
+            <version>3.0.8</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>jcl-over-slf4j</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+
+
+        <dependency>
+            <groupId>org.apache.tiles</groupId>
+            <artifactId>tiles-jsp</artifactId>
+            <version>3.0.8</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>jcl-over-slf4j</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tiles</groupId>
+            <artifactId>tiles-el</artifactId>
+            <version>3.0.8</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>jcl-over-slf4j</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+
+
+        <dependency>
+            <groupId>org.apache.tiles</groupId>
+            <artifactId>tiles-extras</artifactId>
+            <version>3.0.8</version>
+    <exclusions>
+        <exclusion>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+        </exclusion>
+        <exclusion>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jcl-over-slf4j</artifactId>
+        </exclusion>
+
+    </exclusions>
+        </dependency>
+
+
+
         <!-- spring rest dependencies -->
         <dependency>
             <groupId>com.thoughtworks.xstream</groupId>
@@ -252,6 +358,30 @@
 
         <!-- Hibernate -->
         <dependency>
+            <groupId>org.hibernate.search</groupId>
+            <artifactId>hibernate-search-mapper-orm-jakarta</artifactId>
+            <version>6.1.5.Final</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.hibernate.search</groupId>
+            <artifactId>hibernate-search-mapper-orm</artifactId>
+            <version>6.1.5.Final</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.hibernate.search</groupId>
+            <artifactId>hibernate-search-mapper-pojo-base</artifactId>
+            <version>6.1.5.Final</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.hibernate.search</groupId>
+            <artifactId>hibernate-search-backend-lucene</artifactId>
+            <version>6.1.5.Final</version>
+        </dependency>
+
+        <!--dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-search-orm</artifactId>
             <version>${hibernate.search.version}</version>
@@ -269,24 +399,24 @@
                     <artifactId>lucene-facet</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
+        </dependency-->
+
+        <!--dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-search-orm</artifactId>
+            <version>5.11.10.Final</version>
+        </dependency-->
 
         <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-search-engine</artifactId>
-            <version>${hibernate.search.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.hibernate</groupId>
+            <groupId>org.hibernate.orm</groupId>
             <artifactId>hibernate-core</artifactId>
             <version>${hibernate.version}</version>
         </dependency>
-        <dependency>
+        <!--dependency>
             <groupId>org.hibernate.javax.persistence</groupId>
             <artifactId>hibernate-jpa-2.1-api</artifactId>
             <version>1.0.2.Final</version>
-        </dependency>
+        </dependency-->
 
         <dependency>
             <groupId>javax.annotation</groupId>
@@ -312,7 +442,7 @@
         <dependency>
             <groupId>org.apache.lucene</groupId>
             <artifactId>lucene-analyzers-common</artifactId>
-            <version>5.5.5</version>
+            <version>8.11.1</version>
         </dependency>
         <dependency>
             <groupId>org.apache.lucene</groupId>
@@ -343,29 +473,17 @@
             <version>${luceneVersion}</version>
         </dependency>
 
-        <dependency>
+        <!--dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-entitymanager</artifactId>
             <version>5.6.9.Final</version>
-        </dependency>
+        </dependency-->
 
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-envers</artifactId>
-            <version>${hibernate.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-c3p0</artifactId>
-            <version>${hibernate.version}</version>
-        </dependency>
-
-        <dependency>
+        <!--dependency>
             <groupId>javax.validation</groupId>
             <artifactId>validation-api</artifactId>
             <version>2.0.1.Final</version>
-        </dependency>
+        </dependency-->
 
         <dependency>
             <groupId>org.hibernate.validator</groupId>
@@ -375,11 +493,7 @@
 
 
 
-        <dependency>
-            <groupId>org.tuckey</groupId>
-            <artifactId>urlrewritefilter</artifactId>
-            <version>4.0.4</version>
-        </dependency>
+
 
         <!-- jdbc pooling -->
         <dependency>
@@ -468,7 +582,7 @@
                      <plugin>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-jspc-maven-plugin</artifactId>
-                <version>9.3.2.v20150730</version>
+                <version>11.0.11</version>
                 <executions>
                     <execution>
                         <id>jspc</id>
@@ -621,15 +735,15 @@
             <plugin>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
-                <version>9.3.2.v20150730</version>
+                <version>11.0.11</version>
                 <configuration>
                    <systemProperties>
-                        <systemProperty>
+                        <!--systemProperty>
                             <name>logback.configurationFile</name>
                             <value>src/main/resources/logback-debug.xml</value>
-                        </systemProperty>
+                        </systemProperty-->
                     </systemProperties>
-                    <scanIntervalSeconds>0</scanIntervalSeconds>
+                    <!--scanIntervalSeconds>0</scanIntervalSeconds-->
                     <webApp>
                         <contextPath>/${project.artifactId}</contextPath>
                     </webApp>

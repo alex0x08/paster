@@ -42,10 +42,9 @@ package com.Ox08.paster.webapp.tiles2
  */
 
 
-import javax.servlet.ServletContext
-import javax.servlet.ServletException
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
+import jakarta.servlet.{ServletContext, ServletException}
+import jakarta.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletResponse
 import org.apache.tiles.TilesContainer
 import org.apache.tiles.access.TilesAccess
 import org.apache.tiles.request.servlet.ServletUtil
@@ -96,7 +95,8 @@ private final val dynamicTilesViewProcessor = new DynamicTilesViewProcessor
 
         val servletContext:ServletContext = getServletContext()
 
-        val container:TilesContainer = TilesAccess.getContainer(ServletUtil.getApplicationContext(servletContext))
+        val container:TilesContainer = TilesAccess.getContainer(ServletUtil
+					.getApplicationContext(servletContext))
         
         if (container == null) {
             throw new ServletException("Tiles container is not initialized. " + 

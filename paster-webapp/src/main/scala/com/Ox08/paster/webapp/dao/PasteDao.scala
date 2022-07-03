@@ -17,12 +17,12 @@
 package com.Ox08.paster.webapp.dao
 
 import com.Ox08.paster.webapp.model.{Paste, User}
+import jakarta.persistence.{Query, Tuple}
+import jakarta.persistence.criteria.{CriteriaQuery, Predicate}
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
 
 import java.util.ArrayList
-import javax.persistence.{Query, Tuple}
-import javax.persistence.criteria.{CriteriaQuery, Predicate}
 import scala.jdk.CollectionConverters._
 
 @Repository("pasteDao")

@@ -23,7 +23,11 @@ import org.apache.lucene.analysis.standard.StandardAnalyzer
 import org.apache.lucene.queryparser.classic.{MultiFieldQueryParser, ParseException, QueryParser}
 import org.apache.lucene.search.highlight.{Highlighter, QueryScorer, SimpleHTMLFormatter, SimpleSpanFragmenter}
 import org.hibernate.CacheMode
-import org.hibernate.search.jpa.{FullTextEntityManager, FullTextQuery, Search}
+import org.hibernate.search.backend.lucene.search.query.LuceneSearchQuery
+import org.hibernate.search.mapper.orm.Search
+import org.hibernate.search.mapper.orm.session.SearchSession
+//import org.hibernate.search.jpa.{FullTextEntityManager, FullTextQuery, Search}
+
 import org.springframework.transaction.annotation.Transactional
 
 import java.util.ArrayList
@@ -50,7 +54,7 @@ abstract class SearchableDaoImpl[T <: Struct](model: Class[T])
   protected class FSearch(query: String) extends Loggered {
     logger.debug("searching for {}", query)
 
-    val fsession: FullTextEntityManager = getFullTextEntityManager()
+    val fsession: SearchSession = getFullTextEntityManager()
     val pparser = new MultiFieldQueryParser(getDefaultStartFields(),
       new StandardAnalyzer())
 
@@ -58,13 +62,13 @@ abstract class SearchableDaoImpl[T <: Struct](model: Class[T])
     val scorer: QueryScorer = new QueryScorer(luceneQuery)
     val highlighter: Highlighter = new Highlighter(SearchableDaoImpl.FORMATTER, scorer)
     highlighter.setTextFragmenter(new SimpleSpanFragmenter(scorer, 100))
-    val fquery: FullTextQuery = fsession.createFullTextQuery(luceneQuery, model)
+  //  val fquery: LuceneSearchQuery[T] = fsession.search(luceneQuery, model).toQuery()
 
-    def getResults() = fillHighlighted(highlighter, pparser, fquery.getResultList())
+    def getResults() = null // fillHighlighted(highlighter, pparser, fquery.getResultList())
 
   }
 
-  def getFullTextEntityManager() = Search.getFullTextEntityManager(em)
+  def getFullTextEntityManager():SearchSession =  null //Search.session(em)
 
   def getDefaultStartFields(): Array[String] = SearchableDaoImpl.DEFAULT_START_FIELDS
 
@@ -81,14 +85,14 @@ abstract class SearchableDaoImpl[T <: Struct](model: Class[T])
 
     val fsession = getFullTextEntityManager()
     try {
-
+/*
       fsession.createIndexer(model)
         .batchSizeToLoadObjects(25)
         .cacheMode(CacheMode.NORMAL)
         .threadsToLoadObjects(1)
         .threadsForSubsequentFetching(2)
         .startAndWait()
-
+*/
     } catch {
       case e: InterruptedException => {
         throw new RuntimeException(e)

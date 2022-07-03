@@ -16,8 +16,6 @@
 
 package com.Ox08.paster.webapp.model
 
-import org.hibernate.search.query.dsl.QueryBuilder
-
 class OwnerQuery extends GenericQuery with Query {
 
   protected var ownerId:java.lang.Long = null

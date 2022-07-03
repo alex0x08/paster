@@ -17,11 +17,12 @@
 package com.Ox08.paster.webapp.mvc
 
 import com.Ox08.paster.webapp.model.Struct
+import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.ui.Model
 import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation._
-import javax.validation.Valid
+
 import java.util.Locale
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
 

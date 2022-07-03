@@ -3,6 +3,7 @@ package org.h2.server.web
 
 
 import com.Ox08.paster.webapp.base.Loggered
+import jakarta.servlet.http.HttpServletRequestWrapper
 
 import java.sql.SQLException
 import java.util.HashMap
@@ -10,7 +11,7 @@ import javax.sql.DataSource
 import org.springframework.context.ApplicationContext
 import org.springframework.web.context.support.WebApplicationContextUtils
 
-import javax.servlet.http.{HttpServletRequest, HttpServletRequestWrapper, HttpServletResponse}
+import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
 
 /**
  * This is extended version of JDBC Database Console Servlet,

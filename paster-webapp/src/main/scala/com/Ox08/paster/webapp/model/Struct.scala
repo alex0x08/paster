@@ -18,10 +18,11 @@ package com.Ox08.paster.webapp.model
 
 import com.Ox08.paster.webapp.base.Loggered
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute
-import org.hibernate.search.annotations.{DateBridge, Field, Index, Resolution}
+import jakarta.persistence.{Column, MappedSuperclass, PrePersist, PreUpdate, Temporal, TemporalType}
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.{FullTextField, GenericField}
+
 import java.text.SimpleDateFormat
 import java.util.Calendar
-import javax.persistence._
 
 object Struct {
   
@@ -48,16 +49,17 @@ trait SearchObject {
 abstract class Struct extends DBObject with SearchObject with  java.io.Serializable{
 
   @Column(name = "last_modified") //, columnDefinition = "datetime"
-  @Temporal(javax.persistence.TemporalType.TIMESTAMP)
-  @Field(index = Index.YES)
-  @DateBridge(resolution = Resolution.DAY)    
+  @Temporal(TemporalType.TIMESTAMP)
+  @GenericField
+ // @DateBridge(resolution = Resolution.DAY)
   @XStreamAsAttribute
   private var lastModified:java.util.Date = _
 
   @Column(name = "created") //, columnDefinition = "datetime"
-  @Temporal(javax.persistence.TemporalType.TIMESTAMP)
-  @Field(index = Index.YES)
-  @DateBridge(resolution = Resolution.DAY)
+  @Temporal(TemporalType.TIMESTAMP)
+  @GenericField
+  //(index = Index.YES)
+  //@DateBridge(resolution = Resolution.DAY)
   @XStreamAsAttribute
   private val created: java.util.Date = Calendar.getInstance().getTime()
 

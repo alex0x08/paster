@@ -4,16 +4,15 @@ import com.Ox08.paster.webapp.base.{Loggered, MergedPropertyConfigurer}
 import com.Ox08.paster.webapp.dao.PasteDaoImpl
 import com.Ox08.paster.webapp.manager.UserManagerImpl
 import com.Ox08.paster.webapp.model.{Role, User}
+import jakarta.servlet.{ServletContextEvent, ServletContextListener}
 import org.apache.commons.codec.digest.Md5Crypt
 import org.apache.commons.csv.{CSVFormat, CSVRecord}
 import org.springframework.context.ApplicationContext
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.context.support.WebApplicationContextUtils
-
 import java.io.InputStreamReader
 import java.security.SecureRandom
-import javax.servlet.{ServletContextEvent, ServletContextListener}
 import scala.jdk.CollectionConverters._
 
 class BootContext(ctx: ApplicationContext) {
@@ -29,12 +28,11 @@ class BootContext(ctx: ApplicationContext) {
 
 class StartupListener extends ServletContextListener with Loggered {
 
-  override def contextInitialized(event: ServletContextEvent) {
+  override def contextInitialized(event: ServletContextEvent): Unit = {
 
 
     val bootContext = new BootContext(WebApplicationContextUtils
       .getRequiredWebApplicationContext(event.getServletContext()))
-
 
 
     try {
