@@ -70,18 +70,17 @@ class UserManagerImpl extends UserDetailsService with Loggered {
 
     loadDefaults(csv, (record: CSVRecord) => {
       logger.debug("processing record : {}",record)
-      save(changePassword(
-        User.createNew
-          .addRole(if (record.get("ADMIN").toBoolean) {
-            Role.ROLE_ADMIN
-          }
-          else {
-            Role.ROLE_USER
-          })
-          .addUsername(record.get("USERNAME"))
-          .addPassword(record.get("PASSWORD"))
-          .addName(record.get("NAME"))
-          .get(), record.get("PASSWORD")))
+
+      val u = new User(record.get("NAME"),
+        record.get("USERNAME"),
+        record.get("PASSWORD"),util.Set.of(
+        if (record.get("ADMIN").toBoolean) {
+          Role.ROLE_ADMIN
+        }
+        else {
+          Role.ROLE_USER
+        }))
+      save(changePassword(u,u.getPassword()))
     })
 
   }
@@ -97,12 +96,9 @@ class UserManagerImpl extends UserDetailsService with Loggered {
     } finally r.close
   }
 
-  //@PreAuthorize("isAuthenticated()")
   def save(u: User): Unit = {
     users.put(u.getUsername(),u)
-
-    logger.debug("saved {} - {}",u,u.getUsername())
-
+    logger.debug("saved {}",u.getUsername())
   }
 
   @Override
@@ -143,9 +139,8 @@ class UserManagerImpl extends UserDetailsService with Loggered {
 
   def changePassword(user: User, newPassword: String): User = {
     val encodedPass = passwordEncoder.encode(newPassword)
-   // if (user.isPasswordEmpty() || !user.getPassword.equals(encodedPass))
-        logger.debug("changing password for user {}", user.getName)
-        user.setPassword(encodedPass)
+    logger.debug("changing password for user {}", user.getUsername())
+    user.setPassword(encodedPass)
 
     user
   }

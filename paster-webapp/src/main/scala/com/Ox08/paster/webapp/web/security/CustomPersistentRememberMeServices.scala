@@ -19,7 +19,7 @@ package com.Ox08.paster.webapp.web.security
 import com.Ox08.paster.webapp.base.Loggered
 import com.Ox08.paster.webapp.dao.TokenDaoImpl
 import com.Ox08.paster.webapp.manager.UserManagerImpl
-import com.Ox08.paster.webapp.model.{PersistentToken, User}
+import com.Ox08.paster.webapp.model.{SessionToken, User}
 
 import java.security.SecureRandom
 import java.util.Arrays
@@ -59,7 +59,7 @@ class CustomPersistentRememberMeServices(key: String, uds: UserDetailsService, t
                                         request: HttpServletRequest,
                                         response: HttpServletResponse): UserDetails = {
     val token = getPersistentToken(cookieTokens)
-    val login = token.getUser()
+    val login = token.getUsername()
 
     // Token also matches, so login is valid. Update the token value, keeping the *same* series number.
     log.debug("Refreshing persistent login token for user '{}', series '{}'",
@@ -89,9 +89,9 @@ class CustomPersistentRememberMeServices(key: String, uds: UserDetailsService, t
     val login = successfulAuthentication.getName()
     log.debug("Creating new persistent login for user {}", login)
     val user = getUserDetailsService().loadUserByUsername(login).asInstanceOf[User]
-    val token = new PersistentToken()
+    val token = new SessionToken()
     token.setSeries(generateSeriesData())
-    token.setUser(user.getUsername())
+    token.setUsername(user.getUsername())
     token.setTokenValue(generateTokenData())
     token.setTokenDate(new Date())
     token.setIpAddress(request.getRemoteAddr())
@@ -134,7 +134,7 @@ class CustomPersistentRememberMeServices(key: String, uds: UserDetailsService, t
   /**
    * Validate the token and return it.
    */
-  def getPersistentToken(cookieTokens: Array[String]): PersistentToken = {
+  def getPersistentToken(cookieTokens: Array[String]): SessionToken = {
     if (cookieTokens.length != 2) {
       throw new InvalidCookieException("Cookie token did not contain " + 2 +
         " tokens, but contained '" + Arrays.asList(cookieTokens) + "'")
@@ -176,7 +176,7 @@ class CustomPersistentRememberMeServices(key: String, uds: UserDetailsService, t
   }
 
   private def addCookie(
-                         token: PersistentToken, request: HttpServletRequest, response: HttpServletResponse) {
+                         token: SessionToken, request: HttpServletRequest, response: HttpServletResponse) {
     setCookie(
       Array[String](token.getSeries(), token.getTokenValue()),
       CPRConstants.TOKEN_VALIDITY_SECONDS, request, response);

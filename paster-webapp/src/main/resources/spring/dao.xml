@@ -51,20 +51,13 @@
 
         <property name="jpaPropertyMap">
             <map>
-                <entry key="hibernate.physical_naming_strategy" value="com.Ox08.paster.webapp.dao.hibernate.PasterNamingStrategy" />
-
                 <entry key="hibernate.search.default.indexBase" value="${paster.app.home}/index"/>
-                <!--entry key="hibernate.search.default.directory_provider"		
-                       value="org.hibernate.search.store.FSDirectoryProvider"/-->
-                <entry key="hibernate.search.lucene_version"		
+                <entry key="hibernate.search.lucene_version"
                        value="LUCENE_35"/>              
                 <entry key="hibernate.hbm2ddl.auto"		
                        value="update"/>              
-                 <entry key="hibernate.query.substitutions"		
-                       value="true 'Y', false 'N'"/>
-                <!--entry key="hibernate.search.analyzer"
-                       value="org.apache.lucene.morphology.russian.RussianAnalyzer"/-->
-            </map>		
+
+            </map>
         </property>
     </bean>
 

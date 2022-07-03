@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Ubersoft, LLC.
+ * Copyright 2015 Ubersoft, LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package com.Ox08.paster.webapp.dao.hibernate
+package com.Ox08.paster.webapp.dao
 
-import java.sql.Types
-import org.hibernate.dialect.Oracle10gDialect
+import com.Ox08.paster.webapp.model.SessionToken
+import org.springframework.stereotype.Repository
+import org.springframework.transaction.annotation.Transactional
 
-class ExtendedOracle10gDialect extends Oracle10gDialect {
+@Repository("tokenDao")
+@Transactional(readOnly = true, rollbackFor = Array(classOf[Exception]))
+class TokenDaoImpl extends BaseDaoImpl[SessionToken,java.lang.String](classOf[SessionToken])  {
 
-   override protected def registerNumericTypeMappings() {
-        super.registerNumericTypeMappings()
-        registerColumnType( java.sql.Types.TIMESTAMP, "timestamp" )
-    }
+
 }

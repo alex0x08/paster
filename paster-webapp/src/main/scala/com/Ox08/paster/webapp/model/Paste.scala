@@ -32,13 +32,24 @@ import scala.jdk.CollectionConverters._
 object Paste extends Struct {
 
   /**
-   * a set of properties to search by default (without field prefix)
-   */
-  override val terms = super.terms ::: List[String]("text", "tags")
-  /**
    * max title length, if greater - will be cut
    */
   val TITLE_LENGTH = 256
+
+}
+
+@Entity
+@Indexed(index = "indexes/tags")
+@XmlRootElement(name = "tag")
+class Tag(tagString: String) extends Named(tagString) {
+
+  @transient
+  private var total: Int = 0
+  def this() = this(null)
+  def getTotal() = total
+  def setTotal(i: Int) {
+    total = i
+  }
 
 }
 
@@ -53,7 +64,7 @@ object Paste extends Struct {
 @Entity
 @Indexed(index = "indexes/pastas")
 @XmlRootElement(name = "paste")
-class Paste(title: String) extends Named(title) with java.io.Serializable {
+class Paste(ptitle: String) extends Named(ptitle) with java.io.Serializable {
 
 
   def this() = this(null)
@@ -73,7 +84,6 @@ class Paste(title: String) extends Named(title) with java.io.Serializable {
   @Lob
   @NotNull
   @Field
-  //(analyzer = )
   @Size(min = 3, message = "{struct.name.validator}")
   @Column(length = Integer.MAX_VALUE)
   private var text: String = null
@@ -83,7 +93,6 @@ class Paste(title: String) extends Named(title) with java.io.Serializable {
    */
   @XmlTransient
   @Field(store = Store.YES, index = Index.NO)
-  //@transient
   private var thumbImage: String = null
 
 
@@ -91,9 +100,8 @@ class Paste(title: String) extends Named(title) with java.io.Serializable {
    * paste title
    */
   //@NotNull
-  @Column(length = 256)
+  @Column(name="title",length = 256)
   @Size(min = 3, max = 256, message = "{struct.name.validator}")
-  //@NotAudited
   @Field
   private var title: String = null
 
@@ -137,7 +145,7 @@ class Paste(title: String) extends Named(title) with java.io.Serializable {
   private var comments: java.util.List[Comment] = new ArrayList[Comment]()
 
   @Field
-  private var priority: String = Priority.NORMAL.getCode()
+  private var priority: String = null
 
   private var sticked: Boolean = false
 
@@ -164,7 +172,7 @@ class Paste(title: String) extends Named(title) with java.io.Serializable {
     commentsCount = getComments().size()
   }
 
-  override def terms(): List[String] = Paste.terms
+  override def terms(): List[String] = super.terms() ::: List[String]("text", "tags")
 
   def getSymbolsCount() = symbolsCount
 
@@ -213,10 +221,10 @@ class Paste(title: String) extends Named(title) with java.io.Serializable {
 
   def getUuid(): String = uuid
 
-  def getPriority(): Priority = Priority.valueOf(priority)
+  def getPriority(): String = priority
 
-  def setPriority(prior: Priority): Unit = {
-    priority = prior.getCode()
+  def setPriority(prior: String): Unit = {
+    priority = prior
   }
 
   @JsonIgnore
@@ -251,7 +259,6 @@ class Paste(title: String) extends Named(title) with java.io.Serializable {
   def setRemoteUrl(url: String): Unit = {
     this.remoteUrl = url
   }
-
 
   def getChannel() = channel
 

@@ -16,9 +16,9 @@
 
 package com.Ox08.paster.webapp.mvc.paste
 
-import com.Ox08.paster.webapp.dao.{ChannelDao, CommentDaoImpl, PasteDaoImpl, TagDao}
+import com.Ox08.paster.webapp.dao.{ChannelDao, CommentDaoImpl, PasteDaoImpl, PriorityDao, TagDao}
 import com.Ox08.paster.webapp.manager.ResourcePathHelper
-import com.Ox08.paster.webapp.model.{CodeType, CodeTypeEditor, Comment, KeyEditor, OwnerQuery, Paste, Priority, Tag}
+import com.Ox08.paster.webapp.model.{CodeType, CodeTypeEditor, Comment, KeyEditor, OwnerQuery, Paste, Tag}
 import com.Ox08.paster.webapp.mvc.{GenericController, GenericEditController}
 import com.fasterxml.jackson.annotation.JsonIgnore
 import org.apache.commons.lang3.StringUtils
@@ -47,6 +47,9 @@ class PasteEditController extends GenericEditController[Paste] {
 
   @Autowired
   val channelDao: ChannelDao = null
+
+  @Autowired
+  val priorities: PriorityDao = null
 
   @Autowired
   val tagDao: TagDao = null
@@ -98,7 +101,7 @@ class PasteEditController extends GenericEditController[Paste] {
 
     }
     model.addAttribute("availableCodeTypes", CodeType.list)
-    model.addAttribute("availablePriorities", Priority.list)
+    model.addAttribute("availablePriorities", priorities.getAvailablePriorities())
     model.addAttribute("availableChannels", channelDao.getAvailableChannels())
 
     if (!obj.getComments().isEmpty()) {

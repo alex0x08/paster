@@ -103,10 +103,10 @@
                 <p class="navbar-text hidden-sm hidden-xs" style="margin-top:5px;">
 
                     <c:forEach var="stat" items="${stats.list}">
-                        <a class="i ${stat.priority.cssClass}" style="font-size:2em;" title="<fmt:message key="
-                            ${stat.priority.name}" />. Click to search with same priority."
+                        <a class="i ${stat.priority}" style="font-size:2em;" title="<fmt:message key="
+                            ${stat.priority}" />. Click to search with same priority."
                         href="
-                        <c:url value='/main/paste/list/search?query=priority:${stat.priority.code}' />">/</a>
+                        <c:url value='/main/paste/list/search?query=priority:${stat.priority}' />">/</a>
                         <span style="font-size: small;">x
                             <c:out value="${stat.counter}" />&nbsp;</span>
 

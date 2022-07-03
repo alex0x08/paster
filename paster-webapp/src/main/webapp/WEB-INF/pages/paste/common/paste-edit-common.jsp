@@ -141,9 +141,9 @@
                                 <p>
                                      <form:select path="priority" multiple="false" id="pprior" cssClass="form-control" style="display: inline;width: 5em;">
                                         <c:forEach items="${availablePriorities}" var="prior">
-                                            <form:option value="${prior.code}" cssClass="${prior.cssClass}"
-                                                x-css-class-name="${prior.cssClass}">
-                                                <fmt:message key="${prior.name}" />
+                                            <form:option value="${prior}" cssClass="${prior}"
+                                                x-css-class-name="${prior}">
+                                                <fmt:message key="${prior}" />
                                             </form:option>
                                         </c:forEach>
                                     </form:select>

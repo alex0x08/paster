@@ -16,7 +16,7 @@
 
 package com.Ox08.paster.webapp.dao
 
-import com.Ox08.paster.webapp.model.{Paste, Priority, User}
+import com.Ox08.paster.webapp.model.{Paste, User}
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
 
@@ -143,7 +143,7 @@ class PasteDaoImpl extends SearchableDaoImpl[Paste](classOf[Paste]) {
     query.getResultList()
   }
 
-  def countAll(p: Priority): java.lang.Long = {
+  def countAll(p: String): java.lang.Long = {
 
     val cb = em.getCriteriaBuilder()
     val cq: CriteriaQuery[java.lang.Long] = cb.createQuery(classOf[java.lang.Long])
@@ -151,7 +151,7 @@ class PasteDaoImpl extends SearchableDaoImpl[Paste](classOf[Paste]) {
     val r = cq.from(getModel())
 
     cq.select(cb.count(r))
-    cq.where(Array(cb.equal(r.get("priority"), p.getCode())): _*)
+    cq.where(Array(cb.equal(r.get("priority"), p)): _*)
 
     em.createQuery[java.lang.Long](cq)
       .getSingleResult()

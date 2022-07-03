@@ -4,6 +4,7 @@ import com.Ox08.paster.webapp.base.{Loggered, MergedPropertyConfigurer}
 import com.Ox08.paster.webapp.dao.PasteDaoImpl
 import com.Ox08.paster.webapp.manager.UserManagerImpl
 import com.Ox08.paster.webapp.model.{Role, User}
+import org.apache.commons.codec.digest.Md5Crypt
 import org.apache.commons.csv.{CSVFormat, CSVRecord}
 import org.springframework.context.ApplicationContext
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
@@ -11,6 +12,7 @@ import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.context.support.WebApplicationContextUtils
 
 import java.io.InputStreamReader
+import java.security.SecureRandom
 import javax.servlet.{ServletContextEvent, ServletContextListener}
 import scala.jdk.CollectionConverters._
 
@@ -78,12 +80,9 @@ class StartupListener extends ServletContextListener with Loggered {
 
   def setupSecurityContext() {
 
-    val start_user = User.createNew
-      .addRole(Role.ROLE_ADMIN)
-      .addUsername("start")
-      .addName("Initial scheme creator")
-      .get
-
+    val start_user = new User("System","system",
+      Md5Crypt.md5Crypt(SecureRandom.getSeed(20)),
+      java.util.Set.of(Role.ROLE_ADMIN))
 
     // log user in automatically
     val auth = new UsernamePasswordAuthenticationToken(

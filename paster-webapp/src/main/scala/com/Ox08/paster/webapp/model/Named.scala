@@ -24,11 +24,6 @@ import javax.validation.constraints.{NotNull, Size}
 
 object Named extends Struct {
 
-  /**
-   * a set of properties to search by default (without field prefix)
-   */
-  override val terms = super.terms ::: List[String]("name")
-
   abstract class Builder[T <: Named](model: T) extends Struct.Builder[T](model) {
     def addName(name: String): Builder[T] = {
       get().setName(name)
@@ -51,7 +46,7 @@ class Named(kname: String) extends Struct {
 
   def this() = this(null)
 
-  override def terms(): List[String] = Named.terms
+  override def terms(): List[String] = super.terms() ::: List[String]("name")
 
   /*
    override def fillFromHits(ch:CompassHighlighter)  {

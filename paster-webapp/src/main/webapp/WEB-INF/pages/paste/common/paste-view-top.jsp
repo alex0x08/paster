@@ -8,7 +8,7 @@
 --%>
 
 <c:set var="priorTitle">
-    <fmt:message key="${model.priority.name}" />
+    <fmt:message key="${model.priority}" />
 </c:set>
 
 
@@ -31,7 +31,7 @@
             Priority
         --%>
 
-        <span class="i ${model.priority.cssClass}" style="font-size:2em;" title="${priorTitle}">/</span>
+        <span class="i ${model.priority}" style="font-size:2em;" title="${priorTitle}">/</span>
         <c:if test="${model.sticked}">
             <span class="i">]</span>
         </c:if>

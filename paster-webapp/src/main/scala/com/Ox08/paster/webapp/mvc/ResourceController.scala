@@ -22,7 +22,6 @@ import org.springframework.core.io.InputStreamResource
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.{PathVariable, RequestMapping, RequestMethod, ResponseBody}
-
 import java.io.{FileInputStream, IOException}
 import javax.servlet.http.HttpServletResponse
 
