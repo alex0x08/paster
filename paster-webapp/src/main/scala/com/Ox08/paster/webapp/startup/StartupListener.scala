@@ -17,27 +17,20 @@ import scala.jdk.CollectionConverters._
 class BootContext(ctx: ApplicationContext) {
 
   val pasteDao: PasteDaoImpl = ctx.getBean(classOf[PasteDaoImpl])
-
   val users: UserManagerImpl = ctx.getBean(classOf[UserManagerImpl])
-
-
   val props: MergedPropertyConfigurer = ctx.getBean("propertyConfigurer-app")
     .asInstanceOf[MergedPropertyConfigurer]
 }
 
 class StartupListener extends ServletContextListener with Loggered {
 
-  override def contextInitialized(event: ServletContextEvent) {
-
+  override def contextInitialized(event: ServletContextEvent): Unit = {
 
     val bootContext = new BootContext(WebApplicationContextUtils
       .getRequiredWebApplicationContext(event.getServletContext()))
 
-
-
     try {
-
-      setupSecurityContext // setup security context
+      setupSecurityContext() // setup security context
 
       bootContext.users.loadUsers()
 
@@ -57,16 +50,13 @@ class StartupListener extends ServletContextListener with Loggered {
         throw e; // to stop application
       }
     }
-
   }
 
-  override def contextDestroyed(servletContextEvent: ServletContextEvent) {
+  override def contextDestroyed(servletContextEvent: ServletContextEvent): Unit = {
     // not used
   }
 
-
-
-  def loadDefaults(csv: String, callback: CSVRecord => Unit) {
+  def loadDefaults(csv: String, callback: CSVRecord => Unit): Unit = {
     val r = new InputStreamReader(getClass().getResourceAsStream(csv))
     try {
       val records = CSVFormat.DEFAULT.withHeader().parse(r)
@@ -76,14 +66,13 @@ class StartupListener extends ServletContextListener with Loggered {
     } finally r.close
   }
 
-  def setupSecurityContext() {
+  def setupSecurityContext(): Unit = {
 
     val start_user = User.createNew
       .addRole(Role.ROLE_ADMIN)
       .addUsername("start")
       .addName("Initial scheme creator")
-      .get
-
+      .get()
 
     // log user in automatically
     val auth = new UsernamePasswordAuthenticationToken(

@@ -4,7 +4,6 @@ import com.Ox08.paster.webapp.model.Paste
 import com.Ox08.paster.webapp.mvc.GenericController
 import com.rometools.rome.feed.rss.{Channel, Content, Description, Item}
 import org.springframework.web.servlet.view.feed.AbstractRssFeedView
-
 import scala.jdk.CollectionConverters._
 import java.util.Collections
 import javax.servlet.http.{HttpServletRequest, HttpServletResponse}

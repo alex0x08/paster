@@ -17,9 +17,10 @@
 package com.Ox08.paster.webapp.web
 
 import java.util.regex.Pattern
-import javax.servlet.http.HttpServletRequest
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher
 import org.springframework.security.web.util.matcher.RequestMatcher
+
+import javax.servlet.http.HttpServletRequest
 
 class CsrfSecurityRequestMatcher extends RequestMatcher {
 

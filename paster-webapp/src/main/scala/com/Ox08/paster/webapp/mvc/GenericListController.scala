@@ -17,9 +17,7 @@
 package com.Ox08.paster.webapp.mvc
 
 import com.Ox08.paster.webapp.model.Struct
-
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpSession
+import jakarta.servlet.http.{HttpServletRequest, HttpSession}
 import org.springframework.beans.support.MutableSortDefinition
 import org.springframework.beans.support.PagedListHolder
 import org.springframework.ui.Model

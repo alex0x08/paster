@@ -25,8 +25,6 @@ import java.security.SecureRandom
 import java.util.Arrays
 import java.util.Base64
 import java.util.Date
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
 import org.springframework.dao.DataAccessException
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.userdetails.UserDetails
@@ -36,6 +34,7 @@ import org.springframework.security.web.authentication.rememberme.InvalidCookieE
 import org.springframework.security.web.authentication.rememberme.RememberMeAuthenticationException
 
 import java.time.{LocalDate, ZoneId}
+import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
 
 object CPRConstants {
 
@@ -84,7 +83,7 @@ class CustomPersistentRememberMeServices(key: String, uds: UserDetailsService, t
 
   protected def onLoginSuccess(
                                 request: HttpServletRequest, response: HttpServletResponse,
-                                successfulAuthentication: Authentication) {
+                                successfulAuthentication: Authentication): Unit = {
 
     val login = successfulAuthentication.getName()
     log.debug("Creating new persistent login for user {}", login)
@@ -115,7 +114,9 @@ class CustomPersistentRememberMeServices(key: String, uds: UserDetailsService, t
    * current user, so when he logs out from one browser, all his other sessions are destroyed.
    */
 
-  override def logout(request: HttpServletRequest, response: HttpServletResponse, authentication: Authentication) {
+  override def logout(request: HttpServletRequest,
+                      response: HttpServletResponse,
+                      authentication: Authentication): Unit = {
     val rememberMeCookie = extractRememberMeCookie(request)
     if (rememberMeCookie != null && rememberMeCookie.length() != 0) try {
       val cookieTokens = decodeCookie(rememberMeCookie)
@@ -176,7 +177,9 @@ class CustomPersistentRememberMeServices(key: String, uds: UserDetailsService, t
   }
 
   private def addCookie(
-                         token: PersistentToken, request: HttpServletRequest, response: HttpServletResponse) {
+                         token: PersistentToken,
+                         request: HttpServletRequest,
+                         response: HttpServletResponse): Unit= {
     setCookie(
       Array[String](token.getSeries(), token.getTokenValue()),
       CPRConstants.TOKEN_VALIDITY_SECONDS, request, response);

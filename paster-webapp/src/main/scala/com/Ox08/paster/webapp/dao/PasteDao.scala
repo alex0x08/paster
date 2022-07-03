@@ -85,8 +85,8 @@ class PasteDaoImpl extends SearchableDaoImpl[Paste](classOf[Paste]) {
     val cr = new CriteriaSet()
     val select = new ArrayList[Predicate]
 
-    select.add(cr.cb.notEqual(cr.r.get("id"), paste.getId))
-    if (paste.getIntegrationCode != null) {
+    select.add(cr.cb.notEqual(cr.r.get("id"), paste.getId()))
+    if (paste.getIntegrationCode() != null) {
       select.add(cr.cb.equal(cr.r.get("integrationCode"), paste.getIntegrationCode()))
     }
 

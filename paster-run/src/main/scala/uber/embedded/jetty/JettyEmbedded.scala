@@ -291,18 +291,18 @@ class JettyEmbedded {
   @throws(classOf[UnsupportedEncodingException])
   def setupConsole(): JettyEmbedded = {   
     
-    AnsiConsole.systemInstall(); Ansi.ansi().eraseScreen()
+   // AnsiConsole.systemInstall(); Ansi.ansi().eraseScreen()
     
     System.out.write(IOUtils.toByteArray(
         getClass.getResource("/paster-rus.ans")))
-  
+  /*
     if (Locale.getDefault.getLanguage.eq("ru") && SystemUtils.IS_OS_WINDOWS) {
     
       System.setOut(new PrintStream(new FileOutputStream(FileDescriptor.out),true,"cp866"))
       System.setErr(new PrintStream(new FileOutputStream(FileDescriptor.err),true,"cp866"))
     
-    }
-    
+    }*/
+    /*
     cmdProgressExecutor.execute(new Runnable() {
       def run() {
         
@@ -337,7 +337,7 @@ class JettyEmbedded {
       }
       })
     
-   
+   */
     return this
   }
   

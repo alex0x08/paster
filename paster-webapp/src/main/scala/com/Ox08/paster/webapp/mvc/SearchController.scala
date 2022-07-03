@@ -18,13 +18,14 @@ package com.Ox08.paster.webapp.mvc
 
 import com.Ox08.paster.webapp.dao.SearchableDaoImpl
 import com.Ox08.paster.webapp.model.{Key, Query, Struct}
+import jakarta.servlet.http.HttpServletRequest
 import org.apache.commons.lang3.StringUtils
 import org.apache.lucene.queryparser.classic.ParseException
 import org.springframework.beans.support.PagedListHolder
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation._
+
 import java.util.Locale
-import javax.servlet.http.HttpServletRequest
 import scala.jdk.CollectionConverters._
 
 /**

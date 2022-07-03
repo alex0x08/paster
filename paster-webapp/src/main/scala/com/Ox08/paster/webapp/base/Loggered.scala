@@ -16,6 +16,10 @@
 
 package com.Ox08.paster.webapp.base
 
+import ch.qos.logback.classic
+import ch.qos.logback.classic.Level
+import ch.qos.logback.classic.spi.LoggerContextListener
+import ch.qos.logback.core.spi.{ContextAwareBase, LifeCycle}
 import com.fasterxml.jackson.annotation.JsonIgnore
 import org.apache.commons.lang3.builder.{ReflectionToStringBuilder, StandardToStringStyle, ToStringBuilder}
 import org.slf4j.{Logger, LoggerFactory}
@@ -86,4 +90,37 @@ trait Loggered {
   @JsonIgnore
   def getNewProtocolBuilder(): ToStringBuilder = new ToStringBuilder(this, Loggered.style)
 
+}
+
+class LoggerStartupListener extends ContextAwareBase with
+    LoggerContextListener with LifeCycle {
+
+  import ch.qos.logback.classic.LoggerContext
+  import org.springframework.util.Assert
+
+  private var started = false
+
+  def start(): Unit = {
+    if (started) return
+    val isDebug = System.getProperty("appDebug", "false")
+    Assert.notNull(isDebug, "appDebug is empty!")
+    // проверка на значение
+    val debug = java.lang.Boolean.valueOf(isDebug)
+    val c = getContext
+    c.putProperty("appDebug", debug + "")
+    started = true
+  }
+
+  def stop(): Unit = {
+  }
+  def isStarted: Boolean = started
+  def isResetResistant = true
+  def onStart(context: LoggerContext): Unit = {
+  }
+  def onReset(context: LoggerContext): Unit = {
+  }
+  def onStop(context: LoggerContext): Unit = {
+  }
+  override def onLevelChange(logger: classic.Logger, level: Level): Unit = {
+  }
 }

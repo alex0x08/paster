@@ -17,10 +17,8 @@
 package com.Ox08.paster.webapp.tiles2
 
 import com.Ox08.paster.webapp.base.Loggered
+
 import java.util.Locale
-import javax.servlet.ServletContext
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
 import org.apache.tiles.Attribute
 import org.apache.tiles.AttributeContext
 import org.apache.tiles.TilesContainer
@@ -31,6 +29,9 @@ import org.apache.tiles.request.servlet.ServletUtil
 import org.springframework.web.servlet.support.JstlUtils
 import org.springframework.web.servlet.support.RequestContext
 import org.springframework.web.servlet.support.RequestContextUtils
+
+import javax.servlet.ServletContext
+import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
 
 class DynamicTilesViewProcessor extends Loggered {
 
@@ -172,7 +173,8 @@ class DynamicTilesViewProcessor extends Loggered {
 
   protected def createTilesRequest(applicationContext: ApplicationContext,
                                    request: HttpServletRequest, response: HttpServletResponse): Request =
-    new org.apache.tiles.request.servlet.ServletRequest(applicationContext, request, response) {
+    new org.apache.tiles.request.servlet.ServletRequest(applicationContext,
+      request, response) {
       override def getRequestLocale(): Locale = RequestContextUtils.getLocale(request)
     }
 }

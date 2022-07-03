@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" 
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.Ox08.paster.webapp</groupId>
@@ -9,8 +9,8 @@
     <packaging>pom</packaging>
     <name>Paster Project</name>
     <url>https://github.com/alex0x08/paster</url>
-    <inceptionYear>2011</inceptionYear>	
-        
+    <inceptionYear>2011</inceptionYear>
+
     <scm>
         <connection>scm:git:https://github.com/alex0x08/paster.git</connection>
         <url>scm:git:https://github.com/alex0x08/paster.git</url>
@@ -24,14 +24,14 @@
             <url>file:///c:/work/releases/repository/maven-repository/</url>
         </repository>
     </distributionManagement>
-        
+
     <developers>
         <developer>
             <name>Alex Chernyshev</name>
             <timezone>GMT+4</timezone>
         </developer>
     </developers>
-        
+
     <organization>
         <name>0x08 Software</name>
         <url>http://0x08.tk</url>
@@ -45,23 +45,20 @@
         </license>
     </licenses>
 
-        
-        
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding> 
+        <scalaVersion>2.13.8</scalaVersion>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <netbeans.hint.license>apache20</netbeans.hint.license>
         <revision>2.1.04-CURRENT</revision>
         <main.basedir>${basedir}</main.basedir>
     </properties>
 
-    
-    
     <modules>
         <module>paster-run</module>
-        <module>paster-webapp</module>	     
+        <module>paster-webapp</module>
     </modules>
-   
-       
+
+
     <pluginRepositories>
         <pluginRepository>
             <id>alfresco-public-releases</id>
@@ -75,38 +72,28 @@
             <id>alfresco-public-releases</id>
             <url>https://maven.alfresco.com/nexus/content/groups/public</url>
         </repository>
-        
-        
         <repository>
             <id>jboss-thirdparty</id>
             <name>jboss-thirdparty</name>
             <url>https://repository.jboss.org/nexus/content/repositories/thirdparty-releases</url>
         </repository>
-          
-          
-
         <repository>
             <id>atlassian-public</id>
             <name>atlassian-public</name>
             <url>https://maven.atlassian.com/content/groups/public</url>
-        </repository> 
-        
-       
-
+        </repository>
         <repository>
             <id>scala</id>
             <name>Scala tools</name>
             <url>https://scala-tools.org/repo</url>
         </repository>
-            
+
         <repository>
             <id>spring</id>
             <name>Spring Release</name>
             <url>https://maven.springframework.org/release</url>
         </repository>
-            
 
-    
     </repositories>
 
     <build>
@@ -145,8 +132,6 @@
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
-
-
                     <!--debug>true</debug>
                     <debuglevel>none</debuglevel-->
                     <showWarnings>true</showWarnings>
@@ -160,9 +145,38 @@
                 </configuration>
             </plugin>
 
+            <plugin>
+                <groupId>net.alchim31.maven</groupId>
+                <artifactId>scala-maven-plugin</artifactId>
+                <version>4.6.3</version>
+                <configuration>
+                    <args>
+                        <arg>-deprecation</arg>
+                        <arg>-feature</arg>
+                    </args>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.2.0</version>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>3.3.2</version>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>buildnumber-maven-plugin</artifactId>
+                <version>3.0.0</version>
+            </plugin>
 
         </plugins>
     </build>
-  
+
 
 </project>

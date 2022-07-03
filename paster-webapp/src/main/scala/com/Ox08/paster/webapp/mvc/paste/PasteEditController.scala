@@ -111,12 +111,12 @@ class PasteEditController extends GenericEditController[Paste] {
     }
 
     if (!obj.isBlank()) {
-      val pnext = manager.getNextPaste(obj)
-      val pprev = manager.getPreviousPaste(obj)
+      val pnext = manager().getNextPaste(obj)
+      val pprev = manager().getPreviousPaste(obj)
 
       model.addAttribute("availableNext", pnext)
       model.addAttribute("availablePrev", pprev)
-      model.addAttribute("availablePrevList", new IdList(manager.getPreviousPastasIdList(obj)))
+      model.addAttribute("availablePrevList", new IdList(manager().getPreviousPastasIdList(obj)))
 
     } else {
       model.addAttribute("availableNext", null)
@@ -173,7 +173,7 @@ class PasteEditController extends GenericEditController[Paste] {
     p.setReviewImgData(resourcePathHelper.saveResource("r", p.getUuid(),reviewImgData))
     p.setThumbImage(resourcePathHelper.saveResource("t", p.getUuid(),thumbImgData))
 
-    p.touch
+    p.touch()
     p = manager.save(p);
 
     model.asMap().clear()
