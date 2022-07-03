@@ -18,36 +18,54 @@ package com.Ox08.paster.webapp.dao
 
 import com.Ox08.paster.webapp.base.Loggered
 import com.Ox08.paster.webapp.model.Tag
-import org.apache.commons.csv.{CSVFormat, CSVRecord}
 import org.apache.commons.lang3.StringUtils
 import org.springframework.beans.factory.annotation.Value
-
-import java.util.{ArrayList, Collections, HashMap}
 import org.springframework.stereotype.{Repository, Service}
 import org.springframework.transaction.annotation.Transactional
-
-import java.io.{File, FileReader, InputStreamReader}
 import java.util
+import java.util.{ArrayList, Collections, HashMap}
 import scala.jdk.CollectionConverters._
 
 
 @Service
-class ChannelDao( @Value("${paster.channels:null}")
-                  channelsString: String) extends Loggered {
+class PriorityDao(@Value("${paster.priorities:null}")
+                 prioritiesString: String) extends Loggered {
+
+  val priorities: util.Set[String] = new util.TreeSet[String]()
+
+  if (StringUtils.isBlank(prioritiesString)) {
+    priorities.add("Blocker")
+    priorities.add("Normal")
+  } else
+    for (ch <- prioritiesString.split(",")) {
+      priorities.add(ch)
+    }
+
+  def getAvailablePriorities() = Collections.unmodifiableSet(priorities)
+
+  def getDefault() = priorities.iterator().next()
+
+  def exist(name: String) = priorities.contains(name)
+
+}
+
+@Service
+class ChannelDao(@Value("${paster.channels:null}")
+                 channelsString: String) extends Loggered {
 
   val channels: util.Set[String] = new util.TreeSet[String]()
 
-    if (StringUtils.isBlank(channelsString))
-      channels.add("Default") else
-        for (ch <- channelsString.split(",")) {
-            channels.add(ch)
-        }
+  if (StringUtils.isBlank(channelsString))
+    channels.add("Default") else
+    for (ch <- channelsString.split(",")) {
+      channels.add(ch)
+    }
 
   def getAvailableChannels() = Collections.unmodifiableSet(channels)
 
   def getDefault() = channels.iterator().next()
 
-  def exist(name:String) = channels.contains(name)
+  def exist(name: String) = channels.contains(name)
 
 }
 

@@ -25,14 +25,13 @@ import org.springframework.beans.factory.annotation.{Autowired, Value}
 import org.springframework.context.MessageSource
 import org.springframework.orm.ObjectRetrievalFailureException
 import org.springframework.web.bind.annotation._
-
 import java.util.Locale
 
 object LocaleConstants {
 
   val availableLocales: Array[Locale] =Array(
     Locale.US,
-    new Locale("ru", "RU")
+    Locale.forLanguageTag("ru_RU")
   )
 }
 
@@ -44,10 +43,9 @@ abstract class AbstractController extends Loggered {
 
   protected val page500 = "/error/500"
 
-  @Autowired//(name = "messageSource")
+  @Autowired
   protected val messageSource: MessageSource = null
 
-  //@Autowired
   protected val systemInfo = Boot.BOOT.getSystemInfo
   
   @Value("${config.comments.allow-anonymous.create}")

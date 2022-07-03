@@ -24,212 +24,72 @@ import org.hibernate.search.annotations.{Field, Indexed}
 import org.hibernate.validator.constraints.Length
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
+
+import java.util
 import java.util.{ArrayList, Collection, HashSet, Set}
 import javax.persistence._
 import javax.validation.constraints.NotNull
 import javax.xml.bind.annotation.XmlTransient
 import scala.jdk.CollectionConverters._
 
-object User extends Named(null) {
 
-  def createNew = new Builder(new User(null))
+class User(var name: String,
+           username:String,
+           var pwd:String,
+           roles: util.Set[Role]) extends UserDetails with java.io.Serializable {
 
-  class Builder(model: User) extends Named.Builder[User](model) {
-
-    def addUsername(username: String): Builder = {
-      get.setUsername(username); return this
-    }
-
-    def addPassword(password: String): Builder = {
-      get.setPassword(password); return this
-    }
-
-    def addRole(role: Role): Builder = {
-      get.addRole(role); return this
-    }
-  }
-
-}
-
-//@Entity
-//@Indexed(index = "indexes/users") //@Audited
-class User(name: String) extends Named(name) with UserDetails with java.io.Serializable {
-
-  def this() = this(null)
-
-  /**
-   * username
-   */
-
-  @Length(min = 3, max = 250) // @Pattern(regex = "^\\w*$", message = "not a valid username")
-  @NotNull(message = "{validator.not-null}")
-  @Field
-  @Column(nullable = false, length = 50, unique = true)
-  private var username: String = null
-  
-  
-  /**
-   *  roles
-   */
-  @ElementCollection(fetch = FetchType.EAGER)
-  @CollectionTable(joinColumns = Array(new JoinColumn(name = "USER_ID")))
-  @Column(name = "ROLE")
-  private var roles: Set[String] = new HashSet[String]()
-
-  @XmlTransient
-  private var openID: String = null
-
-  
-  /**
-   * pass
-   */
-  @NotNull(message = "{validator.not-null}")
-  @Length(min = 3, max = 250)
-  @XmlTransient
-  private var password: String = null
-
-  @Transient
-  private var passwordRepeat: String = null
-
-  //  @Length(min = 3, max = 250)
-  // @Pattern(regex = "^\\w*$", message = "not a valid username")
-  // @NotNull(message = "{validator.not-null}")
-  @Field //@Column(nullable = false, length = 50,unique=true)
-  //@Basic
-  private var email: String = null
-
-  /**
-   * if this user account is expired
-   */
-  private val accountExpired: Boolean = false
-  private val credentialsExpired: Boolean = false
-  private var totalPastas: Int = _
-  private var totalComments: Int = _
-
-  /**
-   * if this user is editable
-   * useful for openid/oauth/ldap generated users
-   */
-  private var editable: Boolean = true
-
-  def getAvatarHash(): String =
-    if (email != null) {
-      DigestUtils.md5Hex(email)
-    } else if (username == null) {
-      null
-    } else {
-      DigestUtils.md5Hex(username)
-    }
-
-  def isEditable() = editable
-
-  def setEditable(editable: Boolean) {
-    this.editable = editable;
-  }
-
-  override def isEnabled() = !isDisabled()
-
-  def isAccountExpired() = accountExpired
+  override def isEnabled() = true
 
   /**
    * @see org.springframework.security.userdetails.UserDetails#isAccountNonExpired()
    */
-  override def isAccountNonExpired() = !isAccountExpired()
-  
-  def isAccountLocked()= isDisabled()
-  
+  override def isAccountNonExpired() = true
+
   /**
    * @see org.springframework.security.userdetails.UserDetails#isAccountNonLocked()
    */
 
-  override def isAccountNonLocked()= !isAccountLocked()
-  
-  def isCredentialsExpired() =  credentialsExpired
+  override def isAccountNonLocked() = true
 
   /**
    * @see org.springframework.security.userdetails.UserDetails#isCredentialsNonExpired()
    */
-  override def isCredentialsNonExpired() =  !credentialsExpired
+  override def isCredentialsNonExpired() = true
 
-  def getEmail() = email
-  
-  def setEmail(mail: String) {
-    this.email = mail
+  def getName() = name
+
+  override def getPassword() = pwd
+
+  def setPassword(newPass:String): Unit = {
+    pwd = newPass
   }
 
-  @JsonIgnore
-  override def getPassword()= password
-  
-  def setPassword(password: String) {
-    this.password = password 
-  }
-  def getTotalPastas() = totalPastas
-  def getTotalComments() = totalComments
-  def increaseTotalPastas() {
-    totalPastas += 1
-  }
-  def increaseTotalComments() {
-    totalComments += 1
-  }
+  def isPasswordEmpty() = StringUtils.isBlank(pwd)
 
-  @JsonIgnore
-  def getOpenID(): String = openID
+  def isAdmin() = roles.contains(Role.ROLE_ADMIN)
 
-  def setOpenID(openid: String) { this.openID = openid }
+  def getRoles() = roles
+
 
   @Override
-  @JsonIgnore
-  def getPasswordRepeat() =passwordRepeat
-  
+  def getUsername() = username
 
-  def setPasswordRepeat(password: String) {
-    this.passwordRepeat = password
-  }
+  def getAuthorities: util.Collection[_ <: GrantedAuthority] = getRoles()
 
-  def isRemoteUser() = openID != null
-
-  def isPasswordEmpty() = StringUtils.isBlank(password)
-
-  def isAdmin() = roles.contains(Role.ROLE_ADMIN.getCode)
-
-  def getRoles()= roles
-  
-  def setRoles(roles: Set[String]) {
-    this.roles = roles
-  }
-
-  def addRole(role: Role) {
-    roles.add(role.getCode)
-  }
-
-  @Override
-  def getUsername()= username
-  
-
-  def setUsername(username: String) {
-    this.username = username
-  }
-
-  override def getAuthorities(): Collection[GrantedAuthority] = {
-    val out: Collection[GrantedAuthority] = new ArrayList[GrantedAuthority]
-
-    if (roles == null)
-      return out
-
-    for (r <- roles.asScala) {
-      out.add(Role.valueOf(r).asInstanceOf[GrantedAuthority])
-    }
-    out
-  }
-
-  override def loadFull() {
-    getRoles
-    getEmail
-  }
-
-  override def toString():String =  Loggered.toStringSkip(this, 
-                                                          Array("password","passwordRepeat"
-                                                               ))
-  
+  override def toString(): String = Loggered.toStringSkip(this,
+    Array("password", "passwordRepeat"
+    ))
 
 }
+
+
+object Role {
+  val ROLE_ADMIN = new Role("ROLE_ADMIN", "role.admin.name")
+  val ROLE_USER = new Role("ROLE_USER", "role.user.name")
+}
+
+class Role(code: String, desc: String) extends GrantedAuthority {
+  def getAuthority() = code
+  def getName() = desc
+}
+

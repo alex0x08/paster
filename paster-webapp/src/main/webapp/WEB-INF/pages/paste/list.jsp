@@ -92,7 +92,7 @@
                         <c:set property="curDate" value="${paste.lastModified}" target="${splitHelper}"/>
                     </c:if>
 
-                    <c:set var="priorTitle"><fmt:message key="${paste.priority.name}"/></c:set>
+                    <c:set var="priorTitle"><fmt:message key="${paste.priority}"/></c:set>
 
                   
                     <div class="row justify-content-start" >
@@ -120,9 +120,9 @@
                                             <span class="i" title="Paste sticked">]</span>
                                         </c:if>
             
-                                        <a class="i ${paste.priority.cssClass}" style="font-size:2em;"
+                                        <a class="i ${paste.priority}" style="font-size:2em;"
                                            title="<c:out value="${paste.id}"/>: ${priorTitle}. Click to search with same priority."
-                                           href="<c:url value='/main/paste/list/search?query=priority:${paste.priority.code}'/>">/</a>
+                                           href="<c:url value='/main/paste/list/search?query=priority:${paste.priority}'/>">/</a>
             
 
                                         <a class="listLinkLine" href="<c:url value='/${paste.id}'></c:url>" 

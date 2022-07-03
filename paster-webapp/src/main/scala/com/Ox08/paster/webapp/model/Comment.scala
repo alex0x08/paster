@@ -3,13 +3,12 @@ package com.Ox08.paster.webapp.model
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute
 import org.hibernate.search.annotations.{Field, Indexed}
+
 import javax.persistence._
 import javax.validation.constraints.{NotNull, Size}
 import javax.xml.bind.annotation.{XmlRootElement, XmlTransient}
+import scala.collection.immutable.List
 
-object Comment extends Struct {
-  override val terms = super.terms ::: List[String]("text")
-}
 
 @Entity
 @Indexed(index = "indexes/comments")
@@ -26,8 +25,6 @@ class Comment extends Struct with java.io.Serializable {
   @Size(min = 3, message = "{struct.name.validator}")
   private var text: String = null
 
-  //@ManyToOne(fetch = FetchType.EAGER, cascade = Array(CascadeType.PERSIST, CascadeType.MERGE))
-  //@JoinColumn(name = "owner_id")
   private var owner: String = null
   private var lineNumber: java.lang.Long = null
   private var parentId: java.lang.Long = null
@@ -75,7 +72,6 @@ class Comment extends Struct with java.io.Serializable {
     lineNumber = n
   }
 
-  override def terms(): List[String] = Comment.terms
-
+  override def terms(): List[String] =  super.terms() ::: List[String]("text")
 
 }
