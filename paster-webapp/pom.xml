@@ -30,8 +30,14 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
     </properties>
+<dependencyManagement>
+
+
+</dependencyManagement>
 
     <dependencies>
+
+
 
         <dependency>
             <groupId>com.Ox08.paster.webapp</groupId>
@@ -349,29 +355,38 @@
         </dependency>
 
         <!-- Hibernate -->
-        <dependency>
-            <groupId>org.hibernate.search</groupId>
-            <artifactId>hibernate-search-mapper-orm-jakarta</artifactId>
-            <version>6.1.5.Final</version>
-        </dependency>
 
         <dependency>
             <groupId>org.hibernate.search</groupId>
-            <artifactId>hibernate-search-mapper-orm</artifactId>
+            <artifactId>hibernate-search-mapper-orm-orm6</artifactId>
             <version>6.1.5.Final</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.hibernate</groupId>
+                    <artifactId>hibernate-core</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
-        <dependency>
-            <groupId>org.hibernate.search</groupId>
-            <artifactId>hibernate-search-mapper-pojo-base</artifactId>
-            <version>6.1.5.Final</version>
-        </dependency>
 
         <dependency>
             <groupId>org.hibernate.search</groupId>
             <artifactId>hibernate-search-backend-lucene</artifactId>
             <version>6.1.5.Final</version>
         </dependency>
+
+        <dependency>
+            <groupId>jakarta.xml.bind</groupId>
+            <artifactId>jakarta.xml.bind-api</artifactId>
+            <version>4.0.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.hibernate.common</groupId>
+            <artifactId>hibernate-commons-annotations</artifactId>
+            <version>6.0.2.Final</version>
+        </dependency>
+
 
         <!--dependency>
             <groupId>org.hibernate</groupId>
