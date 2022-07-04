@@ -14,19 +14,19 @@ class SystemPropertiesListener extends ServletContextListener with Loggered {
 
   protected var appHome: File = null
 
-  override def contextInitialized(event: ServletContextEvent) {
+  override def contextInitialized(event: ServletContextEvent): Unit = {
     try {
 
       doBoot()
 
 
-      System.setProperty("paste.app.id", System.currentTimeMillis + "")
+      System.setProperty("paste.app.id", System.currentTimeMillis().toString())
 
       System.setProperty("spring.profiles.active", "main")
 
       logger.info("current locale: {}", Locale.getDefault)
 
-      logger.info("application home: {}", System.getProperty("paste.app.home"))
+      logger.info("application home: {}", System.getProperty("paster.app.home"))
 
     } catch {
       case e: IOException =>
@@ -36,9 +36,9 @@ class SystemPropertiesListener extends ServletContextListener with Loggered {
   }
 
 
-  override def contextDestroyed(servletContextEvent: ServletContextEvent) {}
+  override def contextDestroyed(servletContextEvent: ServletContextEvent):Unit = {}
 
-  def doBoot() {
+  def doBoot(): Unit = {
 
     import com.Ox08.paster.webapp.base.{Boot, SystemError, SystemMessage}
     import org.apache.commons.lang3.LocaleUtils

@@ -14,13 +14,9 @@
     <!-- Activates annotation-based bean configuration -->
     <context:annotation-config />
 
-
     <bean id="propertyConfigurer-app"
-          class="com.Ox08.paster.webapp.base.MergedPropertyConfigurer">
-     <property name="ignoreUnresolvablePlaceholders" value="true"/>
-    
-     <property name="ignoreResourceNotFound" value="false"/>     
-        <property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE"/>
+          class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">
+
          <property name="locations">
             <list>
                 <value>file:${paster.app.home}/config.properties</value>

@@ -44,9 +44,9 @@
 </div>
    
        
-<script type="text/javascript" src="<c:url value='/main/assets/${appId}/jquery/3.6.0/jquery.min.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/main/resources/${appId}/local_components/jquery/jquery.slim.min.js'/>"></script>
 <script type="text/javascript"
-    src="<c:url value='/main/assets/${appId}/bootstrap/5.1.3/js/bootstrap.bundle.min.js'/>"></script>
+    src="<c:url value='/main/resources/${appId}/local_components/bootstrap/bootstrap.bundle.min.js'/>"></script>
 
 
 <script type="text/javascript"

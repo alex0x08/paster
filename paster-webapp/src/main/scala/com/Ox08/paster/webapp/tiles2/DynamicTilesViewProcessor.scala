@@ -49,7 +49,7 @@ class DynamicTilesViewProcessor extends Loggered {
    *
    * @param tilesDefinitionName Main template name used to lookup definitions.
    */
-  def setTilesDefinitionName(tilesDefinitionName: String) {
+  def setTilesDefinitionName(tilesDefinitionName: String): Unit = {
     this.tilesDefinitionName = tilesDefinitionName
   }
 
@@ -58,7 +58,7 @@ class DynamicTilesViewProcessor extends Loggered {
    *
    * @param tilesBodyAttributeName Tiles body attribute name.
    */
-  def setTilesBodyAttributeName(tilesBodyAttributeName: String) {
+  def setTilesBodyAttributeName(tilesBodyAttributeName: String): Unit = {
     this.tilesBodyAttributeName = tilesBodyAttributeName;
   }
 
@@ -70,7 +70,7 @@ class DynamicTilesViewProcessor extends Loggered {
    *
    * @param tilesDefinitionDelimiter Optional delimiter to replace '/' in a url.
    */
-  def setTilesDefinitionDelimiter(tilesDefinitionDelimiter: String) {
+  def setTilesDefinitionDelimiter(tilesDefinitionDelimiter: String): Unit = {
     this.tilesDefinitionDelimiter = tilesDefinitionDelimiter;
   }
 
@@ -81,7 +81,7 @@ class DynamicTilesViewProcessor extends Loggered {
   def renderMergedOutputModel(bName: String, url: String,
                               servletContext: ServletContext,
                               request: HttpServletRequest, response: HttpServletResponse,
-                              container: TilesContainer) {
+                              container: TilesContainer): Unit = {
 
     val tilesRequest = createTilesRequest(ServletUtil.getApplicationContext(servletContext),
       request, response);
@@ -147,7 +147,7 @@ class DynamicTilesViewProcessor extends Loggered {
   protected def endDynamicDefinition(definitionName: String,
                                      beanName: String,
                                      tilesRequest: Request,
-                                     container: TilesContainer) {
+                                     container: TilesContainer): Unit = {
     if (!definitionName.equals(beanName)) {
       container.endContext(tilesRequest)
     }

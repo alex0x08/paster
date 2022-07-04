@@ -55,19 +55,19 @@ class SessionToken extends java.io.Serializable {
 
   def getSeries() = series
 
-  def setSeries(series: String) {
+  def setSeries(series: String): Unit = {
     this.series = series
   }
 
   def getTokenValue() = tokenValue
 
-  def setTokenValue(tokenValue: String) {
+  def setTokenValue(tokenValue: String): Unit = {
     this.tokenValue = tokenValue
   }
 
   def getTokenDate: Date = tokenDate
 
-  def setTokenDate(tokenDate: Date) {
+  def setTokenDate(tokenDate: Date): Unit = {
     this.tokenDate = tokenDate;
   }
 
@@ -76,13 +76,13 @@ class SessionToken extends java.io.Serializable {
 
   def getIpAddress = ipAddress
 
-  def setIpAddress(ipAddress: String) {
+  def setIpAddress(ipAddress: String): Unit = {
     this.ipAddress = ipAddress
   }
 
   def getUserAgent = userAgent
 
-  def setUserAgent(userAgent: String) {
+  def setUserAgent(userAgent: String): Unit = {
     if (userAgent.length() >= SessionToken.MAX_USER_AGENT_LEN) {
       this.userAgent = userAgent.substring(0, SessionToken.MAX_USER_AGENT_LEN - 1)
     } else {

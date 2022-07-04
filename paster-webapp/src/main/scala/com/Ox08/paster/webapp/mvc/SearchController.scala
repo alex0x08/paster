@@ -163,7 +163,7 @@ abstract class SearchController[T <: Struct, QV <: Query] extends GenericListCon
     } catch {
       case _: ParseException =>
         model.addAttribute("statusMessageKey", "action.query.incorrect")
-        manager.getList()
+        manager().getList()
     }
   }
 
@@ -174,7 +174,7 @@ abstract class SearchController[T <: Struct, QV <: Query] extends GenericListCon
     if (StringUtils.isBlank(query.getQuery()))
       getManagerBySearchResult(result).getList()
     else
-      getManagerBySearchResult(result).search(query.getQuery)
+      getManagerBySearchResult(result).search(query.getQuery())
   }
 
   override def listImpl(request: HttpServletRequest, locale: Locale, model: Model,

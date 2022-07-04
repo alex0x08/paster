@@ -65,8 +65,8 @@ abstract class Struct extends DBObject with SearchObject with  java.io.Serializa
 
   @PrePersist
   @PreUpdate
-  def touch() {
-    lastModified = Calendar.getInstance.getTime
+  def touch(): Unit= {
+    lastModified = Calendar.getInstance().getTime()
   }
   
   def getLastModified()= lastModified
@@ -75,7 +75,7 @@ abstract class Struct extends DBObject with SearchObject with  java.io.Serializa
       
   def terms():List[String] = Struct.terms
       
-  def loadFull() {}  
+  def loadFull() : Unit= {}
 
   
 }

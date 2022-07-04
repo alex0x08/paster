@@ -37,7 +37,7 @@ object KeyValue extends Key {
 }
 
 class KeyValueEditor[T <: KeyValue](vobj: KeyValueObj[T]) extends PropertyEditorSupport {
-  override def setAsText(text: String) {
+  override def setAsText(text: String): Unit= {
     setValue(vobj.valueOf(text.toLowerCase))
   }
   override def getAsText(): String = {
@@ -54,7 +54,7 @@ class KeyValue(code: String, kvalue: String, kname: String)
   @Column(name = "pvalue")
   private var value: String = kvalue
   def getValue() = value
-  def setValue(f: String) {
+  def setValue(f: String): Unit= {
     value = f
   }
 

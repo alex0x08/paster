@@ -32,14 +32,14 @@ trait Query {
    */
   def getQuery(): String
 
-  def setQuery(query: String)
+  def setQuery(query: String): Unit
 
   /**
    * @return current page
    */
   def getPage(): Int
 
-  def setPage(page: Int)
+  def setPage(page: Int): Unit
 
   /**
    * build CompassQuery from CompassSession

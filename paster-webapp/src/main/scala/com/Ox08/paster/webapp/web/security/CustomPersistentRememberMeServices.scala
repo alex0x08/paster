@@ -84,7 +84,7 @@ class CustomPersistentRememberMeServices(key: String, uds: UserDetailsService, t
 
   protected def onLoginSuccess(
                                 request: HttpServletRequest, response: HttpServletResponse,
-                                successfulAuthentication: Authentication) {
+                                successfulAuthentication: Authentication): Unit = {
 
     val login = successfulAuthentication.getName()
     log.debug("Creating new persistent login for user {}", login)
@@ -115,12 +115,12 @@ class CustomPersistentRememberMeServices(key: String, uds: UserDetailsService, t
    * current user, so when he logs out from one browser, all his other sessions are destroyed.
    */
 
-  override def logout(request: HttpServletRequest, response: HttpServletResponse, authentication: Authentication) {
+  override def logout(request: HttpServletRequest, response: HttpServletResponse, authentication: Authentication): Unit = {
     val rememberMeCookie = extractRememberMeCookie(request)
     if (rememberMeCookie != null && rememberMeCookie.length() != 0) try {
       val cookieTokens = decodeCookie(rememberMeCookie)
       val token = getPersistentToken(cookieTokens)
-      tokenDao.remove(token.getSeries)
+      tokenDao.remove(token.getSeries())
     } catch {
       case e@(_: InvalidCookieException
               | _: RememberMeAuthenticationException
@@ -151,13 +151,13 @@ class CustomPersistentRememberMeServices(key: String, uds: UserDetailsService, t
       Array(presentedToken, token.getTokenValue()))
     if (!presentedToken.equals(token.getTokenValue())) {
       // Token doesn't match series value. Delete this session and throw an exception.
-      tokenDao.remove(token.getSeries)
+      tokenDao.remove(token.getSeries())
       throw new RememberMeAuthenticationException("Invalid remember-me token (Series/token) mismatch. Implies previous cookie theft attack.")
     }
 
     if (LocalDate.ofInstant(token.getTokenDate.toInstant,ZoneId.systemDefault())
       .plusDays(CPRConstants.TOKEN_VALIDITY_DAYS).isBefore(LocalDate.now())) {
-      tokenDao.remove(token.getSeries)
+      tokenDao.remove(token.getSeries())
       throw new RememberMeAuthenticationException("Remember-me login has expired")
     }
     token
@@ -176,7 +176,7 @@ class CustomPersistentRememberMeServices(key: String, uds: UserDetailsService, t
   }
 
   private def addCookie(
-                         token: SessionToken, request: HttpServletRequest, response: HttpServletResponse) {
+                         token: SessionToken, request: HttpServletRequest, response: HttpServletResponse): Unit = {
     setCookie(
       Array[String](token.getSeries(), token.getTokenValue()),
       CPRConstants.TOKEN_VALIDITY_SECONDS, request, response);

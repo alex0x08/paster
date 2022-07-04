@@ -36,18 +36,12 @@
 <meta http-equiv="Expires" content="0" />
 
 
-
-<%--
-        <link href="<c:url value='/main/assets/${appId}/bootstrap/5.1.3/css/bootstrap.min.css'/>"
-              rel="stylesheet" type="text/css"/>
---%>
-
 <link href="<c:url value='/main/resources/${appId}/paster/css/all/bootstrap.min.css'/>" rel="stylesheet"
     type="text/css" />
 
 <link href="<c:url value='/main/resources/${appId}/paster/css/all/mnmlicons.css'/>" rel="stylesheet" type="text/css" />
 
-<link type="text/css" href="<c:url value='/main/assets/${appId}/font-awesome/4.7.0/css/font-awesome.css'/>"
+<link type="text/css" href="<c:url value='/main/resources/${appId}/local_components/font-awesome/css/font-awesome.min.css'/>"
     rel="stylesheet" />
 
 <link href="<c:url value='/main/resources/${appId}/paster/css/all/app.css'/>" rel="stylesheet" type="text/css" />

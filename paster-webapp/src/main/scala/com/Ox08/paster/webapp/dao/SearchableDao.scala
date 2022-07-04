@@ -18,6 +18,7 @@ package com.Ox08.paster.webapp.dao
 
 import com.Ox08.paster.webapp.base.Loggered
 import com.Ox08.paster.webapp.model.Struct
+import jakarta.annotation.PostConstruct
 import org.apache.commons.lang3.StringUtils
 import org.apache.lucene.analysis.standard.StandardAnalyzer
 import org.apache.lucene.queryparser.classic.{MultiFieldQueryParser, ParseException, QueryParser}
@@ -26,6 +27,8 @@ import org.hibernate.CacheMode
 import org.hibernate.search.backend.lucene.search.query.LuceneSearchQuery
 import org.hibernate.search.mapper.orm.Search
 import org.hibernate.search.mapper.orm.session.SearchSession
+import org.springframework.beans.factory.annotation.Value
+import org.springframework.stereotype.Service
 //import org.hibernate.search.jpa.{FullTextEntityManager, FullTextQuery, Search}
 
 import org.springframework.transaction.annotation.Transactional
@@ -40,6 +43,29 @@ object SearchableDaoImpl {
   val searchableDao = new ArrayList[SearchableDaoImpl[_]]()
 }
 
+@Transactional
+@Service
+class SetupIndexes extends Loggered {
+
+  @Value("${paster.reindexOnBoot:false}")
+  val reindexOnBoot: Boolean = false
+
+  @PostConstruct
+  def onStart(): Unit = {
+
+    if (reindexOnBoot) {
+      for (d <- SearchableDaoImpl.searchableDao.asScala) {
+        d.indexAll()
+      }
+
+      logger.info("reindex completed.")
+    } else {
+      logger.info("reindex was disabled. skipping it.")
+    }
+
+  }
+}
+
 @Transactional(readOnly = true, rollbackFor = Array(classOf[Exception]))
 abstract class SearchableDaoImpl[T <: Struct](model: Class[T])
   extends StructDaoImpl[T](model) {
@@ -47,7 +73,7 @@ abstract class SearchableDaoImpl[T <: Struct](model: Class[T])
   /**
    * this is needed to be able to reindex all implementations
    *
-   * @see reindex 
+   * @see reindex
    */
   SearchableDaoImpl.searchableDao.add(this)
 
@@ -62,13 +88,13 @@ abstract class SearchableDaoImpl[T <: Struct](model: Class[T])
     val scorer: QueryScorer = new QueryScorer(luceneQuery)
     val highlighter: Highlighter = new Highlighter(SearchableDaoImpl.FORMATTER, scorer)
     highlighter.setTextFragmenter(new SimpleSpanFragmenter(scorer, 100))
-  //  val fquery: LuceneSearchQuery[T] = fsession.search(luceneQuery, model).toQuery()
+    //  val fquery: LuceneSearchQuery[T] = fsession.search(luceneQuery, model).toQuery()
 
     def getResults() = null // fillHighlighted(highlighter, pparser, fquery.getResultList())
 
   }
 
-  def getFullTextEntityManager():SearchSession =  null //Search.session(em)
+  def getFullTextEntityManager(): SearchSession = null //Search.session(em)
 
   def getDefaultStartFields(): Array[String] = SearchableDaoImpl.DEFAULT_START_FIELDS
 
@@ -81,18 +107,18 @@ abstract class SearchableDaoImpl[T <: Struct](model: Class[T])
     results.asInstanceOf[java.util.List[T]]
   }
 
-  def indexAll(): Unit =  {
+  def indexAll(): Unit = {
 
     val fsession = getFullTextEntityManager()
     try {
-/*
-      fsession.createIndexer(model)
-        .batchSizeToLoadObjects(25)
-        .cacheMode(CacheMode.NORMAL)
-        .threadsToLoadObjects(1)
-        .threadsForSubsequentFetching(2)
-        .startAndWait()
-*/
+      /*
+         fsession.createIndexer(model)
+           .batchSizeToLoadObjects(25)
+           .cacheMode(CacheMode.NORMAL)
+           .threadsToLoadObjects(1)
+           .threadsForSubsequentFetching(2)
+           .startAndWait()
+      */
     } catch {
       case e: InterruptedException => {
         throw new RuntimeException(e)
@@ -102,7 +128,7 @@ abstract class SearchableDaoImpl[T <: Struct](model: Class[T])
 
   def fillHighlighted(highlighter: Highlighter,
                       pparser: QueryParser,
-                      model: T): Unit =  {
+                      model: T): Unit = {
     /* try {
          val hl = highlighter
                  .getBestFragments(pparser.getAnalyzer()
@@ -114,11 +140,11 @@ abstract class SearchableDaoImpl[T <: Struct](model: Class[T])
          }
 
 
- } catch {
+   } catch {
    case e @ (_ : IOException  | _ : InvalidTokenOffsetsException) => {
        logger.error(e.getLocalizedMessage,e)
      }
- }*/
+   }*/
 
   }
 
@@ -146,4 +172,3 @@ abstract class SearchableDaoImpl[T <: Struct](model: Class[T])
 
 }
 
-  

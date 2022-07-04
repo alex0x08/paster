@@ -45,7 +45,7 @@ abstract class GenericEditController[T <: Struct] extends GenericController[T] {
     model.addAttribute(GenericController.MODEL_KEY, obj)
   }
 
-  def loadModel(id: java.lang.Long) = manager.getFull(id)
+  def loadModel(id: java.lang.Long) = manager().getFull(id)
 
 
   @RequestMapping(value = Array(GenericEditController.NEW_ACTION), method = Array(RequestMethod.GET))
@@ -90,10 +90,10 @@ abstract class GenericEditController[T <: Struct] extends GenericController[T] {
     }
 
 
-    val r: T = manager.save(b)
+    val r: T = manager().save(b)
 
     // set id from create
-    if (b.isBlank) {
+    if (b.isBlank()) {
       b.setId(r.getId())
     }
 
@@ -107,7 +107,7 @@ abstract class GenericEditController[T <: Struct] extends GenericController[T] {
     method = Array(RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE))
   def delete(@RequestParam(required = false) id: Long,
              model: Model): String = {
-    manager.remove(id);
+    manager().remove(id);
     listPage
   }
 

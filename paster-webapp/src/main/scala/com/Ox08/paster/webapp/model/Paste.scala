@@ -48,7 +48,7 @@ class Tag(tagString: String) extends Named(tagString) {
   private var total: Int = 0
   def this() = this(null)
   def getTotal() = total
-  def setTotal(i: Int) {
+  def setTotal(i: Int): Unit= {
     total = i
   }
 
@@ -171,7 +171,7 @@ class Paste(ptitle: String) extends Named(ptitle) with java.io.Serializable {
   @PrePersist
   @PreUpdate
   @unused
-  private def onUpdate() {
+  private def onUpdate(): Unit= {
     commentsCount = getComments().size()
   }
 
@@ -278,7 +278,7 @@ class Paste(ptitle: String) extends Named(ptitle) with java.io.Serializable {
   def getCodeType(): CodeType = CodeType.valueOf(codeType)
 
   def setCodeType(f: CodeType): Unit = {
-    codeType = f.getCode
+    codeType = f.getCode()
   }
 
   /**
@@ -316,7 +316,7 @@ class Paste(ptitle: String) extends Named(ptitle) with java.io.Serializable {
    */
   override def loadFull(): Unit = {
 
-    getText
+    getText()
     for (c <- comments.asScala) {
       c.loadFull()
     }

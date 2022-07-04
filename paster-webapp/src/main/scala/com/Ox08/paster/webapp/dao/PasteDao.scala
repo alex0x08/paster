@@ -169,7 +169,7 @@ class PasteDaoImpl extends SearchableDaoImpl[Paste](classOf[Paste]) {
     val cb = em.getCriteriaBuilder
     val cq: CriteriaQuery[java.lang.Long] = cb.createQuery(classOf[java.lang.Long])
 
-    val r = cq.from(getModel)
+    val r = cq.from(getModel())
 
     cq.select(cb.count(r))
 

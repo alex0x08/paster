@@ -42,18 +42,18 @@ class KeyObj[T <: Key] {
   val map = new HashMap[String, T]
 
   def add(c: T): Unit =  {
-    map.put(c.getCode, c)
+    map.put(c.getCode(), c)
   }
 
   def getList: Collection[T] = list
-  def list: Collection[T] = map.values
+  def list: Collection[T] = map.values()
   def valueOf(key: String): T =
     if (map.containsKey(key)) map.get(key) else null.asInstanceOf[T]
 }
 
 class KeyEditorEnum[T <: Key](vobj: KeyObj[T]) extends PropertyEditorSupport {
   override def setAsText(text: String): Unit =  {
-    setValue(vobj.valueOf(text.toLowerCase));
+    setValue(vobj.valueOf(text.toLowerCase()));
   }
   override def getAsText(): String = {
     val s = getValue().asInstanceOf[T]
@@ -68,7 +68,7 @@ class KeyEditorEnum[T <: Key](vobj: KeyObj[T]) extends PropertyEditorSupport {
 class KeyEditor[T <: Key](vobj: Key) extends PropertyEditorSupport {
 
   override def setAsText(text: String): Unit =  {
-    setValue(vobj.create(text.toLowerCase))
+    setValue(vobj.create(text.toLowerCase()))
   }
   override def getAsText(): String = {
     val s = getValue().asInstanceOf[T]

@@ -1,6 +1,6 @@
 package com.Ox08.paster.webapp.startup
 
-import com.Ox08.paster.webapp.base.{Loggered, MergedPropertyConfigurer}
+import com.Ox08.paster.webapp.base.Loggered
 import com.Ox08.paster.webapp.dao.PasteDaoImpl
 import com.Ox08.paster.webapp.manager.UserManagerImpl
 import com.Ox08.paster.webapp.model.{Role, User}
@@ -21,9 +21,6 @@ class BootContext(ctx: ApplicationContext) {
 
   val users: UserManagerImpl = ctx.getBean(classOf[UserManagerImpl])
 
-
-  val props: MergedPropertyConfigurer = ctx.getBean("propertyConfigurer-app")
-    .asInstanceOf[MergedPropertyConfigurer]
 }
 
 class StartupListener extends ServletContextListener with Loggered {
@@ -37,7 +34,7 @@ class StartupListener extends ServletContextListener with Loggered {
 
     try {
 
-      setupSecurityContext // setup security context
+      setupSecurityContext() // setup security context
 
       bootContext.users.loadUsers()
 
@@ -60,23 +57,24 @@ class StartupListener extends ServletContextListener with Loggered {
 
   }
 
-  override def contextDestroyed(servletContextEvent: ServletContextEvent) {
+  override def contextDestroyed(servletContextEvent: ServletContextEvent): Unit= {
     // not used
   }
 
 
 
-  def loadDefaults(csv: String, callback: CSVRecord => Unit) {
+  def loadDefaults(csv: String, callback: CSVRecord => Unit): Unit= {
     val r = new InputStreamReader(getClass().getResourceAsStream(csv))
     try {
-      val records = CSVFormat.DEFAULT.withHeader().parse(r)
+      val records = CSVFormat.DEFAULT.builder()
+        .setHeader().setSkipHeaderRecord(true).build().parse(r)
       for (record <- records.asScala) {
         callback(record)
       }
     } finally r.close
   }
 
-  def setupSecurityContext() {
+  def setupSecurityContext(): Unit= {
 
     val start_user = new User("System","system",
       Md5Crypt.md5Crypt(SecureRandom.getSeed(20)),
@@ -90,19 +88,19 @@ class StartupListener extends ServletContextListener with Loggered {
     SecurityContextHolder.getContext().setAuthentication(auth)
   }
 
-  def reindex(props: MergedPropertyConfigurer) {
-    if (props.getProperty("config.reindex.enabled").equals("1")) {
+ // def reindex(props: MergedPropertyConfigurer): Unit= {
+ //   if (props.getProperty("config.reindex.enabled").equals("1")) {
 
    /*   for (d <- SearchableDaoImpl.searchableDao.asScala) {
  //       d.indexAll()
       }*/
 
-      logger.info("reindex completed.")
+   /*   logger.info("reindex completed.")
     } else {
       logger.info("reindex was disabled. skipping it.")
     }
 
   }
-
+*/
 
 }

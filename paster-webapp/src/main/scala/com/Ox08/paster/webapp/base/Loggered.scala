@@ -107,7 +107,7 @@ class LoggerStartupListener extends ContextAwareBase with
     // проверка на значение
     val debug = java.lang.Boolean.valueOf(isDebug)
     val c = getContext
-    c.putProperty("appDebug", debug + "")
+    c.putProperty("appDebug", debug.toString())
     started = true
   }
 

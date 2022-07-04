@@ -48,18 +48,13 @@
             <version>${spring.version}</version>
         </dependency>
 
-
-
-
     </dependencies>
     <build>
         <plugins>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
             </plugin>
-
 
         </plugins>
 
@@ -69,12 +64,9 @@
     </build>
 
     <properties>
-
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.test.skip>true</maven.test.skip>
         <spring.version>6.0.0-M4</spring.version>
-
-
     </properties>
 
 </project>

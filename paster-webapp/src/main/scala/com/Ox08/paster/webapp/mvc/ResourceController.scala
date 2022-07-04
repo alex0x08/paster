@@ -29,6 +29,8 @@ import java.io.{FileInputStream, IOException}
 @RequestMapping(Array("/resources"))
 class ResourceController extends AbstractController {
 
+  private val MAX_AGE = 31557600
+
   @Autowired
   private val resourcePathHelper: ResourcePathHelper = null
 
@@ -64,12 +66,12 @@ class ResourceController extends AbstractController {
 
     response.setContentType("image/png")
 
-    response.setHeader("Content-Length", fimg.length()+"")
-    response.setHeader("Content-Disposition", "inline;filename='" + fimg.getName + "'")
+    response.setHeader("Content-Length", fimg.length().toString())
+    response.setHeader("Content-Disposition", s"inline;filename='${fimg.getName}'")
     response.setDateHeader("Last-Modified", fimg.lastModified())
     response.setDateHeader("Expires", System.currentTimeMillis +
-      31557600)
-    response.setHeader("Cache-Control", "max-age=" + 31557600 + ", public")
+      MAX_AGE)
+    response.setHeader("Cache-Control", s"max-age=${MAX_AGE}, public")
     response.setHeader("Pragma", "cache")
 
     new InputStreamResource(new FileInputStream(fimg))
@@ -77,7 +79,7 @@ class ResourceController extends AbstractController {
   }
 
   @throws(classOf[IOException])
-  def writeError(response: HttpServletResponse, msg: String, status: Int) {
+  def writeError(response: HttpServletResponse, msg: String, status: Int): Unit = {
     response.setContentType("text/html;charset=UTF-8");
     response.setStatus(status);
     val out = response.getWriter()

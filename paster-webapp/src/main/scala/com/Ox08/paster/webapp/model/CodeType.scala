@@ -100,7 +100,7 @@ object CodeType {
   add(VisualBasic)
 
   private def add(c: CodeType): Unit = {
-    map.put(c.getCode, c)
+    map.put(c.getCode(), c)
   }
 
   def list: Collection[CodeType] = map.values

@@ -255,14 +255,14 @@ class PasteListController extends SearchController[Paste, OwnerQuery] {
   @RequestMapping(value = Array("/own/list"))
   @ModelAttribute("items")
   def listOwn(model: Model, locale: Locale): java.util.List[Paste] = {
-    manager.getByOwner(getCurrentUser())
+    manager().getByOwner(getCurrentUser())
   }
 
   @RequestMapping(value = Array("/own/list/body"), method = Array(RequestMethod.GET))
   @ModelAttribute("items")
   @ResponseBody
   def listOwnBody(): java.util.List[Paste] = {
-    manager.getByOwner(getCurrentUser())
+    manager().getByOwner(getCurrentUser())
   }
 
   protected val pasterListCallback: PasteListCallback = new PasteListCallback(null, true, null)
@@ -272,12 +272,12 @@ class PasteListController extends SearchController[Paste, OwnerQuery] {
     override def invokeCreate(): PagedListHolder[Paste] = {
       val ph = new ExtendedPageListHolder[Paste](
         if (integrationCode != null) {
-          manager.getListIntegrated(integrationCode)
+          manager().getListIntegrated(integrationCode)
         } else {
           if (channel == null) {
-            manager.getByChannel(channelDao.getDefault(), sortAsc)
+            manager().getByChannel(channelDao.getDefault(), sortAsc)
           } else
-            manager.getByChannel(channel, sortAsc)
+            manager().getByChannel(channel, sortAsc)
         })
 
       val sort = ph.getSort().asInstanceOf[MutableSortDefinition]

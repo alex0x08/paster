@@ -45,8 +45,8 @@ class IndexController extends AbstractController{
   }
 
   @RequestMapping(Array("/login"))
-  def login(model:Model):String = if (isCurrentUserLoggedIn) index(model) else {
-  model.addAttribute("query", new GenericQuery)
+  def login(model:Model):String = if (isCurrentUserLoggedIn()) index(model) else {
+  model.addAttribute("query", new GenericQuery())
   "/login"
   }
 

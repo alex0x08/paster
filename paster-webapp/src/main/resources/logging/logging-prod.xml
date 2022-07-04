@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<included>
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- On Windows machines setting withJansi to true enables ANSI
+        color code interpretation by the Jansi library. This requires
+        org.fusesource.jansi:jansi:1.8 on the class path.  Note that
+        Unix-based operating systems such as Linux and Mac OS X
+        support ANSI color codes by default. -->
+        <withJansi>false</withJansi>
+    
+        <!-- encoders are assigned the type 
+        ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
+        <encoder>
+            <pattern>%d{HH:mm:ss} %-5level %class{0}.%method:%line %msg%n</pattern>
+        </encoder>  
+          
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+    
+     
+    <appender name="CYCLIC"  
+               class="ch.qos.logback.core.read.CyclicBufferAppender"> 
+        <MaxSize>2048</MaxSize>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>DEBUG</level>
+            <onMatch>ACCEPT</onMatch>
+        </filter>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+        </filter>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>TRACE</level>
+            <onMatch>ACCEPT</onMatch>
+        </filter>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>WARN</level>
+            <onMatch>ACCEPT</onMatch>
+        </filter>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+        </filter>
+    </appender>
+    
+     <logger name="com.x0x08" level="info" additivity="false">
+        <appender-ref ref="CONSOLE" />
+       
+    </logger>
+    
+    <logger name="com.x0x08" level="debug" additivity="false">
+        <appender-ref ref="CYCLIC"/>
+    </logger>
+
+    <logger name="org.apache.http" level="debug" additivity="false">
+        <appender-ref ref="CYCLIC"/>
+    </logger>
+                
+    <logger name="org.springframework" level="info" additivity="false">
+        <appender-ref ref="CYCLIC"/>
+    </logger>
+    
+     <logger name="org.thymeleaf" level="info" additivity="false">
+        <appender-ref ref="CYCLIC"/>
+    </logger>
+
+               
+    <logger name="javax.activation" level="WARN"/>
+    <logger name="javax.mail" level="WARN"/>
+    <logger name="javax.xml.bind" level="WARN"/>
+    <logger name="ch.qos.logback" level="WARN"/>
+    <logger name="com.codahale.metrics" level="WARN"/>
+    <logger name="com.ryantenney" level="WARN"/>
+    <logger name="com.sun" level="WARN"/>
+    <logger name="com.zaxxer" level="WARN"/>
+    <logger name="org.apache" level="WARN"/>
+    <logger name="org.hibernate.validator" level="WARN"/>
+    <logger name="org.springframework" level="WARN"/>
+    <logger name="org.springframework.web" level="WARN"/>
+    <logger name="org.springframework.security" level="WARN"/>
+    <logger name="org.springframework.cache" level="WARN"/>
+    <logger name="org.thymeleaf" level="WARN"/>
+    <logger name="org.xnio" level="WARN"/>
+    <logger name="springfox" level="WARN"/>
+    <logger name="sun.rmi" level="WARN"/>
+    <logger name="sun.rmi.transport" level="WARN"/>
+
+    <root level="INFO">
+        <appender-ref ref="CYCLIC"/>
+    </root>
+    
+</included>

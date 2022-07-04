@@ -76,7 +76,7 @@ class TagDao extends StructDaoImpl[Tag](classOf[Tag]) {
   def getTagsMap(): java.util.Map[String, Tag] = {
     val out = new HashMap[String, Tag]
     for (t <- getAll().asScala) {
-      out.put(t.getName, t)
+      out.put(t.getName(), t)
     }
     out
   }

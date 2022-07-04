@@ -205,7 +205,7 @@ public class BasicTilesContainerFactory extends AbstractTilesContainerFactory {
      * @return The definitions reader.
      * @since 2.1.1
      */
-    protected DefinitionsReader createDefinitionsReader(
+   protected DefinitionsReader createDefinitionsReader(
             ApplicationContext applicationContext) {
         return new DigesterDefinitionsReader();
     }

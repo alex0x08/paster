@@ -5,7 +5,7 @@
 
 --%>
 
-<script src="<c:url value='/main/assets/${appId}/ace/1.3.3/src-min-noconflict/ace.js'/>" type="text/javascript"
+<script src="<c:url value='/main/resources/${appId}/local_components/ace/src-min-noconflict/ace.js'/>" type="text/javascript"
     charset="utf-8"></script>
 
 <script src="<c:url value='/main/resources/${appId}/local_components/syntax_highlighter/XRegExp.js'/>"></script>

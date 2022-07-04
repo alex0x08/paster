@@ -86,10 +86,11 @@ class UserManagerImpl extends UserDetailsService with Loggered {
   }
 
 
-  def loadDefaults(csv: File, callback: CSVRecord => Unit) {
+  def loadDefaults(csv: File, callback: CSVRecord => Unit): Unit = {
     val r = new FileReader(csv)
     try {
-      val records = CSVFormat.DEFAULT.withHeader().parse(r)
+      val records = CSVFormat.DEFAULT.builder().setHeader()
+        .setSkipHeaderRecord(true).build().parse(r)
       for (record <- records.asScala) {
         callback(record)
       }

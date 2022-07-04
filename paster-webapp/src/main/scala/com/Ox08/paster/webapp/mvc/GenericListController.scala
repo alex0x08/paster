@@ -62,7 +62,7 @@ class SortColumn(property:String, name:String) {
 
   override def equals(from:Any) =
     from.isInstanceOf[SortColumn] && property != null &&
-      property.equals((from.asInstanceOf[SortColumn]).getProperty)
+      property.equals((from.asInstanceOf[SortColumn]).getProperty())
 
   override def hashCode():Int =
     42 + Objects.hashCode(this.property)
@@ -95,11 +95,11 @@ abstract class GenericListController[T <: Struct ] extends GenericController[T] 
    */
   protected val defaultListCallback:SourceCallback[T]  = new SourceCallback[T]() {
     override def invokeCreate():PagedListHolder[T] = 
-     new PagedListHolder[T](manager.getList())    
+     new PagedListHolder[T](manager().getList())
   }
 
 
-  protected def fillListModel(model:Model,locale:Locale) {
+  protected def fillListModel(model:Model,locale:Locale): Unit= {
     /**
      * set default list mode
      */

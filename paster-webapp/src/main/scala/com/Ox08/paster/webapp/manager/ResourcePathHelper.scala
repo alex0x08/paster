@@ -33,7 +33,7 @@ object ResourcePathHelper {
 @Component("resourcePathHelper")
 class ResourcePathHelper extends Loggered {
 
-  @Value("${paste.app.home}")
+  @Value("${paster.app.home}")
   val pasteAppHome: String = null
 
   def getResource(ptype: String, fid: String): File = {

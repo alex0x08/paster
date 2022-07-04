@@ -90,9 +90,9 @@ class PasteEditController extends GenericEditController[Paste] {
       model.addAttribute("title", getResource("paste.new", locale))
     } else {
       model.addAttribute("title", StringEscapeUtils.escapeHtml4(
-        getResource("paste.edit.title", Array(obj.getId, obj.getName()), locale)))
+        getResource("paste.edit.title", Array(obj.getId(), obj.getName()), locale)))
 
-      obj.getComments.addAll(
+      obj.getComments().addAll(
         commentManager.getCommentsForPaste(obj.getId()))
 
       if (!model.containsAttribute("comment")) {
@@ -105,8 +105,8 @@ class PasteEditController extends GenericEditController[Paste] {
     model.addAttribute("availableChannels", channelDao.getAvailableChannels())
 
     if (!obj.getComments().isEmpty()) {
-      val commentLines = new ArrayList[Long]
-      for (c <- obj.getComments.asScala) {
+      val commentLines = new ArrayList[Long]()
+      for (c <- obj.getComments().asScala) {
         commentLines.add(c.getLineNumber())
       }
 
@@ -153,7 +153,7 @@ class PasteEditController extends GenericEditController[Paste] {
 
     commentManager.remove(commentId)
     model.asMap().clear()
-    "redirect:/main/paste/" + pasteId + "#line_" + lineNumber
+    s"redirect:/main/paste/$pasteId#line_$lineNumber"
   }
 
   @RequestMapping(value = Array("/saveReviewDraw"), method = Array(RequestMethod.POST))
@@ -177,10 +177,10 @@ class PasteEditController extends GenericEditController[Paste] {
     p.setThumbImage(resourcePathHelper.saveResource("t", p.getUuid(),thumbImgData))
 
     p.touch()
-    p = manager.save(p);
+    p = manager().save(p);
 
     model.asMap().clear()
-    "redirect:/main/paste/" + pasteId
+    s"redirect:/main/paste/$pasteId"
   }
 
   /**
@@ -199,7 +199,7 @@ class PasteEditController extends GenericEditController[Paste] {
 
     if (!isCurrentUserLoggedIn() && !allowAnonymousCommentsCreate) return page403
 
-    val p = manager.get(b.getPasteId)
+    val p = manager().get(b.getPasteId())
 
     if (p == null) return page404
 
@@ -221,9 +221,9 @@ class PasteEditController extends GenericEditController[Paste] {
     if (b.getThumbImage() != null)
       p.setThumbImage(resourcePathHelper.saveResource("t", p.getUuid(),b.getThumbImage()))
     p.touch()
-    manager.save(p)
+    manager().save(p)
     model.asMap().clear()
-    "redirect:/main/paste/" + b.getPasteId() + "#line_" + b.getLineNumber()
+    s"redirect:/main/paste/${b.getPasteId()}#line_${b.getLineNumber()}"
   }
 
 
@@ -241,7 +241,7 @@ class PasteEditController extends GenericEditController[Paste] {
      * copy fields not filled in form
      */
     if (!b.isBlank()) {
-      val current = manager.getFull(b.getId())
+      val current = manager().getFull(b.getId())
       b.getComments().addAll(current.getComments())
       b.setIntegrationCode(current.getIntegrationCode())
       // b.setThumbImg(current.getThumbImg())
@@ -249,8 +249,6 @@ class PasteEditController extends GenericEditController[Paste] {
 
     if (b.getChannel() == null || !channelDao.exist(b.getChannel()))
           b.setChannel(channelDao.getDefault())
-
-
 
     /**
      * concatenate all model tags objects to one string
@@ -325,7 +323,7 @@ class PasteEditController extends GenericEditController[Paste] {
     val out = super.save(cancel, b, result, model, locale, redirectAttributes)
     if (out.equals(listPage)) {
       model.asMap().clear();
-      "redirect:/main/paste/" + b.getId()
+      s"redirect:/main/paste/${b.getId()}"
     } else
       out
   }
@@ -403,19 +401,19 @@ class PasteEditController extends GenericEditController[Paste] {
   @ResponseBody
   def getBodyPlain(@PathVariable("id") id: java.lang.Long,
                    model: Model,
-                   locale: Locale): String = return loadModel(id).getText()
+                   locale: Locale): String = loadModel(id).getText()
 
   /**
    *
    * @return new search query object
    */
   @ModelAttribute("query")
-  def newQuery(): OwnerQuery = new OwnerQuery
+  def newQuery(): OwnerQuery = new OwnerQuery()
 }
 
 class IdList(list: java.util.List[Long]) {
 
-  def getCount = list.size
+  def getCount = list.size()
   def getItems = list
   def getItemsAsString = StringUtils.join(list, ",")
 

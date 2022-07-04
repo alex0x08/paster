@@ -19,29 +19,26 @@
  * under the License.
  */
 package org.apache.tiles.request.reflect;
-
 import java.beans.BeanInfo;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
-
+import java.util.logging.Level;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-
 /**
  * Utilities to work with dynamic class loading and instantiation.
  *
- * @version $Rev: 1306435 $ $Date: 2012-03-29 02:39:11 +1100 (Thu, 29 Mar 2012) $
+ * @version $Rev: 1306435 $ $Date: 2012-03-29 02:39:11 +1100 (Thu, 29 Mar 2012)
+ * $
  */
 public final class ClassUtil {
-
     /**
      * Constructor, private to avoid instantiation.
      */
     private ClassUtil() {
     }
-
     /**
      * Returns the class and casts it to the correct subclass.<br>
      * It tries to use the thread's current classloader first and, if it does
@@ -63,7 +60,6 @@ public final class ClassUtil {
         return Class.forName(className, true, classLoader)
                 .asSubclass(baseClass);
     }
-
     /**
      * Returns an instance of the given class name, by calling the default
      * constructor.
@@ -76,7 +72,6 @@ public final class ClassUtil {
     public static Object instantiate(String className) {
         return instantiate(className, false);
     }
-
     /**
      * Returns an instance of the given class name, by calling the default
      * constructor.
@@ -86,16 +81,17 @@ public final class ClassUtil {
      * returns <code>true</code>, otherwise it throws a
      * <code>TilesException</code>.
      * @return The new instance of the class name.
-     * @throws CannotInstantiateObjectException If something goes wrong during instantiation.
+     * @throws CannotInstantiateObjectException If something goes wrong during
+     * instantiation.
      */
     public static Object instantiate(String className, boolean returnNull) {
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        /*ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         if (classLoader == null) {
             classLoader = ClassUtil.class.getClassLoader();
-        }
+        }*/
         try {
             Class<? extends Object> namedClass = getClass(className, Object.class);
-            return namedClass.newInstance();
+            return namedClass.getDeclaredConstructor().newInstance();
         } catch (ClassNotFoundException e) {
             if (returnNull) {
                 return null;
@@ -105,15 +101,14 @@ public final class ClassUtil {
         } catch (IllegalAccessException e) {
             throw new CannotInstantiateObjectException(
                     "Unable to access factory class: '" + className + "'", e);
-        } catch (InstantiationException e) {
+        } catch (InstantiationException | NoSuchMethodException | SecurityException | IllegalArgumentException | InvocationTargetException e) {
             throw new CannotInstantiateObjectException(
                     "Unable to instantiate factory class: '"
-                            + className
-                            + "'. Make sure that this class has a default constructor",
+                    + className
+                    + "'. Make sure that this class has a default constructor",
                     e);
         }
     }
-
     /**
      * Collects bean infos from a class and filling a list.
      *

@@ -19,10 +19,10 @@ class PasteRssView extends AbstractRssFeedView{
   private var externalUrl:String = null
 
   def getExternalUrl():String = externalUrl
-  def setExternalUrl(url:String) { externalUrl = url}
+  def setExternalUrl(url:String): Unit= { externalUrl = url}
 
   override protected def buildFeedMetadata(model:java.util.Map[String, Object], feed:Channel,
-    request:HttpServletRequest) {
+    request:HttpServletRequest): Unit= {
     feed.setTitle("Paster RSS")
     feed.setDescription("Code Review Tool")
     feed.setLink(externalUrl)
