@@ -17,20 +17,18 @@
 package com.Ox08.paster.webapp.mvc.paste
 
 import com.Ox08.paster.webapp.dao.{ChannelDao, CommentDaoImpl, PasteDaoImpl, SearchableDaoImpl}
-import com.Ox08.paster.webapp.model.{KeyObj, OwnerQuery, Paste}
-import com.Ox08.paster.webapp.mvc.{ExtendedPageListHolder, GenericController, GenericListController, SearchController, SearchResult}
+import com.Ox08.paster.webapp.model.{OwnerQuery, Paste}
+import com.Ox08.paster.webapp.mvc._
 import jakarta.servlet.http.HttpServletRequest
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.support.{MutableSortDefinition, PagedListHolder}
 import org.springframework.stereotype.Controller
+import org.springframework.ui.Model
 import org.springframework.web.bind.annotation._
 
-import java.util.concurrent.TimeUnit
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.ui.Model
-
 import java.util.Locale
-import org.springframework.beans.support.MutableSortDefinition
-import org.springframework.beans.support.PagedListHolder
-
+import java.util.concurrent.TimeUnit
+/*
 object PasteSearchResult extends KeyObj[SearchResult] {
 
   val PASTE = new SearchResult("paste", "result.paste.name", "pasteItems")
@@ -38,7 +36,7 @@ object PasteSearchResult extends KeyObj[SearchResult] {
 
   add(PASTE);
   add(COMMENT)
-}
+}*/
 
 
 @Controller
@@ -90,17 +88,19 @@ class PasteListController extends SearchController[Paste, OwnerQuery] {
   override def viewPage = "/paste/view"
 
   def manager(): PasteDaoImpl = pasteManager
-  def getAvailableResults(): java.util.Collection[SearchResult] = PasteSearchResult.list
-  def getSearchResultByCode(code: String): SearchResult = {
+
+  def getAvailableResults(): Array[String] = Array("PASTE", "COMMENT")
+
+  /*def getSearchResultByCode(code: String): SearchResult = {
     val out = PasteSearchResult.valueOf(code.toLowerCase)
     if (out == null)
       PasteSearchResult.PASTE
     else out
-  }
+  }*/
 
-  def getManagerBySearchResult(result: SearchResult): SearchableDaoImpl[_] = return result match {
-    case PasteSearchResult.PASTE => manager()
-    case PasteSearchResult.COMMENT => commentManager
+  def getManagerBySearchResult(result: String): SearchableDaoImpl[_] = return result match {
+    case "PASTE" => manager()
+    case "COMMENT" => commentManager
   }
 
 

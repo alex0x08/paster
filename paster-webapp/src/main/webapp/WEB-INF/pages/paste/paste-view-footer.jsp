@@ -4,14 +4,17 @@
 
 <script src="<c:url value='/main/resources/${appId}/local_components/syntax_highlighter/XRegExp.js'/>"></script>
 <script src="<c:url value='/main/resources/${appId}/local_components/syntax_highlighter/shCore.js'/>"></script>
-<script src="<c:url value='/main/resources/${appId}/local_components/syntax_highlighter/shLegacy.js'/>"></script>
 <script src="<c:url value='/main/resources/${appId}/local_components/syntax_highlighter/shUber.js'/>"></script>
 <script type="text/javascript"
     src="<c:url value='/main/resources/${appId}/local_components/epiceditor/js/epiceditor.js'/>"></script>
 <script type="text/javascript"
     src="<c:url value='/main/resources/${appId}/local_components/marked/marked.min.js'/>"></script>
-
+<script type="text/javascript"
+    src="<c:url value='/main/resources/${appId}/local_components/sketchjs/sketch.js'/>"></script>
+<%--
 <script src="<c:url value='/main/resources/${appId}/paster/js/paste-view/sketch.js'/>"></script>
+--%>
+
 <script src="<c:url value='/main/resources/${appId}/paster/js/paste-view/paste-view.js'/>"></script>
 
 <script type="text/javascript">

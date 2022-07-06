@@ -21,6 +21,26 @@ class PasterEdit {
     editor = undefined;
     counter = undefined;
 
+    getEditorType(codeType) {
+
+        switch (codeType) {
+            case 'bash':
+                return 'sh';
+            case 'cpp':
+                return 'c_cpp';
+            case 'js':
+                return 'javascript';
+            case 'plain':
+                return 'text';
+            case 'py':
+                return 'python';
+            case 'vb':
+                return 'vbscript';
+            default:
+                return codeType;
+          }
+
+    }
 
     init(codeType) {
         const mainThis = this;
@@ -49,7 +69,7 @@ class PasterEdit {
             autoScrollEditorIntoView: true
         });
 
-        editor.getSession().setMode("ace/mode/" + codeType);
+        editor.getSession().setMode("ace/mode/" + mainThis.getEditorType(codeType));
 
         const textarea = document.getElementById("ptext");
 
@@ -59,11 +79,8 @@ class PasterEdit {
 
         const elSelectFileBtn = document.getElementById('select-file-btn');
 
-
         elSelectFileBtn.addEventListener('change', function (e) {
-
             mainThis.readLocalFile(e);
-
         });
 
 
@@ -104,7 +121,7 @@ class PasterEdit {
 
         document.getElementById('ptype').addEventListener('change', function (event) {
             editor.getSession()
-                .setMode("ace/mode/" + this.querySelector('option:checked').getAttribute("editCode"));
+                .setMode("ace/mode/" + mainThis.getEditorType(this.querySelector('option:checked').getAttribute("value")));
         });
 
         document.getElementById('pprior').addEventListener('change', function (event) {

@@ -32,8 +32,8 @@ var __slice = Array.prototype.slice;
       this.el = el;
       this.canvas = $(el);
       this.context = el.getContext('2d');
-      
-      
+
+
       this.lastPoint = {};
       this.points = [ ];
       

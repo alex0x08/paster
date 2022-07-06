@@ -18,11 +18,12 @@ package com.Ox08.paster.webapp.model
 
 import com.Ox08.paster.webapp.base.Loggered
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute
-import jakarta.persistence.{Column, MappedSuperclass, PrePersist, PreUpdate, Temporal, TemporalType}
+import jakarta.persistence.{Column, GeneratedValue, Id, MappedSuperclass, PrePersist, PreUpdate, Temporal, TemporalType}
+import org.hibernate.annotations.GenericGenerator
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.{FullTextField, GenericField}
 
 import java.text.SimpleDateFormat
-import java.util.Calendar
+import java.util.{Calendar, Objects}
 
 object Struct {
   
@@ -79,3 +80,51 @@ abstract class Struct extends DBObject with SearchObject with  java.io.Serializa
 
   
 }
+
+
+
+@MappedSuperclass
+abstract class DBObject extends java.io.Serializable {
+
+  @Id
+  @GeneratedValue(generator = "AllSequenceStyleGenerator")
+  @GenericGenerator(name = "AllSequenceStyleGenerator",
+    strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator"
+  )
+  @XStreamAsAttribute
+  private var id:java.lang.Long = null
+
+  @XStreamAsAttribute
+  private var disabled:Boolean = _
+
+  def isDisabled() = disabled
+
+  def setDisabled(disabled:Boolean): Unit =  { this.disabled = disabled  }
+
+  def isBlank() = (id == null)
+
+  def getId() = id
+
+  def setId(id:java.lang.Long): Unit =  {
+    this.id=id
+  }
+
+  override def hashCode():Int = {
+    var hash:Int = 53*7
+
+    if (id != null)
+      hash+=Objects.hashCode(id)
+
+    hash
+  }
+
+  override def equals(from:Any) =
+    (from.isInstanceOf[DBObject] && !isBlank()
+      && from.asInstanceOf[DBObject].getId().equals(id))
+
+
+  override def toString():String =  Loggered.toStringSkip(this, null)
+
+
+}
+

@@ -133,7 +133,7 @@
 --%>
         <div id="${model.id}_pasteBodyContent">
             <pre id="${model.id}_pasteText"
-                class="brush: ${model.codeType.code};toolbar: false; auto-links:false;highlight: [${commentedLinesList}]; "
+                class="brush: ${model.codeType};toolbar: false; auto-links:false;highlight: [${commentedLinesList}]; "
                 style="display:none; overflow-y: hidden;">
                         <c:out value="${model.text}" escapeXml="true" />
                     </pre>

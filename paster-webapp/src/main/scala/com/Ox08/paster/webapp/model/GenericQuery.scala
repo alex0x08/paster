@@ -66,13 +66,15 @@ class GenericQuery extends Query {
     this.query = query
   }
 
- /* def fillQuery(qb: QueryBuilder): org.apache.lucene.search.Query = {
-    if (query == null || query.trim.length == 0) query = "*"
-    qb
-      .keyword()
-      .onFields("title", "subtitle", "authors.name")
-      .matching(query)
-      .createQuery()
+}
 
-  }*/
+
+class OwnerQuery extends GenericQuery with Query {
+
+  protected var ownerId:java.lang.Long = null
+
+  def getOwnerId():java.lang.Long = ownerId
+
+  def setOwnerId(ownerId:java.lang.Long) : Unit =  { this.ownerId = ownerId}
+
 }

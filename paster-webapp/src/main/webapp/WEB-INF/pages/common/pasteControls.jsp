@@ -46,7 +46,7 @@
                 </tiles:insertDefinition>
 
                 <span style="font-size: 9px;">
-                    <fmt:message key="${model.codeType.name}"/>    
+                    <fmt:message key="${'code.type.'.concat(model.codeType)}"/>
                     ,<kc:prettyTime date="${model.lastModified}" locale="${pageContext.response.locale}"/>
                 </span>
 

@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <included>    
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
-        
+
+        <turboFilter class="ch.qos.logback.classic.turbo.DuplicateMessageFilter"/>
+
         <!-- On Windows machines setting withJansi to true enables ANSI
         color code interpretation by the Jansi library. This requires
         org.fusesource.jansi:jansi:1.8 on the class path.  Note that

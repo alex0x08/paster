@@ -52,7 +52,7 @@
 <script type="text/javascript"
     src="<c:url value='/main/resources/${appId}/local_components/tinyicon/tinycon.js'/>"></script>
     
-<script src="<c:url value='/main/resources/${appId}/local_components/pixastic/canvas-to-blob.js'/>"></script>
+<script src="<c:url value='/main/resources/${appId}/local_components/pixastic/canvas-to-blob.min.js'/>"></script>
 
 <script src="<c:url value='/main/resources/${appId}/local_components/pixastic/html2canvas.js'/>"></script>
 <script src="<c:url value='/main/resources/${appId}/local_components/pixastic/canvas2image.js'/>"></script>

@@ -17,14 +17,36 @@
 package com.Ox08.paster.webapp.dao
 
 import com.Ox08.paster.webapp.base.Loggered
-import com.Ox08.paster.webapp.model.Tag
+import com.Ox08.paster.webapp.model.{Tag}
 import org.apache.commons.lang3.StringUtils
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.{Repository, Service}
 import org.springframework.transaction.annotation.Transactional
+
 import java.util
 import java.util.{ArrayList, Collections, HashMap}
 import scala.jdk.CollectionConverters._
+
+@Service
+class CodeTypeDao(@Value("${paster.codeTypes:null}")
+                 codeTypesString: String) extends Loggered {
+
+  val codeTypes: util.Set[String] = new util.TreeSet[String]()
+
+  if (StringUtils.isBlank(codeTypesString))
+    codeTypes.add("plain") else
+    for (ch <- codeTypesString.split(",")) {
+      codeTypes.add(ch)
+    }
+
+
+  def getAvailable() = Collections.unmodifiableSet(codeTypes)
+
+  def getDefault() = codeTypes.iterator().next()
+
+  def exist(name: String) = codeTypes.contains(name)
+
+}
 
 
 @Service

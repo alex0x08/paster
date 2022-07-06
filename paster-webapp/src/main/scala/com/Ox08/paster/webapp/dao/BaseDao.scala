@@ -17,6 +17,7 @@
 package com.Ox08.paster.webapp.dao
 
 import com.Ox08.paster.webapp.base.Loggered
+import com.Ox08.paster.webapp.model.Struct
 import jakarta.persistence.criteria.CriteriaQuery
 import jakarta.persistence.{EntityManager, PersistenceContext, Tuple}
 import org.springframework.transaction.annotation.Propagation
@@ -230,4 +231,20 @@ abstract class BaseDaoImpl[T <: java.io.Serializable, PK <: java.io.Serializable
     out
   }
 
+}
+
+
+@Transactional(readOnly = true, rollbackFor = Array(classOf[Exception]))
+abstract class StructDaoImpl[T <: Struct](model:Class[T])
+  extends BaseDaoImpl[T,java.lang.Long](model)  {
+
+  @Transactional
+  def getFull(id:Long):T = {
+    val out:T = get(id)
+    if (out==null) null.asInstanceOf[T] else {
+      out.loadFull()
+      out
+    }
+
+  }
 }

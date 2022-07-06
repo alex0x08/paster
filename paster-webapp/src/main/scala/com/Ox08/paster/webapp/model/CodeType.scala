@@ -46,22 +46,16 @@ import java.util.Collection
  * SQL	sql	shBrushSql.js
  * Visual Basic	vb, vbnet	shBrushVb.js
  * XML	xml, xhtml, xslt, html, xhtml
- */
 object CodeType {
 
-  val ActionScript = new CodeType("code.type.as3", "actionscript3", "text", "shBrushAS3.js", "as3")
   val Bash = new CodeType("code.type.bash", "bash", "sh", "shBrushBash.js", "sh")
-  val ColdFusion = new CodeType("code.type.coldfusion", "cf", "coldfusion", "shBrushColdFusion.js", "cf")
   val CSharp = new CodeType("code.type.csharp", "csharp", "csharp", "shBrushCSharp.js", "cs")
   val CPP = new CodeType("code.type.cpp", "cpp", "c_cpp", "shBrushCpp.js", "cpp")
   val CSS = new CodeType("code.type.css", "css", "css", "shBrushCss.js", "css")
-  val Delphi = new CodeType("code.type.delphi", "delphi", "pascal", "shBrushDelphi.js", "pas")
   val Diff = new CodeType("code.type.diff", "diff", "diff", "shBrushDiff.js", "diff")
   val Erlang = new CodeType("code.type.erlang", "erlang", "text", "shBrushErlang.js", "erl")
-  val Groovy = new CodeType("code.type.groovy", "groovy", "groovy", "shBrushGroovy.js", "groovy")
   val JavaScript = new CodeType("code.type.js", "js", "javascript", "shBrushJScript.js", "js")
   val Java = new CodeType("code.type.java", "java", "java", "shBrushJava.js", "java")
-  val JavaFX = new CodeType("code.type.javafx", "javafx", "java", "shBrushJavaFX.js", "javafx")
   val Perl = new CodeType("code.type.perl", "perl", "perl", "shBrushPerl.js", "pl")
   val Php = new CodeType("code.type.php", "php", "php", "shBrushPhp.js", "php")
   val Plain = new CodeType("code.type.plain", "plain", "text", "shBrushPlain.js", "txt")
@@ -83,16 +77,11 @@ object CodeType {
   add(Sql)
   add(Php)
   add(Scala)
-  add(ActionScript)
   add(Bash)
-  add(ColdFusion)
   add(CSharp)
   add(CPP)
-  add(Delphi)
   add(Diff)
   add(Erlang)
-  add(Groovy)
-  add(JavaFX)
   add(Perl)
   add(PowerShell)
   add(Python)
@@ -107,44 +96,17 @@ object CodeType {
 
   def valueOf(key: String): CodeType = if (map.containsKey(key)) map.get(key) else null
 }
+ */
 
 
-@Entity
-class CodeType(name: String, code: String, keditType: String, kbrushFile: String, kext: String)
-  extends Key(code, name) with java.io.Serializable {
+class CodeType(code:String)
+  extends java.io.Serializable {
 
-  private var editType: String = keditType
-  private var brushFile: String = kbrushFile
-  private var ext: String = kext
+  def getCode() = code
 
-  def this() = this(null, null, null, null, null)
+  def getName() = s"code.type.$code"
 
-  def getExt() = ext
+  def getEditType() = code
 
-  def setExt(ext: String): Unit = {
-    this.ext = ext
-  }
-
-  def getEditType() = editType
-
-  def setEditType(e: String): Unit = {
-    this.editType = editType
-  }
-
-  def getBrushFile() = brushFile
-
-  def setBrushFile(e: String): Unit = {
-    this.brushFile = brushFile
-  }
-
-  override def create(code: String) = new CodeType(null, code, null, null, null)
-
-  // def getAvailableCodeTypes() :Collection[CodeType] = CodeType.list
 }
 
-class CodeTypeEditor extends PropertyEditorSupport {
-
-  override def setAsText(text: String): Unit = {
-    setValue(CodeType.valueOf(text.toLowerCase));
-  }
-}

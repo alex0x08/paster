@@ -10,7 +10,6 @@
 
 <script src="<c:url value='/main/resources/${appId}/local_components/syntax_highlighter/XRegExp.js'/>"></script>
 <script src="<c:url value='/main/resources/${appId}/local_components/syntax_highlighter/shCore.js'/>"></script>
-<script src="<c:url value='/main/resources/${appId}/local_components/syntax_highlighter/shLegacy.js'/>"></script>
 <script src="<c:url value='/main/resources/${appId}/local_components/syntax_highlighter/shUber.js'/>"></script>
 
 <script src="<c:url value='/main/resources/${appId}/paster/js/paste-edit/word-count.js'/>" type="text/javascript"
@@ -23,7 +22,7 @@
 <script type="text/javascript">
 
     // will be substituted from backend
-    const EDITOR_TYPE = '${model.codeType.editType}';
+    const EDITOR_TYPE = '${model.codeType}';
 
     const pasterEdit = new PasterEdit();
 

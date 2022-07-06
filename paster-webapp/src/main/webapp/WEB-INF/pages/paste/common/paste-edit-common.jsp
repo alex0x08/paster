@@ -395,8 +395,8 @@
 
                             <form:select path="codeType" multiple="false" id="ptype">
                                 <c:forEach items="${availableCodeTypes}" var="codeType">
-                                    <form:option value="${codeType.code}" editCode="${codeType.editType}">
-                                        <fmt:message key="${codeType.name}" />
+                                    <form:option value="${codeType}" >
+                                        <fmt:message key=" ${'code.type.'.concat(codeType)}" />
                                     </form:option>
                                 </c:forEach>
                             </form:select>

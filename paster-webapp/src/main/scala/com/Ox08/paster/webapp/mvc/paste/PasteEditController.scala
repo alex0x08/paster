@@ -16,13 +16,14 @@
 
 package com.Ox08.paster.webapp.mvc.paste
 
-import com.Ox08.paster.webapp.dao.{ChannelDao, CommentDaoImpl, PasteDaoImpl, PriorityDao, TagDao}
+import com.Ox08.paster.webapp.dao._
 import com.Ox08.paster.webapp.manager.ResourcePathHelper
-import com.Ox08.paster.webapp.model.{CodeType, CodeTypeEditor, Comment, KeyEditor, OwnerQuery, Paste, Tag}
+import com.Ox08.paster.webapp.model._
 import com.Ox08.paster.webapp.mvc.{GenericController, GenericEditController}
 import com.fasterxml.jackson.annotation.JsonIgnore
 import jakarta.validation.Valid
 import org.apache.commons.lang3.StringUtils
+import org.apache.commons.text.{StringEscapeUtils, WordUtils}
 import org.springframework.beans.factory.annotation.{Autowired, Qualifier}
 import org.springframework.context.MessageSource
 import org.springframework.stereotype.Controller
@@ -31,8 +32,6 @@ import org.springframework.validation.BindingResult
 import org.springframework.web.bind.WebDataBinder
 import org.springframework.web.bind.annotation._
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
-import org.apache.commons.text.StringEscapeUtils
-import org.apache.commons.text.WordUtils
 
 import java.util.{ArrayList, Locale}
 import scala.jdk.CollectionConverters._
@@ -44,6 +43,9 @@ import scala.jdk.CollectionConverters._
 @Controller
 @RequestMapping(Array("/paste"))
 class PasteEditController extends GenericEditController[Paste] {
+
+  @Autowired
+  val codeTypeDao: CodeTypeDao = null
 
   @Autowired
   val channelDao: ChannelDao = null
@@ -80,7 +82,7 @@ class PasteEditController extends GenericEditController[Paste] {
   @InitBinder
   def initBinder(binder: WebDataBinder): Unit = {
     binder.initDirectFieldAccess()
-    binder.registerCustomEditor(classOf[CodeType], new CodeTypeEditor())
+ //   binder.registerCustomEditor(classOf[CodeType], new CodeTypeEditor())
   }
 
   override def fillEditModel(obj: Paste, model: Model, locale: Locale): Unit = {
@@ -100,7 +102,7 @@ class PasteEditController extends GenericEditController[Paste] {
       }
 
     }
-    model.addAttribute("availableCodeTypes", CodeType.list)
+    model.addAttribute("availableCodeTypes", codeTypeDao.getAvailable())
     model.addAttribute("availablePriorities", priorities.getAvailablePriorities())
     model.addAttribute("availableChannels", channelDao.getAvailableChannels())
 
@@ -136,7 +138,9 @@ class PasteEditController extends GenericEditController[Paste] {
 
   def getNewCommentInstance(pp: Paste, model: Model): Comment = {
     val p = new Comment()
-    p.setOwner(getCurrentUser().getUsername())
+    if (getCurrentUser()!=null) {
+      p.setOwner(getCurrentUser().getUsername())
+    }
     p.setPasteId(pp.getId())
     p
   }
@@ -268,24 +272,30 @@ class PasteEditController extends GenericEditController[Paste] {
      */
     if (b.isNormalized()) {
 
+
+
       b.getCodeType() match {
 
-        case CodeType.JavaScript => {
+        case "js" => {
           /**
            * try to normalize json
            */
-          /*try {
+          try {
 
-            val o = new JsonParser().parse(b.getText()).getAsJsonObject()
-            b.setText(new GsonBuilder().setPrettyPrinting().create().toJson(o))
+          import com.fasterxml.jackson.databind.ObjectMapper
+          val mapper = new ObjectMapper
+
+          val n =mapper.readTree(b.getText())
+
+          b.setText(mapper.writerWithDefaultPrettyPrinter.writeValueAsString(n))
 
           } catch{
-            case e @ (_ : MalformedJsonException | _ :Exception) => {
+            case e @ (_ :Exception) => {
                     //ignore
               }
-            }*/
+            }
         }
-        case CodeType.Plain =>
+        case "plain" =>
           /**
            * set word wrap for plain
            */
@@ -367,7 +377,7 @@ class PasteEditController extends GenericEditController[Paste] {
   @RequestMapping(value = Array("/codetypes"), method = Array(RequestMethod.GET))
   @ResponseBody
   @JsonIgnore
-  def getAvailableCodeTypes(): java.util.Collection[CodeType] = CodeType.list
+  def getAvailableCodeTypes(): java.util.Collection[String] = codeTypeDao.getAvailable()
 
   @RequestMapping(value = Array("/tags/all"), method = Array(RequestMethod.GET))
   @ResponseBody

@@ -87,7 +87,7 @@
         <c:forEach var="paste" items="${pageItems.pageList}" varStatus="status">
 
             <c:choose>
-                <c:when test="${paste['class'].name eq 'uber.paste.model.Paste'}">                
+                <c:when test="${paste['class'].name eq 'com.Ox08.paster.webapp.model.Paste'}">
                     <c:if test="${not paste.sticked}"> 
                         <c:set property="curDate" value="${paste.lastModified}" target="${splitHelper}"/>
                     </c:if>
@@ -150,8 +150,8 @@
                                             <tiles:putAttribute name="modelName" value="paste"/>
                                         </tiles:insertDefinition>,                                
 
-                                        <a href="<c:url value='/main/paste/list/search?query=codeType:${paste.codeType.code}'/>">
-                                            <fmt:message key='${paste.codeType.name}'/></a>                               
+                                        <a href="<c:url value='/main/paste/list/search?query=codeType:${paste.codeType}'/>">
+                                            <fmt:message key='${"code.type.".concat(paste.codeType)}'/></a>
 
                                         (
                                         <c:if test="${not empty paste.wordsCount}">
@@ -176,7 +176,7 @@
                     </div>
 
                 </c:when>
-                <c:when test="${paste['class'].name eq 'uber.paste.model.Comment'}">
+                <c:when test="${paste['class'].name eq 'com.Ox08.paster.webapp.Comment'}">
 
                     <c:set property="curDate" value="${paste.lastModified}" target="${splitHelper}"/>
 

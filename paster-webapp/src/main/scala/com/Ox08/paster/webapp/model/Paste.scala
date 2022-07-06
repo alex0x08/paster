@@ -117,7 +117,7 @@ class Paste(ptitle: String) extends Named(ptitle) with java.io.Serializable {
    */
   @NotNull
   @KeywordField
-  private var codeType: String = CodeType.Plain.getCode()
+  private var codeType: String = "plain"
 
   /**
    * integration code, used when paste was created in/for some integrated system
@@ -275,10 +275,10 @@ class Paste(ptitle: String) extends Named(ptitle) with java.io.Serializable {
    *
    * @return list
    */
-  def getCodeType(): CodeType = CodeType.valueOf(codeType)
+  def getCodeType(): String = codeType
 
-  def setCodeType(f: CodeType): Unit = {
-    codeType = f.getCode()
+  def setCodeType(f: String): Unit = {
+    codeType = f
   }
 
   /**

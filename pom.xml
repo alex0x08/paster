@@ -48,6 +48,7 @@
     <properties>
         <java.version>18</java.version>
         <scalaVersion>2.13.8</scalaVersion>
+        <jakartaEEVersion>9.1.0</jakartaEEVersion>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <netbeans.hint.license>apache20</netbeans.hint.license>
         <revision>2.1.04-CURRENT</revision>

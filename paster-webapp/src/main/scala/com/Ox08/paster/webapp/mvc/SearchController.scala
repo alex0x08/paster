@@ -17,7 +17,7 @@
 package com.Ox08.paster.webapp.mvc
 
 import com.Ox08.paster.webapp.dao.SearchableDaoImpl
-import com.Ox08.paster.webapp.model.{Key, Query, Struct}
+import com.Ox08.paster.webapp.model.{Query, Struct}
 import jakarta.servlet.http.HttpServletRequest
 import org.apache.commons.lang3.StringUtils
 import org.apache.lucene.queryparser.classic.ParseException
@@ -30,12 +30,9 @@ import scala.jdk.CollectionConverters._
 
 /**
  * Search result object
- */
+
 class SearchResult(code: String, desc: String, kitemsModel: String) extends Key(code, desc) {
 
-  /**
-   * name of the model (used from web)
-   */
   private val itemsModel: String = kitemsModel
 
   override def create(code: String) = new SearchResult(code, null, null)
@@ -44,7 +41,7 @@ class SearchResult(code: String, desc: String, kitemsModel: String) extends Key(
 
   def getCodeLowerCase() = super.getCode().toLowerCase
 
-}
+}*/
 
 
 object SearchController {
@@ -75,11 +72,9 @@ abstract class SearchController[T <: Struct, QV <: Query] extends GenericListCon
    *
    * @return search results if any
    */
-  def getAvailableResults(): java.util.Collection[SearchResult]
+  def getAvailableResults(): Array[String]
 
-  def getSearchResultByCode(code: String): SearchResult
-
-  def getManagerBySearchResult(result: SearchResult): SearchableDaoImpl[_]
+  def getManagerBySearchResult(result: String): SearchableDaoImpl[_]
 
   override protected def fillListModel(model: Model, locale: Locale): Unit = {
     super.fillListModel(model, locale)
@@ -120,7 +115,7 @@ abstract class SearchController[T <: Struct, QV <: Query] extends GenericListCon
     var out: java.util.List[T] = null
     try {
 
-      for (r <- getAvailableResults().asScala) {
+      for (r <- getAvailableResults()) {
 
         val rout = processPageListHolder(request,
           locale,
@@ -140,15 +135,15 @@ abstract class SearchController[T <: Struct, QV <: Query] extends GenericListCon
                 }
               }
             }
-          }, r.getItemsModel(), false
+          }, s"${r}_ITEMS", false
         )
 
         if (out == null && !rout.isEmpty) {
           out = rout
           model.addAttribute(GenericController.NODE_LIST_MODEL_PAGE,
-            model.asMap().get(r.getItemsModel()))
-          model.addAttribute("result", r.getCodeLowerCase())
-          logger.debug("found {} in {}", out.size(), r.getItemsModel())
+            model.asMap().get(s"${r}_ITEMS"))
+          model.addAttribute("result", r)
+          logger.debug("found {} in {}", out.size(), s"${r}_ITEMS")
         }
       }
 
@@ -168,7 +163,7 @@ abstract class SearchController[T <: Struct, QV <: Query] extends GenericListCon
   }
 
 
-  def search(query: Query, result: SearchResult): java.util.List[_] = {
+  def search(query: Query, result: String): java.util.List[_] = {
     logger.debug("_search {}", query.getQuery())
 
     if (StringUtils.isBlank(query.getQuery()))
@@ -189,7 +184,7 @@ abstract class SearchController[T <: Struct, QV <: Query] extends GenericListCon
       logger.debug("_listImpl(search) pageSize {} , result {}", Array(pageSize, model.asMap().get("result")))
     }
 
-    super.listImpl(request, locale, model, page, NPpage, pageSize, sortColumn, sortAsc, getSearchResultByCode(result).getItemsModel())
+    super.listImpl(request, locale, model, page, NPpage, pageSize, sortColumn, sortAsc, s"${result}_ITEMS" )
   }
 
 
