@@ -111,12 +111,8 @@
 
     Draw mode, draw area
 --%>
-            <div id="${model.id}_drawArea" style="z-index:5000;position:absolute;
+            <div id="${model.id}_drawArea" style="z-index:5000;position:absolute;cursor:crosshair;
                  background-color:rgba(100,70,0,0.1);">
-
-
-                <canvas id="${model.id}_sketch" with="400" height="200" style="cursor:crosshair;">
-                </canvas>
 
 
             </div>

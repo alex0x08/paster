@@ -19,7 +19,6 @@
 
 class PasterView {
 
-    
  
     setupDraw(modelId,allowEdit) {
         var mainThis = this;
@@ -50,7 +49,7 @@ class PasterView {
 
         Sketch.create({
 
-            container: document.getElementById(modelId + '_sketch'),
+            container: document.getElementById(modelId + '_drawArea'),
             autoclear: false,
             retina: 'auto',
 
@@ -103,10 +102,6 @@ class PasterView {
         });
 
 
- //       var $j = jQuery.noConflict();
-       // $j('#' + modelId + '_sketch').sketch();
-
-    
         if (allowEdit) {
             document.getElementById(modelId + '_saveReviewBtn')
                 .addEventListener("click", function(event){
@@ -229,14 +224,14 @@ class PasterView {
         var sizes = this.getTextSizes(document.getElementById(modelId + "_pasteBodyContent"));
         console.log('sizes: ',sizes);
         var area = document.getElementById(modelId + "_drawArea"),
-                sketch = document.getElementById(modelId + "_sketch");
+                sketch = document.getElementsByClassName("sketch")[0];
         area.style.height =sizes[0];
         area.style.width = sizes[1];
 
         sketch.height = sizes[0];
         sketch.width = sizes[1];
 
-        const canvas = document.getElementById(modelId + '_sketch');
+        const canvas = sketch; //document.getElementById(modelId + '_sketch');
         const ctx = canvas.getContext('2d');
 
         if (drawReviewData != '') {
@@ -285,18 +280,17 @@ class PasterView {
         console.log('saving review..');
         const reviewImg = document.getElementById(modelId + '_reviewDrawImg');
 
-        //const $j = jQuery.noConflict();
+        const sketch = document.getElementsByClassName("sketch")[0];
 
-//el.toDataURL("image/png");
-        const imgData = $j('#' + modelId + '_sketch').sketch().getData();
+        const imgData = sketch.toDataURL("image/png");;
         reviewImg.value = imgData;
 
         const thumbImg = document.getElementById(modelId + '_thumbImg');
 
         this.showAll(modelId);
 
-        var sketch = document.getElementById(modelId + "_sketch_ro");
-        sketch.style['background-image'] = 'url(' + imgData + ')';
+        var sketchRo = document.getElementById(modelId + "_sketch_ro");
+        sketchRo.style['background-image'] = 'url(' + imgData + ')';
 
         pasterApp.takeScreenshot(
                     document.getElementById(modelId + '_centerPanel'), function (img) {
