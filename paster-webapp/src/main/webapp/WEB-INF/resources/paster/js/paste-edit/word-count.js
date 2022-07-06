@@ -12,6 +12,8 @@ requires:
 
 provides: [WordCount]
 
+Note: rewritten to work without Mootools
+
 ...
 */
 class WordCount {

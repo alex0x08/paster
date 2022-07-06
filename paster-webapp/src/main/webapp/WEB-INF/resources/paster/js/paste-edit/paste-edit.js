@@ -38,7 +38,7 @@ class PasterEdit {
                 return 'vbscript';
             default:
                 return codeType;
-          }
+        }
 
     }
 
@@ -83,8 +83,6 @@ class PasterEdit {
             mainThis.readLocalFile(e);
         });
 
-
-
         //To focus the ace editor
         // editor.focus();
         //Get the number of lines
@@ -125,7 +123,7 @@ class PasterEdit {
         });
 
         document.getElementById('pprior').addEventListener('change', function (event) {
-            console.log('selected: ', this.querySelector('option:checked'))
+            Logger.debug('selected: ', this.querySelector('option:checked'))
 
             var prPreview = document.getElementById('priorPreview');
 
@@ -144,16 +142,12 @@ class PasterEdit {
                     mainThis.onSave();
                 });
             });
-
-
     }
     clearTitle() {
         document.getElementById('pname').setValue('value', '');
     }
     readLocalFile(e) {
-
         const file = e.target.files[0];
-
         if (!file) {
             return;
         }
@@ -171,7 +165,7 @@ class PasterEdit {
 
         let text = (event.clipboardData || window.clipboardData).getData('text/plain');
 
-        console.log('paste event: ',text)
+        Logger.debug('paste event: ', text)
 
         if (text) {
             const block = (text.length < this.MAX_TITLE_LENGTH - 2)

@@ -264,7 +264,7 @@ var SyntaxHighlighter = function () {
          * 							are highlighted.
          */
         highlight: function (modelId, globalParams, element, scrollToLine, showEditForm) {
-            console.log('highlight , show edit form: ',showEditForm)
+            Logger.debug('highlight , show edit form: ',showEditForm)
             if (showEditForm) {
                 sh.vars.editorOpts = JSON.parse(JSON.stringify(globalEpicEditorOpts));
 
@@ -352,7 +352,7 @@ var SyntaxHighlighter = function () {
                             if (element) {
                                 window.scrollTo({ top: element.offsetTop, behavior: 'smooth' });
                             } else {
-                                console.log('cannot scroll to ', sh.vars.modelId + '_' + loc);
+                                Logger.debug('cannot scroll to ', sh.vars.modelId + '_' + loc);
                             }
 
                         }
@@ -421,7 +421,7 @@ var SyntaxHighlighter = function () {
             const space = document.getElementById(sh.vars.modelId + "_numSpace_l" + id);
             const calc_size = parseInt(cl.offsetHeight) + 1;
 
-            console.log('cacl size:',calc_size);
+            Logger.debug('cacl size:',calc_size);
 
             space.style['height'] = calc_size + 'px';
             cl.style['height'] = calc_size + "px";
@@ -454,10 +454,10 @@ var SyntaxHighlighter = function () {
         },
 
         insertEditForm: function (modelId, lineNumber, parentId) {
-            console.log('insert edit form for ', modelId, lineNumber, parentId);
+            Logger.debug('insert edit form for ', modelId, lineNumber, parentId);
             if (sh.vars.editor[modelId] && sh.vars.editor[modelId].is('loaded')) {
                 sh.vars.editor[modelId].unload();
-                console.log('editor unloaded');
+                Logger.debug('editor unloaded');
             }
 
             const cForm = document.getElementById(modelId + '_commentForm'),

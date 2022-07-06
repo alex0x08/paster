@@ -42,7 +42,11 @@
         </div>
     </div>
 </div>
-   
+
+
+<script type="text/javascript"
+    src="<c:url value='/main/resources/${appId}/local_components/logger.js'/>"></script>
+
        
 <script type="text/javascript"
     src="<c:url value='/main/resources/${appId}/local_components/bootstrap/bootstrap.bundle.min.js'/>"></script>
@@ -62,6 +66,8 @@
 
 <script type="text/javascript">
 
+    Logger.useDefaults();
+    Logger.setLevel(Logger.DEBUG);
 
     window.pica.prototype.debug = console.log.bind(console);
 

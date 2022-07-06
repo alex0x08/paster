@@ -47,7 +47,7 @@ class PasterView {
                         e.preventDefault();
                         const dcolor= el.getAttribute('data-color');
                         currentColor = dcolor;
-                        console.log('current color:',currentColor)
+                        Logger.debug('current color:',currentColor);
                     });
             });
 
@@ -58,7 +58,7 @@ class PasterView {
                             const sz= el.getAttribute('data-size');
                             currentSz= sz;
                             radius =0;
-                            console.log('current sz:',currentSz)
+                            Logger.debug('current sz:',currentSz);
                         });
                 });
 
@@ -79,7 +79,7 @@ class PasterView {
             retina: 'auto',
 
             setup: function () {
-                console.log('setup');
+                Logger.debug('sketch configured');
             },
 
             update: function () {
@@ -137,7 +137,7 @@ class PasterView {
 
     }
     setupCommentsAdd(modelId) {
-        console.log('setup comments add ', modelId);
+        Logger.debug('setup comments add ', modelId);
 
         var mainThis = this;
 
@@ -243,7 +243,7 @@ class PasterView {
     showDrawArea(modelId, drawReviewData) {
 
         var sizes = this.getTextSizes(document.getElementById(modelId + "_pasteBodyContent"));
-        console.log('sizes: ',sizes);
+        Logger.debug('sizes: ',sizes);
         var area = document.getElementById(modelId + "_drawArea"),
                 sketch = document.getElementsByClassName("sketch")[0];
         area.style.height =sizes[0];
@@ -273,7 +273,7 @@ class PasterView {
      * @param {*} modelId 
      */
     onSaveComment(modelId) {
-        console.log('_on save comment: ', modelId);
+        Logger.debug('_on save comment: ', modelId);
 
         const ed =SyntaxHighlighter.getEditor(modelId);
 
@@ -284,7 +284,7 @@ class PasterView {
         .replace(/\u2424/g, '\n');
 
 
-        console.log('text: ',ptext);
+        Logger.debug('formatted text: ',ptext);
 
 
         const commentArea = document.getElementById('commentText-' + modelId);
@@ -299,7 +299,7 @@ class PasterView {
 
     }
     onSaveReviewDraw(modelId) {
-        console.log('saving review..');
+        Logger.debug('saving review..');
         const reviewImg = document.getElementById(modelId + '_reviewDrawImg');
 
         const sketch = document.getElementsByClassName("sketch")[0];
@@ -317,7 +317,7 @@ class PasterView {
         pasterApp.takeScreenshot(
                     document.getElementById(modelId + '_centerPanel'), function (img) {
             thumbImg.value = img.src;
-            console.log('screenshot taken ',thumbImg.value)
+            Logger.debug('screenshot taken ',thumbImg.value)
             document.getElementById(modelId + "_saveReviewDraw").submit();
         });
 
