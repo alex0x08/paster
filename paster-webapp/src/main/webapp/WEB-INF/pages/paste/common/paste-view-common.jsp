@@ -67,8 +67,7 @@
 
                     <div id="${model.id}_tools" class="tools">
                         Colors:
-                        <a href='#${model.id}_sketch' class='btn btn-xs button_color_virgins_blood' data-color='#D20202'
-                            title="Virgin's blood">&nbsp;&nbsp;</a>
+                       
 
                     </div>
 

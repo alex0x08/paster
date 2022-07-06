@@ -143,7 +143,7 @@
                                         <c:forEach items="${availablePriorities}" var="prior">
                                             <form:option value="${prior}" cssClass="${prior}"
                                                 x-css-class-name="${prior}">
-                                                <fmt:message key="${prior}" />
+                                                <c:out value="${prior}"/>
                                             </form:option>
                                         </c:forEach>
                                     </form:select>
@@ -166,7 +166,7 @@
                                     <form:select path="channel" multiple="false" id="pchan"  cssClass="form-control">
                                         <c:forEach items="${availableChannels}" var="channel">
                                             <form:option value="${channel}">
-                                                <fmt:message key="${channel}" />
+                                                <c:out value="${channel}"/>
                                             </form:option>
                                         </c:forEach>
                                     </form:select>

@@ -44,7 +44,6 @@
 </div>
    
        
-<script type="text/javascript" src="<c:url value='/main/resources/${appId}/local_components/jquery/jquery.slim.min.js'/>"></script>
 <script type="text/javascript"
     src="<c:url value='/main/resources/${appId}/local_components/bootstrap/bootstrap.bundle.min.js'/>"></script>
 
@@ -83,7 +82,6 @@
     }
 
     const PasterI18n = new PasterI18nClass();
-
 
     var pasterApp = new PasterApp();
 

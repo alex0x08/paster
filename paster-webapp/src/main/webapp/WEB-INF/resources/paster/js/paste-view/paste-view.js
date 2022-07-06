@@ -19,14 +19,14 @@
 
 class PasterView {
 
- 
+
     setupDraw(modelId,allowEdit) {
         var mainThis = this;
-        const colors_array = ['#ff1101', '#ff0', '#0f0', '#0ff', '#00f', '#6d47e7', '#000', '#fff'];
+        const colors_array = [ '#D20202', '#ff1101', '#ff0', '#0f0', '#0ff', '#00f', '#6d47e7', '#000', '#fff'];
         var toolsEl =document.getElementById(modelId + '_tools')
         colors_array.forEach(c => {
             const htmlBlock =  "<a href='#" + modelId
-                                + "_sketch' class='btn btn-xs' data-color='" + c
+                                + "_sketch' class='"+modelId +"_sketch_color btn btn-xs' data-color='" + c
                                 + "' style='border:1px solid black; background: " + c
                                 + ";'>&nbsp;&nbsp;</a> ";
 
@@ -34,23 +34,48 @@ class PasterView {
          });
         const sz_array = [1, 3, 5, 10, 15];
         sz_array.forEach(c => {
-            const htmlBlock =  "<a href='#" + modelId + "_sketch' data-size='" + c
+            const htmlBlock =  "<a href='#" + modelId + "_sketch' class="+modelId+"_sketch_sz data-size='" + c
                                 + "' style='background: #ccc'>" + c + "</a> ";
                 toolsEl.insertAdjacentHTML( 'beforeend', htmlBlock );
         });
 
 
 
+        Array.from(document.getElementsByClassName(modelId+'_sketch_color')).forEach(
+            function (el, i, array) {
+                el.addEventListener("click", function (e) {
+                        e.preventDefault();
+                        const dcolor= el.getAttribute('data-color');
+                        currentColor = dcolor;
+                        console.log('current color:',currentColor)
+                    });
+            });
 
-        var COLOURS = ['#E3EB64', '#A7EBCA', '#FFFFFF', '#D8EBA7', '#868E80'];
-        var radius = 0;
+            Array.from(document.getElementsByClassName(modelId+'_sketch_sz')).forEach(
+                function (el, i, array) {
+                    el.addEventListener("click", function (e) {
+                            e.preventDefault();
+                            const sz= el.getAttribute('data-size');
+                            currentSz= sz;
+                            radius =0;
+                            console.log('current sz:',currentSz)
+                        });
+                });
 
+
+
+
+        var currentSz = 20;
+        var currentColor = '#E3EB64';
+        var radius =0;
         var inAction = false;
 
-        Sketch.create({
+        mainThis.sketchObj = Sketch.create({
 
             container: document.getElementById(modelId + '_drawArea'),
+            autostart: false,
             autoclear: false,
+            fullscreen: false,
             retina: 'auto',
 
             setup: function () {
@@ -58,7 +83,7 @@ class PasterView {
             },
 
             update: function () {
-                radius = 1.2 + abs(sin(this.millis * 0.003) * 20);
+                radius= 2 + abs(sin(this.millis * 0.003) * currentSz);
             },
 
             // Event handlers
@@ -87,7 +112,7 @@ class PasterView {
 
                         this.lineCap = 'round';
                         this.lineJoin = 'round';
-                        this.fillStyle = this.strokeStyle = COLOURS[i % COLOURS.length];
+                        this.fillStyle = this.strokeStyle = currentColor;
                         this.lineWidth = radius;
 
                         this.moveTo(touch.ox, touch.oy);
@@ -122,12 +147,9 @@ class PasterView {
             function (el, i, array) {
                 el.addEventListener("click", function (e) {
                         e.preventDefault();
-
                         const ln = el.getAttribute('plineNumber');
                         const commentId = el.getAttribute('pCommentId');
-
                         SyntaxHighlighter.insertEditForm(modelId,ln,commentId);
-                        
                     });
             });
 
@@ -157,10 +179,9 @@ class PasterView {
 
     }
     getTextSizes(el) {
-        var h = parseInt(el.offsetHeight),
+        var h = parseInt(el.offsetHeight)+10,
                 w = parseInt(el.offsetWidth);
         return [h, w];
-
     }
     showAll(modelId) {
 
@@ -228,8 +249,8 @@ class PasterView {
         area.style.height =sizes[0];
         area.style.width = sizes[1];
 
-        sketch.height = sizes[0];
-        sketch.width = sizes[1];
+       sketch.height = sizes[0];
+       sketch.width = sizes[1];
 
         const canvas = sketch; //document.getElementById(modelId + '_sketch');
         const ctx = canvas.getContext('2d');
@@ -243,6 +264,7 @@ class PasterView {
         }
         document.getElementById(modelId + "_drawBlock").style.display='';
         document.getElementById(modelId + "_all").style.display='none';
+        this.sketchObj.start()
     }
     /**
      * Handles additional fields on comment save

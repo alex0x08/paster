@@ -86,7 +86,7 @@
 
                         <ul class="dropdown-menu" role="menu" id="pasteNewMenu">
                             <li>
-                                <a role="menuitem" id="createNewBtn" class="mainLinkLine"
+                                <a role="menuitem" id="createNewBtn" class="dropdown-item mainLinkLine"
                                     href="<c:url value='/main/paste/new'></c:url>"
                                     title="<fmt:message key='paste.create.new' />">
                                     <fmt:message key='paste.create.new' />

@@ -14,10 +14,13 @@
 
                 <c:choose>
                     <c:when test="${source eq sourceType}">
-                        <span style="font-size: 14px; font-weight: bold; "><fmt:message key="${source}"/> </span>
+                        <span style="font-size: 14px; font-weight: bold; ">
+                            <c:out value="${source}"/>
                     </c:when>
                     <c:otherwise>
-                        <a href="<c:url value='/main/paste/list/${source}'/>"><fmt:message key="${source}"/></a>
+                        <a href="<c:url value='/main/paste/list/${source}'/>">
+                            <c:out value="${source}"/>
+                        </a>
                     </c:otherwise>
                 </c:choose>
 
