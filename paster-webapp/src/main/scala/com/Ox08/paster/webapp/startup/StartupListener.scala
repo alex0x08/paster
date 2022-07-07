@@ -1,9 +1,9 @@
 package com.Ox08.paster.webapp.startup
 
-import com.Ox08.paster.webapp.base.Loggered
-import com.Ox08.paster.webapp.dao.PasteDaoImpl
+import com.Ox08.paster.webapp.base.Logged
+import com.Ox08.paster.webapp.dao.PasteDao
 import com.Ox08.paster.webapp.manager.UserManagerImpl
-import com.Ox08.paster.webapp.model.{Role, User}
+import com.Ox08.paster.webapp.model.{Role, PasterUser}
 import jakarta.servlet.{ServletContextEvent, ServletContextListener}
 import org.apache.commons.codec.digest.Md5Crypt
 import org.apache.commons.csv.{CSVFormat, CSVRecord}
@@ -11,25 +11,26 @@ import org.springframework.context.ApplicationContext
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.context.support.WebApplicationContextUtils
+
 import java.io.InputStreamReader
 import java.security.SecureRandom
 import scala.jdk.CollectionConverters._
 
 class BootContext(ctx: ApplicationContext) {
 
-  val pasteDao: PasteDaoImpl = ctx.getBean(classOf[PasteDaoImpl])
+  val pasteDao: PasteDao = ctx.getBean(classOf[PasteDao])
 
   val users: UserManagerImpl = ctx.getBean(classOf[UserManagerImpl])
 
 }
 
-class StartupListener extends ServletContextListener with Loggered {
+class StartupListener extends ServletContextListener with Logged {
 
   override def contextInitialized(event: ServletContextEvent): Unit = {
 
 
     val bootContext = new BootContext(WebApplicationContextUtils
-      .getRequiredWebApplicationContext(event.getServletContext()))
+      .getRequiredWebApplicationContext(event.getServletContext))
 
 
     try {
@@ -49,10 +50,9 @@ class StartupListener extends ServletContextListener with Loggered {
 
 
     } catch {
-      case e@( _: java.io.IOException) => {
+      case e@( _: java.io.IOException) =>
         logger.error(e.getLocalizedMessage, e)
         throw e; // to stop application
-      }
     }
 
   }
@@ -64,19 +64,19 @@ class StartupListener extends ServletContextListener with Loggered {
 
 
   def loadDefaults(csv: String, callback: CSVRecord => Unit): Unit= {
-    val r = new InputStreamReader(getClass().getResourceAsStream(csv))
+    val r = new InputStreamReader(getClass.getResourceAsStream(csv))
     try {
       val records = CSVFormat.DEFAULT.builder()
         .setHeader().setSkipHeaderRecord(true).build().parse(r)
       for (record <- records.asScala) {
         callback(record)
       }
-    } finally r.close
+    } finally r.close()
   }
 
   def setupSecurityContext(): Unit= {
 
-    val start_user = new User("System","system",
+    val start_user = new PasterUser("System","system",
       Md5Crypt.md5Crypt(SecureRandom.getSeed(20)),
       java.util.Set.of(Role.ROLE_ADMIN))
 
@@ -85,7 +85,7 @@ class StartupListener extends ServletContextListener with Loggered {
       "start", "start", start_user.getAuthorities())
     auth.setDetails(start_user)
 
-    SecurityContextHolder.getContext().setAuthentication(auth)
+    SecurityContextHolder.getContext.setAuthentication(auth)
   }
 
  // def reindex(props: MergedPropertyConfigurer): Unit= {

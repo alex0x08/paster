@@ -59,8 +59,8 @@
 
                 <div class="row">
                     <div class="col-md-10 offset2">
-                        <p title="<c:out value="${systemInfo.runtimeVersion.full}"/>">
-                            <c:out value="${systemInfo.runtimeVersion.implVersion}"/>
+                        <p title="<c:out value='${systemInfo.runtimeVersion.full}'/>">
+                            <c:out value="${systemInfo.runtimeVersion.full}"/>
                         </p>
 
                         <fmt:formatDate pattern="${datePattern}" var="startDate" 

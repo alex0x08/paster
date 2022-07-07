@@ -18,9 +18,8 @@ package com.Ox08.paster.webapp.model
 
 import jakarta.persistence.{Column, Entity, Id, Table, Temporal, TemporalType}
 import jakarta.validation.constraints.{NotNull, Size}
-
 import java.text.SimpleDateFormat
-import java.util.{Date, Objects}
+import java.util.Date
 
 object SessionToken {
   val DATE_TIME_FORMATTER = new SimpleDateFormat("d MMMM yyyy")
@@ -32,55 +31,31 @@ object SessionToken {
 class SessionToken extends java.io.Serializable {
 
   @Id
-  private var series: String = null
+  var series: String = _
 
   @NotNull
   @Column(name = "token_val")
-  private var tokenValue: String = null
+  var tokenValue: String = _
 
   @Column(name = "token_dt")
   @Temporal(TemporalType.TIMESTAMP)
-  private var tokenDate: Date = null
+  var tokenDate: Date = _
 
   //an IPV6 address max length is 39 characters
   @Size(min = 0, max = 39)
   @Column(name = "ipaddr")
-  private var ipAddress: String = null
+  var ipAddress: String = _
 
   @Column(name = "user_agent")
-  private var userAgent: String = null
+  private var userAgent: String = _
 
   @Column(name = "username")
-  private var username: String = null
+  var username: String = _
 
-  def getSeries() = series
+  def getFormattedTokenDate: String =
+    SessionToken.DATE_TIME_FORMATTER.format(this.tokenDate.getTime)
 
-  def setSeries(series: String): Unit = {
-    this.series = series
-  }
-
-  def getTokenValue() = tokenValue
-
-  def setTokenValue(tokenValue: String): Unit = {
-    this.tokenValue = tokenValue
-  }
-
-  def getTokenDate: Date = tokenDate
-
-  def setTokenDate(tokenDate: Date): Unit = {
-    this.tokenDate = tokenDate;
-  }
-
-  def getFormattedTokenDate =
-    SessionToken.DATE_TIME_FORMATTER.format(this.tokenDate.getTime())
-
-  def getIpAddress = ipAddress
-
-  def setIpAddress(ipAddress: String): Unit = {
-    this.ipAddress = ipAddress
-  }
-
-  def getUserAgent = userAgent
+  def getUserAgent: String = userAgent
 
   def setUserAgent(userAgent: String): Unit = {
     if (userAgent.length() >= SessionToken.MAX_USER_AGENT_LEN) {
@@ -90,10 +65,5 @@ class SessionToken extends java.io.Serializable {
     }
   }
 
-  def getUsername() = username
-
-  def setUsername(user: String): Unit = {
-    this.username = user
-  }
 
 }

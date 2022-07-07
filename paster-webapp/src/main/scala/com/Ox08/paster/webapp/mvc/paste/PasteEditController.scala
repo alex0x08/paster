@@ -32,8 +32,8 @@ import org.springframework.validation.BindingResult
 import org.springframework.web.bind.WebDataBinder
 import org.springframework.web.bind.annotation._
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
-
-import java.util.{ArrayList, Locale}
+import java.util
+import java.util.Locale
 import scala.jdk.CollectionConverters._
 
 /**
@@ -57,10 +57,10 @@ class PasteEditController extends GenericEditController[Paste] {
   val tagDao: TagDao = null
 
   @Autowired
-  val pasteManager: PasteDaoImpl = null
+  val pasteManager: PasteDao = null
 
   @Autowired
-  val commentManager: CommentDaoImpl = null
+  val commentManager: CommentDao = null
 
   @Autowired
   val resourcePathHelper: ResourcePathHelper = null
@@ -77,45 +77,44 @@ class PasteEditController extends GenericEditController[Paste] {
   def editPage = "paste/edit"
   def viewPage = "paste/view"
 
-  def manager() = pasteManager
+  def manager(): PasteDao = pasteManager
 
   @InitBinder
   def initBinder(binder: WebDataBinder): Unit = {
     binder.initDirectFieldAccess()
- //   binder.registerCustomEditor(classOf[CodeType], new CodeTypeEditor())
   }
 
   override def fillEditModel(obj: Paste, model: Model, locale: Locale): Unit = {
     super.fillEditModel(obj, model, locale)
 
-    if (obj.isBlank()) {
+    if (obj.isBlank) {
       model.addAttribute("title", getResource("paste.new", locale))
     } else {
       model.addAttribute("title", StringEscapeUtils.escapeHtml4(
-        getResource("paste.edit.title", Array(obj.getId(), obj.getName()), locale)))
+        getResource("paste.edit.title", Array(obj.id, obj.title), locale)))
 
-      obj.getComments().addAll(
-        commentManager.getCommentsForPaste(obj.getId()))
+      obj.comments.addAll(
+        commentManager.getCommentsForPaste(obj.id))
 
       if (!model.containsAttribute("comment")) {
-        model.addAttribute("comment", getNewCommentInstance(obj, model))
+        model.addAttribute("comment", getNewCommentInstance(obj))
       }
 
     }
-    model.addAttribute("availableCodeTypes", codeTypeDao.getAvailable())
-    model.addAttribute("availablePriorities", priorities.getAvailablePriorities())
-    model.addAttribute("availableChannels", channelDao.getAvailableChannels())
+    model.addAttribute("availableCodeTypes", codeTypeDao.getAvailableElements)
+    model.addAttribute("availablePriorities", priorities.getAvailableElements)
+    model.addAttribute("availableChannels", channelDao.getAvailableElements)
 
-    if (!obj.getComments().isEmpty()) {
-      val commentLines = new ArrayList[Long]()
-      for (c <- obj.getComments().asScala) {
-        commentLines.add(c.getLineNumber())
+    if (!obj.comments.isEmpty) {
+      val commentLines = new util.ArrayList[Long]()
+      for (c <- obj.comments.asScala) {
+        commentLines.add(c.lineNumber)
       }
 
       model.addAttribute("commentedLinesList", StringUtils.join(commentLines, ","))
     }
 
-    if (!obj.isBlank()) {
+    if (!obj.isBlank) {
       val pnext = manager().getNextPaste(obj)
       val pprev = manager().getPreviousPaste(obj)
 
@@ -129,31 +128,32 @@ class PasteEditController extends GenericEditController[Paste] {
     }
   }
 
-  override def getNewModelInstance(): Paste = {
+  override def getNewModelInstance: Paste = {
     val p = new Paste()
-    p.setOwner(getCurrentUser().getUsername())
-    p.setChannel(channelDao.getDefault())
+    p.author = getCurrentUser.getUsername()
+    p.channel =channelDao.getDefault
     p
   }
 
-  def getNewCommentInstance(pp: Paste, model: Model): Comment = {
+  def getNewCommentInstance(pp: Paste): Comment = {
     val p = new Comment()
-    if (getCurrentUser()!=null) {
-      p.setOwner(getCurrentUser().getUsername())
+    if (getCurrentUser!=null) {
+      p.author =getCurrentUser.getUsername()
     }
-    p.setPasteId(pp.getId())
+    p.pasteId = pp.id
     p
   }
 
 
   @RequestMapping(value = Array("/removeComment"),
     method = Array(RequestMethod.POST, RequestMethod.GET))
-  def removeComment(@RequestParam(required = true) commentId: java.lang.Long,
-                    @RequestParam(required = true) pasteId: java.lang.Long,
-                    @RequestParam(required = true) lineNumber: java.lang.Long,
-                    model: Model, locale: Locale): String = {
+  def removeComment(@RequestParam(required = true) commentId: Integer,
+                    @RequestParam(required = true) pasteId: Integer,
+                    @RequestParam(required = true) lineNumber: Long,
+                    model: Model): String = {
 
-    if (logger.isDebugEnabled) logger.debug("_removeComment commentId={} , lineNumber ={} {}", commentId, lineNumber, "")
+    if (logger.isDebugEnabled)
+      logger.debug("_removeComment commentId={} , lineNumber ={} {}", commentId, lineNumber, "")
 
     commentManager.remove(commentId)
     model.asMap().clear()
@@ -162,12 +162,12 @@ class PasteEditController extends GenericEditController[Paste] {
 
   @RequestMapping(value = Array("/saveReviewDraw"), method = Array(RequestMethod.POST))
   def saveReviewDraw(
-                      @RequestParam(required = true) pasteId: java.lang.Long,
+                      @RequestParam(required = true) pasteId: Integer,
                       @RequestParam(required = true) reviewImgData: String,
                       @RequestParam(required = true) thumbImgData: String,
-                      model: Model, locale: Locale): String = {
+                      model: Model): String = {
 
-    if (!isCurrentUserLoggedIn() && !allowAnonymousCommentsCreate) return page403
+    if (!isCurrentUserLoggedIn && !allowAnonymousCommentsCreate) return page403
 
     var p = pasteManager.get(pasteId)
 
@@ -177,11 +177,11 @@ class PasteEditController extends GenericEditController[Paste] {
 
     logger.info("adding reviewImg to {}, data {}", Array(pasteId, reviewImgData))
 
-    p.setReviewImgData(resourcePathHelper.saveResource("r", p.getUuid(),reviewImgData))
-    p.setThumbImage(resourcePathHelper.saveResource("t", p.getUuid(),thumbImgData))
+    p.reviewImgData = resourcePathHelper.saveResource("r", p.uuid,reviewImgData)
+    p.thumbImage =resourcePathHelper.saveResource("t", p.uuid,thumbImgData)
 
     p.touch()
-    p = manager().save(p);
+    p = manager().save(p)
 
     model.asMap().clear()
     s"redirect:/main/paste/$pasteId"
@@ -190,44 +190,39 @@ class PasteEditController extends GenericEditController[Paste] {
   /**
    * add new comment
    *
-   * @param pasteId
-   * @param b
-   * @param result
-   * @param model
-   * @param locale
    * @return
    */
   @RequestMapping(value = Array("/saveComment"), method = Array(RequestMethod.POST))
   def saveComment(@Valid b: Comment,
                   result: BindingResult, model: Model, locale: Locale): String = {
 
-    if (!isCurrentUserLoggedIn() && !allowAnonymousCommentsCreate) return page403
+    if (!isCurrentUserLoggedIn && !allowAnonymousCommentsCreate) return page403
 
-    val p = manager().get(b.getPasteId())
+    val p = manager().get(b.pasteId)
 
     if (p == null) return page404
 
     logger.debug("adding comment {}", b)
 
-    if (result.hasErrors()) {
-      logger.debug("form has errors {}", result.getErrorCount())
+    if (result.hasErrors) {
+      logger.debug("form has errors {}", result.getErrorCount)
       model.addAttribute("comment", b)
       fillEditModel(p, model, locale)
       return viewPage
     }
 
-    if (isCurrentUserLoggedIn()) {
-      b.setOwner(getCurrentUser().getUsername())
+    if (isCurrentUserLoggedIn) {
+      b.author = getCurrentUser.getUsername()
      // b.getOwner().increaseTotalComments()
     }
     commentManager.save(b)
 
-    if (b.getThumbImage() != null)
-      p.setThumbImage(resourcePathHelper.saveResource("t", p.getUuid(),b.getThumbImage()))
+    if (b.getThumbImage != null)
+      p.thumbImage =resourcePathHelper.saveResource("t", p.uuid,b.getThumbImage)
     p.touch()
     manager().save(p)
     model.asMap().clear()
-    s"redirect:/main/paste/${b.getPasteId()}#line_${b.getLineNumber()}"
+    s"redirect:/main/paste/${b.pasteId}#line_${b.lineNumber}"
   }
 
 
@@ -237,46 +232,47 @@ class PasteEditController extends GenericEditController[Paste] {
                     result: BindingResult, model: Model, locale: Locale,
                     redirectAttributes: RedirectAttributes): String = {
 
-    if (!isCurrentUserLoggedIn() && !allowAnonymousPasteCreate) return page403
+    if (!isCurrentUserLoggedIn && !allowAnonymousPasteCreate) return page403
 
     logger.debug("saving paste..")
 
     /**
      * copy fields not filled in form
      */
-    if (!b.isBlank()) {
-      val current = manager().getFull(b.getId())
-      b.getComments().addAll(current.getComments())
-      b.setIntegrationCode(current.getIntegrationCode())
+    if (!b.isBlank) {
+      val current = manager().getFull(b.id)
+      b.comments.addAll(current.comments)
+      b.integrationCode = current.integrationCode
       // b.setThumbImg(current.getThumbImg())
     }
 
-    if (b.getChannel() == null || !channelDao.exist(b.getChannel()))
-          b.setChannel(channelDao.getDefault())
+    if (b.channel == null || !channelDao.exist(b.channel))
+          b.channel = channelDao.getDefault
 
     /**
      * concatenate all model tags objects to one string
      */
-    b.getTagsMap().clear()
+    b.getTagsMap.clear()
 
-    val allTags = tagDao.getTagsMap()
+    val allTags = tagDao.getTagsMap
 
-    for (s <- b.getTagsAsString().split(" ")) {
+    for (s <- b.tagsAsString.split(" ")) {
       if (!StringUtils.isBlank(s)
         && s.length >= 3 // name min size
-      ) if (allTags.containsKey(s)) b.getTagsMap().put(s, allTags.get(s)) else b.getTagsMap().put(s, new Tag(s))
+      ) if (allTags.containsKey(s))
+          b.getTagsMap.put(s, allTags.get(s))
+        else
+          b.getTagsMap.put(s, new Tag(s))
     }
 
     /**
      * check if normalized was set
      */
-    if (b.isNormalized()) {
+    if (b.normalized) {
 
+      b.codeType match {
 
-
-      b.getCodeType() match {
-
-        case "js" => {
+        case "js" =>
           /**
            * try to normalize json
            */
@@ -285,55 +281,53 @@ class PasteEditController extends GenericEditController[Paste] {
           import com.fasterxml.jackson.databind.ObjectMapper
           val mapper = new ObjectMapper
 
-          val n =mapper.readTree(b.getText())
+          val n =mapper.readTree(b.text)
 
-          b.setText(mapper.writerWithDefaultPrettyPrinter.writeValueAsString(n))
+          b.text = mapper.writerWithDefaultPrettyPrinter.writeValueAsString(n)
 
           } catch{
-            case e @ (_ :Exception) => {
-                    //ignore
-              }
-            }
-        }
+            case _ :Exception =>
+              //ignore
+          }
         case "plain" =>
           /**
            * set word wrap for plain
            */
-
-          b.setText(WordUtils.wrap(b.getText(), 80))
+          b.text = WordUtils.wrap(b.text, 80)
         case _ =>
       }
     }
 
-    if (b.isBlank()) if (isCurrentUserLoggedIn()) {
-      b.setOwner(getCurrentUser().getUsername())
+    if (b.isBlank)
+      if (isCurrentUserLoggedIn) {
+      b.author = getCurrentUser.getUsername()
      // b.getOwner().increaseTotalPastas()
     }
 
 
-    b.setTitle(
-      f = if (b.getText().length > Paste.TITLE_LENGTH) {
+    b.title =
+      if (b.text.length > Paste.TITLE_LENGTH) {
 
-        val summary: String = b.getText()
+        val summary: String = b.text
 
         if (summary == null || summary.length < 3)
-          b.getText().substring(0, Paste.TITLE_LENGTH - 3) + "..."
+          b.text.substring(0, Paste.TITLE_LENGTH - 3) + "..."
         else if (summary.length > Paste.TITLE_LENGTH)
           summary.substring(0, Paste.TITLE_LENGTH - 3) + "..."
         else
           summary
-      } else b.getText())
+      } else b.text
 
-    logger.debug("__found thumbnail {} comments {}", b.getThumbImage(), b.getComments().size())
+    logger.debug("__found thumbnail {} comments {}", b.thumbImage, b.commentsCount)
 
-    if (b.getThumbImage() != null) {
-      b.setThumbImage(resourcePathHelper.saveResource("t", b.getUuid(),b.getThumbImage()))
+    if (b.thumbImage != null) {
+      b.thumbImage =resourcePathHelper.saveResource("t", b.uuid,b.thumbImage)
     }
 
     val out = super.save(cancel, b, result, model, locale, redirectAttributes)
     if (out.equals(listPage)) {
-      model.asMap().clear();
-      s"redirect:/main/paste/${b.getId()}"
+      model.asMap().clear()
+      s"redirect:/main/paste/${b.id}"
     } else
       out
   }
@@ -345,7 +339,7 @@ class PasteEditController extends GenericEditController[Paste] {
     new Array[java.lang.Object](0), null, Locale.getDefault)
 
   @RequestMapping(value = Array("/raw/view"), method = Array(RequestMethod.GET))
-  def getByPathRaw(@RequestParam(required = true) id: java.lang.Long, model: Model, locale: Locale): String = {
+  def getByPathRaw(@RequestParam(required = true) id: Integer, model: Model, locale: Locale): String = {
     val r = getByPath(id, model, locale)
     if (!r.equals(viewPage))
       r
@@ -355,7 +349,7 @@ class PasteEditController extends GenericEditController[Paste] {
 
 
   @RequestMapping(value = Array("/{id:[0-9]+}"), method = Array(RequestMethod.GET))
-  override def getByPath(@PathVariable("id") id: java.lang.Long, model: Model, locale: Locale): String = {
+  override def getByPath(@PathVariable("id") id: Integer, model: Model, locale: Locale): String = {
     val r = super.getByPath(id, model, locale)
     if (!r.equals(viewPage))
       return r
@@ -363,7 +357,7 @@ class PasteEditController extends GenericEditController[Paste] {
     val p = model.asMap().get(GenericController.MODEL_KEY).asInstanceOf[Paste]
 
     model.addAttribute("title", getResource("paste.view.title",
-      Array(p.getId(), StringEscapeUtils.escapeHtml4(p.getName())),
+      Array(p.id, StringEscapeUtils.escapeHtml4(p.title)),
       locale))
 
     viewPage
@@ -377,21 +371,21 @@ class PasteEditController extends GenericEditController[Paste] {
   @RequestMapping(value = Array("/codetypes"), method = Array(RequestMethod.GET))
   @ResponseBody
   @JsonIgnore
-  def getAvailableCodeTypes(): java.util.Collection[String] = codeTypeDao.getAvailable()
+  def getAvailableCodeTypes: java.util.Collection[String] = codeTypeDao.getAvailableElements
 
   @RequestMapping(value = Array("/tags/all"), method = Array(RequestMethod.GET))
   @ResponseBody
   @JsonIgnore
-  def getAvailableTags() = tagDao.getTags()
+  def getAvailableTags: util.List[Tag] = tagDao.getTags
 
   @RequestMapping(value = Array("/tags/names"), method = Array(RequestMethod.GET, RequestMethod.POST))
   @ResponseBody
   @JsonIgnore
-  def getAvailableTagsNames(): java.util.List[String] = {
-    val out = new ArrayList[String]
+  def getAvailableTagsNames: java.util.List[String] = {
+    val out = new util.ArrayList[String]
 
-    for (s <- tagDao.getAll().asScala) {
-      out.add(s.getName())
+    for (s <- tagDao.getAll.asScala) {
+      out.add(s.name)
     }
 
     out
@@ -401,17 +395,13 @@ class PasteEditController extends GenericEditController[Paste] {
   /**
    * return plain paste text
    *
-   * @param id
-   * @param model
-   * @param locale
    * @return
    */
   @RequestMapping(value = Array("/{id:[0-9]+}.txt"),
-    method = Array(RequestMethod.GET), produces = Array("text/plain;charset=UTF-8"))
+    method = Array(RequestMethod.GET),
+    produces = Array("text/plain;charset=UTF-8"))
   @ResponseBody
-  def getBodyPlain(@PathVariable("id") id: java.lang.Long,
-                   model: Model,
-                   locale: Locale): String = loadModel(id).getText()
+  def getBodyPlain(@PathVariable("id") id: Integer): String = loadModel(id).text
 
   /**
    *
@@ -423,8 +413,8 @@ class PasteEditController extends GenericEditController[Paste] {
 
 class IdList(list: java.util.List[Long]) {
 
-  def getCount = list.size()
-  def getItems = list
-  def getItemsAsString = StringUtils.join(list, ",")
+  def getCount: Int = list.size()
+  def getItems: util.List[Long] = list
+  def getItemsAsString: String = StringUtils.join(list, ",")
 
 }

@@ -16,10 +16,10 @@
 
 package com.Ox08.paster.webapp.mvc
 
-
-import com.Ox08.paster.webapp.base.{Boot, Loggered}
+import com.Ox08.paster.webapp.base.Boot.BOOT
+import com.Ox08.paster.webapp.base.{Boot, Logged}
 import com.Ox08.paster.webapp.manager.UserManager
-import com.Ox08.paster.webapp.model.User
+import com.Ox08.paster.webapp.model.PasterUser
 import com.fasterxml.jackson.annotation.JsonIgnore
 import org.springframework.beans.factory.annotation.{Autowired, Value}
 import org.springframework.context.MessageSource
@@ -35,7 +35,7 @@ object LocaleConstants {
   )
 }
 
-abstract class AbstractController extends Loggered {
+abstract class AbstractController extends Logged {
 
   protected val page404 = "/error/404"
 
@@ -46,7 +46,7 @@ abstract class AbstractController extends Loggered {
   @Autowired
   protected val messageSource: MessageSource = null
 
-  protected val systemInfo = Boot.BOOT.getSystemInfo
+  protected val systemInfo: BOOT.SystemInfo = Boot.BOOT.getSystemInfo
   
   @Value("${config.comments.allow-anonymous.create}")
   val allowAnonymousCommentsCreate: Boolean = false
@@ -59,11 +59,11 @@ abstract class AbstractController extends Loggered {
   
   @ModelAttribute("allowAnonymousCommentsCreate")
   @JsonIgnore
-  def isAllowAnonymousCommentsCreate() = allowAnonymousCommentsCreate
+  def isAllowAnonymousCommentsCreate: Boolean = allowAnonymousCommentsCreate
 
   @ModelAttribute("allowAnonymousPasteCreate")
   @JsonIgnore
-  def isAllowAnonymousPasteCreate() = allowAnonymousPasteCreate
+  def isAllowAnonymousPasteCreate: Boolean = allowAnonymousPasteCreate
 
   protected def getResource(key: String, locale: Locale): String =
     messageSource.getMessage(key, new Array[java.lang.Object](0), locale)
@@ -73,30 +73,30 @@ abstract class AbstractController extends Loggered {
 
   @ExceptionHandler(Array(classOf[Throwable]))
   protected def handleAllExceptions(ex: ObjectRetrievalFailureException): String = {
-    logger.error(ex.getLocalizedMessage(), ex)
+    logger.error(ex.getLocalizedMessage, ex)
     page500
   }
 
   @ModelAttribute("appId")
-  def getAppId() = appId
+  def getAppId: String = appId
 
   @ModelAttribute("systemInfo")
-  def getSystemInfo() = systemInfo
+  def getSystemInfo: BOOT.SystemInfo = systemInfo
 
   @ModelAttribute("availableLocales")
-  def getAvailableLocales(): Array[Locale] = LocaleConstants.availableLocales
+  def getAvailableLocales: Array[Locale] = LocaleConstants.availableLocales
 
   @JsonIgnore
   @ModelAttribute("currentUser")
-  def getCurrentUser() = UserManager.getCurrentUser()
+  def getCurrentUser: PasterUser = UserManager.getCurrentUser
 
   @JsonIgnore
-  def isCurrentUserLoggedIn() = UserManager.getCurrentUser() != null
+  def isCurrentUserLoggedIn: Boolean = UserManager.getCurrentUser != null
 
   @JsonIgnore
-  def isCurrentUserAdmin(): Boolean = {
-    val u: User = UserManager.getCurrentUser()
-    u != null && u.isAdmin()
+  def isCurrentUserAdmin: Boolean = {
+    val u: PasterUser = UserManager.getCurrentUser
+    u != null && u.isAdmin
   }
 
 }

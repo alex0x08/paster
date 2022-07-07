@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute
 import jakarta.persistence.{Column, Entity, Lob, Transient}
 import jakarta.validation.constraints.{NotNull, Size}
-import jakarta.xml.bind.annotation.{XmlRootElement, XmlTransient}
+import jakarta.xml.bind.annotation.XmlRootElement
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.{FullTextField, Indexed}
 
 
@@ -14,61 +14,39 @@ import org.hibernate.search.mapper.pojo.mapping.definition.annotation.{FullTextF
 class Comment extends Struct with java.io.Serializable {
 
   @XStreamAsAttribute
-  @Column(nullable = false)
-  private var pasteId: java.lang.Long = null
+  @Column(name = "paste_id",nullable = false)
+  var pasteId: Integer = _
 
   @Lob
   @NotNull
   @FullTextField
   @Size(min = 3, message = "{struct.name.validator}")
-  private var text: String = null
+  @Column(name = "comment_text")
+  var text: String = _
 
-  private var owner: String = null
-  private var lineNumber: java.lang.Long = null
-  private var parentId: java.lang.Long = null
+  @Column(name = "author_username")
+  var author: String = _
+
+  @Column(name = "line_num")
+  var lineNumber: Long = _
+
+  @XStreamAsAttribute
+  @Column(name = "parent_id")
+  var parentId: Long = _
 
   @Transient
-  private var thumbImage: String = null
+  private var thumbImage: Option[String] = None
 
   @JsonIgnore
-  def getThumbImage() = thumbImage
+  def getThumbImage: String = thumbImage.get
 
   def setThumbImage(img: String): Unit =  {
-    thumbImage = img
+    thumbImage = Some(img)
   }
 
-  def setPasteId(id: java.lang.Long): Unit =  {
-    pasteId = id
-  }
 
-  def getPasteId() = pasteId
+  def isHasOwner: Boolean = author != null
 
-  @XmlTransient
-  @JsonIgnore
-  def getOwner(): String = owner
-
-  def setOwner(u: String): Unit =  {
-    owner = u
-  }
-
-  def isHasOwner() = owner != null
-
-  def getText = text
-
-  def setText(f: String): Unit =  {
-    this.text = f
-  }
-
-  def getParentId(): java.lang.Long = parentId
-  def setParentId(n: java.lang.Long): Unit =  {
-    parentId = n
-  }
-
-  def getLineNumber(): java.lang.Long = lineNumber
-
-  def setLineNumber(n: java.lang.Long): Unit =  {
-    lineNumber = n
-  }
 
   override def terms(): List[String] =  super.terms() ::: List[String]("text")
 

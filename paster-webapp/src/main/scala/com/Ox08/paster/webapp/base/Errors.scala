@@ -2,13 +2,11 @@ package com.Ox08.paster.webapp.base
 
 import org.slf4j.helpers.MessageFormatter
 import org.springframework.util.Assert
-
 import java.lang.reflect.InvocationTargetException
-import scala.jdk.CollectionConverters._
 import java.util
 import java.util.{Locale, ResourceBundle}
 import scala.collection.mutable
-import scala.collection.mutable.WrappedArray
+import scala.jdk.CollectionConverters._
 
 
 /**
@@ -19,14 +17,14 @@ import scala.collection.mutable.WrappedArray
  * @since 1.0
  */
 abstract class AbstractI18nMessageStore protected( // default bundle name
-                                                   val defaultBundleName: String) extends Loggered {
+                                                   val defaultBundleName: String) extends Logged {
   //reloadMessages()
   // bundle locale
   protected var messageLocale: Locale = Locale.getDefault()
   // additional bundles, loaded from plugins
   final private val additionalBundles = new util.ArrayList[ResourceBundle]
   // default bundle
-  protected var defaultBundle: ResourceBundle = null
+  protected var defaultBundle: ResourceBundle = _
 
   // reload default bundle
   final def reloadMessages(): Unit = {
@@ -58,7 +56,6 @@ abstract class AbstractI18nMessageStore protected( // default bundle name
   /**
    * get formatted text by key, with lookup in additional bundles
    *
-   * @param key
    * @return
    */
   protected def getMessage(key: String): String = {
@@ -102,7 +99,6 @@ class SystemError extends AbstractI18nMessageStore("bundles/errorMessages") {
   /**
    * создать объект исключения со сформированным сообщением об ошибке
    *
-   * @param <       T> тип возвращаемоего исключения
    * @param clazz   класс исключения
    * @param code    код ошибки
    * @param message доп. сообщение
@@ -177,7 +173,7 @@ class SystemError extends AbstractI18nMessageStore("bundles/errorMessages") {
    * @return новый массив параметров
    */
   private def prepareParams(message: String, params: Any*) = {
-    if (params.length > 0) {
+    if (params.nonEmpty) {
       val pparams = new Array[AnyRef](params.length + 1)
       pparams(0) = message
       System.arraycopy(params, 0, pparams, 1, params.length)

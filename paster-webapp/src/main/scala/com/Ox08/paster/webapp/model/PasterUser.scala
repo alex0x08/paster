@@ -16,59 +16,58 @@
 
 package com.Ox08.paster.webapp.model
 
-import com.Ox08.paster.webapp.base.Loggered
+import com.Ox08.paster.webapp.base.Logged
 import org.apache.commons.lang3.StringUtils
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 import java.util
 
-class User(var name: String,
-           username:String,
-           var pwd:String,
-           roles: util.Set[Role]) extends UserDetails with java.io.Serializable {
+class PasterUser(name: String,
+                 username:String,
+                 var pwd:String,
+                 roles: util.Set[Role]) extends UserDetails with java.io.Serializable {
 
-  override def isEnabled() = true
+  override def isEnabled = true
 
   /**
    * @see org.springframework.security.userdetails.UserDetails#isAccountNonExpired()
    */
-  override def isAccountNonExpired() = true
+  override def isAccountNonExpired = true
 
   /**
    * @see org.springframework.security.userdetails.UserDetails#isAccountNonLocked()
    */
 
-  override def isAccountNonLocked() = true
+  override def isAccountNonLocked = true
 
   /**
    * @see org.springframework.security.userdetails.UserDetails#isCredentialsNonExpired()
    */
-  override def isCredentialsNonExpired() = true
+  override def isCredentialsNonExpired = true
 
-  def getName() = name
+  def getName: String = name
 
-  override def getPassword() = pwd
+  override def getPassword: String = pwd
 
   def setPassword(newPass:String): Unit = {
     pwd = newPass
   }
 
-  def isPasswordEmpty() = StringUtils.isBlank(pwd)
+  def isPasswordEmpty: Boolean = StringUtils.isBlank(pwd)
 
-  def isAdmin() = roles.contains(Role.ROLE_ADMIN)
+  def isAdmin: Boolean = roles.contains(Role.ROLE_ADMIN)
 
-  def getRoles() = roles
+  def getRoles: util.Set[Role] = roles
 
 
   @Override
-  def getUsername() = username
+  def getUsername: String = username
 
-  def getAuthorities: util.Collection[_ <: GrantedAuthority] = getRoles()
+  def getAuthorities: util.Collection[_ <: GrantedAuthority] = getRoles
 
-  override def toString(): String = Loggered.toStringSkip(this,
+  override def toString: String = Logged.toStringSkip(this,
     Array("password", "passwordRepeat"
     ))
-
 }
 
 
@@ -78,7 +77,7 @@ object Role {
 }
 
 class Role(code: String, desc: String) extends GrantedAuthority {
-  def getAuthority() = code
-  def getName() = desc
+  def getAuthority: String = code
+  def getName: String = desc
 }
 

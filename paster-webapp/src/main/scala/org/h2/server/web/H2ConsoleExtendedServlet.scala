@@ -2,7 +2,7 @@
 package org.h2.server.web
 
 
-import com.Ox08.paster.webapp.base.Loggered
+import com.Ox08.paster.webapp.base.Logged
 import jakarta.servlet.http.HttpServletRequestWrapper
 
 import java.sql.SQLException
@@ -21,7 +21,7 @@ import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
  * to user's session and open console automatically.
  *
  */
-class H2ConsoleExtendedServlet extends WebServlet with Loggered {
+class H2ConsoleExtendedServlet extends WebServlet with Logged {
 
   private var dataSource: DataSource = null
 

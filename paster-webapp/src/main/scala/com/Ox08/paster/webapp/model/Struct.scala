@@ -16,14 +16,14 @@
 
 package com.Ox08.paster.webapp.model
 
-import com.Ox08.paster.webapp.base.Loggered
+import com.Ox08.paster.webapp.base.Logged
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute
 import jakarta.persistence.{Column, GeneratedValue, Id, MappedSuperclass, PrePersist, PreUpdate, Temporal, TemporalType}
 import org.hibernate.annotations.GenericGenerator
-import org.hibernate.search.mapper.pojo.mapping.definition.annotation.{FullTextField, GenericField}
-
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField
 import java.text.SimpleDateFormat
-import java.util.{Calendar, Objects}
+import java.time.LocalDateTime
+import java.util.Objects
 
 object Struct {
   
@@ -32,7 +32,7 @@ object Struct {
   final val DB_DATE_FORMAT_FULL = "dd.MM.yyyy HH:mm:ss"
   final val SD_FULL = new SimpleDateFormat(DB_DATE_FORMAT_FULL)
   
-    abstract class Builder[T <: java.io.Serializable](obj:T) extends Loggered{
+    abstract class Builder[T <: java.io.Serializable](obj:T) extends Logged{
         def get():T = obj
         }
 }
@@ -49,30 +49,29 @@ trait SearchObject {
 @MappedSuperclass
 abstract class Struct extends DBObject with SearchObject with  java.io.Serializable{
 
-  @Column(name = "last_modified") //, columnDefinition = "datetime"
+  @Column(name = "last_modified")
   @Temporal(TemporalType.TIMESTAMP)
   @GenericField
  // @DateBridge(resolution = Resolution.DAY)
   @XStreamAsAttribute
-  private var lastModified:java.util.Date = _
+  var lastModified:LocalDateTime = _
 
-  @Column(name = "created") //, columnDefinition = "datetime"
+  @Column(name = "created")
   @Temporal(TemporalType.TIMESTAMP)
   @GenericField
   //(index = Index.YES)
   //@DateBridge(resolution = Resolution.DAY)
   @XStreamAsAttribute
-  private val created: java.util.Date = Calendar.getInstance().getTime()
+  val created: LocalDateTime = LocalDateTime.now()
 
   @PrePersist
   @PreUpdate
   def touch(): Unit= {
-    lastModified = Calendar.getInstance().getTime()
+    lastModified = LocalDateTime.now()
   }
   
-  def getLastModified()= lastModified
-  
-  def getCreated() = created
+  def getLastModified: LocalDateTime = lastModified
+  def getCreated: LocalDateTime = created
       
   def terms():List[String] = Struct.terms
       
@@ -92,38 +91,25 @@ abstract class DBObject extends java.io.Serializable {
     strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator"
   )
   @XStreamAsAttribute
-  private var id:java.lang.Long = null
+  var id:Integer = _
 
   @XStreamAsAttribute
-  private var disabled:Boolean = _
+  var disabled:Boolean = _
 
-  def isDisabled() = disabled
 
-  def setDisabled(disabled:Boolean): Unit =  { this.disabled = disabled  }
-
-  def isBlank() = (id == null)
-
-  def getId() = id
-
-  def setId(id:java.lang.Long): Unit =  {
-    this.id=id
-  }
+  def isBlank: Boolean = id == null
 
   override def hashCode():Int = {
     var hash:Int = 53*7
 
-    if (id != null)
+    if (id !=null)
       hash+=Objects.hashCode(id)
 
     hash
   }
 
-  override def equals(from:Any) =
-    (from.isInstanceOf[DBObject] && !isBlank()
-      && from.asInstanceOf[DBObject].getId().equals(id))
-
-
-  override def toString():String =  Loggered.toStringSkip(this, null)
+  override def equals(from:Any): Boolean =
+    from.isInstanceOf[DBObject] && !isBlank && from.asInstanceOf[DBObject].id.equals(id)
 
 
 }

@@ -60,7 +60,7 @@ class DynamicTilesView extends AbstractUrlBasedView {
    * @param tilesDefinitionName Main template name used to lookup definitions.
    */
   def setTilesDefinitionName(tilesDefinitionName: String): Unit = {
-    dynamicTilesViewProcessor.setTilesDefinitionName(tilesDefinitionName);
+    dynamicTilesViewProcessor.setTilesDefinitionName(tilesDefinitionName)
   }
 
   /**
@@ -69,7 +69,7 @@ class DynamicTilesView extends AbstractUrlBasedView {
    * @param tilesBodyAttributeName Tiles body attribute name.
    */
   def setTilesBodyAttributeName(tilesBodyAttributeName: String): Unit = {
-    dynamicTilesViewProcessor.setTilesBodyAttributeName(tilesBodyAttributeName);
+    dynamicTilesViewProcessor.setTilesBodyAttributeName(tilesBodyAttributeName)
   }
 
   /**
@@ -81,7 +81,7 @@ class DynamicTilesView extends AbstractUrlBasedView {
    * @param tilesDefinitionDelimiter Optional delimiter to replace '/' in a url.
    */
   def setTilesDefinitionDelimiter(tilesDefinitionDelimiter: String): Unit = {
-    dynamicTilesViewProcessor.setTilesDefinitionDelimiter(tilesDefinitionDelimiter);
+    dynamicTilesViewProcessor.setTilesDefinitionDelimiter(tilesDefinitionDelimiter)
   }
 
   /**
@@ -92,24 +92,24 @@ class DynamicTilesView extends AbstractUrlBasedView {
                                         request: HttpServletRequest,
                                         response: HttpServletResponse): Unit = {
 
-    val servletContext: ServletContext = getServletContext()
+    val servletContext: ServletContext = getServletContext
 
     val container: TilesContainer = TilesAccess.getContainer(ServletUtil
       .getApplicationContext(servletContext))
 
     if (container == null) {
       throw new ServletException("Tiles container is not initialized. " +
-        "Have you added a TilesConfigurer to your web application context?");
+        "Have you added a TilesConfigurer to your web application context?")
     }
 
-    exposeModelAsRequestAttributes(model, request);
+    exposeModelAsRequestAttributes(model, request)
 
-    dynamicTilesViewProcessor.renderMergedOutputModel(getBeanName(),
-      getUrl(),
+    dynamicTilesViewProcessor.renderMergedOutputModel(getBeanName,
+      getUrl,
       servletContext,
       request,
       response,
-      container);
+      container)
 
   }
 }

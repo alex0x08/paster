@@ -16,22 +16,24 @@
 
 package com.Ox08.paster.webapp.manager
 
-import com.Ox08.paster.webapp.base.Loggered
+import com.Ox08.paster.webapp.base.Logged
 import org.apache.commons.io.FileUtils
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
+
 import java.io.File
 import java.net.URLDecoder
 import java.nio.file.FileSystems
 import java.text.SimpleDateFormat
 import java.util.{Base64, Calendar}
+import scala.collection.mutable
 
 object ResourcePathHelper {
   val PATH_FORMAT = new SimpleDateFormat("YYYY/MM/dd/")
 }
 
 @Component("resourcePathHelper")
-class ResourcePathHelper extends Loggered {
+class ResourcePathHelper extends Logged {
 
   @Value("${paster.app.home}")
   val pasteAppHome: String = null
@@ -46,29 +48,29 @@ class ResourcePathHelper extends Loggered {
 
     if (logger.isDebugEnabled) logger.debug("file url {}", id)
 
-    FileSystems.getDefault()
+    FileSystems.getDefault
       .getPath(pasteAppHome, "resources", ptype, id + "."+getExtFor(ptype)).toFile
   }
 
 
   def saveResource(pt: String, objId :String,imgData:String): String = {
-    val fname = new StringBuilder()
-      .append(ResourcePathHelper.PATH_FORMAT.format(Calendar.getInstance().getTime()))
+    val fname = new mutable.StringBuilder()
+      .append(ResourcePathHelper.PATH_FORMAT.format(Calendar.getInstance().getTime))
       .append(objId)
       .append('.')
       .append(getExtFor(pt))
       .toString
 
-    val fimg = FileSystems.getDefault().getPath(pasteAppHome, "resources",
+    val fimg = FileSystems.getDefault.getPath(pasteAppHome, "resources",
       pt,
       fname).toFile
     val imgData2 = imgData.substring(imgData.indexOf(',') + 1)
-    FileUtils.writeByteArrayToFile(fimg, Base64.getDecoder().decode(imgData2.getBytes))
+    FileUtils.writeByteArrayToFile(fimg, Base64.getDecoder.decode(imgData2.getBytes))
 
     fname.replaceAll("/", ",")
 
   }
-  def getExtFor(ptype:String) = ptype match {
+  def getExtFor(ptype:String): String = ptype match {
     case "r" =>
       "png"
     case _ =>

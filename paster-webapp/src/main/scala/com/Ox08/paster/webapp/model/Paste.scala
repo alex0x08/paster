@@ -16,14 +16,15 @@
 
 package com.Ox08.paster.webapp.model
 
-import com.Ox08.paster.webapp.base.Loggered
+import com.Ox08.paster.webapp.base.Logged
 import com.fasterxml.jackson.annotation.JsonIgnore
-import jakarta.persistence.{CascadeType, Column, Entity, FetchType, Lob, ManyToMany, MapKey, PrePersist, PreUpdate}
+import com.thoughtworks.xstream.annotations.XStreamAsAttribute
+import jakarta.persistence.{CascadeType, Column, Entity, FetchType, Lob, ManyToMany, MapKey, PrePersist, PreUpdate, Table}
 import jakarta.validation.constraints.{NotNull, Size}
 import jakarta.xml.bind.annotation.{XmlRootElement, XmlTransient}
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.{FullTextField, Indexed, KeywordField}
-
-import java.util.{ArrayList, UUID}
+import java.util
+import java.util.UUID
 import scala.annotation.unused
 import scala.jdk.CollectionConverters._
 
@@ -42,15 +43,20 @@ object Paste extends Struct {
 @Entity
 @Indexed(index = "indexes/tags")
 @XmlRootElement(name = "tag")
-class Tag(tagString: String) extends Named(tagString) {
+@Table(name = "P_TAGS")
+class Tag(tagString: String) extends DBObject {
+
+  @NotNull
+  @FullTextField
+  @Column(name="tag_name",length = 256)
+  @Size(min = 3, message = "{struct.name.validator}")
+  @XStreamAsAttribute
+  var name: String = _
 
   @transient
-  private var total: Int = 0
+  var total: Int = 0
+
   def this() = this(null)
-  def getTotal() = total
-  def setTotal(i: Int): Unit= {
-    total = i
-  }
 
 }
 
@@ -65,7 +71,8 @@ class Tag(tagString: String) extends Named(tagString) {
 @Entity
 @Indexed(index = "indexes/pastas")
 @XmlRootElement(name = "paste")
-class Paste(ptitle: String) extends Named(ptitle) with java.io.Serializable {
+@Table(name = "P_PASTAS")
+class Paste(ptitle: String) extends Struct with java.io.Serializable {
 
 
   def this() = this(null)
@@ -78,7 +85,7 @@ class Paste(ptitle: String) extends Named(ptitle) with java.io.Serializable {
   @Column(nullable = false, unique = true, length = 255, updatable = false)
   @KeywordField
   //(index = Index.NO, store = Store.YES, termVector = TermVector.NO)
-  private val uuid = UUID.randomUUID().toString()
+  val uuid: String = UUID.randomUUID().toString
 
   /**
    * paste's body
@@ -87,78 +94,97 @@ class Paste(ptitle: String) extends Named(ptitle) with java.io.Serializable {
   @NotNull
   @FullTextField
   @Size(min = 3, message = "{struct.name.validator}")
-  @Column(length = Integer.MAX_VALUE)
-  private var text: String = null
+  @Column(name = "paste_text",length = Integer.MAX_VALUE)
+  var text: String = _
 
   /**
    * link to preview image
    */
   @XmlTransient
   //@Field(store = Store.YES, index = Index.NO)
-  private var thumbImage: String = null
+  @Column(name = "p_thumb_img")
+  @JsonIgnore
+  var thumbImage: String = _
 
 
   /**
    * paste title
    */
   //@NotNull
-  @Column(name="title",length = 256)
+  @Column(name="paste_title",length = 256)
   @Size(min = 3, max = 256, message = "{struct.name.validator}")
   @FullTextField
-  private var title: String = null
+  var title: String = _
 
   /**
    * paste owner (author)
    */
-  private var owner: String = null
+  @Column(name = "author_username")
+  var author: String = _
 
   /**
    * type of paste, used almost to highlight it correctly
    */
   @NotNull
   @KeywordField
-  private var codeType: String = "plain"
+  @Column(name = "code_type")
+  var codeType: String = _
 
   /**
    * integration code, used when paste was created in/for some integrated system
    */
-  private var integrationCode: String = null
+  @Column(name = "ext_code")
+  var integrationCode: String = _
 
   /**
    * remote url, used when paste was loaded from external site
    */
-  private var remoteUrl: String = null
+  @Column(name = "remote_url")
+  var remoteUrl: String = _
 
   /**
    * paste's  source, describes where it came from
    */
   @NotNull
-  private var channel: String = null
+  @Column(name = "p_channel")
+  var channel: String = _
 
  // @Field(name = "tags", index = Index.YES, store = Store.YES, termVector = TermVector.YES) //,boost=@Boost(2f)
   @KeywordField
-  private var tagsAsString: String = null
+  @Column(name = "p_tags")
+  var tagsAsString: String = _
 
-  private var normalized: Boolean = false
+  @Column(name = "is_norm")
+  var normalized: Boolean = _
 
   /**
    * comments relation
    */
   @transient
-  private var comments: java.util.List[Comment] = new ArrayList[Comment]()
+  @XmlTransient
+  @JsonIgnore
+  val comments: java.util.List[Comment] = new util.ArrayList[Comment]()
 
   @KeywordField
-  private var priority: String = null
+  @Column(name = "p_prior")
+  var priority: String = _
 
-  private var sticked: Boolean = false
 
-  private[model] var commentsCount: java.lang.Integer = null
+  @Column(name = "is_stick")
+  var stick: Boolean = _
 
-  private var symbolsCount: java.lang.Integer = null
+  @Column(name = "comments_count")
+  var commentsCount: Int = _
 
-  private var wordsCount: java.lang.Integer = null
+  @Column(name = "symbols_count")
+  var symbolsCount: Int = _
 
-  private var reviewImgData: String = null
+  @Column(name = "words_count")
+  var wordsCount: Int = _
+
+  @Column(name = "review_img")
+  @JsonIgnore
+  var reviewImgData: String = _
 
   /**
    * related tags
@@ -172,29 +198,18 @@ class Paste(ptitle: String) extends Named(ptitle) with java.io.Serializable {
   @PreUpdate
   @unused
   private def onUpdate(): Unit= {
-    commentsCount = getComments().size()
+    commentsCount = comments.size()
   }
+
+
+  def getPriority:String = priority // for EL
+  def getCodeType:String = codeType
+  def isStick:Boolean = stick
+  def getTitle:String = title
+  def getId: Integer = id
+  def getThumbImage:String = thumbImage
 
   override def terms(): List[String] = super.terms() ::: List[String]("text", "tags")
-
-  def getSymbolsCount() = symbolsCount
-
-  def setSymbolsCount(c: java.lang.Integer): Unit = {
-    this.symbolsCount = c
-  }
-
-  def getWordsCount() = wordsCount
-
-  def setWordsCount(c: java.lang.Integer): Unit = {
-    this.wordsCount = c
-  }
-
-
-  def getTagsAsString() = tagsAsString
-
-  def setTagsAsString(str: String): Unit = {
-    this.tagsAsString = str
-  }
 
   /**
    * paste's owner
@@ -202,113 +217,14 @@ class Paste(ptitle: String) extends Named(ptitle) with java.io.Serializable {
    *
    * @return user instance
    */
-  @XmlTransient
-  @JsonIgnore
-  def getOwner(): String = owner
 
-  def setOwner(u: String): Unit = {
-    owner = u
-  }
-
-  def isHasOwner() = owner != null
-
-  def getIntegrationCode(): String = integrationCode
-
-  def setIntegrationCode(code: String): Unit = {
-    integrationCode = code
-  }
-
-  def getTags(): java.util.Set[String] = tagsMap.keySet()
-
-  def getTagsMap(): java.util.Map[String, Tag] = tagsMap
-
-  def getUuid(): String = uuid
-
-  def getPriority(): String = priority
-
-  def setPriority(prior: String): Unit = {
-    priority = prior
-  }
-
-  @JsonIgnore
-  def getThumbImage() = thumbImage
-
-  def setThumbImage(img: String): Unit = {
-    thumbImage = img
-  }
-
-  @JsonIgnore
-  def getReviewImgData() = this.reviewImgData
-
-  def setReviewImgData(img: String): Unit = {
-    reviewImgData = img
-  }
+  def isHasAuthor: Boolean = author != null
 
 
-  def isSticked() = sticked
+  def getTags: java.util.Set[String] = tagsMap.keySet()
 
-  def setSticked(b: Boolean): Unit = {
-    this.sticked = b
-  }
+  def getTagsMap: java.util.Map[String, Tag] = tagsMap
 
-  def isNormalized() = normalized
-
-  def setNormalized(b: Boolean): Unit = {
-    this.normalized = b
-  }
-
-  def getRemoteUrl() = remoteUrl
-
-  def setRemoteUrl(url: String): Unit = {
-    this.remoteUrl = url
-  }
-
-  def getChannel() = channel
-
-  def setChannel(s: String): Unit = {
-    channel = s
-  }
-
-  /**
-   * List of supported code types
-   * (need to proper syntax highlight)
-   *
-   * @return list
-   */
-  def getCodeType(): String = codeType
-
-  def setCodeType(f: String): Unit = {
-    codeType = f
-  }
-
-  /**
-   * Paste's title
-   * This field contains small piece of original text, it will be recreated after each object save
-   */
-  def getTitle() = getName()
-
-  def setTitle(f: String) = setName(f)
-
-  /**
-   * Pasta content
-   * Blob field stores all text for pasta
-   *
-   * @return big text
-   */
-  def getText(): String = text
-
-  def setText(f: String): Unit = {
-    this.text = f
-  }
-
-  /**
-   * @return list of comments
-   */
-  @XmlTransient
-  @JsonIgnore
-  def getComments(): java.util.List[Comment] = comments
-
-  def getCommentCount(): java.lang.Integer = commentsCount
 
   /**
    * loads this instance fully from database
@@ -316,14 +232,14 @@ class Paste(ptitle: String) extends Named(ptitle) with java.io.Serializable {
    */
   override def loadFull(): Unit = {
 
-    getText()
+
     for (c <- comments.asScala) {
       c.loadFull()
     }
   }
 
 
-  override def toString(): String = Loggered.toStringSkip(this,
+  override def toString(): String = Logged.toStringSkip(this,
     Array("reviewImgData",
       "thumbImage",
       "title",

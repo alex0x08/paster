@@ -16,9 +16,8 @@
 
 package com.Ox08.paster.webapp.manager
 
-
-import com.Ox08.paster.webapp.base.{Boot, Loggered}
-import com.Ox08.paster.webapp.model.{Role, User}
+import com.Ox08.paster.webapp.base.{Boot, Logged}
+import com.Ox08.paster.webapp.model.{PasterUser, Role}
 import org.apache.commons.csv.{CSVFormat, CSVRecord}
 import org.springframework.beans.factory.annotation.{Autowired, Qualifier}
 import org.springframework.dao.DataAccessException
@@ -28,34 +27,33 @@ import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.session.SessionRegistry
 import org.springframework.security.core.userdetails.{UserDetails, UserDetailsService, UsernameNotFoundException}
 import org.springframework.security.crypto.password.PasswordEncoder
-
-import java.io.{File, FileReader, InputStreamReader}
+import java.io.{File, FileReader}
 import java.util
 import scala.jdk.CollectionConverters._
 
-object UserManager extends Loggered {
+object UserManager extends Logged {
 
-  def getCurrentUser(): User =
-    if (SecurityContextHolder.getContext().getAuthentication() == null)
+  def getCurrentUser: PasterUser =
+    if (SecurityContextHolder.getContext.getAuthentication == null)
       null
     else
-      SecurityContextHolder.getContext().getAuthentication().getPrincipal() match {
-        case _: User =>
-          SecurityContextHolder.getContext()
-            .getAuthentication().getPrincipal().asInstanceOf[User]
+      SecurityContextHolder.getContext.getAuthentication.getPrincipal match {
+        case _: PasterUser =>
+          SecurityContextHolder.getContext
+            .getAuthentication.getPrincipal.asInstanceOf[PasterUser]
         case _ =>
           /**
            * this almost all time means that we got anonymous user
            */
           logger.debug("getCurrentUser ,unknown principal type: {}",
-            SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString)
+            SecurityContextHolder.getContext.getAuthentication.getPrincipal.toString)
           null
       }
 }
 
-class UserManagerImpl extends UserDetailsService with Loggered {
+class UserManagerImpl extends UserDetailsService with Logged {
 
-  val users: util.Map[String,User] = new util.HashMap
+  val users: util.Map[String,PasterUser] = new util.HashMap
 
   @Autowired
   @Qualifier("sessionRegistry")
@@ -71,7 +69,7 @@ class UserManagerImpl extends UserDetailsService with Loggered {
     loadDefaults(csv, (record: CSVRecord) => {
       logger.debug("processing record : {}",record)
 
-      val u = new User(record.get("NAME"),
+      val u = new PasterUser(record.get("NAME"),
         record.get("USERNAME"),
         record.get("PASSWORD"),util.Set.of(
         if (record.get("ADMIN").toBoolean) {
@@ -94,16 +92,16 @@ class UserManagerImpl extends UserDetailsService with Loggered {
       for (record <- records.asScala) {
         callback(record)
       }
-    } finally r.close
+    } finally r.close()
   }
 
-  def save(u: User): Unit = {
+  def save(u: PasterUser): Unit = {
     users.put(u.getUsername(),u)
     logger.debug("saved {}",u.getUsername())
   }
 
   @Override
-  def getUser(username: String): User = {
+  def getUser(username: String): PasterUser = {
       if (users.containsKey(username)) {
         users.get(username)
       } else null
@@ -111,34 +109,34 @@ class UserManagerImpl extends UserDetailsService with Loggered {
 
   @Override
   @throws(classOf[UsernameNotFoundException])
-  def getUserByUsername(username: String) = getUser(username)
+  def getUserByUsername(username: String): PasterUser = getUser(username)
 
   @PreAuthorize("isAuthenticated()")
-  def getUsers = users.values()
+  def getUsers: util.Collection[PasterUser] = users.values()
 
   @PreAuthorize("isAuthenticated()")
-  def getAllLoggedInUsers() = sessionRegistry.getAllPrincipals()
+  def getAllLoggedInUsers: util.List[AnyRef] = sessionRegistry.getAllPrincipals
 
   @PreAuthorize("isAuthenticated()")
-  def saveUser(user: User) = save(user)
+  def saveUser(user: PasterUser): Unit = save(user)
 
 
   @Secured(Array("ROLE_ADMIN"))
-  def removeUser(username: String) = {
+  def removeUser(username: String): PasterUser = {
     users.remove(username)
   }
 
   @throws(classOf[UsernameNotFoundException])
   @throws(classOf[DataAccessException])
   override def loadUserByUsername(username: String): UserDetails = {
-    val out: User = getUser(username)
+    val out: PasterUser = getUser(username)
     logger.debug("loaded by username {} , user {}", username,out)
     if (out == null)
       throw new UsernameNotFoundException(String.format("User %s not found", username))
     out
   }
 
-  def changePassword(user: User, newPassword: String): User = {
+  def changePassword(user: PasterUser, newPassword: String): PasterUser = {
     val encodedPass = passwordEncoder.encode(newPassword)
     logger.debug("changing password for user {}", user.getUsername())
     user.setPassword(encodedPass)

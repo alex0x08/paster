@@ -25,19 +25,19 @@ trait Query {
   /**
    * if this query empty
    */
-  def isEmpty(): Boolean
+  def isEmpty: Boolean
 
   /**
    * @return query string
    */
-  def getQuery(): String
+  def getQuery: String
 
   def setQuery(query: String): Unit
 
   /**
    * @return current page
    */
-  def getPage(): Int
+  def getPage: Int
 
   def setPage(page: Int): Unit
 
@@ -51,16 +51,16 @@ trait Query {
 
 class GenericQuery extends Query {
 
-  protected var query: String = null
-  protected var page: Int = 1
+  var query: String = _
+  var page: Int = 1
 
   def setPage(page: Int): Unit =  {
     this.page = page
   }
 
-  def getPage() = page
-  def isEmpty(): Boolean = query == null || query.equals("*")
-  def getQuery(): String = query
+  def getPage: Int = page
+  def isEmpty: Boolean = query == null || query.equals("*")
+  def getQuery: String = query
 
   def setQuery(query: String): Unit =  {
     this.query = query
@@ -71,10 +71,6 @@ class GenericQuery extends Query {
 
 class OwnerQuery extends GenericQuery with Query {
 
-  protected var ownerId:java.lang.Long = null
-
-  def getOwnerId():java.lang.Long = ownerId
-
-  def setOwnerId(ownerId:java.lang.Long) : Unit =  { this.ownerId = ownerId}
+  var ownerId:Long = _
 
 }

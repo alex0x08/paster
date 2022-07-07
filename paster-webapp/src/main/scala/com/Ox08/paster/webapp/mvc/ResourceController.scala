@@ -21,9 +21,9 @@ import jakarta.servlet.http.HttpServletResponse
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.io.InputStreamResource
 import org.springframework.stereotype.Controller
-import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.{PathVariable, RequestMapping, RequestMethod, ResponseBody}
 import java.io.{FileInputStream, IOException}
+import scala.collection.mutable
 
 @Controller
 @RequestMapping(Array("/resources"))
@@ -40,13 +40,13 @@ class ResourceController extends AbstractController {
   )
   @ResponseBody
   def getResource(
-                   model: Model,
                    @PathVariable("lastModified") lastModified: Long,
                    @PathVariable("path") path: String,
                    @PathVariable("type") ptype: String,
                    response: HttpServletResponse
                  ): InputStreamResource = {
 
+    logger.debug("get {} type: {} lm: {}",path,ptype,lastModified)
 
     ptype match {
       case "t" | "r" | "a" | "b" =>
@@ -66,12 +66,12 @@ class ResourceController extends AbstractController {
 
     response.setContentType("image/png")
 
-    response.setHeader("Content-Length", fimg.length().toString())
+    response.setHeader("Content-Length", fimg.length().toString)
     response.setHeader("Content-Disposition", s"inline;filename='${fimg.getName}'")
     response.setDateHeader("Last-Modified", fimg.lastModified())
     response.setDateHeader("Expires", System.currentTimeMillis +
       MAX_AGE)
-    response.setHeader("Cache-Control", s"max-age=${MAX_AGE}, public")
+    response.setHeader("Cache-Control", s"max-age=$MAX_AGE, public")
     response.setHeader("Pragma", "cache")
 
     new InputStreamResource(new FileInputStream(fimg))
@@ -80,10 +80,10 @@ class ResourceController extends AbstractController {
 
   @throws(classOf[IOException])
   def writeError(response: HttpServletResponse, msg: String, status: Int): Unit = {
-    response.setContentType("text/html;charset=UTF-8");
-    response.setStatus(status);
-    val out = response.getWriter()
-    out.println(new StringBuilder()
+    response.setContentType("text/html;charset=UTF-8")
+    response.setStatus(status)
+    val out = response.getWriter
+    out.println(new mutable.StringBuilder()
       .append("<html><head><title>ERROR: ")
       .append(msg)
       .append("</title></head><body><h1>ERROR: ")

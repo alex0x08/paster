@@ -24,9 +24,7 @@ import org.apache.lucene.queryparser.classic.ParseException
 import org.springframework.beans.support.PagedListHolder
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation._
-
-import java.util.Locale
-import scala.jdk.CollectionConverters._
+import java.util
 
 /**
  * Search result object
@@ -72,35 +70,28 @@ abstract class SearchController[T <: Struct, QV <: Query] extends GenericListCon
    *
    * @return search results if any
    */
-  def getAvailableResults(): Array[String]
+  def getAvailableResults: Array[String]
 
   def getManagerBySearchResult(result: String): SearchableDaoImpl[_]
 
-  override protected def fillListModel(model: Model, locale: Locale): Unit = {
-    super.fillListModel(model, locale)
-    model.addAttribute("availableResults", getAvailableResults())
+  override protected def fillListModel(model: Model): Unit = {
+    super.fillListModel(model)
+    model.addAttribute("availableResults", getAvailableResults)
   }
 
-  protected def fillSearchModel(model: Model, locale: Locale): Unit = {
+  protected def fillSearchModel(model: Model): Unit = {
     model.addAttribute(GenericListController.LIST_MODE, "search")
   }
 
   /**
    * main search function
    *
-   * @param request
-   * @param locale
-   * @param query
-   * @param model
-   * @param page
-   * @param NPpage
-   * @param pageSize
    * @return
    */
   @RequestMapping(value = Array(SearchController.SEARCH_ACTION),
     method = Array(RequestMethod.POST, RequestMethod.GET))
   @ModelAttribute(GenericController.NODE_LIST_MODEL)
-  def search(request: HttpServletRequest, locale: Locale,
+  def search(request: HttpServletRequest,
              @ModelAttribute("query") query: QV, model: Model,
              @RequestParam(required = false) page: java.lang.Integer,
              @RequestParam(required = false) NPpage: String,
@@ -109,16 +100,15 @@ abstract class SearchController[T <: Struct, QV <: Query] extends GenericListCon
              @RequestParam(required = false) sortAsc: Boolean): java.util.List[T] = {
 
 
-    fillListModel(model, locale)
-    fillSearchModel(model, locale)
+    fillListModel(model)
+    fillSearchModel(model)
 
     var out: java.util.List[T] = null
     try {
 
-      for (r <- getAvailableResults()) {
+      for (r <- getAvailableResults) {
 
         val rout = processPageListHolder(request,
-          locale,
           model,
           page,
           NPpage,
@@ -129,13 +119,12 @@ abstract class SearchController[T <: Struct, QV <: Query] extends GenericListCon
               try {
                 new PagedListHolder[T](search(query, r).asInstanceOf[java.util.List[T]])
               } catch {
-                case e: ParseException => {
+                case e: ParseException =>
                   logger.error(e.getLocalizedMessage, e)
                   new PagedListHolder[T]()
-                }
               }
             }
-          }, s"${r}_ITEMS", false
+          }, s"${r}_ITEMS", createDefaultItemModel = false
         )
 
         if (out == null && !rout.isEmpty) {
@@ -158,33 +147,34 @@ abstract class SearchController[T <: Struct, QV <: Query] extends GenericListCon
     } catch {
       case _: ParseException =>
         model.addAttribute("statusMessageKey", "action.query.incorrect")
-        manager().getList()
+        manager().getList
     }
   }
 
 
   def search(query: Query, result: String): java.util.List[_] = {
-    logger.debug("_search {}", query.getQuery())
+    logger.debug("_search {}", query.getQuery)
 
-    if (StringUtils.isBlank(query.getQuery()))
-      getManagerBySearchResult(result).getList()
+    if (StringUtils.isBlank(query.getQuery))
+      getManagerBySearchResult(result).getList
     else
-      getManagerBySearchResult(result).search(query.getQuery())
+      getManagerBySearchResult(result).search(query.getQuery)
   }
 
-  override def listImpl(request: HttpServletRequest, locale: Locale, model: Model,
+  override def listImpl(request: HttpServletRequest,
+                        model: Model,
                         page: java.lang.Integer,
                         NPpage: String,
                         pageSize: java.lang.Integer,
                         sortColumn: String, sortAsc: Boolean, result: String): java.util.List[T] = {
-    fillSearchModel(model, locale)
+    fillSearchModel(model)
     model.addAttribute("result", result.toLowerCase())
 
     if (logger.isDebugEnabled()) {
       logger.debug("_listImpl(search) pageSize {} , result {}", Array(pageSize, model.asMap().get("result")))
     }
 
-    super.listImpl(request, locale, model, page, NPpage, pageSize, sortColumn, sortAsc, s"${result}_ITEMS" )
+    super.listImpl(request, model, page, NPpage, pageSize, sortColumn, sortAsc, s"${result}_ITEMS" )
   }
 
 
@@ -193,9 +183,8 @@ abstract class SearchController[T <: Struct, QV <: Query] extends GenericListCon
   def searchByPath(@PathVariable("page") page: java.lang.Integer,
                    @PathVariable("result") result: String,
                    request: HttpServletRequest,
-                   model: Model,
-                   locale: Locale) = listImpl(request, locale, model, page, null,
-    null, null, false, result)
+                   model: Model): util.List[T] = listImpl(request, model, page, null,
+    null, null, sortAsc = false, result)
 
 
   @RequestMapping(value = Array("/search/{result:[a-z]+}/limit/{pageSize:[0-9]+}"),
@@ -205,9 +194,8 @@ abstract class SearchController[T <: Struct, QV <: Query] extends GenericListCon
                         @PathVariable("pageSize") pageSize: java.lang.Integer,
                         @PathVariable("result") result: String,
                         request: HttpServletRequest,
-                        model: Model,
-                        locale: Locale) = listImpl(request, locale, model, null,
-    null, pageSize, null, false,
+                        model: Model): util.List[T] = listImpl(request, model, null,
+    null, pageSize, null, sortAsc = false,
     result)
 
 
@@ -216,10 +204,9 @@ abstract class SearchController[T <: Struct, QV <: Query] extends GenericListCon
   def searchByPathNext(
                         request: HttpServletRequest,
                         @PathVariable("result") result: String,
-                        model: Model,
-                        locale: Locale) = listImpl(request, locale, model,
+                        model: Model): util.List[T] = listImpl(request,model,
     null, GenericListController.NEXT_PARAM,
-    null, null, false,
+    null, null, sortAsc = false,
     result)
 
 
@@ -228,9 +215,8 @@ abstract class SearchController[T <: Struct, QV <: Query] extends GenericListCon
   def searchByPathPrev(
                         request: HttpServletRequest,
                         @PathVariable("result") result: String,
-                        model: Model,
-                        locale: Locale) = listImpl(request, locale, model, null,
-    "prev", null, null, false, result)
+                        model: Model): util.List[T] = listImpl(request, model, null,
+    "prev", null, null, sortAsc = false, result)
 
 
 }

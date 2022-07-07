@@ -16,18 +16,16 @@
 
 package com.Ox08.paster.webapp.dao
 
-import com.Ox08.paster.webapp.base.Loggered
+import com.Ox08.paster.webapp.base.Logged
 import com.Ox08.paster.webapp.model.Struct
-import jakarta.persistence.criteria.CriteriaQuery
+import jakarta.persistence.criteria.{CriteriaBuilder, CriteriaQuery, Root}
 import jakarta.persistence.{EntityManager, PersistenceContext, Tuple}
-import org.springframework.transaction.annotation.Propagation
-import org.springframework.transaction.annotation.Transactional
-
-import java.util.ArrayList
+import org.springframework.transaction.annotation.{Propagation, Transactional}
+import java.util
 import scala.jdk.CollectionConverters._
 
 
-object BaseDaoImpl {
+object BaseDao {
   val MAX_RESULTS = 2000
 }
 
@@ -35,22 +33,20 @@ object BaseDaoImpl {
  * Basic DAO operations
  *
  * @param model model class (generics is not enough)
- * @param <     T> model type
- * @param <     PK> primary key type
  */
 @Transactional(readOnly = true, rollbackFor = Array(classOf[Exception]))
-abstract class BaseDaoImpl[T <: java.io.Serializable, PK <: java.io.Serializable](model: Class[T])
-  extends Loggered {
+abstract class BaseDao[T <: java.io.Serializable, PK <: java.io.Serializable](model: Class[T])
+  extends Logged {
 
   /**
    * a wrapper to help work with Criteria API
    */
   protected class CriteriaSet {
 
-    val cb = em.getCriteriaBuilder // criteria builder instance
-    val cr = cb.createQuery(model);
-    val r = cr.from(model) // query and root instances
-    val ct = cb.createTupleQuery() // tuple query
+    val cb: CriteriaBuilder = em.getCriteriaBuilder // criteria builder instance
+    val cr: CriteriaQuery[T] = cb.createQuery(model)
+    val r: Root[T] = cr.from(model) // query and root instances
+    val ct: CriteriaQuery[Tuple] = cb.createTupleQuery() // tuple query
   }
 
 
@@ -60,7 +56,7 @@ abstract class BaseDaoImpl[T <: java.io.Serializable, PK <: java.io.Serializable
   /**
    * @return model class
    */
-  protected def getModel() = model
+  protected def getModel: Class[T] = model
 
   /**
    * save object in database, nothing new here
@@ -76,7 +72,7 @@ abstract class BaseDaoImpl[T <: java.io.Serializable, PK <: java.io.Serializable
     rollbackFor = Array(classOf[Exception]), propagation = Propagation.REQUIRED)
   def save(obj: T): T = {
     logger.debug("saving obj {}", obj)
-    val out: T = em.merge(obj);
+    val out: T = em.merge(obj)
     em.flush()
     out
   }
@@ -88,7 +84,7 @@ abstract class BaseDaoImpl[T <: java.io.Serializable, PK <: java.io.Serializable
    * new (not saved) object
    */
   @Transactional(readOnly = false)
-  def persist(obj: T) = em.persist(obj)
+  def persist(obj: T): Unit = em.persist(obj)
 
   /**
    * check if object exists in database
@@ -97,7 +93,7 @@ abstract class BaseDaoImpl[T <: java.io.Serializable, PK <: java.io.Serializable
    * object's unique id (PK type)
    * @return true/false         
    */
-  def exists(id: PK) = em.find(model, id) != null
+  def exists(id: PK): Boolean = em.find(model, id) != null
 
 
   /**
@@ -112,7 +108,7 @@ abstract class BaseDaoImpl[T <: java.io.Serializable, PK <: java.io.Serializable
     val obj: T = get(id)
 
     if (obj != null) {
-      em.remove(obj);
+      em.remove(obj)
       em.flush()
     } else {
       logger.error("tried to remove non-exist object {}", id)
@@ -126,7 +122,7 @@ abstract class BaseDaoImpl[T <: java.io.Serializable, PK <: java.io.Serializable
    * object's unique id
    * @return object of type T
    */
-  def get(id: PK) = em.find(model, id)
+  def get(id: PK): T = em.find(model, id)
 
   /**
    * count all objects of type T
@@ -136,9 +132,9 @@ abstract class BaseDaoImpl[T <: java.io.Serializable, PK <: java.io.Serializable
   def countAll(): java.lang.Long = {
     val cr = new CriteriaSet
     val cq: CriteriaQuery[java.lang.Long] =
-      cr.cb.createQuery(classOf[java.lang.Long]);
+      cr.cb.createQuery(classOf[java.lang.Long])
     cq.select(cr.cb.count(cq.from(model)))
-    em.createQuery[java.lang.Long](cq).getSingleResult()
+    em.createQuery[java.lang.Long](cq).getSingleResult
   }
 
   /**
@@ -148,7 +144,7 @@ abstract class BaseDaoImpl[T <: java.io.Serializable, PK <: java.io.Serializable
                           order: Option[String] = None,
                           asc: Option[Boolean] = None): T = {
     val results = getListByKeyValue(key, value, order, asc)
-    if (results.isEmpty()) null.asInstanceOf[T] else results.get(0)
+    if (results.isEmpty) null.asInstanceOf[T] else results.get(0)
   }
 
   /**
@@ -168,43 +164,39 @@ abstract class BaseDaoImpl[T <: java.io.Serializable, PK <: java.io.Serializable
                         order: Option[String] = None,
                         asc: Option[Boolean] = None): java.util.List[T] = {
 
-    val cr = new CriteriaSet
+    val cr: CriteriaSet = new CriteriaSet
 
     em.createQuery[T](cr.cr.where(Array(cr.cb.equal(cr.r.get(key), value)): _*)
       .select(cr.r)
-      .orderBy(if (order.isDefined) {
-
-        if (asc.getOrElse(false)) {
-          (cr.cb.asc(cr.r.get(order.get)))
-        } else {
-          (cr.cb.desc(cr.r.get(order.get)))
-        }
-
+      .orderBy(if (order.isDefined) if (asc.getOrElse(false)) {
+        cr.cb.asc(cr.r.get(order.get))
       } else {
-        (cr.cb.desc(cr.r.get(key)))
+        cr.cb.desc(cr.r.get(order.get))
+      } else {
+        cr.cb.desc(cr.r.get(key))
       }
       ))
-      .setMaxResults(BaseDaoImpl.MAX_RESULTS).getResultList
+      .setMaxResults(BaseDao.MAX_RESULTS).getResultList
   }
 
   /**
    * get list of objects T
    *
    */
-  def getList(): java.util.List[T] = {
+  def getList: java.util.List[T] = {
 
     val cr = new CriteriaSet
 
     em.createQuery[T](cr.cr.orderBy(cr.cb.desc(cr.r.get("id"))))
-      .setMaxResults(BaseDaoImpl.MAX_RESULTS)
-      .getResultList()
+      .setMaxResults(BaseDao.MAX_RESULTS)
+      .getResultList
   }
 
-  def getAll(): java.util.List[T] = {
+  def getAll: java.util.List[T] = {
     val cr = new CriteriaSet
     em.createQuery[T](cr.cr)
-      .setMaxResults(BaseDaoImpl.MAX_RESULTS)
-      .getResultList()
+      .setMaxResults(BaseDao.MAX_RESULTS)
+      .getResultList
   }
 
   /**
@@ -212,8 +204,7 @@ abstract class BaseDaoImpl[T <: java.io.Serializable, PK <: java.io.Serializable
    */
   def getIdList(from: PK): java.util.List[PK] = {
 
-    val out = new ArrayList[PK]
-
+    val out = new util.ArrayList[PK]
     val cr = new CriteriaSet
 
     cr.ct.multiselect(cr.r.get("id"))
@@ -223,7 +214,7 @@ abstract class BaseDaoImpl[T <: java.io.Serializable, PK <: java.io.Serializable
     }
 
     val tupleResult: java.util.List[Tuple] = em.createQuery(cr.ct)
-      .setMaxResults(BaseDaoImpl.MAX_RESULTS).getResultList()
+      .setMaxResults(BaseDao.MAX_RESULTS).getResultList
 
     for (t <- tupleResult.asScala) {
       out.add(t.get(0).asInstanceOf[PK])
@@ -236,10 +227,10 @@ abstract class BaseDaoImpl[T <: java.io.Serializable, PK <: java.io.Serializable
 
 @Transactional(readOnly = true, rollbackFor = Array(classOf[Exception]))
 abstract class StructDaoImpl[T <: Struct](model:Class[T])
-  extends BaseDaoImpl[T,java.lang.Long](model)  {
+  extends BaseDao[T,Integer](model)  {
 
   @Transactional
-  def getFull(id:Long):T = {
+  def getFull(id:Integer):T = {
     val out:T = get(id)
     if (out==null) null.asInstanceOf[T] else {
       out.loadFull()

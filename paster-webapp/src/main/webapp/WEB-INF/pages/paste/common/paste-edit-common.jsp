@@ -114,18 +114,18 @@
 
                                 <fmt:message var="pasteTitle" key="paste.title" />
 
-                                <form:label path="name">
+                                <form:label path="title">
                                     <c:out value="${pasteTitle}" />
                                     <a id="cleanTitleBtn" onclick="cleanTitle();" href="javascript:void(0);"
                                         title="<fmt:message key='button.clear'/>">
                                         <span class="i">d</span>
                                     </a> </form:label>
                                 <fmt:message key="paste.edit.title.placeholder" var="titlePlaceHolder" />
-                                <form:input cssClass="form-control" path="name" name="title" id="pname" maxlength="255"
+                                <form:input cssClass="form-control" path="title" name="title" id="pname" maxlength="255"
                                     title="${pasteTitle}" placeholder="${titlePlaceHolder}" />
 
 
-                                <form:errors element="div" path="name" cssClass="alert alert-danger" />
+                                <form:errors element="div" path="title" cssClass="alert alert-danger" />
 
 
                             </div>
@@ -242,14 +242,14 @@
                             <div class="col-auto">
 
                                 <fmt:message var="titleStick" key='paste.stick' />
-                                <form:label cssClass="control-label" path="sticked" title="${titleStick}">
+                                <form:label cssClass="control-label" path="stick" title="${titleStick}">
                                     <span class="i">]</span>
                                     <c:out value="${titleStick}" />
                                 </form:label>
 
                                 <div class="checkbox">
 
-                                    <form:checkbox path="sticked" title="${titleStick}" />
+                                    <form:checkbox path="stick" title="${titleStick}" />
                                 </div>
 
                             </div>

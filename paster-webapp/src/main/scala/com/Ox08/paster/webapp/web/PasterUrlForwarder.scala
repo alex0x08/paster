@@ -12,9 +12,7 @@ class PasterUrlForwarder extends Filter{
       .replaceAll("/","")
 
 
-      if (url.length>0 && url.matches("[0-9]+")) {
-        System.out.println("do redirect url="+url)
-
+      if (url.nonEmpty && url.matches("[0-9]+")) {
           request.getRequestDispatcher("main/paste/"+url).forward(request,response)
         return
       }

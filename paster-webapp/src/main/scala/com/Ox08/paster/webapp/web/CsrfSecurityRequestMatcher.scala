@@ -19,17 +19,16 @@ package com.Ox08.paster.webapp.web
 import java.util.regex.Pattern
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher
 import org.springframework.security.web.util.matcher.RequestMatcher
-
 import jakarta.servlet.http.HttpServletRequest
 
 class CsrfSecurityRequestMatcher extends RequestMatcher {
 
-  val allowedMethods = Pattern.compile("^(GET|POST|HEAD|TRACE|OPTIONS)$")
+  val allowedMethods: Pattern = Pattern.compile("^(GET|POST|HEAD|TRACE|OPTIONS)$")
 
   private val unprotectedMatcher = new AntPathRequestMatcher("/act/admin/dbconsole/**")
 
   override def matches(request: HttpServletRequest): Boolean = {
-    if (allowedMethods.matcher(request.getMethod()).matches()) return false
+    if (allowedMethods.matcher(request.getMethod).matches()) return false
     !unprotectedMatcher.matches(request)
   }
 

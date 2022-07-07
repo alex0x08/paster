@@ -16,7 +16,7 @@
 
 package com.Ox08.paster.webapp.mvc.paste
 
-import com.Ox08.paster.webapp.dao.{ChannelDao, CommentDaoImpl, PasteDaoImpl, SearchableDaoImpl}
+import com.Ox08.paster.webapp.dao.{ChannelDao, CommentDao, PasteDao, SearchableDaoImpl}
 import com.Ox08.paster.webapp.model.{OwnerQuery, Paste}
 import com.Ox08.paster.webapp.mvc._
 import jakarta.servlet.http.HttpServletRequest
@@ -26,48 +26,40 @@ import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation._
 
+import java.util
 import java.util.Locale
 import java.util.concurrent.TimeUnit
-/*
-object PasteSearchResult extends KeyObj[SearchResult] {
-
-  val PASTE = new SearchResult("paste", "result.paste.name", "pasteItems")
-  val COMMENT = new SearchResult("comment", "result.comment.name", "commentItems")
-
-  add(PASTE);
-  add(COMMENT)
-}*/
 
 
 @Controller
 @RequestMapping(value = Array("/paste"))
 class PasteListController extends SearchController[Paste, OwnerQuery] {
   class DateSplitHelper(locale: Locale) {
-    var prevDate: java.util.Date = null
-    var curDate: java.util.Date = null
+    var prevDate: Option[java.util.Date] = None
+    var curDate: Option[java.util.Date] = None
     var total: Int = 0
-    var title: String = null
+    var title: Option[String] = None
     def setCurDate(date: java.util.Date): Unit = {
-      curDate = date
-      if (prevDate == null) {
-        prevDate = curDate
+      curDate = Some(date)
+      if (prevDate.isEmpty) {
+        prevDate = Some(date)
       }
       total.+=(1)
     }
 
-    def getSplitTitle() = title
-    def isSplit(): Boolean = {
+    def getSplitTitle: String = title.get
+    def isSplit: Boolean = {
 
-      if (curDate ==null || prevDate==null) {
+      if (curDate.isEmpty || prevDate.isEmpty) {
         return false
       }
-      val diff = curDate.getTime - prevDate.getTime
+      val diff = curDate.get.getTime - prevDate.get.getTime
       val d= TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS)
 
       if (scala.math.abs(d) > 14) {
-        title = PasteListController.this.getResource("paste.list.slider.title",
-          Array(curDate, prevDate, total), locale)
-        prevDate = curDate
+        title = Some(PasteListController.this.getResource("paste.list.slider.title",
+          Array(curDate.get, prevDate.get, total), locale))
+        prevDate = Some(curDate.get)
         total = 0
         true
       } else false
@@ -78,27 +70,20 @@ class PasteListController extends SearchController[Paste, OwnerQuery] {
   val channelDao: ChannelDao = null
 
   @Autowired
-  val pasteManager: PasteDaoImpl = null
+  val pasteManager: PasteDao = null
 
   @Autowired
-  val commentManager: CommentDaoImpl = null
+  val commentManager: CommentDao = null
 
   override def listPage = "redirect:/main/paste/list"
   override def editPage = "/paste/edit"
   override def viewPage = "/paste/view"
 
-  def manager(): PasteDaoImpl = pasteManager
+  def manager(): PasteDao = pasteManager
 
   def getAvailableResults(): Array[String] = Array("PASTE", "COMMENT")
 
-  /*def getSearchResultByCode(code: String): SearchResult = {
-    val out = PasteSearchResult.valueOf(code.toLowerCase)
-    if (out == null)
-      PasteSearchResult.PASTE
-    else out
-  }*/
-
-  def getManagerBySearchResult(result: String): SearchableDaoImpl[_] = return result match {
+  def getManagerBySearchResult(result: String): SearchableDaoImpl[_] = result match {
     case "PASTE" => manager()
     case "COMMENT" => commentManager
   }
@@ -107,11 +92,11 @@ class PasteListController extends SearchController[Paste, OwnerQuery] {
   @ModelAttribute("query")
   def newQuery(): OwnerQuery = new OwnerQuery
 
-  protected override def fillListModel(model: Model, locale: Locale): Unit = {
-    super.fillListModel(model, locale)
+  protected override def fillListModel(model: Model): Unit = {
+    super.fillListModel(model)
     model.addAttribute("title", "Pastas")
-    model.addAttribute("availableSourceTypes", channelDao.getAvailableChannels())
-    model.addAttribute("splitHelper", new DateSplitHelper(locale))
+    model.addAttribute("availableSourceTypes", channelDao.getAvailableElements)
+    model.addAttribute("splitHelper", new DateSplitHelper(Locale.getDefault))
     model.addAttribute("sortDesc", false)
   }
 
@@ -123,8 +108,7 @@ class PasteListController extends SearchController[Paste, OwnerQuery] {
   override def searchByPath(@PathVariable("page") page: java.lang.Integer,
                             @PathVariable("result") result: String,
                             request: HttpServletRequest,
-                            model: Model,
-                            locale: Locale) = listImpl(request, locale,
+                            model: Model): util.List[Paste] = listImpl(request,
     model, page, null, null, null, false, null, result)
 
   @RequestMapping(value = Array(
@@ -133,8 +117,7 @@ class PasteListController extends SearchController[Paste, OwnerQuery] {
   def searchByPathParam(@RequestParam(required = false) page: java.lang.Integer,
                         @PathVariable("result") result: String,
                         request: HttpServletRequest,
-                        model: Model,
-                        locale: Locale) = listImpl(request, locale,
+                        model: Model): util.List[Paste] = listImpl(request,
     model, page, null, null, null, false, null, result)
 
   @RequestMapping(value = Array("/list/{source:[a-zA-Z0-9]+}/{page:[0-9]+}",
@@ -144,8 +127,7 @@ class PasteListController extends SearchController[Paste, OwnerQuery] {
   def listByPathSource(@PathVariable("page") page: java.lang.Integer,
                        @PathVariable("source") source: String,
                        request: HttpServletRequest,
-                       model: Model,
-                       locale: Locale) = listImpl(request, locale, model, page, null,
+                       model: Model): util.List[Paste] = listImpl(request, model, page, null,
     null, "lastModified", false, source, null)
 
 
@@ -155,8 +137,7 @@ class PasteListController extends SearchController[Paste, OwnerQuery] {
   def listByPathSizeSource(@PathVariable("pageSize") pageSize: java.lang.Integer,
                            @PathVariable("source") source: String,
                            request: HttpServletRequest,
-                           model: Model,
-                           locale: Locale) = listImpl(request, locale, model, null,
+                           model: Model): util.List[Paste] = listImpl(request,  model, null,
     null, pageSize, "lastModified", false, source, null)
 
 
@@ -165,8 +146,7 @@ class PasteListController extends SearchController[Paste, OwnerQuery] {
   def listByPathNextSource(
                             request: HttpServletRequest,
                             @PathVariable("source") source: String,
-                            model: Model,
-                            locale: Locale) = listImpl(request, locale, model, null,
+                            model: Model): util.List[Paste] = listImpl(request, model, null,
     GenericListController.NEXT_PARAM, null, "lastModified", false, source, null)
 
 
@@ -175,8 +155,7 @@ class PasteListController extends SearchController[Paste, OwnerQuery] {
   def listByPathPrevSource(
                             request: HttpServletRequest,
                             @PathVariable("source") source: String,
-                            model: Model,
-                            locale: Locale) = listImpl(request, locale, model, null,
+                            model: Model): util.List[Paste] = listImpl(request, model, null,
     "prev", null, "lastModified", false, source, null)
 
   @RequestMapping(value = Array("/list/{source:[a-zA-Z0-9]+}",
@@ -185,13 +164,12 @@ class PasteListController extends SearchController[Paste, OwnerQuery] {
   @ModelAttribute(GenericController.NODE_LIST_MODEL)
   def listSource(request: HttpServletRequest,
                  @PathVariable("source") source: String,
-                 locale: Locale,
                  model: Model,
                  @RequestParam(required = false) page: java.lang.Integer,
                  @RequestParam(required = false) NPpage: String,
                  @RequestParam(required = false) pageSize: java.lang.Integer): java.util.List[Paste] = {
 
-    listImpl(request, locale, model, page, NPpage, pageSize, null, false, source, null)
+    listImpl(request, model, page, NPpage, pageSize, null, false, source, null)
   }
 
 
@@ -199,27 +177,23 @@ class PasteListController extends SearchController[Paste, OwnerQuery] {
   @ModelAttribute(GenericController.NODE_LIST_MODEL)
   def listSourceOlder(request: HttpServletRequest,
                       @PathVariable("source") source: String,
-                      locale: Locale,
                       model: Model,
                       @RequestParam(required = false) page: java.lang.Integer,
                       @RequestParam(required = false) NPpage: String,
-                      @RequestParam(required = false) pageSize: java.lang.Integer): java.util.List[Paste] = {
-
-    return listImpl(request, locale, model, page, NPpage, pageSize, "lastModified", true,
-      source, null)
-  }
+                      @RequestParam(required = false) pageSize: java.lang.Integer): java.util.List[Paste] = listImpl(request, model, page, NPpage, pageSize, "lastModified", true,
+                        source, null)
 
   @RequestMapping(value = Array("/list",
     "/raw/list"),
     method = Array(RequestMethod.GET))
   @ModelAttribute(GenericController.NODE_LIST_MODEL)
-  override def list(request: HttpServletRequest, locale: Locale, model: Model,
+  override def list(request: HttpServletRequest, model: Model,
                     @RequestParam(required = false) page: java.lang.Integer,
                     @RequestParam(required = false) NPpage: String,
                     @RequestParam(required = false) pageSize: java.lang.Integer,
                     @RequestParam(required = false) sortColumn: String,
                     @RequestParam(required = false) sortAsc: Boolean = false): java.util.List[Paste] = {
-    listImpl(request, locale, model, page, NPpage, pageSize,
+    listImpl(request, model, page, NPpage, pageSize,
       sortColumn, sortAsc, null, null)
   }
 
@@ -231,7 +205,7 @@ class PasteListController extends SearchController[Paste, OwnerQuery] {
     pasteManager.countAllSince(channelCode, dateFrom)
   }
 
-  def listImpl(request: HttpServletRequest, locale: Locale, model: Model,
+  def listImpl(request: HttpServletRequest, model: Model,
                page: java.lang.Integer,
                NPpage: String,
                pageSize: java.lang.Integer,
@@ -239,14 +213,14 @@ class PasteListController extends SearchController[Paste, OwnerQuery] {
                sortAsc: java.lang.Boolean = false,
                channelCode: String, integrationCode: String): java.util.List[Paste] = {
     logger.debug("_paste listImpl, pageSize {}", pageSize)
-    fillListModel(model, locale)
+    fillListModel(model)
     val ps = if (channelCode != null && channelDao.exist(channelCode)) {
       model.addAttribute("sourceType", channelCode.toLowerCase)
       model.addAttribute("sortDesc", !sortAsc)
       channelCode
     } else null
 
-    processPageListHolder(request, locale, model, page, NPpage, pageSize, sortColumn, sortAsc,
+    processPageListHolder(request, model, page, NPpage, pageSize, sortColumn, sortAsc,
       if (ps == null) pasterListCallback else {
         new PasteListCallback(ps, sortAsc, integrationCode)
       }, GenericController.NODE_LIST_MODEL_PAGE)
@@ -254,15 +228,15 @@ class PasteListController extends SearchController[Paste, OwnerQuery] {
 
   @RequestMapping(value = Array("/own/list"))
   @ModelAttribute("items")
-  def listOwn(model: Model, locale: Locale): java.util.List[Paste] = {
-    manager().getByOwner(getCurrentUser())
+  def listOwn(): java.util.List[Paste] = {
+    manager().getByOwner(getCurrentUser)
   }
 
   @RequestMapping(value = Array("/own/list/body"), method = Array(RequestMethod.GET))
   @ModelAttribute("items")
   @ResponseBody
   def listOwnBody(): java.util.List[Paste] = {
-    manager().getByOwner(getCurrentUser())
+    manager().getByOwner(getCurrentUser)
   }
 
   protected val pasterListCallback: PasteListCallback = new PasteListCallback(null, true, null)
@@ -275,12 +249,12 @@ class PasteListController extends SearchController[Paste, OwnerQuery] {
           manager().getListIntegrated(integrationCode)
         } else {
           if (channel == null) {
-            manager().getByChannel(channelDao.getDefault(), sortAsc)
+            manager().getByChannel(channelDao.getDefault, sortAsc)
           } else
             manager().getByChannel(channel, sortAsc)
         })
 
-      val sort = ph.getSort().asInstanceOf[MutableSortDefinition]
+      val sort = ph.getSort.asInstanceOf[MutableSortDefinition]
       /**
        * default sort
        */

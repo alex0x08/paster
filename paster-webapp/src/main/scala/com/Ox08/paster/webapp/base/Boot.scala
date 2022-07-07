@@ -15,17 +15,13 @@ object Boot {
 
 }
 
-class Boot private()  extends Loggered {
-
-  private val UNDEFINED = "UNDEFINED"
-
-  private val MAVEN_TS_FORMAT: SimpleDateFormat = new SimpleDateFormat("yyy-MM-dd_HHmm")
+class Boot private()  extends Logged {
 
 
   private val wasBoot = false // a mark that system has been booted already
   private var initialConfig = false
 
-  def getSystemInfo = SystemInfo.SYSTEM_INFO
+  def getSystemInfo: SystemInfo = SystemInfo.SYSTEM_INFO
 
   /**
    * Start booot sequence
@@ -55,7 +51,7 @@ class Boot private()  extends Loggered {
     if (!System.getProperties.containsKey(appVar)) { // get current user's home folder
       val user_home = System.getProperty("user.home")
       // generate full path like: ~/.apps/codename
-      app_home = Paths.get(user_home, ".apps", appCode).toFile()
+      app_home = Paths.get(user_home, ".apps", appCode).toFile
       if (!app_home.exists || !app_home.isDirectory) { // try to create all folders in path, if fail - throw exception and quit
         if (!app_home.mkdirs) throw SystemError.withCode(0x6005, app_home.getAbsolutePath)
       }
@@ -96,16 +92,15 @@ class Boot private()  extends Loggered {
         throw SystemError.withError(0x6001, ex)
     }
     // parse build info
-    val mf_version = new AppVersion().fillFromProperties(build_info)
-    mf_version.fillGitState(git_info)
+    val mf_version = new AppVersion(build_info,new GitRepositoryState(git_info))
     // set env variables ( used in EL from Spring )
     system.setRuntimeVersion(mf_version)
-    System.setProperty("app.version", mf_version.getImplBuildNum)
-    System.setProperty("app.build.time", mf_version.getImplBuildTime)
-    System.setProperty("app.build.number", mf_version.getImplBuildNum)
-    System.setProperty("app.build.version", mf_version.getImplVersionFull)
-    logger.info(SystemMessage.of("proxyman.system.message.appRelease", mf_version.getImplVersionFull))
-    logger.info(SystemMessage.of("proxyman.system.message.appGitBranch", mf_version.getGitState.getBranch))
+    System.setProperty("app.version", mf_version.implBuildNum)
+    System.setProperty("app.build.time", mf_version.implBuildTime)
+    System.setProperty("app.build.number", mf_version.implBuildNum)
+    System.setProperty("app.build.version", mf_version.implVersionFull)
+    logger.info(SystemMessage.of("proxyman.system.message.appRelease", mf_version.implVersionFull))
+    logger.info(SystemMessage.of("proxyman.system.message.appGitBranch", mf_version.getGitState.branch))
     // load customized config ( 'config.properties' file)
     createLoadAppConfig(system, app_home)
     if (system.getExternalUrlPrefix != null) {
@@ -159,8 +154,8 @@ class Boot private()  extends Loggered {
   private def doResourceCheck(js_store: File, name: String) : File= {
     Assert.notNull(name, SystemError.messageFor(0x6006))
     val rScript: File = new File(js_store, name)
-    if (!rScript.exists() || !rScript.isFile() || (rScript.length() == 0))
-      try FileUtils.copyURLToFile(getClass().getResource("/default/" + name), rScript)
+    if (!rScript.exists() || !rScript.isFile || (rScript.length() == 0))
+      try FileUtils.copyURLToFile(getClass.getResource("/default/" + name), rScript)
     catch {
       case ex: IOException =>
         throw SystemError.withError(0x6001, ex)
@@ -176,7 +171,7 @@ class Boot private()  extends Loggered {
    * @param name     имя создаваемой папки
    * @return
    */
-  private def createAppFolder(app_home: File, name: String) = {
+  private def createAppFolder(app_home: File, name: String): File = {
     val folder = if (name != null) new File(app_home, name)
     else app_home
     if ((!folder.exists || !folder.isDirectory) && !folder.mkdirs)
@@ -229,41 +224,39 @@ class Boot private()  extends Loggered {
    */
   final class SystemInfo private() {
     // версия сборки
-    private var runtimeVersion: AppVersion = null
+    private var runtimeVersion: AppVersion = _
     // дата и время запуска системы
     final private val dateStart = Calendar.getInstance.getTime
-    // дата установки
-    private var dateInstalled = null
-    private var appHome: File = null
-    private var tempDir: File = null
-    private var configFile: File = null
+    private var appHome: File = _
+    private var tempDir: File = _
+    private var configFile: File = _
     // для предотвращения дальнейших изменений
     private var locked = false
     private var debug = true
     private var config = new Properties() // загруженная конфигурация
-    private var externalUrlPrefix: String = null // полный внешний префикс для ссылок
+    private var externalUrlPrefix: String = _ // полный внешний префикс для ссылок
 
     // ex. : http://some.site.com/app
     // используется когда система стоит за
     // прокси-сервером и не знает о
     // своем внешнем имени
-    private var appCode: String = null // кодовое обозначение системы
+    private var appCode: String = _ // кодовое обозначение системы
 
-    def getAppCode = appCode
+    def getAppCode: String = appCode
 
     def setAppCode(appCode: String): Unit = {
       checkLock()
       this.appCode = appCode
     }
 
-    def getExternalUrlPrefix = externalUrlPrefix
+    def getExternalUrlPrefix: String = externalUrlPrefix
 
     def setExternalUrlPrefix(prefix: String): Unit = {
       checkLock()
       this.externalUrlPrefix = prefix
     }
 
-    def isDebug = debug
+    def isDebug: Boolean = debug
 
     def setDebug(debug: Boolean): Unit = {
       checkLock()
@@ -271,41 +264,39 @@ class Boot private()  extends Loggered {
     }
 
     def getSetting(setting: String, defaultValue: String): String = {
-      if (!(config.containsKey(setting))) {
-        return defaultValue
-      }
+      if (!config.containsKey(setting)) return defaultValue
       config.getProperty(setting)
     }
 
     def getSettingAsBoolean(setting: String, defaultValue: Boolean): Boolean = {
-      if (!(config.containsKey(setting))) {
+      if (!config.containsKey(setting)) {
         return defaultValue
       }
       java.lang.Boolean.valueOf(config.getProperty(setting))
     }
 
     def getSettingAsInt(setting: String, defaultValue: Int): Int = {
-      if (!(config.containsKey(setting))) {
+      if (!config.containsKey(setting)) {
         return defaultValue
       }
       Integer.valueOf(config.getProperty(setting))
     }
 
-    def getConfig = config
+    def getConfig: Properties = config
 
-    def setConfig(config: Nothing): Unit = {
+    def setConfig(config: Properties): Unit = {
       checkLock()
       this.config = config
     }
 
-    def getConfigFile = configFile
+    def getConfigFile: File = configFile
 
     def setConfigFile(configFile: File): Unit = {
       checkLock()
       this.configFile = configFile
     }
 
-    def getAppHome = appHome
+    def getAppHome: File = appHome
 
     def setAppHome(appHome: File): SystemInfo = {
       checkLock()
@@ -313,7 +304,7 @@ class Boot private()  extends Loggered {
       this
     }
 
-    def getTempDir = tempDir
+    def getTempDir: File = tempDir
 
     def setTempDir(tempDir: File): SystemInfo = {
       checkLock()
@@ -321,7 +312,7 @@ class Boot private()  extends Loggered {
       this
     }
 
-    def getRuntimeVersion = runtimeVersion
+    def getRuntimeVersion: AppVersion = runtimeVersion
 
     def setRuntimeVersion(runtimeVersion: AppVersion): SystemInfo = {
       checkLock()
@@ -329,9 +320,9 @@ class Boot private()  extends Loggered {
       this
     }
 
-    def getDateStart = dateStart
+    def getDateStart: Date = dateStart
 
-    def isLocked = locked
+    def isLocked: Boolean = locked
 
     def lock(): Unit = {
       this.locked = true
@@ -352,101 +343,52 @@ class Boot private()  extends Loggered {
    * @author Alex Chernyshev <alex3.145@gmail.com>
    */
   @SerialVersionUID(1L)
-  class AppVersion extends Serializable {
-    private var implVer: String = null
-    private var implBuildNum: String = null
-    private var implBuildTime: String = null
-    private var implVersionFull: String = null // full version string
-    private var buildDate: Date = null
-    private var gitState: GitRepositoryState = null
+  class AppVersion(p: Properties,git:GitRepositoryState) extends Serializable {
 
-    def isGitState: Boolean = gitState != null
+    private val UNDEFINED = "UNDEFINED"
+    private val MAVEN_TS_FORMAT: SimpleDateFormat = new SimpleDateFormat("yyy-MM-dd_HHmm")
 
-    def getGitState: GitRepositoryState = gitState
+    val implVer: String = p.getProperty("build.version", UNDEFINED)
+    val implBuildNum: String = p.getProperty("build.number", UNDEFINED)
+    val implBuildTime: String = p.getProperty("build.time", UNDEFINED)
 
-    def fillGitState(p: Properties): AppVersion = {
-      gitState = new GitRepositoryState(p)
-      this
+    val buildDate: Date = try {
+      MAVEN_TS_FORMAT.parse(implBuildTime)
+    } catch {
+      case _: ParseException => null
     }
+    val implVersionFull: String = implVer + "." + implBuildNum
 
-    def fillFromProperties(p: Properties): AppVersion = {
-      implVer = p.getProperty("build.version", UNDEFINED)
-      implBuildTime = p.getProperty("build.time", UNDEFINED)
-      implBuildNum = p.getProperty("build.number", UNDEFINED)
-      try buildDate = MAVEN_TS_FORMAT.parse(implBuildTime)
-      catch {
-        case ex: ParseException =>
-        // implBuildNum = UNDEFINED;
-        //throw new RuntimeException(ex);
-      }
-      implVersionFull = implVer + "." + implBuildNum
-      this
-    }
+    def getFull: String = implVersionFull // for EL
 
-    def getBuildDate = buildDate
-
-    def getImplVersion = implVer
-
-    def getImplBuildNum = implBuildNum
-
-    def getImplBuildTime = implBuildTime
-
-    def getImplVersionFull = implVersionFull
-
-    def getFull = implVersionFull
+    def getGitState: GitRepositoryState = git
   }
 
   /**
    * Класс содержит поля детальной информации о git-репозитории
    */
   class GitRepositoryState(val properties: Properties) {
-    val tags = properties.get("git.tags")
-    val branch = properties.get("git.branch")
-    val remoteOriginUrl = properties.get("git.remote.origin.url")
-    val commitId = properties.get("git.commit.id")
 
-    val commitIdAbbrev = properties.get("git.commit.id.abbrev")
-    val describe = properties.get("git.commit.id.describe")
-    val describeShort = properties.get("git.commit.id.describe-short")
-    val commitUserName = properties.get("git.commit.user.name")
-    val commitUserEmail = properties.get("git.commit.user.email")
-    val commitMessageFull = properties.get("git.commit.message.full")
-    val commitMessageShort = properties.get("git.commit.message.short")
-    val commitTime = properties.get("git.commit.time")
-    val buildUserName = properties.get("git.build.user.name")
-    val buildUserEmail = properties.get("git.build.user.email")
-    val buildTime = properties.get("git.build.time")
+    val tags: String = getProp("git.tags")
 
+    val branch: String = getProp("git.branch")
+    val remoteOriginUrl: String = getProp("git.remote.origin.url")
+    val commitId: String = getProp("git.commit.id")
 
-    def getTags = tags
+    val commitIdAbbrev: String = getProp("git.commit.id.abbrev")
+    val describe: String = getProp("git.commit.id.describe")
+    val describeShort: String = getProp("git.commit.id.describe-short")
+    val commitUserName: String = getProp("git.commit.user.name")
+    val commitUserEmail: String = getProp("git.commit.user.email")
+    val commitMessageFull: String = getProp("git.commit.message.full")
+    val commitMessageShort: String = getProp("git.commit.message.short")
+    val commitTime: String = getProp("git.commit.time")
+    val buildUserName: String = getProp("git.build.user.name")
+    val buildUserEmail: String = getProp("git.build.user.email")
+    val buildTime: String = getProp("git.build.time")
 
-    def getBranch = branch
+    private def getProp(key:String):String = properties.getProperty(key)
 
-    def getRemoteOriginUrl = remoteOriginUrl
-
-    def getCommitId = commitId
-
-    def getCommitIdAbbrev = commitIdAbbrev
-
-    def getDescribe = describe
-
-    def getDescribeShort = describeShort
-
-    def getCommitUserName = commitUserName
-
-    def getCommitUserEmail = commitUserEmail
-
-    def getCommitMessageFull = commitMessageFull
-
-    def getCommitMessageShort = commitMessageShort
-
-    def getCommitTime = commitTime
-
-    def getBuildUserName = buildUserName
-
-    def getBuildUserEmail = buildUserEmail
-
-    def getBuildTime = buildTime
   }
 
 

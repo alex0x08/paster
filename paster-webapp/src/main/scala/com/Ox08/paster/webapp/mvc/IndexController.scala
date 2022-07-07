@@ -28,14 +28,13 @@ class IndexController extends AbstractController{
   
   
   @RequestMapping(value = Array("/"))
-  def index(model:Model) = {
+  def index(model:Model): String = {
     model.asMap().clear()
     "redirect:/main/paste/list"
   }
 
   @RequestMapping(Array("/error/{errorCode:[0-9_]+}"))
-  def error(model:Model,
-            response:HttpServletResponse,
+  def error(response:HttpServletResponse,
             @PathVariable("errorCode") errorCode:Int):String = errorCode match {
                 case 403 |404 |500  =>
                   response.setStatus(errorCode)
@@ -45,7 +44,7 @@ class IndexController extends AbstractController{
   }
 
   @RequestMapping(Array("/login"))
-  def login(model:Model):String = if (isCurrentUserLoggedIn()) index(model) else {
+  def login(model:Model):String = if (isCurrentUserLoggedIn) index(model) else {
   model.addAttribute("query", new GenericQuery())
   "/login"
   }

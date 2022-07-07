@@ -4,9 +4,12 @@ import com.Ox08.paster.webapp.model.Paste
 import com.Ox08.paster.webapp.mvc.GenericController
 import com.rometools.rome.feed.rss.{Channel, Content, Description, Item}
 import org.springframework.web.servlet.view.feed.AbstractRssFeedView
+
 import scala.jdk.CollectionConverters._
-import java.util.Collections
+import java.util.{Collections, Date}
 import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
+
+import java.time.{ZoneId, ZoneOffset}
 
 /**
  * Created with IntelliJ IDEA.
@@ -16,16 +19,16 @@ import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
  */
 class PasteRssView extends AbstractRssFeedView{
 
-  private var externalUrl:String = null
+  private var externalUrl:Option[String] = None
 
-  def getExternalUrl():String = externalUrl
-  def setExternalUrl(url:String): Unit= { externalUrl = url}
+  def getExternalUrl:String = externalUrl.get
+  def setExternalUrl(url:String): Unit= { externalUrl = Some(url)}
 
   override protected def buildFeedMetadata(model:java.util.Map[String, Object], feed:Channel,
     request:HttpServletRequest): Unit= {
     feed.setTitle("Paster RSS")
     feed.setDescription("Code Review Tool")
-    feed.setLink(externalUrl)
+    feed.setLink(externalUrl.get)
     super.buildFeedMetadata(model, feed, request)
   }
 
@@ -40,16 +43,16 @@ class PasteRssView extends AbstractRssFeedView{
     val entries:java.util.List[Item] = new java.util.ArrayList[Item](contentList.size())
     for (e:Paste<- contentList.asScala) {
       val entry = new Item()
-      entry.setTitle(e.getName())
-      entry.setLink(externalUrl+"/main/paste/"+e.getId())
-      entry.setPubDate(e.getLastModified())
-          entry.setAuthor( if (e.getOwner()!=null) { e.getOwner()} else { "Anonymous"})
+      entry.setTitle(e.title)
+      entry.setLink(s"$externalUrl/main/paste/${e.id}")
+      entry.setPubDate(Date.from(e.lastModified.toInstant(ZoneOffset.UTC)))
+          entry.setAuthor( if (e.author!=null) { e.author} else { "Anonymous"})
       val d = new Description()
-      d.setValue(e.getTitle())
+      d.setValue(e.title)
       entry.setDescription(d)
 
       val summary = new Content()
-      summary.setValue(e.getTitle())
+      summary.setValue(e.title)
       entry.setContent(summary)
       entries.add(entry)
     }

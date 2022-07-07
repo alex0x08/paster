@@ -32,7 +32,7 @@
         --%>
 
         <span class="i ${model.priority}" style="font-size:2em;" title="${priorTitle}">/</span>
-        <c:if test="${model.sticked}">
+        <c:if test="${model.stick}">
             <span class="i">]</span>
         </c:if>
 
@@ -45,7 +45,7 @@
 
         --%>
 
-        <c:out value="${model.name}" escapeXml="true" />
+        <c:out value="${model.title}" escapeXml="true" />
 
 
     </div>

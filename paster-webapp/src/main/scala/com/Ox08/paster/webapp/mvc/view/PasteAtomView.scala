@@ -3,12 +3,12 @@ package com.Ox08.paster.webapp.mvc.view
 import com.Ox08.paster.webapp.model.Paste
 import com.Ox08.paster.webapp.mvc.GenericController
 import org.springframework.web.servlet.view.feed.AbstractAtomFeedView
-
 import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
 import com.rometools.rome.feed.atom.{Content, Entry, Feed}
 
+import java.time.ZoneOffset
 import scala.jdk.CollectionConverters._
-import java.util.Collections
+import java.util.{Collections, Date}
 
 /**
  * Created with IntelliJ IDEA.
@@ -27,8 +27,8 @@ class PasteAtomView extends AbstractAtomFeedView{
     val contentList =model.get(GenericController.NODE_LIST_MODEL).asInstanceOf[java.util.List[Paste]]
 
     for (e:Paste<- contentList.asScala) {
-      val date = e.getLastModified()
-      if (feed.getUpdated() == null || date.compareTo(feed.getUpdated()) > 0) 
+      val date = Date.from(e.lastModified.toInstant(ZoneOffset.UTC))
+      if (feed.getUpdated == null || date.compareTo(feed.getUpdated) > 0)
         feed.setUpdated(date)
     }
   }
@@ -49,15 +49,16 @@ class PasteAtomView extends AbstractAtomFeedView{
     for (e:Paste<- contentList.asScala) {
 
       val entry = new Entry()
-      val date = String.format("%1$tY-%1$tm-%1$td", e.getLastModified())
+      val date = String.format("%1$tY-%1$tm-%1$td", e.lastModified)
       // see http://diveintomark.org/archives/2004/05/28/howto-atom-id#other
-      entry.setId(String.format("tag:springsource.com,%s:%d", date, e.getId()))
+      entry.setId(String.format("tag:springsource.com,%s:%d", date, e.id))
       entry.setTitle(String.format("On %s, %s wrote", date,
-        if (e.getOwner()!=null) { e.getOwner()} else { "Anonymous"}))
-      entry.setUpdated(e.getLastModified())
+        if (e.author!=null) { e.author} else { "Anonymous"}))
+
+      entry.setUpdated(Date.from(e.lastModified.toInstant(ZoneOffset.UTC)))
 
       val summary = new Content()
-      summary.setValue(e.getText())
+      summary.setValue(e.text)
       entry.setSummary(summary)
 
       entries.add(entry)

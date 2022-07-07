@@ -24,7 +24,7 @@ class ConfigurableMarshallingView(marshaller:Marshaller) extends MarshallingView
     private var modelKeys:Array[String] = _
 
    
-    def getModelKeys():Array[String] = modelKeys
+    def getModelKeys:Array[String] = modelKeys
     
     def setModelKeys(m:Array[String]): Unit= {  this.modelKeys = m    }
     
@@ -43,7 +43,7 @@ class ConfigurableMarshallingView(marshaller:Marshaller) extends MarshallingView
         for (modelKey <- modelKeys) {
             if (model.containsKey(modelKey)) {
             val o = model.get(modelKey)
-            if (o != null && marshaller.supports(o.getClass())) 
+            if (o != null && marshaller.supports(o.getClass))
                return o            
           }
         }

@@ -26,23 +26,22 @@ import org.slf4j.{Logger, LoggerFactory}
 
 import java.lang.reflect.Field
 
-object Loggered {
+object Logged {
 
-  val style = new StandardToStringStyle() {
+  val style: StandardToStringStyle = new StandardToStringStyle() {
     setFieldSeparator(", ")
     setUseClassName(false)
     setUseIdentityHashCode(false)
-
-    setArraySeparator(":");
+    setArraySeparator(":")
     setArrayEnd(" ")
     setArrayStart(" ")
     setContentStart(" ")
     setContentEnd(" ")
     setFieldNameValueSeparator(": ")
 
-    override def append(buffer: java.lang.StringBuffer, 
-                        fieldName: String, 
-                        value: Any, 
+    override def append(buffer: java.lang.StringBuffer,
+                        fieldName: String,
+                        value: Any,
                         fullDetail: java.lang.Boolean): Unit = {
       if (value != null) {
         super.append(buffer, fieldName, value, fullDetail)
@@ -51,44 +50,42 @@ object Loggered {
   }
 
   def toStringSkip(x: Any, fields: Array[String]): String = {
-    return new ReflectionToStringBuilder(x, style) {
+    new ReflectionToStringBuilder(x, style) {
       override def accept(f: Field): Boolean = {
 
         if (!super.accept(f)) {
-          return false;
+          return false
         }
 
         if (fields == null) {
-          return true;
+          return true
         }
 
         for (field <- fields) {
-          if (f.getName().equals(field)) {
-            return false;
-          }
+          if (f.getName.equals(field)) return false
         }
-        return true;
+        true
       }
-    }.toString()
+    }.toString
   }
 
-  def getNewProtocolBuilder(clazz: AnyRef): ToStringBuilder = 
-            new ToStringBuilder(clazz.getClass.getName, Loggered.style)
+  def getNewProtocolBuilder(clazz: AnyRef): ToStringBuilder =
+            new ToStringBuilder(clazz.getClass.getName, Logged.style)
 
   def getLogger(clazz: AnyRef): Logger = LoggerFactory.getLogger(clazz.getClass)
 }
 
-trait Loggered {
+trait Logged {
 
   @transient
  // @WebMethod(exclude = true)
   @JsonIgnore
-  def logger = LoggerFactory.getLogger(getClass.getName)
+  def logger: Logger = LoggerFactory.getLogger(getClass.getName)
 
   @transient
  // @WebMethod(exclude = true)
   @JsonIgnore
-  def getNewProtocolBuilder(): ToStringBuilder = new ToStringBuilder(this, Loggered.style)
+  def getNewProtocolBuilder: ToStringBuilder = new ToStringBuilder(this, Logged.style)
 
 }
 
@@ -107,7 +104,7 @@ class LoggerStartupListener extends ContextAwareBase with
     // проверка на значение
     val debug = java.lang.Boolean.valueOf(isDebug)
     val c = getContext
-    c.putProperty("appDebug", debug.toString())
+    c.putProperty("appDebug", debug.toString)
     started = true
   }
 

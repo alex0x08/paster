@@ -91,7 +91,7 @@
 
             <c:choose>
                 <c:when test="${paste['class'].name eq 'com.Ox08.paster.webapp.model.Paste'}">
-                    <c:if test="${not paste.sticked}"> 
+                    <c:if test="${not paste.stick}">
                         <c:set property="curDate" value="${paste.lastModified}" target="${splitHelper}"/>
                     </c:if>
 
@@ -119,7 +119,7 @@
                                 <div class="pasteTitle col-lg-10 col-md-12 col-xs-12">
                                     <div class="pasteTitle" style="padding: 1em;">
 
-                                        <c:if test="${paste.sticked}">
+                                        <c:if test="${paste.stick}">
                                             <span class="i" title="Paste sticked">]</span>
                                         </c:if>
             

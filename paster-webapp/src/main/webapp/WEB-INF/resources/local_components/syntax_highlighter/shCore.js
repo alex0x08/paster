@@ -13,6 +13,10 @@
  *
  * @license
  * Dual licensed under the MIT and GPL licenses.
+ * 
+ * Alex:
+ *      Modified for inline comments support.
+ * 
  */
 //
 // Begin anonymous function. This is used to contain local scope variables without polutting global scope.
@@ -264,14 +268,14 @@ var SyntaxHighlighter = function () {
          * 							are highlighted.
          */
         highlight: function (modelId, globalParams, element, scrollToLine, showEditForm) {
-            Logger.debug('highlight , show edit form: ',showEditForm)
+            Logger.debug('highlight , show edit form: ', showEditForm)
             if (showEditForm) {
                 sh.vars.editorOpts = JSON.parse(JSON.stringify(globalEpicEditorOpts));
 
                 sh.vars.editorOpts.container = 'epiceditor-' + modelId;
-              //  sh.vars.editorOpts.textarea = 'commentText-' + modelId;
-                    sh.vars.editor[modelId] = new EpicEditor(sh.vars.editorOpts);
-          
+                //  sh.vars.editorOpts.textarea = 'commentText-' + modelId;
+                sh.vars.editor[modelId] = new EpicEditor(sh.vars.editorOpts);
+
             }
             sh.vars.modelId = modelId;
             sh.vars.showComments[modelId] = true;
@@ -365,12 +369,12 @@ var SyntaxHighlighter = function () {
 
             }
         },
-       
+
         toggleComments: function (modelId, ctrl) {
 
             sh.vars.showComments[modelId] = !sh.vars.showComments[modelId];
 
-            ctrl.getElement('span').textContent =  sh.vars.showComments[modelId] ? '-' : '+';
+            ctrl.getElement('span').textContent = sh.vars.showComments[modelId] ? '-' : '+';
 
             const tbEl = document.getElementById('tb_' + modelId);
 
@@ -398,10 +402,10 @@ var SyntaxHighlighter = function () {
                 id = cl.getAttribute('commentId');
 
             const textEl = cl.querySelector('#commentMarkedText');
-            
-           let mtext =  marked.parse('\n' +textEl.textContent);
-  
-           textEl.innerHTML = mtext;
+
+            let mtext = marked.parse('\n' + textEl.textContent);
+
+            textEl.innerHTML = mtext;
 
             if (mode == 1) {
                 cl.style['padding-left'] = '20px';
@@ -421,11 +425,11 @@ var SyntaxHighlighter = function () {
             const space = document.getElementById(sh.vars.modelId + "_numSpace_l" + id);
             const calc_size = parseInt(cl.offsetHeight) + 1;
 
-            Logger.debug('cacl size:',calc_size);
+            Logger.debug('cacl size:', calc_size);
 
             space.style['height'] = calc_size + 'px';
             cl.style['height'] = calc_size + "px";
-         
+
             if (mode == 1) {
                 const ln = lineNumber + 1;
                 const el = document.getElementById(sh.vars.modelId + '_ln_' + ln);
@@ -468,7 +472,7 @@ var SyntaxHighlighter = function () {
 
             if (parentId > 0) {
                 // alert(parentId);
-                cForm.querySelector('#parentId').value =  parentId;
+                cForm.querySelector('#parentId').value = parentId;
             }
 
             cForm.style.position = "relative";
@@ -490,7 +494,7 @@ var SyntaxHighlighter = function () {
             }
             document.getElementById("pasteLineCopyBtn").style.display = "inline-block";
             document.getElementById('pasteLineToCopy').innerHTML = document
-                                .getElementById(modelId + '_cl_linePlainCode_' + lineNumber).innerHTML;
+                .getElementById(modelId + '_cl_linePlainCode_' + lineNumber).innerHTML;
 
             const ell = document.getElementById(modelId + '_cl_linePlain_' + lineNumber);
             ell.parentNode.insertBefore(document.getElementById("pasteLineCopyBtn"), ell);
@@ -522,7 +526,7 @@ var SyntaxHighlighter = function () {
                     sh.vars.editor[modelId].load();
                 }, 1);
             }
-           
+
 
         }
     }; // end of sh
@@ -1705,8 +1709,6 @@ var SyntaxHighlighter = function () {
 
             sh.vars.lineNumbers = lineNumbers;
 
-
-            //alert(lineNumbers);
             return html;
         },
         /**
@@ -1724,9 +1726,6 @@ var SyntaxHighlighter = function () {
 
             // create main HTML
             div.innerHTML = this.getHtml(code);
-
-
-
 
             // set up click handlers
             if (this.getParam('toolbar'))

@@ -16,9 +16,8 @@
 
 package com.Ox08.paster.webapp.tiles2
 
-import com.Ox08.paster.webapp.base.Loggered
+import com.Ox08.paster.webapp.base.Logged
 import jakarta.servlet.ServletContext
-
 import java.util.Locale
 import org.apache.tiles.Attribute
 import org.apache.tiles.AttributeContext
@@ -32,14 +31,12 @@ import org.springframework.web.servlet.support.RequestContext
 import org.springframework.web.servlet.support.RequestContextUtils
 import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
 
-import java.io.IOException
-
-class DynamicTilesViewProcessor extends Loggered {
+class DynamicTilesViewProcessor extends Logged {
 
   /**
    * Keeps Tiles definition to use once derived.
    */
-  private var derivedDefinitionName: String = null
+  private var derivedDefinitionName: String = _
   private var tilesDefinitionName = ""
   private var tilesBodyAttributeName = "content"
   private var tilesDefinitionDelimiter = "."
@@ -59,7 +56,7 @@ class DynamicTilesViewProcessor extends Loggered {
    * @param tilesBodyAttributeName Tiles body attribute name.
    */
   def setTilesBodyAttributeName(tilesBodyAttributeName: String): Unit = {
-    this.tilesBodyAttributeName = tilesBodyAttributeName;
+    this.tilesBodyAttributeName = tilesBodyAttributeName
   }
 
   /**
@@ -71,7 +68,7 @@ class DynamicTilesViewProcessor extends Loggered {
    * @param tilesDefinitionDelimiter Optional delimiter to replace '/' in a url.
    */
   def setTilesDefinitionDelimiter(tilesDefinitionDelimiter: String): Unit = {
-    this.tilesDefinitionDelimiter = tilesDefinitionDelimiter;
+    this.tilesDefinitionDelimiter = tilesDefinitionDelimiter
   }
 
   /**
@@ -84,7 +81,7 @@ class DynamicTilesViewProcessor extends Loggered {
                               container: TilesContainer): Unit = {
 
     val tilesRequest = createTilesRequest(ServletUtil.getApplicationContext(servletContext),
-      request, response);
+      request, response)
 
 
     var beanName: String = bName.replaceAll("//", "/")
@@ -171,7 +168,7 @@ class DynamicTilesViewProcessor extends Loggered {
     if (derivedDefinitionName != null) {
       derivedDefinitionName
     } else if (container.isValidDefinition(beanName, tilesRequest)) {
-      derivedDefinitionName = beanName;
+      derivedDefinitionName = beanName
       beanName
     } else {
       throw new TilesException("No defintion of found for "
@@ -183,6 +180,6 @@ class DynamicTilesViewProcessor extends Loggered {
                                    request: HttpServletRequest, response: HttpServletResponse): Request =
     new org.apache.tiles.request.servlet.ServletRequest(applicationContext,
       request, response) {
-      override def getRequestLocale(): Locale = RequestContextUtils.getLocale(request)
+      override def getRequestLocale: Locale = RequestContextUtils.getLocale(request)
     }
 }

@@ -1,7 +1,7 @@
 package com.Ox08.paster.webapp.service
 
 
-import com.Ox08.paster.webapp.base.Loggered
+import com.Ox08.paster.webapp.base.Logged
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 
@@ -11,7 +11,7 @@ import java.util
 import scala.jdk.CollectionConverters._
 
 @Service
-class SystemManagementService extends Loggered {
+class SystemManagementService extends Logged {
 
 
   private var inRestart = false
@@ -32,7 +32,7 @@ class SystemManagementService extends Loggered {
      */
     try Thread.sleep(1000)
     catch {
-      case e: Exception =>
+      case _: Exception =>
       //ignore
     }
 
@@ -41,7 +41,7 @@ class SystemManagementService extends Loggered {
     try { // java binary
       val java = System.getProperty("java.home") + "/bin/java"
       // vm arguments
-      val vmArguments = ManagementFactory.getRuntimeMXBean.getInputArguments()
+      val vmArguments = ManagementFactory.getRuntimeMXBean.getInputArguments
       val vmArgsOneLine = new StringBuffer()
       for (arg <- vmArguments.asScala) { // if it's the agent argument : we ignore it otherwise the
         // address of the old application and the new one will be in conflict
@@ -62,7 +62,7 @@ class SystemManagementService extends Loggered {
       // program main is a jar
       if (mainCommand(0).endsWith(".jar")) { // if it's a jar, add -jar mainJar
         command.add("-jar")
-        command.add(new File(mainCommand(0)).getPath())
+        command.add(new File(mainCommand(0)).getPath)
       }
       else { // else it's a .class, add the classpath and mainClass
         command.add("-cp")
@@ -85,7 +85,7 @@ class SystemManagementService extends Loggered {
         override def run(): Unit = {
           try builder.start
           catch {
-            case e: IOException =>
+            case _: IOException =>
 
             // e.printStackTrace();
           }

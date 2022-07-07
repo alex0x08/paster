@@ -33,7 +33,7 @@
 
                     <div class="row">
                         <div class="column grid-16">
-                        <c:if test="${paste.sticked}">
+                        <c:if test="${paste.stick}">
                             <span class="i" title="Paste sticked">]</span>
                         </c:if>
 
