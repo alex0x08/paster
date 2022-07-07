@@ -2,25 +2,28 @@ package com.Ox08.paster.webapp.startup
 
 import com.Ox08.paster.webapp.base.Logged
 import com.Ox08.paster.webapp.dao.PasteDao
-import com.Ox08.paster.webapp.manager.UserManagerImpl
-import com.Ox08.paster.webapp.model.{Role, PasterUser}
+import com.Ox08.paster.webapp.manager.UserManager
+import com.Ox08.paster.webapp.model.{PasterUser, Role}
 import jakarta.servlet.{ServletContextEvent, ServletContextListener}
 import org.apache.commons.codec.digest.Md5Crypt
 import org.apache.commons.csv.{CSVFormat, CSVRecord}
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
-import org.springframework.web.context.support.WebApplicationContextUtils
+import org.springframework.web.context.support.{SpringBeanAutowiringSupport, WebApplicationContextUtils}
 
 import java.io.InputStreamReader
 import java.security.SecureRandom
 import scala.jdk.CollectionConverters._
 
-class BootContext(ctx: ApplicationContext) {
+class BootContext {
 
-  val pasteDao: PasteDao = ctx.getBean(classOf[PasteDao])
+  @Autowired
+  val users: UserManager = null
 
-  val users: UserManagerImpl = ctx.getBean(classOf[UserManagerImpl])
+  @Autowired
+  val pasteDao: PasteDao = null
 
 }
 
@@ -29,9 +32,9 @@ class StartupListener extends ServletContextListener with Logged {
   override def contextInitialized(event: ServletContextEvent): Unit = {
 
 
-    val bootContext = new BootContext(WebApplicationContextUtils
-      .getRequiredWebApplicationContext(event.getServletContext))
+    val bootContext = new BootContext()
 
+    SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(bootContext,event.getServletContext)
 
     try {
 

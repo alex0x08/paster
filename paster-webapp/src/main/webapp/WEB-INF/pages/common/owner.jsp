@@ -12,15 +12,16 @@
 
 
 <c:choose>
-    <c:when test="${not empty model.owner and model.owner ne currentUser}">
+    <c:when test="${not empty model.author and model.author ne currentUser}">
      
         <span style="display: inline;  ">
-            <a title="Contact ${model.owner}"  href="mailto:${model.owner}?subject=<c:out value='${model.text}' escapeXml="true"/>"><c:out value="${model.owner}" /></a>
+            <a title="Contact ${model.author}"
+            href="mailto:${model.author}?subject=<c:out value='${model.text}' escapeXml="true"/>"><c:out value="${model.author}" /></a>
         </span>
 
 
     </c:when>
-     <c:when test="${not empty model.owner and model.owner eq currentUser}">
+     <c:when test="${not empty model.author and model.author eq currentUser}">
          <span style="display: inline;  ">
              <fmt:message key="user.you"/>
          </span>

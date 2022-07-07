@@ -21,11 +21,12 @@ import com.thoughtworks.xstream.annotations.XStreamAsAttribute
 import jakarta.persistence.{Column, GeneratedValue, Id, MappedSuperclass, PrePersist, PreUpdate, Temporal, TemporalType}
 import org.hibernate.annotations.GenericGenerator
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField
-import java.text.SimpleDateFormat
-import java.time.LocalDateTime
-import java.util.Objects
 
-object Struct {
+import java.text.SimpleDateFormat
+import java.time.{LocalDateTime, ZoneOffset}
+import java.util.{Date, Objects}
+
+object Struct extends Logged {
   
   val terms = List[String]("id","name")
 
@@ -69,7 +70,9 @@ abstract class Struct extends DBObject with SearchObject with  java.io.Serializa
   def touch(): Unit= {
     lastModified = LocalDateTime.now()
   }
-  
+  def getLastModifiedDt: Date  =Date.from(lastModified.toInstant(ZoneOffset.UTC))
+  def getCreatedDt: Date  =Date.from(created.toInstant(ZoneOffset.UTC))
+
   def getLastModified: LocalDateTime = lastModified
   def getCreated: LocalDateTime = created
       

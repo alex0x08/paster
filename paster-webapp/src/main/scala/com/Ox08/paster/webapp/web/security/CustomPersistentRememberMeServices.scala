@@ -18,13 +18,14 @@ package com.Ox08.paster.webapp.web.security
 
 import com.Ox08.paster.webapp.base.Logged
 import com.Ox08.paster.webapp.dao.SessionTokensDao
-import com.Ox08.paster.webapp.manager.UserManagerImpl
+import com.Ox08.paster.webapp.manager.UserManager
 import com.Ox08.paster.webapp.model.{PasterUser, SessionToken}
 import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
 import org.springframework.dao.DataAccessException
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.userdetails.{UserDetails, UserDetailsService}
 import org.springframework.security.web.authentication.rememberme.{AbstractRememberMeServices, InvalidCookieException, RememberMeAuthenticationException}
+
 import java.security.SecureRandom
 import java.time.{LocalDate, ZoneId}
 import java.util
@@ -129,15 +130,14 @@ class CustomPersistentRememberMeServices(key: String, uds: UserDetailsService, t
    */
   def getPersistentToken(cookieTokens: Array[String]): SessionToken = {
     if (cookieTokens.length != 2) {
-      throw new InvalidCookieException("Cookie token did not contain " + 2 +
-        " tokens, but contained '" + util.Arrays.asList(cookieTokens) + "'")
+      throw new InvalidCookieException(s"Cookie token did not contain 2 tokens, but contained '${util.Arrays.asList(cookieTokens)}'")
     }
     val presentedSeries = cookieTokens(0)
     val presentedToken = cookieTokens(1)
     val token = tokenDao.get(presentedSeries)
     if (token == null) {
       // No series match, so we can't authenticate using this cookie
-      throw new RememberMeAuthenticationException("No persistent token found for series id: " + presentedSeries)
+      throw new RememberMeAuthenticationException(s"No persistent token found for series id: $presentedSeries")
     }
     // We have a match for this user/series combination
     log.info("presentedToken={} / tokenValue={}",
@@ -175,7 +175,7 @@ class CustomPersistentRememberMeServices(key: String, uds: UserDetailsService, t
       CPRConstants.TOKEN_VALIDITY_SECONDS, request, response)
   }
 
-  def getUserManager: UserManagerImpl = getUserDetailsService.asInstanceOf[UserManagerImpl]
+  def getUserManager: UserManager = getUserDetailsService.asInstanceOf[UserManager]
 
 
 }

@@ -16,12 +16,13 @@
 
 package com.Ox08.paster.webapp.mvc
 
-import com.Ox08.paster.webapp.manager.ResourcePathHelper
+import com.Ox08.paster.webapp.manager.ResourceManager
 import jakarta.servlet.http.HttpServletResponse
-import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.{Autowired, Value}
 import org.springframework.core.io.InputStreamResource
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.{PathVariable, RequestMapping, RequestMethod, ResponseBody}
+
 import java.io.{FileInputStream, IOException}
 import scala.collection.mutable
 
@@ -29,10 +30,11 @@ import scala.collection.mutable
 @RequestMapping(Array("/resources"))
 class ResourceController extends AbstractController {
 
-  private val MAX_AGE = 31557600
+  @Value("${paster.resources.cacheMillis:31557600}")
+  private val MAX_AGE = 0
 
   @Autowired
-  private val resourcePathHelper: ResourcePathHelper = null
+  private val resourcePathHelper: ResourceManager = null
 
   @RequestMapping(
     value = Array("/{version:[a-zA-Z0-9]+}/{type:[a-z]}/{lastModified:[0-9]+}/paste_content/{path}"),
@@ -69,8 +71,7 @@ class ResourceController extends AbstractController {
     response.setHeader("Content-Length", fimg.length().toString)
     response.setHeader("Content-Disposition", s"inline;filename='${fimg.getName}'")
     response.setDateHeader("Last-Modified", fimg.lastModified())
-    response.setDateHeader("Expires", System.currentTimeMillis +
-      MAX_AGE)
+    response.setDateHeader("Expires", System.currentTimeMillis + MAX_AGE)
     response.setHeader("Cache-Control", s"max-age=$MAX_AGE, public")
     response.setHeader("Pragma", "cache")
 

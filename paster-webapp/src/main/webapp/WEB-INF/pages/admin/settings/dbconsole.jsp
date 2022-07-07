@@ -10,9 +10,8 @@
 
 <script type="text/javascript">
 
-
     window.addEventListener('load', function(){
-        $('dbconsoleFrame').setStyle('height',document.body.scrollHeight);
+        document.getElementById('dbconsoleFrame').style.height=document.body.scrollHeight +'px';
     });
 
 </script>

@@ -24,7 +24,6 @@ import jakarta.servlet.http.HttpServletRequest
 class CsrfSecurityRequestMatcher extends RequestMatcher {
 
   val allowedMethods: Pattern = Pattern.compile("^(GET|POST|HEAD|TRACE|OPTIONS)$")
-
   private val unprotectedMatcher = new AntPathRequestMatcher("/act/admin/dbconsole/**")
 
   override def matches(request: HttpServletRequest): Boolean = {

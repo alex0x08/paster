@@ -49,7 +49,7 @@ class SetupIndexes extends Logged {
   @Value("${paster.reindexOnBoot:false}")
   val reindexOnBoot: Boolean = false
 
-  //@PostConstruct
+  @PostConstruct
   def onStart(): Unit = {
 
     if (reindexOnBoot) {

@@ -36,7 +36,7 @@
 <c:choose>
     <c:when test="${model.reviewImgData!=null}">
         <c:url var="drawImg"
-            value='/main/resources/${appId}/r/${model.lastModified.time}/paste_content/${model.reviewImgData}' />
+            value='/main/resources/${appId}/r/${model.lastModifiedDt.time}/paste_content/${model.reviewImgData}' />
     </c:when>
     <c:otherwise>
         <c:set var="drawImg" value="" />

@@ -51,7 +51,7 @@ class Tag(tagString: String) extends DBObject {
   @Column(name="tag_name",length = 256)
   @Size(min = 3, message = "{struct.name.validator}")
   @XStreamAsAttribute
-  var name: String = _
+  var name: String = tagString
 
   @transient
   var total: Int = 0
@@ -208,6 +208,14 @@ class Paste(ptitle: String) extends Struct with java.io.Serializable {
   def getTitle:String = title
   def getId: Integer = id
   def getThumbImage:String = thumbImage
+  def getAuthor: String = author
+  def getText: String = text
+  def getCommentsCount: Int = commentsCount
+  def getWordsCount: Int = wordsCount
+  def getSymbolsCount: Int = symbolsCount
+  def getIntegrationCode: String = integrationCode
+  def getReviewImgData: String = reviewImgData
+  def getComments: util.List[Comment] = comments
 
   override def terms(): List[String] = super.terms() ::: List[String]("text", "tags")
 
@@ -220,7 +228,6 @@ class Paste(ptitle: String) extends Struct with java.io.Serializable {
 
   def isHasAuthor: Boolean = author != null
 
-
   def getTags: java.util.Set[String] = tagsMap.keySet()
 
   def getTagsMap: java.util.Map[String, Tag] = tagsMap
@@ -232,14 +239,19 @@ class Paste(ptitle: String) extends Struct with java.io.Serializable {
    */
   override def loadFull(): Unit = {
 
+    Struct.logger.debug("called loadFull for {}",id)
 
-    for (c <- comments.asScala) {
-      c.loadFull()
+    for (t <- tagsMap.entrySet().asScala) {
+        t.getValue.name
     }
+
+    /*for (c <- comments.asScala) {
+      c.loadFull()
+    }*/
   }
 
 
-  override def toString(): String = Logged.toStringSkip(this,
+  override def toString: String = Logged.toStringSkip(this,
     Array("reviewImgData",
       "thumbImage",
       "title",

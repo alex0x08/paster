@@ -69,8 +69,8 @@ class GenericQuery extends Query {
 }
 
 
-class OwnerQuery extends GenericQuery with Query {
+class AuthorQuery extends GenericQuery with Query {
 
-  var ownerId:Long = _
+  var authorId:Long = _
 
 }

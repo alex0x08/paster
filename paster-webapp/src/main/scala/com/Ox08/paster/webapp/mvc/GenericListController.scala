@@ -16,41 +16,14 @@
 
 package com.Ox08.paster.webapp.mvc
 
+import com.Ox08.paster.webapp.dao.StructDaoImpl
 import com.Ox08.paster.webapp.model.Struct
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.beans.support.{MutableSortDefinition, PagedListHolder}
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation._
+
 import java.util
-
-object GenericListController {
-
-  final val INTEGRATED = "/integrated"
-  
-  final val RAW = "/raw"  
-
-  final val LIST_ACTION = "/list"
-
-  final val COUNT_ACTION = "/count"
-
-  final val NEXT_PARAM = "next"
-
-  final val PAGE_SET = "pageSet"
-
-  final val pageSet:Array[Int] = Array(5,10,50,100,500)
-  /**
-   * model attribute to specify list mode
-   * value can be 'search' or 'list'
-   */
-  final val LIST_MODE = "listMode"
-  
-  
-  final val defaultSortColumns:List[SortColumn] = 
-            List[SortColumn](new SortColumn("id","struct.id"),
-                              new SortColumn("name","struct.name"),
-                              new SortColumn("lastModified","struct.lastModified"))
-}
-
 import java.util.Objects
 
 class SortColumn(property:String, name:String) {
@@ -86,7 +59,25 @@ class ExtendedPageListHolder[T <: Struct ](source:java.util.List[T])
  * Based on Spring PageListHolder heavy usage
  * @tparam T model class
  */
-abstract class GenericListController[T <: Struct ] extends GenericController[T] {
+abstract class GenericListController[T <: Struct ] extends AbstractController {
+
+
+  /**
+   * link to list page
+   */
+  protected def listPage:String
+
+  /**
+   *  edit page
+   */
+  protected def editPage:String
+
+  protected def viewPage:String
+
+  /**
+   *  binded DAO service
+   */
+  protected def manager():StructDaoImpl[T]
 
   /**
    * default callback object: will simply use getList from attached manager
@@ -101,8 +92,8 @@ abstract class GenericListController[T <: Struct ] extends GenericController[T] 
     /**
      * set default list mode
      */
-    if (!model.containsAttribute(GenericListController.LIST_MODE)) {
-      model.addAttribute(GenericListController.LIST_MODE,"list")
+    if (!model.containsAttribute(MvcConstants.LIST_MODE)) {
+      model.addAttribute(MvcConstants.LIST_MODE,"list")
     }
   }
 
@@ -145,7 +136,7 @@ abstract class GenericListController[T <: Struct ] extends GenericController[T] 
        */
       if (NPpage != null) {
         
-        if (NPpage.equals(GenericListController.NEXT_PARAM)) {
+        if (NPpage.equals(MvcConstants.NEXT_PARAM)) {
           pagedListHolder.nextPage()
         } else {
           pagedListHolder.previousPage()
@@ -178,60 +169,60 @@ abstract class GenericListController[T <: Struct ] extends GenericController[T] 
     
     model.addAttribute(pageHolderName, pagedListHolder)
 
-    if (createDefaultItemModel && !pageHolderName.equals(GenericController.NODE_LIST_MODEL_PAGE)) {
-      model.addAttribute(GenericController.NODE_LIST_MODEL_PAGE, pagedListHolder)
+    if (createDefaultItemModel && !pageHolderName.equals(MvcConstants.NODE_LIST_MODEL_PAGE)) {
+      model.addAttribute(MvcConstants.NODE_LIST_MODEL_PAGE, pagedListHolder)
     }
 
-    model.addAttribute(GenericListController.PAGE_SET, GenericListController.pageSet)
+    model.addAttribute(MvcConstants.PAGE_SET, MvcConstants.pageSet)
 
     pagedListHolder.getPageList
     }
     
     @ModelAttribute("availableSortColumns")
-    def getAvailableSortColumns:List[SortColumn] = GenericListController.defaultSortColumns
+    def getAvailableSortColumns:List[SortColumn] = MvcConstants.defaultSortColumns
 
   
     @RequestMapping(value = Array("/list/sort/{sortColumn:[a-z0-9A-Z]+}",
                              "/list/sort/{sortColumn:[a-z0-9A-Z]+}/up"), 
                     method = Array(RequestMethod.GET))
-    @ModelAttribute(GenericController.NODE_LIST_MODEL)
+    @ModelAttribute(MvcConstants.NODE_LIST_MODEL)
     def listWithSort(@PathVariable("sortColumn") sortColumn:String,
              request:HttpServletRequest,
              model:Model): util.List[T] = list(request,model, null, null,null, sortColumn,sortAsc = false)
     
     @RequestMapping(value = Array("/list/sort/{sortColumn:[a-z0-9A-Z]+}/down"), 
                     method = Array(RequestMethod.GET))
-    @ModelAttribute(GenericController.NODE_LIST_MODEL)
+    @ModelAttribute(MvcConstants.NODE_LIST_MODEL)
     def listWithSortDown(@PathVariable("sortColumn") sortColumn:String,
             request:HttpServletRequest,
             model:Model): util.List[T] = list(request,model, null, null,null, sortColumn,sortAsc = true)
   
   @RequestMapping(value = Array("/list/{page:[0-9]+}"), method = Array(RequestMethod.GET))
-  @ModelAttribute(GenericController.NODE_LIST_MODEL)
+  @ModelAttribute(MvcConstants.NODE_LIST_MODEL)
   def listByPath(@PathVariable("page") page:java.lang.Integer,
   request:HttpServletRequest,
   model:Model): util.List[T] =  list(request,model, page, null, null, null,sortAsc = false)
 
   @RequestMapping(value = Array("/list/limit/{pageSize:[0-9]+}"), method = Array(RequestMethod.GET))
-  @ModelAttribute(GenericController.NODE_LIST_MODEL)
+  @ModelAttribute(MvcConstants.NODE_LIST_MODEL)
   def listByPathSize(@PathVariable("pageSize") pageSize:java.lang.Integer,
   request:HttpServletRequest,
   model:Model): util.List[T] = list(request, model, null, null, pageSize, null,sortAsc = false)
 
   @RequestMapping(value = Array("/list/next"), method = Array(RequestMethod.GET))
-  @ModelAttribute(GenericController.NODE_LIST_MODEL)
+  @ModelAttribute(MvcConstants.NODE_LIST_MODEL)
   def listByPathNext(
     request:HttpServletRequest,
-    model:Model): util.List[T] = list(request,model, null, GenericListController.NEXT_PARAM, null, null,sortAsc = false)
+    model:Model): util.List[T] = list(request,model, null, MvcConstants.NEXT_PARAM, null, null,sortAsc = false)
 
   @RequestMapping(value = Array("/list/prev"), method = Array(RequestMethod.GET))
-  @ModelAttribute(GenericController.NODE_LIST_MODEL)
+  @ModelAttribute(MvcConstants.NODE_LIST_MODEL)
   def listByPathPrev(
     request:HttpServletRequest,
     model:Model): util.List[T] = list(request, model, null, "prev",null, null,sortAsc = false)
 
-  @RequestMapping(value = Array(GenericListController.LIST_ACTION),method = Array(RequestMethod.GET))
-  @ModelAttribute(GenericController.NODE_LIST_MODEL)
+  @RequestMapping(value = Array(MvcConstants.LIST_ACTION),method = Array(RequestMethod.GET))
+  @ModelAttribute(MvcConstants.NODE_LIST_MODEL)
   def list( request:HttpServletRequest,
             model:Model,
            @RequestParam(required = false)  page:java.lang.Integer,
@@ -239,7 +230,7 @@ abstract class GenericListController[T <: Struct ] extends GenericController[T] 
            @RequestParam(required = false)  pageSize:java.lang.Integer,
            @RequestParam(required = false)  sortColumn:String,
            @RequestParam(required = false)  sortAsc:Boolean):java.util.List[T] = 
-  listImpl(request,model,page,NPpage,pageSize,sortColumn,sortAsc,GenericController.NODE_LIST_MODEL_PAGE)
+  listImpl(request,model,page,NPpage,pageSize,sortColumn,sortAsc,MvcConstants.NODE_LIST_MODEL_PAGE)
   
 
 

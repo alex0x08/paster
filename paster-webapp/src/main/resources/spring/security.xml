@@ -77,7 +77,7 @@
     <beans:bean id="csrfSecurityRequestMatcher" class="com.Ox08.paster.webapp.web.CsrfSecurityRequestMatcher"/>
 
     <beans:bean id="userManager"
-                class="com.Ox08.paster.webapp.manager.UserManagerImpl">
+                class="com.Ox08.paster.webapp.manager.UserManager">
     </beans:bean>
 
 
@@ -96,7 +96,7 @@
  <beans:bean id="customRememberMeServices"
                 class="com.Ox08.paster.webapp.web.security.CustomPersistentRememberMeServices">
         <!-- This ensures that remember-me is added as an authentication provider -->
-        <beans:constructor-arg value="1q2w3e4r5t6y7u8i" />
+        <beans:constructor-arg value="${paster.security.session.salt}" />
         <beans:constructor-arg ref="userManager" />
         <beans:constructor-arg ref="tokenDao" />
     </beans:bean>
@@ -104,7 +104,7 @@
     <beans:bean id="rememberMeAuthenticationProvider"
                 class="org.springframework.security.authentication.RememberMeAuthenticationProvider">
         <!-- This ensures that remember-me is added as an authentication provider -->
-        <beans:constructor-arg value="1q2w3e4r5t6y7u8i" />
+        <beans:constructor-arg value="${paster.security.session.salt}" />
 
     </beans:bean>
 
@@ -112,17 +112,11 @@
     
     <beans:bean id="sessionRegistry" class="org.springframework.security.core.session.SessionRegistryImpl"/>
 
-    
-  
-     
+     <beans:bean id="passwordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
 
-     <beans:bean id="passwordEncoder" class="org.springframework.security.crypto.password.StandardPasswordEncoder"/>
-
-    
     <!-- Automatically receives AuthenticationEvent messages -->
     <beans:bean id="loggerListener" class="org.springframework.security.authentication.event.LoggerListener"/>
 
-    
 
 
 </beans:beans>

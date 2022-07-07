@@ -42,7 +42,6 @@ abstract class BaseDao[T <: java.io.Serializable, PK <: java.io.Serializable](mo
    * a wrapper to help work with Criteria API
    */
   protected class CriteriaSet {
-
     val cb: CriteriaBuilder = em.getCriteriaBuilder // criteria builder instance
     val cr: CriteriaQuery[T] = cb.createQuery(model)
     val r: Root[T] = cr.from(model) // query and root instances
@@ -104,9 +103,7 @@ abstract class BaseDao[T <: java.io.Serializable, PK <: java.io.Serializable](mo
    */
   @Transactional
   def remove(id: PK):Unit = {
-
     val obj: T = get(id)
-
     if (obj != null) {
       em.remove(obj)
       em.flush()

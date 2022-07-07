@@ -38,7 +38,7 @@ class IndexController extends AbstractController{
             @PathVariable("errorCode") errorCode:Int):String = errorCode match {
                 case 403 |404 |500  =>
                   response.setStatus(errorCode)
-                  "/error/"+errorCode
+                  s"/error/$errorCode"
                 case _ =>
                   "/error/500"
   }

@@ -38,7 +38,8 @@ package com.Ox08.paster.webapp.tiles2
  * <li>If no match is found from any process above a TilesException is thrown.</li>
  * </ol>
  *
- * @author David Winterfeldt
+ * @author David Winterfeldt (original Java version)
+ *
  */
 
 

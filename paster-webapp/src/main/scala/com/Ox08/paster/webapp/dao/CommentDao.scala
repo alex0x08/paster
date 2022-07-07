@@ -13,14 +13,12 @@ import java.io.IOException
 class CommentDao extends SearchableDaoImpl[Comment](classOf[Comment]) {
 
   def getCommentsForPaste(pasteId: Integer): java.util.List[Comment] =
-
     getListByKeyValue("pasteId", pasteId,
       Option("lastModified"),
       Option(true))
 
   override def fillHighlighted(highlighter: Highlighter, pparser: QueryParser, model: Comment): Unit ={
     try {
-
       val hl = highlighter
         .getBestFragments(pparser.getAnalyzer
           .tokenStream("text", model.text),

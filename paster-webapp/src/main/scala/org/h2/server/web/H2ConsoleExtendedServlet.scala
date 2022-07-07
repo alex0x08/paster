@@ -3,15 +3,13 @@ package org.h2.server.web
 
 
 import com.Ox08.paster.webapp.base.Logged
-import jakarta.servlet.http.HttpServletRequestWrapper
-
-import java.sql.SQLException
-import java.util.HashMap
-import javax.sql.DataSource
+import jakarta.servlet.http.{HttpServletRequest, HttpServletRequestWrapper, HttpServletResponse}
 import org.springframework.context.ApplicationContext
 import org.springframework.web.context.support.WebApplicationContextUtils
 
-import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
+import java.sql.{Connection, SQLException}
+import java.util
+import javax.sql.DataSource
 
 /**
  * This is extended version of JDBC Database Console Servlet,
@@ -21,9 +19,9 @@ import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
  * to user's session and open console automatically.
  *
  */
-class H2ConsoleExtendedServlet extends WebServlet with Logged {
+class H2ConsoleExtendedServlet extends JakartaWebServlet with Logged {
 
-  private var dataSource: DataSource = null
+  private var dataSource: DataSource = _
 
   private val server = new WebServer
 
@@ -32,7 +30,7 @@ class H2ConsoleExtendedServlet extends WebServlet with Logged {
     logger.debug("h2 servlet init..")
 
     val ctx: ApplicationContext = WebApplicationContextUtils
-      .getWebApplicationContext(getServletContext())
+      .getWebApplicationContext(getServletContext)
 
     dataSource = ctx.getBean("dataSource").asInstanceOf[DataSource]
 
@@ -40,7 +38,7 @@ class H2ConsoleExtendedServlet extends WebServlet with Logged {
       server.setAllowChunked(false)
       server.init()
 
-      val f = getClass().getSuperclass().getDeclaredField("server")
+      val f = getClass.getSuperclass.getDeclaredField("server")
       f.setAccessible(true)
       f.set(this, server)
 
@@ -57,23 +55,19 @@ class H2ConsoleExtendedServlet extends WebServlet with Logged {
               | _: IllegalAccessException
               | _: SQLException
               | _: SecurityException
-              | _: IllegalArgumentException) => {
+              | _: IllegalArgumentException) =>
         logger.error(e.getLocalizedMessage, e)
-      }
     }
-
   }
 
   @throws(classOf[java.io.IOException])
   override def doGet(req: HttpServletRequest, res: HttpServletResponse): Unit = {
 
-    val h2console_db_session_id = getH2SessionIdFromContext()
+    val h2console_db_session_id = getH2SessionIdFromContext
     var session: WebSession = null
 
     if (h2console_db_session_id != null) {
-
       session = server.getSession(h2console_db_session_id)
-
       if (session == null) {
         session = createAndRegLocalSession()
       } else {
@@ -91,7 +85,7 @@ class H2ConsoleExtendedServlet extends WebServlet with Logged {
     var con = session.getConnection
 
     if (con == null || con.isClosed) {
-      con = dataSource.getConnection
+      con = dataSource.getConnection //.unwrap(Class[org.h2.jdbc.JdbcConnection])
 
       session.setConnection(con)
       session.put("url", con.getMetaData.getURL)
@@ -115,23 +109,28 @@ class H2ConsoleExtendedServlet extends WebServlet with Logged {
      */
 
 
-    val map = new HashMap[String, String]()
-    map.put("jsessionid", getH2SessionIdFromContext())
+    val map = new util.HashMap[String, String]()
+    map.put("jsessionid", getH2SessionIdFromContext)
 
     super.doGet(new ExtendedHttpServletRequestWrapper(req, map), res)
   }
 
-  private def getH2SessionIdFromContext() = getServletContext()
+  private def getH2SessionIdFromContext:String = getServletContext
     .getAttribute("h2console-session-id").asInstanceOf[String]
 
   private def createAndRegLocalSession(): WebSession = {
 
     this.synchronized {
       val conn = dataSource.getConnection()
+      val cconn:Connection =conn.unwrap(classOf[Connection])
+
+
+      logger.debug("driver: {}",cconn.getClass.getCanonicalName)
+
       val session = server.createNewSession("local")
       session.setShutdownServerOnDisconnect()
-      session.setConnection(conn)
-      session.put("url", conn.getMetaData().getURL())
+      session.setConnection(cconn)
+      session.put("url", conn.getMetaData.getURL)
 
       /**
        *
@@ -152,8 +151,7 @@ class H2ConsoleExtendedServlet extends WebServlet with Logged {
 
       logger.debug("created h2 session {}", ss)
 
-      getServletContext().setAttribute("h2console-session-id", ss)
-
+      getServletContext.setAttribute("h2console-session-id", ss)
       return session
     }
 
@@ -173,13 +171,11 @@ class H2ConsoleExtendedServlet extends WebServlet with Logged {
       } else {
         // otherwise return what's in the original request
         super.getParameter(name)
-
       }
 
-      System.out.println("name=" + name + " val=" + out)
-      return out
+      //System.out.println("name=" + name + " val=" + out)
+      out
     }
-
 
   }
 

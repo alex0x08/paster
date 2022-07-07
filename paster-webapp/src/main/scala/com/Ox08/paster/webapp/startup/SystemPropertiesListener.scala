@@ -21,7 +21,7 @@ class SystemPropertiesListener extends ServletContextListener with Logged {
 
       System.setProperty("paste.app.id", System.currentTimeMillis().toString)
 
-      System.setProperty("spring.profiles.active", "main")
+      //System.setProperty("spring.profiles.active", "main")
 
       logger.info("current locale: {}", Locale.getDefault)
 

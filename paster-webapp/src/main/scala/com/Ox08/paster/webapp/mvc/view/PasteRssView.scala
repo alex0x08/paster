@@ -1,7 +1,7 @@
 package com.Ox08.paster.webapp.mvc.view
 
 import com.Ox08.paster.webapp.model.Paste
-import com.Ox08.paster.webapp.mvc.GenericController
+import com.Ox08.paster.webapp.mvc.MvcConstants
 import com.rometools.rome.feed.rss.{Channel, Content, Description, Item}
 import org.springframework.web.servlet.view.feed.AbstractRssFeedView
 
@@ -36,10 +36,10 @@ class PasteRssView extends AbstractRssFeedView{
   override protected def buildFeedItems(model:java.util.Map[String, Object],
      request:HttpServletRequest, response:HttpServletResponse):java.util.List[Item] = {
 
-    if (!model.containsKey(GenericController.NODE_LIST_MODEL)) {
+    if (!model.containsKey(MvcConstants.NODE_LIST_MODEL)) {
       return Collections.emptyList[Item]()
     }
-    val  contentList = model.get(GenericController.NODE_LIST_MODEL).asInstanceOf[java.util.List[Paste]]
+    val  contentList = model.get(MvcConstants.NODE_LIST_MODEL).asInstanceOf[java.util.List[Paste]]
     val entries:java.util.List[Item] = new java.util.ArrayList[Item](contentList.size())
     for (e:Paste<- contentList.asScala) {
       val entry = new Item()

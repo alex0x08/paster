@@ -189,7 +189,7 @@
     <div class="container-fluid">
 
         <div class="row">
-            <div class="col-xs-6 col-sm-8 col-md-12 col-lg-14">
+            <div class="col-xs-6 col-sm-8 col-md-12 col-lg-12">
 
                 <div class="notices">
                 </div>
@@ -218,7 +218,7 @@
 
 
         <div class="row">
-            <div class="col-xs-10 col-sm-10 col-md-12 col-lg-14">
+            <div class="col-xs-10 col-sm-10 col-md-12 col-lg-12">
 
                 <spring:hasBindErrors name="input">
                     <c:forEach items="${errors.globalErrors}" var="errorMessage">

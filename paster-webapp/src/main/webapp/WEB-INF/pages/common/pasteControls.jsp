@@ -47,7 +47,7 @@
 
                 <span style="font-size: 9px;">
                     <fmt:message key="${'code.type.'.concat(model.codeType)}"/>
-                    ,<kc:prettyTime date="${model.lastModified}" locale="${pageContext.response.locale}"/>
+                    ,<kc:prettyTime date="${model.lastModifiedDt}" locale="${pageContext.response.locale}"/>
                 </span>
 
                  <c:if test="${not empty model.integrationCode}">

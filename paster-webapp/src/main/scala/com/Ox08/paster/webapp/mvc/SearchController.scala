@@ -26,27 +26,6 @@ import org.springframework.ui.Model
 import org.springframework.web.bind.annotation._
 import java.util
 
-/**
- * Search result object
-
-class SearchResult(code: String, desc: String, kitemsModel: String) extends Key(code, desc) {
-
-  private val itemsModel: String = kitemsModel
-
-  override def create(code: String) = new SearchResult(code, null, null)
-
-  def getItemsModel(): String = itemsModel
-
-  def getCodeLowerCase() = super.getCode().toLowerCase
-
-}*/
-
-
-object SearchController {
-  final val SEARCH_ACTION = "/list/search"
-  final val TOTAL_FOUND = "totalFound"
-
-}
 
 /**
  * Abstract Search Controller.
@@ -80,7 +59,7 @@ abstract class SearchController[T <: Struct, QV <: Query] extends GenericListCon
   }
 
   protected def fillSearchModel(model: Model): Unit = {
-    model.addAttribute(GenericListController.LIST_MODE, "search")
+    model.addAttribute(MvcConstants.LIST_MODE, "search")
   }
 
   /**
@@ -88,9 +67,9 @@ abstract class SearchController[T <: Struct, QV <: Query] extends GenericListCon
    *
    * @return
    */
-  @RequestMapping(value = Array(SearchController.SEARCH_ACTION),
+  @RequestMapping(value = Array(MvcConstants.SEARCH_ACTION),
     method = Array(RequestMethod.POST, RequestMethod.GET))
-  @ModelAttribute(GenericController.NODE_LIST_MODEL)
+  @ModelAttribute(MvcConstants.NODE_LIST_MODEL)
   def search(request: HttpServletRequest,
              @ModelAttribute("query") query: QV, model: Model,
              @RequestParam(required = false) page: java.lang.Integer,
@@ -129,7 +108,7 @@ abstract class SearchController[T <: Struct, QV <: Query] extends GenericListCon
 
         if (out == null && !rout.isEmpty) {
           out = rout
-          model.addAttribute(GenericController.NODE_LIST_MODEL_PAGE,
+          model.addAttribute(MvcConstants.NODE_LIST_MODEL_PAGE,
             model.asMap().get(s"${r}_ITEMS"))
           model.addAttribute("result", r)
           logger.debug("found {} in {}", out.size(), s"${r}_ITEMS")
@@ -137,7 +116,7 @@ abstract class SearchController[T <: Struct, QV <: Query] extends GenericListCon
       }
 
       if (out == null) {
-        model.addAttribute(GenericController.NODE_LIST_MODEL_PAGE,
+        model.addAttribute(MvcConstants.NODE_LIST_MODEL_PAGE,
           new PagedListHolder[T](java.util.Collections.emptyList[T]()))
         model.addAttribute("result", "") //tiles bug
         logger.debug("no results found in any models")
@@ -179,7 +158,7 @@ abstract class SearchController[T <: Struct, QV <: Query] extends GenericListCon
 
 
   @RequestMapping(value = Array("/search/{result:[a-z]+}/{page:[0-9]+}"), method = Array(RequestMethod.GET))
-  @ModelAttribute(GenericController.NODE_LIST_MODEL)
+  @ModelAttribute(MvcConstants.NODE_LIST_MODEL)
   def searchByPath(@PathVariable("page") page: java.lang.Integer,
                    @PathVariable("result") result: String,
                    request: HttpServletRequest,
@@ -189,7 +168,7 @@ abstract class SearchController[T <: Struct, QV <: Query] extends GenericListCon
 
   @RequestMapping(value = Array("/search/{result:[a-z]+}/limit/{pageSize:[0-9]+}"),
     method = Array(RequestMethod.GET))
-  @ModelAttribute(GenericController.NODE_LIST_MODEL)
+  @ModelAttribute(MvcConstants.NODE_LIST_MODEL)
   def searchByPathSize(
                         @PathVariable("pageSize") pageSize: java.lang.Integer,
                         @PathVariable("result") result: String,
@@ -200,18 +179,18 @@ abstract class SearchController[T <: Struct, QV <: Query] extends GenericListCon
 
 
   @RequestMapping(value = Array("/search/{result:[a-z]+}/next"), method = Array(RequestMethod.GET))
-  @ModelAttribute(GenericController.NODE_LIST_MODEL)
+  @ModelAttribute(MvcConstants.NODE_LIST_MODEL)
   def searchByPathNext(
                         request: HttpServletRequest,
                         @PathVariable("result") result: String,
                         model: Model): util.List[T] = listImpl(request,model,
-    null, GenericListController.NEXT_PARAM,
+    null, MvcConstants.NEXT_PARAM,
     null, null, sortAsc = false,
     result)
 
 
   @RequestMapping(value = Array("/search/{result:[a-z]+}/prev"), method = Array(RequestMethod.GET))
-  @ModelAttribute(GenericController.NODE_LIST_MODEL)
+  @ModelAttribute(MvcConstants.NODE_LIST_MODEL)
   def searchByPathPrev(
                         request: HttpServletRequest,
                         @PathVariable("result") result: String,

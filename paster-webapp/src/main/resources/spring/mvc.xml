@@ -152,13 +152,13 @@
                     </property>
                 </bean>
 
-                <bean class="com.Ox08.paster.webapp.mvc.view.ConfigurableMarshallingView">
+                <bean class="com.Ox08.paster.webapp.mvc.view.ConfigurableXmlView">
                     <constructor-arg>
                         <bean class="org.springframework.oxm.xstream.XStreamMarshaller"
                               p:autodetectAnnotations="true" p:encoding="UTF-8"/>
                     </constructor-arg>
+                    <constructor-arg value="model,items"/>
                     <property name="contentType" value="application/xml"/>
-                    <property name="modelKeys" value="model,items"/>
                 </bean>
 
                 <bean class="com.Ox08.paster.webapp.mvc.view.PasteAtomView">

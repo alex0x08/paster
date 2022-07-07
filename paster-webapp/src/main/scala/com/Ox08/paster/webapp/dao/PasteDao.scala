@@ -33,7 +33,7 @@ import scala.jdk.CollectionConverters._
 @Transactional(readOnly = true, rollbackFor = Array(classOf[Exception]))
 class PasteDao extends SearchableDaoImpl[Paste](classOf[Paste]) {
 
-  def getByOwner(owner: PasterUser): util.List[Paste] = getListByKeyValue("author", owner)
+  def getByAuthor(author: PasterUser): util.List[Paste] = getListByKeyValue("author", author)
 
   def getByRemoteUrl(url: String): util.List[Paste] = getListByKeyValue("remoteUrl", url)
 
@@ -50,9 +50,9 @@ class PasteDao extends SearchableDaoImpl[Paste](classOf[Paste]) {
   def getPreviousPastas(paste: Paste): java.util.List[Paste] =
     getNextPreviousPaste(paste, direction = true, BaseDao.MAX_RESULTS)
 
-  def getPreviousPastasIdList(paste: Paste): java.util.List[Long] = {
+  def getPreviousPastasIdList(paste: Paste): java.util.List[Integer] = {
 
-    val out = new util.ArrayList[Long]
+    val out = new util.ArrayList[Integer]
 
     val cb = em.getCriteriaBuilder
     val cr = cb.createTupleQuery()
@@ -77,7 +77,7 @@ class PasteDao extends SearchableDaoImpl[Paste](classOf[Paste]) {
     val tupleResult: java.util.List[Tuple] = em.createQuery(cr)
       .setMaxResults(BaseDao.MAX_RESULTS).getResultList
     for (t <- tupleResult.asScala) {
-      out.add(t.get(0).asInstanceOf[Long])
+      out.add(t.get(0).asInstanceOf[Integer])
     }
     out
   }

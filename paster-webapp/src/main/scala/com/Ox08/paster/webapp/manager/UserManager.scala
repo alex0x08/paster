@@ -51,7 +51,7 @@ object UserManager extends Logged {
       }
 }
 
-class UserManagerImpl extends UserDetailsService with Logged {
+class UserManager extends UserDetailsService with Logged {
 
   val users: util.Map[String,PasterUser] = new util.HashMap
 

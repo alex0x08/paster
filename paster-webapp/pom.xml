@@ -574,17 +574,11 @@
                 <artifactId>jetty-maven-plugin</artifactId>
                 <version>11.0.11</version>
                 <configuration>
-                   <systemProperties>
-                       <systemProperty>
-                           <name>appDebug</name>
-                           <value>true</value>
-                       </systemProperty>
 
-                        <!--systemProperty>
-                            <name>logback.configurationFile</name>
-                            <value>src/main/resources/logback-debug.xml</value>
-                        </systemProperty-->
+                    <systemProperties>
+                        <appDebug>true</appDebug>
                     </systemProperties>
+
                     <!--scanIntervalSeconds>0</scanIntervalSeconds-->
                     <webApp>
                         <contextPath>/${project.artifactId}</contextPath>

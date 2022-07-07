@@ -26,25 +26,33 @@ import java.util
 import java.util.Collections
 import scala.jdk.CollectionConverters._
 
-
+/**
+ *  A preudo-DAO class to store collection of supported code types
+ *
+ *
+ * @param codeTypesString
+ *            list of supported code types, separated by comma (,)
+ * @param codeTypeDefault
+ *            a default code type
+ */
 @Service
 class CodeTypeDao(@Value("${paster.codeTypes:null}")
-                  codeTypesString: String) extends AbstractStringBasedDao(codeTypesString, "plain") {
-
-}
+                  codeTypesString: String,
+                  @Value("${paster.codeTypes.default:'plain'}")
+                  codeTypeDefault: String
+                 ) extends AbstractStringBasedDao(codeTypesString, codeTypeDefault) {}
 
 
 @Service
 class PriorityDao(@Value("${paster.priorities:null}")
-                  prioritiesString: String) extends AbstractStringBasedDao(prioritiesString, "Normal") {
-
-}
+                  prioritiesString: String,
+                  @Value("${paster.priorities.default:'Normal'}")
+                  priorityDefault: String) extends AbstractStringBasedDao(prioritiesString, priorityDefault) {}
 
 @Service
 class ChannelDao(@Value("${paster.channels:null}")
-                 channelsString: String) extends AbstractStringBasedDao(channelsString, "Default") {
-
-}
+                 channelsString: String,@Value("${paster.channels.default:'Default'}")
+                 channelDefault: String) extends AbstractStringBasedDao(channelsString, channelDefault) {}
 
 abstract class AbstractStringBasedDao(elementsAsString: String,
                                       defaultElement: String) extends Logged {
@@ -52,10 +60,14 @@ abstract class AbstractStringBasedDao(elementsAsString: String,
   val elements: util.Set[String] = new util.TreeSet[String]()
 
   if (StringUtils.isBlank(elementsAsString))
-    elements.add(defaultElement) else
+    elements.add(defaultElement) else {
     for (ch <- elementsAsString.split(",")) {
       elements.add(ch)
     }
+    if (!elements.contains(defaultElement)) {
+      elements.add(defaultElement)
+    }
+  }
 
   def getAvailableElements: util.Set[String] = Collections.unmodifiableSet(elements)
 

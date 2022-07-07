@@ -1,11 +1,10 @@
 package com.Ox08.paster.webapp.mvc.view
 
 import com.Ox08.paster.webapp.model.Paste
-import com.Ox08.paster.webapp.mvc.GenericController
+import com.Ox08.paster.webapp.mvc.MvcConstants
 import org.springframework.web.servlet.view.feed.AbstractAtomFeedView
 import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
 import com.rometools.rome.feed.atom.{Content, Entry, Feed}
-
 import java.time.ZoneOffset
 import scala.jdk.CollectionConverters._
 import java.util.{Collections, Date}
@@ -24,7 +23,7 @@ class PasteAtomView extends AbstractAtomFeedView{
     feed.setId("tag:paster")
     feed.setTitle("Latest pastas")
 
-    val contentList =model.get(GenericController.NODE_LIST_MODEL).asInstanceOf[java.util.List[Paste]]
+    val contentList =model.get(MvcConstants.NODE_LIST_MODEL).asInstanceOf[java.util.List[Paste]]
 
     for (e:Paste<- contentList.asScala) {
       val date = Date.from(e.lastModified.toInstant(ZoneOffset.UTC))
@@ -38,11 +37,11 @@ class PasteAtomView extends AbstractAtomFeedView{
                                           request:HttpServletRequest , 
                                           response:HttpServletResponse ):java.util.List[Entry]=  {
 
-         if (!model.containsKey(GenericController.NODE_LIST_MODEL)) {
+         if (!model.containsKey(MvcConstants.NODE_LIST_MODEL)) {
            return Collections.emptyList[Entry]()
          }
 
-    val  contentList = model.get(GenericController.NODE_LIST_MODEL).asInstanceOf[java.util.List[Paste]]
+    val  contentList = model.get(MvcConstants.NODE_LIST_MODEL).asInstanceOf[java.util.List[Paste]]
 
     val entries:java.util.List[Entry] = new java.util.ArrayList[Entry](contentList.size())
 

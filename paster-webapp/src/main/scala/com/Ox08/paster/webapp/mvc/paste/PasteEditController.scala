@@ -17,9 +17,9 @@
 package com.Ox08.paster.webapp.mvc.paste
 
 import com.Ox08.paster.webapp.dao._
-import com.Ox08.paster.webapp.manager.ResourcePathHelper
+import com.Ox08.paster.webapp.manager.ResourceManager
 import com.Ox08.paster.webapp.model._
-import com.Ox08.paster.webapp.mvc.{GenericController, GenericEditController}
+import com.Ox08.paster.webapp.mvc.{GenericEditController, MvcConstants}
 import com.fasterxml.jackson.annotation.JsonIgnore
 import jakarta.validation.Valid
 import org.apache.commons.lang3.StringUtils
@@ -32,6 +32,7 @@ import org.springframework.validation.BindingResult
 import org.springframework.web.bind.WebDataBinder
 import org.springframework.web.bind.annotation._
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
+
 import java.util
 import java.util.Locale
 import scala.jdk.CollectionConverters._
@@ -63,7 +64,7 @@ class PasteEditController extends GenericEditController[Paste] {
   val commentManager: CommentDao = null
 
   @Autowired
-  val resourcePathHelper: ResourcePathHelper = null
+  val resourcePathHelper: ResourceManager = null
 
   @Autowired
   @Qualifier("mimeTypeSource")
@@ -130,7 +131,9 @@ class PasteEditController extends GenericEditController[Paste] {
 
   override def getNewModelInstance: Paste = {
     val p = new Paste()
-    p.author = getCurrentUser.getUsername()
+    if (isCurrentUserLoggedIn) {
+      p.author = getCurrentUser.getUsername()
+    }
     p.channel =channelDao.getDefault
     p
   }
@@ -167,13 +170,13 @@ class PasteEditController extends GenericEditController[Paste] {
                       @RequestParam(required = true) thumbImgData: String,
                       model: Model): String = {
 
-    if (!isCurrentUserLoggedIn && !allowAnonymousCommentsCreate) return page403
+    if (!isCurrentUserLoggedIn && !allowAnonymousCommentsCreate) return MvcConstants.page403
 
     var p = pasteManager.get(pasteId)
 
-    if (p == null) return page404
+    if (p == null) return MvcConstants.page404
 
-    if (reviewImgData == null || thumbImgData == null) return page500
+    if (reviewImgData == null || thumbImgData == null) return MvcConstants.page500
 
     logger.info("adding reviewImg to {}, data {}", Array(pasteId, reviewImgData))
 
@@ -196,13 +199,13 @@ class PasteEditController extends GenericEditController[Paste] {
   def saveComment(@Valid b: Comment,
                   result: BindingResult, model: Model, locale: Locale): String = {
 
-    if (!isCurrentUserLoggedIn && !allowAnonymousCommentsCreate) return page403
+    logger.debug("adding comment {}", b)
+
+    if (!isCurrentUserLoggedIn && !allowAnonymousCommentsCreate) return MvcConstants.page403
 
     val p = manager().get(b.pasteId)
 
-    if (p == null) return page404
-
-    logger.debug("adding comment {}", b)
+    if (p == null) return MvcConstants.page404
 
     if (result.hasErrors) {
       logger.debug("form has errors {}", result.getErrorCount)
@@ -228,11 +231,11 @@ class PasteEditController extends GenericEditController[Paste] {
 
   @RequestMapping(value = Array("/save"), method = Array(RequestMethod.POST))
   override def save(@RequestParam(required = false) cancel: String,
-                    @Valid @ModelAttribute(GenericController.MODEL_KEY) b: Paste,
+                    @Valid @ModelAttribute(MvcConstants.MODEL_KEY) b: Paste,
                     result: BindingResult, model: Model, locale: Locale,
                     redirectAttributes: RedirectAttributes): String = {
 
-    if (!isCurrentUserLoggedIn && !allowAnonymousPasteCreate) return page403
+    if (!isCurrentUserLoggedIn && !allowAnonymousPasteCreate) return MvcConstants.page403
 
     logger.debug("saving paste..")
 
@@ -354,7 +357,7 @@ class PasteEditController extends GenericEditController[Paste] {
     if (!r.equals(viewPage))
       return r
 
-    val p = model.asMap().get(GenericController.MODEL_KEY).asInstanceOf[Paste]
+    val p = model.asMap().get(MvcConstants.MODEL_KEY).asInstanceOf[Paste]
 
     model.addAttribute("title", getResource("paste.view.title",
       Array(p.id, StringEscapeUtils.escapeHtml4(p.title)),
@@ -408,13 +411,13 @@ class PasteEditController extends GenericEditController[Paste] {
    * @return new search query object
    */
   @ModelAttribute("query")
-  def newQuery(): OwnerQuery = new OwnerQuery()
+  def newQuery(): AuthorQuery = new AuthorQuery()
 }
 
-class IdList(list: java.util.List[Long]) {
+class IdList(list: java.util.List[Integer]) {
 
   def getCount: Int = list.size()
-  def getItems: util.List[Long] = list
+  def getItems: util.List[Integer] = list
   def getItemsAsString: String = StringUtils.join(list, ",")
 
 }

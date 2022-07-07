@@ -363,7 +363,7 @@ var SyntaxHighlighter = function () {
                     }
                 } else {
                     if (showEditForm) {
-                        sh.insertEditForm(sh.vars.modelId, ln);
+                     //   sh.insertEditForm(sh.vars.modelId, ln);
                     }
                 }
 
@@ -478,6 +478,8 @@ var SyntaxHighlighter = function () {
             cForm.style.position = "relative";
             cForm.style['max-width'] = window.innerWidth - 100;
             cForm.style.display = "";
+
+            Logger.debug('edit line: ',sh.vars.currentEditLine )
 
             if (sh.vars.currentEditLine != null) {
                 // alert('hide prev '+sh.vars.currentEditModel+'|line='+sh.vars.currentEditLine);
@@ -1478,6 +1480,7 @@ var SyntaxHighlighter = function () {
          * @return {String}				Returns HTML markup.
          */
         getLineHtml: function (lineIndex, lineNumber, code, mode) {
+           // Logger.debug('getLineHtml ',lineIndex,lineNumber,code,mode)
             var classes = [
                 'line',
                 'number' + lineNumber,

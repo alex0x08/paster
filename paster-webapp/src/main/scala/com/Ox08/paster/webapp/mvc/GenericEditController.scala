@@ -16,6 +16,7 @@
 
 package com.Ox08.paster.webapp.mvc
 
+import com.Ox08.paster.webapp.dao.StructDaoImpl
 import com.Ox08.paster.webapp.model.Struct
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
@@ -25,25 +26,35 @@ import org.springframework.web.bind.annotation._
 import java.util.Locale
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
 
-object GenericEditController {
-  final val EDIT_ACTION = "/edit"
-  final val VIEW_ACTION = "/view"
-  final val SAVE_ACTION = "/save"
-  final val NEW_ACTION = "/new"
-  final val DELETE_ACTION = "/delete"
-}
-
-abstract class GenericEditController[T <: Struct] extends GenericController[T] {
+abstract class GenericEditController[T <: Struct] extends AbstractController {
 
   protected def getNewModelInstance: T
 
+  /**
+   * link to list page
+   */
+  protected def listPage:String
+
+  /**
+   *  edit page
+   */
+  protected def editPage:String
+
+  protected def viewPage:String
+
+
+  /**
+   *  binded DAO service
+   */
+  protected def manager():StructDaoImpl[T]
+
   protected def fillEditModel(obj: T, model: Model, locale: Locale): Unit = {
-    model.addAttribute(GenericController.MODEL_KEY, obj)
+    model.addAttribute(MvcConstants.MODEL_KEY, obj)
   }
 
   def loadModel(id: Integer): T = manager().getFull(id)
 
-  @RequestMapping(value = Array(GenericEditController.NEW_ACTION), method = Array(RequestMethod.GET))
+  @RequestMapping(value = Array(MvcConstants.NEW_ACTION), method = Array(RequestMethod.GET))
   @ResponseStatus(HttpStatus.CREATED)
   def createNew(model: Model, locale: Locale): String = {
     fillEditModel(getNewModelInstance, model, locale)
@@ -53,15 +64,15 @@ abstract class GenericEditController[T <: Struct] extends GenericController[T] {
   @RequestMapping(value = Array("/edit/{id:[0-9]+}"), method = Array(RequestMethod.GET))
   def editWithId(model: Model, @PathVariable("id") id: Integer, locale: Locale): String = {
     if (id == 0) {
-      return page404
+      return MvcConstants.page404
     }
     fillEditModel(loadModel(id), model, locale)
     editPage
   }
 
-  @RequestMapping(value = Array(GenericEditController.SAVE_ACTION), method = Array(RequestMethod.POST))
+  @RequestMapping(value = Array(MvcConstants.SAVE_ACTION), method = Array(RequestMethod.POST))
   def save(@RequestParam(required = false) cancel: String,
-           @Valid @ModelAttribute(GenericController.MODEL_KEY) b: T,
+           @Valid @ModelAttribute(MvcConstants.MODEL_KEY) b: T,
            result: BindingResult, model: Model, locale: Locale,
            redirectAttributes: RedirectAttributes): String = {
 
@@ -85,7 +96,7 @@ abstract class GenericEditController[T <: Struct] extends GenericController[T] {
     listPage
   }
 
-  @RequestMapping(value = Array(GenericEditController.DELETE_ACTION),
+  @RequestMapping(value = Array(MvcConstants.DELETE_ACTION),
     method = Array(RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE))
   def delete(@RequestParam(required = false) id: Integer): String = {
     manager().remove(id)
@@ -96,9 +107,9 @@ abstract class GenericEditController[T <: Struct] extends GenericController[T] {
   def getByPath(@PathVariable("id") id: Integer, model: Model, locale: Locale): String = {
     val m = loadModel(id)
     if (m == null) {
-      return page404
+      return MvcConstants.page404
     }
-    model.addAttribute(GenericController.MODEL_KEY, m)
+    model.addAttribute(MvcConstants.MODEL_KEY, m)
     fillEditModel(m, model, locale)
     viewPage
   }

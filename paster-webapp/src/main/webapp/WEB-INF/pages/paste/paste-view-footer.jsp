@@ -4,7 +4,7 @@
 
 <script src="<c:url value='/main/resources/${appId}/local_components/syntax_highlighter/XRegExp.js'/>"></script>
 <script src="<c:url value='/main/resources/${appId}/local_components/syntax_highlighter/shCore.js'/>"></script>
-<script src="<c:url value='/main/resources/${appId}/local_components/syntax_highlighter/shUber.js'/>"></script>
+<script src="<c:url value='/main/resources/${appId}/local_components/syntax_highlighter/shAll.js'/>"></script>
 <script type="text/javascript"
     src="<c:url value='/main/resources/${appId}/local_components/epiceditor/js/epiceditor.js'/>"></script>
 <script type="text/javascript"

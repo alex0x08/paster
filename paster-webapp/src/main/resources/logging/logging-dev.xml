@@ -27,17 +27,13 @@
     </appender>
     
     
-    <logger name="com.x0x08" level="DEBUG" additivity="false">
+    <logger name="com.Ox08" level="DEBUG" additivity="false">
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="CYCLIC"/>
     
     </logger>
     
-     <logger name="ru" level="DEBUG" additivity="false">
-        <appender-ref ref="CONSOLE"/>
-        <appender-ref ref="CYCLIC"/>
-    
-    </logger>
+     <logger name="org.h2" level="ALL" />
               
     
     <logger name="javax.activation" level="WARN"/>

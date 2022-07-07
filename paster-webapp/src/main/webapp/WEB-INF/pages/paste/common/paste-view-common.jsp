@@ -19,7 +19,7 @@
     <div id="${model.id}_centerPanel" class="col-md-12" style="min-width:650px;">
 
         <c:url var="drawImg"
-            value='/main/resources/${appId}/r/${model.lastModified.time}/paste_content/${model.reviewImgData}' />
+            value='/main/resources/${appId}/r/${model.lastModifiedDt.time}/paste_content/${model.reviewImgData}' />
 
 <%--
 
@@ -172,7 +172,7 @@
                                 <tiles:putAttribute name="modelName" value="comment" />
                             </tiles:insertDefinition>
                             ,
-                            <kc:prettyTime date="${comment.lastModified}" locale="${pageContext.response.locale}" />
+                            <kc:prettyTime date="${comment.lastModifiedDt}" locale="${pageContext.response.locale}" />
                         </small>
                     </div>
 
@@ -187,7 +187,7 @@
                             </a>
                         </c:if>
                         <sec:authorize
-                            access="${currentUser !=null and (currentUser.admin or ( comment.hasOwner  and comment.owner eq currentUser)) }">
+                            access="${currentUser !=null and (currentUser.admin or ( comment.hasAuthor and comment.author eq currentUser)) }">
 
 
                             <a class="deleteBtn" id="deleteCommentBtn_${model.id}_${comment.id}" href="<c:url value='/main/paste/removeComment'>

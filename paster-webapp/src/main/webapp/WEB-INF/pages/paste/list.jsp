@@ -67,11 +67,11 @@
                 Found
                 <c:forEach var="resultType" items="${availableResults}" varStatus="loopStatus">
                     <c:choose>
-                        <c:when test="${result eq resultType.codeLowerCase}">
-                            <span style="font-size: larger; "><fmt:message key="${resultType.name}"/> </span>
+                        <c:when test="${result eq resultType}">
+                            <span style="font-size: larger; "><fmt:message key="${resultType}"/> </span>
                         </c:when>
                         <c:otherwise>
-                            <a href="<c:url value='/main/paste/list/search/${resultType.codeLowerCase}/1'/>"><fmt:message key="${resultType.name}"/></a>
+                            <a href="<c:url value='/main/paste/list/search/${resultType}/1'/>"><fmt:message key="${resultType}"/></a>
                         </c:otherwise>
                     </c:choose>
                     <c:if test="${!loopStatus.last}"> | </c:if>
@@ -92,7 +92,7 @@
             <c:choose>
                 <c:when test="${paste['class'].name eq 'com.Ox08.paster.webapp.model.Paste'}">
                     <c:if test="${not paste.stick}">
-                        <c:set property="curDate" value="${paste.lastModified}" target="${splitHelper}"/>
+                        <c:set property="curDate" value="${paste.lastModifiedDt}" target="${splitHelper}"/>
                     </c:if>
 
                     <c:set var="priorTitle"><fmt:message key="${paste.priority}"/></c:set>
@@ -102,7 +102,7 @@
 
                         <div class="col-md-2" style="padding-bottom: 0.5em;">
 
-                            <c:url value='/main/resources/${appId}/t/${paste.lastModified.time}/paste_content/${paste.thumbImage}' var="thumbUrl">
+                            <c:url value='/main/resources/${appId}/t/${paste.lastModifiedDt.time}/paste_content/${paste.thumbImage}' var="thumbUrl">
                             </c:url>
 
                             <a class="pastePreviewLink" href="<c:url value='/${paste.id}'></c:url>" pasteId="${paste.id}" 
@@ -167,7 +167,7 @@
                                             <fmt:message key="paste.edit.word.counter.charText"/>
                                         </c:if>
                                         )
-                                        ,<kc:prettyTime date="${paste.lastModified}" locale="${pageContext.response.locale}"/>
+                                        ,<kc:prettyTime date="${paste.lastModifiedDt}" locale="${pageContext.response.locale}"/>
                                     </small>
 
                                 
@@ -181,7 +181,7 @@
                 </c:when>
                 <c:when test="${paste['class'].name eq 'com.Ox08.paster.webapp.Comment'}">
 
-                    <c:set property="curDate" value="${paste.lastModified}" target="${splitHelper}"/>
+                    <c:set property="curDate" value="${paste.lastModifiedDt}" target="${splitHelper}"/>
 
                     <a href="<c:url value='/${paste.id}'></c:url>" title="Click to view paste vol. ${paste.id}">
                         <span  class="pasteTitle"><c:out value="${paste.text}" escapeXml="true"  /></span>
@@ -195,7 +195,7 @@
                             <tiles:putAttribute name="modelName" value="paste"/>
                         </tiles:insertDefinition>
 
-                        ,<kc:prettyTime date="${paste.lastModified}" locale="${pageContext.response.locale}"/>
+                        ,<kc:prettyTime date="${paste.lastModifiedDt}" locale="${pageContext.response.locale}"/>
                     </small>
 
                 </c:when>

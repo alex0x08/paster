@@ -28,7 +28,7 @@ class StaticResourcesContentInterceptor extends WebContentInterceptor {
     super.preHandle(request, response, handler)
     val h = response.getHeader("Cache-Control")
     if (h != null) {
-      response.setHeader("Cache-Control", h + " private")
+      response.setHeader("Cache-Control", s"$h private")
     }
     if (response.containsHeader("Cookie")) {
       response.setHeader("Cookie", null)

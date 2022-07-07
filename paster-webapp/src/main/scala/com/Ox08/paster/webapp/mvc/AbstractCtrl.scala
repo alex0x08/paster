@@ -27,21 +27,64 @@ import org.springframework.orm.ObjectRetrievalFailureException
 import org.springframework.web.bind.annotation._
 import java.util.Locale
 
-object LocaleConstants {
+
+
+object MvcConstants {
+
+
+  val page404 = "/error/404"
+
+  val page403 = "/error/403"
+
+  val page500 = "/error/500"
+
+  final val NODE_LIST_MODEL = "items"
+  final val NODE_LIST_MODEL_PAGE = "pageItems"
+  final val MODEL_KEY= "model"
+  final val NODE_COUNT_KEY = "count"
 
   val availableLocales: Array[Locale] =Array(
     Locale.US,
     Locale.forLanguageTag("ru_RU")
   )
+
+  final val INTEGRATED = "/integrated"
+
+  final val RAW = "/raw"
+
+  final val LIST_ACTION = "/list"
+
+  final val COUNT_ACTION = "/count"
+
+  final val NEXT_PARAM = "next"
+
+  final val PAGE_SET = "pageSet"
+
+  final val pageSet:Array[Int] = Array(5,10,50,100,500)
+  /**
+   * model attribute to specify list mode
+   * value can be 'search' or 'list'
+   */
+  final val LIST_MODE = "listMode"
+
+
+  final val defaultSortColumns:List[SortColumn] =
+    List[SortColumn](new SortColumn("id","struct.id"),
+      new SortColumn("name","struct.name"),
+      new SortColumn("lastModified","struct.lastModified"))
+
+  final val SEARCH_ACTION = "/list/search"
+  final val TOTAL_FOUND = "totalFound"
+
+  final val EDIT_ACTION = "/edit"
+  final val VIEW_ACTION = "/view"
+  final val SAVE_ACTION = "/save"
+  final val NEW_ACTION = "/new"
+  final val DELETE_ACTION = "/delete"
+
 }
 
 abstract class AbstractController extends Logged {
-
-  protected val page404 = "/error/404"
-
-  protected val page403 = "/error/403"
-
-  protected val page500 = "/error/500"
 
   @Autowired
   protected val messageSource: MessageSource = null
@@ -74,7 +117,7 @@ abstract class AbstractController extends Logged {
   @ExceptionHandler(Array(classOf[Throwable]))
   protected def handleAllExceptions(ex: ObjectRetrievalFailureException): String = {
     logger.error(ex.getLocalizedMessage, ex)
-    page500
+    MvcConstants.page500
   }
 
   @ModelAttribute("appId")
@@ -84,7 +127,7 @@ abstract class AbstractController extends Logged {
   def getSystemInfo: BOOT.SystemInfo = systemInfo
 
   @ModelAttribute("availableLocales")
-  def getAvailableLocales: Array[Locale] = LocaleConstants.availableLocales
+  def getAvailableLocales: Array[Locale] = MvcConstants.availableLocales
 
   @JsonIgnore
   @ModelAttribute("currentUser")

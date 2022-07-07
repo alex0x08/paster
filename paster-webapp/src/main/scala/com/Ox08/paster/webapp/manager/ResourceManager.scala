@@ -28,12 +28,12 @@ import java.text.SimpleDateFormat
 import java.util.{Base64, Calendar}
 import scala.collection.mutable
 
-object ResourcePathHelper {
+object ResourceManager {
   val PATH_FORMAT = new SimpleDateFormat("YYYY/MM/dd/")
 }
 
 @Component("resourcePathHelper")
-class ResourcePathHelper extends Logged {
+class ResourceManager extends Logged {
 
   @Value("${paster.app.home}")
   val pasteAppHome: String = null
@@ -55,7 +55,7 @@ class ResourcePathHelper extends Logged {
 
   def saveResource(pt: String, objId :String,imgData:String): String = {
     val fname = new mutable.StringBuilder()
-      .append(ResourcePathHelper.PATH_FORMAT.format(Calendar.getInstance().getTime))
+      .append(ResourceManager.PATH_FORMAT.format(Calendar.getInstance().getTime))
       .append(objId)
       .append('.')
       .append(getExtFor(pt))

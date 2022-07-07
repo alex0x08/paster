@@ -28,24 +28,31 @@ class Comment extends Struct with java.io.Serializable {
   var author: String = _
 
   @Column(name = "line_num")
-  var lineNumber: Long = _
+  var lineNumber: Int = _
 
   @XStreamAsAttribute
   @Column(name = "parent_id")
-  var parentId: Long = _
+  var parentId: Integer = _
 
   @Transient
-  private var thumbImage: Option[String] = None
+  var thumbImage: String = _
+
+  def getId: Integer = id
+  def getText: String = text
+  def getAuthor: String = author
+  def getLineNumber: Int = lineNumber
+  def getParentId: Integer = parentId
+  def getPasteId: Integer = pasteId
 
   @JsonIgnore
-  def getThumbImage: String = thumbImage.get
+  def getThumbImage: String = thumbImage
 
   def setThumbImage(img: String): Unit =  {
-    thumbImage = Some(img)
+    thumbImage = img
   }
 
 
-  def isHasOwner: Boolean = author != null
+  def isHasAuthor: Boolean = author != null
 
 
   override def terms(): List[String] =  super.terms() ::: List[String]("text")

@@ -51,7 +51,7 @@
                      
                  </td>
                  <td>
-                     <c:out value="${user.lastModified}"/>
+                     <c:out value="${user.lastModifiedDt}"/>
                  </td>
              </tr>
          

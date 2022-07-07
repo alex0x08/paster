@@ -15,7 +15,7 @@
 
 
 <sec:authorize
-    access="${currentUser !=null and (currentUser.admin or ( model.hasOwner  and model.owner eq currentUser)) }">
+    access="${currentUser !=null and (currentUser.admin or ( model.hasAuthor  and model.author eq currentUser)) }">
 
     <a class="btn btn-danger btn-sm deleteBtn" id="deleteBtn_${model.id}"
         href="<c:url value='/main/${modelName}/delete'><c:param name="id" value="${model.id}" /></c:url>"
@@ -26,7 +26,7 @@
 
     <div style="display:none;" id="dialogMsg">
         <img width="300" height="200" class="p-comment" style="width: 250px; height: 150px; float: left; margin: 5px;"
-            src="<c:url value='/main/resources/${appId}/t/static/paste_content/${model.thumbImage}' />" />
+            src="<c:url value='/main/resources/${appId}/t/${model.lastModifiedDt.time}/paste_content/${model.thumbImage}' />" />
         <fmt:message key="dialog.confirm.paste.remove.message">
             <fmt:param value="${model.id}" />
         </fmt:message>

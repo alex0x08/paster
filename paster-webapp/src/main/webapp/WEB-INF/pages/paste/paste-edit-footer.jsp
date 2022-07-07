@@ -10,7 +10,7 @@
 
 <script src="<c:url value='/main/resources/${appId}/local_components/syntax_highlighter/XRegExp.js'/>"></script>
 <script src="<c:url value='/main/resources/${appId}/local_components/syntax_highlighter/shCore.js'/>"></script>
-<script src="<c:url value='/main/resources/${appId}/local_components/syntax_highlighter/shUber.js'/>"></script>
+<script src="<c:url value='/main/resources/${appId}/local_components/syntax_highlighter/shAll.js'/>"></script>
 
 <script src="<c:url value='/main/resources/${appId}/paster/js/paste-edit/word-count.js'/>" type="text/javascript"
     charset="utf-8"></script>

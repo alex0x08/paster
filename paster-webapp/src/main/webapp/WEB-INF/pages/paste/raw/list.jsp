@@ -8,8 +8,8 @@
 
 <div id="paste_list_${param.page}" class="page">
     <h4 class="f-h4">
-        <fmt:formatDate pattern="${dateTimePattern}" var="fromDate" value="${pageItems.firstElement.lastModified}" />
-        <fmt:formatDate pattern="${dateTimePattern}" var="toDate" value="${pageItems.lastElement.lastModified}" />
+        <fmt:formatDate pattern="${dateTimePattern}" var="fromDate" value="${pageItems.firstElement.lastModifiedDt}" />
+        <fmt:formatDate pattern="${dateTimePattern}" var="toDate" value="${pageItems.lastElement.lastModifiedDt}" />
 
         <a href="<c:url value='/main/paste/list/${sourceType}/${param.page}'/>">
 
@@ -42,7 +42,7 @@
                            href="<c:url value='/main/paste/list/search?query=priority:${paste.priority}'/>">/</a>
 
                         <a href="<c:url value='/main/paste/${paste.id}'></c:url>" title="Click to view paste vol. ${paste.id}">
-                            <span  class="pasteTitle"><c:out value="${paste.name}" escapeXml="true"  /></span>
+                            <span  class="pasteTitle"><c:out value="${paste.title}" escapeXml="true"  /></span>
                         </a>
                     </div>
                 </div>
@@ -103,7 +103,7 @@
                                         <tiles:putAttribute name="modelName" value="paste"/>
                                     </tiles:insertDefinition>
 
-                                    ,<kc:prettyTime date="${paste.lastModified}" locale="${pageContext.response.locale}"/>
+                                    ,<kc:prettyTime date="${paste.lastModifiedDt}" locale="${pageContext.response.locale}"/>
                                 </small>
 
                                 <sec:authorize access="hasRole('ROLE_ADMIN')">
