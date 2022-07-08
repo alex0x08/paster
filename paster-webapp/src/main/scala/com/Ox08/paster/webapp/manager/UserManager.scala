@@ -109,7 +109,7 @@ class UserManager extends UserDetailsService with Logged {
       for (record <- records.asScala) {
         if (usersCount> 500) {
           logger.error("Too many users defined: {} Processed only first 500",records.getRecords.size())
-          break
+          break()
         }
         callback(record)
         usersCount+=1

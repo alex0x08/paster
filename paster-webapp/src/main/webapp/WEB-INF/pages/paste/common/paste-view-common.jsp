@@ -19,7 +19,7 @@
     <div id="${model.id}_centerPanel" class="col-md-12" style="min-width:650px;">
 
         <c:url var="drawImg"
-            value='/main/resources/${appId}/r/${model.lastModifiedDt.time}/paste_content/${model.reviewImgData}' />
+            value='/main/paste-resources/${appId}/r/${model.lastModifiedDt.time}/paste_content/${model.reviewImgData}' />
 
 <%--
 

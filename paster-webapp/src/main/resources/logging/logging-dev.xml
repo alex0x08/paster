@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<included>    
+<included>
+
+    <turboFilter class="ch.qos.logback.classic.turbo.DuplicateMessageFilter" allowedRepetitions="2"/>
+
+
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
 
-        <turboFilter class="ch.qos.logback.classic.turbo.DuplicateMessageFilter"/>
 
         <!-- On Windows machines setting withJansi to true enables ANSI
         color code interpretation by the Jansi library. This requires
@@ -65,6 +68,8 @@
     -->
     <logger name="org.hibernate.engine.jdbc.env.internal.LobCreatorBuilderImpl" level="ERROR"/>
 
+    <logger name="org.hibernate.SQL" level="DEBUG" />
+    <logger name="org.hibernate.type" level="TRACE" />
 
     <root level="INFO">
         <appender-ref ref="CONSOLE"/>

@@ -180,8 +180,8 @@ class PasteEditCtrl extends GenericEditCtrl[Paste] {
 
     logger.info("adding reviewImg to {}, data {}", Array(pasteId, reviewImgData))
 
-    p.reviewImgData = resourcePathHelper.saveResource("r", p.uuid,reviewImgData)
-    p.thumbImage =resourcePathHelper.saveResource("t", p.uuid,thumbImgData)
+    p.reviewImgData = resourcePathHelper.saveResource('r', p.uuid,reviewImgData)
+    p.thumbImage =resourcePathHelper.saveResource('t', p.uuid,thumbImgData)
 
     p.touch()
     p = manager().save(p)
@@ -221,7 +221,7 @@ class PasteEditCtrl extends GenericEditCtrl[Paste] {
     commentManager.save(b)
 
     if (b.getThumbImage != null)
-      p.thumbImage =resourcePathHelper.saveResource("t", p.uuid,b.getThumbImage)
+      p.thumbImage =resourcePathHelper.saveResource('t', p.uuid,b.getThumbImage)
     p.touch()
     manager().save(p)
     model.asMap().clear()
@@ -324,7 +324,7 @@ class PasteEditCtrl extends GenericEditCtrl[Paste] {
     logger.debug("__found thumbnail {} comments {}", b.thumbImage, b.commentsCount)
 
     if (b.thumbImage != null) {
-      b.thumbImage =resourcePathHelper.saveResource("t", b.uuid,b.thumbImage)
+      b.thumbImage =resourcePathHelper.saveResource('t', b.uuid,b.thumbImage)
     }
 
     val out = super.save(cancel, b, result, model, locale, redirectAttributes)

@@ -127,6 +127,14 @@ class Boot private() extends Logged {
       val dateInstalled: Date = INSTALLED_TS_FORMAT.parse(dateInstalledStr)
       logger.debug("found install date: {}", dateInstalled)
       system.setInstalled(installed = true, dateInstalled)
+    } else {
+      val dateInstalled = new Date()
+      val p: Properties = new Properties()
+      p.setProperty("dateInstalled", INSTALLED_TS_FORMAT.format(dateInstalled))
+      val out = new StringWriter()
+      p.store(out, "Install information")
+      FileUtils.writeStringToFile(iFile, out.toString, "UTF-8")
+      system.setInstalled(installed = true, dateInstalled)
     }
   }
   /**

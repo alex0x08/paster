@@ -102,7 +102,7 @@
 
                         <div class="col-md-2" style="padding-bottom: 0.5em;">
 
-                            <c:url value='/main/resources/${appId}/t/${paste.lastModifiedDt.time}/paste_content/${paste.thumbImage}' var="thumbUrl">
+                            <c:url value='/main/paste-resources/${appId}/t/${paste.lastModifiedDt.time}/paste_content/${paste.thumbImage}' var="thumbUrl">
                             </c:url>
 
                             <a class="pastePreviewLink" href="<c:url value='/${paste.id}'></c:url>" pasteId="${paste.id}" 

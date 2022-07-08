@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.{PathVariable, RequestMapping, Re
 import java.io.{FileInputStream, IOException}
 import scala.collection.mutable
 @Controller
-@RequestMapping(Array("/resources"))
+@RequestMapping(Array("/paste-resources"))
 class ResourceCtrl extends AbstractCtrl {
   @Value("${paster.resources.cacheMillis:31557600}")
   private val MAX_AGE = 0
