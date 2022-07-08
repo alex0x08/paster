@@ -34,7 +34,7 @@ import java.util
  * @tparam T  model class
  * @tparam QV query class
  */
-abstract class SearchController[T <: Struct, QV <: Query] extends GenericListController[T] {
+abstract class SearchCtrl[T <: Struct, QV <: Query] extends GenericListCtrl[T] {
 
   /**
    * linked search manager

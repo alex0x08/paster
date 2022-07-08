@@ -13,9 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.Ox08.paster.webapp.dao
-
 import com.Ox08.paster.webapp.base.Logged
 import com.Ox08.paster.webapp.model.Tag
 import org.apache.commons.lang3.StringUtils
@@ -25,15 +23,13 @@ import org.springframework.transaction.annotation.Transactional
 import java.util
 import java.util.Collections
 import scala.jdk.CollectionConverters._
-
 /**
- *  A preudo-DAO class to store collection of supported code types
- *
+ * A preudo-DAO class to store collection of supported code types
  *
  * @param codeTypesString
- *            list of supported code types, separated by comma (,)
+ * list of supported code types, separated by comma (,)
  * @param codeTypeDefault
- *            a default code type
+ * a default code type
  */
 @Service
 class CodeTypeDao(@Value("${paster.codeTypes:null}")
@@ -41,47 +37,32 @@ class CodeTypeDao(@Value("${paster.codeTypes:null}")
                   @Value("${paster.codeTypes.default:'plain'}")
                   codeTypeDefault: String
                  ) extends AbstractStringBasedDao(codeTypesString, codeTypeDefault) {}
-
-
 @Service
 class PriorityDao(@Value("${paster.priorities:null}")
                   prioritiesString: String,
                   @Value("${paster.priorities.default:'Normal'}")
                   priorityDefault: String) extends AbstractStringBasedDao(prioritiesString, priorityDefault) {}
-
 @Service
 class ChannelDao(@Value("${paster.channels:null}")
-                 channelsString: String,@Value("${paster.channels.default:'Default'}")
+                 channelsString: String, @Value("${paster.channels.default:'Default'}")
                  channelDefault: String) extends AbstractStringBasedDao(channelsString, channelDefault) {}
-
 abstract class AbstractStringBasedDao(elementsAsString: String,
                                       defaultElement: String) extends Logged {
-
   val elements: util.Set[String] = new util.TreeSet[String]()
-
   if (StringUtils.isBlank(elementsAsString))
     elements.add(defaultElement) else {
     for (ch <- elementsAsString.split(",")) {
       elements.add(ch)
     }
-    if (!elements.contains(defaultElement)) {
-      elements.add(defaultElement)
-    }
+    if (!elements.contains(defaultElement)) elements.add(defaultElement)
   }
-
   def getAvailableElements: util.Set[String] = Collections.unmodifiableSet(elements)
-
   def getDefault: String = defaultElement
-
   def exist(name: String): Boolean = elements.contains(name)
-
 }
-
-
 @Repository("tagDao")
 @Transactional(readOnly = true, rollbackFor = Array(classOf[Exception]))
 class TagDao extends BaseDao[Tag, java.lang.Long](classOf[Tag]) {
-
   def getTagsMap: java.util.Map[String, Tag] = {
     val out = new util.HashMap[String, Tag]
     for (t <- getAll.asScala) {
@@ -89,13 +70,11 @@ class TagDao extends BaseDao[Tag, java.lang.Long](classOf[Tag]) {
     }
     out
   }
-
   def getTags: java.util.List[Tag] = {
     val out = new util.ArrayList[Tag]
     val l = em.createQuery("select t, count(t) from Paste p join p.tagsMap t group by t")
       .setMaxResults(100)
       .getResultList
-
     for (o <- l.asScala) {
       val oo = o.asInstanceOf[Array[Object]]
       val tag = oo(0).asInstanceOf[Tag]

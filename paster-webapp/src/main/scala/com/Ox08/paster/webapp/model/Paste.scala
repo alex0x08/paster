@@ -120,6 +120,7 @@ class Paste(ptitle: String) extends Struct with java.io.Serializable {
    * paste owner (author)
    */
   @Column(name = "author_username")
+  @KeywordField
   var author: String = _
 
   /**
@@ -150,7 +151,7 @@ class Paste(ptitle: String) extends Struct with java.io.Serializable {
   var channel: String = _
 
  // @Field(name = "tags", index = Index.YES, store = Store.YES, termVector = TermVector.YES) //,boost=@Boost(2f)
-  @KeywordField
+  @FullTextField(name="tags")
   @Column(name = "p_tags")
   var tagsAsString: String = _
 
@@ -168,7 +169,6 @@ class Paste(ptitle: String) extends Struct with java.io.Serializable {
   @KeywordField
   @Column(name = "p_prior")
   var priority: String = _
-
 
   @Column(name = "is_stick")
   var stick: Boolean = _

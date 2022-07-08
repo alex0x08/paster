@@ -19,7 +19,7 @@ package com.Ox08.paster.webapp.mvc.paste
 import com.Ox08.paster.webapp.dao._
 import com.Ox08.paster.webapp.manager.ResourceManager
 import com.Ox08.paster.webapp.model._
-import com.Ox08.paster.webapp.mvc.{GenericEditController, MvcConstants}
+import com.Ox08.paster.webapp.mvc.{GenericEditCtrl, MvcConstants}
 import com.fasterxml.jackson.annotation.JsonIgnore
 import jakarta.validation.Valid
 import org.apache.commons.lang3.StringUtils
@@ -43,7 +43,7 @@ import scala.jdk.CollectionConverters._
  */
 @Controller
 @RequestMapping(Array("/paste"))
-class PasteEditController extends GenericEditController[Paste] {
+class PasteEditCtrl extends GenericEditCtrl[Paste] {
 
   @Autowired
   val codeTypeDao: CodeTypeDao = null
@@ -334,12 +334,6 @@ class PasteEditController extends GenericEditController[Paste] {
     } else
       out
   }
-
-  def getMimeResource(key: String): String = mimeSource.getMessage(key,
-    new Array[java.lang.Object](0), null, Locale.getDefault)
-
-  def getMimeExtResource(key: String): String = mimeExtSource.getMessage(key,
-    new Array[java.lang.Object](0), null, Locale.getDefault)
 
   @RequestMapping(value = Array("/raw/view"), method = Array(RequestMethod.GET))
   def getByPathRaw(@RequestParam(required = true) id: Integer, model: Model, locale: Locale): String = {

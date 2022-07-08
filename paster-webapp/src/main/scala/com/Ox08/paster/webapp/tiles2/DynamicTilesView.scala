@@ -13,9 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.Ox08.paster.webapp.tiles2
-
 /**
  * <p>View implementation that first checks if the request is 
  * a Tiles definition, then if it isn't tries to retrieve a default Tiles 
@@ -41,8 +39,6 @@ package com.Ox08.paster.webapp.tiles2
  * @author David Winterfeldt (original Java version)
  *
  */
-
-
 import jakarta.servlet.{ServletContext, ServletException}
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
@@ -50,11 +46,8 @@ import org.apache.tiles.TilesContainer
 import org.apache.tiles.access.TilesAccess
 import org.apache.tiles.request.servlet.ServletUtil
 import org.springframework.web.servlet.view.AbstractUrlBasedView
-
 class DynamicTilesView extends AbstractUrlBasedView {
-
   private final val dynamicTilesViewProcessor = new DynamicTilesViewProcessor
-
   /**
    * Main template name.  The default is 'mainTemplate'.
    *
@@ -63,7 +56,6 @@ class DynamicTilesView extends AbstractUrlBasedView {
   def setTilesDefinitionName(tilesDefinitionName: String): Unit = {
     dynamicTilesViewProcessor.setTilesDefinitionName(tilesDefinitionName)
   }
-
   /**
    * Tiles body attribute name.  The default is 'body'.
    *
@@ -72,7 +64,6 @@ class DynamicTilesView extends AbstractUrlBasedView {
   def setTilesBodyAttributeName(tilesBodyAttributeName: String): Unit = {
     dynamicTilesViewProcessor.setTilesBodyAttributeName(tilesBodyAttributeName)
   }
-
   /**
    * Sets Tiles definition delimiter.  For example, instead of using
    * the request 'info/about' to lookup the template definition
@@ -84,7 +75,6 @@ class DynamicTilesView extends AbstractUrlBasedView {
   def setTilesDefinitionDelimiter(tilesDefinitionDelimiter: String): Unit = {
     dynamicTilesViewProcessor.setTilesDefinitionDelimiter(tilesDefinitionDelimiter)
   }
-
   /**
    * Renders output using Tiles.
    */
@@ -92,25 +82,19 @@ class DynamicTilesView extends AbstractUrlBasedView {
   protected def renderMergedOutputModel(model: java.util.Map[java.lang.String, Object],
                                         request: HttpServletRequest,
                                         response: HttpServletResponse): Unit = {
-
     val servletContext: ServletContext = getServletContext
-
     val container: TilesContainer = TilesAccess.getContainer(ServletUtil
       .getApplicationContext(servletContext))
-
     if (container == null) {
       throw new ServletException("Tiles container is not initialized. " +
         "Have you added a TilesConfigurer to your web application context?")
     }
-
     exposeModelAsRequestAttributes(model, request)
-
     dynamicTilesViewProcessor.renderMergedOutputModel(getBeanName,
       getUrl,
       servletContext,
       request,
       response,
       container)
-
   }
 }

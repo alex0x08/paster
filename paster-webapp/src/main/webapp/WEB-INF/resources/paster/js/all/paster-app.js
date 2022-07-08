@@ -16,17 +16,18 @@
 
 
 class PasterApp {
-  
+
     appInit() {
-//        this.growl = new Growler.init();
+        //        this.growl = new Growler.init();
         this.bindDeleteDlg(document.body);
-        this.resizer = window.pica({features: ['all']
+        this.resizer = window.pica({
+            features: ['all']
         });
 
     }
     showNotify(message) {
-       // this.growl.notify(message);
-       Logger.debug('notify ',message);
+        // this.growl.notify(message);
+        Logger.debug('notify ', message);
 
     }
     showModal(dlg, redirectUrl, action, title, message) {
@@ -41,7 +42,7 @@ class PasterApp {
             el.href = redirectUrl;
         }
 
-        dlg.querySelector('#dialogMessage').innerHTML =  message;
+        dlg.querySelector('#dialogMessage').innerHTML = message;
 
         if (!this.modalDlg) {
             this.modalDlg = new bootstrap.Modal(dlg, { animate: false, closeOnEsc: true });
@@ -69,32 +70,32 @@ class PasterApp {
     }
     takeScreenshot(source, onComplete) {
         var $paster = this;
-        Logger.debug('taking screenshot for ',source)
+        Logger.debug('taking screenshot for ', source)
 
         html2canvas(source, {
-                    allowTaint: true,
-                    taintTest: false                 
-                }).then(function(canvas) {
-                    Logger.debug('rendered..',canvas)
-                    const img = document.createElement("canvas");
-                    img.width = canvas.width;
-                    img.height = canvas.height;
+            allowTaint: true,
+            taintTest: false
+        }).then(function (canvas) {
+            Logger.debug('rendered..', canvas)
+            const img = document.createElement("canvas");
+            img.width = canvas.width;
+            img.height = canvas.height;
 
-                    $paster.resizer.resize(canvas, img, {
-                        quality: 3,
-                        alpha: true,
-                        unsharpAmount: 150,
-                        unsharpRadius: 0.7,
-                        unsharpThreshold: 245,
-                        transferable: true
-                    }, function (err) {
-                         Logger.error( 'error on creating img', err);
-                    }).then(result => {
-                        Logger.debug('resized..');
-                        const img2 = Canvas2Image.convertToPNG(result, 300, 200);
-                        onComplete(img2);
-                    });
-                });
+            $paster.resizer.resize(canvas, img, {
+                quality: 3,
+                alpha: true,
+                unsharpAmount: 150,
+                unsharpRadius: 0.7,
+                unsharpThreshold: 245,
+                transferable: true
+            }, function (err) {
+                Logger.error('error on creating img', err);
+            }).then(result => {
+                Logger.debug('resized..');
+                const img2 = Canvas2Image.convertToPNG(result, 300, 200);
+                onComplete(img2);
+            });
+        });
     }
 
 };

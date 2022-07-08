@@ -13,12 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.Ox08.paster.webapp.tiles2
-
 import com.Ox08.paster.webapp.base.Logged
 import jakarta.servlet.ServletContext
-
 import java.util.Locale
 import org.apache.tiles.Attribute
 import org.apache.tiles.AttributeContext
@@ -31,14 +28,12 @@ import org.springframework.web.servlet.support.JstlUtils
 import org.springframework.web.servlet.support.RequestContext
 import org.springframework.web.servlet.support.RequestContextUtils
 import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
-
 /**
  * A processor implementation for Apache Tiles' dynamic view.
  *
  * Initially had been taken from famous 'Pet Store' Spring demo project, rewritten to Scala.
  */
 class DynamicTilesViewProcessor extends Logged {
-
   /**
    * Keeps Tiles definition to use once derived.
    */
@@ -46,7 +41,6 @@ class DynamicTilesViewProcessor extends Logged {
   private var tilesDefinitionName = ""
   private var tilesBodyAttributeName = "content"
   private var tilesDefinitionDelimiter = "."
-
   /**
    * Main template name.  The default is 'mainTemplate'.
    *
@@ -55,7 +49,6 @@ class DynamicTilesViewProcessor extends Logged {
   def setTilesDefinitionName(tilesDefinitionName: String): Unit = {
     this.tilesDefinitionName = tilesDefinitionName
   }
-
   /**
    * Tiles body attribute name.  The default is 'body'.
    *
@@ -64,7 +57,6 @@ class DynamicTilesViewProcessor extends Logged {
   def setTilesBodyAttributeName(tilesBodyAttributeName: String): Unit = {
     this.tilesBodyAttributeName = tilesBodyAttributeName
   }
-
   /**
    * Sets Tiles definition delimiter.  For example, instead of using
    * the request 'info/about' to lookup the template definition
@@ -76,7 +68,6 @@ class DynamicTilesViewProcessor extends Logged {
   def setTilesDefinitionDelimiter(tilesDefinitionDelimiter: String): Unit = {
     this.tilesDefinitionDelimiter = tilesDefinitionDelimiter
   }
-
   /**
    * Renders output using Tiles.
    */
@@ -86,15 +77,12 @@ class DynamicTilesViewProcessor extends Logged {
                               servletContext: ServletContext,
                               request: HttpServletRequest, response: HttpServletResponse,
                               container: TilesContainer): Unit = {
-
     val tilesRequest = createTilesRequest(ServletUtil.getApplicationContext(servletContext),
       request, response)
     // stip slashes
     var beanName: String = bName replaceAll("//", "/")
-
     // append / to start if needed
-    if (false ==(beanName startsWith "/")) beanName = s"/$beanName"
-
+    if (false == (beanName startsWith "/")) beanName = s"/$beanName"
     // seek for tiles definition based on bean name
     while (!container.isValidDefinition(beanName, tilesRequest)) {
       val pos = beanName.lastIndexOf('/')
@@ -102,14 +90,11 @@ class DynamicTilesViewProcessor extends Logged {
         throw new TilesException(s"No defintion of found for '$beanName'")
       beanName = beanName.substring(0, pos)
     }
-
     JstlUtils.exposeLocalizationContext(new RequestContext(request, servletContext))
-
     val definitionName: String = startDynamicDefinition(beanName, url, tilesRequest, container)
-
     try container.render(definitionName, tilesRequest) catch {
       case e: Exception =>
-        logger.error(e.getMessage,e)
+        logger.error(e.getMessage, e)
     }
     endDynamicDefinition(definitionName, beanName, tilesRequest, container)
   }
@@ -127,13 +112,12 @@ class DynamicTilesViewProcessor extends Logged {
     // body attribute
     if (!definitionName.equals(beanName)) {
       val attributeContext: AttributeContext = container.startContext(tilesRequest)
-      attributeContext.putAttribute(tilesBodyAttributeName,new Attribute(url))
+      attributeContext.putAttribute(tilesBodyAttributeName, new Attribute(url))
       if (logger.isDebugEnabled)
         logger.debug("URL used for Tiles body.  url='{}'.", url)
     }
     definitionName
   }
-
   /**
    * Closes the temporary Tiles definition.
    */
@@ -141,11 +125,9 @@ class DynamicTilesViewProcessor extends Logged {
                                      beanName: String,
                                      tilesRequest: Request,
                                      container: TilesContainer): Unit = {
-
     if (!definitionName.equals(beanName))
-        container.endContext(tilesRequest)
+      container.endContext(tilesRequest)
   }
-
   /**
    * Processes values to get tiles template definition name.  First
    * a Tiles definition matching the url is checked, then a
@@ -163,12 +145,11 @@ class DynamicTilesViewProcessor extends Logged {
     // check for main template
     if (derivedDefinitionName != null)
       derivedDefinitionName
-        else if (container.isValidDefinition(beanName, tilesRequest)) {
+    else if (container.isValidDefinition(beanName, tilesRequest)) {
       derivedDefinitionName = beanName
       beanName
     } else throw new TilesException(s"No defintion of found for '$beanName'")
   }
-
   protected def createTilesRequest(applicationContext: ApplicationContext,
                                    request: HttpServletRequest, response: HttpServletResponse): Request =
     new ServletRequest(applicationContext,

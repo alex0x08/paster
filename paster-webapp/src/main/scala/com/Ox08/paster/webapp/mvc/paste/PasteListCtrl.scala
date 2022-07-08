@@ -34,7 +34,7 @@ import scala.math.abs
 
 @Controller
 @RequestMapping(value = Array("/paste"))
-class PasteListController extends SearchController[Paste, AuthorQuery] {
+class PasteListCtrl extends SearchCtrl[Paste, AuthorQuery] {
 
   @Value("${paster.paste.list.splitter.days:7}")
   val splitDays:Int = 0
@@ -62,7 +62,7 @@ class PasteListController extends SearchController[Paste, AuthorQuery] {
       val d= TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS)
 
       if (abs(d) > 14) {
-        title = PasteListController.this.getResource("paste.list.slider.title",
+        title = PasteListCtrl.this.getResource("paste.list.slider.title",
           Array(curDate, prevDate, total), locale)
         prevDate = curDate
         total = 0
@@ -75,22 +75,22 @@ class PasteListController extends SearchController[Paste, AuthorQuery] {
   val channelDao: ChannelDao = null
 
   @Autowired
-  val pasteManager: PasteDao = null
+  val pasteDao: PasteDao = null
 
   @Autowired
-  val commentManager: CommentDao = null
+  val commentDao: CommentDao = null
 
   override def listPage = "redirect:/main/paste/list"
   override def editPage = "/paste/edit"
   override def viewPage = "/paste/view"
 
-  def manager(): PasteDao = pasteManager
+  def manager(): PasteDao = pasteDao
 
   def getAvailableResults(): Array[String] = Array("PASTE", "COMMENT")
 
   def getManagerBySearchResult(result: String): SearchableDaoImpl[_] = result match {
     case "PASTE" => manager()
-    case "COMMENT" => commentManager
+    case "COMMENT" => commentDao
   }
 
 
@@ -212,7 +212,7 @@ class PasteListController extends SearchController[Paste, AuthorQuery] {
   @ModelAttribute(MvcConstants.NODE_COUNT_KEY)
   def countAllSince(@PathVariable("source") channelCode: String,
                     @PathVariable("since") dateFrom: java.lang.Long): java.lang.Long = {
-    pasteManager.countAllSince(channelCode, dateFrom)
+    pasteDao.countAllSince(channelCode, dateFrom)
   }
 
   def listImpl(request: HttpServletRequest, model: Model,

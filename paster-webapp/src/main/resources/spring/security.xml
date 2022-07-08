@@ -94,7 +94,7 @@
 
     
  <beans:bean id="customRememberMeServices"
-                class="com.Ox08.paster.webapp.web.security.CustomPersistentRememberMeServices">
+                class="com.Ox08.paster.webapp.web.security.PasterPersistentRememberMeServices">
         <!-- This ensures that remember-me is added as an authentication provider -->
         <beans:constructor-arg value="${paster.security.session.salt}" />
         <beans:constructor-arg ref="userManager" />

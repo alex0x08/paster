@@ -13,29 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.Ox08.paster.webapp.mvc
-
 import com.Ox08.paster.webapp.manager.ResourceManager
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.beans.factory.annotation.{Autowired, Value}
 import org.springframework.core.io.InputStreamResource
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.{PathVariable, RequestMapping, RequestMethod, ResponseBody}
-
 import java.io.{FileInputStream, IOException}
 import scala.collection.mutable
-
 @Controller
 @RequestMapping(Array("/resources"))
-class ResourceController extends AbstractController {
-
+class ResourceCtrl extends AbstractCtrl {
   @Value("${paster.resources.cacheMillis:31557600}")
   private val MAX_AGE = 0
-
   @Autowired
   private val resourcePathHelper: ResourceManager = null
-
   @RequestMapping(
     value = Array("/{version:[a-zA-Z0-9]+}/{type:[a-z]}/{lastModified:[0-9]+}/paste_content/{path}"),
     method = Array(RequestMethod.GET)
@@ -44,41 +37,31 @@ class ResourceController extends AbstractController {
   def getResource(
                    @PathVariable("lastModified") lastModified: Long,
                    @PathVariable("path") path: String,
-                   @PathVariable("type") ptype: String,
+                   @PathVariable("type") ptype: Char,
                    response: HttpServletResponse
                  ): InputStreamResource = {
-
-    logger.debug("get {} type: {} lm: {}",path,ptype,lastModified)
-
+    logger.debug("get {} type: {} lm: {}", path, ptype, lastModified)
     ptype match {
-      case "t" | "r" | "a" | "b" =>
-        //allow
+      case 't' | 'r' | 'a' | 'b' =>
+      //allow
       case _ =>
         writeError(response, "uknown type", 404)
         return null
     }
-
-
     val fimg = resourcePathHelper.getResource(ptype, path)
-
     if (fimg == null) {
       writeError(response, "file not found", 404)
       return null
     }
-
     response.setContentType("image/png")
-
     response.setHeader("Content-Length", fimg.length().toString)
     response.setHeader("Content-Disposition", s"inline;filename='${fimg.getName}'")
     response.setDateHeader("Last-Modified", fimg.lastModified())
     response.setDateHeader("Expires", System.currentTimeMillis + MAX_AGE)
     response.setHeader("Cache-Control", s"max-age=$MAX_AGE, public")
     response.setHeader("Pragma", "cache")
-
     new InputStreamResource(new FileInputStream(fimg))
-
   }
-
   @throws(classOf[IOException])
   def writeError(response: HttpServletResponse, msg: String, status: Int): Unit = {
     response.setContentType("text/html;charset=UTF-8")
@@ -93,5 +76,4 @@ class ResourceController extends AbstractController {
       .toString)
     out.flush()
   }
-
 }

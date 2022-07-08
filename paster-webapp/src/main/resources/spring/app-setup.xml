@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans profile="setup" xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/mvc
+                           http://www.springframework.org/schema/mvc/spring-mvc.xsd
+                           http://www.springframework.org/schema/context
+                           http://www.springframework.org/schema/context/spring-context.xsd">
+
+
+    <context:component-scan base-package="com.Ox08.paster.setup" />
+
+    <!-- Activates annotation-based bean configuration -->
+    <context:annotation-config />
+
+    <bean id="propertyConfigurer-app"
+          class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">
+
+        <property name="locations">
+            <list>
+                <value>file:${paster.app.home}/config.properties</value>
+                <value>classpath:default.properties</value>
+            </list>
+        </property>
+
+    </bean>
+
+    <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource"
+          p:basenames="i18n.messages" />
+
+
+
+    <mvc:annotation-driven content-negotiation-manager="contentNegotiationManager" >
+        <mvc:path-matching suffix-pattern="true"/>
+    </mvc:annotation-driven>
+
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="order" value="2"/>
+        <property name="exposeContextBeansAsAttributes" value="true"/>
+    </bean>
+
+
+    <mvc:resources mapping="/assets/${paste.app.id}/**"
+                   location="classpath:/META-INF/resources/webjars/"/>
+
+    <mvc:resources mapping="/static/${paste.app.id}/**"
+                   location="/WEB-INF/static/"/>
+    <mvc:resources mapping="/resources/${paste.app.id}/**"
+                   location="/WEB-INF/resources/"/>
+
+
+    <bean id="tilesConfigurer" class="org.springframework.web.servlet.view.tiles3.TilesConfigurer">
+        <property name="definitions">
+            <list>
+                <value>/WEB-INF/setup/tiles-defs/*.xml</value>
+            </list>
+        </property>
+
+        <property name="validateDefinitions" value="false"/>
+
+    </bean>
+
+
+    <bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+        <property name="order" value="1"/>
+        <property name="contentNegotiationManager" ref="contentNegotiationManager"/>
+        <property name="viewResolvers">
+            <list>
+                <bean class="org.springframework.web.servlet.view.BeanNameViewResolver"/>
+                <bean class="org.springframework.web.servlet.view.UrlBasedViewResolver"
+                      p:viewClass="com.Ox08.paster.webapp.tiles2.DynamicTilesView" p:prefix="/WEB-INF/pages"
+                      p:suffix=".jsp"/>
+            </list>
+        </property>
+    </bean>
+
+
+</beans>

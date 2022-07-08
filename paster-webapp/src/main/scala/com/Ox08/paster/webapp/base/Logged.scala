@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,9 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.Ox08.paster.webapp.base
-
 import ch.qos.logback.classic
 import ch.qos.logback.classic.Level
 import ch.qos.logback.classic.spi.LoggerContextListener
@@ -23,11 +21,17 @@ import ch.qos.logback.core.spi.{ContextAwareBase, LifeCycle}
 import com.fasterxml.jackson.annotation.JsonIgnore
 import org.apache.commons.lang3.builder.{ReflectionToStringBuilder, StandardToStringStyle, ToStringBuilder}
 import org.slf4j.{Logger, LoggerFactory}
-
 import java.lang.reflect.Field
-
+/**
+ *  A common logger class, with shared logic related to logging and loggers
+ *
+ *  @author Alex Chernyshev <alex3.145@gmail.com>
+ *  @since 1.0
+ */
 object Logged {
-
+  /**
+   * predefined logging style for key-value pairs
+   */
   val style: StandardToStringStyle = new StandardToStringStyle() {
     setFieldSeparator(", ")
     setUseClassName(false)
@@ -38,7 +42,6 @@ object Logged {
     setContentStart(" ")
     setContentEnd(" ")
     setFieldNameValueSeparator(": ")
-
     override def append(buffer: java.lang.StringBuffer,
                         fieldName: String,
                         value: Any,
@@ -48,19 +51,15 @@ object Logged {
       }
     }
   }
-
   def toStringSkip(x: Any, fields: Array[String]): String = {
     new ReflectionToStringBuilder(x, style) {
       override def accept(f: Field): Boolean = {
-
         if (!super.accept(f)) {
           return false
         }
-
         if (fields == null) {
           return true
         }
-
         for (field <- fields) {
           if (f.getName.equals(field)) return false
         }
@@ -68,35 +67,28 @@ object Logged {
       }
     }.toString
   }
-
   def getNewProtocolBuilder(clazz: AnyRef): ToStringBuilder =
-            new ToStringBuilder(clazz.getClass.getName, Logged.style)
-
+    new ToStringBuilder(clazz.getClass.getName, Logged.style)
   def getLogger(clazz: AnyRef): Logger = LoggerFactory.getLogger(clazz.getClass)
 }
-
 trait Logged {
-
   @transient
- // @WebMethod(exclude = true)
+  // @WebMethod(exclude = true)
   @JsonIgnore
   def logger: Logger = LoggerFactory.getLogger(getClass.getName)
-
   @transient
- // @WebMethod(exclude = true)
+  // @WebMethod(exclude = true)
   @JsonIgnore
   def getNewProtocolBuilder: ToStringBuilder = new ToStringBuilder(this, Logged.style)
-
 }
-
+/**
+ * An Logback listener, used to pass 'appDebug' variable from environment to logback configs
+ */
 class LoggerStartupListener extends ContextAwareBase with
-    LoggerContextListener with LifeCycle {
-
+  LoggerContextListener with LifeCycle {
   import ch.qos.logback.classic.LoggerContext
   import org.springframework.util.Assert
-
   private var started = false
-
   def start(): Unit = {
     if (started) return
     val isDebug = System.getProperty("appDebug", "false")
@@ -107,7 +99,6 @@ class LoggerStartupListener extends ContextAwareBase with
     c.putProperty("appDebug", debug.toString)
     started = true
   }
-
   def stop(): Unit = {
   }
   def isStarted: Boolean = started

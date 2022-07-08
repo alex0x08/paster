@@ -1,16 +1,12 @@
 
 package org.h2.server.web
-
-
 import com.Ox08.paster.webapp.base.Logged
 import jakarta.servlet.http.{HttpServletRequest, HttpServletRequestWrapper, HttpServletResponse}
 import org.springframework.context.ApplicationContext
 import org.springframework.web.context.support.WebApplicationContextUtils
-
 import java.sql.{Connection, SQLException}
 import java.util
 import javax.sql.DataSource
-
 /**
  * This is extended version of JDBC Database Console Servlet,
  * packed with H2 Driver
@@ -20,36 +16,24 @@ import javax.sql.DataSource
  *
  */
 class H2ConsoleExtendedServlet extends JakartaWebServlet with Logged {
-
   private var dataSource: DataSource = _
-
   private val server = new WebServer
-
   override def init(): Unit = {
-
     logger.debug("h2 servlet init..")
-
     val ctx: ApplicationContext = WebApplicationContextUtils
       .getWebApplicationContext(getServletContext)
-
     dataSource = ctx.getBean("dataSource").asInstanceOf[DataSource]
-
     try {
       server.setAllowChunked(false)
       server.init()
-
       val f = getClass.getSuperclass.getDeclaredField("server")
       f.setAccessible(true)
       f.set(this, server)
 
       //    val session = createAndRegLocalSession()
-
       //   val ss = session.get("sessionId").asInstanceOf[String]
-
       //  logger.debug("h2 sessionId: {}",ss);
-
-      //  getServletContext().setAttribute("h2console-session-id",ss);   
-
+      //  getServletContext().setAttribute("h2console-session-id",ss);
     } catch {
       case e@(_: NoSuchFieldException
               | _: IllegalAccessException
@@ -59,40 +43,28 @@ class H2ConsoleExtendedServlet extends JakartaWebServlet with Logged {
         logger.error(e.getLocalizedMessage, e)
     }
   }
-
   @throws(classOf[java.io.IOException])
   override def doGet(req: HttpServletRequest, res: HttpServletResponse): Unit = {
-
     val h2console_db_session_id = getH2SessionIdFromContext
     var session: WebSession = null
-
     if (h2console_db_session_id != null) {
       session = server.getSession(h2console_db_session_id)
-      if (session == null) {
+      if (session == null)
         session = createAndRegLocalSession()
-      } else {
+      else
         logger.debug("using existing session {}", h2console_db_session_id)
-      }
-
-    } else {
-      session = createAndRegLocalSession()
-    }
-
+    } else session = createAndRegLocalSession()
     /**
      * refresh connection if closed
      *
      */
     var con = session.getConnection
-
     if (con == null || con.isClosed) {
       con = dataSource.getConnection //.unwrap(Class[org.h2.jdbc.JdbcConnection])
-
       session.setConnection(con)
       session.put("url", con.getMetaData.getURL)
       logger.debug("reopened connection to db")
     }
-
-
     /**
      * attributes are filled from both httpservlet attributes and params
      * so easy solution like
@@ -107,31 +79,21 @@ class H2ConsoleExtendedServlet extends JakartaWebServlet with Logged {
      * session = server.getSession(sessionId);
      * }
      */
-
-
     val map = new util.HashMap[String, String]()
     map.put("jsessionid", getH2SessionIdFromContext)
-
     super.doGet(new ExtendedHttpServletRequestWrapper(req, map), res)
   }
-
-  private def getH2SessionIdFromContext:String = getServletContext
+  private def getH2SessionIdFromContext: String = getServletContext
     .getAttribute("h2console-session-id").asInstanceOf[String]
-
   private def createAndRegLocalSession(): WebSession = {
-
     this.synchronized {
       val conn = dataSource.getConnection()
-      val cconn:Connection =conn.unwrap(classOf[Connection])
-
-
-      logger.debug("driver: {}",cconn.getClass.getCanonicalName)
-
+      val cconn: Connection = conn.unwrap(classOf[Connection])
+      logger.debug("driver: {}", cconn.getClass.getCanonicalName)
       val session = server.createNewSession("local")
       session.setShutdownServerOnDisconnect()
       session.setConnection(cconn)
       session.put("url", conn.getMetaData.getURL)
-
       /**
        *
        * sessionId here is INTERNAL id, not container's jsessionId
@@ -146,37 +108,21 @@ class H2ConsoleExtendedServlet extends JakartaWebServlet with Logged {
        * session.put("sessionId", newId);
        *
        */
-
       val ss = session.get("sessionId").asInstanceOf[String]
-
       logger.debug("created h2 session {}", ss)
-
       getServletContext.setAttribute("h2console-session-id", ss)
       return session
     }
-
-
   }
-
-
   class ExtendedHttpServletRequestWrapper(req: HttpServletRequest, params: java.util.Map[String, String])
     extends HttpServletRequestWrapper(req) {
-
-
     override def getParameter(name: String): String = {
-
       // if we added one, return that one
-      val out = if (params.containsKey(name)) {
-        params.get(name)
-      } else {
+      val out = if (params.containsKey(name)) params.get(name) else {
         // otherwise return what's in the original request
         super.getParameter(name)
       }
-
-      //System.out.println("name=" + name + " val=" + out)
       out
     }
-
   }
-
 }

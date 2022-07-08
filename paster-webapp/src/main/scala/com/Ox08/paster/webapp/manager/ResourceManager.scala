@@ -13,10 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.Ox08.paster.webapp.manager
-
-import com.Ox08.paster.webapp.base.Logged
+import com.Ox08.paster.webapp.base.{Boot, Logged}
 import org.apache.commons.io.FileUtils
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
@@ -27,54 +25,71 @@ import java.nio.file.FileSystems
 import java.text.SimpleDateFormat
 import java.util.{Base64, Calendar}
 import scala.collection.mutable
-
 object ResourceManager {
   val PATH_FORMAT = new SimpleDateFormat("YYYY/MM/dd/")
 }
-
+/**
+ * Resource Manager to persist/retrieve binaries attached to entities
+ */
 @Component("resourcePathHelper")
 class ResourceManager extends Logged {
-
-  @Value("${paster.app.home}")
-  val pasteAppHome: String = null
-
-  def getResource(ptype: String, fid: String): File = {
-
+  /**
+   * Get file from object id and resource type
+   * @param resourceType
+   *      single char resource type
+   * @param fid
+   *      object id
+   * @return
+   */
+  def getResource(resourceType: Char, fid: String): File = {
     //to avoid relative paths
     val id = URLDecoder.decode(fid, "UTF-8")
       .replaceAll("/", "x")
       .replaceAll("\\.", "x")
       .replaceAll(",", "/")
 
-    if (logger.isDebugEnabled) logger.debug("file url {}", id)
+    if (logger.isDebugEnabled)
+        logger.debug("getting file from url {}", id)
 
     FileSystems.getDefault
-      .getPath(pasteAppHome, "resources", ptype, id + "."+getExtFor(ptype)).toFile
+      .getPath(Boot.BOOT.getSystemInfo.getAppHome.getAbsolutePath,
+            "resources", resourceType.toString, id + "." + getExtFor(resourceType)).toFile
   }
-
-
-  def saveResource(pt: String, objId :String,imgData:String): String = {
-    val fname = new mutable.StringBuilder()
+  /**
+   * Saves image to file
+   * @param pt
+   *      single char resource type
+   * @param objId
+   *      object id
+   * @param imgData
+   *      binary image data
+   * @return
+   */
+  def saveResource(pt: Char, objId: String, imgData: String): String = {
+    val fileName = new mutable.StringBuilder()
       .append(ResourceManager.PATH_FORMAT.format(Calendar.getInstance().getTime))
       .append(objId)
       .append('.')
       .append(getExtFor(pt))
       .toString
-
-    val fimg = FileSystems.getDefault.getPath(pasteAppHome, "resources",
-      pt,
-      fname).toFile
+    val fileImg = FileSystems.getDefault
+            .getPath(Boot.BOOT.getSystemInfo.getAppHome.getAbsolutePath, "resources",
+      pt.toString,
+      fileName).toFile
     val imgData2 = imgData.substring(imgData.indexOf(',') + 1)
-    FileUtils.writeByteArrayToFile(fimg, Base64.getDecoder.decode(imgData2.getBytes))
-
-    fname.replaceAll("/", ",")
-
+    FileUtils.writeByteArrayToFile(fileImg, Base64.getDecoder.decode(imgData2.getBytes))
+    fileName.replaceAll("/", ",")
   }
-  def getExtFor(ptype:String): String = ptype match {
-    case "r" =>
+  /**
+   * Get extension for resource type
+   * @param resourceType
+   *    single char resource type
+   * @return
+   */
+  def getExtFor(resourceType: Char): String = resourceType match {
+    case 'r' =>
       "png"
     case _ =>
       "jpg"
   }
-
 }

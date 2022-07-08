@@ -13,64 +13,44 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.Ox08.paster.webapp.model
-
 /**
  * Query trait
  */
-
 trait Query {
-
   /**
    * if this query empty
    */
   def isEmpty: Boolean
-
   /**
    * @return query string
    */
   def getQuery: String
-
   def setQuery(query: String): Unit
-
   /**
    * @return current page
    */
   def getPage: Int
-
   def setPage(page: Int): Unit
 
   /**
    * build CompassQuery from CompassSession
    */
   //def fillQuery(qb: QueryBuilder): org.apache.lucene.search.Query
-
 }
-
-
 class GenericQuery extends Query {
-
   var query: String = _
   var page: Int = 1
-
-  def setPage(page: Int): Unit =  {
+  def setPage(page: Int): Unit = {
     this.page = page
   }
-
   def getPage: Int = page
   def isEmpty: Boolean = query == null || query.equals("*")
   def getQuery: String = query
-
-  def setQuery(query: String): Unit =  {
+  def setQuery(query: String): Unit = {
     this.query = query
   }
-
 }
-
-
 class AuthorQuery extends GenericQuery with Query {
-
-  var authorId:Long = _
-
+  var authorId: Long = _
 }

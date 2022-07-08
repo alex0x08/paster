@@ -1,9 +1,9 @@
 package com.Ox08.paster.webapp.startup
 
-import com.Ox08.paster.webapp.base.Logged
-import jakarta.servlet.{ServletContextEvent, ServletContextListener}
 
-import java.io.{File, IOException}
+import com.Ox08.paster.webapp.base.{Boot, Logged, SystemError, SystemMessage}
+import jakarta.servlet.{ServletContextEvent, ServletContextListener}
+import java.io.IOException
 import java.util.Locale
 
 object SystemConstants {
@@ -16,12 +16,18 @@ class SystemPropertiesListener extends ServletContextListener with Logged {
   override def contextInitialized(event: ServletContextEvent): Unit = {
     try {
 
+
+
       doBoot()
+
+      if (Boot.BOOT.getSystemInfo.isInstalled) {
+        System.setProperty("spring.profiles.active", "main")
+      } else {
+        System.setProperty("spring.profiles.active", "setup")
+      }
 
 
       System.setProperty("paste.app.id", System.currentTimeMillis().toString)
-
-      //System.setProperty("spring.profiles.active", "main")
 
       logger.info("current locale: {}", Locale.getDefault)
 
@@ -37,9 +43,9 @@ class SystemPropertiesListener extends ServletContextListener with Logged {
 
   override def contextDestroyed(servletContextEvent: ServletContextEvent):Unit = {}
 
+
   def doBoot(): Unit = {
 
-    import com.Ox08.paster.webapp.base.{Boot, SystemError, SystemMessage}
     // re-initialize parent logger
     //SLF4JBridgeHandler.removeHandlersForRootLogger
     // re-install parent logger

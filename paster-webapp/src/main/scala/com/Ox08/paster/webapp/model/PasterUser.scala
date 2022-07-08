@@ -13,69 +13,48 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.Ox08.paster.webapp.model
-
 import com.Ox08.paster.webapp.base.Logged
 import org.apache.commons.lang3.StringUtils
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 import java.util
-
 class PasterUser(name: String,
-                 username:String,
-                 var pwd:String,
+                 username: String,
+                 var pwd: String,
                  roles: util.Set[Role]) extends UserDetails with java.io.Serializable {
-
   override def isEnabled = true
-
   /**
    * @see org.springframework.security.userdetails.UserDetails#isAccountNonExpired()
    */
   override def isAccountNonExpired = true
-
   /**
    * @see org.springframework.security.userdetails.UserDetails#isAccountNonLocked()
    */
-
   override def isAccountNonLocked = true
-
   /**
    * @see org.springframework.security.userdetails.UserDetails#isCredentialsNonExpired()
    */
   override def isCredentialsNonExpired = true
-
   def getName: String = name
-
   override def getPassword: String = pwd
-
-  def setPassword(newPass:String): Unit = {
+  def setPassword(newPass: String): Unit = {
     pwd = newPass
   }
-
   def isPasswordEmpty: Boolean = StringUtils.isBlank(pwd)
-
   def isAdmin: Boolean = roles.contains(Role.ROLE_ADMIN)
-
   def getRoles: util.Set[Role] = roles
-
-
   @Override
   def getUsername: String = username
-
   def getAuthorities: util.Collection[_ <: GrantedAuthority] = getRoles
-
   override def toString: String = Logged.toStringSkip(this,
     Array("password", "passwordRepeat"
     ))
 }
-
-
 object Role {
   val ROLE_ADMIN = new Role("ROLE_ADMIN", "role.admin.name")
   val ROLE_USER = new Role("ROLE_USER", "role.user.name")
 }
-
 class Role(code: String, desc: String) extends GrantedAuthority {
   def getAuthority: String = code
   def getName: String = desc

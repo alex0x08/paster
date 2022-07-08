@@ -50,8 +50,8 @@ class PasterList {
                 mainThis.parseSearchResults(block);
                 pasterApp.bindDeleteDlg(block);
             }
-        });
-        this.parseSearchResults(document.getElementById('pastas'));*/
+        });*/
+        this.parseSearchResults(document.getElementById('pastas'));
     }
     parseSearchResults(parent) {
         Array.from(parent.getElementsByClassName('pasteTitle')).forEach(

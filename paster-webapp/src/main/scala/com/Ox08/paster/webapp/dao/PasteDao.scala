@@ -33,6 +33,9 @@ import scala.jdk.CollectionConverters._
 @Transactional(readOnly = true, rollbackFor = Array(classOf[Exception]))
 class PasteDao extends SearchableDaoImpl[Paste](classOf[Paste]) {
 
+
+  override def getDefaultStartFields: Array[String] = Array("title","text")
+
   def getByAuthor(author: PasterUser): util.List[Paste] = getListByKeyValue("author", author)
 
   def getByRemoteUrl(url: String): util.List[Paste] = getListByKeyValue("remoteUrl", url)

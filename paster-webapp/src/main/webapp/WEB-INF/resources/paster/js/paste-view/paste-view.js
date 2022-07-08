@@ -15,59 +15,51 @@
  */
 
 
-
-
 class PasterView {
 
-
-    setupDraw(modelId,allowEdit) {
+    setupDraw(modelId, allowEdit) {
         var mainThis = this;
-        const colors_array = [ '#D20202', '#ff1101', '#ff0', '#0f0', '#0ff', '#00f', '#6d47e7', '#000', '#fff'];
-        var toolsEl =document.getElementById(modelId + '_tools')
+        const colors_array = ['#D20202', '#ff1101', '#ff0', '#0f0', '#0ff', '#00f', '#6d47e7', '#000', '#fff'];
+        var toolsEl = document.getElementById(modelId + '_tools')
         colors_array.forEach(c => {
-            const htmlBlock =  "<a href='#" + modelId
-                                + "_sketch' class='"+modelId +"_sketch_color btn btn-xs' data-color='" + c
-                                + "' style='border:1px solid black; background: " + c
-                                + ";'>&nbsp;&nbsp;</a> ";
+            const htmlBlock = "<a href='#" + modelId
+                + "_sketch' class='" + modelId + "_sketch_color btn btn-xs' data-color='" + c
+                + "' style='border:1px solid black; background: " + c
+                + ";'>&nbsp;&nbsp;</a> ";
 
-                toolsEl.insertAdjacentHTML( 'beforeend', htmlBlock );
-         });
+            toolsEl.insertAdjacentHTML('beforeend', htmlBlock);
+        });
         const sz_array = [1, 3, 5, 10, 15];
         sz_array.forEach(c => {
-            const htmlBlock =  "<a href='#" + modelId + "_sketch' class="+modelId+"_sketch_sz data-size='" + c
-                                + "' style='background: #ccc'>" + c + "</a> ";
-                toolsEl.insertAdjacentHTML( 'beforeend', htmlBlock );
+            const htmlBlock = "<a href='#" + modelId + "_sketch' class=" + modelId + "_sketch_sz data-size='" + c
+                + "' style='background: #ccc'>" + c + "</a> ";
+            toolsEl.insertAdjacentHTML('beforeend', htmlBlock);
         });
 
-
-
-        Array.from(document.getElementsByClassName(modelId+'_sketch_color')).forEach(
+        Array.from(document.getElementsByClassName(modelId + '_sketch_color')).forEach(
             function (el, i, array) {
                 el.addEventListener("click", function (e) {
-                        e.preventDefault();
-                        const dcolor= el.getAttribute('data-color');
-                        currentColor = dcolor;
-                        Logger.debug('current color:',currentColor);
-                    });
+                    e.preventDefault();
+                    const dcolor = el.getAttribute('data-color');
+                    currentColor = dcolor;
+                    Logger.debug('current color:', currentColor);
+                });
             });
 
-            Array.from(document.getElementsByClassName(modelId+'_sketch_sz')).forEach(
-                function (el, i, array) {
-                    el.addEventListener("click", function (e) {
-                            e.preventDefault();
-                            const sz= el.getAttribute('data-size');
-                            currentSz= sz;
-                            radius =0;
-                            Logger.debug('current sz:',currentSz);
-                        });
+        Array.from(document.getElementsByClassName(modelId + '_sketch_sz')).forEach(
+            function (el, i, array) {
+                el.addEventListener("click", function (e) {
+                    e.preventDefault();
+                    const sz = el.getAttribute('data-size');
+                    currentSz = sz;
+                    radius = 0;
+                    Logger.debug('current sz:', currentSz);
                 });
-
-
-
+            });
 
         var currentSz = 20;
         var currentColor = '#E3EB64';
-        var radius =0;
+        var radius = 0;
         var inAction = false;
 
         mainThis.sketchObj = Sketch.create({
@@ -83,7 +75,7 @@ class PasterView {
             },
 
             update: function () {
-                radius= 2 + abs(sin(this.millis * 0.003) * currentSz);
+                radius = 2 + abs(sin(this.millis * 0.003) * currentSz);
             },
 
             // Event handlers
@@ -129,10 +121,10 @@ class PasterView {
 
         if (allowEdit) {
             document.getElementById(modelId + '_saveReviewBtn')
-                .addEventListener("click", function(event){
+                .addEventListener("click", function (event) {
                     event.preventDefault();
                     mainThis.onSaveReviewDraw(modelId);
-        });
+                });
         }
 
     }
@@ -141,36 +133,36 @@ class PasterView {
 
         var mainThis = this;
 
-        const commentsParent = document.getElementById(modelId +'_commentsList');
+        const commentsParent = document.getElementById(modelId + '_commentsList');
 
         Array.from(commentsParent.getElementsByClassName('pInsertCommentTrigger')).forEach(
             function (el, i, array) {
                 el.addEventListener("click", function (e) {
-                        e.preventDefault();
-                        const ln = el.getAttribute('plineNumber');
-                        const commentId = el.getAttribute('pCommentId');
-                        SyntaxHighlighter.insertEditForm(modelId,ln,commentId);
-                    });
+                    e.preventDefault();
+                    const ln = el.getAttribute('plineNumber');
+                    const commentId = el.getAttribute('pCommentId');
+                    SyntaxHighlighter.insertEditForm(modelId, ln, commentId);
+                });
             });
 
 
         document.getElementById(modelId + '_addCommentBtn').addEventListener('click', function (event) {
             event.preventDefault();
-            this.querySelector('#btnCaption').text =  PasterI18n.text.notify.transmitMessage;
-            this.disabled =true;
+            this.querySelector('#btnCaption').text = PasterI18n.text.notify.transmitMessage;
+            this.disabled = true;
 
-             Array.from(document
-                            .getElementById(modelId + '_addCommentForm')
-                            .getElementsByClassName('disableOnSubmit')).forEach(
-                        function (el, i, array) {
-                            el.style.display='none';
-                        });
+            Array.from(document
+                .getElementById(modelId + '_addCommentForm')
+                .getElementsByClassName('disableOnSubmit')).forEach(
+                    function (el, i, array) {
+                        el.style.display = 'none';
+                    });
 
-            this.querySelector('#btnIcon').style.display='';
+            this.querySelector('#btnIcon').style.display = '';
             mainThis.onSaveComment(modelId);
         });
 
-      
+
 
     }
     setupLazy(pageUrl, userPageUrl, maxRequests, modelId, idSet) {
@@ -179,8 +171,8 @@ class PasterView {
 
     }
     getTextSizes(el) {
-        var h = parseInt(el.offsetHeight)+10,
-                w = parseInt(el.offsetWidth);
+        var h = parseInt(el.offsetHeight) + 10,
+            w = parseInt(el.offsetWidth);
         return [h, w];
     }
     showAll(modelId) {
@@ -193,10 +185,10 @@ class PasterView {
         sketch.height = sizes[0];
 
         document.getElementById(modelId + "_all").style.display = '';
-        document.getElementById(modelId + "_drawBlock").style.display='none';
+        document.getElementById(modelId + "_drawBlock").style.display = 'none';
 
     }
-    init(modelId,allowEdit) {
+    init(modelId, allowEdit) {
 
         var mainThis = this;
 
@@ -209,61 +201,61 @@ class PasterView {
             pasterApp.showNotify(event.data["text/plain"].length + ' symbols copied to clipboard.');
         });*/
 
-        
+
         SyntaxHighlighter.highlight(modelId, {}, document.getElementById(modelId + '_pasteText'), true, allowEdit);
 
         document.getElementById(modelId + '_btnShowAll')
-            .addEventListener("click", function(event){
-                    event.preventDefault();
-                    mainThis.showAll(modelId);
-        });
+            .addEventListener("click", function (event) {
+                event.preventDefault();
+                mainThis.showAll(modelId);
+            });
 
         document.getElementById(modelId + '_btnShowComments')
-        .addEventListener("click", function(event){
+            .addEventListener("click", function (event) {
                 event.preventDefault();
                 mainThis.showComments(modelId);
-        });
+            });
 
         document.getElementById(modelId + '_btnShowDraw')
-            .addEventListener("click", function(event){
+            .addEventListener("click", function (event) {
                 event.preventDefault();
 
                 const drawImg = document.getElementById(modelId + '_drawImg').textContent;
 
-                mainThis.showDrawArea(modelId,drawImg);
-        });
+                mainThis.showDrawArea(modelId, drawImg);
+            });
 
-        this.setupDraw(modelId,allowEdit);
+        this.setupDraw(modelId, allowEdit);
         this.showAll(modelId);
     }
     showComments(modelId) {
-        document.getElementById(modelId + "_drawBlock").style.display='none';
-        document.getElementById(modelId + "_all").style.display='none';
+        document.getElementById(modelId + "_drawBlock").style.display = 'none';
+        document.getElementById(modelId + "_all").style.display = 'none';
     }
     showDrawArea(modelId, drawReviewData) {
 
         var sizes = this.getTextSizes(document.getElementById(modelId + "_pasteBodyContent"));
-        Logger.debug('sizes: ',sizes);
+        Logger.debug('sizes: ', sizes);
         var area = document.getElementById(modelId + "_drawArea"),
-                sketch = document.getElementsByClassName("sketch")[0];
-        area.style.height =sizes[0];
+            sketch = document.getElementsByClassName("sketch")[0];
+        area.style.height = sizes[0];
         area.style.width = sizes[1];
 
-       sketch.height = sizes[0];
-       sketch.width = sizes[1];
+        sketch.height = sizes[0];
+        sketch.width = sizes[1];
 
         const canvas = sketch; //document.getElementById(modelId + '_sketch');
         const ctx = canvas.getContext('2d');
 
         if (drawReviewData != '') {
-           const img = new Image();
+            const img = new Image();
             img.src = drawReviewData;
             img.onload = function () {
                 ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, sizes[1], sizes[0]);
             };
         }
-        document.getElementById(modelId + "_drawBlock").style.display='';
-        document.getElementById(modelId + "_all").style.display='none';
+        document.getElementById(modelId + "_drawBlock").style.display = '';
+        document.getElementById(modelId + "_all").style.display = 'none';
         this.sketchObj.start()
     }
     /**
@@ -275,23 +267,23 @@ class PasterView {
     onSaveComment(modelId) {
         Logger.debug('_on save comment: ', modelId);
 
-        const ed =SyntaxHighlighter.getEditor(modelId);
+        const ed = SyntaxHighlighter.getEditor(modelId);
 
         var ptext = ed.exportFile();
 
-        ptext=ptext.replace(/\r\n|\r/g, '\n')
-        .replace(/\t/g, '    ')
-        .replace(/\u2424/g, '\n');
+        ptext = ptext.replace(/\r\n|\r/g, '\n')
+            .replace(/\t/g, '    ')
+            .replace(/\u2424/g, '\n');
 
 
-        Logger.debug('formatted text: ',ptext);
+        Logger.debug('formatted text: ', ptext);
 
 
         const commentArea = document.getElementById('commentText-' + modelId);
         commentArea.innerHTML = ptext;
 
         const thumbImg = document.getElementById(modelId + '_thumbImgComment');
-       
+
         pasterApp.takeScreenshot(document.getElementById(modelId + '_pasteBodyContent'), function (img) {
             thumbImg.value = img.src;
             document.getElementById(modelId + "_addCommentForm").submit();
@@ -315,13 +307,12 @@ class PasterView {
         sketchRo.style['background-image'] = 'url(' + imgData + ')';
 
         pasterApp.takeScreenshot(
-                    document.getElementById(modelId + '_centerPanel'), function (img) {
-            thumbImg.value = img.src;
-            Logger.debug('screenshot taken ',thumbImg.value)
-            document.getElementById(modelId + "_saveReviewDraw").submit();
-        });
+            document.getElementById(modelId + '_centerPanel'), function (img) {
+                thumbImg.value = img.src;
+                Logger.debug('screenshot taken ', thumbImg.value)
+                document.getElementById(modelId + "_saveReviewDraw").submit();
+            });
 
     }
 
 }
-   

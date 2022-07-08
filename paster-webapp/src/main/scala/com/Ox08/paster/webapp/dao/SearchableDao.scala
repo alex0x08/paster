@@ -18,7 +18,6 @@ package com.Ox08.paster.webapp.dao
 
 import com.Ox08.paster.webapp.base.Logged
 import com.Ox08.paster.webapp.model.Struct
-import jakarta.annotation.PostConstruct
 import org.apache.commons.lang3.StringUtils
 import org.apache.lucene.analysis.standard.StandardAnalyzer
 import org.apache.lucene.queryparser.classic.{MultiFieldQueryParser, ParseException, QueryParser}
@@ -30,38 +29,35 @@ import org.hibernate.search.engine.search.predicate.SearchPredicate
 import org.hibernate.search.mapper.orm.Search
 import org.hibernate.search.mapper.orm.session.SearchSession
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.context.ApplicationListener
+import org.springframework.context.event.ContextRefreshedEvent
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util
 import scala.jdk.CollectionConverters._
 
 object SearchableDaoImpl {
-
   val FORMATTER = new SimpleHTMLFormatter("[result]", "[/result]")
   val DEFAULT_START_FIELDS: Array[String] = Array[String]("name")
-  val searchableDao = new util.ArrayList[SearchableDaoImpl[_]]()
 }
 
-@Transactional
 @Service
-class SetupIndexes extends Logged {
+class SetupIndexes extends Logged  with ApplicationListener[ContextRefreshedEvent]{
 
   @Value("${paster.reindexOnBoot:false}")
   val reindexOnBoot: Boolean = false
 
-  @PostConstruct
-  def onStart(): Unit = {
-
+  @Transactional
+  def onApplicationEvent(event: ContextRefreshedEvent): Unit = {
     if (reindexOnBoot) {
-      for (d <- SearchableDaoImpl.searchableDao.asScala) {
-        d.indexAll()
+      val daos =event.getApplicationContext.getBeansOfType(classOf[SearchableDaoImpl[_]])
+
+      for (d <- daos.entrySet().asScala) {
+        d.getValue.indexAll()
       }
 
       logger.info("reindex completed.")
-    } else {
-      logger.info("reindex was disabled. skipping it.")
-    }
-
+    } else logger.info("reindex was disabled. skipping it.")
   }
 }
 
@@ -69,12 +65,6 @@ class SetupIndexes extends Logged {
 abstract class SearchableDaoImpl[T <: Struct](model: Class[T])
   extends StructDaoImpl[T](model) {
 
-  /**
-   * this is needed to be able to reindex all implementations
-   *
-   * @see reindex
-   */
-  SearchableDaoImpl.searchableDao.add(this)
 
   protected class FSearch(query: String) extends Logged {
     logger.debug("searching for {}", query)
@@ -93,7 +83,8 @@ abstract class SearchableDaoImpl[T <: Struct](model: Class[T])
       .fromLuceneQuery(luceneQuery).toPredicate
 
     val fquery: LuceneSearchQuery[T] = fsession.search(model)
-      .extension(LuceneExtension.get()).where(predicate2).toQuery
+      .extension(LuceneExtension.get())
+      .where(predicate2).toQuery
 
     def getResults: util.List[T] = fillHighlighted(highlighter, pparser, fquery.fetchAll().hits())
 
@@ -106,6 +97,7 @@ abstract class SearchableDaoImpl[T <: Struct](model: Class[T])
   def fillHighlighted(highlighter: Highlighter,
                       pparser: QueryParser,
                       results: java.util.List[_]): java.util.List[T] = {
+    logger.debug("found {} results",results.size())
     for (obj <- results.asScala) {
       fillHighlighted(highlighter, pparser, obj.asInstanceOf[T])
     }
@@ -146,8 +138,8 @@ abstract class SearchableDaoImpl[T <: Struct](model: Class[T])
      * added for stupid users
      */
     new FSearch(
-      if (!query.contains(":") && !query.contains("*"))
-        query + "*" else
+      /*if (!query.contains(":") && !query.contains("*"))
+        query + "*" else*/
         query
     ).getResults
   }

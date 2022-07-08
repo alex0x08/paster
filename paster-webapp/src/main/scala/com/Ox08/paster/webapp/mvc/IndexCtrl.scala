@@ -24,7 +24,7 @@ import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 
 @Controller
-class IndexController extends AbstractController{
+class IndexCtrl extends AbstractCtrl{
   
   
   @RequestMapping(value = Array("/"))

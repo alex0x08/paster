@@ -84,7 +84,7 @@ object MvcConstants {
 
 }
 
-abstract class AbstractController extends Logged {
+abstract class AbstractCtrl extends Logged {
 
   @Autowired
   protected val messageSource: MessageSource = null

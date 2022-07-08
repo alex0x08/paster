@@ -13,26 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.Ox08.paster.webapp.mvc.view
-
 import org.apache.commons.lang3.StringUtils
 import org.springframework.oxm.Marshaller
 import org.springframework.web.servlet.view.xml.MarshallingView
-
 class ConfigurableXmlView(marshaller: Marshaller, modelKeys: String) extends MarshallingView(marshaller) {
-
   if (logger.isDebugEnabled)
     logger.debug(String.format("generating xml view, available model keys %s",
       modelKeys))
-
   override protected
   def locateToBeMarshalled(model: java.util.Map[String, Object]): Object = {
-
     if (StringUtils.isBlank(modelKeys)) {
       return super.locateToBeMarshalled(model)
     }
-
     for (modelKey <- modelKeys.split(",")) {
       if (model.containsKey(modelKey)) {
         val o = model.get(modelKey)
@@ -46,5 +39,4 @@ class ConfigurableXmlView(marshaller: Marshaller, modelKeys: String) extends Mar
     }
     null
   }
-
 }

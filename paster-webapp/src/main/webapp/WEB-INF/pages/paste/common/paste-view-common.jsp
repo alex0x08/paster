@@ -28,7 +28,7 @@
 --%>
 
 <div class="btn-group" role="group" aria-label="Controls">
-    <button id="${model.id}_btnShowAll" type="button" class="btn btn-primary">All</button>
+    <button id="${model.id}_btnShowAll" type="button" class="btn btn-primary active">All</button>
     <button id="${model.id}_btnShowComments" type="button" class="btn btn-primary">Comments</button>
     <button id="${model.id}_btnShowDraw" type="button" class="btn btn-primary">Draw</button>
   </div>
@@ -58,21 +58,17 @@
     Draw mode, paint options
 
 --%>
-        <div id="${model.id}_drawBlock" style="display:none;">
-            <div class="row">
-                <div class="col-md-4">
+        <div id="${model.id}_drawBlock" style="display:none;padding-top: 1em;">
+            <div class="row justify-content-between">
+                <div class="col-md-8">
 
-                    <a href="#${model.id}_sketch" data-tool="marker">Marker</a> |
-                    <a href="#${model.id}_sketch" data-tool="eraser">Erase all (click)</a>
-
+                 
                     <div id="${model.id}_tools" class="tools">
-                        Colors:
-                       
-
+                   
                     </div>
 
                 </div>
-                <div class="col-md-4 pull-right">
+                <div class="col-auto">
 
                     <c:if test="${not empty currentUser or allowAnonymousCommentsCreate}">
 

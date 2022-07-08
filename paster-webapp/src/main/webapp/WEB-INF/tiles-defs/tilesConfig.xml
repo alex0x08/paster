@@ -1,150 +1,144 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 <!DOCTYPE tiles-definitions PUBLIC
-       "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
-       "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+        "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+        "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
 <tiles-definitions>
 
     <!-- Default Main Template -->
     <definition name=".mainTemplate" template="/WEB-INF/pages/template/main.jsp">
-        <put-attribute name="menu" value="/WEB-INF/pages/template/menu.jsp" />
-        <put-attribute name="head" value="" />
-        <put-attribute name="content" value="" />
-        <put-attribute name="search-top" value="" />
-                
-        <put-attribute name="footer" value="" />
+        <put-attribute name="menu" value="/WEB-INF/pages/template/menu.jsp"/>
+        <put-attribute name="head" value=""/>
+        <put-attribute name="content" value=""/>
+        <put-attribute name="search-top" value=""/>
+        <put-attribute name="footer" value=""/>
+    </definition>
+
+    <definition name=".mainTemplatePaste" template="/WEB-INF/pages/template/main.jsp">
+        <put-attribute name="menu" value="/WEB-INF/pages/template/menu.jsp"/>
+        <put-attribute name="head" value=""/>
+        <put-attribute name="content" value=""/>
+        <put-attribute name="search-top" value="/WEB-INF/pages/template/search.jsp"/>
+        <put-attribute name="footer" value=""/>
     </definition>
 
 
-  <definition name=".mainTemplatePaste" template="/WEB-INF/pages/template/main.jsp">
-        <put-attribute name="menu" value="/WEB-INF/pages/template/menu.jsp" />
-        <put-attribute name="head" value="" />
-        <put-attribute name="content" value="" />
-        <put-attribute name="search-top" value="/WEB-INF/pages/template/search.jsp" />
-                
-        <put-attribute name="footer" value="" />
-    </definition>
-   
-        
-
-    <definition name=".errorTemplate" template="/WEB-INF/pages/template/main-error.jsp">      
-        <put-attribute name="content" value="" />
+    <definition name=".errorTemplate" template="/WEB-INF/pages/template/main-error.jsp">
+        <put-attribute name="content" value=""/>
     </definition>
 
 
-    
     <definition name=".rawTemplate" template="/WEB-INF/pages/template/raw.jsp">
-        <put-attribute name="pageTitle"  expression="" />
-        <put-attribute name="head" value="" />
-        <put-attribute name="content" value="" />
-        <put-attribute name="footer" value="" />
+        <put-attribute name="pageTitle" expression=""/>
+        <put-attribute name="head" value=""/>
+        <put-attribute name="content" value=""/>
+        <put-attribute name="footer" value=""/>
     </definition>
-
 
     <definition name="/paste/raw/list" extends=".rawTemplate">
-        <put-attribute name="content" value="/WEB-INF/pages/paste/raw/list.jsp" />
+        <put-attribute name="content" value="/WEB-INF/pages/paste/raw/list.jsp"/>
     </definition>
 
     <definition name="/paste/raw/search" extends=".rawTemplate">
-        <put-attribute name="content" value="/WEB-INF/pages/paste/raw/list.jsp" />
+        <put-attribute name="content" value="/WEB-INF/pages/paste/raw/list.jsp"/>
     </definition>
 
     <definition name="/paste/list" extends=".mainTemplatePaste">
-        <put-attribute name="content" value="/WEB-INF/pages/paste/list.jsp" />
-        <put-attribute name="footer" value="/WEB-INF/pages/paste/paste-list-footer.jsp" />
+        <put-attribute name="content" value="/WEB-INF/pages/paste/list.jsp"/>
+        <put-attribute name="footer" value="/WEB-INF/pages/paste/paste-list-footer.jsp"/>
     </definition>
 
-    <definition name="/paste/edit"  extends=".mainTemplatePaste">
-        <put-attribute name="head" value="/WEB-INF/pages/paste/paste-edit-head.jsp" />
-        <put-attribute name="content" value="/WEB-INF/pages/paste/edit.jsp" />
-       <put-attribute name="footer" value="/WEB-INF/pages/paste/paste-edit-footer.jsp" />
-     </definition>
-
-    <definition name="/paste/view"  extends=".mainTemplatePaste">
-        <put-attribute name="content" value="/WEB-INF/pages/paste/view.jsp" />
-        <put-attribute name="head" value="/WEB-INF/pages/paste/paste-view-head.jsp" />
-        <put-attribute name="footer" value="/WEB-INF/pages/paste/paste-view-footer.jsp" />    
+    <definition name="/paste/edit" extends=".mainTemplatePaste">
+        <put-attribute name="head" value="/WEB-INF/pages/paste/paste-edit-head.jsp"/>
+        <put-attribute name="content" value="/WEB-INF/pages/paste/edit.jsp"/>
+        <put-attribute name="footer" value="/WEB-INF/pages/paste/paste-edit-footer.jsp"/>
     </definition>
 
-
-    <definition name="/paste/raw/view"  extends=".rawTemplate">
-        <put-attribute name="content" value="/WEB-INF/pages/paste/raw/view.jsp" />
-    </definition>
-
-    <definition name="/user/list"  extends=".mainTemplate">
-        <put-attribute name="content" value="/WEB-INF/pages/user/list.jsp" />
-    </definition>
-
-    <definition name="/user/edit"  extends=".mainTemplate">
-        <put-attribute name="content" value="/WEB-INF/pages/user/edit.jsp" />
+    <definition name="/paste/view" extends=".mainTemplatePaste">
+        <put-attribute name="content" value="/WEB-INF/pages/paste/view.jsp"/>
+        <put-attribute name="head" value="/WEB-INF/pages/paste/paste-view-head.jsp"/>
+        <put-attribute name="footer" value="/WEB-INF/pages/paste/paste-view-footer.jsp"/>
     </definition>
 
 
-    <definition name="/admin/settings"  extends=".mainTemplate">
-        <put-attribute name="content" value="/WEB-INF/pages/admin/settings/edit.jsp" />
+    <definition name="/paste/raw/view" extends=".rawTemplate">
+        <put-attribute name="content" value="/WEB-INF/pages/paste/raw/view.jsp"/>
     </definition>
 
-    <definition name="/admin/settings/dbconsole"  extends=".mainTemplate">
-        <put-attribute name="content" value="/WEB-INF/pages/admin/settings/dbconsole.jsp" />
+    <definition name="/user/list" extends=".mainTemplate">
+        <put-attribute name="content" value="/WEB-INF/pages/user/list.jsp"/>
     </definition>
 
-
-    <definition name="/common/tags" template="/WEB-INF/pages/common/tags.jsp" >
-        <put-attribute name="model" value="" />
-        <put-attribute name="modelName" value="" />
-    </definition>
-
-    <definition name="/common/owner" template="/WEB-INF/pages/common/owner.jsp" >
-        <put-attribute name="model" value="" />
-        <put-attribute name="modelName" value="" />
+    <definition name="/user/edit" extends=".mainTemplate">
+        <put-attribute name="content" value="/WEB-INF/pages/user/edit.jsp"/>
     </definition>
 
 
-    <definition name="/common/commentCount" template="/WEB-INF/pages/common/commentCount.jsp" >
-        <put-attribute name="model" value="" />
-        <put-attribute name="modelName" value="" />
+    <definition name="/admin/settings" extends=".mainTemplate">
+        <put-attribute name="content" value="/WEB-INF/pages/admin/settings/edit.jsp"/>
     </definition>
-    
-    <definition name="/common/deleteLink" template="/WEB-INF/pages/common/deleteLink.jsp" >
-        <put-attribute name="model" value="" />
-        <put-attribute name="modelName" value="" />
-        <put-attribute name="currentUser" value="" />
+
+    <definition name="/admin/settings/dbconsole" extends=".mainTemplate">
+        <put-attribute name="content" value="/WEB-INF/pages/admin/settings/dbconsole.jsp"/>
     </definition>
 
 
-    <definition name="/common/pageList" template="/WEB-INF/pages/common/pageList.jsp" >
-        <put-attribute name="sourceType" value="" />
-        <put-attribute name="listMode" value="" />
-        <put-attribute name="pageItems" value="" />
-        <put-attribute name="result" value="" />
-        <put-attribute name="sortDesc" value="" />
+    <definition name="/common/tags" template="/WEB-INF/pages/common/tags.jsp">
+        <put-attribute name="model" value=""/>
+        <put-attribute name="modelName" value=""/>
     </definition>
 
-    <definition name="/common/pasteControls" template="/WEB-INF/pages/common/pasteControls.jsp" >
-        <put-attribute name="model" value="" />
-        <put-attribute name="mode" value="normal" />
-        <put-attribute name="prev" value="" />
-        <put-attribute name="next" value="" />
+    <definition name="/common/owner" template="/WEB-INF/pages/common/owner.jsp">
+        <put-attribute name="model" value=""/>
+        <put-attribute name="modelName" value=""/>
     </definition>
 
 
-    <definition name="/login"  extends=".mainTemplate">
-        <put-attribute name="content" value="/WEB-INF/pages/login.jsp" />
-        <put-attribute name="head" value="" />
+    <definition name="/common/commentCount" template="/WEB-INF/pages/common/commentCount.jsp">
+        <put-attribute name="model" value=""/>
+        <put-attribute name="modelName" value=""/>
+    </definition>
+
+    <definition name="/common/deleteLink" template="/WEB-INF/pages/common/deleteLink.jsp">
+        <put-attribute name="model" value=""/>
+        <put-attribute name="modelName" value=""/>
+        <put-attribute name="currentUser" value=""/>
     </definition>
 
 
-    <definition name="/error/404"  extends=".errorTemplate">
-        <put-attribute name="content" value="/WEB-INF/pages/error/404.jsp" />
+    <definition name="/common/pageList" template="/WEB-INF/pages/common/pageList.jsp">
+        <put-attribute name="sourceType" value=""/>
+        <put-attribute name="listMode" value=""/>
+        <put-attribute name="pageItems" value=""/>
+        <put-attribute name="result" value=""/>
+        <put-attribute name="sortDesc" value=""/>
+    </definition>
+
+    <definition name="/common/pasteControls" template="/WEB-INF/pages/common/pasteControls.jsp">
+        <put-attribute name="model" value=""/>
+        <put-attribute name="mode" value="normal"/>
+        <put-attribute name="prev" value=""/>
+        <put-attribute name="next" value=""/>
     </definition>
 
 
-    <definition name="/error/403"  extends=".errorTemplate">
-        <put-attribute name="content" value="/WEB-INF/pages/error/403.jsp" />
+    <definition name="/login" extends=".mainTemplate">
+        <put-attribute name="content" value="/WEB-INF/pages/login.jsp"/>
+        <put-attribute name="head" value=""/>
     </definition>
 
 
-    <definition name="/error/500"  extends=".errorTemplate">
-        <put-attribute name="content" value="/WEB-INF/pages/error/500.jsp" />
+    <definition name="/error/404" extends=".errorTemplate">
+        <put-attribute name="content" value="/WEB-INF/pages/error/404.jsp"/>
+    </definition>
+
+
+    <definition name="/error/403" extends=".errorTemplate">
+        <put-attribute name="content" value="/WEB-INF/pages/error/403.jsp"/>
+    </definition>
+
+
+    <definition name="/error/500" extends=".errorTemplate">
+        <put-attribute name="content" value="/WEB-INF/pages/error/500.jsp"/>
     </definition>
 
 </tiles-definitions>
