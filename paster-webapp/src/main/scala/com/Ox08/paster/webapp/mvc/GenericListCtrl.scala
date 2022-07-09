@@ -72,8 +72,8 @@ abstract class GenericListCtrl[T <: Struct] extends AbstractCtrl {
     /**
      * set default list mode
      */
-    if (!model.containsAttribute(MvcConstants.LIST_MODE)) {
-      model.addAttribute(MvcConstants.LIST_MODE, "list")
+    if (!model.containsAttribute("listMode")) {
+      model.addAttribute("listMode", "list")
     }
   }
   /**
@@ -113,7 +113,7 @@ abstract class GenericListCtrl[T <: Struct] extends AbstractCtrl {
        * check if exist and use it
        */
       if (NPpage != null) {
-        if (NPpage.equals(MvcConstants.NEXT_PARAM)) {
+        if (NPpage.equals("next")) {
           pagedListHolder.nextPage()
         } else {
           pagedListHolder.previousPage()
@@ -144,11 +144,14 @@ abstract class GenericListCtrl[T <: Struct] extends AbstractCtrl {
     if (createDefaultItemModel && !pageHolderName.equals(MvcConstants.NODE_LIST_MODEL_PAGE)) {
       model.addAttribute(MvcConstants.NODE_LIST_MODEL_PAGE, pagedListHolder)
     }
-    model.addAttribute(MvcConstants.PAGE_SET, MvcConstants.pageSet)
+    model.addAttribute("pageSet", Array(5, 10, 50, 100, 500))
     pagedListHolder.getPageList
   }
   @ModelAttribute("availableSortColumns")
-  def getAvailableSortColumns: List[SortColumn] = MvcConstants.defaultSortColumns
+  def getAvailableSortColumns: List[SortColumn] = List[SortColumn](new SortColumn("id", "struct.id"),
+    new SortColumn("name", "struct.name"),
+    new SortColumn("lastModified", "struct.lastModified"))
+
   @RequestMapping(value = Array("/list/sort/{sortColumn:[a-z0-9A-Z]+}",
     "/list/sort/{sortColumn:[a-z0-9A-Z]+}/up"),
     method = Array(RequestMethod.GET))
@@ -176,13 +179,13 @@ abstract class GenericListCtrl[T <: Struct] extends AbstractCtrl {
   @ModelAttribute(MvcConstants.NODE_LIST_MODEL)
   def listByPathNext(
                       request: HttpServletRequest,
-                      model: Model): util.List[T] = list(request, model, null, MvcConstants.NEXT_PARAM, null, null, sortAsc = false)
+                      model: Model): util.List[T] = list(request, model, null, "next", null, null, sortAsc = false)
   @RequestMapping(value = Array("/list/prev"), method = Array(RequestMethod.GET))
   @ModelAttribute(MvcConstants.NODE_LIST_MODEL)
   def listByPathPrev(
                       request: HttpServletRequest,
                       model: Model): util.List[T] = list(request, model, null, "prev", null, null, sortAsc = false)
-  @RequestMapping(value = Array(MvcConstants.LIST_ACTION), method = Array(RequestMethod.GET))
+  @RequestMapping(value = Array("/list"), method = Array(RequestMethod.GET))
   @ModelAttribute(MvcConstants.NODE_LIST_MODEL)
   def list(request: HttpServletRequest,
            model: Model,

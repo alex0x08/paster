@@ -59,7 +59,7 @@ abstract class SearchCtrl[T <: Struct, QV <: Query] extends GenericListCtrl[T] {
   }
 
   protected def fillSearchModel(model: Model): Unit = {
-    model.addAttribute(MvcConstants.LIST_MODE, "search")
+    model.addAttribute("listMode", "search")
   }
 
   /**
@@ -67,7 +67,7 @@ abstract class SearchCtrl[T <: Struct, QV <: Query] extends GenericListCtrl[T] {
    *
    * @return
    */
-  @RequestMapping(value = Array(MvcConstants.SEARCH_ACTION),
+  @RequestMapping(value = Array("/list/search"),
     method = Array(RequestMethod.POST, RequestMethod.GET))
   @ModelAttribute(MvcConstants.NODE_LIST_MODEL)
   def search(request: HttpServletRequest,
@@ -184,7 +184,7 @@ abstract class SearchCtrl[T <: Struct, QV <: Query] extends GenericListCtrl[T] {
                         request: HttpServletRequest,
                         @PathVariable("result") result: String,
                         model: Model): util.List[T] = listImpl(request,model,
-    null, MvcConstants.NEXT_PARAM,
+    null, "next",
     null, null, sortAsc = false,
     result)
 

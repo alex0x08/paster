@@ -1,21 +1,14 @@
 package com.Ox08.paster.webapp.service
-
-
 import com.Ox08.paster.webapp.base.Logged
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
-
 import java.io.{File, IOException}
 import java.lang.management.ManagementFactory
 import java.util
 import scala.jdk.CollectionConverters._
-
 @Service
 class SystemManagementService extends Logged {
-
-
   private var inRestart = false
-
   /**
    * Перезапустить JVM
    *
@@ -35,9 +28,6 @@ class SystemManagementService extends Logged {
       case _: Exception =>
       //ignore
     }
-
-
-
     try { // java binary
       val java = System.getProperty("java.home") + "/bin/java"
       // vm arguments
@@ -98,5 +88,4 @@ class SystemManagementService extends Logged {
         throw new IOException("Error while trying to restart the application", e)
     }
   }
-
 }

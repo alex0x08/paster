@@ -37,6 +37,7 @@ class PasterUser(name: String,
    */
   override def isCredentialsNonExpired = true
   def getName: String = name
+
   override def getPassword: String = pwd
   def setPassword(newPass: String): Unit = {
     pwd = newPass
@@ -47,9 +48,8 @@ class PasterUser(name: String,
   @Override
   def getUsername: String = username
   def getAuthorities: util.Collection[_ <: GrantedAuthority] = getRoles
-  override def toString: String = Logged.toStringSkip(this,
-    Array("password", "passwordRepeat"
-    ))
+  override def toString: String =
+    Logged.toStringSkip(this,Array("password", "passwordRepeat" ))
 }
 object Role {
   val ROLE_ADMIN = new Role("ROLE_ADMIN", "role.admin.name")

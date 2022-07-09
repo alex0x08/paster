@@ -398,6 +398,10 @@ var SyntaxHighlighter = function () {
 
         },
         insertComment: function (cl, mode, count) {
+
+             mainThis = this;
+        
+
             const lineNumber = parseInt(cl.getAttribute('lineNumber')),
                 id = cl.getAttribute('commentId');
 
@@ -407,18 +411,33 @@ var SyntaxHighlighter = function () {
 
             textEl.innerHTML = mtext;
 
+            var el
             if (mode == 1) {
                 cl.style['padding-left'] = '20px';
                 const ln = lineNumber + 1;
-                const el = document.getElementById(sh.vars.modelId + '_cl_' + ln);
+                el = document.getElementById(sh.vars.modelId + '_cl_' + ln);
                 el.parentNode.insertBefore(cl, el);
 
             } else {
-                const el = document.getElementById(sh.vars.modelId + '_cl_' + lineNumber);
+                el = document.getElementById(sh.vars.modelId + '_cl_' + lineNumber);
                 if (el) {
                     el.parentNode.insertBefore(cl, el.nextSibling);
                 }
             }
+            Array.from(cl.getElementsByClassName('pInsertCommentTrigger')).forEach(
+                function (el) {
+                    el.addEventListener("click", function (e) {
+                        e.preventDefault();
+                        const ln = el.getAttribute('plineNumber');
+                        const commentId = el.getAttribute('pCommentId');
+                        mainThis.insertEditForm(sh.vars.modelId, ln, commentId);
+                    });
+                });
+    
+    
+
+         
+
 
             cl.style.display = '';
 

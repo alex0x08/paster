@@ -152,7 +152,7 @@ class PasteListCtrl extends SearchCtrl[Paste, AuthorQuery] {
                             request: HttpServletRequest,
                             @PathVariable("source") source: String,
                             model: Model): util.List[Paste] = listImpl(request, model, null,
-                            MvcConstants.NEXT_PARAM,
+                            "next",
                   null,
     "lastModified",
     false, source, null)
@@ -209,7 +209,7 @@ class PasteListCtrl extends SearchCtrl[Paste, AuthorQuery] {
 
   @RequestMapping(value = Array("/count/{source:[a-zA-Z0-9]+}/{since:[0-9]+}"),
     method = Array(RequestMethod.GET), produces = Array("application/json"))
-  @ModelAttribute(MvcConstants.NODE_COUNT_KEY)
+  @ModelAttribute("count")
   def countAllSince(@PathVariable("source") channelCode: String,
                     @PathVariable("since") dateFrom: java.lang.Long): java.lang.Long = {
     pasteDao.countAllSince(channelCode, dateFrom)

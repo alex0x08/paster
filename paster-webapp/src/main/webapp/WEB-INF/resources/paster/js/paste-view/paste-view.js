@@ -135,15 +135,21 @@ class PasterView {
 
         const commentsParent = document.getElementById(modelId + '_commentsList');
 
+        console.log('comments parent',commentsParent)
+
+        /*console.log('els:',commentsParent.getElementsByClassName('pInsertCommentTrigger'))
+
+
         Array.from(commentsParent.getElementsByClassName('pInsertCommentTrigger')).forEach(
-            function (el, i, array) {
+            function (el) {
+                console.log('e:',el)
                 el.addEventListener("click", function (e) {
                     e.preventDefault();
                     const ln = el.getAttribute('plineNumber');
                     const commentId = el.getAttribute('pCommentId');
                     SyntaxHighlighter.insertEditForm(modelId, ln, commentId);
                 });
-            });
+            });*/
 
 
         document.getElementById(modelId + '_addCommentBtn').addEventListener('click', function (event) {

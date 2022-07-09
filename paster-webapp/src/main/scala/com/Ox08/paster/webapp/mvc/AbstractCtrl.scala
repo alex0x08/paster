@@ -13,9 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.Ox08.paster.webapp.mvc
-
 import com.Ox08.paster.webapp.base.Boot.BOOT
 import com.Ox08.paster.webapp.base.{Boot, Logged}
 import com.Ox08.paster.webapp.manager.UserManager
@@ -26,120 +24,57 @@ import org.springframework.context.MessageSource
 import org.springframework.orm.ObjectRetrievalFailureException
 import org.springframework.web.bind.annotation._
 import java.util.Locale
-
-
-
 object MvcConstants {
-
-
   val page404 = "/error/404"
-
   val page403 = "/error/403"
-
   val page500 = "/error/500"
-
   final val NODE_LIST_MODEL = "items"
   final val NODE_LIST_MODEL_PAGE = "pageItems"
-  final val MODEL_KEY= "model"
-  final val NODE_COUNT_KEY = "count"
-
-  val availableLocales: Array[Locale] =Array(
-    Locale.US,
-    Locale.forLanguageTag("ru_RU")
-  )
-
-  final val INTEGRATED = "/integrated"
-
-  final val RAW = "/raw"
-
-  final val LIST_ACTION = "/list"
-
-  final val COUNT_ACTION = "/count"
-
-  final val NEXT_PARAM = "next"
-
-  final val PAGE_SET = "pageSet"
-
-  final val pageSet:Array[Int] = Array(5,10,50,100,500)
-  /**
-   * model attribute to specify list mode
-   * value can be 'search' or 'list'
-   */
-  final val LIST_MODE = "listMode"
-
-
-  final val defaultSortColumns:List[SortColumn] =
-    List[SortColumn](new SortColumn("id","struct.id"),
-      new SortColumn("name","struct.name"),
-      new SortColumn("lastModified","struct.lastModified"))
-
-  final val SEARCH_ACTION = "/list/search"
-  final val TOTAL_FOUND = "totalFound"
-
-  final val EDIT_ACTION = "/edit"
-  final val VIEW_ACTION = "/view"
-  final val SAVE_ACTION = "/save"
-  final val NEW_ACTION = "/new"
-  final val DELETE_ACTION = "/delete"
+  final val MODEL_KEY = "model"
 
 }
-
 abstract class AbstractCtrl extends Logged {
-
   @Autowired
   protected val messageSource: MessageSource = null
-
   protected val systemInfo: BOOT.SystemInfo = Boot.BOOT.getSystemInfo
-  
   @Value("${config.comments.allow-anonymous.create}")
   val allowAnonymousCommentsCreate: Boolean = false
-
   @Value("${config.paste.allow-anonymous.create}")
   val allowAnonymousPasteCreate: Boolean = false
-
   @Value("${paste.app.id}")
-  val appId:String = null
-  
+  val appId: String = null
   @ModelAttribute("allowAnonymousCommentsCreate")
   @JsonIgnore
   def isAllowAnonymousCommentsCreate: Boolean = allowAnonymousCommentsCreate
-
   @ModelAttribute("allowAnonymousPasteCreate")
   @JsonIgnore
   def isAllowAnonymousPasteCreate: Boolean = allowAnonymousPasteCreate
-
   protected def getResource(key: String, locale: Locale): String =
     messageSource.getMessage(key, new Array[java.lang.Object](0), locale)
-
   protected def getResource(key: String, args: Array[Any], locale: Locale): String =
     messageSource.getMessage(key, args.asInstanceOf[Array[java.lang.Object]], locale)
-
   @ExceptionHandler(Array(classOf[Throwable]))
   protected def handleAllExceptions(ex: ObjectRetrievalFailureException): String = {
     logger.error(ex.getLocalizedMessage, ex)
     MvcConstants.page500
   }
-
   @ModelAttribute("appId")
   def getAppId: String = appId
-
   @ModelAttribute("systemInfo")
   def getSystemInfo: BOOT.SystemInfo = systemInfo
-
   @ModelAttribute("availableLocales")
-  def getAvailableLocales: Array[Locale] = MvcConstants.availableLocales
-
+  def getAvailableLocales: Array[Locale] = Array(
+    Locale.US,
+    Locale.forLanguageTag("ru_RU")
+  )
   @JsonIgnore
   @ModelAttribute("currentUser")
   def getCurrentUser: PasterUser = UserManager.getCurrentUser
-
   @JsonIgnore
   def isCurrentUserLoggedIn: Boolean = UserManager.getCurrentUser != null
-
   @JsonIgnore
   def isCurrentUserAdmin: Boolean = {
     val u: PasterUser = UserManager.getCurrentUser
     u != null && u.isAdmin
   }
-
 }

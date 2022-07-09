@@ -13,40 +13,51 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.Ox08.paster.webapp.mvc
-
 import com.Ox08.paster.webapp.model.GenericQuery
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
-
+/**
+ * Default Controller
+ */
 @Controller
-class IndexCtrl extends AbstractCtrl{
-  
-  
+class IndexCtrl extends AbstractCtrl {
+  /**
+   * Handles default url
+   * @param model
+   * @return
+   */
   @RequestMapping(value = Array("/"))
-  def index(model:Model): String = {
+  def index(model: Model): String = {
     model.asMap().clear()
     "redirect:/main/paste/list"
   }
-
+  /**
+   * Handles error pages
+   * @param response
+   * @param errorCode
+   * @return
+   */
   @RequestMapping(Array("/error/{errorCode:[0-9_]+}"))
-  def error(response:HttpServletResponse,
-            @PathVariable("errorCode") errorCode:Int):String = errorCode match {
-                case 403 |404 |500  =>
-                  response.setStatus(errorCode)
-                  s"/error/$errorCode"
-                case _ =>
-                  "/error/500"
+  def error(response: HttpServletResponse,
+            @PathVariable("errorCode") errorCode: Int): String = errorCode match {
+    case 403 | 404 | 500 =>
+      response.setStatus(errorCode)
+      s"/error/$errorCode"
+    case _ =>
+      "/error/500"
   }
-
+  /**
+   * Login page
+   * @param model
+   * @return
+   */
   @RequestMapping(Array("/login"))
-  def login(model:Model):String = if (isCurrentUserLoggedIn) index(model) else {
-  model.addAttribute("query", new GenericQuery())
-  "/login"
+  def login(model: Model): String = if (isCurrentUserLoggedIn) index(model) else {
+    model.addAttribute("query", new GenericQuery())
+    "/login"
   }
-
 }

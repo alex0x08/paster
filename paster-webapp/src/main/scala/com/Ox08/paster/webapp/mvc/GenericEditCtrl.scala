@@ -42,7 +42,7 @@ abstract class GenericEditCtrl[T <: Struct] extends AbstractCtrl {
     model.addAttribute(MvcConstants.MODEL_KEY, obj)
   }
   def loadModel(id: Integer): T = manager().getFull(id)
-  @RequestMapping(value = Array(MvcConstants.NEW_ACTION), method = Array(RequestMethod.GET))
+  @RequestMapping(value = Array("/new"), method = Array(RequestMethod.GET))
   @ResponseStatus(HttpStatus.CREATED)
   def createNew(model: Model, locale: Locale): String = {
     fillEditModel(getNewModelInstance, model, locale)
@@ -56,7 +56,7 @@ abstract class GenericEditCtrl[T <: Struct] extends AbstractCtrl {
     fillEditModel(loadModel(id), model, locale)
     editPage
   }
-  @RequestMapping(value = Array(MvcConstants.SAVE_ACTION), method = Array(RequestMethod.POST))
+  @RequestMapping(value = Array("/save"), method = Array(RequestMethod.POST))
   def save(@RequestParam(required = false) cancel: String,
            @Valid @ModelAttribute(MvcConstants.MODEL_KEY) b: T,
            result: BindingResult, model: Model, locale: Locale,
@@ -78,7 +78,7 @@ abstract class GenericEditCtrl[T <: Struct] extends AbstractCtrl {
     redirectAttributes.addFlashAttribute("statusMessageKey", "action.success")
     listPage
   }
-  @RequestMapping(value = Array(MvcConstants.DELETE_ACTION),
+  @RequestMapping(value = Array("/delete"),
     method = Array(RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE))
   def delete(@RequestParam(required = false) id: Integer): String = {
     manager().remove(id)
