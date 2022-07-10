@@ -1,6 +1,7 @@
 /*
 ---
 
+
 script: LazyPagination.js
 
 description: Automatically sends ajax requests as the user scrolls an element.
@@ -17,136 +18,146 @@ requires:
 
 provides: [LazyPagination]
 
+Alex:
+Was rewritten for standalone usage
+
 ...
 */
 
 
 class LazyPagination {
-	
+
 	options = {
-			buffer: 1000,
-			maxRequests: 5,
-			pageDataIndex: 'page',
-                        idKey: 'id',
-			data: { page: 2},   
-                        afterAppend: {},
-                        beforeLoad: {}, 
-                        idSet: new Array(),
-                        idMode: false,
-			navigation: false,
-			inject: false, 
-                        
-		}
-              
-	initialize(element,options){
-		//this.parent(options);
+		maxRequests: 5,
+		pageDataIndex: 'page',
+		idKey: 'id',
+		data: { page: 2, modelId: 0 },
+		afterAppend: function () { },
+		beforeLoad: function () { },
+		idSet: new Array(),
+		idMode: false,
+		navigation: false,
+		inject: false,
+
+	}
+
+	initialize(options) {
+
+		this.options = { ...this.options, ...options };
+
+		Logger.debug('merged options ', this.options);
+
+		const xhr = new XMLHttpRequest();
+
+		this.xmlhttp = xhr;
+
+		const mainThis = this;
+
+		xhr.onload = function () {
+
+			if (xhr.readyState == XMLHttpRequest.DONE) {
+				if (xhr.status == 200) {
+
+					const html = '' + xhr.responseText;
+
+					(mainThis.options.inject) ? mainThis.inject(html) : mainThis.adopt(html);
+					mainThis.increment();
+					mainThis.measure();
+
+				} else {
+					Logger.warn('request failed')
+				}
+			}
+		};
 
 
-		/*const xmlhttp = new XMLHttpRequest();
-        const cb = document.getElementById('newPastasCountBlock');
-
-        xmlhttp.onreadystatechange = function() {
-            if (xmlhttp.readyState == XMLHttpRequest.DONE) {
-               if (xmlhttp.status == 200) {
-
-                  const obj = JSON.parse(xmlhttp.responseText, true);
-                        const pcount = obj['count'];
-                        if (pcount>0) {
-                            cb = document.getElementById('newPastasCountBlock');
-                            cb.style.display='';
-                            cb.text = pcount;
-                          	Tinycon.setBubble(pcount);
-                        }
-
-               } else {
-                    cb.text= 'Sorry, your request failed :(';
-               }
-            }
-        };
-
-        xmlhttp.open("GET", '${ctx}/main/paste/count/form/'+new Date().getTime()+'.json', true);
-        xmlhttp.send(); */
-
-		this.element = document.id(element);
 		this.bound = this.measure.bind(this);
 		this.requests = 0;
 
-		this.addEventListener('onComplete',function(response,html){
-         	(this.options.inject) ? this.inject(html[0]) : this.adopt(html[0]);
-			this.increment();
-			this.measure();
-		});
-		
-		if(this.options.navigation) document.id(this.options.navigation).destroy();
+
 		this.attach();
 		this.measure();
 	}
-                
-	measure(){
-		var scrollHeight = this.element.getScrollSize().y, 
-			height = this.element.getSize().y,
-			scroll = this.element.getScroll().y;
-        
-         console.log("scrollHeight="+scrollHeight+" height="+height+" scroll="+scroll+" calc="+(scrollHeight-height - this.options.buffer));
-                
-		if(scrollHeight-height - this.options.buffer <= scroll) this.send();
+
+	getSizes(el) {
+		var h = parseInt(el.offsetHeight) + 10,
+			w = parseInt(el.offsetWidth);
+		return [h, w];
+	}
+
+
+	measure() {
+		var scrollHeight = document.documentElement.scrollHeight,
+			height = document.documentElement.clientHeight,
+			scroll = window.pageYOffset;
+
+
+		//console.log("scrollHeight=" + scrollHeight + " height=" + height + " scroll=" + scroll);
+
+		if (scroll + height >= scrollHeight - 10)
+			this.send();
 		return this;
 	}
-	
-	send(){
+
+	send() {
 		console.log('attempt to send..')
-		if(this.check && this.requests != this.options.maxRequests ) {
-                  
-                this.options.beforeLoad(this.options.data[this.options.idKey]);
-                    
-                    if (this.options.idMode) {
-                        this.options.data[this.options.idKey] = this.options.idSet[this.options.data[this.options.pageDataIndex]];
-                    }
-                    
-                   //
-                   //  alert( this.options.data[this.options.idKey]);
-                    this.parent();
-                }
+		if (this.requests != this.options.maxRequests) {
+			//console.log('data:', this.options.data[this.options.idKey])
+
+			this.options.beforeLoad(this.options.data[this.options.idKey]);
+
+			if (this.options.idMode) {
+				this.options.data[this.options.idKey] = this.options.idSet[this.options.data[this.options.pageDataIndex]];
+			}
+
+			//
+			this.xmlhttp.open(this.options.method, this.options.url + '?id=' + this.options.data[this.options.idKey], true);
+			this.xmlhttp.send();
+
+		}
 	}
-	
-	increment(){
+
+	increment() {
 		this.requests++;
 		this.options.data[this.options.pageDataIndex]++;
 		return this;
 	}
-	
-	attach(){
-		window.addEventListener('resize',this.bound);
-		this.element.addEventListener('scroll',this.bound);
+
+	attach() {
+		window.addEventListener('resize', this.bound);
+		document.addEventListener('scroll', this.bound);
 		return this;
 	}
-	
-	detach(){
-		window.removeEvent('resize',this.bound);
-		this.element.removeEvent('scroll',this.bound);
+
+	detach() {
+		window.removeEvent('resize', this.bound);
+		document.removeEvent('scroll', this.bound);
 		return this;
 	}
-	
-	adopt(html){
-		//(this.element === document || this.element === window) ? 
-	//		$(document.body).adopt(html) : this.element.adopt(html);
-						
-			(this.element === document || this.element === window) ? 
+
+	adopt(html) {
+
+		(this.element === document || this.element === window) ?
 			document.body.append(html) : this.element.parentNode.append(html);
-			
-                this.options.afterAppend(html, this.options.idMode ? 
-                this.options.idSet[this.options.data[this.options.pageDataIndex]] : this.options.data[this.options.pageDataIndex]);        
+
+		this.options.afterAppend(html, this.options.idMode ?
+			this.options.idSet[this.options.data[this.options.pageDataIndex]] : this.options.data[this.options.pageDataIndex]);
 		return this;
 	}
-	
-	inject(html){
-		html.inject(this.options.inject.element, this.options.inject.where);
-	
-        
-                           this.options.afterAppend(html, this.options.idMode ? 
-                this.options.idSet[this.options.data[this.options.pageDataIndex]] : this.options.data[this.options.pageDataIndex]);        
-	
-                return this;
+
+	inject(html) {
+
+		var div = document.createElement('div');
+		div.innerHTML = html;
+
+		const el = document.getElementById(this.options.inject.element)
+
+		el.parentNode.insertBefore(div, el);
+
+		this.options.afterAppend(div, this.options.idMode ?
+			this.options.idSet[this.options.data[this.options.pageDataIndex]] : this.options.data[this.options.pageDataIndex]);
+
+		return this;
 	}
 
 }

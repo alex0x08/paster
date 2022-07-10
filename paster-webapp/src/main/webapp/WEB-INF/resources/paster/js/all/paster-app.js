@@ -52,6 +52,7 @@ class PasterApp {
         this.modalDlg.show();
     }
     bindDeleteDlg(parent) {
+        console.log('parent:',parent)
 
         var $paster = this;
 

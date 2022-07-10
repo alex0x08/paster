@@ -17,7 +17,8 @@
 class PasterEdit {
 
     MAX_TITLE_LENGTH = 100;
-
+    MAX_FILE_SIZE = 1024 * 1024 * 5;
+        
     editor = undefined;
     counter = undefined;
 
@@ -90,25 +91,30 @@ class PasterEdit {
         //Go to end of the last line
         editor.gotoLine(count, editor.getSession().getLine(count - 1).length);
 
+        editor.setOption("showPrintMargin", false)
+
+          
+
         editor.getSession().on('change', function () {
             const text = editor.getSession().getValue();
             textarea.value = text;
             counter.getCount(text);
         });
 
-        document.getElementById('ptheme').addEventListener('change', function (event) {
-            editor.setTheme(this.querySelector('option:selected').value);
-        });
+       
 
         document.getElementById('normalized').addEventListener('click', function (event) {
-            if (this.getAttribute('checked')) {
+            Logger.debug('click normalized',event)
+            if (event.target.checked) {
+                editor.setOption("showPrintMargin", true)
                 var col = 80;
                 editor.getSession().setUseWrapMode(true);
                 editor.getSession().setWrapLimitRange(col, col);
                 editor.renderer.setPrintMarginColumn(col);
             } else {
                 editor.getSession().setUseWrapMode(false);
-                editor.renderer.setPrintMarginColumn(80);
+                editor.setOption("showPrintMargin", false)
+              //  editor.renderer.setPrintMarginColumn(80);
             }
         });
 
@@ -146,11 +152,19 @@ class PasterEdit {
     clearTitle() {
         document.getElementById('pname').setValue('value', '');
     }
-    readLocalFile(e) {
+    readLocalFile(e) {        
+
         const file = e.target.files[0];
         if (!file) {
             return;
         }
+
+        console.log('file sz:',file.size,this.MAX_FILE_SIZE);
+
+        if(file.size > this.MAX_FILE_SIZE){
+            pasterApp.showNotify('File is too large');
+            return;
+         };
 
         const mainThis = this;
 

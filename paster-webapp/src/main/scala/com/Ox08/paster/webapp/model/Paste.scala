@@ -17,9 +17,12 @@ package com.Ox08.paster.webapp.model
 import com.Ox08.paster.webapp.base.Logged
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute
+import com.thoughtworks.xstream.annotations.XStreamOmitField
+import com.thoughtworks.xstream.annotations.XStreamAlias
+
 import jakarta.persistence.{CascadeType, Column, Entity, FetchType, Lob, ManyToMany, MapKey, PrePersist, PreUpdate, Table}
 import jakarta.validation.constraints.{NotNull, Size}
-import jakarta.xml.bind.annotation.{XmlRootElement, XmlTransient}
+
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.{FullTextField, Indexed, KeywordField}
 import java.util
 import java.util.UUID
@@ -36,7 +39,7 @@ object Paste extends Struct {
 }
 @Entity
 @Indexed(index = "indexes/tags")
-@XmlRootElement(name = "tag")
+@XStreamAlias("Tag")
 @Table(name = "P_TAGS")
 class Tag(tagString: String) extends DBObject {
   @NotNull
@@ -57,7 +60,7 @@ class Tag(tagString: String) extends DBObject {
  */
 @Entity
 @Indexed(index = "indexes/pastas")
-@XmlRootElement(name = "paste")
+@XStreamAlias("Paste")
 @Table(name = "P_PASTAS")
 class Paste(ptitle: String) extends Struct with java.io.Serializable {
   def this() = this(null)
@@ -81,7 +84,7 @@ class Paste(ptitle: String) extends Struct with java.io.Serializable {
   /**
    * link to preview image
    */
-  @XmlTransient
+  @XStreamOmitField
   //@Field(store = Store.YES, index = Index.NO)
   @Column(name = "p_thumb_img")
   @JsonIgnore
@@ -133,8 +136,7 @@ class Paste(ptitle: String) extends Struct with java.io.Serializable {
    * comments relation
    */
   @transient
-  @XmlTransient
-  @JsonIgnore
+  @XStreamOmitField
   val comments: java.util.List[Comment] = new util.ArrayList[Comment]()
   @KeywordField
   @Column(name = "p_prior")
@@ -148,6 +150,7 @@ class Paste(ptitle: String) extends Struct with java.io.Serializable {
   @Column(name = "words_count")
   var wordsCount: Int = _
   @Column(name = "review_img")
+  @XStreamOmitField
   @JsonIgnore
   var reviewImgData: String = _
   /**
@@ -155,6 +158,7 @@ class Paste(ptitle: String) extends Struct with java.io.Serializable {
    */
   @MapKey(name = "name")
   @ManyToMany(fetch = FetchType.EAGER, cascade = Array(CascadeType.ALL))
+  @XStreamOmitField
   private[model] var tagsMap: java.util.Map[String, Tag] = new java.util.HashMap
   @PrePersist
   @PreUpdate
@@ -175,6 +179,8 @@ class Paste(ptitle: String) extends Struct with java.io.Serializable {
   def getSymbolsCount: Int = symbolsCount
   def getIntegrationCode: String = integrationCode
   def getReviewImgData: String = reviewImgData
+
+  @JsonIgnore
   def getComments: util.List[Comment] = comments
   override def terms(): List[String] = super.terms() ::: List[String]("text", "tags")
   /**
@@ -185,6 +191,7 @@ class Paste(ptitle: String) extends Struct with java.io.Serializable {
    */
   def isHasAuthor: Boolean = author != null
   def getTags: java.util.Set[String] = tagsMap.keySet()
+  @JsonIgnore
   def getTagsMap: java.util.Map[String, Tag] = tagsMap
   /**
    * loads this instance fully from database

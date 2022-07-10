@@ -29,6 +29,10 @@ class PasterView {
 
             toolsEl.insertAdjacentHTML('beforeend', htmlBlock);
         });
+
+       // const customColorHtml ='<input type="color" class="form-control form-control-color" id="selectCustomColorInput" value="#D20202" title="Choose your color"/>'
+       // toolsEl.insertAdjacentHTML('beforeend', customColorHtml);
+      
         const sz_array = [1, 3, 5, 10, 15];
         sz_array.forEach(c => {
             const htmlBlock = "<a href='#" + modelId + "_sketch' class=" + modelId + "_sketch_sz data-size='" + c
@@ -155,10 +159,12 @@ class PasterView {
 
     }
     setupLazy(pageUrl, userPageUrl, maxRequests, modelId, idSet) {
-        Logger.debug('setup lazy..');
+        Logger.debug('setup lazy modelId:',modelId);
         var mainThis = this;
 
-          this.lazyPaging = new LazyPagination(document, {
+          this.lazyPaging = new LazyPagination()
+          
+          this.lazyPaging.initialize({
                     url: pageUrl,
                     method: 'get',
                     maxRequests: maxRequests,
@@ -174,23 +180,21 @@ class PasterView {
                         element: 'morePages',
                         where: 'before'
                     }, beforeLoad: function (page) {
-                        //alert(page);
-                        //SyntaxHighlighter.hideEditForm(this.);
-                        $('pageLoadSpinner').setStyle('display', '');
+                        
+                        document.getElementById('pageLoadSpinner').style.display='';
                     }, afterAppend: function (block, page) {
 
                         var ptext = document.getElementById(page + '_pasteText');
 
                         SyntaxHighlighter.highlight(page, {}, ptext, false, false);
 
-                        //ptext.setStyle('display', 'none');
-
-                        /*$(page + '_addCommentBtn').addEvent('click', function () {
+                        document.getElementById(page + '_addCommentBtn')
+                                .addEventListener('click', function () {
                             this.getElementById('btnCaption').set('text',
                                     PasterI18n.text.notify.transmitMessage).disabled = true;
                             this.getElementById('btnIcon').setStyle('display', '');
                             mainThis.onSaveComment(page);
-                        });*/
+                        });
 
                         try {
                             history.pushState({id: page}, "Page " + page, userPageUrl + "/" + page);
@@ -201,15 +205,16 @@ class PasterView {
                         mainThis.setupDraw(page);
                         mainThis.showAll(page);
 
-                      //  $('pageLoadSpinner').setStyle('display', 'none');
-                      //  $(page + '_pasteText').grab($('pageLoadSpinner'), "after");
+
+                        const elSpin =document.getElementById('pageLoadSpinner');
+                        elSpin.style.display='none';
+                        
+                        const elPt = document.getElementById(page + '_pasteText');
+                        elPt.parentNode.insertBefore(elSpin, elPt);
+
                     }
 
                 });
-
-                this.lazyPaging.initialize()
-
-
     }
     getTextSizes(el) {
         var h = parseInt(el.offsetHeight) + 10,
@@ -368,7 +373,6 @@ class PasterView {
                 Logger.debug('screenshot taken ', thumbImg.value)
                 document.getElementById(modelId + "_saveReviewDraw").submit();
             });
-
     }
 
 
@@ -385,8 +389,7 @@ class PasterView {
             }
         } catch(e) {
             copyElement.remove();
-            console.log("document.execCommand('copy'); is not supported");
-            prompt('Copy the text below. (ctrl c, enter)', text);
+            Logger.warn("document.execCommand('copy'); is not supported");
         } finally {
             if (typeof e == 'undefined') {
                 copyElement.remove();

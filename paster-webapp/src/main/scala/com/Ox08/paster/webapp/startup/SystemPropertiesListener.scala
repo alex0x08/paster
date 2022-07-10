@@ -41,7 +41,7 @@ class SystemPropertiesListener extends ServletContextListener with Logged {
     SLF4JBridgeHandler.install()
     // use English locale as default
     val en: Locale = Locale.ENGLISH //.f.forLanguageTag("en_US")
-    System.out.println("locale=" + en)
+    //System.out.println("locale=" + en)
     // all system errors will be in English
     SystemError.instance.setErrorLocale(en)
     // all system messages will be in English

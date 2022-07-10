@@ -54,6 +54,7 @@ class ExtendedPageListHolder[T <: Struct](source: java.util.List[T])
   (getLastElementOnPage >= 0) getSource.get(getLastElementOnPage)
   else null.asInstanceOf[T]
   def getElementsOnPage: Int = getPageList.size()
+
 }
 /**
  * Abstract Controller to deal with lists

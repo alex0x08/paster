@@ -22,7 +22,9 @@ class PasterList {
 
         var mainThis = this;
 
-      this.lazy = new LazyPagination(document, {
+      this.lazy = new LazyPagination()
+
+      this.lazy.initialize({
             url: pageUrl,
             method: 'get',
             maxRequests: maxRequests,
@@ -32,8 +34,8 @@ class PasterList {
                 page: currentPage
             },
             inject: {
-                element: 'morePages',
-                where: 'before'
+                element: 'morePages'
+                
             }, beforeLoad: function () {
                 document.getElementById('pageLoadSpinner').style.display = '';
             }, afterAppend: function (block, page) {
@@ -51,8 +53,9 @@ class PasterList {
                 pasterApp.bindDeleteDlg(block);
             }
         });
-        this.parseSearchResults(document.getElementById('pastas'));
+        mainThis.parseSearchResults(document.getElementById('pastas'));
     }
+
     parseSearchResults(parent) {
         Array.from(parent.getElementsByClassName('pasteTitle')).forEach(
             function (el, i, array) {

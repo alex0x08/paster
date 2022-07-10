@@ -40,8 +40,7 @@
                                     <fmt:message key="paste.new" />
                                 </c:when>
                                 <c:otherwise>
-                                    <span>#
-                                        <c:out value="${model.id}" /></span>
+                                    <span>Paste #<c:out value="${model.id}" /></span>
                                 </c:otherwise>
                             </c:choose>
                         </a>
@@ -49,27 +48,12 @@
                     <li class="nav-item dropdown" role="presentation">
                         <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
                             aria-expanded="false">
-                            <fmt:message key="paste.editor.title" /><span class="caret"></span>
+                            Open
+                            <span class="caret"></span>
 
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" id="syntax-tab-header" href="#" data-bs-toggle="tab"
-                                    data-bs-target="#syntaxTab" aria-controls="profile">
-                                    <fmt:message key="paste.syntax.title" /></a>
 
-                                </a>
-                            </li>
-
-                            <li><a class="dropdown-item" id="color-tab-header" href="#" data-bs-toggle="tab"
-                                    data-bs-target="#colorTab" aria-controls="profile">
-                                    <fmt:message key="paste.color.title" /></a>
-
-                                </a>
-                            </li>
-
-                            <li>
-                                <hr class="dropdown-divider" />
-                            </li>
                             <li>
                                 <a class="dropdown-item" id="remote-file-tab-header" href="#" data-bs-toggle="tab"
                                     data-bs-target="#openRemoteFileTab" aria-controls="profile">
@@ -87,13 +71,7 @@
 
                         </ul>
                     </li>
-                    <li class="nav-item" role="presentation">
-                        <a class="nav-link" href="#" id="contact-tab" data-bs-target="#contact" data-bs-toggle="tab"
-                            aria-controls="contact">Link</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-                    </li>
+
                 </ul>
 
 
@@ -142,7 +120,7 @@
                                      <form:select path="priority" multiple="false" id="pprior" cssClass="form-control" style="display: inline;width: 5em;">
                                         <c:forEach items="${availablePriorities}" var="prior">
                                             <form:option value="${prior}" cssClass="${prior}"
-                                                x-css-class-name="${prior}">
+                                                x-css-class-name="${ 'priority_'.concat(prior.toLowerCase())}">
                                                 <c:out value="${prior}"/>
                                             </form:option>
                                         </c:forEach>
@@ -226,6 +204,23 @@
                         </div>
 
                         <div class="row">
+
+                            <div class="col-md-1">
+
+                                <form:label path="codeType" cssClass="control-label" title="Select syntax">
+                                    Syntax
+                                </form:label>
+    
+                                <form:select path="codeType" multiple="false" id="ptype" cssClass="form-control">
+                                    <c:forEach items="${availableCodeTypes}" var="codeType">
+                                        <form:option value="${codeType}" >
+                                            <fmt:message key="${'code.type.'.concat(codeType)}" />
+                                        </form:option>
+                                    </c:forEach>
+                                </form:select>
+                            </div>
+    
+
                             <div class="col-md-4">
                                 <form:label cssClass="control-label" path="tagsAsString">
                                     <span class="i">T</span>
@@ -276,24 +271,16 @@
                     <div class="tab-pane fade" id="openLocalFileTab" role="tabpanel"
                         aria-labelledby="local-file-tab-header">
 
-                        <div class="col-xs-4 col-sm-3 col-md-3 col-lg-2">
+                        <div class="col-md-4">
 
-
-                            <form:label path="codeType" cssClass="control-label" title="Select syntax">
-                                Select file
-                            </form:label>
-
-                            <span class="btn btn-primary btn-file">
-                                Browse
-                                <input type="file" accept="text/*" id="select-file-btn" />
-
-                            </span>
-
+                        <div class="mb-3">
+                          <label for="formFile" class="form-label">Select local file</label>
+                            <input class="form-control" type="file" accept="text/*,application/json" id="select-file-btn" />
+                        </div>
 
 
                             <p class="help-block">
-                                Supported extensions: .txt, .java
-
+                                Supported text and source files.
                             </p>
                         </div>
 
@@ -320,52 +307,7 @@
 
                     <div class="tab-pane fade" id="colorTab" role="tabpanel" aria-labelledby="color-tab-header">
 
-                        <div class="col-xs-6 col-sm-4 col-md-4 col-lg-3">
-
-                            <label for="ptheme" class="control-label">
-                                Select color theme
-                            </label>
-
-                            <select id="ptheme" size="1">
-                                <optgroup label="Bright">
-                                    <option value="ace/theme/chrome">Chrome</option>
-                                    <option value="ace/theme/clouds">Clouds</option>
-                                    <option value="ace/theme/crimson_editor">Crimson Editor</option>
-                                    <option value="ace/theme/dawn">Dawn</option>
-                                    <option value="ace/theme/dreamweaver">Dreamweaver</option>
-                                    <option value="ace/theme/eclipse">Eclipse</option>
-                                    <option value="ace/theme/github">GitHub</option>
-                                    <option value="ace/theme/solarized_light">Solarized Light</option>
-                                    <option value="ace/theme/textmate" selected="selected">TextMate</option>
-                                    <option value="ace/theme/tomorrow">Tomorrow</option>
-                                    <option value="ace/theme/xcode">XCode</option>
-                                </optgroup>
-                                <optgroup label="Dark">
-                                    <option value="ace/theme/ambiance">Ambiance</option>
-                                    <option value="ace/theme/chaos">Chaos</option>
-                                    <option value="ace/theme/clouds_midnight">Clouds Midnight</option>
-                                    <option value="ace/theme/cobalt">Cobalt</option>
-                                    <option value="ace/theme/idle_fingers">idleFingers</option>
-                                    <option value="ace/theme/kr_theme">krTheme</option>
-                                    <option value="ace/theme/merbivore">Merbivore</option>
-                                    <option value="ace/theme/merbivore_soft">Merbivore Soft</option>
-                                    <option value="ace/theme/mono_industrial">Mono Industrial</option>
-                                    <option value="ace/theme/monokai">Monokai</option>
-                                    <option value="ace/theme/pastel_on_dark">Pastel on dark</option>
-                                    <option value="ace/theme/solarized_dark">Solarized Dark</option>
-                                    <option value="ace/theme/twilight">Twilight</option>
-                                    <option value="ace/theme/tomorrow_night">Tomorrow Night</option>
-                                    <option value="ace/theme/tomorrow_night_blue">Tomorrow Night Blue</option>
-                                    <option value="ace/theme/tomorrow_night_bright">Tomorrow Night Bright</option>
-                                    <option value="ace/theme/tomorrow_night_eighties">Tomorrow Night 80s</option>
-                                    <option value="ace/theme/vibrant_ink">Vibrant Ink</option>
-                                </optgroup>
-                            </select>
-                            <p class="help-block">
-                                <a class="btn btn-xs" href="#"><i class="fa fa-check-square-o"></i> Set as
-                                    default</a></p>
-
-                        </div>
+                        
                         <div class="col-xs-4 col-sm-3 col-md-3 col-lg-2">
 
                             <label for="fontsize">Font Size</label>
@@ -387,28 +329,7 @@
                     </div>
                     <div class="tab-pane fade" id="syntaxTab" role="tabpanel" aria-labelledby="syntax-tab-header">
 
-                        <div class="col-xs-4 col-sm-3 col-md-3 col-lg-2">
-
-                            <form:label path="codeType" cssClass="control-label" title="Select syntax">
-                                Select syntax
-                            </form:label>
-
-                            <form:select path="codeType" multiple="false" id="ptype">
-                                <c:forEach items="${availableCodeTypes}" var="codeType">
-                                    <form:option value="${codeType}" >
-                                        <fmt:message key=" ${'code.type.'.concat(codeType)}" />
-                                    </form:option>
-                                </c:forEach>
-                            </form:select>
-                            <p class="help-block">
-                                <a class="btn btn-xs" href="#">
-                                    <i class="fa fa-check-square-o"></i>Set as default</a>
-                            </p>
-
-
-
-                        </div>
-
+                     
 
 
 

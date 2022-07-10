@@ -50,20 +50,6 @@
                             <ul class="dropdown-menu" aria-labelledby="dropdown01">
 
                                 <li>
-                                    <a class="dropdown-item" href="<c:url value='/main/user/list'/>">
-                                        <span class="i">x</span>
-                                        <fmt:message key='user.list.title' /></a>
-
-
-                                </li>
-                                <li>
-
-                                    <a class="dropdown-item" href="<c:url value='/main/admin/settings/edit'/>">
-                                        <span class="i">B</span>
-                                        <fmt:message key='settings.edit.title' /></a>
-
-                                </li>
-                                <li>
                                     <a class="dropdown-item" href="<c:url value='/main/admin/settings/dbconsole'/>">
                                         <span class="i">B</span>
                                         <fmt:message key="settings.dbconsole.title" />

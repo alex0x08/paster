@@ -74,9 +74,9 @@ class PasteEditCtrl extends GenericEditCtrl[Paste] {
         model.addAttribute("comment", getNewCommentInstance(obj))
       }
     }
-    model.addAttribute("availableCodeTypes", codeTypeDao.getAvailableElements)
-    model.addAttribute("availablePriorities", priorities.getAvailableElements)
-    model.addAttribute("availableChannels", channelDao.getAvailableElements)
+    model.addAttribute("availableCodeTypes", codeTypeDao.getAvailableElements.asJava)
+    model.addAttribute("availablePriorities", priorities.getAvailableElements.asJava)
+    model.addAttribute("availableChannels", channelDao.getAvailableElements.asJava)
     if (!obj.comments.isEmpty) {
       val commentLines = new util.ArrayList[Long]()
       for (c <- obj.comments.asScala) {

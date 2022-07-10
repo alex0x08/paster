@@ -34,7 +34,7 @@ class Boot private() extends Logged {
     system.setAppCode(appCode)
     // check 'appDebug' flag
     system.setDebug(java.lang.Boolean.valueOf(System.getProperty("appDebug", "false")))
-    logger.info(SystemMessage.of("proxyman.system.message.debugMode", system.isDebug))
+    logger.info(SystemMessage.of("paster.system.message.debugMode", ""+system.isDebug))
     // try to detect app's home folder
     var app_home: File = null
     val appVar = appCode + ".app.home"
@@ -55,7 +55,7 @@ class Boot private() extends Logged {
     }
     // put app's home to systemInfo object
     system.setAppHome(app_home)
-    logger.info(SystemMessage.of("proxyman.system.message.appHome", app_home.getAbsolutePath))
+    logger.info(SystemMessage.of("paster.system.message.appHome", app_home.getAbsolutePath))
     // try to kill previous JVM instance (if present)
     killPreviousInstance(app_home)
     // create temp folder
@@ -63,7 +63,7 @@ class Boot private() extends Logged {
     system.setTempDir(temp_store)
     /*// create folder for binary files
     val files_dir = createAppFolder(app_home, "pfiles")
-    logger.info(SystemMessage.of("proxyman.system.message.filesDir", files_dir.getAbsolutePath))
+    logger.info(SystemMessage.of("paster.system.message.filesDir", files_dir.getAbsolutePath))
     system.setFilesDir(files_dir)*/
     val config = new File(app_home, "config.properties")
     if (!config.exists || !config.isFile) initialConfig = true
@@ -90,13 +90,13 @@ class Boot private() extends Logged {
     System.setProperty("app.build.time", mf_version.implBuildTime)
     System.setProperty("app.build.number", mf_version.implBuildNum)
     System.setProperty("app.build.version", mf_version.implVersionFull)
-    logger.info(SystemMessage.of("proxyman.system.message.appRelease", mf_version.implVersionFull))
-    logger.info(SystemMessage.of("proxyman.system.message.appGitBranch", mf_version.getGitState.branch))
+    logger.info(SystemMessage.of("paster.system.message.appRelease", mf_version.implVersionFull))
+    logger.info(SystemMessage.of("paster.system.message.appGitBranch", mf_version.getGitState.branch))
     // load customized config ( 'config.properties' file)
     createLoadAppConfig(system, app_home)
     if (system.getExternalUrlPrefix != null) {
       System.setProperty("app.externalUrlPrefix", system.getExternalUrlPrefix)
-      logger.info(SystemMessage.of("proxyman.system.message.appExternalUrl", system.getExternalUrlPrefix))
+      logger.info(SystemMessage.of("paster.system.message.appExternalUrl", system.getExternalUrlPrefix))
     }
     checkInstalled(system, app_home)
   }
@@ -192,8 +192,10 @@ class Boot private() extends Logged {
    * Создание внутренней папки в домашнем каталоге со всеми необходимыми
    * проверками
    *
-   * @param app_home домашний каталог
-   * @param name     имя создаваемой папки
+   * @param app_home
+   *      домашний каталог
+   * @param name
+   *      имя создаваемой папки
    * @return
    */
   private def createAppFolder(app_home: File, name: String): File = {
@@ -213,7 +215,7 @@ class Boot private() extends Logged {
   private def createLoadAppConfig(system: SystemInfo, app_home: File): File = {
     val config = new File(app_home, "config.properties")
     if (!config.exists || !config.isFile) {
-      logger.warn(SystemMessage.of("proxyman.system.message.appConfigNotFound", config.getAbsolutePath))
+      logger.warn(SystemMessage.of("paster.system.message.appConfigNotFound", config.getAbsolutePath))
       //  throw new IllegalStateException("app config file not found!");
       return null
     }
@@ -226,7 +228,7 @@ class Boot private() extends Logged {
     try {
       system.getConfig.load(input)
       system.setExternalUrlPrefix(system.getConfig.getProperty("externalUrlPrefix", null))
-      logger.info(SystemMessage.of("proxyman.system.message.loadedLinesFromAppConf", system.getConfig.size))
+      logger.info(SystemMessage.of("paster.system.message.loadedLinesFromAppConf", ""+system.getConfig.size))
     } catch {
       case e: IOException =>
         throw SystemError.withError(0x6001, e)

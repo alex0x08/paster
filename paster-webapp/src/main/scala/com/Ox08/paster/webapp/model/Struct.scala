@@ -15,10 +15,13 @@
  */
 package com.Ox08.paster.webapp.model
 import com.Ox08.paster.webapp.base.Logged
+import com.fasterxml.jackson.annotation.JsonIgnore
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute
 import jakarta.persistence.{Column, GeneratedValue, Id, MappedSuperclass, PrePersist, PreUpdate, Temporal, TemporalType}
+import jakarta.xml.bind.annotation.XmlTransient
 import org.hibernate.annotations.GenericGenerator
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField
+
 import java.text.SimpleDateFormat
 import java.time.{LocalDateTime, ZoneOffset}
 import java.util.{Date, Objects}
@@ -58,7 +61,9 @@ abstract class Struct extends DBObject with SearchObject with java.io.Serializab
   }
   def getLastModifiedDt: Date = Date.from(lastModified.toInstant(ZoneOffset.UTC))
   def getCreatedDt: Date = Date.from(created.toInstant(ZoneOffset.UTC))
+  @JsonIgnore
   def getLastModified: LocalDateTime = lastModified
+  @JsonIgnore
   def getCreated: LocalDateTime = created
   def terms(): List[String] = Struct.terms
   def loadFull(): Unit = {}
@@ -74,6 +79,7 @@ abstract class DBObject extends java.io.Serializable {
   var id: Integer = _
   @XStreamAsAttribute
   var disabled: Boolean = _
+  @JsonIgnore
   def isBlank: Boolean = id == null
   override def hashCode(): Int = {
     var hash: Int = 53 * 7

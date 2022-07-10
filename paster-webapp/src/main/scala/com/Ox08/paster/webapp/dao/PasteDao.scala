@@ -29,18 +29,30 @@ import scala.jdk.CollectionConverters._
 @Transactional(readOnly = true, rollbackFor = Array(classOf[Exception]))
 class PasteDao extends SearchableDaoImpl[Paste](classOf[Paste]) {
   override def getDefaultStartFields: Array[String] = Array("title", "text")
+
   def getByAuthor(author: PasterUser): util.List[Paste] = getListByKeyValue("author", author)
+
   def getByRemoteUrl(url: String): util.List[Paste] = getListByKeyValue("remoteUrl", url)
+  /**
+   * Gets single next paste
+   * @param paste
+   *    current paste
+   * @return
+   *    next paste
+   */
   def getNextPaste(paste: Paste): Paste = {
-    val out: java.util.List[Paste] = getNextPreviousPaste(paste, direction = false, 1)
+    val out: java.util.List[Paste] = getNextOrPreviousPaste(paste, direction = false, 1)
     if (out.isEmpty) null else out.get(0)
   }
+
   def getPreviousPaste(paste: Paste): Paste = {
-    val out: java.util.List[Paste] = getNextPreviousPaste(paste, direction = true, 1)
+    val out: java.util.List[Paste] = getNextOrPreviousPaste(paste, direction = true, 1)
     if (out.isEmpty) null else out.get(0)
+
   }
   def getPreviousPastas(paste: Paste): java.util.List[Paste] =
-    getNextPreviousPaste(paste, direction = true, BaseDao.MAX_RESULTS)
+    getNextOrPreviousPaste(paste, direction = true, BaseDao.MAX_RESULTS)
+
   def getPreviousPastasIdList(paste: Paste): java.util.List[Integer] = {
     val out = new util.ArrayList[Integer]
     val cb = em.getCriteriaBuilder
@@ -53,11 +65,11 @@ class PasteDao extends SearchableDaoImpl[Paste](classOf[Paste]) {
       select.add(cb.equal(r.get("integrationCode"), paste.integrationCode))
     }
     select.add(cb.equal(r.get("channel"), paste.channel))
-    select.add(cb.lessThanOrEqualTo(r.get("lastModified")
-      .as(classOf[LocalDateTime]), paste.lastModified))
+    select.add(cb.lessThanOrEqualTo(r.get("created")
+      .as(classOf[LocalDateTime]), paste.created))
     cr.where(select.toArray(new Array[Predicate](select.size)): _*)
       .orderBy(
-        cb.desc(r.get("lastModified"))
+        cb.desc(r.get("created"))
       )
     val tupleResult: java.util.List[Tuple] = em.createQuery(cr)
       .setMaxResults(BaseDao.MAX_RESULTS).getResultList
@@ -66,7 +78,18 @@ class PasteDao extends SearchableDaoImpl[Paste](classOf[Paste]) {
     }
     out
   }
-  private def getNextPreviousPaste(paste: Paste, direction: Boolean, maxResults: Int):
+  /**
+   * Seeks for previous or next paste , related to specified
+   * @param paste
+   *        selected paste
+   * @param direction
+   *        false  -previous
+   *        true - next
+   * @param maxResults
+   *        maximum results in list
+   * @return
+   */
+  private def getNextOrPreviousPaste(paste: Paste, direction: Boolean, maxResults: Int):
   java.util.List[Paste] = {
     val cr = new CriteriaSet()
     val select = new util.ArrayList[Predicate]
@@ -76,20 +99,21 @@ class PasteDao extends SearchableDaoImpl[Paste](classOf[Paste]) {
     }
     select.add(cr.cb.equal(cr.r.get("channel"), paste.channel))
     if (direction) {
-      select.add(cr.cb.lessThanOrEqualTo(cr.r.get("lastModified").as(classOf[LocalDateTime]), paste.lastModified))
+      select.add(cr.cb.lessThanOrEqualTo(cr.r.get("created").as(classOf[LocalDateTime]), paste.created))
     } else {
-      select.add(cr.cb.greaterThanOrEqualTo(cr.r.get("lastModified").as(classOf[LocalDateTime]), paste.lastModified))
+      select.add(cr.cb.greaterThanOrEqualTo(cr.r.get("created").as(classOf[LocalDateTime]), paste.created))
     }
     val query = em.createQuery[Paste](
       cr.cr.where(select.toArray(new Array[Predicate](select.size)): _*)
         .orderBy(if (direction) {
-          cr.cb.desc(cr.r.get("lastModified"))
+          cr.cb.desc(cr.r.get("created"))
         } else {
-          cr.cb.asc(cr.r.get("lastModified"))
+          cr.cb.asc(cr.r.get("created"))
         }))
-      .setMaxResults(maxResults)
+      .setMaxResults(if (maxResults > BaseDao.MAX_RESULTS) BaseDao.MAX_RESULTS else maxResults )
     query.getResultList
   }
+
   def getByChannel(channel: String, sortAsc: Boolean): java.util.List[Paste] = {
     val cr = new CriteriaSet()
     val query: Query = em.createQuery(

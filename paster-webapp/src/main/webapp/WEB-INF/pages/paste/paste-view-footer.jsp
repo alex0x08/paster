@@ -91,8 +91,6 @@
 
 <script src="<c:url value='/main/resources/${appId}/paster/js/all/LazyPagination.js'/>"></script>
 
-
-
 <script type="text/javascript">
 
     const MODEL_ID = '${model.id}';
@@ -108,17 +106,15 @@
         pasterView.setupCommentsAdd(MODEL_ID);
 
   
-        document.getElementById('pageLoadSpinner').style.display='';
-        pasterView.setupLazy("<c:url value='/main/paste/raw/view'/>",
-                "<c:url value='/main/paste'/>",
-        ${availablePrevList.count},
-        ${model.id},
-                [${availablePrevList.itemsAsString}]);
-
-        <%--
+      
+        
     <c:if test="${availablePrevList.count > 0}">
-  
-    </c:if> --%>
+        document.getElementById('pageLoadSpinner').style.display='';
+        pasterView.setupLazy("<c:url value='/main/paste/raw/view'/>",  "<c:url value='/main/paste'/>",
+        ${availablePrevList.count},  ${model.id}, [${availablePrevList.itemsAsString}]);
+
+    </c:if>
+
 
     });
 

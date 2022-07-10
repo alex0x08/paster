@@ -40,8 +40,9 @@ abstract class AbstractI18nMessageStore protected( // default bundle name
     this.messageLocale = locale
     this.reloadMessages()
   }
-  protected def formatMessage(raw: String, args: Any*): String =
-    MessageFormatter.arrayFormat(raw, mutable.ArraySeq(args).toArray).getMessage
+  protected def formatMessage(raw: String, args: Array[AnyRef]): String = {
+    MessageFormatter.arrayFormat(raw, args).getMessage
+  }
   /**
    * get formatted text by key, with lookup in additional bundles
    *
@@ -107,19 +108,19 @@ class SystemError extends AbstractI18nMessageStore("bundles/errorMessages") {
    * @param params  дополнительные параметры ( для подстановки в шаблон )
    * @return
    */
-  private def getErrorMessage(code: Int, message: String, parent: Exception, prefix: Boolean, params: Any*) = {
+  private def getErrorMessage(code: Int, message: String, parent: Exception, prefix: Boolean, params: AnyRef*) = {
     // пытаемся найти текст ошибки по коду
-    var errorMsg = getMessage("proxyman.system.error." + String.format("0x%x", code))
+    var errorMsg = getMessage("paster.system.error." + String.format("0x%x", code))
     var ccode = code
     // если не нашли - формируем 'неизвестную ошибку'
     if (errorMsg == null) {
-      errorMsg = getMessage("proxyman.system.error.0x6000")
+      errorMsg = getMessage("paster.system.error.0x6000")
       ccode = 0x6000
     }
     // если нет доп. сообщения
     if (message == null) { // если нет исключения
       if (parent == null) { // формируем выходное сообщение, подставляем в шаблон переданные параметры
-        errorMsg = formatMessage(errorMsg, params)
+        errorMsg = formatMessage(errorMsg, params.toArray)
       }
       else { // если есть исключение - добавляем в набор параметров
         // сообщение об ошибке первым аргументом
@@ -130,7 +131,7 @@ class SystemError extends AbstractI18nMessageStore("bundles/errorMessages") {
     }
     else { // если есть доп. сообщение
       if (parent == null) { // формируем выходное сообщение, используем доп. сообщение как шаблон
-        errorMsg = formatMessage(message, params)
+        errorMsg = formatMessage(message, params.toArray)
       }
       else {
         val pparams = prepareParams(getMessage(parent), params)
@@ -149,7 +150,7 @@ class SystemError extends AbstractI18nMessageStore("bundles/errorMessages") {
    * @param message добаляемое сообщение
    * @return новый массив параметров
    */
-  private def prepareParams(message: String, params: Any*) = {
+  private def prepareParams(message: String, params: Any*): Array[AnyRef] = {
     if (params.nonEmpty) {
       val pparams = new Array[AnyRef](params.length + 1)
       pparams(0) = message
@@ -223,7 +224,7 @@ object SystemError { // синглтон
  */
 object SystemMessage { // синглтон
   private val INSTANCE = new SystemMessage
-  def of(template: String, params: Any*): String = INSTANCE.createMessage(template, params)
+  def of(template: String, params: AnyRef*): String = INSTANCE.createMessage(template, params.toArray)
   def instance: SystemMessage = INSTANCE
 }
 class SystemMessage private() // приватный конструктор
@@ -235,7 +236,7 @@ class SystemMessage private() // приватный конструктор
    * @param params параметры
    * @return сформированное сообщние
    */
-  private def createMessage(key: String, params: Any*) = {
+  private def createMessage(key: String, params: Array[AnyRef]) = {
     val raw = getMessage(key)
     if (raw == null) key
     else formatMessage(raw, params)
