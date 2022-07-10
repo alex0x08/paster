@@ -28,6 +28,7 @@ import org.springframework.security.crypto.password.PasswordEncoder
 
 import java.io.{File, FileReader}
 import java.util
+import scala.collection.mutable
 import scala.jdk.CollectionConverters._
 import scala.util.control.Breaks.break
 /**
@@ -64,7 +65,7 @@ object UserManager extends Logged {
  */
 class UserManager extends UserDetailsService with Logged {
   // runtime storage for users
-  val users: util.Map[String, PasterUser] = new util.HashMap
+  private val users = mutable.Map[String, PasterUser]()
 
   @Autowired
   @Qualifier("sessionRegistry")
@@ -119,6 +120,7 @@ class UserManager extends UserDetailsService with Logged {
   /**
    *  Virtually saves user
    * @param u
+   *    paster user object
    */
   def save(u: PasterUser): Unit = {
     users.put(u.getUsername(), u)
@@ -126,22 +128,22 @@ class UserManager extends UserDetailsService with Logged {
   }
   @Override
   def getUser(username: String): PasterUser = {
-    if (users.containsKey(username)) {
-      users.get(username)
+    if (users contains username) {
+      users(username)
     } else null
   }
   @Override
   @throws(classOf[UsernameNotFoundException])
   def getUserByUsername(username: String): PasterUser = getUser(username)
   @PreAuthorize("isAuthenticated()")
-  def getUsers: util.Collection[PasterUser] = users.values()
+  def getUsers: Iterable[PasterUser] = users.values
   @PreAuthorize("isAuthenticated()")
   def getAllLoggedInUsers: util.List[AnyRef] = sessionRegistry.getAllPrincipals
   @PreAuthorize("isAuthenticated()")
   def saveUser(user: PasterUser): Unit = save(user)
   @Secured(Array("ROLE_ADMIN"))
   def removeUser(username: String): PasterUser = {
-    users.remove(username)
+    (users remove username).get
   }
   @throws(classOf[UsernameNotFoundException])
   @throws(classOf[DataAccessException])

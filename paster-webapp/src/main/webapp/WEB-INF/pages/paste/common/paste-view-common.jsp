@@ -27,7 +27,7 @@
    
 --%>
 
-<div class="btn-group" role="group" aria-label="Controls">
+<div id='pasteViewControls' class="btn-group" role="group" aria-label="Controls">
     <button id="${model.id}_btnShowAll" type="button" class="btn btn-primary active">All</button>
     <button id="${model.id}_btnShowComments" type="button" class="btn btn-primary">Comments</button>
     <button id="${model.id}_btnShowDraw" type="button" class="btn btn-primary">Draw</button>

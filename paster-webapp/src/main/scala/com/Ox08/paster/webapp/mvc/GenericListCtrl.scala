@@ -22,6 +22,13 @@ import org.springframework.ui.Model
 import org.springframework.web.bind.annotation._
 import java.util
 import java.util.Objects
+/**
+ * Single column used for sorting
+ * @param property
+ *          column title
+ * @param name
+ *    sorting key
+ */
 class SortColumn(property: String, name: String) {
   def getName: String = name
   def getProperty: String = property
@@ -31,6 +38,13 @@ class SortColumn(property: String, name: String) {
   override def hashCode(): Int =
     42 + Objects.hashCode(this.property)
 }
+/**
+ *
+ * @param source
+ *      list of source elements to apply pagination
+ * @tparam T
+ *    type of element
+ */
 class ExtendedPageListHolder[T <: Struct](source: java.util.List[T])
   extends PagedListHolder[T](source) {
   def getFirstElement: T = if
@@ -98,7 +112,9 @@ abstract class GenericListCtrl[T <: Struct] extends AbstractCtrl {
     if (pagedListHolder == null ||
       (page == null && NPpage == null && pageSize == null && sortColumn == null)) {
       pagedListHolder = callback.invokeCreate()
-      logger.debug("pagedListHolder created pageSize={}", pageSize)
+      if (logger.isDebugEnabled()) {
+        logger.debug("pagedListHolder created pageSize={}", pageSize)
+      }
     } else {
       if (sortColumn != null) {
         val sort = pagedListHolder.getSort.asInstanceOf[MutableSortDefinition]
@@ -113,11 +129,7 @@ abstract class GenericListCtrl[T <: Struct] extends AbstractCtrl {
        * check if exist and use it
        */
       if (NPpage != null) {
-        if (NPpage.equals("next")) {
-          pagedListHolder.nextPage()
-        } else {
-          pagedListHolder.previousPage()
-        }
+        if (NPpage.equals("next")) pagedListHolder.nextPage() else pagedListHolder.previousPage()
 
         /**
          * if page number was specified
@@ -136,9 +148,9 @@ abstract class GenericListCtrl[T <: Struct] extends AbstractCtrl {
     /**
      * if items per page parameter was specified
      */
-    if (pageSize != null) {
-      pagedListHolder.setPageSize(pageSize)
-    }
+    if (pageSize != null)
+        pagedListHolder.setPageSize(pageSize)
+
     request.getSession().setAttribute(getClass.getName + "_" + pageHolderName, pagedListHolder)
     model.addAttribute(pageHolderName, pagedListHolder)
     if (createDefaultItemModel && !pageHolderName.equals(MvcConstants.NODE_LIST_MODEL_PAGE)) {
@@ -179,12 +191,14 @@ abstract class GenericListCtrl[T <: Struct] extends AbstractCtrl {
   @ModelAttribute(MvcConstants.NODE_LIST_MODEL)
   def listByPathNext(
                       request: HttpServletRequest,
-                      model: Model): util.List[T] = list(request, model, null, "next", null, null, sortAsc = false)
+                      model: Model): util.List[T] = list(request, model, null,
+                  "next", null, null, sortAsc = false)
   @RequestMapping(value = Array("/list/prev"), method = Array(RequestMethod.GET))
   @ModelAttribute(MvcConstants.NODE_LIST_MODEL)
   def listByPathPrev(
                       request: HttpServletRequest,
-                      model: Model): util.List[T] = list(request, model, null, "prev", null, null, sortAsc = false)
+                      model: Model): util.List[T] = list(request, model, null, "prev",
+    null, null, sortAsc = false)
   @RequestMapping(value = Array("/list"), method = Array(RequestMethod.GET))
   @ModelAttribute(MvcConstants.NODE_LIST_MODEL)
   def list(request: HttpServletRequest,
@@ -195,6 +209,8 @@ abstract class GenericListCtrl[T <: Struct] extends AbstractCtrl {
            @RequestParam(required = false) sortColumn: String,
            @RequestParam(required = false) sortAsc: Boolean): java.util.List[T] =
     listImpl(request, model, page, NPpage, pageSize, sortColumn, sortAsc, MvcConstants.NODE_LIST_MODEL_PAGE)
+
+
   def listImpl(request: HttpServletRequest,
                model: Model,
                page: java.lang.Integer,
@@ -202,7 +218,14 @@ abstract class GenericListCtrl[T <: Struct] extends AbstractCtrl {
                pageSize: java.lang.Integer,
                sortColumn: String, sortAsc: Boolean, result: String): java.util.List[T] = {
     fillListModel(model)
-    processPageListHolder(request, model, page, NPpage, pageSize, sortColumn, sortAsc, defaultListCallback,
+    processPageListHolder(request,
+          model,
+      page,
+      NPpage,
+      pageSize,
+      sortColumn,
+      sortAsc,
+      defaultListCallback,
       result)
   }
   /**

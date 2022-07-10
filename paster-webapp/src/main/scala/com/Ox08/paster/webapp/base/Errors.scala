@@ -24,7 +24,6 @@ abstract class AbstractI18nMessageStore protected( // default bundle name
   protected var defaultBundle: ResourceBundle = _
   // reload default bundle
   final def reloadMessages(): Unit = {
-    System.out.println("__:" + messageLocale)
     this.defaultBundle = ResourceBundle.getBundle(this.defaultBundleName, messageLocale)
   }
   // add & load additional bundle

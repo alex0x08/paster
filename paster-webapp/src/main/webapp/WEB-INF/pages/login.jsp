@@ -23,7 +23,7 @@
                 <div class='col-lg-8 col-md-8'>
                     <div class="input-group">
                         <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
-                        <input class="form-control"  name="username" 
+                        <input class="form-control"  name="username" autofocus="true"
                                type="text" placeholder="<fmt:message key="login.username"/>">
                     </div>
                 </div>

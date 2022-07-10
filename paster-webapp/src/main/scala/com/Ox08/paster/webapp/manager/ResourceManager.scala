@@ -16,9 +16,7 @@
 package com.Ox08.paster.webapp.manager
 import com.Ox08.paster.webapp.base.{Boot, Logged}
 import org.apache.commons.io.FileUtils
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
-
 import java.io.File
 import java.net.URLDecoder
 import java.nio.file.FileSystems
@@ -35,10 +33,11 @@ object ResourceManager {
 class ResourceManager extends Logged {
   /**
    * Get file from object id and resource type
+   *
    * @param resourceType
-   *      single char resource type
+   * single char resource type
    * @param fid
-   *      object id
+   * object id
    * @return
    */
   def getResource(resourceType: Char, fid: String): File = {
@@ -47,22 +46,22 @@ class ResourceManager extends Logged {
       .replaceAll("/", "x")
       .replaceAll("\\.", "x")
       .replaceAll(",", "/")
-
     if (logger.isDebugEnabled)
-        logger.debug("getting file from url {}", id)
-
+      logger.debug("getting file from url {}", id)
     FileSystems.getDefault
       .getPath(Boot.BOOT.getSystemInfo.getAppHome.getAbsolutePath,
-            "resources", resourceType.toString, id + "." + getExtFor(resourceType)).toFile
+        "resources", resourceType.toString,
+        id + '.' + getExtFor(resourceType)).toFile
   }
   /**
    * Saves image to file
+   *
    * @param pt
-   *      single char resource type
+   * single char resource type
    * @param objId
-   *      object id
+   * object id
    * @param imgData
-   *      binary image data
+   * binary image data
    * @return
    */
   def saveResource(pt: Char, objId: String, imgData: String): String = {
@@ -73,17 +72,18 @@ class ResourceManager extends Logged {
       .append(getExtFor(pt))
       .toString
     val fileImg = FileSystems.getDefault
-            .getPath(Boot.BOOT.getSystemInfo.getAppHome.getAbsolutePath, "resources",
-      pt.toString,
-      fileName).toFile
+      .getPath(Boot.BOOT.getSystemInfo.getAppHome.getAbsolutePath, "resources",
+        pt.toString,
+        fileName).toFile
     val imgData2 = imgData.substring(imgData.indexOf(',') + 1)
     FileUtils.writeByteArrayToFile(fileImg, Base64.getDecoder.decode(imgData2.getBytes))
     fileName.replaceAll("/", ",")
   }
   /**
    * Get extension for resource type
+   *
    * @param resourceType
-   *    single char resource type
+   * single char resource type
    * @return
    */
   def getExtFor(resourceType: Char): String = resourceType match {

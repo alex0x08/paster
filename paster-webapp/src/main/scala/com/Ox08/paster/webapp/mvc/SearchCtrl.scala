@@ -111,7 +111,8 @@ abstract class SearchCtrl[T <: Struct, QV <: Query] extends GenericListCtrl[T] {
           model.addAttribute(MvcConstants.NODE_LIST_MODEL_PAGE,
             model.asMap().get(s"${r}_ITEMS"))
           model.addAttribute("result", r)
-          logger.debug("found {} in {}", out.size(), s"${r}_ITEMS")
+          if (logger.isDebugEnabled)
+              logger.debug("found {} in {}", out.size(), s"${r}_ITEMS")
         }
       }
 
@@ -119,7 +120,8 @@ abstract class SearchCtrl[T <: Struct, QV <: Query] extends GenericListCtrl[T] {
         model.addAttribute(MvcConstants.NODE_LIST_MODEL_PAGE,
           new PagedListHolder[T](java.util.Collections.emptyList[T]()))
         model.addAttribute("result", "") //tiles bug
-        logger.debug("no results found in any models")
+        if (logger.isDebugEnabled)
+          logger.debug("no results found in any models")
         java.util.Collections.emptyList[T]()
       } else out
 

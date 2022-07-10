@@ -57,8 +57,8 @@ class PasterView {
                 });
             });
 
-        var currentSz = 20;
-        var currentColor = '#E3EB64';
+        var currentSz = 5;
+        var currentColor = '#D20202';
         var radius = 0;
         var inAction = false;
 
@@ -137,19 +137,6 @@ class PasterView {
 
         console.log('comments parent',commentsParent)
 
-        /*console.log('els:',commentsParent.getElementsByClassName('pInsertCommentTrigger'))
-
-
-        Array.from(commentsParent.getElementsByClassName('pInsertCommentTrigger')).forEach(
-            function (el) {
-                console.log('e:',el)
-                el.addEventListener("click", function (e) {
-                    e.preventDefault();
-                    const ln = el.getAttribute('plineNumber');
-                    const commentId = el.getAttribute('pCommentId');
-                    SyntaxHighlighter.insertEditForm(modelId, ln, commentId);
-                });
-            });*/
 
 
         document.getElementById(modelId + '_addCommentBtn').addEventListener('click', function (event) {
@@ -213,35 +200,48 @@ class PasterView {
         document.getElementById(modelId + '_btnShowAll')
             .addEventListener("click", function (event) {
                 event.preventDefault();
+                mainThis.toggleControls(this.getAttribute('id'));
                 mainThis.showAll(modelId);
             });
 
         document.getElementById(modelId + '_btnShowComments')
             .addEventListener("click", function (event) {
                 event.preventDefault();
+                mainThis.toggleControls(this.getAttribute('id'));
                 mainThis.showComments(modelId);
             });
 
         document.getElementById(modelId + '_btnShowDraw')
             .addEventListener("click", function (event) {
                 event.preventDefault();
-
+                mainThis.toggleControls(this.getAttribute('id'));
                 const drawImg = document.getElementById(modelId + '_drawImg').textContent;
-
                 mainThis.showDrawArea(modelId, drawImg);
             });
 
         this.setupDraw(modelId, allowEdit);
         this.showAll(modelId);
     }
+    toggleControls(selectedId) {
+        const controls =document.getElementById('pasteViewControls');       
+        Array.from(controls.getElementsByTagName('button')).forEach(
+            function (el, i, array) {                
+                    if (selectedId == el.getAttribute('id')) {
+                        el.className = 'btn btn-primary active'            
+                    } else {
+                        el.className = 'btn btn-primary'           
+                    }
+            });       
+    }
     showComments(modelId) {
+        Logger.debug('show only comments');
         document.getElementById(modelId + "_drawBlock").style.display = 'none';
         document.getElementById(modelId + "_all").style.display = 'none';
     }
     showDrawArea(modelId, drawReviewData) {
 
         var sizes = this.getTextSizes(document.getElementById(modelId + "_pasteBodyContent"));
-        Logger.debug('sizes: ', sizes);
+        Logger.debug('show draw area, sizes: ', sizes);
         var area = document.getElementById(modelId + "_drawArea"),
             sketch = document.getElementsByClassName("sketch")[0];
         area.style.height = sizes[0];
@@ -250,7 +250,7 @@ class PasterView {
         sketch.height = sizes[0];
         sketch.width = sizes[1];
 
-        const canvas = sketch; //document.getElementById(modelId + '_sketch');
+        const canvas = sketch; 
         const ctx = canvas.getContext('2d');
 
         if (drawReviewData != '') {
@@ -319,6 +319,26 @@ class PasterView {
                 document.getElementById(modelId + "_saveReviewDraw").submit();
             });
 
+    }
+
+
+    copyToClipboard(text) {
+        var copyElement = document.createElement('input');
+        copyElement.setAttribute('type', 'text');
+        copyElement.setAttribute('value', text);
+        copyElement = document.body.appendChild(copyElement);
+        copyElement.select();
+        try {
+            if(!document.execCommand('copy')) throw 'Not allowed.';
+        } catch(e) {
+            copyElement.remove();
+            console.log("document.execCommand('copy'); is not supported");
+            prompt('Copy the text below. (ctrl c, enter)', text);
+        } finally {
+            if (typeof e == 'undefined') {
+                copyElement.remove();
+            }
+        }
     }
 
 }

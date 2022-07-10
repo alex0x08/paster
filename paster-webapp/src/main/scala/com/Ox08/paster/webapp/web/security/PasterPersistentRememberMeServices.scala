@@ -60,7 +60,7 @@ class PasterPersistentRememberMeServices(key: String, uds: UserDetailsService, t
       case e@(_: DataAccessException
         ) =>
         log.error(e.getLocalizedMessage, e)
-        throw new RememberMeAuthenticationException("Autologin failed due to data access problem: " + e.getMessage)
+        throw new RememberMeAuthenticationException(s"Autologin failed due to data access problem: ${e.getMessage}")
     }
     getUserDetailsService.loadUserByUsername(login)
   }

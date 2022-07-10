@@ -20,8 +20,9 @@ import org.apache.commons.lang3.StringUtils
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.{Repository, Service}
 import org.springframework.transaction.annotation.Transactional
+
 import java.util
-import java.util.Collections
+import scala.collection.mutable
 import scala.jdk.CollectionConverters._
 /**
  * A preudo-DAO class to store collection of supported code types
@@ -46,32 +47,42 @@ class PriorityDao(@Value("${paster.priorities:null}")
 class ChannelDao(@Value("${paster.channels:null}")
                  channelsString: String, @Value("${paster.channels.default:'Default'}")
                  channelDefault: String) extends AbstractStringBasedDao(channelsString, channelDefault) {}
+/**
+ * Abstract String Based DAO
+ * Takes data from single comma-separated string
+ *
+ * @param elementsAsString
+ *          comma-separated list of elements
+ * @param defaultElement
+ *        default element, will be appended if not found in list
+ */
 abstract class AbstractStringBasedDao(elementsAsString: String,
                                       defaultElement: String) extends Logged {
-  val elements: util.Set[String] = new util.TreeSet[String]()
+  var elements: mutable.Set[String] = mutable.Set[String]()
   if (StringUtils.isBlank(elementsAsString))
-    elements.add(defaultElement) else {
+    elements += defaultElement
+    else {
     for (ch <- elementsAsString.split(",")) {
-      elements.add(ch)
+      elements +=ch
     }
     if (!elements.contains(defaultElement)) elements.add(defaultElement)
   }
-  def getAvailableElements: util.Set[String] = Collections.unmodifiableSet(elements)
+  def getAvailableElements: Set[String] = elements.toSet
   def getDefault: String = defaultElement
   def exist(name: String): Boolean = elements.contains(name)
 }
 @Repository("tagDao")
 @Transactional(readOnly = true, rollbackFor = Array(classOf[Exception]))
 class TagDao extends BaseDao[Tag, java.lang.Long](classOf[Tag]) {
-  def getTagsMap: java.util.Map[String, Tag] = {
-    val out = new util.HashMap[String, Tag]
+  def getTagsMap: Map[String, Tag] = {
+    val out = mutable.Map[String, Tag]()
     for (t <- getAll.asScala) {
-      out.put(t.name, t)
+      out +=(t.name -> t)
     }
-    out
+    out.toMap
   }
-  def getTags: java.util.List[Tag] = {
-    val out = new util.ArrayList[Tag]
+  def getTags: List[Tag] = {
+    var out = List[Tag]()
     val l = em.createQuery("select t, count(t) from Paste p join p.tagsMap t group by t")
       .setMaxResults(100)
       .getResultList
@@ -80,7 +91,7 @@ class TagDao extends BaseDao[Tag, java.lang.Long](classOf[Tag]) {
       val tag = oo(0).asInstanceOf[Tag]
       val total = oo(1).asInstanceOf[java.lang.Long]
       tag.total = total.toInt
-      out.add(tag)
+      out = out :+ tag
     }
     out
   }

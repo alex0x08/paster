@@ -58,12 +58,13 @@ class PasterApp {
                 el.addEventListener("click", function (e) {
                     e.preventDefault();
                     var source = e.target || e.srcElement;
+                    console.log('dialog ',source.parentElement.parentElement)
                     $paster.showModal(
                         document.getElementById('deletePopup'),
                         source.parentElement.href,
                         PasterI18n.text.dialog.removal.title,
                         PasterI18n.text.dialog.removal.message,
-                        source.parentElement.querySelector('#dialogMsg').innerHTML);
+                        source.parentElement.parentElement.querySelector('#dialogMsg').innerHTML);
                 });
             });
 

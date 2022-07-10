@@ -22,8 +22,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import jakarta.validation.Valid
 import org.apache.commons.lang3.StringUtils
 import org.apache.commons.text.{StringEscapeUtils, WordUtils}
-import org.springframework.beans.factory.annotation.{Autowired, Qualifier}
-import org.springframework.context.MessageSource
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.validation.BindingResult
@@ -49,15 +48,15 @@ class PasteEditCtrl extends GenericEditCtrl[Paste] {
   @Autowired
   val tagDao: TagDao = null
   @Autowired
-  val pasteManager: PasteDao = null
+  val pasteDao: PasteDao = null
   @Autowired
-  val commentManager: CommentDao = null
+  val commentDao: CommentDao = null
   @Autowired
-  val resourcePathHelper: ResourceManager = null
+  val resourceDao: ResourceManager = null
   def listPage = "redirect:/main/paste/list"
   def editPage = "paste/edit"
   def viewPage = "paste/view"
-  def manager(): PasteDao = pasteManager
+  def manager(): PasteDao = pasteDao
   @InitBinder
   def initBinder(binder: WebDataBinder): Unit = {
     binder.initDirectFieldAccess()
@@ -66,12 +65,11 @@ class PasteEditCtrl extends GenericEditCtrl[Paste] {
     super.fillEditModel(obj, model, locale)
     if (obj.isBlank) {
       model.addAttribute("title", getResource("paste.new", locale))
-
     } else {
       model.addAttribute("title", StringEscapeUtils.escapeHtml4(
         getResource("paste.edit.title", Array(obj.id, obj.title), locale)))
       obj.comments.addAll(
-        commentManager.getCommentsForPaste(obj.id))
+        commentDao.getCommentsForPaste(obj.id))
       if (!model.containsAttribute("comment")) {
         model.addAttribute("comment", getNewCommentInstance(obj))
       }
@@ -123,7 +121,18 @@ class PasteEditCtrl extends GenericEditCtrl[Paste] {
                     model: Model): String = {
     if (logger.isDebugEnabled)
       logger.debug("_removeComment commentId={} , lineNumber ={} {}", commentId, lineNumber, "")
-    commentManager.remove(commentId)
+    if (!commentDao.exists(commentId)) {
+      logger.warn("comment with id {} not found", commentId)
+      model.asMap().clear()
+      return s"redirect:/main/paste/$pasteId#line_$lineNumber"
+    }
+    val subCommentsIds: List[Integer] = commentDao.getSubCommentsIdsFor(commentId)
+    if (subCommentsIds.nonEmpty) {
+      for (p <- subCommentsIds) {
+        commentDao.remove(p)
+      }
+    }
+    commentDao.remove(commentId)
     model.asMap().clear()
     s"redirect:/main/paste/$pasteId#line_$lineNumber"
   }
@@ -134,12 +143,12 @@ class PasteEditCtrl extends GenericEditCtrl[Paste] {
                       @RequestParam(required = true) thumbImgData: String,
                       model: Model): String = {
     if (!isCurrentUserLoggedIn && !allowAnonymousCommentsCreate) return MvcConstants.page403
-    var p = pasteManager.get(pasteId)
+    var p = pasteDao.get(pasteId)
     if (p == null) return MvcConstants.page404
     if (reviewImgData == null || thumbImgData == null) return MvcConstants.page500
     logger.info("adding reviewImg to {}, data {}", Array(pasteId, reviewImgData))
-    p.reviewImgData = resourcePathHelper.saveResource('r', p.uuid, reviewImgData)
-    p.thumbImage = resourcePathHelper.saveResource('t', p.uuid, thumbImgData)
+    p.reviewImgData = resourceDao.saveResource('r', p.uuid, reviewImgData)
+    p.thumbImage = resourceDao.saveResource('t', p.uuid, thumbImgData)
     p.touch()
     p = manager().save(p)
     model.asMap().clear()
@@ -167,9 +176,9 @@ class PasteEditCtrl extends GenericEditCtrl[Paste] {
       b.author = getCurrentUser.getUsername()
       // b.getOwner().increaseTotalComments()
     }
-    commentManager.save(b)
+    commentDao.save(b)
     if (b.getThumbImage != null)
-      p.thumbImage = resourcePathHelper.saveResource('t', p.uuid, b.getThumbImage)
+      p.thumbImage = resourceDao.saveResource('t', p.uuid, b.getThumbImage)
     p.touch()
     manager().save(p)
     model.asMap().clear()
@@ -203,8 +212,8 @@ class PasteEditCtrl extends GenericEditCtrl[Paste] {
     for (s <- b.tagsAsString.split(" ")) {
       if (!StringUtils.isBlank(s)
         && s.length >= 3 // name min size
-      ) if (allTags.containsKey(s))
-        b.getTagsMap.put(s, allTags.get(s))
+      ) if (allTags contains s)
+        b.getTagsMap.put(s, allTags(s))
       else
         b.getTagsMap.put(s, new Tag(s))
     }
@@ -215,6 +224,7 @@ class PasteEditCtrl extends GenericEditCtrl[Paste] {
     if (b.normalized) {
       b.codeType match {
         case "js" =>
+
           /**
            * try to normalize json
            */
@@ -228,6 +238,7 @@ class PasteEditCtrl extends GenericEditCtrl[Paste] {
             //ignore
           }
         case "plain" =>
+
           /**
            * set word wrap for plain
            */
@@ -252,7 +263,7 @@ class PasteEditCtrl extends GenericEditCtrl[Paste] {
       } else b.text
     logger.debug("__found thumbnail {} comments {}", b.thumbImage, b.commentsCount)
     if (b.thumbImage != null) {
-      b.thumbImage = resourcePathHelper.saveResource('t', b.uuid, b.thumbImage)
+      b.thumbImage = resourceDao.saveResource('t', b.uuid, b.thumbImage)
     }
     val out = super.save(cancel, b, result, model, locale, redirectAttributes)
     if (out.equals(listPage)) {
@@ -287,11 +298,11 @@ class PasteEditCtrl extends GenericEditCtrl[Paste] {
   @RequestMapping(value = Array("/codetypes"), method = Array(RequestMethod.GET))
   @ResponseBody
   @JsonIgnore
-  def getAvailableCodeTypes: java.util.Collection[String] = codeTypeDao.getAvailableElements
+  def getAvailableCodeTypes: util.Set[String] = codeTypeDao.getAvailableElements.asJava
   @RequestMapping(value = Array("/tags/all"), method = Array(RequestMethod.GET))
   @ResponseBody
   @JsonIgnore
-  def getAvailableTags: util.List[Tag] = tagDao.getTags
+  def getAvailableTags: util.List[Tag] = tagDao.getTags.asJava
   @RequestMapping(value = Array("/tags/names"), method = Array(RequestMethod.GET, RequestMethod.POST))
   @ResponseBody
   @JsonIgnore
