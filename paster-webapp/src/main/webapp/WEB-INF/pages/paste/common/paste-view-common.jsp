@@ -61,12 +61,8 @@
         <div id="${model.id}_drawBlock" style="display:none;padding-top: 1em;">
             <div class="row justify-content-between">
                 <div class="col-md-8">
-
-                 
                     <div id="${model.id}_tools" class="tools">
-                   
                     </div>
-
                 </div>
                 <div class="col-auto">
 

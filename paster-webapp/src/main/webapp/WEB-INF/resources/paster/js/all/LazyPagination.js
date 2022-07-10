@@ -21,11 +21,9 @@ provides: [LazyPagination]
 */
 
 
-
-var LazyPagination = new Class({
+class LazyPagination {
 	
-	Extends: Request.HTML,
-		options: {
+	options = {
 			buffer: 1000,
 			maxRequests: 5,
 			pageDataIndex: 'page',
@@ -38,10 +36,37 @@ var LazyPagination = new Class({
 			navigation: false,
 			inject: false, 
                         
-		},
+		}
               
-	initialize: function(element,options){
-		this.parent(options);
+	initialize(element,options){
+		//this.parent(options);
+
+
+		/*const xmlhttp = new XMLHttpRequest();
+        const cb = document.getElementById('newPastasCountBlock');
+
+        xmlhttp.onreadystatechange = function() {
+            if (xmlhttp.readyState == XMLHttpRequest.DONE) {
+               if (xmlhttp.status == 200) {
+
+                  const obj = JSON.parse(xmlhttp.responseText, true);
+                        const pcount = obj['count'];
+                        if (pcount>0) {
+                            cb = document.getElementById('newPastasCountBlock');
+                            cb.style.display='';
+                            cb.text = pcount;
+                          	Tinycon.setBubble(pcount);
+                        }
+
+               } else {
+                    cb.text= 'Sorry, your request failed :(';
+               }
+            }
+        };
+
+        xmlhttp.open("GET", '${ctx}/main/paste/count/form/'+new Date().getTime()+'.json', true);
+        xmlhttp.send(); */
+
 		this.element = document.id(element);
 		this.bound = this.measure.bind(this);
 		this.requests = 0;
@@ -55,20 +80,21 @@ var LazyPagination = new Class({
 		if(this.options.navigation) document.id(this.options.navigation).destroy();
 		this.attach();
 		this.measure();
-	},
+	}
                 
-	measure: function(){
+	measure(){
 		var scrollHeight = this.element.getScrollSize().y, 
 			height = this.element.getSize().y,
 			scroll = this.element.getScroll().y;
         
-           // console.log("scrollHeight="+scrollHeight+" height="+height+" scroll="+scroll+" calc="+(scrollHeight-height - this.options.buffer));
+         console.log("scrollHeight="+scrollHeight+" height="+height+" scroll="+scroll+" calc="+(scrollHeight-height - this.options.buffer));
                 
 		if(scrollHeight-height - this.options.buffer <= scroll) this.send();
 		return this;
-	},
+	}
 	
-	send: function(){
+	send(){
+		console.log('attempt to send..')
 		if(this.check && this.requests != this.options.maxRequests ) {
                   
                 this.options.beforeLoad(this.options.data[this.options.idKey]);
@@ -81,38 +107,39 @@ var LazyPagination = new Class({
                    //  alert( this.options.data[this.options.idKey]);
                     this.parent();
                 }
-	},
+	}
 	
-	increment: function(){
+	increment(){
 		this.requests++;
 		this.options.data[this.options.pageDataIndex]++;
 		return this;
-	},
+	}
 	
-	attach: function(){
+	attach(){
 		window.addEventListener('resize',this.bound);
 		this.element.addEventListener('scroll',this.bound);
 		return this;
-	},
+	}
 	
-	detach: function(){
+	detach(){
 		window.removeEvent('resize',this.bound);
 		this.element.removeEvent('scroll',this.bound);
 		return this;
-	},
+	}
 	
-	adopt: function(html){
-		(this.element === document || this.element === window) ? 
-			$(document.body).adopt(html) : this.element.adopt(html);
-                        
-                      //alert( this.options.idSet[this.options.pageDataIndex]);
-                        
+	adopt(html){
+		//(this.element === document || this.element === window) ? 
+	//		$(document.body).adopt(html) : this.element.adopt(html);
+						
+			(this.element === document || this.element === window) ? 
+			document.body.append(html) : this.element.parentNode.append(html);
+			
                 this.options.afterAppend(html, this.options.idMode ? 
                 this.options.idSet[this.options.data[this.options.pageDataIndex]] : this.options.data[this.options.pageDataIndex]);        
 		return this;
-	},
+	}
 	
-	inject: function(html){
+	inject(html){
 		html.inject(this.options.inject.element, this.options.inject.where);
 	
         
@@ -122,4 +149,4 @@ var LazyPagination = new Class({
                 return this;
 	}
 
-});
+}

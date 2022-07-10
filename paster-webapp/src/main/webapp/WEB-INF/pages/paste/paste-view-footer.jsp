@@ -89,6 +89,8 @@
 
 </script>
 
+<script src="<c:url value='/main/resources/${appId}/paster/js/all/LazyPagination.js'/>"></script>
+
 
 
 <script type="text/javascript">
@@ -105,9 +107,7 @@
 
         pasterView.setupCommentsAdd(MODEL_ID);
 
-      
-
-    <c:if test="${availablePrevList.count > 0}">
+  
         document.getElementById('pageLoadSpinner').style.display='';
         pasterView.setupLazy("<c:url value='/main/paste/raw/view'/>",
                 "<c:url value='/main/paste'/>",
@@ -115,7 +115,10 @@
         ${model.id},
                 [${availablePrevList.itemsAsString}]);
 
-    </c:if>
+        <%--
+    <c:if test="${availablePrevList.count > 0}">
+  
+    </c:if> --%>
 
     });
 

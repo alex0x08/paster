@@ -130,6 +130,7 @@
                 <entry key="xml" value="application/xml"/>
                 <entry key="atom" value="application/atom+xml"/>
                 <entry key="rss" value="application/rss+xml"/>
+                <entry key="txt" value="text/plain"/>
             </map>
         </property>
     </bean>

@@ -23,15 +23,17 @@
 </span>
 
 
+<div id="pageLoadSpinner" >
+    <i class="fa fa-spinner"></i>
+    <fmt:message key="action.loading"/>
+</div>
+<div id="morePages"></div>
 
+<%--
 <c:if test="${availablePrevList.count > 0}">
-    <div id="pageLoadSpinner" >
-        <i class="fa fa-spinner"></i>
-        <fmt:message key="action.loading"/>
-    </div>
-    <div id="morePages"></div>
+ 
 </c:if>
-
+--%>
 
 <c:choose>
     <c:when test="${model.reviewImgData!=null}">

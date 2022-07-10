@@ -22,7 +22,7 @@ class PasterList {
 
         var mainThis = this;
 
-      /*  this.lazy = new LazyPagination(document, {
+      this.lazy = new LazyPagination(document, {
             url: pageUrl,
             method: 'get',
             maxRequests: maxRequests,
@@ -50,7 +50,7 @@ class PasterList {
                 mainThis.parseSearchResults(block);
                 pasterApp.bindDeleteDlg(block);
             }
-        });*/
+        });
         this.parseSearchResults(document.getElementById('pastas'));
     }
     parseSearchResults(parent) {

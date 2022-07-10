@@ -155,8 +155,60 @@ class PasterView {
 
     }
     setupLazy(pageUrl, userPageUrl, maxRequests, modelId, idSet) {
-
+        Logger.debug('setup lazy..');
         var mainThis = this;
+
+          this.lazyPaging = new LazyPagination(document, {
+                    url: pageUrl,
+                    method: 'get',
+                    maxRequests: maxRequests,
+                    buffer: 100,
+                    pageDataIndex: 'page',
+                    idMode: true,
+                    data: {
+                        page: 0,
+                        id: modelId
+                    },
+                    idSet: idSet,
+                    inject: {
+                        element: 'morePages',
+                        where: 'before'
+                    }, beforeLoad: function (page) {
+                        //alert(page);
+                        //SyntaxHighlighter.hideEditForm(this.);
+                        $('pageLoadSpinner').setStyle('display', '');
+                    }, afterAppend: function (block, page) {
+
+                        var ptext = document.getElementById(page + '_pasteText');
+
+                        SyntaxHighlighter.highlight(page, {}, ptext, false, false);
+
+                        //ptext.setStyle('display', 'none');
+
+                        /*$(page + '_addCommentBtn').addEvent('click', function () {
+                            this.getElementById('btnCaption').set('text',
+                                    PasterI18n.text.notify.transmitMessage).disabled = true;
+                            this.getElementById('btnIcon').setStyle('display', '');
+                            mainThis.onSaveComment(page);
+                        });*/
+
+                        try {
+                            history.pushState({id: page}, "Page " + page, userPageUrl + "/" + page);
+                        } catch (e) {
+                        }
+                        pasterApp.bindDeleteDlg(block);
+
+                        mainThis.setupDraw(page);
+                        mainThis.showAll(page);
+
+                      //  $('pageLoadSpinner').setStyle('display', 'none');
+                      //  $(page + '_pasteText').grab($('pageLoadSpinner'), "after");
+                    }
+
+                });
+
+                this.lazyPaging.initialize()
+
 
     }
     getTextSizes(el) {
@@ -182,23 +234,15 @@ class PasterView {
         var mainThis = this;
 
 
-        document.getElementById("ctrlc_link")
+        document.getElementById("ctrlc_line")
         .addEventListener("click", function (event) {
             event.preventDefault();
-            const text = document.getElementById(modelId + '_pasteText').innerText
+            const dct =this.getAttribute('data-clipboard-target')
+
+            const text = document.getElementById(dct).innerText
             console.log('to clipboard:',text)
             mainThis.copyToClipboard(text)
         });
-
-
-        /*this.clip = new ZeroClipboard(document.id("ctrlc_link"));
-        this.clip.on('aftercopy', function (event) {
-            pasterApp.showNotify(event.data["text/plain"].length + ' symbols copied to clipboard.');
-        });
-        this.clipLine = new ZeroClipboard(document.id("ctrlc_line"));
-        this.clipLine.on('aftercopy', function (event) {
-            pasterApp.showNotify(event.data["text/plain"].length + ' symbols copied to clipboard.');
-        });*/
 
 
         SyntaxHighlighter.highlight(modelId, {}, document.getElementById(modelId + '_pasteText'), true, allowEdit);

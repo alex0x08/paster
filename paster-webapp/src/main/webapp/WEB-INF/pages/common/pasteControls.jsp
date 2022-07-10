@@ -67,15 +67,7 @@
         </a> |
         <a href="<c:url value='/main/paste/${model.id}.txt'/>" target="${target}" title="View as plain text">
             <span style="font-size: larger;" class="i">k</span>
-        </a> |
-
-
-        <c:if test="${mode ne 'icon'}">
-            <a id="ctrlc_link" data-clipboard-target="${model.id}_pasteText" href="javascript:void(0);"
-               title="Copy to clipboard" >
-                <i class="img-map img-clip"></i></a>
-        </c:if>
-
+        </a>
 
     </div>
 </div>
