@@ -79,7 +79,7 @@
                             <input id="${model.id}_thumbImg" name="thumbImgData" type="hidden" value="" />
     
     
-                            <button id="${model.id}_saveReviewBtn" class='btn btn-danger p-btn-save' type="submit">
+                            <button id="${model.id}_saveReviewBtn" class='btn btn-danger p-btn-save' type="button">
                                 <span class="i" style="font-size:larger;">S</span>
                                 <span id="btnCaption">
                                     <fmt:message key="button.save" /></span>
@@ -104,8 +104,6 @@
 --%>
             <div id="${model.id}_drawArea" style="z-index:5000;position:absolute;cursor:crosshair;
                  background-color:rgba(100,70,0,0.1);">
-
-
             </div>
 
         </div>
@@ -250,8 +248,6 @@
 
                             <div class="form-group" style="margin-bottom:0.1em;">
                                 <div class="col-md-12">
-
-
                                     <form:errors path="text" cssClass="control-label" element="label"
                                         for="commentText" />
 
@@ -263,8 +259,7 @@
                                 </div>
                             </div>
 
-                            <div class="form-group" style="margin-bottom:0.1em;">
-
+                            <div class="form-group row justify-content-between" style="margin-bottom:0.1em;">
 
                                 <div class="col-md-4">
                                     <button id="${model.id}_addCommentBtn" class='sbtn p-btn-save' type="submit">
@@ -274,19 +269,25 @@
                                         <i id="btnIcon" style="display:none;" class="fa fa-spinner fa-spin"></i>
                                     </button>
 
-                                    <a class="disableOnSubmit" title="<fmt:message key=" button.cancel" />"
-                                    href="javascript:void(0);" onclick="SyntaxHighlighter.hideEditForm(${model.id});">
+                                    <a id="${model.id}_closeCommentBtn" 
+                                        class="disableOnSubmit" 
+                                        title="<fmt:message key=" button.cancel" />"  href="#" >
                                     <span>
                                         <fmt:message key="button.cancel" /></span>
                                     </a>
 
-
+                                </div>
+                                <div id="${model.id}_errorMessage" class="col-md-4" style="display: none;">
+                                   error message 
                                 </div>
 
-                                <div class="col-md-3 pull-right">
-                                    <fmt:message key="comments.line">
-                                        <fmt:param value="<span id='pageNum'></span>" />
-                                    </fmt:message>
+                                <div class="col-auto">
+                                    <span style="padding-right: 0.5em;">
+                                        <fmt:message key="comments.line">
+                                            <fmt:param value="<span id='pageNum'></span>" />
+                                        </fmt:message>
+                                    </span>
+                                   
 
                                 </div>
                             </div>

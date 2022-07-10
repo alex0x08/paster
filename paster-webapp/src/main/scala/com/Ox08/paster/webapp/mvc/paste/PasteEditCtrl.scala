@@ -168,6 +168,9 @@ class PasteEditCtrl extends GenericEditCtrl[Paste] {
     if (p == null) return MvcConstants.page404
     if (result.hasErrors) {
       logger.debug("form has errors {}", result.getErrorCount)
+      for (e<-result.getAllErrors.asScala) {
+        logger.debug("error: {} code: {} msg: {}" ,e.getObjectName,e.getCode,e.getDefaultMessage)
+      }
       model.addAttribute("comment", b)
       fillEditModel(p, model, locale)
       return viewPage

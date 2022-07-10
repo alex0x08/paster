@@ -49,7 +49,7 @@ class PasterUser(name: String,
   def getUsername: String = username
   def getAuthorities: util.Collection[_ <: GrantedAuthority] = getRoles
   override def toString: String =
-    Logged.toStringSkip(this,Array("password", "passwordRepeat" ))
+    Logged.toStringSkip(this,Array("pwd"))
 }
 object Role {
   val ROLE_ADMIN = new Role("ROLE_ADMIN", "role.admin.name")

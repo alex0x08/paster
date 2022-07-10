@@ -17,8 +17,7 @@ package com.Ox08.paster.webapp.model
 import com.Ox08.paster.webapp.base.Logged
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute
-import jakarta.persistence.{Column, GeneratedValue, Id, MappedSuperclass, PrePersist, PreUpdate, Temporal, TemporalType}
-import jakarta.xml.bind.annotation.XmlTransient
+import jakarta.persistence._
 import org.hibernate.annotations.GenericGenerator
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField
 
@@ -26,7 +25,7 @@ import java.text.SimpleDateFormat
 import java.time.{LocalDateTime, ZoneOffset}
 import java.util.{Date, Objects}
 object Struct extends Logged {
-  val terms = List[String]("id", "name")
+  protected val terms: List[String] = List[String]("id", "name")
   final val DB_DATE_FORMAT_FULL = "dd.MM.yyyy HH:mm:ss"
   final val SD_FULL = new SimpleDateFormat(DB_DATE_FORMAT_FULL)
   abstract class Builder[T <: java.io.Serializable](obj: T) extends Logged {
@@ -59,8 +58,8 @@ abstract class Struct extends DBObject with SearchObject with java.io.Serializab
   def touch(): Unit = {
     lastModified = LocalDateTime.now()
   }
-  def getLastModifiedDt: Date = Date.from(lastModified.toInstant(ZoneOffset.UTC))
-  def getCreatedDt: Date = Date.from(created.toInstant(ZoneOffset.UTC))
+  def getLastModifiedDt: Date = if (lastModified==null.asInstanceOf[LocalDateTime]) null else Date.from(lastModified.toInstant(ZoneOffset.UTC))
+  def getCreatedDt: Date = if (created==null.asInstanceOf[LocalDateTime]) null else Date.from(created.toInstant(ZoneOffset.UTC))
   @JsonIgnore
   def getLastModified: LocalDateTime = lastModified
   @JsonIgnore

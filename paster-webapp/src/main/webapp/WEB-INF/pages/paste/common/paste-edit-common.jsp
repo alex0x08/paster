@@ -48,7 +48,7 @@
                     <li class="nav-item dropdown" role="presentation">
                         <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
                             aria-expanded="false">
-                            Open
+                            Load from..
                             <span class="caret"></span>
 
                         </a>
@@ -94,7 +94,7 @@
 
                                 <form:label path="title">
                                     <c:out value="${pasteTitle}" />
-                                    <a id="cleanTitleBtn" onclick="cleanTitle();" href="javascript:void(0);"
+                                    <a id="cleanTitleBtn"  href="#"
                                         title="<fmt:message key='button.clear'/>">
                                         <span class="i">d</span>
                                     </a> </form:label>
@@ -186,11 +186,34 @@
                                     <fmt:message key='button.cancel' /></a>
 
                                     <c:if test="${!model.blank}">
-                                        <tiles:insertDefinition name="/common/deleteLink">
-                                            <tiles:putAttribute name="model" value="${model}" />
-                                            <tiles:putAttribute name="modelName" value="paste" />
-                                            <tiles:putAttribute name="currentUser" value="${currentUser}" />
-                                        </tiles:insertDefinition>
+
+
+                                         <sec:authorize
+                                                            access="${currentUser !=null and (currentUser.admin or ( model.hasAuthor  and model.author eq currentUser)) }">
+
+                                                            <a class="btn btn-danger btn-sm deleteBtn" 
+                                                                id="deleteBtn_${model.id}"
+                                                                href="<c:url value='/main/paste/delete'>
+                                                                        <c:param name='id' value='${model.id}'' />
+                                                            </c:url>"
+                                                            title="
+                                                            <fmt:message key='button.delete' />">
+                                                            <span class="i">d</span>
+                                                            <fmt:message key='button.delete' />
+                                                            </a>
+
+                                                        </sec:authorize>
+
+
+                                            <div style="display:none;" id="dialogMsg">
+                                                    <img width="300" height="200" class="p-comment"
+                                                        style="width: 250px; height: 150px; float: left; margin: 5px;"
+                                                        src="<c:url value='/main/paste-resources/${appId}/t/${model.lastModifiedDt.time}/paste_content/${model.thumbImage}' />" />
+                                                    <fmt:message key="dialog.confirm.paste.remove.message">
+                                                        <fmt:param value="${model.id}" />
+                                                    </fmt:message>
+                                                </div>
+
 
                                     </c:if>
 

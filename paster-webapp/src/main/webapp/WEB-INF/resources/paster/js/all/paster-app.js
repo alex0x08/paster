@@ -28,9 +28,7 @@ class PasterApp {
     showNotify(message) {
         document.getElementById('pasterToast').getElementsByClassName('toast-body')[0].innerText = message
         this.growl.show()
-        // this.growl.notify(message);
         Logger.debug('notify ', message);
-
     }
     showModal(dlg, redirectUrl, action, title, message) {
 
@@ -54,17 +52,17 @@ class PasterApp {
     bindDeleteDlg(parent) {
         console.log('parent:',parent)
 
-        var $paster = this;
+        var self = this;
 
         Array.from(parent.getElementsByClassName('deleteBtn')).forEach(
             function (el, i, array) {
                 el.addEventListener("click", function (e) {
                     e.preventDefault();
                     var source = e.target || e.srcElement;
-                    console.log('dialog ',source.parentElement.parentElement)
-                    $paster.showModal(
+                    console.log('dialog ',source.parentElement)
+                    self.showModal(
                         document.getElementById('deletePopup'),
-                        source.parentElement.href,
+                        source.href,
                         PasterI18n.text.dialog.removal.title,
                         PasterI18n.text.dialog.removal.message,
                         source.parentElement.parentElement.querySelector('#dialogMsg').innerHTML);
@@ -73,7 +71,7 @@ class PasterApp {
 
     }
     takeScreenshot(source, onComplete) {
-        var $paster = this;
+        var self = this;
         Logger.debug('taking screenshot for ', source)
 
         html2canvas(source, {
@@ -85,7 +83,7 @@ class PasterApp {
             img.width = canvas.width;
             img.height = canvas.height;
 
-            $paster.resizer.resize(canvas, img, {
+            self.resizer.resize(canvas, img, {
                 quality: 3,
                 alpha: true,
                 unsharpAmount: 150,

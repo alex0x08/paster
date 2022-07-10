@@ -35,10 +35,12 @@ class PasterList {
             },
             inject: {
                 element: 'morePages'
-                
+
             }, beforeLoad: function () {
                 document.getElementById('pageLoadSpinner').style.display = '';
-            }, afterAppend: function (block, page) {
+                
+            },
+             afterAppend: function (block, page) {
                 try {
                     history.pushState({ page: page }, "Page " + page, userPageUrl + "/" + page);
                 } catch (e) {

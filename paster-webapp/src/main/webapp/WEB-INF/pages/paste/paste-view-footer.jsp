@@ -11,9 +11,6 @@
     src="<c:url value='/main/resources/${appId}/local_components/marked/marked.min.js'/>"></script>
 <script type="text/javascript"
     src="<c:url value='/main/resources/${appId}/local_components/sketchjs/sketch.js'/>"></script>
-<%--
-<script src="<c:url value='/main/resources/${appId}/paster/js/paste-view/sketch.js'/>"></script>
---%>
 
 <script src="<c:url value='/main/resources/${appId}/paster/js/paste-view/paste-view.js'/>"></script>
 
@@ -24,7 +21,7 @@
      
         <%--
 
-        EpicEditor(for markdown) global options
+                EpicEditor(for markdown) global options
 
         --%>
 
@@ -43,7 +40,7 @@
         file: {
             name: 'epiceditor',
             defaultContent: '',
-            autoSave: 100
+            autoSave: 50000
         },
         theme: {
             base: '/themes/base/epiceditor.css',
@@ -103,16 +100,12 @@
 
         pasterView.init(MODEL_ID,ALLOW_EDIT);
 
-        pasterView.setupCommentsAdd(MODEL_ID);
-
-  
+        pasterView.setupCommentsAdd(MODEL_ID); 
       
         
     <c:if test="${availablePrevList.count > 0}">
-        document.getElementById('pageLoadSpinner').style.display='';
         pasterView.setupLazy("<c:url value='/main/paste/raw/view'/>",  "<c:url value='/main/paste'/>",
         ${availablePrevList.count},  ${model.id}, [${availablePrevList.itemsAsString}]);
-
     </c:if>
 
 

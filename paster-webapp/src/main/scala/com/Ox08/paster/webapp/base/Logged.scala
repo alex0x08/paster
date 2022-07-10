@@ -54,6 +54,7 @@ object Logged {
   def toStringSkip(x: Any, fields: Array[String]): String = {
     new ReflectionToStringBuilder(x, style) {
       override def accept(f: Field): Boolean = {
+      //  System.out.println("accept " + f.getName)
         if (!super.accept(f)) {
           return false
         }

@@ -32,6 +32,7 @@ class LazyPagination {
 		pageDataIndex: 'page',
 		idKey: 'id',
 		data: { page: 2, modelId: 0 },
+		skipMeasure: function() { return false },
 		afterAppend: function () { },
 		beforeLoad: function () { },
 		idSet: new Array(),
@@ -87,12 +88,18 @@ class LazyPagination {
 
 
 	measure() {
+		
+		if (this.options.skipMeasure() == true) {
+		//	console.log('skipping measure..')
+			return this;
+		}
+
 		var scrollHeight = document.documentElement.scrollHeight,
 			height = document.documentElement.clientHeight,
 			scroll = window.pageYOffset;
 
 
-		//console.log("scrollHeight=" + scrollHeight + " height=" + height + " scroll=" + scroll);
+	//	console.log("scrollHeight=" + scrollHeight + " height=" + height + " scroll=" + scroll);
 
 		if (scroll + height >= scrollHeight - 10)
 			this.send();

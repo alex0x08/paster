@@ -53,10 +53,13 @@
   </div>
 </div>
 </div>
+
 <script type="text/javascript"
     src="<c:url value='/main/resources/${appId}/local_components/logger.js'/>"></script>
 
-       
+<script type="text/javascript"
+    src="<c:url value='/main/resources/${appId}/local_components/fastdom.js'/>"></script>
+
 <script type="text/javascript"
     src="<c:url value='/main/resources/${appId}/local_components/bootstrap/bootstrap.bundle.min.js'/>"></script>
 
@@ -102,7 +105,14 @@
 
     window.addEventListener('load', function () {
         pasterApp.appInit(document.body);
+
+        <c:if test="${not empty statusMessageKey}">
+            pasterApp.showNotify('<fmt:message key="${statusMessageKey}"/>');   
+        </c:if>
+
     });
 
 
 </script>
+
+

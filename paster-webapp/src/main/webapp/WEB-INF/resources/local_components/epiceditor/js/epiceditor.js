@@ -25,11 +25,13 @@
    * @returns {undefined}
    */
   function _applyStyles(context, attrs) {
-    for (var attr in attrs) {
-      if (attrs.hasOwnProperty(attr)) {
-        context.style[attr] = attrs[attr];
+    fastdom.mutate(() => {   
+      for (var attr in attrs) {
+        if (attrs.hasOwnProperty(attr)) {
+          context.style[attr] = attrs[attr];
+        }
       }
-    }
+    });
   }
 
   /**
@@ -1160,7 +1162,7 @@
         return;
       }
       self.save(true);
-    }, 100);
+    }, 10000); // Alex: not required because I do direct call to 'save' before exportFile
 
     _syncTextarea = function () {
       // TODO: Figure out root cause for having to do this ||.
@@ -1279,6 +1281,7 @@
    * @returns {object} EpicEditor will be returned
    */
   EpicEditor.prototype.reflow = function (kind, callback) {
+    fastdom.mutate(() => {   
     var self = this
       , widthDiff = _outerWidth(self.element) - self.element.offsetWidth
       , heightDiff = _outerHeight(self.element) - self.element.offsetHeight
@@ -1313,6 +1316,7 @@
 
     self.emit('reflow', eventData);
     callback.call(this, eventData);
+    });
     return self;
   }
 

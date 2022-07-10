@@ -69,8 +69,7 @@
                     access="${currentUser !=null and (currentUser.admin or ( model.hasAuthor  and model.author eq currentUser)) }">
 
                     <a class="btn btn-danger btn-sm deleteBtn" id="deleteBtn_${model.id}"
-                        href="<c:url value='/main/${modelName}/delete'><c:param name=" id" value="${model.id}" />
-                    </c:url>"
+                        href="<c:url value='/main/paste/delete'><c:param name='id' value='${model.id}' /></c:url>"
                     title="
                     <fmt:message key='button.delete' />">
                     <span class="i">d</span>

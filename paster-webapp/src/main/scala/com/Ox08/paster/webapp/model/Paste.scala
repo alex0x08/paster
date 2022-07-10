@@ -208,6 +208,7 @@ class Paste(ptitle: String) extends Struct with java.io.Serializable {
   override def toString: String = Logged.toStringSkip(this,
     Array("reviewImgData",
       "thumbImage",
+      "tagsMap",
       "title",
       "text"))
 }

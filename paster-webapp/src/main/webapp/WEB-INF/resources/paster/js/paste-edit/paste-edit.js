@@ -44,7 +44,7 @@ class PasterEdit {
     }
 
     init(codeType) {
-        const mainThis = this;
+        const self = this;
         this.counter = new WordCount();
         this.counter.initialize('wordsCount', {
             countWordsTo: document.getElementById('wordsCount'),
@@ -70,7 +70,7 @@ class PasterEdit {
             autoScrollEditorIntoView: true
         });
 
-        editor.getSession().setMode("ace/mode/" + mainThis.getEditorType(codeType));
+        editor.getSession().setMode("ace/mode/" + self.getEditorType(codeType));
 
         const textarea = document.getElementById("ptext");
 
@@ -81,7 +81,7 @@ class PasterEdit {
         const elSelectFileBtn = document.getElementById('select-file-btn');
 
         elSelectFileBtn.addEventListener('change', function (e) {
-            mainThis.readLocalFile(e);
+            self.readLocalFile(e);
         });
 
         //To focus the ace editor
@@ -118,6 +118,11 @@ class PasterEdit {
             }
         });
 
+        //onclick="cleanTitle();"
+        document.getElementById('cleanTitleBtn').addEventListener('click', function (event) {
+            self.clearTitle();    
+        });
+
 
         document.getElementById('fontsize').addEventListener('change', function (event) {
             editor.setFontSize(this.querySelector('option:checked').getAttribute("value"));
@@ -125,7 +130,7 @@ class PasterEdit {
 
         document.getElementById('ptype').addEventListener('change', function (event) {
             editor.getSession()
-                .setMode("ace/mode/" + mainThis.getEditorType(this.querySelector('option:checked').getAttribute("value")));
+                .setMode("ace/mode/" + self.getEditorType(this.querySelector('option:checked').getAttribute("value")));
         });
 
         document.getElementById('pprior').addEventListener('change', function (event) {
@@ -145,12 +150,12 @@ class PasterEdit {
                     document.getElementById('btnIcon').style.display = '';
 
                     event.preventDefault();
-                    mainThis.onSave();
+                    self.onSave();
                 });
             });
     }
     clearTitle() {
-        document.getElementById('pname').setValue('value', '');
+        document.getElementById('pname').value = '';
     }
     readLocalFile(e) {        
 
@@ -166,11 +171,11 @@ class PasterEdit {
             return;
          };
 
-        const mainThis = this;
+        const self = this;
 
         const freader = new FileReader();
         freader.onload = function (e) {
-            mainThis.editor.getSession().setValue(e.target.result);
+            self.editor.getSession().setValue(e.target.result);
         };
         freader.readAsText(file);
 

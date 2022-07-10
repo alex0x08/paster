@@ -94,6 +94,7 @@ var SyntaxHighlighter = function () {
             lineNumbers: {},
             currentEditLine: null, currentEditModel: null,
             showComments: {},
+            loaded: [],
             editor: []
         },
         /** This object is populated by user included external brush files. */
@@ -256,6 +257,13 @@ var SyntaxHighlighter = function () {
         getEditor(modelId) {
             return sh.vars.editor[modelId];
         },
+        checkLoaded(modelId) {
+
+            const isloaded = sh.vars.loaded[modelId];
+           // console.log('isloaded ',isloaded,' for model ',modelId)
+            return isloaded;
+        },
+
         /**
          * Shorthand to highlight all elements on the page that are marked as 
          * SyntaxHighlighter source code.
@@ -279,6 +287,8 @@ var SyntaxHighlighter = function () {
             }
             sh.vars.modelId = modelId;
             sh.vars.showComments[modelId] = true;
+
+            sh.vars.loaded[modelId] = false;
 
             var elements = this.findElements(globalParams, element),
                 propertyName = 'innerHTML',
@@ -326,26 +336,37 @@ var SyntaxHighlighter = function () {
 
                 params['brush'] = brushName;
                 highlighter.init(params);
-                element = highlighter.getDiv(code);
+                
+                fastdom.mutate(() => { 
+                    element = highlighter.getDiv(code);
 
-                // carry over ID
-                if ((target.id || '') != '')
-                    element.id = target.id;
-
-                target.parentNode.replaceChild(element, target);
+                    // carry over ID
+                    if ((target.id || '') != '')
+                        element.id = target.id;
+                        target.parentNode.replaceChild(element, target);
+                    });
 
                 //var roots = []
                 Array.from(document.getElementById(sh.vars.modelId + '_commentsList')
                     .getElementsByClassName('parentComment')).forEach(
                         function (el, i, array) {
+                            fastdom.mutate(() => { 
                             sh.insertComment(el, 0, i);
+                            });
                         });
 
                 Array.from(document.getElementById(sh.vars.modelId + '_commentsList')
                     .getElementsByClassName('subComment')).forEach(
                         function (el, i, array) {
+                            fastdom.mutate(() => { 
                             sh.insertComment(el, 1, i);
+                            });
                         });
+
+                        fastdom.mutate(() => {
+                            sh.vars.loaded[modelId] = true;
+                        });
+
 
                 const ln = document.getElementById('lineNumber').value;
                 if (!ln || 0 === ln.length) {
@@ -473,11 +494,13 @@ var SyntaxHighlighter = function () {
                 document.getElementById(modelId + '_cl_linePlain_' + sh.vars.currentEditLine).style.display = 'none';
                 sh.vars.currentEditLine = null;
             }
-            sh.vars.editor[modelId].unload();
+           // sh.vars.editor[modelId].unload();
+           // sh.vars.editor[modelId] = undefined;
         },
 
         insertEditForm: function (modelId, lineNumber, parentId) {
             Logger.debug('insert edit form for ', modelId, lineNumber, parentId);
+         
             if (sh.vars.editor[modelId] && sh.vars.editor[modelId].is('loaded')) {
                 sh.vars.editor[modelId].unload();
                 Logger.debug('editor unloaded');
@@ -490,61 +513,92 @@ var SyntaxHighlighter = function () {
             cForm.querySelector('#lineNumber').value = lineNumber;
 
             if (parentId > 0) {
-                // alert(parentId);
                 cForm.querySelector('#parentId').value = parentId;
             }
+ 
+            fastdom.mutate(() => { 
+                cForm.style.position = "relative";
+                cForm.style['max-width'] = window.innerWidth - 100;
+                cForm.style.display = "";             
+            });
+                Logger.debug('edit line: ',sh.vars.currentEditLine )
 
-            cForm.style.position = "relative";
-            cForm.style['max-width'] = window.innerWidth - 100;
-            cForm.style.display = "";
+                if (sh.vars.currentEditLine != null) {
+                    // alert('hide prev '+sh.vars.currentEditModel+'|line='+sh.vars.currentEditLine);
+                    fastdom.mutate(() => {  
+                        document.getElementById(sh.vars.currentEditModel + '_cl_lineHtml_' + sh.vars.currentEditLine).style.display = "";
+                        document.getElementById(sh.vars.currentEditModel + '_cl_linePlain_' + sh.vars.currentEditLine).style.display = "none";
+                        sh.vars.currentEditLine = null;
+                    });
+           
+                } else {
+                    fastdom.mutate(() => {  
+                        document.getElementById(modelId + '_cl_lineHtml_' + lineNumber).style.display = "none";
+                        document.getElementById(modelId + '_cl_linePlain_' + lineNumber).style.display = "";
+                        sh.vars.currentEditLine = lineNumber;
+                        sh.vars.currentEditModel = modelId;        
+                    });
+           
+           
+                }
+         
+     
 
-            Logger.debug('edit line: ',sh.vars.currentEditLine )
+                fastdom.mutate(() => {  
+                    
+                document.getElementById("pasteLineCopyBtn").style.display = "inline-block";
+                document.getElementById('pasteLineToCopy').innerHTML = document
+                    .getElementById(modelId + '_cl_linePlainCode_' + lineNumber).innerHTML;
+                });
+           
+                fastdom.mutate(() => {  
+                    const ell = document.getElementById(modelId + '_cl_linePlain_' + lineNumber);
+                    ell.parentNode.insertBefore(document.getElementById("pasteLineCopyBtn"), ell);
+                });
+           
+                if (parentId > 0) {
+                    const el = document.getElementById(modelId + '_comment_l' + parentId);
+                    fastdom.mutate(() => {  
+                        el.parentNode.insertBefore(cForm, el.nextSibling);
+                    });
+           
+                } else {
+                    const el = document.getElementById(modelId + '_cl_' + lineNumber);
+                    fastdom.mutate(() => {  
+                        el.parentNode.insertBefore(cForm, el.nextSibling);
+                    });
+                }
+    
 
-            if (sh.vars.currentEditLine != null) {
-                // alert('hide prev '+sh.vars.currentEditModel+'|line='+sh.vars.currentEditLine);
-                document.getElementById(sh.vars.currentEditModel + '_cl_lineHtml_' + sh.vars.currentEditLine).style.display = "";
-                document.getElementById(sh.vars.currentEditModel + '_cl_linePlain_' + sh.vars.currentEditLine).style.display = "none";
-                sh.vars.currentEditLine = null;
-            } else {
-                document.getElementById(modelId + '_cl_lineHtml_' + lineNumber).style.display = "none";
-                document.getElementById(modelId + '_cl_linePlain_' + lineNumber).style.display = "";
+                fastdom.mutate(() => {  
+                    const calc_size = parseInt(cForm.offsetHeight) + 1;
 
-                sh.vars.currentEditLine = lineNumber;
-                sh.vars.currentEditModel = modelId;
+                    nspace.style['height'] = calc_size;
+                    cForm.style['height'] = calc_size + " !important";    
+                 });
+           
+                if (parentId > 0) {
+                    const el = document.getElementById(modelId + "_numSpace_l" + parentId);
+                    fastdom.mutate(() => {  
+                        el.parentNode.insertBefore(nspace, el.nextSibling);
+                    });          
 
-            }
-            document.getElementById("pasteLineCopyBtn").style.display = "inline-block";
-            document.getElementById('pasteLineToCopy').innerHTML = document
-                .getElementById(modelId + '_cl_linePlainCode_' + lineNumber).innerHTML;
-
-            const ell = document.getElementById(modelId + '_cl_linePlain_' + lineNumber);
-            ell.parentNode.insertBefore(document.getElementById("pasteLineCopyBtn"), ell);
-
-            if (parentId > 0) {
-                const el = document.getElementById(modelId + '_comment_l' + parentId);
-                el.parentNode.insertBefore(cForm, el.nextSibling);
-            } else {
-                const el = document.getElementById(modelId + '_cl_' + lineNumber);
-                el.parentNode.insertBefore(cForm, el.nextSibling);
-            }
-
-            const calc_size = parseInt(cForm.offsetHeight) + 1;
-
-            nspace.style['height'] = calc_size;
-            cForm.style['height'] = calc_size + " !important";
-
-            if (parentId > 0) {
-                const el = document.getElementById(modelId + "_numSpace_l" + parentId);
-                el.parentNode.insertBefore(nspace, el.nextSibling);
-            } else {
-                const el = document.getElementById(modelId + '_ln_' + lineNumber);
-                el.parentNode.insertBefore(nspace, el.nextSibling);
-            }
-
-            nspace.style.display = "";
+                } else {
+                    const el = document.getElementById(modelId + '_ln_' + lineNumber);
+                    fastdom.mutate(() => {  
+                        el.parentNode.insertBefore(nspace, el.nextSibling);
+                    });
+                }
+    
+                fastdom.mutate(() => {  
+                                nspace.style.display = "";
+                            });
+          
             if (sh.vars.editor[modelId]) {
                 setTimeout(function () {
-                    sh.vars.editor[modelId].load();
+                    fastdom.mutate(() => {
+                        sh.vars.editor[modelId].load();
+                    });
                 }, 1);
             }
 
@@ -554,6 +608,7 @@ var SyntaxHighlighter = function () {
 
     sh['all'] = sh.all;
     sh['highlight'] = sh.highlight;
+    sh['checkLoaded'] = sh.checkLoaded;
     sh['insertEditForm'] = sh.insertEditForm;
     sh['insertComment'] = sh.insertComment;
     sh['toggleComments'] = sh.toggleComments;
@@ -1745,17 +1800,15 @@ var SyntaxHighlighter = function () {
             this.code = code;
 
             var div = this.create('div');
-
-            // create main HTML
-            div.innerHTML = this.getHtml(code);
-
-            // set up click handlers
+                // create main HTML
+                div.innerHTML = this.getHtml(code);
+                 // set up click handlers
             if (this.getParam('toolbar'))
-                attachEvent(findElement(div, '.toolbar'), 'click', sh.toolbar.handler);
+            attachEvent(findElement(div, '.toolbar'), 'click', sh.toolbar.handler);
 
             if (this.getParam('quick-code'))
-                attachEvent(findElement(div, '.code'), 'dblclick', quickCodeHandler);
-
+            attachEvent(findElement(div, '.code'), 'dblclick', quickCodeHandler);
+           
             return div;
         },
         /**
