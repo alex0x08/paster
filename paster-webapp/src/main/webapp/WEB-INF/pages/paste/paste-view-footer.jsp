@@ -85,10 +85,7 @@
             sanitize: true,
             smartLists: true,
             smartypants: false
-        });
-
-
-      
+        });      
 
 </script>
 

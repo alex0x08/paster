@@ -18,14 +18,16 @@
 class PasterApp {
 
     appInit() {
-        //        this.growl = new Growler.init();
+        this.growl = new bootstrap.Toast(document.getElementById('pasterToast'));
         this.bindDeleteDlg(document.body);
         this.resizer = window.pica({
             features: ['all']
         });
-
+  
     }
     showNotify(message) {
+        document.getElementById('pasterToast').getElementsByClassName('toast-body')[0].innerText = message
+        this.growl.show()
         // this.growl.notify(message);
         Logger.debug('notify ', message);
 

@@ -135,10 +135,6 @@ class PasterView {
 
         const commentsParent = document.getElementById(modelId + '_commentsList');
 
-        console.log('comments parent',commentsParent)
-
-
-
         document.getElementById(modelId + '_addCommentBtn').addEventListener('click', function (event) {
             event.preventDefault();
             this.querySelector('#btnCaption').text = PasterI18n.text.notify.transmitMessage;
@@ -184,6 +180,16 @@ class PasterView {
     init(modelId, allowEdit) {
 
         var mainThis = this;
+
+
+        document.getElementById("ctrlc_link")
+        .addEventListener("click", function (event) {
+            event.preventDefault();
+            const text = document.getElementById(modelId + '_pasteText').innerText
+            console.log('to clipboard:',text)
+            mainThis.copyToClipboard(text)
+        });
+
 
         /*this.clip = new ZeroClipboard(document.id("ctrlc_link"));
         this.clip.on('aftercopy', function (event) {
@@ -330,6 +336,9 @@ class PasterView {
         copyElement.select();
         try {
             if(!document.execCommand('copy')) throw 'Not allowed.';
+            else {
+                pasterApp.showNotify(text.length + ' symbols copied to clipboard.');
+            }
         } catch(e) {
             copyElement.remove();
             console.log("document.execCommand('copy'); is not supported");
