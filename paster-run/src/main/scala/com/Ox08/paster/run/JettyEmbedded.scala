@@ -1,28 +1,21 @@
 
-
 package com.Ox08.paster.run
-
-import org.apache.commons.cli.{CommandLine, CommandLineParser, HelpFormatter, Option, Options, ParseException, DefaultParser}
-import org.apache.commons.io.IOUtils
-import org.apache.commons.lang.SystemUtils
-import org.apache.commons.lang.builder.{StandardToStringStyle, ToStringBuilder}
+import org.apache.commons.cli.{CommandLine, CommandLineParser, DefaultParser, HelpFormatter, Option, Options, ParseException}
 import org.eclipse.jetty.server.{Connector, Server, ServerConnector}
-import org.eclipse.jetty.util.component.{AbstractLifeCycle, LifeCycle}
+import org.eclipse.jetty.util.component.LifeCycle
 import org.eclipse.jetty.util.thread.QueuedThreadPool
 import org.eclipse.jetty.webapp.WebAppContext
+
 import java.io._
 import java.nio.charset.Charset
 import java.nio.file._
 import java.nio.file.attribute.BasicFileAttributes
 import java.text.MessageFormat
-import java.util.{Locale, Properties, ResourceBundle}
 import java.util.concurrent.{ArrayBlockingQueue, Executors}
+import java.util.{Locale, Properties, ResourceBundle}
 import scala.util.Try
-
 object JettyEmbedded {
-
   def main(args: Array[String]): Unit = {
-
     new JettyEmbedded()
       .setupConsole()
       .validateInput(args)
@@ -33,249 +26,161 @@ object JettyEmbedded {
       .startServer()
   }
 }
-
 class JettyEmbedded {
-
   private var appConf: String = "config.properties"
-
   private var addr: String = "0.0.0.0"
-
   private var contextPath = "/"
-
   private var port = 8080
-
   private var tempDir = new File("temp")
-
-  private var appWar: File = null
-
-  private var server: Server = null
-
-  private var cmd: CommandLine = null
-
+  private var appWar: File = _
+  private var server: Server = _
+  private var cmd: CommandLine = _
   private val cmdProgressExecutor = Executors.newSingleThreadExecutor()
-
   private final val messages: ResourceBundle = ResourceBundle
     .getBundle("messages", Locale.getDefault,
       ResourceBundle.Control.getControl(
         ResourceBundle.Control.FORMAT_PROPERTIES))
 
-  private final val style = new StandardToStringStyle() {
-    setFieldSeparator(", ")
-    setUseClassName(false)
-    setUseIdentityHashCode(false)
-    setNullText(i18n("default.not-set"))
-  }
-
   private val config = new Config
-
   @throws(classOf[ParseException])
   def validateInput(args: Array[String]): JettyEmbedded = {
 
     // parse the command line arguments
     cmd = config.parser.parse(config.options, args)
-
-    if (cmd.hasOption("help")) {
-
-      if (Locale.getDefault.getLanguage.eq("ru") && SystemUtils.IS_OS_WINDOWS) {
-
-        config.helpFormatter.printHelp(
-          new PrintWriter(new OutputStreamWriter(
-            System.out, Charset.forName("cp866")), true
-          ), config.helpFormatter.getWidth(),
-          "app", null,
-          config.options,
-          config.helpFormatter.getLeftPadding(),
-          config.helpFormatter.getDescPadding(), null, false)
-      } else {
+    /*if (cmd.hasOption("help")) {
+      if (Locale.getDefault.getLanguage.eq("ru") && SystemUtils.IS_OS_WINDOWS) config.helpFormatter.printHelp(
+        new PrintWriter(new OutputStreamWriter(
+          System.out, Charset.forName("cp866")), true
+        ), config.helpFormatter.getWidth,
+        "app", null,
+        config.options,
+        config.helpFormatter.getLeftPadding,
+        config.helpFormatter.getDescPadding, null, false) else {
         config.helpFormatter.printHelp("app", config.options)
       }
-
       System.exit(0)
-    }
-
+    }*/
     if (cmd.hasOption("conf"))
       appConf = cmd.getOptionValue("conf")
-
-
-    return this
+    this
   }
-
   def createServer(): JettyEmbedded = {
-
     val pool = new QueuedThreadPool(
       200, 10, 60000,
-      new ArrayBlockingQueue(600));
+      new ArrayBlockingQueue(600))
     pool.setDetailedDump(false)
-
     server = new Server(pool)
-
     val con = new ServerConnector(server)
-
-    con.setHost(addr);
+    con.setHost(addr)
     con.setPort(port)
-
     server.setConnectors(Array[Connector](con))
-
-    Runtime.getRuntime().addShutdownHook(new Thread() {
+    Runtime.getRuntime.addShutdownHook(new Thread() {
       override def run(): Unit = {
         try
           server.stop()
-
         catch {
-          case e@(_: Exception) => {
+          case e@(_: Exception) =>
             error(e)
-          }
-
         } finally {
-
           synchronized {
             wait(1000)
           }
           deleteDir(tempDir)
-
-          Try(cmdProgressExecutor.shutdown)
+          Try(cmdProgressExecutor.shutdown())
         }
-
-
       }
-    });
-    return this
+    })
+    this
   }
-
-
   @throws(classOf[IOException])
   def loadConf(): JettyEmbedded = {
-
     var is: InputStream = null
-
     log("info.using-config", appConf)
-
     try {
-
       val conf_file = new File(appConf)
-
-      if (!conf_file.exists() || !conf_file.isFile()) {
-        log("error.config-not-found", conf_file.getAbsolutePath())
+      if (!conf_file.exists() || !conf_file.isFile) {
+        log("error.config-not-found", conf_file.getAbsolutePath)
         return this
       }
-
-
       is = new FileInputStream(conf_file)
-
-      val p = new Properties();
+      val p = new Properties()
       p.load(is)
-
       val appWarS = p.getProperty("app.war", null)
-
-
       if (appWarS != null)
         this.appWar = new File(appWarS)
-
-
       port = Integer.valueOf(
         if (cmd.hasOption("port"))
           cmd.getOptionValue("port")
         else
           p.getProperty("http.port", port + "")
       )
-
       addr = if (cmd.hasOption("host")) {
         cmd.getOptionValue("host")
       }
       else p.getProperty("app.host", null)
-
       contextPath = if (cmd.hasOption("contextPath")) {
         cmd.getOptionValue("contextPath")
       } else
         p.getProperty("app.context", contextPath)
-
-
       if (cmd.hasOption("tmpPath"))
         tempDir = new File(cmd.getOptionValue("tmpPath"))
-
-
-      log(getNewProtocolBuilder()
-        .append(i18n("info.dump-config"))
-        .append("host", addr)
-        .append("port", port)
-        .append("contextPath", contextPath)
-        .append("tmpPath", tempDir)
-        .toString)
 
     } finally {
       if (is != null) {
         try
-          is.close
+          is.close()
         catch {
-          case e@(_: Exception) => {}
+          case _: Exception =>
         }
       }
     }
-    return this
+    this
   }
-
   def mkDirs(): JettyEmbedded = {
-
     if (tempDir.exists())
       deleteDir(tempDir)
-
-    tempDir.mkdirs();
+    tempDir.mkdirs()
     new File(tempDir, "work").mkdir()
-
-    System.setProperty("jetty.home", tempDir.getAbsolutePath())
-    return this
+    System.setProperty("jetty.home", tempDir.getAbsolutePath)
+    this
   }
-
   @throws(classOf[Exception])
   def startServer(): JettyEmbedded = {
-    server.start();
-    server.join();
-    return this
+    server.start()
+    server.join()
+    this
   }
-
   @throws(classOf[Exception])
   def startApp(): JettyEmbedded = {
-
     val webapp = new WebAppContext()
-
-    val servletHandler = webapp.getServletHandler()
-
     webapp.setInitParameter("org.eclipse.jetty.jsp.precompiled", "true")
     webapp.setInitParameter("org.eclipse.jetty.servlet.Default.useFileMappedBuffer", "false")
-
     webapp.setContextPath(contextPath)
     webapp.setTempDirectory(tempDir)
-
     if (appWar != null) {
-      webapp.setWar(appWar.getAbsolutePath())
-
-      if (appWar.isDirectory())
+      webapp.setWar(appWar.getAbsolutePath)
+      if (appWar.isDirectory)
         webapp.setExtractWAR(true)
-
       server.setHandler(webapp)
       server.addEventListener(new LifeCycle.Listener() {
         override def lifeCycleStarted(event: LifeCycle): Unit = {
           cmdProgressExecutor.shutdown()
         }
-
         override def lifeCycleStopped(event: LifeCycle): Unit = {
           deleteDir(tempDir)
         }
       })
-
-
     } else
       log("error.application-not-set")
-    return this
+    this
   }
-
   @throws(classOf[UnsupportedEncodingException])
   def setupConsole(): JettyEmbedded = {
 
     // AnsiConsole.systemInstall(); Ansi.ansi().eraseScreen()
 
-    System.out.write(IOUtils.toByteArray(
-      getClass.getResource("/paster-rus.ans")))
+    //System.out.write(IOUtils.toByteArray(
+     // getClass.getResource("/paster-rus.ans")))
     /*
       if (Locale.getDefault.getLanguage.eq("ru") && SystemUtils.IS_OS_WINDOWS) {
 
@@ -319,22 +224,16 @@ class JettyEmbedded {
       })
     
    */
-    return this
+    this
   }
-
-  private def deleteDir(from: File) =
+  private def deleteDir(from: File): Any =
     if (from.exists && from.isDirectory)
       Files.walkFileTree(Paths.get(from.toURI), new DeleteDirectory())
-
-  def getNewProtocolBuilder(): ToStringBuilder = new ToStringBuilder("", style)
-
-  def error(e: Exception) = e.printStackTrace
-
-  def i18n(key: String) = if (messages.containsKey(key))
+  def error(e: Exception): Unit = e.printStackTrace()
+  def i18n(key: String): String = if (messages.containsKey(key))
     messages.getString(key)
   else
     key
-
   def format(args: String*): String = {
     if (args.length > 1) {
       MessageFormat.format(
@@ -342,80 +241,61 @@ class JettyEmbedded {
     } else
       i18n(args(0))
   }
-
-  def log(args: String*) = System.out.println(format(args: _*))
-
-
+  def log(args: String*): Unit = System.out.println(format(args: _*))
   class Config {
-
     val parser: CommandLineParser = new DefaultParser()
     val options: Options = new Options()
     val helpFormatter: HelpFormatter = new HelpFormatter()
-
     options.addOption(new Option("h", "help", false, i18n("args.msg.help")))
     options.addOption(new Option("v", "version", false, i18n("args.msg.version")))
-
-    val oconf = Option.builder().argName("conf")
+    options.addOption(Option.builder().argName("conf")
       .hasArg()
-      .desc(format("args.msg.use-given", appConf)).build()
-
-    options.addOption(oconf)
-
-    val ohost = Option.builder().argName("host")
-      .hasArg().desc(format("args.msg.host", addr)).build()
-
-    options.addOption(ohost)
-
-
-    val oport = Option.builder().argName("port")
+      .required(false)
+      .longOpt("confFile")
+      .desc(format("args.msg.use-given", appConf))
+      .build())
+    options.addOption(Option.builder().argName("host")
       .hasArg()
-      .desc(format("args.msg.port", port.toString)).build()
-
-    options.addOption(oport)
-
-
-    val octx = Option.builder().argName("contextPath")
+      .required(false)
+      .longOpt("hostName")
+      .desc(format("args.msg.host", addr)).build())
+    options.addOption(Option.builder().argName("port")
       .hasArg()
-      .desc(format("args.msg.contextPath", contextPath)).build()
-
-    options.addOption(octx)
-
-    val otmp = Option.builder().argName("tmpPath")
+      .required(false)
+      .longOpt("portNum")
+      .desc(format("args.msg.port", port.toString)).build())
+    options.addOption(Option.builder().argName("cxt")
       .hasArg()
-      .desc(format("args.msg.tmpPath", tempDir.getPath)).build()
-
-    options.addOption(otmp)
-
+      .required(false)
+      .longOpt("contextPath")
+      .desc(format("args.msg.contextPath", contextPath)).build())
+    options.addOption(Option.builder().argName("tmp")
+      .hasArg()
+      .required(false)
+      .longOpt("tmpPath")
+      .desc(format("args.msg.tmpPath", tempDir.getPath)).build())
   }
-
 }
-
 class DeleteDirectory extends SimpleFileVisitor[Path] {
-
   @throws(classOf[IOException])
   override def visitFile(file: Path, attributes: BasicFileAttributes): FileVisitResult = {
     try
       Files.delete(file)
     catch {
-      case e@(_: Exception) => {
-        // e.printStackTrace
-      }
+      case _: Exception =>
+      // e.printStackTrace
     }
-
     FileVisitResult.CONTINUE
   }
-
   @throws(classOf[IOException])
   override def postVisitDirectory(directory: Path,
                                   exception: IOException): FileVisitResult = if (exception == null) {
-
     try
       Files.delete(directory)
     catch {
-      case e@(_: Exception) => {}
+      case _: Exception =>
     }
     FileVisitResult.CONTINUE
   } else
     FileVisitResult.TERMINATE
-
 }

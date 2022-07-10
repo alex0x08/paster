@@ -28,7 +28,7 @@
             <outputDirectory></outputDirectory>
             <includes>
                 <include>*.exe</include>
-                <include>*-all.jar</include>
+                <include>paster-run.jar</include>
             </includes>
         </fileSet>
         

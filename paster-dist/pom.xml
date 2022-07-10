@@ -2,25 +2,22 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-  
+
+
   <parent>
-    <groupId>uber.paster</groupId>
+    <groupId>com.Ox08.paster.webapp</groupId>
     <artifactId>paster-project</artifactId>
-    <version>1.2-SNAPSHOT</version>
+    <version>${revision}</version>
+    <relativePath>../pom.xml</relativePath>
   </parent>
-  
+
+
   <artifactId>paster-dist</artifactId>
 
   <packaging>pom</packaging>
 
   <name>Paster Distribution</name>
-  
-  <!-- NOTE: These dependency declarations are only required to sort this project to the 
-       end of the line in the multimodule build. 
-       
-       Since we only include the child1 module in our assembly, we only need to ensure this
-       distribution project builds AFTER that one...
-  -->
+
   <dependencies>
    
   

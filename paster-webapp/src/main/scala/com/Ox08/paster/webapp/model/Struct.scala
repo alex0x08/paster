@@ -58,8 +58,10 @@ abstract class Struct extends DBObject with SearchObject with java.io.Serializab
   def touch(): Unit = {
     lastModified = LocalDateTime.now()
   }
-  def getLastModifiedDt: Date = if (lastModified==null.asInstanceOf[LocalDateTime]) null else Date.from(lastModified.toInstant(ZoneOffset.UTC))
-  def getCreatedDt: Date = if (created==null.asInstanceOf[LocalDateTime]) null else Date.from(created.toInstant(ZoneOffset.UTC))
+  def getLastModifiedDt: Date = if (lastModified==null.asInstanceOf[LocalDateTime]) null
+                                            else Date.from(lastModified.toInstant(ZoneOffset.UTC))
+  def getCreatedDt: Date = if (created==null.asInstanceOf[LocalDateTime]) null
+                                            else Date.from(created.toInstant(ZoneOffset.UTC))
   @JsonIgnore
   def getLastModified: LocalDateTime = lastModified
   @JsonIgnore

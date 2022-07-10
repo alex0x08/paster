@@ -59,6 +59,7 @@
         <module>libs</module>        
         <module>paster-webapp</module>
         <module>paster-run</module>
+        <module>paster-dist</module>
       </modules>
 
 
@@ -126,17 +127,6 @@
             </releases>
         </repository>
 
-
-        <!--repository>
-            <id>jboss-thirdparty</id>
-            <name>jboss-thirdparty</name>
-            <url>https://repository.jboss.org/nexus/content/repositories/thirdparty-releases</url>
-        </repository-->
-        <!--repository>
-            <id>scala</id>
-            <name>Scala tools</name>
-            <url>https://scala-tools.org/repo</url>
-        </repository-->
 
         <repository>
             <id>spring</id>
