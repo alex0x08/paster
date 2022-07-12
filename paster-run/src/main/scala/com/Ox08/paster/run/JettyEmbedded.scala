@@ -1,12 +1,26 @@
 
 package com.Ox08.paster.run
+import com.Ox08.paster.run.JettyEmbedded.{CONTAINER_INCLUDE_PATTERN_KEY, CONTAINER_INCLUDE_PATTERN_VALUE}
 import org.apache.commons.cli.{CommandLine, CommandLineParser, DefaultParser, HelpFormatter, Option, Options, ParseException}
+import org.apache.tomcat.{InstanceManager, SimpleInstanceManager}
 import org.eclipse.jetty.server.{Connector, Server, ServerConnector}
-import org.eclipse.jetty.util.component.LifeCycle
+import org.eclipse.jetty.servlet.ServletContextHandler
+import org.eclipse.jetty.util.component.{AbstractLifeCycle, LifeCycle}
 import org.eclipse.jetty.util.thread.QueuedThreadPool
-import org.eclipse.jetty.webapp.WebAppContext
+import org.eclipse.jetty.webapp.{Configuration, WebAppConfiguration, WebAppContext}
+import org.eclipse.jetty.apache.jsp.JettyJasperInitializer
+import org.apache.jasper.servlet.JspServlet
+import org.apache.tomcat.util.scan.{StandardJarScanFilter, StandardJarScanner}
+import org.eclipse.jetty.servlet.DefaultServlet
+import org.eclipse.jetty.servlet.ServletHolder
+import org.eclipse.jetty.annotations.ServletContainerInitializersStarter
+import org.eclipse.jetty.jsp.JettyJspServlet
+import org.eclipse.jetty.plus.annotation.ContainerInitializer
+import org.slf4j.bridge.SLF4JBridgeHandler
 
+import java.util
 import java.io._
+import java.net.URL
 import java.nio.charset.Charset
 import java.nio.file._
 import java.nio.file.attribute.BasicFileAttributes
@@ -15,6 +29,10 @@ import java.util.concurrent.{ArrayBlockingQueue, Executors}
 import java.util.{Locale, Properties, ResourceBundle}
 import scala.util.Try
 object JettyEmbedded {
+
+  private val CONTAINER_INCLUDE_PATTERN_KEY = "org.eclipse.jetty.server.webapp.ContainerIncludeJarPattern"
+  private val CONTAINER_INCLUDE_PATTERN_VALUE = ".*/[^/]*servlet-api-[^/]*\\.jar$|.*/javax.servlet.jsp.jstl-.*\\\\.jar$|.*/[^/]*taglibs.*\\.jar$"
+
   def main(args: Array[String]): Unit = {
     new JettyEmbedded()
       .setupConsole()
@@ -65,6 +83,8 @@ class JettyEmbedded {
     this
   }
   def createServer(): JettyEmbedded = {
+    System.setProperty("org.apache.jasper.compiler.disablejsr199", "true")
+
     val pool = new QueuedThreadPool(
       200, 10, 60000,
       new ArrayBlockingQueue(600))
@@ -152,16 +172,124 @@ class JettyEmbedded {
   }
   @throws(classOf[Exception])
   def startApp(): JettyEmbedded = {
-    val webapp = new WebAppContext()
-    webapp.setInitParameter("org.eclipse.jetty.jsp.precompiled", "true")
+    //SLF4JBridgeHandler.install()
+
+    //import org.eclipse.jetty.servlet.ServletContextHandler
+    //val servletContextHandler = new ServletContextHandler(ServletContextHandler.SESSIONS)
+   // servletContextHandler.setContextPath("/")
+   // servletContextHandler.setResourceBase(baseUri.toASCIIString)
+    val webapp: WebAppContext = new WebAppContext()
+   // webapp.setInitParameter("org.eclipse.jetty.jsp.precompiled", "true")
+    webapp.setAttribute(classOf[InstanceManager].getName, new SimpleInstanceManager());
+
     webapp.setInitParameter("org.eclipse.jetty.servlet.Default.useFileMappedBuffer", "false")
     webapp.setContextPath(contextPath)
+    webapp.setParentLoaderPriority(true)
     webapp.setTempDirectory(tempDir)
+    webapp.setAttribute("javax.servlet.context.tempdir", new File(tempDir,"jsp"))
     if (appWar != null) {
       webapp.setWar(appWar.getAbsolutePath)
       if (appWar.isDirectory)
         webapp.setExtractWAR(true)
+      val sci = new JettyJasperInitializer
+     val sciStarter = new ServletContainerInitializersStarter(webapp)
+      val initializer = new ContainerInitializer(sci, null)
+      val initializers = new util.ArrayList[ContainerInitializer]
+      initializers.add(initializer)
+      webapp.setAttribute("org.eclipse.jetty.containerInitializers", initializers)
+      webapp.addBean(sciStarter, true)
+
+      val jarScanner = new StandardJarScanner
+      val jarScanFilter = new StandardJarScanFilter
+      //  jarScanFilter.setTldScan("taglibs-standard-impl-*")
+      //  jarScanFilter.setTldSkip("apache-*,ecj-*,jetty-*,asm-*,javax.servlet-*,javax.annotation-*,taglibs-standard-spec-*")
+      jarScanner.setJarScanFilter(jarScanFilter)
+      webapp.setAttribute("org.apache.tomcat.JarScanner", jarScanner)
+
+
+      val holderJsp = new ServletHolder("jsp", classOf[JettyJspServlet])
+      holderJsp.setInitOrder(0)
+      holderJsp.setInitParameter("fork", "false")
+      holderJsp.setInitParameter("keepgenerated", "true")
+     // webapp.addServlet(holderJsp, "*.jsp")
+      val holderDefault = new ServletHolder("default", classOf[DefaultServlet])
+      holderDefault.setInitParameter("dirAllowed", "true")
+    //  webapp.addServlet(holderDefault, "/")
+
+      // This webapp will use jsps and jstl. We need to enable the// This webapp will use jsps and jstl. We need to enable the
+      // AnnotationConfiguration in order to correctly
+      // set up the jsp container
+     // val classlist = new Configuration..ClassList.setServerDefault(server)
+     // classlist.addBefore("org.eclipse.jetty.webapp.JettyWebXmlConfiguration", "org.eclipse.jetty.annotations.AnnotationConfiguration")
+      import org.eclipse.jetty.webapp.FragmentConfiguration
+      import org.eclipse.jetty.webapp.MetaInfConfiguration
+      import org.eclipse.jetty.webapp.WebInfConfiguration
+      import org.eclipse.jetty.webapp.WebXmlConfiguration
+      import org.eclipse.jetty.annotations.AnnotationConfiguration
+      webapp.setConfigurations(Array[Configuration](new AnnotationConfiguration,
+        new WebAppConfiguration,
+        new WebXmlConfiguration, new WebInfConfiguration, new MetaInfConfiguration))
+      webapp.setAttribute("org.eclipse.jetty.server.webapp.ContainerIncludeJarPattern",
+        ".*/[^/]*servlet-api-[^/]*\\.jar$|.*/jakarta.servlet.jsp.jstl-.*\\.jar$|.*/[^/]*taglibs.*\\.jar$")
+
+
+    //  webapp.addBean(new EmbeddedJspStarter(webapp))
+
+
+     // webapp.setAttribute(CONTAINER_INCLUDE_PATTERN_KEY, CONTAINER_INCLUDE_PATTERN_VALUE)
+      import java.util
+//      val serverClasses = new util.ArrayList[_](util.Arrays.asList(webapp.getServerClasses))
+ //     serverClasses.remove("org.slf4j.")
+    //  webapp.setS.setServerClasses(serverClasses.toArray(new Array[String](0)))
+      import org.apache.jasper.servlet.JspServlet
+     // import org.eclipse.jetty.servlet.ServletHolder
+      // Add JSP Servlet (must be named "jsp")// Add JSP Servlet (must be named "jsp")
+     // val holderJsp = new ServletHolder("jsp", classOf[JspServlet])
+     // holderJsp.setInitOrder(0)
+     // import org.eclipse.jetty.jsp.JettyJspServlet
+  //    import org.eclipse.jetty.servlet.ServletHolder
+      // Create / Register JSP Servlet (must be named "jsp" per spec)
+     /* val holderJsp = new ServletHolder("jsp", classOf[JettyJspServlet])
+      holderJsp.setInitOrder(0)
+     // holderJsp.setInitParameter("scratchdir", scratchDir.toString)
+      holderJsp.setInitParameter("logVerbosityLevel", "DEBUG")
+      holderJsp.setInitParameter("fork", "false")
+      holderJsp.setInitParameter("xpoweredBy", "false")
+      holderJsp.setInitParameter("compilerTargetVM", "18")
+      holderJsp.setInitParameter("compilerSourceVM", "18")
+      holderJsp.setInitParameter("keepgenerated", "true")
+*/
+    /*  webapp.addServlet(holderJsp,"*.jsp")
+
+      import org.eclipse.jetty.servlet.DefaultServlet
+      import org.eclipse.jetty.servlet.ServletHolder
+      // Add Default Servlet (must be named "default")// Add Default Servlet (must be named "default")
+      val holderDefault = new ServletHolder("default", classOf[DefaultServlet])
+     // holderDefault.setInitParameter("resourceBase", baseUri.toASCIIString)
+      holderDefault.setInitParameter("dirAllowed", "true")
+      webapp.addServlet(holderDefault, "/")
+*/
+      import java.net.URLClassLoader
+      import java.net.URLClassLoader
+      import java.security.AccessController
+      import java.security.PrivilegedAction
+      import org.eclipse.jetty.webapp.WebAppClassLoader
+      import java.io.IOException
+      /*try // configure the class loader - webappClassLoader -> jetty nar -> web app's nar -> ...
+        webapp.setClassLoader(new WebAppClassLoader(getClass.getClassLoader, webapp))
+      catch {
+        case ioe: IOException =>
+          ioe.printStackTrace()
+      }*/
+
+      //    webapp.setClassLoader(Thread.currentThread().getContextClassLoader())
+
+     // val jspClassLoader = new URLClassLoader(new Array[URL](0), this.getClass.getClassLoader)
+     // webapp.setClassLoader(jspClassLoader)
+
+  //    webapp.setAttribute(classOf[InstanceManager].getName, new SimpleInstanceManager());
       server.setHandler(webapp)
+
       server.addEventListener(new LifeCycle.Listener() {
         override def lifeCycleStarted(event: LifeCycle): Unit = {
           cmdProgressExecutor.shutdown()
@@ -276,6 +404,32 @@ class JettyEmbedded {
       .desc(format("args.msg.tmpPath", tempDir.getPath)).build())
   }
 }
+
+class  EmbeddedJspStarter(context:WebAppContext) extends AbstractLifeCycle
+{
+  import org.apache.tomcat.util.scan.StandardJarScanFilter
+  import org.apache.tomcat.util.scan.StandardJarScanner
+  import org.eclipse.jetty.apache.jsp.JettyJasperInitializer
+
+  private val sci:JettyJasperInitializer = new JettyJasperInitializer
+
+  val jarScanner = new StandardJarScanner
+  val jarScanFilter = new StandardJarScanFilter
+//  jarScanFilter.setTldScan("taglibs-standard-impl-*")
+//  jarScanFilter.setTldSkip("apache-*,ecj-*,jetty-*,asm-*,javax.servlet-*,javax.annotation-*,taglibs-standard-spec-*")
+  jarScanner.setJarScanFilter(jarScanFilter)
+  this.context.setAttribute("org.apache.tomcat.JarScanner", jarScanner)
+  @throws[Exception]
+  override protected def doStart(): Unit = {
+    val old = Thread.currentThread.getContextClassLoader
+    Thread.currentThread.setContextClassLoader(context.getClassLoader)
+    try {
+      sci.onStartup(null, context.getServletContext)
+      super.doStart()
+    } finally Thread.currentThread.setContextClassLoader(old)
+  }
+}
+
 class DeleteDirectory extends SimpleFileVisitor[Path] {
   @throws(classOf[IOException])
   override def visitFile(file: Path, attributes: BasicFileAttributes): FileVisitResult = {
