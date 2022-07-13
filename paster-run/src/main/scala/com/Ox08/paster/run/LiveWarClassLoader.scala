@@ -1,79 +1,152 @@
 package com.Ox08.paster.run
-import com.Ox08.paster.run.LiveWarClassLoader.{CLASSES_BASE, DEBUG}
-
-import java.io.{ByteArrayOutputStream, Closeable, File, IOException, InputStream}
-import java.net.{MalformedURLException, URI, URL, URLClassLoader}
+import java.io._
+import java.net._
 import java.util
 import java.util.Collections
-import java.util.jar.JarFile
+import java.util.jar.{JarEntry, JarFile}
 import java.util.zip.ZipEntry
 import scala.collection.mutable
-import scala.io.Source
-import scala.util.control.Breaks.{break, breakable}
+import scala.jdk.CollectionConverters._
+/**
+ *
+ */
 object LiveWarClassLoader {
-
-  private val ID = classOf[LiveWarClassLoader].getSimpleName
-  private val DEBUG = true //Boolean.getBoolean("jetty.bootstrap.debug")
   private val CLASSES_BASE = "WEB-INF/classes/"
+  val MAP = new mutable.HashMap[String, Array[Byte]]
+  val MAP_DUPS = new mutable.HashMap[String, List[Array[Byte]]]
+  val EMPTY_BA = new Array[Byte](0)
 }
-
-class LiveWarClassLoader(warFileUrl:URL,parent: ClassLoader )
-        extends ClassLoader(parent) with Closeable {
+/**
+ * Custom classloader to load WAR without unpacking
+ * @param debug
+ *        show/hide debug messages
+ * @param warFileUrl
+ *        url to WAR file
+ * @param parent
+ *        parent classloader
+ */
+class LiveWarClassLoader(debug: Boolean, warFileUrl: URL, parent: ClassLoader)
+  extends ClassLoader(parent) with Closeable {
   private val warFileUri = warFileUrl.toURI
-  private val warFile =  new JarFile(new File(warFileUri))
+  private val warFile = new JarFile(new File(warFileUri))
+  loadData()
+  def loadData(): Unit = {
+    for (e <- warFile.entries().asScala) {
+      if (e.getName.startsWith("WEB-INF/lib") && e.getName.endsWith(".jar")) {
+        debug(s"found lib: ${e.getName}")
+        import java.util.jar.JarInputStream
+        val zip = new JarInputStream(warFile.getInputStream(e))
+        var ze: JarEntry = null
+        while ({ze = zip.getNextJarEntry; ze != null }) {
+          // we must to load directories too, their names should be present
+          // in resources map
+          if (ze.isDirectory) {
+            val key = ze.getName //.substring(0, ze.getName.length - 1)
+            LiveWarClassLoader.MAP.put(key, LiveWarClassLoader.EMPTY_BA)
+          } else {
+            val data = readBytes(zip, 4096)
+            if (LiveWarClassLoader.MAP.contains(ze.getName)) {
+              debug(s"already loaded: ${ze.getName}")
+              var datas: List[Array[Byte]] = if (LiveWarClassLoader.MAP_DUPS.contains(ze.getName)) {
+                LiveWarClassLoader.MAP_DUPS(ze.getName)
+              } else {
+                List()
+              }
+              datas = datas.appended(data)
+              debug(s"dups ${ze.getName} = ${datas.length}")
+              LiveWarClassLoader.MAP_DUPS.put(ze.getName, datas)
+            } else {
+              LiveWarClassLoader.MAP.put(ze.getName, data)
+            }
+          }
+        }
+      }
+    }
+    import java.net.URL
+    URL.setURLStreamHandlerFactory(new VirtualWARURLStreamHandlerFactory(debug = true))
+  }
   @throws[IOException]
   override def close(): Unit = {
-    warFile.close
+    warFile.close()
   }
-  private def debug(format: String, args: Any*): Unit = {
-    if (DEBUG)
-          System.out.println(format)
+  private def debug(format: String): Unit = {
+    if (debug)
+      System.out.println(format)
   }
   @throws[ClassNotFoundException]
   override protected def findClass(name: String): Class[_] = {
-    debug(s"findClass: ${name}")
     val path = name.replace('.', '/').concat(".class")
     val entry = findEntry(path)
-    if (entry != null) try loadClass(name, entry)
-    catch {
-      case e: IOException =>
-        throw new ClassNotFoundException(name, e)
+    if (entry != null) {
+      debug(s"findClass: $name")
+      try
+        loadClass(name, entry)
+      catch {
+        case e: IOException =>
+          throw new ClassNotFoundException(name, e)
+      }
+    } else if (LiveWarClassLoader.MAP.contains(path)) {
+      debug(s"findClass in map: $name")
+      val classBytes = LiveWarClassLoader.MAP(path)
+      defineClass(name, classBytes, 0, classBytes.length)
+    } else {
+      val clazz = super.findClass(name)
+      if (clazz == null) {
+        debug(s"NOT findClass in war/map: $name")
+      }
+      clazz
     }
-    else
-      super.findClass(name)
-      //throw new ClassNotFoundException(name)
   }
   private def findEntry(name: String): ZipEntry = {
     val path: mutable.StringBuilder = new mutable.StringBuilder
-    path.append(CLASSES_BASE)
-    if (name.charAt(0) == '/') path.append(name.substring(1))
-    else path.append(name)
+    path.append(LiveWarClassLoader.CLASSES_BASE)
+    if (name.charAt(0) == '/')
+      path.append(name.substring(1))
+    else
+      path.append(name)
     val entry: ZipEntry = warFile.getEntry(path.toString)
-    debug(s"findEntry(${name}) ${path} => ${entry}")
+    if (entry != null)
+      debug(s"findEntry($name) found $path => $entry")
     entry
   }
-  override protected  def findResource(name: String): URL = {
-    debug(s"findResource: ${name}")
+  override protected def findResource(name: String): URL = {
     val entry = findEntry(name)
-    if (entry != null)
-      try
+    if (entry != null) {
+      try {
+        debug(s"findResource: $name")
         return URI.create("jar:" + this.warFileUri.toASCIIString + "!/" + entry.getName).toURL
-      catch {
-      case e: MalformedURLException =>
-        e.printStackTrace(System.err)
-        return null
+      } catch {
+        case e: MalformedURLException =>
+          e.printStackTrace(System.err)
+          return null
+      }
+    } else if (LiveWarClassLoader.MAP.contains(name)) {
+      debug(s"findResource in map: $name")
+      return URI.create("war-virtual:" + name).toURL
     }
-    //if (getParent != null) {
-      super.findResource(name)
-    //}
-    //null
+    val url = super.findResource(name)
+    if (url == null) {
+      debug(s"NOT findResource : $name")
+    }
+    url
   }
   @throws[IOException]
   override protected def findResources(name: String): util.Enumeration[URL] = {
-    debug(s"findResources: ${name}")
+    debug(s"findResources: $name")
     val urls = new util.ArrayList[URL]
     val self = findResource(name)
-    if (self != null) urls.add(self)
+    if (self != null)
+      urls.add(self)
+    if (LiveWarClassLoader.MAP_DUPS.contains(name)) {
+      val dups = LiveWarClassLoader.MAP_DUPS(name)
+      var count = 0
+      for (_ <- dups) {
+        val u = URI.create("war-virtual:dup:" + count + ":" + name).toURL
+        urls.add(u)
+        count += 1
+      }
+      debug(s"returned $count dups for $name")
+    }
     if (getParent != null) {
       val parent = getParent.getResources(name)
       while (parent.hasMoreElements)
@@ -82,28 +155,82 @@ class LiveWarClassLoader(warFileUrl:URL,parent: ClassLoader )
     Collections.enumeration(urls)
   }
   @throws[IOException]
-  private def loadClass(name: String, entry: ZipEntry) = try {
+  private def loadClass(name: String, entry: ZipEntry): Class[_] = try {
     val in = warFile.getInputStream(entry)
-      try {
-      val classBytes =  readBytes(in,4096)
-
+    try {
+      val classBytes = readBytes(in, 4096)
       defineClass(name, classBytes, 0, classBytes.length)
     } finally {
       if (in != null) in.close()
     }
   }
-
-  val EOF: Int = -1
-
   def readBytes(is: InputStream, bufferSize: Int): Array[Byte] = {
     val buf = Array.ofDim[Byte](bufferSize)
     val out = new ByteArrayOutputStream(bufferSize)
-
-    Stream.continually(is.read(buf)) takeWhile { _ != EOF } foreach { n =>
-      out.write(buf, 0, n)
-    }
-
+    var nRead = 0
+    while ( {
+      nRead = is.read(buf, 0, buf.length); nRead != -1
+    })
+      out.write(buf, 0, nRead)
     out.toByteArray
   }
+}
 
+class VirtualWARURLStreamHandlerFactory(val debug: Boolean) extends URLStreamHandlerFactory {
+  override def createURLStreamHandler(protocol: String): URLStreamHandler = {
+    if ("war-virtual" == protocol)
+      return new VirtualWARUrlStreamHandler(debug)
+    null
+  }
+}
+class VirtualWARUrlStreamHandler(val debug: Boolean) extends URLStreamHandler {
+  @throws[IOException]
+  protected def openConnection(u: URL): URLConnection = {
+    var fileName = u.getFile
+    if (debug)
+        debug(s"opening file $fileName")
+
+    if (fileName.startsWith("war-virtual:"))
+      fileName = fileName.substring(0, "war-virtual:".length)
+    if (fileName.startsWith("dup:")) {
+      fileName = fileName.substring("dup:".length)
+      val n = fileName
+        .substring(0, fileName.indexOf(":"))
+        .toInt
+      fileName = fileName.substring(fileName.indexOf(":") + 1)
+      if (!LiveWarClassLoader.MAP_DUPS.contains(fileName)) {
+        debug("not found: " + fileName)
+        throw new FileNotFoundException(fileName)
+      }
+      val data = LiveWarClassLoader.MAP_DUPS.get(fileName)
+      if (data.isEmpty)
+        throw new FileNotFoundException(fileName)
+      val dupsData = data.get(n)
+      new URLConnection(u) {
+        @throws[IOException]
+        def connect(): Unit = {}
+        @throws[IOException]
+        override def getInputStream: InputStream = new ByteArrayInputStream(dupsData)
+      }
+    } else {
+      if (!LiveWarClassLoader.MAP.contains(fileName)) {
+        if (debug)
+          System.out.printf("not found: %s%n", fileName)
+        throw new FileNotFoundException(fileName)
+      }
+      val data = LiveWarClassLoader.MAP.get(fileName)
+      if (data.isEmpty)
+        throw new FileNotFoundException(fileName)
+      new URLConnection(u) {
+        @throws[IOException]
+        def connect(): Unit = {}
+        @throws[IOException]
+        override def getInputStream: InputStream = new ByteArrayInputStream(data.get)
+      }
+    }
+  }
+  private def debug(format: String): Unit = {
+    if (debug)
+      System.out.println(format)
+  }
 }

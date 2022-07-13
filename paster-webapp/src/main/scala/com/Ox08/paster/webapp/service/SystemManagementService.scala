@@ -6,6 +6,7 @@ import java.io.{File, IOException}
 import java.lang.management.ManagementFactory
 import java.util
 import scala.jdk.CollectionConverters._
+
 @Service
 class SystemManagementService extends Logged {
   private var inRestart = false
