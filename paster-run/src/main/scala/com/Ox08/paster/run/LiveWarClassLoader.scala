@@ -47,17 +47,14 @@ class LiveWarClassLoader(debug: Boolean, warFileUrl: URL, parent: ClassLoader)
             val data = readBytes(zip, 4096)
             if (LiveWarClassLoader.MAP.contains(ze.getName)) {
               debug(s"already loaded: ${ze.getName}")
-              var datas: List[Array[Byte]] = if (LiveWarClassLoader.MAP_DUPLICATES.contains(ze.getName)) {
+              var datas: List[Array[Byte]] = if (LiveWarClassLoader.MAP_DUPLICATES.contains(ze.getName))
                 LiveWarClassLoader.MAP_DUPLICATES(ze.getName)
-              } else {
+              else
                 List()
-              }
               datas = datas.appended(data)
               debug(s"dups ${ze.getName} = ${datas.length}")
               LiveWarClassLoader.MAP_DUPLICATES.put(ze.getName, datas)
-            } else {
-              LiveWarClassLoader.MAP.put(ze.getName, data)
-            }
+            } else LiveWarClassLoader.MAP.put(ze.getName, data)
           }
         }
       }
@@ -91,9 +88,8 @@ class LiveWarClassLoader(debug: Boolean, warFileUrl: URL, parent: ClassLoader)
       defineClass(name, classBytes, 0, classBytes.length)
     } else {
       val clazz = super.findClass(name)
-      if (clazz == null) {
+      if (clazz == null)
         debug(s"NOT findClass in war/map: $name")
-      }
       clazz
     }
   }
@@ -125,9 +121,8 @@ class LiveWarClassLoader(debug: Boolean, warFileUrl: URL, parent: ClassLoader)
       return URI.create("war-virtual:" + name).toURL
     }
     val url = super.findResource(name)
-    if (url == null) {
+    if (url == null)
       debug(s"NOT findResource : $name")
-    }
     url
   }
   @throws[IOException]
@@ -160,17 +155,15 @@ class LiveWarClassLoader(debug: Boolean, warFileUrl: URL, parent: ClassLoader)
     try {
       val classBytes = readBytes(in, 4096)
       defineClass(name, classBytes, 0, classBytes.length)
-    } finally {
-      if (in != null) in.close()
-    }
+    } finally
+      if (in != null)
+        in.close()
   }
   def readBytes(is: InputStream, bufferSize: Int): Array[Byte] = {
     val buf = Array.ofDim[Byte](bufferSize)
     val out = new ByteArrayOutputStream(bufferSize)
     var nRead = 0
-    while ( {
-      nRead = is.read(buf, 0, buf.length); nRead != -1
-    })
+    while ({ nRead = is.read(buf, 0, buf.length); nRead != -1 })
       out.write(buf, 0, nRead)
     out.toByteArray
   }

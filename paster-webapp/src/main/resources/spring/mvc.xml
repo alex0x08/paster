@@ -30,11 +30,7 @@
         <mvc:path-matching suffix-pattern="true"/>
     </mvc:annotation-driven>
 
-
-
     <!--general -->
-
-
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="order" value="2"/>
         <property name="exposeContextBeansAsAttributes" value="true"/>
@@ -47,15 +43,12 @@
               p:paramName="locale"/>
     </mvc:interceptors>
 
-
     <mvc:resources mapping="/assets/${paste.app.id}/**"
                    location="classpath:/META-INF/resources/webjars/"/>
-
     <mvc:resources mapping="/static/${paste.app.id}/**"
                    location="/WEB-INF/static/"/>
     <mvc:resources mapping="/resources/${paste.app.id}/**"
                    location="/WEB-INF/resources/"/>
-
 
     <mvc:interceptors>
         <mvc:interceptor>

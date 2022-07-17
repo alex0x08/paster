@@ -29,9 +29,8 @@ class PasteAtomView extends AbstractAtomFeedView {
   override protected def buildFeedEntries(model: java.util.Map[String, Object],
                                           request: HttpServletRequest,
                                           response: HttpServletResponse): java.util.List[Entry] = {
-    if (!model.containsKey(MvcConstants.NODE_LIST_MODEL)) {
+    if (!model.containsKey(MvcConstants.NODE_LIST_MODEL))
       return Collections.emptyList[Entry]()
-    }
     val contentList = model.get(MvcConstants.NODE_LIST_MODEL).asInstanceOf[java.util.List[Paste]]
     val entries: java.util.List[Entry] = new java.util.ArrayList[Entry](contentList.size())
     for (e <- contentList.asScala) {
@@ -40,11 +39,7 @@ class PasteAtomView extends AbstractAtomFeedView {
       // see http://diveintomark.org/archives/2004/05/28/howto-atom-id#other
       entry.setId(String.format("tag:springsource.com,%s:%d", date, e.id))
       entry.setTitle(String.format("On %s, %s wrote", date,
-        if (e.author != null) {
-          e.author
-        } else {
-          "Anonymous"
-        }))
+        if (e.author != null) e.author else "Anonymous"))
       entry.setUpdated(Date.from(e.lastModified.toInstant(ZoneOffset.UTC)))
       val summary = new Content()
       summary.setValue(e.text)

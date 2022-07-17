@@ -22,16 +22,16 @@ class ConfigurableXmlView(marshaller: Marshaller, modelKeys: String) extends Mar
     logger.debug(s"generating xml view, available model keys $modelKeys")
   override protected
   def locateToBeMarshalled(model: java.util.Map[String, Object]): Object = {
-    if (StringUtils.isBlank(modelKeys)) {
+    if (StringUtils.isBlank(modelKeys))
       return super.locateToBeMarshalled(model)
-    }
     for (modelKey <- modelKeys.split(",")) {
       if (model.containsKey(modelKey)) {
         var o = model.get(modelKey)
         // fix for serialization bug in xstream
         // we need to use arrays, otherwise XStream will try to serialize java.util.ArrayList's internals and fail
         if ("java.util.ArrayList$SubList".equals(o.getClass.getName)) {
-          val oo: java.util.List[_] = o.asInstanceOf[java.util.List[_]] ; o = oo.toArray
+          val oo: java.util.List[_] = o.asInstanceOf[java.util.List[_]]
+          o = oo.toArray
         }
         if (o != null && marshaller.supports(o.getClass)) {
           if (logger.isDebugEnabled)

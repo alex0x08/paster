@@ -239,7 +239,9 @@ class SystemMessage private() // приватный конструктор
    */
   private def createMessage(key: String, params: Array[AnyRef]) = {
     val raw = getMessage(key)
-    if (raw == null) key
-    else formatMessage(raw, params)
+    if (raw == null)
+      key
+    else
+      formatMessage(raw, params)
   }
 }

@@ -24,10 +24,11 @@ import java.util
 import java.util.Objects
 /**
  * Single column used for sorting
+ *
  * @param property
- *          column title
+ * column title
  * @param name
- *    sorting key
+ * sorting key
  */
 class SortColumn(property: String, name: String) {
   def getName: String = name
@@ -41,9 +42,9 @@ class SortColumn(property: String, name: String) {
 /**
  *
  * @param source
- *      list of source elements to apply pagination
+ * list of source elements to apply pagination
  * @tparam T
- *    type of element
+ * type of element
  */
 class ExtendedPageListHolder[T <: Struct](source: java.util.List[T])
   extends PagedListHolder[T](source) {
@@ -54,7 +55,6 @@ class ExtendedPageListHolder[T <: Struct](source: java.util.List[T])
   (getLastElementOnPage >= 0) getSource.get(getLastElementOnPage)
   else null.asInstanceOf[T]
   def getElementsOnPage: Int = getPageList.size()
-
 }
 /**
  * Abstract Controller to deal with lists
@@ -87,9 +87,8 @@ abstract class GenericListCtrl[T <: Struct] extends AbstractCtrl {
     /**
      * set default list mode
      */
-    if (!model.containsAttribute("listMode")) {
+    if (!model.containsAttribute("listMode"))
       model.addAttribute("listMode", "list")
-    }
   }
   /**
    * process pagination
@@ -134,23 +133,20 @@ abstract class GenericListCtrl[T <: Struct] extends AbstractCtrl {
         /**
          * if page number was specified
          */
-      } else if (page != null) {
-        pagedListHolder.setPage(
-          (
-            if (page < 1) 1
-            else if (page > pagedListHolder.getPageCount)
-              pagedListHolder.getPageCount
-            else page
-            ).asInstanceOf[Integer] - 1)
-      }
+      } else if (page != null) pagedListHolder.setPage(
+        (
+          if (page < 1) 1
+          else if (page > pagedListHolder.getPageCount)
+            pagedListHolder.getPageCount
+          else page
+          ).asInstanceOf[Integer] - 1)
     }
 
     /**
      * if items per page parameter was specified
      */
     if (pageSize != null)
-        pagedListHolder.setPageSize(pageSize)
-
+      pagedListHolder.setPageSize(pageSize)
     request.getSession().setAttribute(getClass.getName + "_" + pageHolderName, pagedListHolder)
     model.addAttribute(pageHolderName, pagedListHolder)
     if (createDefaultItemModel && !pageHolderName.equals(MvcConstants.NODE_LIST_MODEL_PAGE)) {
@@ -163,7 +159,6 @@ abstract class GenericListCtrl[T <: Struct] extends AbstractCtrl {
   def getAvailableSortColumns: List[SortColumn] = List[SortColumn](new SortColumn("id", "struct.id"),
     new SortColumn("name", "struct.name"),
     new SortColumn("lastModified", "struct.lastModified"))
-
   @RequestMapping(value = Array("/list/sort/{sortColumn:[a-z0-9A-Z]+}",
     "/list/sort/{sortColumn:[a-z0-9A-Z]+}/up"),
     method = Array(RequestMethod.GET))
@@ -192,7 +187,7 @@ abstract class GenericListCtrl[T <: Struct] extends AbstractCtrl {
   def listByPathNext(
                       request: HttpServletRequest,
                       model: Model): util.List[T] = list(request, model, null,
-                  "next", null, null, sortAsc = false)
+    "next", null, null, sortAsc = false)
   @RequestMapping(value = Array("/list/prev"), method = Array(RequestMethod.GET))
   @ModelAttribute(MvcConstants.NODE_LIST_MODEL)
   def listByPathPrev(
@@ -209,8 +204,6 @@ abstract class GenericListCtrl[T <: Struct] extends AbstractCtrl {
            @RequestParam(required = false) sortColumn: String,
            @RequestParam(required = false) sortAsc: Boolean): java.util.List[T] =
     listImpl(request, model, page, NPpage, pageSize, sortColumn, sortAsc, MvcConstants.NODE_LIST_MODEL_PAGE)
-
-
   def listImpl(request: HttpServletRequest,
                model: Model,
                page: java.lang.Integer,
@@ -219,7 +212,7 @@ abstract class GenericListCtrl[T <: Struct] extends AbstractCtrl {
                sortColumn: String, sortAsc: Boolean, result: String): java.util.List[T] = {
     fillListModel(model)
     processPageListHolder(request,
-          model,
+      model,
       page,
       NPpage,
       pageSize,

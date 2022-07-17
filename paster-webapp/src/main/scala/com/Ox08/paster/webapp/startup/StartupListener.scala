@@ -18,9 +18,7 @@ class BootContext {
 }
 class StartupListener extends ServletContextListener with Logged {
   override def contextInitialized(event: ServletContextEvent): Unit = {
-
     if (Boot.BOOT.getSystemInfo.isInstalled) {
-
       val bootContext = new BootContext()
       SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(bootContext, event.getServletContext)
       try {
@@ -32,15 +30,11 @@ class StartupListener extends ServletContextListener with Logged {
           logger.error(e.getLocalizedMessage, e)
           throw e; // to stop application
       }
-
     }
-
-
   }
   override def contextDestroyed(servletContextEvent: ServletContextEvent): Unit = {
     // not used
   }
-
   def setupSecurityContext(): Unit = {
     val start_user = new PasterUser("System", "system",
       Md5Crypt.md5Crypt(SecureRandom.getSeed(20)),
@@ -51,5 +45,4 @@ class StartupListener extends ServletContextListener with Logged {
     auth.setDetails(start_user)
     SecurityContextHolder.getContext.setAuthentication(auth)
   }
-
 }

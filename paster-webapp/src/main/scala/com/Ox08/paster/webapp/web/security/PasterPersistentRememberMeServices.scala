@@ -68,7 +68,9 @@ class PasterPersistentRememberMeServices(key: String, uds: UserDetailsService, t
                                 request: HttpServletRequest, response: HttpServletResponse,
                                 successfulAuthentication: Authentication): Unit = {
     val login = successfulAuthentication.getName
-    log.debug("Creating new persistent login for user {}", login)
+    if (log.isDebugEnabled())
+      log.debug("Creating new persistent login for user {}", login)
+
     val user = getUserDetailsService.loadUserByUsername(login).asInstanceOf[PasterUser]
     val token = new SessionToken()
     token.series = generateSeriesData()

@@ -28,8 +28,17 @@
 
 
     <definition name="/setup/welcome" extends=".setupTemplate">
-        <put-attribute name="content" value="/WEB-INF/pages/setup/setup.jsp"/>
+        <put-attribute name="content" value="/WEB-INF/pages/setup/setupWelcome.jsp"/>
     </definition>
+
+    <definition name="/setup/db" extends=".setupTemplate">
+        <put-attribute name="content" value="/WEB-INF/pages/setup/setupDb.jsp"/>
+    </definition>
+
+    <definition name="/setup/security" extends=".setupTemplate">
+        <put-attribute name="content" value="/WEB-INF/pages/setup/setupSecurity.jsp"/>
+    </definition>
+
 
     <definition name="/restarting" extends=".setupTemplate">
         <put-attribute name="content" value="/WEB-INF/pages/restarting.jsp"/>

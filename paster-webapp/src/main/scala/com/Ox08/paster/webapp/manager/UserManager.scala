@@ -81,7 +81,7 @@ class UserManager extends UserDetailsService with Logged {
       val u = new PasterUser(record.get("NAME"),
         record.get("USERNAME"),
         record.get("PASSWORD"), util.Set.of(
-          if (record.get("ADMIN").toBoolean)
+          if (record.get("ISADMIN").toBoolean)
             Role.ROLE_ADMIN
           else
             Role.ROLE_USER))

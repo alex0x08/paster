@@ -38,9 +38,9 @@ abstract class AbstractCtrl extends Logged {
   @Autowired
   protected val messageSource: MessageSource = null
   protected val systemInfo: BOOT.SystemInfo = Boot.BOOT.getSystemInfo
-  @Value("${config.comments.allow-anonymous.create}")
+  @Value("${paster.security.comments.allow-anonymous.create}")
   val allowAnonymousCommentsCreate: Boolean = false
-  @Value("${config.paste.allow-anonymous.create}")
+  @Value("${paster.security.pastas.allow-anonymous.create}")
   val allowAnonymousPasteCreate: Boolean = false
   @Value("${paste.app.id}")
   val appId: String = null

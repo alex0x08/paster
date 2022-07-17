@@ -1,20 +1,20 @@
 package com.Ox08.paster.setup
 import com.Ox08.paster.common.SystemManagementService
-import com.Ox08.paster.webapp.base.{Boot, Logged}
 import com.Ox08.paster.webapp.base.Boot.BOOT
-import com.Ox08.paster.webapp.model.{Comment, GenericQuery}
+import com.Ox08.paster.webapp.base.{Boot, Logged}
 import com.Ox08.paster.webapp.mvc.MvcConstants
 import jakarta.servlet.http.HttpServletResponse
-import jakarta.validation.Valid
 import org.springframework.beans.factory.annotation.{Autowired, Value}
 import org.springframework.context.MessageSource
 import org.springframework.orm.ObjectRetrievalFailureException
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
-import org.springframework.validation.BindingResult
-import org.springframework.web.bind.annotation.{ExceptionHandler, ModelAttribute, PathVariable, RequestMapping, RequestMethod}
-
+import org.springframework.web.bind.annotation._
 import java.util.Locale
+/**
+ * This is 'all-in-one' configuration controller, used for setup stage
+ */
+
 @Controller
 class SetupCtrl extends Logged{
 
@@ -42,9 +42,10 @@ class SetupCtrl extends Logged{
     messageSource.getMessage(key, new Array[java.lang.Object](0), locale)
   protected def getResource(key: String, args: Array[Any], locale: Locale): String =
     messageSource.getMessage(key, args.asInstanceOf[Array[java.lang.Object]], locale)
+
   @ExceptionHandler(Array(classOf[Throwable]))
-  protected def handleAllExceptions(ex: ObjectRetrievalFailureException): String = {
-    logger.error(ex.getLocalizedMessage, ex)
+  protected def handleAllExceptions(ex: Throwable): String = {
+    logger.error(ex.getMessage, ex)
     MvcConstants.page500
   }
 
@@ -73,10 +74,12 @@ class SetupCtrl extends Logged{
   @RequestMapping(Array("/setup/welcome"))
   def setupWelcome(model: Model): String = "/setup/welcome"
 
+  @RequestMapping(Array("/setup/db"))
+  def setupDatabase(model: Model): String = "/setup/db"
+
+
   @RequestMapping(value = Array("/setup/finalizeInstall"), method = Array(RequestMethod.POST))
   def finalizeInstall(
-                   //@Valid b: Comment,
-                  //result: BindingResult,
                    model: Model, locale: Locale): String = {
     model.asMap().clear()
     Boot.BOOT.markInstalled()

@@ -34,34 +34,6 @@ import scala.math.abs
 class PasteListCtrl extends SearchCtrl[Paste, AuthorQuery] {
   @Value("${paster.paste.list.splitter.days:7}")
   val splitDays: Int = 0
-  class DateSplitHelper(splitDays: Int, locale: Locale) {
-    var prevDate: Date = _
-    var curDate: Date = _
-    var total: Int = 0
-    var title: String = _
-    def setCurDate(date: Date): Unit = {
-      curDate = date
-      if (prevDate == null) {
-        prevDate = date
-      }
-      total.+=(1)
-    }
-    def getSplitTitle: String = title
-    def isSplit: Boolean = {
-      if (curDate == null || prevDate == null) {
-        return false
-      }
-      val diff = curDate.getTime - prevDate.getTime
-      val d = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS)
-      if (abs(d) > 14) {
-        title = PasteListCtrl.this.getResource("paste.list.slider.title",
-          Array(curDate, prevDate, total), locale)
-        prevDate = curDate
-        total = 0
-        true
-      } else false
-    }
-  }
   @Autowired
   val channelDao: ChannelDao = null
   @Autowired
@@ -195,34 +167,29 @@ class PasteListCtrl extends SearchCtrl[Paste, AuthorQuery] {
       channelCode
     } else null
     processPageListHolder(request, model, page, NPpage, pageSize, sortColumn, sortAsc,
-      if (ps == null) pasterListCallback else {
-        new PasteListCallback(ps, sortAsc, integrationCode)
-      }, MvcConstants.NODE_LIST_MODEL_PAGE)
+      if (ps == null)
+        pasterListCallback
+      else
+        new PasteListCallback(ps, sortAsc, integrationCode), MvcConstants.NODE_LIST_MODEL_PAGE)
   }
   @RequestMapping(value = Array("/own/list"))
   @ModelAttribute("items")
-  def listOwn(): java.util.List[Paste] = {
-    manager().getByAuthor(getCurrentUser)
-  }
+  def listOwn(): java.util.List[Paste] = manager().getByAuthor(getCurrentUser)
   @RequestMapping(value = Array("/own/list/body"), method = Array(RequestMethod.GET))
   @ModelAttribute("items")
   @ResponseBody
-  def listOwnBody(): java.util.List[Paste] = {
-    manager().getByAuthor(getCurrentUser)
-  }
+  def listOwnBody(): java.util.List[Paste] = manager().getByAuthor(getCurrentUser)
   protected val pasterListCallback: PasteListCallback = new PasteListCallback(null, true, null)
   class PasteListCallback(channel: String, sortAsc: Boolean, integrationCode: String)
     extends SourceCallback[Paste] {
     override def invokeCreate(): PagedListHolder[Paste] = {
       val ph = new ExtendedPageListHolder[Paste](
-        if (integrationCode != null) {
+        if (integrationCode != null)
           manager().getListIntegrated(integrationCode)
-        } else {
-          if (channel == null) {
-            manager().getByChannel(channelDao.getDefault, sortAsc)
-          } else
-            manager().getByChannel(channel, sortAsc)
-        })
+        else if (channel == null)
+          manager().getByChannel(channelDao.getDefault, sortAsc)
+        else
+          manager().getByChannel(channel, sortAsc))
       val sort = ph.getSort.asInstanceOf[MutableSortDefinition]
 
       /**
@@ -234,4 +201,31 @@ class PasteListCtrl extends SearchCtrl[Paste, AuthorQuery] {
       ph
     }
   }
+  class DateSplitHelper(splitDays: Int, locale: Locale) {
+    var prevDate: Date = _
+    var curDate: Date = _
+    var total: Int = 0
+    var title: String = _
+    def setCurDate(date: Date): Unit = {
+      curDate = date
+      if (prevDate == null)
+        prevDate = date
+      total.+=(1)
+    }
+    def getSplitTitle: String = title
+    def isSplit: Boolean = {
+      if (curDate == null || prevDate == null)
+        return false
+      val diff = curDate.getTime - prevDate.getTime
+      val d = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS)
+      if (abs(d) > 14) {
+        title = PasteListCtrl.this.getResource("paste.list.slider.title",
+          Array(curDate, prevDate, total), locale)
+        prevDate = curDate
+        total = 0
+        true
+      } else false
+    }
+  }
+
 }

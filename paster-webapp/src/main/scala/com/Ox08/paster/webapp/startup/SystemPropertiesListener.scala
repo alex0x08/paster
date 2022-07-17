@@ -2,6 +2,8 @@ package com.Ox08.paster.webapp.startup
 import com.Ox08.paster.webapp.base.{Boot, Logged, SystemError, SystemMessage}
 import jakarta.servlet.{ServletContextEvent, ServletContextListener}
 import org.slf4j.bridge.SLF4JBridgeHandler
+import org.springframework.context.i18n.LocaleContextHolder
+
 import java.io.IOException
 import java.util.Locale
 object SystemConstants {
@@ -13,16 +15,14 @@ class SystemPropertiesListener extends ServletContextListener with Logged {
     try {
       doBoot()
       var springProfiles = ""
-      if (Boot.BOOT.getSystemInfo.isInstalled) {
+      if (Boot.BOOT.getSystemInfo.isInstalled)
         springProfiles += "main"
-      } else {
+      else
         springProfiles += "setup"
-      }
-      if ("public".equals(Boot.BOOT.getSystemInfo.getSetting("paster.security.access.mode", "private"))) {
+      if ("public".equals(Boot.BOOT.getSystemInfo.getSetting("paster.security.access.mode", "private")))
         springProfiles += ",paster-security-public"
-      } else {
+      else
         springProfiles += ",paster-security-private"
-      }
       logger.info("profiles: {}", springProfiles)
       System.setProperty("spring.profiles.active", springProfiles)
       System.setProperty("paste.app.id", System.currentTimeMillis().toString)
@@ -41,6 +41,10 @@ class SystemPropertiesListener extends ServletContextListener with Logged {
     SLF4JBridgeHandler.install()
     // use English locale as default
     val en: Locale = Locale.ENGLISH //.f.forLanguageTag("en_US")
+
+    LocaleContextHolder.setDefaultLocale(en)
+
+
     //System.out.println("locale=" + en)
     // all system errors will be in English
     SystemError.instance.setErrorLocale(en)
