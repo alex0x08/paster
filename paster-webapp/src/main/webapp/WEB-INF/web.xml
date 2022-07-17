@@ -13,7 +13,7 @@
     
     <context-param>
         <param-name>contextConfigLocation</param-name>
-        <param-value>classpath:/spring/app-main.xml</param-value>
+        <param-value>classpath:/spring/app-main.xml,classpath:/spring/app-setup.xml</param-value>
     </context-param>
 
     <context-param>

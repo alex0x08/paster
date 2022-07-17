@@ -4,12 +4,10 @@ import org.eclipse.jetty.server.{Handler, Server, ServerConnector}
 import org.eclipse.jetty.util.resource.Resource
 import org.eclipse.jetty.webapp._
 import org.slf4j.LoggerFactory
-
 import java.io.IOException
 import java.net.{URL, URLClassLoader}
 import java.util
 import java.util.{Locale, Properties}
-import scala.jdk.CollectionConverters.SetHasAsScala
 /**
  * Runner
  * <p>
@@ -28,9 +26,6 @@ object PasterRunner {
   val DEFAULT_PORT = 8080
 
   def main(args: Array[String]): Unit = {
-    System.err.println("WARNING: jetty-runner is deprecated.")
-    System.err.println("         See Jetty Documentation for startup options")
-    System.err.println("         https://www.eclipse.org/jetty/documentation/")
     val runner = new PasterRunner
     try if (args.length > 0 && args(0).equalsIgnoreCase("--help"))
           runner.usage(null)
@@ -181,14 +176,11 @@ class PasterRunner() {
     } else {
       setupContexts(warFile)
     }
-
-
     if (_server == null)
       usage("No Contexts defined")
   }
 
   private def setupContexts(appFile:String): Unit ={
-
 
       System.out.println("war="+appFile)
     //TomcatURLStreamHandlerFactory.disable()
@@ -229,10 +221,8 @@ class PasterRunner() {
     try {
       if (!ctx.exists)
         usage(s"Context '$ctx' does not exist")
-
       if (contextPathSet && !contextPath.startsWith("/"))
         contextPath = "/" + contextPath
-
       PasterRunner.LOG.debug(s"war file: ${ctx.getURI.toURL}")
 
       // Configure the context
@@ -252,7 +242,7 @@ class PasterRunner() {
       fname = fname.substring(fname.lastIndexOf('/'))
       val incPattern = ".*" + fname.replace(".", "\\\\.") + "$"
 
-      System.out.println("pattern="+incPattern)
+      //System.out.println("pattern="+incPattern)
 
       webapp.setAttribute(MetaInfConfiguration.CONTAINER_JAR_PATTERN, incPattern)
     } finally

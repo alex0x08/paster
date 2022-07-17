@@ -135,4 +135,11 @@
         <put-attribute name="content" value="/WEB-INF/pages/error/500.jsp"/>
     </definition>
 
+    <definition name="/restarting" extends=".errorTemplate">
+        <put-attribute name="content" value="/WEB-INF/pages/restarting.jsp"/>
+        <put-attribute name="head" value="/WEB-INF/pages/common/restarting-head.jsp"/>
+
+    </definition>
+
+
 </tiles-definitions>

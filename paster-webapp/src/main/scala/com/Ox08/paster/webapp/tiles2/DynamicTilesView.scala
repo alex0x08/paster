@@ -46,6 +46,9 @@ import org.apache.tiles.TilesContainer
 import org.apache.tiles.access.TilesAccess
 import org.apache.tiles.request.servlet.ServletUtil
 import org.springframework.web.servlet.view.AbstractUrlBasedView
+/**
+ *
+ */
 class DynamicTilesView extends AbstractUrlBasedView {
   private final val dynamicTilesViewProcessor = new DynamicTilesViewProcessor
   /**

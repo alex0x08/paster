@@ -13,7 +13,7 @@ import scala.jdk.CollectionConverters._
 object LiveWarClassLoader {
   private val CLASSES_BASE = "WEB-INF/classes/"
   val MAP = new mutable.HashMap[String, Array[Byte]]
-  val MAP_DUPS = new mutable.HashMap[String, List[Array[Byte]]]
+  val MAP_DUPLICATES = new mutable.HashMap[String, List[Array[Byte]]]
   val EMPTY_BA = new Array[Byte](0)
 }
 /**
@@ -47,14 +47,14 @@ class LiveWarClassLoader(debug: Boolean, warFileUrl: URL, parent: ClassLoader)
             val data = readBytes(zip, 4096)
             if (LiveWarClassLoader.MAP.contains(ze.getName)) {
               debug(s"already loaded: ${ze.getName}")
-              var datas: List[Array[Byte]] = if (LiveWarClassLoader.MAP_DUPS.contains(ze.getName)) {
-                LiveWarClassLoader.MAP_DUPS(ze.getName)
+              var datas: List[Array[Byte]] = if (LiveWarClassLoader.MAP_DUPLICATES.contains(ze.getName)) {
+                LiveWarClassLoader.MAP_DUPLICATES(ze.getName)
               } else {
                 List()
               }
               datas = datas.appended(data)
               debug(s"dups ${ze.getName} = ${datas.length}")
-              LiveWarClassLoader.MAP_DUPS.put(ze.getName, datas)
+              LiveWarClassLoader.MAP_DUPLICATES.put(ze.getName, datas)
             } else {
               LiveWarClassLoader.MAP.put(ze.getName, data)
             }
@@ -137,8 +137,8 @@ class LiveWarClassLoader(debug: Boolean, warFileUrl: URL, parent: ClassLoader)
     val self = findResource(name)
     if (self != null)
       urls.add(self)
-    if (LiveWarClassLoader.MAP_DUPS.contains(name)) {
-      val dups = LiveWarClassLoader.MAP_DUPS(name)
+    if (LiveWarClassLoader.MAP_DUPLICATES.contains(name)) {
+      val dups = LiveWarClassLoader.MAP_DUPLICATES(name)
       var count = 0
       for (_ <- dups) {
         val u = URI.create("war-virtual:dup:" + count + ":" + name).toURL
@@ -198,11 +198,11 @@ class VirtualWARUrlStreamHandler(val debug: Boolean) extends URLStreamHandler {
         .substring(0, fileName.indexOf(":"))
         .toInt
       fileName = fileName.substring(fileName.indexOf(":") + 1)
-      if (!LiveWarClassLoader.MAP_DUPS.contains(fileName)) {
+      if (!LiveWarClassLoader.MAP_DUPLICATES.contains(fileName)) {
         debug("not found: " + fileName)
         throw new FileNotFoundException(fileName)
       }
-      val data = LiveWarClassLoader.MAP_DUPS.get(fileName)
+      val data = LiveWarClassLoader.MAP_DUPLICATES.get(fileName)
       if (data.isEmpty)
         throw new FileNotFoundException(fileName)
       val dupsData = data.get(n)

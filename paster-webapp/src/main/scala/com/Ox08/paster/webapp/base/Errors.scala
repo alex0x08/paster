@@ -40,9 +40,7 @@ abstract class AbstractI18nMessageStore protected( // default bundle name
     this.messageLocale = locale
     this.reloadMessages()
   }
-  protected def formatMessage(raw: String, args: Array[AnyRef]): String = {
-    MessageFormatter.arrayFormat(raw, args).getMessage
-  }
+  protected def formatMessage(raw: String, args: Array[AnyRef]): String = MessageFormatter.arrayFormat(raw, args).getMessage
   /**
    * get formatted text by key, with lookup in additional bundles
    *
@@ -50,7 +48,8 @@ abstract class AbstractI18nMessageStore protected( // default bundle name
    */
   protected def getMessage(key: String): String = {
     Assert.notNull(key, "key should be non null")
-    if (this.defaultBundle.containsKey(key)) return this.defaultBundle.getString(key)
+    if (this.defaultBundle.containsKey(key))
+      return this.defaultBundle.getString(key)
     for (r <- this.additionalBundles.asScala) {
       if (r.containsKey(key)) return r.getString(key)
     }
@@ -61,7 +60,8 @@ class PasterRuntimeException(code: Int, // error code ( ex. 0x06001 )
                              message: String, parent: Exception) extends RuntimeException(message, parent) {
   updateTrace(parent)
   def updateTrace(parent: Exception): Unit = {
-    if (parent != null) setStackTrace(parent.getStackTrace)
+    if (parent != null)
+      setStackTrace(parent.getStackTrace)
   }
   def getCode: Int = code
 }
@@ -111,11 +111,11 @@ class SystemError extends AbstractI18nMessageStore("bundles/errorMessages") {
   private def getErrorMessage(code: Int, message: String, parent: Exception, prefix: Boolean, params: AnyRef*) = {
     // пытаемся найти текст ошибки по коду
     var errorMsg = getMessage("paster.system.error." + String.format("0x%x", code))
-    var ccode = code
+    var currentCode = code
     // если не нашли - формируем 'неизвестную ошибку'
     if (errorMsg == null) {
       errorMsg = getMessage("paster.system.error.0x6000")
-      ccode = 0x6000
+      currentCode = 0x6000
     }
     // если нет доп. сообщения
     if (message == null) { // если нет исключения
@@ -134,12 +134,13 @@ class SystemError extends AbstractI18nMessageStore("bundles/errorMessages") {
         errorMsg = formatMessage(message, params.toArray)
       }
       else {
-        val pparams = prepareParams(getMessage(parent), params)
-        errorMsg = formatMessage(message, pparams)
+        val preparedParams = prepareParams(getMessage(parent), params)
+        errorMsg = formatMessage(message, preparedParams)
       }
     }
     // если используется префикс
-    if (prefix) errorMsg = "[" + String.format("0x%x", ccode) + "] " + errorMsg
+    if (prefix)
+      errorMsg = s"[0x$currentCode] $errorMsg"
     errorMsg
   }
   /**
@@ -152,10 +153,10 @@ class SystemError extends AbstractI18nMessageStore("bundles/errorMessages") {
    */
   private def prepareParams(message: String, params: Any*): Array[AnyRef] = {
     if (params.nonEmpty) {
-      val pparams = new Array[AnyRef](params.length + 1)
-      pparams(0) = message
-      System.arraycopy(params, 0, pparams, 1, params.length)
-      pparams
+      val appendedParams = new Array[AnyRef](params.length + 1)
+      appendedParams(0) = message
+      System.arraycopy(params, 0, appendedParams, 1, params.length)
+      appendedParams
     }
     else
       Array[AnyRef](message)

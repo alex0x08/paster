@@ -33,15 +33,14 @@ class CommentDao extends SearchableDaoImpl[Comment](classOf[Comment]) {
     getListByKeyValue("pasteId", pasteId,
       Option("lastModified"),
       Option(true))
-  override def fillHighlighted(highlighter: Highlighter, pparser: QueryParser, model: Comment): Unit = {
+  override def fillHighlighted(highlighter: Highlighter, queryParser: QueryParser, model: Comment): Unit = {
     try {
       val hl = highlighter
-        .getBestFragments(pparser.getAnalyzer
+        .getBestFragments(queryParser.getAnalyzer
           .tokenStream("text", model.text),
           model.text, 3, " ...")
-      if (hl != null && hl.trim().nonEmpty) {
-        model.text = hl
-      }
+      if (hl != null && hl.trim().nonEmpty)
+          model.text = hl
     } catch {
       case e@(_: IOException | _: InvalidTokenOffsetsException) =>
         logger.error(e.getLocalizedMessage, e)

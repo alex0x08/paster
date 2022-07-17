@@ -8,27 +8,31 @@ import java.nio.file.Paths
 import java.text.{ParseException, SimpleDateFormat}
 import java.util.{Calendar, Date, Properties}
 object Boot {
+  private val INSTALLED_TS_FORMAT: SimpleDateFormat = new SimpleDateFormat("MM.dd.yyyy HH:mm")
+
   val BOOT = new Boot
 }
 class Boot private() extends Logged {
-  private val INSTALLED_TS_FORMAT: SimpleDateFormat = new SimpleDateFormat("MM.dd.yyyy HH:mm")
   private val wasBoot = false // a mark that system has been booted already
   private var initialConfig = false
   def getSystemInfo: SystemInfo = SystemInfo.SYSTEM_INFO
   /**
-   * Start booot sequence
+   * Start boot sequence
    *
    * @param appCode application codename
    *
    */
   def doBootSequence(appCode: String): Unit = {
     // system already booted?
-    if (wasBoot) throw SystemError.withCode(0x6004, appCode)
+    if (wasBoot)
+      throw SystemError.withCode(0x6004, appCode)
     // codename is blank?
-    if (StringUtils.isBlank(appCode)) throw SystemError.withCode(0x6003)
+    if (StringUtils.isBlank(appCode))
+      throw SystemError.withCode(0x6003)
     val system = SystemInfo.SYSTEM_INFO
     // system state locked?
-    if (system.isLocked) throw SystemError.withCode(0x6002)
+    if (system.isLocked)
+      throw SystemError.withCode(0x6002)
 
     // set codename
     system.setAppCode(appCode)
@@ -44,7 +48,8 @@ class Boot private() extends Logged {
       // generate full path like: ~/.apps/codename
       app_home = Paths.get(user_home, ".apps", appCode).toFile
       if (!app_home.exists || !app_home.isDirectory) { // try to create all folders in path, if fail - throw exception and quit
-        if (!app_home.mkdirs) throw SystemError.withCode(0x6005, app_home.getAbsolutePath)
+        if (!app_home.mkdirs)
+          throw SystemError.withCode(0x6005, app_home.getAbsolutePath)
       }
       // set app's home folder as system variable, it will be used in EL expressions
       System.setProperty(appVar, app_home.getAbsolutePath)
@@ -58,6 +63,8 @@ class Boot private() extends Logged {
     logger.info(SystemMessage.of("paster.system.message.appHome", app_home.getAbsolutePath))
     // try to kill previous JVM instance (if present)
     killPreviousInstance(app_home)
+
+    writePid(app_home)
     // create temp folder
     val temp_store = createAppFolder(app_home, "temp")
     system.setTempDir(temp_store)
@@ -83,7 +90,7 @@ class Boot private() extends Logged {
         throw SystemError.withError(0x6001, ex)
     }
     // parse build info
-    val mf_version = new AppVersion(build_info, new GitRepositoryState(git_info))
+    val mf_version = new AppVersion(build_info, git_info)
     // set env variables ( used in EL from Spring )
     system.setRuntimeVersion(mf_version)
     System.setProperty("app.version", mf_version.implBuildNum)
@@ -91,7 +98,7 @@ class Boot private() extends Logged {
     System.setProperty("app.build.number", mf_version.implBuildNum)
     System.setProperty("app.build.version", mf_version.implVersionFull)
     logger.info(SystemMessage.of("paster.system.message.appRelease", mf_version.implVersionFull))
-    logger.info(SystemMessage.of("paster.system.message.appGitBranch", mf_version.getGitState.branch))
+    logger.info(SystemMessage.of("paster.system.message.appGitBranch", mf_version.getGitState.getProperty("git.branch",null)))
     // load customized config ( 'config.properties' file)
     createLoadAppConfig(system, app_home)
     if (system.getExternalUrlPrefix != null) {
@@ -105,7 +112,7 @@ class Boot private() extends Logged {
     val iFile = new File(system.getAppHome, ".installed")
     val dateInstalled = new Date()
     val p: Properties = new Properties()
-    p.setProperty("dateInstalled", INSTALLED_TS_FORMAT.format(dateInstalled))
+    p.setProperty("dateInstalled", Boot.INSTALLED_TS_FORMAT.format(dateInstalled))
     val out = new StringWriter()
     p.store(out, "Install information")
     FileUtils.writeStringToFile(iFile, out.toString, "UTF-8")
@@ -124,19 +131,25 @@ class Boot private() extends Logged {
       if (dateInstalledStr == null) {
         throw SystemError.withError(0x6001, "Incorrect or broken '.installed' file!")
       }
-      val dateInstalled: Date = INSTALLED_TS_FORMAT.parse(dateInstalledStr)
+      val dateInstalled: Date = Boot.INSTALLED_TS_FORMAT.parse(dateInstalledStr)
       logger.debug("found install date: {}", dateInstalled)
       system.setInstalled(installed = true, dateInstalled)
     } else {
-      val dateInstalled = new Date()
+      /*val dateInstalled = new Date()
       val p: Properties = new Properties()
       p.setProperty("dateInstalled", INSTALLED_TS_FORMAT.format(dateInstalled))
       val out = new StringWriter()
       p.store(out, "Install information")
       FileUtils.writeStringToFile(iFile, out.toString, "UTF-8")
-      system.setInstalled(installed = true, dateInstalled)
+      system.setInstalled(installed = true, dateInstalled)*/
     }
   }
+  private def writePid(appHome:File):Unit = {
+    val pidFile = new File(appHome, "app.pid")
+    val pid =ProcessHandle.current.pid()
+    FileUtils.writeStringToFile(pidFile,pid.toString,"UTF-8")
+  }
+
   /**
    * Tries to kill previous JVM instance, lookup by PID from 'app.pid' file
    *
@@ -146,20 +159,20 @@ class Boot private() extends Logged {
     try { // lookup PID file
       val pid = new File(appHome, "app.pid")
       if (pid.exists && pid.isFile) { // read PID
-        val fpid = FileUtils.readFileToString(pid, "UTF-8")
-        if (StringUtils.isBlank(fpid)) {
+        val previousPidStr = FileUtils.readFileToString(pid, "UTF-8")
+        if (StringUtils.isBlank(previousPidStr)) {
           logger.warn("pid file is empty!")
           return
         }
         // parse PID
-        val npid = NumberUtils.toInt(fpid, -1)
-        if (npid <= 0) {
-          logger.warn("wrong pid : {}", npid)
+        val previousPid = NumberUtils.toInt(previousPidStr, -1)
+        if (previousPid <= 0) {
+          logger.warn("wrong pid : {}", previousPid)
           return
         }
         // lookup process by PID
-        ProcessHandle.of(npid).ifPresent((processHandle: ProcessHandle) => {
-          logger.info("killing old instance: {}", npid)
+        ProcessHandle.of(previousPid).ifPresent((processHandle: ProcessHandle) => {
+          logger.info("killing old instance: {}", previousPid)
           // try to kill
           processHandle.destroy()
         })
@@ -169,6 +182,7 @@ class Boot private() extends Logged {
         throw SystemError.withError(0x6001, e)
     }
   }
+
   /**
    * Проверка на существование файла в домашней папке системы и его загрузка
    * из jar
@@ -177,9 +191,9 @@ class Boot private() extends Logged {
    * @param name     имя файла, должно совпадать с именем в jar
    * @return
    */
-  private def doResourceCheck(js_store: File, name: String): File = {
+  private def doResourceCheck(js_store: File, name: String) = {
     Assert.notNull(name, SystemError.messageFor(0x6006))
-    val rScript: File = new File(js_store, name)
+    val rScript = new File(js_store, name)
     if (!rScript.exists() || !rScript.isFile || (rScript.length() == 0))
       try FileUtils.copyURLToFile(getClass.getResource("/default/" + name), rScript)
       catch {
@@ -347,7 +361,7 @@ class Boot private() extends Logged {
    * @author Alex Chernyshev <alex3.145@gmail.com>
    */
   @SerialVersionUID(1L)
-  class AppVersion(p: Properties, git: GitRepositoryState) extends Serializable {
+  class AppVersion(p: Properties, git: Properties) extends Serializable {
     private val UNDEFINED = "UNDEFINED"
     private val MAVEN_TS_FORMAT: SimpleDateFormat = new SimpleDateFormat("yyy-MM-dd_HHmm")
     val implVer: String = p.getProperty("build.version", UNDEFINED)
@@ -360,29 +374,10 @@ class Boot private() extends Logged {
     }
     val implVersionFull: String = implVer + "." + implBuildNum
     def getFull: String = implVersionFull // for EL
-    def getGitState: GitRepositoryState = git
+    def getGitState: Properties = git
   }
-  /**
-   * Класс содержит поля детальной информации о git-репозитории
-   */
-  class GitRepositoryState(val properties: Properties) {
-    val tags: String = getProp("git.tags")
-    val branch: String = getProp("git.branch")
-    val remoteOriginUrl: String = getProp("git.remote.origin.url")
-    val commitId: String = getProp("git.commit.id")
-    val commitIdAbbrev: String = getProp("git.commit.id.abbrev")
-    val describe: String = getProp("git.commit.id.describe")
-    val describeShort: String = getProp("git.commit.id.describe-short")
-    val commitUserName: String = getProp("git.commit.user.name")
-    val commitUserEmail: String = getProp("git.commit.user.email")
-    val commitMessageFull: String = getProp("git.commit.message.full")
-    val commitMessageShort: String = getProp("git.commit.message.short")
-    val commitTime: String = getProp("git.commit.time")
-    val buildUserName: String = getProp("git.build.user.name")
-    val buildUserEmail: String = getProp("git.build.user.email")
-    val buildTime: String = getProp("git.build.time")
-    private def getProp(key: String): String = properties.getProperty(key)
-  }
+
+
 }
 
 

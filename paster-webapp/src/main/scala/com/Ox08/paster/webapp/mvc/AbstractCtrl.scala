@@ -33,6 +33,7 @@ object MvcConstants {
   final val MODEL_KEY = "model"
 
 }
+
 abstract class AbstractCtrl extends Logged {
   @Autowired
   protected val messageSource: MessageSource = null
@@ -49,6 +50,7 @@ abstract class AbstractCtrl extends Logged {
   @ModelAttribute("allowAnonymousPasteCreate")
   @JsonIgnore
   def isAllowAnonymousPasteCreate: Boolean = allowAnonymousPasteCreate
+
   protected def getResource(key: String, locale: Locale): String =
     messageSource.getMessage(key, new Array[java.lang.Object](0), locale)
   protected def getResource(key: String, args: Array[Any], locale: Locale): String =

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE tiles-definitions PUBLIC
+        "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+        "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+<tiles-definitions>
+    <!-- Default Main Template -->
+    <definition name=".setupTemplate" template="/WEB-INF/pages/template/main-setup.jsp">
+        <put-attribute name="head" value=""/>
+        <put-attribute name="content" value=""/>
+        <put-attribute name="footer" value=""/>
+    </definition>
+
+    <definition name=".errorTemplate" template="/WEB-INF/pages/template/main-error.jsp">
+        <put-attribute name="content" value=""/>
+    </definition>
+
+    <definition name="/error/404" extends=".errorTemplate">
+        <put-attribute name="content" value="/WEB-INF/pages/error/404.jsp"/>
+    </definition>
+
+    <definition name="/error/403" extends=".errorTemplate">
+        <put-attribute name="content" value="/WEB-INF/pages/error/403.jsp"/>
+    </definition>
+
+    <definition name="/error/500" extends=".errorTemplate">
+        <put-attribute name="content" value="/WEB-INF/pages/error/500.jsp"/>
+    </definition>
+
+
+    <definition name="/setup/welcome" extends=".setupTemplate">
+        <put-attribute name="content" value="/WEB-INF/pages/setup/setup.jsp"/>
+    </definition>
+
+    <definition name="/restarting" extends=".setupTemplate">
+        <put-attribute name="content" value="/WEB-INF/pages/restarting.jsp"/>
+        <put-attribute name="head" value="/WEB-INF/pages/common/restarting-head.jsp"/>
+    </definition>
+
+</tiles-definitions>

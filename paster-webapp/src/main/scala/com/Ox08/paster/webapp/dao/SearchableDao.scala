@@ -44,8 +44,8 @@ class SetupIndexes extends Logged with ApplicationListener[ContextRefreshedEvent
   @Transactional
   def onApplicationEvent(event: ContextRefreshedEvent): Unit = {
     if (reindexOnBoot) {
-      val daos = event.getApplicationContext.getBeansOfType(classOf[SearchableDaoImpl[_]])
-      for (d <- daos.entrySet().asScala) {
+      val allSearchableDao = event.getApplicationContext.getBeansOfType(classOf[SearchableDaoImpl[_]])
+      for (d <- allSearchableDao.entrySet().asScala) {
         d.getValue.indexAll()
       }
       logger.info("reindex completed.")
@@ -57,28 +57,28 @@ abstract class SearchableDaoImpl[T <: Struct](model: Class[T])
   extends StructDaoImpl[T](model) {
   protected class FSearch(query: String) extends Logged {
     logger.debug("searching for {}", query)
-    val fsession: SearchSession = getFullTextEntityManager
-    val pparser = new MultiFieldQueryParser(getDefaultStartFields,
+    val searchSession: SearchSession = getFullTextEntityManager
+    val queryParser = new MultiFieldQueryParser(getDefaultStartFields,
       new StandardAnalyzer())
-    val luceneQuery: org.apache.lucene.search.Query = pparser.parse(query)
+    val luceneQuery: org.apache.lucene.search.Query = queryParser.parse(query)
     val scorer: QueryScorer = new QueryScorer(luceneQuery)
     val highlighter: Highlighter = new Highlighter(SearchableDaoImpl.FORMATTER, scorer)
     highlighter.setTextFragmenter(new SimpleSpanFragmenter(scorer, 100))
-    val predicate2: SearchPredicate = fsession.scope(model).predicate.extension(LuceneExtension.get)
+    val predicate2: SearchPredicate = searchSession.scope(model).predicate.extension(LuceneExtension.get)
       .fromLuceneQuery(luceneQuery).toPredicate
-    val fquery: LuceneSearchQuery[T] = fsession.search(model)
+    val searchQuery: LuceneSearchQuery[T] = searchSession.search(model)
       .extension(LuceneExtension.get())
       .where(predicate2).toQuery
-    def getResults: util.List[T] = fillHighlighted(highlighter, pparser, fquery.fetchAll().hits())
+    def getResults: util.List[T] = fillHighlighted(highlighter, queryParser, searchQuery.fetchAll().hits())
   }
   def getFullTextEntityManager: SearchSession = Search.session(em)
   def getDefaultStartFields: Array[String] = SearchableDaoImpl.DEFAULT_START_FIELDS
   def fillHighlighted(highlighter: Highlighter,
-                      pparser: QueryParser,
+                      queryParser: QueryParser,
                       results: java.util.List[_]): java.util.List[T] = {
     logger.debug("found {} results", results.size())
     for (obj <- results.asScala) {
-      fillHighlighted(highlighter, pparser, obj.asInstanceOf[T])
+      fillHighlighted(highlighter, queryParser, obj.asInstanceOf[T])
     }
     results.asInstanceOf[java.util.List[T]]
   }

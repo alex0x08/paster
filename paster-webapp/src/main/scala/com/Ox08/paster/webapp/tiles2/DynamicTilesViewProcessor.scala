@@ -82,12 +82,12 @@ class DynamicTilesViewProcessor extends Logged {
     // stip slashes
     var beanName: String = bName replaceAll("//", "/")
     // append / to start if needed
-    if (false == (beanName startsWith "/")) beanName = s"/$beanName"
+    if (!(beanName startsWith "/")) beanName = s"/$beanName"
     // seek for tiles definition based on bean name
     while (!container.isValidDefinition(beanName, tilesRequest)) {
       val pos = beanName.lastIndexOf('/')
       if (pos < 1)
-        throw new TilesException(s"No defintion of found for '$beanName'")
+        throw new TilesException(s"No definition found for '$beanName'")
       beanName = beanName.substring(0, pos)
     }
     JstlUtils.exposeLocalizationContext(new RequestContext(request, servletContext))
@@ -148,7 +148,7 @@ class DynamicTilesViewProcessor extends Logged {
     else if (container.isValidDefinition(beanName, tilesRequest)) {
       derivedDefinitionName = beanName
       beanName
-    } else throw new TilesException(s"No defintion of found for '$beanName'")
+    } else throw new TilesException(s"No definition found for '$beanName'")
   }
   protected def createTilesRequest(applicationContext: ApplicationContext,
                                    request: HttpServletRequest, response: HttpServletResponse): Request =

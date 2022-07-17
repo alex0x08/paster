@@ -2,41 +2,52 @@
 <beans profile="setup" xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xmlns:sec="http://www.springframework.org/schema/security"
        xmlns:mvc="http://www.springframework.org/schema/mvc"
        xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
                            http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/task
+                           http://www.springframework.org/task/spring-task.xsd
                            http://www.springframework.org/schema/mvc
                            http://www.springframework.org/schema/mvc/spring-mvc.xsd
+                           http://www.springframework.org/schema/security
+                           http://www.springframework.org/schema/security/spring-security.xsd
                            http://www.springframework.org/schema/context
                            http://www.springframework.org/schema/context/spring-context.xsd">
 
 
-    <context:component-scan base-package="com.Ox08.paster.setup" />
+    <context:component-scan base-package="com.Ox08.paster.common,com.Ox08.paster.setup"   />
+
+
+    <task:executor id="pasterTaskExecutor" pool-size="5" queue-capacity="10"   />
+    <task:annotation-driven executor="pasterTaskExecutor" />
 
     <!-- Activates annotation-based bean configuration -->
     <context:annotation-config />
 
     <bean id="propertyConfigurer-app"
           class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">
-
         <property name="locations">
             <list>
                 <value>file:${paster.app.home}/config.properties</value>
                 <value>classpath:default.properties</value>
             </list>
         </property>
-
     </bean>
 
     <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource"
           p:basenames="i18n.messages" />
 
+    <sec:http realm="Paster Realm Empty"
+              auto-config="false"
+              use-expressions="true"
+              security="none"
+              disable-url-rewriting="true">
+    </sec:http>
 
-
-    <mvc:annotation-driven content-negotiation-manager="contentNegotiationManager" >
-        <mvc:path-matching suffix-pattern="true"/>
-    </mvc:annotation-driven>
+    <mvc:annotation-driven/>
 
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="order" value="2"/>
@@ -46,28 +57,22 @@
 
     <mvc:resources mapping="/assets/${paste.app.id}/**"
                    location="classpath:/META-INF/resources/webjars/"/>
-
     <mvc:resources mapping="/static/${paste.app.id}/**"
                    location="/WEB-INF/static/"/>
     <mvc:resources mapping="/resources/${paste.app.id}/**"
                    location="/WEB-INF/resources/"/>
 
-
     <bean id="tilesConfigurer" class="org.springframework.web.servlet.view.tiles3.TilesConfigurer">
         <property name="definitions">
             <list>
-                <value>/WEB-INF/setup/tiles-defs/*.xml</value>
+                <value>/WEB-INF/setup/*.xml</value>
             </list>
         </property>
-
         <property name="validateDefinitions" value="false"/>
-
     </bean>
-
 
     <bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
         <property name="order" value="1"/>
-        <property name="contentNegotiationManager" ref="contentNegotiationManager"/>
         <property name="viewResolvers">
             <list>
                 <bean class="org.springframework.web.servlet.view.BeanNameViewResolver"/>
@@ -77,6 +82,4 @@
             </list>
         </property>
     </bean>
-
-
 </beans>

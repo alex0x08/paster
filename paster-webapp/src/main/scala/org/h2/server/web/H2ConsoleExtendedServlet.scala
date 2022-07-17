@@ -1,9 +1,10 @@
 
 package org.h2.server.web
-import com.Ox08.paster.webapp.base.Logged
+import com.Ox08.paster.webapp.base.{Boot, Logged}
 import jakarta.servlet.http.{HttpServletRequest, HttpServletRequestWrapper, HttpServletResponse}
 import org.springframework.context.ApplicationContext
 import org.springframework.web.context.support.WebApplicationContextUtils
+
 import java.sql.{Connection, SQLException}
 import java.util
 import javax.sql.DataSource
@@ -17,12 +18,19 @@ import javax.sql.DataSource
  */
 class H2ConsoleExtendedServlet extends JakartaWebServlet with Logged {
   private var dataSource: DataSource = _
-  private val server = new WebServer
+  private var server:WebServer = _
+
   override def init(): Unit = {
+
+    if (!Boot.BOOT.getSystemInfo.isInstalled) return
+
+    server = new WebServer
     logger.debug("h2 servlet init..")
     val ctx: ApplicationContext = WebApplicationContextUtils
       .getWebApplicationContext(getServletContext)
-    dataSource = ctx.getBean("dataSource").asInstanceOf[DataSource]
+
+      dataSource = ctx.getBean("dataSource").asInstanceOf[DataSource]
+
     try {
       server.setAllowChunked(false)
       server.init()
@@ -45,6 +53,9 @@ class H2ConsoleExtendedServlet extends JakartaWebServlet with Logged {
   }
   @throws(classOf[java.io.IOException])
   override def doGet(req: HttpServletRequest, res: HttpServletResponse): Unit = {
+
+    if (!Boot.BOOT.getSystemInfo.isInstalled) return
+
     val h2console_db_session_id = getH2SessionIdFromContext
     var session: WebSession = null
     if (h2console_db_session_id != null) {

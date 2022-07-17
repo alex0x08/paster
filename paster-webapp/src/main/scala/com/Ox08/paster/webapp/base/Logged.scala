@@ -46,21 +46,18 @@ object Logged {
                         fieldName: String,
                         value: Any,
                         fullDetail: java.lang.Boolean): Unit = {
-      if (value != null) {
+      if (value != null)
         super.append(buffer, fieldName, value, fullDetail)
-      }
     }
   }
   def toStringSkip(x: Any, fields: Array[String]): String = {
     new ReflectionToStringBuilder(x, style) {
       override def accept(f: Field): Boolean = {
       //  System.out.println("accept " + f.getName)
-        if (!super.accept(f)) {
+        if (!super.accept(f))
           return false
-        }
-        if (fields == null) {
+        if (fields == null)
           return true
-        }
         for (field <- fields) {
           if (f.getName.equals(field)) return false
         }

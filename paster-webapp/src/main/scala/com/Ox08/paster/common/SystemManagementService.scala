@@ -1,4 +1,5 @@
-package com.Ox08.paster.webapp.service
+package com.Ox08.paster.common
+
 import com.Ox08.paster.webapp.base.Logged
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
@@ -7,26 +8,41 @@ import java.lang.management.ManagementFactory
 import java.util
 import scala.jdk.CollectionConverters._
 
+trait SystemManagementService {
+  def restartApplication(): Unit
+}
+
 @Service
-class SystemManagementService extends Logged {
+class SystemManagementServiceImpl extends SystemManagementService with Logged {
   private var inRestart = false
   /**
    * Перезапустить JVM
    *
    * @throws IOException общая ошибка в случае проблем с перезапуском
    */
-  @Async
+  @Async("pasterTaskExecutor")
   @throws[IOException]
   def restartApplication(): Unit = {
     if (inRestart) return
     inRestart = true
+
+
+    val thName = Thread.currentThread().getName
+
+    logger.debug("Restarting, current thread: {}",thName)
+
+    if (!thName.startsWith("pasterTaskExecutor")) {
+      throw new IllegalStateException("Incorrect Task Executor")
+    }
+
 
     /**
      * пауза в секунду для отрисовки страницы с прогрессом перезагрузки
      */
     try Thread.sleep(1000)
     catch {
-      case _: Exception =>
+      case e: Exception =>
+          e.printStackTrace()
       //ignore
     }
     try { // java binary

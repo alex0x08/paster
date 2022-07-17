@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 package com.Ox08.paster.webapp.mvc
+import com.Ox08.paster.webapp.base.Boot
 import com.Ox08.paster.webapp.model.GenericQuery
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.web.bind.annotation.PathVariable
@@ -33,6 +34,8 @@ class IndexCtrl extends AbstractCtrl {
   @RequestMapping(value = Array("/"))
   def index(model: Model): String = {
     model.asMap().clear()
+    if (!Boot.BOOT.getSystemInfo.isInstalled)
+      return "redirect:/main/setup/welcome"
     "redirect:/main/paste/list"
   }
   /**
