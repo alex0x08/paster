@@ -61,9 +61,8 @@ class PasteDao extends SearchableDaoImpl[Paste](classOf[Paste]) {
     cr.multiselect(r.get("id"))
     val select = new util.ArrayList[Predicate]
     select.add(cb.notEqual(r.get("id"), paste.id))
-    if (paste.integrationCode != null) {
+    if (paste.integrationCode != null)
       select.add(cb.equal(r.get("integrationCode"), paste.integrationCode))
-    }
     select.add(cb.equal(r.get("channel"), paste.channel))
     select.add(cb.lessThanOrEqualTo(r.get("created")
       .as(classOf[LocalDateTime]), paste.created))
@@ -173,10 +172,10 @@ class PasteDao extends SearchableDaoImpl[Paste](classOf[Paste]) {
       cb.equal(r.get("channel"), channel)): _*)
     em.createQuery[java.lang.Long](cq).getSingleResult
   }
-  override def fillHighlighted(highlighter: Highlighter, pparser: QueryParser, model: Paste): Unit = {
+  override def fillHighlighted(highlighter: Highlighter, queryParser: QueryParser, model: Paste): Unit = {
     try {
       val hl = highlighter
-        .getBestFragments(pparser.getAnalyzer
+        .getBestFragments(queryParser.getAnalyzer
           .tokenStream("title", model.title),
           model.title, 3, " ...")
       if (hl != null && hl.trim().nonEmpty) {

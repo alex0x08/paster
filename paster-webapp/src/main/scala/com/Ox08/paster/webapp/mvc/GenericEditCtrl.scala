@@ -50,9 +50,8 @@ abstract class GenericEditCtrl[T <: Struct] extends AbstractCtrl {
   }
   @RequestMapping(value = Array("/edit/{id:[0-9]+}"), method = Array(RequestMethod.GET))
   def editWithId(model: Model, @PathVariable("id") id: Integer, locale: Locale): String = {
-    if (id == 0) {
+    if (id == 0)
       return MvcConstants.page404
-    }
     fillEditModel(loadModel(id), model, locale)
     editPage
   }
@@ -87,9 +86,7 @@ abstract class GenericEditCtrl[T <: Struct] extends AbstractCtrl {
   @RequestMapping(value = Array("/{id:[0-9]+}"), method = Array(RequestMethod.GET))
   def getByPath(@PathVariable("id") id: Integer, model: Model, locale: Locale): String = {
     val m = loadModel(id)
-    if (m == null) {
-      return MvcConstants.page404
-    }
+    if (m == null) return MvcConstants.page404
     model.addAttribute(MvcConstants.MODEL_KEY, m)
     fillEditModel(m, model, locale)
     viewPage

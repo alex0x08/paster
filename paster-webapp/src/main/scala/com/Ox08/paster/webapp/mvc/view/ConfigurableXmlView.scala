@@ -17,11 +17,9 @@ package com.Ox08.paster.webapp.mvc.view
 import org.apache.commons.lang3.StringUtils
 import org.springframework.oxm.Marshaller
 import org.springframework.web.servlet.view.xml.MarshallingView
-import util.control.Breaks._
 class ConfigurableXmlView(marshaller: Marshaller, modelKeys: String) extends MarshallingView(marshaller) {
   if (logger.isDebugEnabled)
-    logger.debug(String.format("generating xml view, available model keys %s",
-      modelKeys))
+    logger.debug(s"generating xml view, available model keys $modelKeys")
   override protected
   def locateToBeMarshalled(model: java.util.Map[String, Object]): Object = {
     if (StringUtils.isBlank(modelKeys)) {
@@ -33,13 +31,11 @@ class ConfigurableXmlView(marshaller: Marshaller, modelKeys: String) extends Mar
         // fix for serialization bug in xstream
         // we need to use arrays, otherwise XStream will try to serialize java.util.ArrayList's internals and fail
         if ("java.util.ArrayList$SubList".equals(o.getClass.getName)) {
-          val oo: java.util.List[_] = o.asInstanceOf[java.util.List[_]]
-          o = oo.toArray
+          val oo: java.util.List[_] = o.asInstanceOf[java.util.List[_]] ; o = oo.toArray
         }
         if (o != null && marshaller.supports(o.getClass)) {
           if (logger.isDebugEnabled)
-            logger.debug(String.format("generating xml view, for model %s",
-              modelKey))
+            logger.debug(s"generating xml view, for model $modelKey")
           return o
         }
       }

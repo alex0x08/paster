@@ -31,8 +31,7 @@ class ResourceCtrl extends AbstractCtrl {
   private val resourcePathHelper: ResourceManager = null
   @RequestMapping(
     value = Array("/{version:[a-zA-Z0-9]+}/{type:[a-z]}/{lastModified:[0-9]+}/paste_content/{path}"),
-    method = Array(RequestMethod.GET)
-  )
+    method = Array(RequestMethod.GET))
   @ResponseBody
   def getResource(
                    @PathVariable("lastModified") lastModified: Long,

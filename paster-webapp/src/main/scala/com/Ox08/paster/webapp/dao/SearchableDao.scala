@@ -104,9 +104,8 @@ abstract class SearchableDaoImpl[T <: Struct](model: Class[T])
     /**
      * ignore empty queries
      */
-    if (StringUtils.isBlank(query) || query.trim().equals("*")) {
+    if (StringUtils.isBlank(query) || query.trim().equals("*"))
       return getList
-    }
 
     /**
      * added for stupid users

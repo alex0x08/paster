@@ -60,7 +60,8 @@ abstract class BaseDao[T <: java.io.Serializable, PK <: java.io.Serializable](mo
   @Transactional(readOnly = false,
     rollbackFor = Array(classOf[Exception]), propagation = Propagation.REQUIRED)
   def save(obj: T): T = {
-    logger.debug("saving obj {}", obj)
+    if (logger.isDebugEnabled())
+        logger.debug("saving obj {}", obj)
     val out: T = em.merge(obj)
     em.flush()
     out

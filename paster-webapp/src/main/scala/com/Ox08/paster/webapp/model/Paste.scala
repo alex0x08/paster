@@ -198,8 +198,8 @@ class Paste(ptitle: String) extends Struct with java.io.Serializable {
    * MUST be called with opened hibernate session
    */
   override def loadFull(): Unit = {
-
-    Struct.logger.debug("called loadFull for {}", id)
+    if (Struct.logger.isDebugEnabled())
+        Struct.logger.debug("called loadFull for {}", id)
 
     for (t <- tagsMap.entrySet().asScala) {
       t.getValue.name

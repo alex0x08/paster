@@ -34,9 +34,9 @@ class PasteAtomView extends AbstractAtomFeedView {
     }
     val contentList = model.get(MvcConstants.NODE_LIST_MODEL).asInstanceOf[java.util.List[Paste]]
     val entries: java.util.List[Entry] = new java.util.ArrayList[Entry](contentList.size())
-    for (e: Paste <- contentList.asScala) {
+    for (e <- contentList.asScala) {
       val entry = new Entry()
-      val date = String.format("%1$tY-%1$tm-%1$td", e.lastModified)
+      val date = String.format("%1$tY-%1$tm-%1$td", e.getLastModifiedDt)
       // see http://diveintomark.org/archives/2004/05/28/howto-atom-id#other
       entry.setId(String.format("tag:springsource.com,%s:%d", date, e.id))
       entry.setTitle(String.format("On %s, %s wrote", date,

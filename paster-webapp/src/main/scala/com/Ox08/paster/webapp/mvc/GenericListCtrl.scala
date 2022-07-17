@@ -113,9 +113,8 @@ abstract class GenericListCtrl[T <: Struct] extends AbstractCtrl {
     if (pagedListHolder == null ||
       (page == null && NPpage == null && pageSize == null && sortColumn == null)) {
       pagedListHolder = callback.invokeCreate()
-      if (logger.isDebugEnabled()) {
+      if (logger.isDebugEnabled())
         logger.debug("pagedListHolder created pageSize={}", pageSize)
-      }
     } else {
       if (sortColumn != null) {
         val sort = pagedListHolder.getSort.asInstanceOf[MutableSortDefinition]

@@ -63,16 +63,15 @@ class PasteEditCtrl extends GenericEditCtrl[Paste] {
   }
   override def fillEditModel(obj: Paste, model: Model, locale: Locale): Unit = {
     super.fillEditModel(obj, model, locale)
-    if (obj.isBlank) {
-      model.addAttribute("title", getResource("paste.new", locale))
-    } else {
+    if (obj.isBlank)
+      model.addAttribute("title", getResource("paste.new", locale)) else {
+
       model.addAttribute("title", StringEscapeUtils.escapeHtml4(
         getResource("paste.edit.title", Array(obj.id, obj.title), locale)))
       obj.comments.addAll(
         commentDao.getCommentsForPaste(obj.id))
-      if (!model.containsAttribute("comment")) {
+      if (!model.containsAttribute("comment"))
         model.addAttribute("comment", getNewCommentInstance(obj))
-      }
     }
     model.addAttribute("availableCodeTypes", codeTypeDao.getAvailableElements.asJava)
     model.addAttribute("availablePriorities", priorities.getAvailableElements.asJava)
@@ -97,9 +96,8 @@ class PasteEditCtrl extends GenericEditCtrl[Paste] {
   }
   override def getNewModelInstance: Paste = {
     val p = new Paste()
-    if (isCurrentUserLoggedIn) {
+    if (isCurrentUserLoggedIn)
       p.author = getCurrentUser.getUsername()
-    }
     p.channel = channelDao.getDefault
     p.codeType = codeTypeDao.getDefault
     p.priority = priorities.getDefault
@@ -107,9 +105,8 @@ class PasteEditCtrl extends GenericEditCtrl[Paste] {
   }
   def getNewCommentInstance(pp: Paste): Comment = {
     val p = new Comment()
-    if (getCurrentUser != null) {
+    if (getCurrentUser != null)
       p.author = getCurrentUser.getUsername()
-    }
     p.pasteId = pp.id
     p
   }
@@ -264,7 +261,9 @@ class PasteEditCtrl extends GenericEditCtrl[Paste] {
         else
           summary
       } else b.text
-    logger.debug("__found thumbnail {} comments {}", b.thumbImage, b.commentsCount)
+    if (logger.isDebugEnabled())
+        logger.debug("__found thumbnail {} comments {}", b.thumbImage, b.commentsCount)
+
     if (b.thumbImage != null) {
       b.thumbImage = resourceDao.saveResource('t', b.uuid, b.thumbImage)
     }

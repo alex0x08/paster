@@ -78,9 +78,7 @@ abstract class SearchCtrl[T <: Struct, QV <: Query] extends GenericListCtrl[T] {
           pageSize,
           sortColumn, sortAsc, new SourceCallback[T]() {
             override def invokeCreate(): PagedListHolder[T] = {
-              try {
-                new PagedListHolder[T](search(query, r).asInstanceOf[java.util.List[T]])
-              } catch {
+              try new PagedListHolder[T](search(query, r).asInstanceOf[java.util.List[T]]) catch {
                 case e: ParseException =>
                   logger.error(e.getLocalizedMessage, e)
                   new PagedListHolder[T]()
@@ -112,7 +110,9 @@ abstract class SearchCtrl[T <: Struct, QV <: Query] extends GenericListCtrl[T] {
     }
   }
   def search(query: Query, result: String): java.util.List[_] = {
-    logger.debug("_search {}", query.getQuery)
+    if (logger.isDebugEnabled())
+      logger.debug("_search {}", query.getQuery)
+
     if (StringUtils.isBlank(query.getQuery))
       getManagerBySearchResult(result).getList
     else
@@ -126,9 +126,8 @@ abstract class SearchCtrl[T <: Struct, QV <: Query] extends GenericListCtrl[T] {
                         sortColumn: String, sortAsc: Boolean, result: String): java.util.List[T] = {
     fillSearchModel(model)
     model.addAttribute("result", result.toLowerCase())
-    if (logger.isDebugEnabled()) {
+    if (logger.isDebugEnabled())
       logger.debug("_listImpl(search) pageSize {} , result {}", Array(pageSize, model.asMap().get("result")))
-    }
     super.listImpl(request, model, page, NPpage, pageSize, sortColumn, sortAsc, s"${result}_ITEMS")
   }
   @RequestMapping(value = Array("/search/{result:[a-z]+}/{page:[0-9]+}"), method = Array(RequestMethod.GET))

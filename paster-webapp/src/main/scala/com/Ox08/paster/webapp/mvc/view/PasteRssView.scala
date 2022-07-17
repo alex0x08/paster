@@ -2,11 +2,11 @@ package com.Ox08.paster.webapp.mvc.view
 import com.Ox08.paster.webapp.model.Paste
 import com.Ox08.paster.webapp.mvc.MvcConstants
 import com.rometools.rome.feed.rss.{Channel, Content, Description, Item}
-import org.springframework.web.servlet.view.feed.AbstractRssFeedView
-import scala.jdk.CollectionConverters._
-import java.util.{Collections, Date}
 import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
-import java.time.{ZoneId, ZoneOffset}
+import org.springframework.web.servlet.view.feed.AbstractRssFeedView
+import java.time.ZoneOffset
+import java.util.{Collections, Date}
+import scala.jdk.CollectionConverters._
 /**
  * Created with IntelliJ IDEA.
  * User: achernyshev
@@ -38,11 +38,7 @@ class PasteRssView extends AbstractRssFeedView {
       entry.setTitle(e.title)
       entry.setLink(s"$externalUrl/main/paste/${e.id}")
       entry.setPubDate(Date.from(e.lastModified.toInstant(ZoneOffset.UTC)))
-      entry.setAuthor(if (e.author != null) {
-        e.author
-      } else {
-        "Anonymous"
-      })
+      entry.setAuthor(if (e.author != null) e.author else "Anonymous")
       val d = new Description()
       d.setValue(e.title)
       entry.setDescription(d)

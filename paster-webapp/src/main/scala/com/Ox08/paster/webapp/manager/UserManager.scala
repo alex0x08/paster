@@ -54,7 +54,7 @@ object UserManager extends Logged {
            * this almost all time means that we got anonymous user
            */
           if (logger.isDebugEnabled())
-            logger.debug("getCurrentUser ,unknown principal type: {}",
+              logger.debug("getCurrentUser ,unknown principal type: {}",
               SecurityContextHolder.getContext.getAuthentication.getPrincipal.toString)
           null
       }
@@ -75,16 +75,16 @@ class UserManager extends UserDetailsService with Logged {
   def loadUsers(): Unit = {
     val csv = new File(Boot.BOOT.getSystemInfo.getAppHome, "users.csv")
     loadUsersFromCSV(csv, (record: CSVRecord) => {
-      logger.debug("processing record : {}", record)
+      if (logger.isDebugEnabled())
+        logger.debug("processing record : {}", record)
+
       val u = new PasterUser(record.get("NAME"),
         record.get("USERNAME"),
         record.get("PASSWORD"), util.Set.of(
-          if (record.get("ADMIN").toBoolean) {
+          if (record.get("ADMIN").toBoolean)
             Role.ROLE_ADMIN
-          }
-          else {
-            Role.ROLE_USER
-          }))
+          else
+            Role.ROLE_USER))
       save(changePassword(u, u.getPassword()))
     })
   }
@@ -110,7 +110,7 @@ class UserManager extends UserDetailsService with Logged {
       for (record <- records.asScala) {
         if (usersCount> 500) {
           logger.error("Too many users defined: {} Processed only first 500",records.getRecords.size())
-          break()
+          return
         }
         callback(record)
         usersCount+=1
@@ -124,7 +124,8 @@ class UserManager extends UserDetailsService with Logged {
    */
   def save(u: PasterUser): Unit = {
     users.put(u.getUsername(), u)
-    logger.debug("saved {}", u.getUsername())
+    if (logger.isDebugEnabled())
+        logger.debug("saved {}", u.getUsername())
   }
   @Override
   def getUser(username: String): PasterUser = {
@@ -149,14 +150,16 @@ class UserManager extends UserDetailsService with Logged {
   @throws(classOf[DataAccessException])
   override def loadUserByUsername(username: String): UserDetails = {
     val out: PasterUser = getUser(username)
-    logger.debug("loaded by username {} , user {}", username, out)
+    if (logger.isDebugEnabled())
+        logger.debug("loaded by username {} , user {}", username, out)
     if (out == null)
-      throw new UsernameNotFoundException(String.format("User %s not found", username))
+      throw new UsernameNotFoundException(s"User $username not found")
     out
   }
   def changePassword(user: PasterUser, newPassword: String): PasterUser = {
     val encodedPass = passwordEncoder.encode(newPassword)
-    logger.debug("changing password for user {}", user.getUsername())
+    if (logger.isDebugEnabled())
+      logger.debug("changing password for user {}", user.getUsername())
     user.setPassword(encodedPass)
     user
   }

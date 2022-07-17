@@ -51,7 +51,7 @@ class ResourceManager extends Logged {
     FileSystems.getDefault
       .getPath(Boot.BOOT.getSystemInfo.getAppHome.getAbsolutePath,
         "resources", resourceType.toString,
-        id + '.' + getExtFor(resourceType)).toFile
+        s"$id.${getExtFor(resourceType)}").toFile
   }
   /**
    * Saves image to file
