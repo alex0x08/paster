@@ -43,7 +43,6 @@ class Comment extends Struct with java.io.Serializable {
   @XStreamAsAttribute
   @Column(name = "parent_id")
   var parentId: Integer = _
-
   @Transient
   var thumbImage: String = _
   /**
@@ -55,11 +54,8 @@ class Comment extends Struct with java.io.Serializable {
   def getLineNumber: Int = lineNumber
   def getParentId: Integer = parentId
   def getPasteId: Integer = pasteId
-
   @JsonIgnore
   def getThumbImage: String = thumbImage
-
   def isHasAuthor: Boolean = author != null
-
   override def terms(): List[String] = super.terms() ::: List[String]("text")
 }

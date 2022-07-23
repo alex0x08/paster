@@ -9,7 +9,6 @@ import java.text.{ParseException, SimpleDateFormat}
 import java.util.{Calendar, Date, Properties}
 object Boot {
   private val INSTALLED_TS_FORMAT: SimpleDateFormat = new SimpleDateFormat("MM.dd.yyyy HH:mm")
-
   val BOOT = new Boot
 }
 class Boot private() extends Logged {
@@ -38,7 +37,7 @@ class Boot private() extends Logged {
     system.setAppCode(appCode)
     // check 'appDebug' flag
     system.setDebug(java.lang.Boolean.valueOf(System.getProperty("appDebug", "false")))
-    logger.info(SystemMessage.of("paster.system.message.debugMode", ""+system.isDebug))
+    logger.info(SystemMessage.of("paster.system.message.debugMode", "" + system.isDebug))
     // try to detect app's home folder
     var app_home: File = null
     val appVar = appCode + ".app.home"
@@ -47,7 +46,8 @@ class Boot private() extends Logged {
       val user_home = System.getProperty("user.home")
       // generate full path like: ~/.apps/codename
       app_home = Paths.get(user_home, ".apps", appCode).toFile
-      if (!app_home.exists || !app_home.isDirectory) { // try to create all folders in path, if fail - throw exception and quit
+      if (!app_home.exists || !app_home.isDirectory) {
+        // try to create all folders in path, if fail - throw exception and quit
         if (!app_home.mkdirs)
           throw SystemError.withCode(0x6005, app_home.getAbsolutePath)
       }
@@ -63,7 +63,6 @@ class Boot private() extends Logged {
     logger.info(SystemMessage.of("paster.system.message.appHome", app_home.getAbsolutePath))
     // try to kill previous JVM instance (if present)
     killPreviousInstance(app_home)
-
     writePid(app_home)
     // create temp folder
     val temp_store = createAppFolder(app_home, "temp")
@@ -98,7 +97,8 @@ class Boot private() extends Logged {
     System.setProperty("app.build.number", mf_version.implBuildNum)
     System.setProperty("app.build.version", mf_version.implVersionFull)
     logger.info(SystemMessage.of("paster.system.message.appRelease", mf_version.implVersionFull))
-    logger.info(SystemMessage.of("paster.system.message.appGitBranch", mf_version.getGitState.getProperty("git.branch",null)))
+    logger.info(SystemMessage.of("paster.system.message.appGitBranch",
+      mf_version.getGitState.getProperty("git.branch", null)))
     // load customized config ( 'config.properties' file)
     createLoadAppConfig(system, app_home)
     if (system.getExternalUrlPrefix != null) {
@@ -121,18 +121,17 @@ class Boot private() extends Logged {
   private def checkInstalled(system: SystemInfo, appHome: File): Unit = {
     val iFile = new File(appHome, ".installed")
     if (iFile.exists() && iFile.isFile) {
-      if (iFile.length() == 0 || iFile.length() > 2048) {
+      if (iFile.length() == 0 || iFile.length() > 2048)
         throw SystemError.withError(0x6001, "Incorrect or broken '.installed' file!")
-      }
       val data: String = FileUtils.readFileToString(iFile, "UTF-8")
       val p = new Properties()
       p.load(new StringReader(data))
       val dateInstalledStr = p.getProperty("dateInstalled", null)
-      if (dateInstalledStr == null) {
+      if (dateInstalledStr == null)
         throw SystemError.withError(0x6001, "Incorrect or broken '.installed' file!")
-      }
       val dateInstalled: Date = Boot.INSTALLED_TS_FORMAT.parse(dateInstalledStr)
-      logger.debug("found install date: {}", dateInstalled)
+      if (logger.isDebugEnabled)
+        logger.debug("found install date: {}", dateInstalled)
       system.setInstalled(installed = true, dateInstalled)
     } else {
       /*val dateInstalled = new Date()
@@ -144,12 +143,11 @@ class Boot private() extends Logged {
       system.setInstalled(installed = true, dateInstalled)*/
     }
   }
-  private def writePid(appHome:File):Unit = {
+  private def writePid(appHome: File): Unit = {
     val pidFile = new File(appHome, "app.pid")
-    val pid =ProcessHandle.current.pid()
-    FileUtils.writeStringToFile(pidFile,pid.toString,"UTF-8")
+    val pid = ProcessHandle.current.pid()
+    FileUtils.writeStringToFile(pidFile, pid.toString, "UTF-8")
   }
-
   /**
    * Tries to kill previous JVM instance, lookup by PID from 'app.pid' file
    *
@@ -182,7 +180,6 @@ class Boot private() extends Logged {
         throw SystemError.withError(0x6001, e)
     }
   }
-
   /**
    * Проверка на существование файла в домашней папке системы и его загрузка
    * из jar
@@ -207,9 +204,9 @@ class Boot private() extends Logged {
    * проверками
    *
    * @param app_home
-   *      домашний каталог
+   * домашний каталог
    * @param name
-   *      имя создаваемой папки
+   * имя создаваемой папки
    * @return
    */
   private def createAppFolder(app_home: File, name: String): File = {
@@ -242,11 +239,13 @@ class Boot private() extends Logged {
     try {
       system.getConfig.load(input)
       system.setExternalUrlPrefix(system.getConfig.getProperty("externalUrlPrefix", null))
-      logger.info(SystemMessage.of("paster.system.message.loadedLinesFromAppConf", ""+system.getConfig.size))
+      logger.info(SystemMessage.of("paster.system.message.loadedLinesFromAppConf", "" + system.getConfig.size))
     } catch {
       case e: IOException =>
         throw SystemError.withError(0x6001, e)
-    } finally if (input != null) input.close()
+    } finally
+      if (input != null)
+        input.close()
     config
   }
   object SystemInfo {
@@ -310,9 +309,8 @@ class Boot private() extends Logged {
       java.lang.Boolean.valueOf(config.getProperty(setting))
     }
     def getSettingAsInt(setting: String, defaultValue: Int): Int = {
-      if (!config.containsKey(setting)) {
+      if (!config.containsKey(setting))
         return defaultValue
-      }
       Integer.valueOf(config.getProperty(setting))
     }
     def getConfig: Properties = config
@@ -350,7 +348,7 @@ class Boot private() extends Logged {
     }
     private def checkLock(): Unit = {
       if (locked) {
-        //  throw SystemError.withCode(0x6002)
+          throw SystemError.withCode(0x6002)
       }
     }
   }
@@ -376,8 +374,6 @@ class Boot private() extends Logged {
     def getFull: String = implVersionFull // for EL
     def getGitState: Properties = git
   }
-
-
 }
 
 

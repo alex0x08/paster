@@ -60,8 +60,8 @@ abstract class AbstractStringBasedDao(elementsAsString: String,
                                       defaultElement: String) extends Logged {
   var elements: mutable.Set[String] = mutable.Set[String]()
   if (StringUtils.isBlank(elementsAsString))
-    elements += defaultElement
-    else {
+      elements += defaultElement
+  else {
     for (ch <- elementsAsString.split(",")) {
       elements +=ch
     }

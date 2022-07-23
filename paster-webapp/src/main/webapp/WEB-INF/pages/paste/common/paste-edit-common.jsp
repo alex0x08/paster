@@ -253,14 +253,9 @@
 
                     </div>
                 </div>
-
-
-
             </div>
 
-
             <div class="form-group">
-
                 <form:label path="text">
                     <fmt:message key="paste.text" />
                 </form:label>
@@ -268,14 +263,8 @@
                     id="ptext" placeHolder="paste text" cols="120" rows="10" />
                 <div id="editor" style="height: 50em;">
                 </div>
-
                 <form:errors path="text" cssClass="alert alert-danger" element="div" />
-
-
-          
-
             </div>
-
         </form:form>
     </div>
 </div>

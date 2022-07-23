@@ -80,7 +80,7 @@ abstract class SearchCtrl[T <: Struct, QV <: Query] extends GenericListCtrl[T] {
             override def invokeCreate(): PagedListHolder[T] = {
               try new PagedListHolder[T](search(query, r).asInstanceOf[java.util.List[T]]) catch {
                 case e: ParseException =>
-                  logger.error(e.getLocalizedMessage, e)
+                  logger.error(e.getMessage, e)
                   new PagedListHolder[T]()
               }
             }
@@ -88,8 +88,7 @@ abstract class SearchCtrl[T <: Struct, QV <: Query] extends GenericListCtrl[T] {
         )
         if (out == null && !rout.isEmpty) {
           out = rout
-          model.addAttribute(MvcConstants.NODE_LIST_MODEL_PAGE,
-            model.asMap().get(s"${r}_ITEMS"))
+          model.addAttribute(MvcConstants.NODE_LIST_MODEL_PAGE, model.asMap().get(s"${r}_ITEMS"))
           model.addAttribute("result", r)
           if (logger.isDebugEnabled)
             logger.debug("found {} in {}", out.size(), s"${r}_ITEMS")
@@ -110,9 +109,8 @@ abstract class SearchCtrl[T <: Struct, QV <: Query] extends GenericListCtrl[T] {
     }
   }
   def search(query: Query, result: String): java.util.List[_] = {
-    if (logger.isDebugEnabled())
+    if (logger.isDebugEnabled)
       logger.debug("_search {}", query.getQuery)
-
     if (StringUtils.isBlank(query.getQuery))
       getManagerBySearchResult(result).getList
     else
@@ -126,7 +124,7 @@ abstract class SearchCtrl[T <: Struct, QV <: Query] extends GenericListCtrl[T] {
                         sortColumn: String, sortAsc: Boolean, result: String): java.util.List[T] = {
     fillSearchModel(model)
     model.addAttribute("result", result.toLowerCase())
-    if (logger.isDebugEnabled())
+    if (logger.isDebugEnabled)
       logger.debug("_listImpl(search) pageSize {} , result {}", Array(pageSize, model.asMap().get("result")))
     super.listImpl(request, model, page, NPpage, pageSize, sortColumn, sortAsc, s"${result}_ITEMS")
   }

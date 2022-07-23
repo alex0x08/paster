@@ -11,7 +11,6 @@
     <fmt:message key="${model.priority}" />
 </c:set>
 
-
 <div class="row">
     <div class="col-md-10">
         <%--
@@ -24,7 +23,6 @@
         </a>
 
         <%--
-
             Priority
         --%>
 
@@ -35,14 +33,10 @@
 
         <%--
 
-
             Paste's title
-
         --%>
-
         <c:out value="${model.title}" escapeXml="true" />
     </div>
-
     <div class='col-md-2'>
         <div class="btn-group" style="padding-top: 0.8em;">
             <c:if test="${not empty currentUser or allowAnonymousCommentsCreate}">
@@ -50,7 +44,6 @@
                     title="<fmt:message key='button.edit' />">
                     <fmt:message key='button.edit' />
                 </a>
-
                 <sec:authorize
                     access="${currentUser !=null and (currentUser.admin or ( model.hasAuthor  and model.author eq currentUser)) }">
                     <a class="btn btn-danger btn-sm deleteBtn" id="deleteBtn_${model.id}"
@@ -61,13 +54,8 @@
                     <fmt:message key='button.delete' />
                     </a>
                 </sec:authorize>
-
             </c:if>
-
         </div>
-
-
-
         <div style="display:none;" id="dialogMsg">
             <img width="300" height="200" class="p-comment"
                 style="width: 250px; height: 150px; float: left; margin: 5px;"
@@ -78,7 +66,6 @@
         </div>
     </div>
 </div>
-
 <tiles:insertDefinition name="/common/pasteControls">
     <tiles:putAttribute name="model" value="${model}" />
     <c:if test="${not empty availableNext}">

@@ -49,14 +49,16 @@ class SetupIndexes extends Logged with ApplicationListener[ContextRefreshedEvent
         d.getValue.indexAll()
       }
       logger.info("reindex completed.")
-    } else logger.info("reindex was disabled. skipping it.")
+    } else
+      logger.info("reindex was disabled. skipping it.")
   }
 }
 @Transactional(readOnly = true, rollbackFor = Array(classOf[Exception]))
 abstract class SearchableDaoImpl[T <: Struct](model: Class[T])
   extends StructDaoImpl[T](model) {
   protected class FSearch(query: String) extends Logged {
-    logger.debug("searching for {}", query)
+    if (logger.isDebugEnabled)
+      logger.debug("searching for {}", query)
     val searchSession: SearchSession = getFullTextEntityManager
     val queryParser = new MultiFieldQueryParser(getDefaultStartFields,
       new StandardAnalyzer())
@@ -76,7 +78,8 @@ abstract class SearchableDaoImpl[T <: Struct](model: Class[T])
   def fillHighlighted(highlighter: Highlighter,
                       queryParser: QueryParser,
                       results: java.util.List[_]): java.util.List[T] = {
-    logger.debug("found {} results", results.size())
+    if (logger.isDebugEnabled)
+      logger.debug("found {} results", results.size())
     for (obj <- results.asScala) {
       fillHighlighted(highlighter, queryParser, obj.asInstanceOf[T])
     }

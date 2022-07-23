@@ -1,56 +1,41 @@
 <%@ include file="/WEB-INF/pages/common/taglibs.jsp"%>
  
 
-        <%--
-
+<%--
         Common content for all pages (will be attached to bottom of body)
-
-        
-        --%>    
+--%>    
 
 <div  class="modal hide" id="deletePopup">
-
     <div class="modal-dialog">
         <div class="modal-content">
-
             <div class="modal-header">
                 <button type="button" class="close" data-bs-dismiss="modal" aria-hidden="true">X</button>
                 <h4 class="modal-title" id="dialogTitle"></h4>
             </div>
-            <div id="dialogMessage" class="modal-body">
-                
+            <div id="dialogMessage" class="modal-body">                
             </div>
             <div class="modal-footer">
                 <a id="dialogAction" href="" class="btn btn-primary"></a>
-                <button type="button" class="btn btn-default" data-bs-dismiss="modal">Cancel</button>
-               
+                <button type="button" class="btn btn-default" data-bs-dismiss="modal">Cancel</button>               
             </div>
-
         </div>
     </div>
 </div>
-
-
-<div  class="modal hide" id="newPasteDialog" >
-
+<div class="modal hide" id="newPasteDialog" >
     <div class="modal-dialog">
-        <div class="modal-content" style="padding:0;margin:0;">
-           
+        <div class="modal-content" style="padding:0;margin:0;">           
             <div id="dialogMessage" class="modal-body">                
             </div>          
-
         </div>
     </div>
 </div>
-<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index:11">
 <div id="pasterToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
   <div class="toast-header">
     <strong class="me-auto">Paster</strong>
     <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
   </div>
-  <div class="toast-body">
-    Hello, world! This is a toast message.
-  </div>
+  <div class="toast-body"></div>
 </div>
 </div>
 
@@ -62,11 +47,9 @@
 
 <script type="text/javascript"
     src="<c:url value='/main/resources/${appId}/local_components/bootstrap/bootstrap.bundle.min.js'/>"></script>
-
-
 <script type="text/javascript"
     src="<c:url value='/main/resources/${appId}/local_components/tinyicon/tinycon.js'/>"></script>
-    
+   
 <script src="<c:url value='/main/resources/${appId}/local_components/pixastic/canvas-to-blob.min.js'/>"></script>
 
 <script src="<c:url value='/main/resources/${appId}/local_components/pixastic/html2canvas.js'/>"></script>
@@ -75,14 +58,12 @@
 
 <script type="text/javascript" src="<c:url value='/main/resources/${appId}/paster/js/all/paster-app.js'/>"></script>
 
-
 <script type="text/javascript">
 
     Logger.useDefaults();
     Logger.setLevel(Logger.DEBUG);
 
     window.pica.prototype.debug = console.log.bind(console);
-
 
     class PasterI18nClass {
         text = {
@@ -91,10 +72,9 @@
             },
             dialog: {
                 removal: {
-                    title: '<fmt:message key='button.delete'/>',
-                    message: '<fmt:message key='dialog.confirm.remove'/>'
+                    title: '<fmt:message key="button.delete"/>',
+                    message: '<fmt:message key="dialog.confirm.remove"/>'
                     }
-
             }
         }
     }
@@ -109,10 +89,5 @@
         <c:if test="${not empty statusMessageKey}">
             pasterApp.showNotify('<fmt:message key="${statusMessageKey}"/>');   
         </c:if>
-
     });
-
-
 </script>
-
-

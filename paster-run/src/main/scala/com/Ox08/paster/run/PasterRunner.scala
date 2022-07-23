@@ -24,13 +24,12 @@ object PasterRunner {
     classOf[JspConfiguration].getCanonicalName)
   val DEFAULT_CONTEXT_PATH = "/"
   val DEFAULT_PORT = 8080
-
   def main(args: Array[String]): Unit = {
     val runner = new PasterRunner
     try if (args.length > 0 && args(0).equalsIgnoreCase("--help"))
-          runner.usage(null)
+      runner.usage(null)
     else if (args.length > 0 && args(0).equalsIgnoreCase("--version"))
-          runner.version()
+      runner.version()
     else {
       runner.loadConf()
       runner.configure(args)
@@ -44,14 +43,12 @@ object PasterRunner {
   }
 }
 class PasterRunner() {
-
   private var contextPath = PasterRunner.DEFAULT_CONTEXT_PATH
   private var port = PasterRunner.DEFAULT_PORT
   private var host: String = _
-  private var warFile:String = _
+  private var warFile: String = _
   private var contextPathSet = false
   private var runnerServerInitialized = false
-
   protected var _server: Server = _
   protected var _classLoader: URLClassLoader = _
   protected var _classpath = new Classpath
@@ -64,24 +61,24 @@ class PasterRunner() {
     @throws[IOException]
     def addJars(lib: Resource): Unit = {
       if (lib == null || !lib.exists)
-            throw new IllegalStateException(s"No such lib: $lib")
+        throw new IllegalStateException(s"No such lib: $lib")
       val list = lib.list
       if (list == null)
-              return
+        return
       for (path <- list) {
-          if ("." != path && ".." != path) {
-            val item = lib.addPath(path)
-            if (item.isDirectory)
-              addJars(item)
-            else {
-              val lowerCasePath = path.toLowerCase(Locale.ENGLISH)
-              if (lowerCasePath.endsWith(".jar"))
-                _classpath.add(item.getURI.toURL)
-            }
-            if (item != null)
-              item.close()
+        if ("." != path && ".." != path) {
+          val item = lib.addPath(path)
+          if (item.isDirectory)
+            addJars(item)
+          else {
+            val lowerCasePath = path.toLowerCase(Locale.ENGLISH)
+            if (lowerCasePath.endsWith(".jar"))
+              _classpath.add(item.getURI.toURL)
           }
+          if (item != null)
+            item.close()
         }
+      }
     }
     def asArray: Array[URL] = _classpath.toArray(new Array[URL](0))
   }
@@ -109,13 +106,10 @@ class PasterRunner() {
     System.err.println("org.eclipse.jetty.runner.Runner: " + Server.getVersion)
     System.exit(1)
   }
-
   @throws(classOf[IOException])
   def loadConf(): Unit = {
-
     val p = new Properties()
     p.load(getClass.getResourceAsStream("/config.properties"))
-
     if (p.containsKey("paster.runner.port"))
       this.port = p.getProperty("paster.runner.port").toInt
     if (p.containsKey("paster.runner.host"))
@@ -124,9 +118,7 @@ class PasterRunner() {
       this.contextPath = p.getProperty("paster.runner.contextPath")
     if (p.containsKey("paster.runner.warFile"))
       this.warFile = p.getProperty("paster.runner.warFile")
-
   }
-
   /**
    * Configure a jetty instance and deploy the webapps presented as args
    *
@@ -134,16 +126,14 @@ class PasterRunner() {
    * @throws Exception if unable to configure
    */
   @throws[Exception]
-  def configure(args: Array[String]): Unit = { // handle classpath bits first so we can initialize the log mechanism.
-
+  def configure(args: Array[String]): Unit = {
+    // handle classpath bits first so we can initialize the log mechanism.
     var i: Int = 0
-    if (args.length >0) {
+    if (args.length > 0) {
       while (i < args.length) {
         val arg = args(i)
         if ("--lib" eq arg) {
-          val lib = Resource.newResource(args({
-            i += 1; i
-          }))
+          val lib = Resource.newResource(args({ i += 1; i }))
           if (!lib.exists || !lib.isDirectory) usage(s"No such lib directory $lib")
           _classpath.addJars(lib)
         } else if (arg.startsWith("--"))
@@ -155,16 +145,15 @@ class PasterRunner() {
     PasterRunner.LOG.info("Runner")
     PasterRunner.LOG.debug("Runner classpath {}", _classpath)
     i = 0
-
-    if (args.length >0) {
+    if (args.length > 0) {
       while (i < args.length) {
         args(i) match {
           case "--port" =>
-            port = args({ i += 1; i }).toInt
+            port = args({i += 1; i}).toInt
           case "--host" =>
-            host = args({ i += 1;i })
+            host = args({i += 1; i})
           case "--path" =>
-            contextPath = args({ i += 1; i })
+            contextPath = args({i += 1; i})
             contextPathSet = true
           case "--lib" =>
             i += 1 //skip
@@ -173,20 +162,17 @@ class PasterRunner() {
         }
         i += 1
       }
-    } else {
+    } else
       setupContexts(warFile)
-    }
     if (_server == null)
       usage("No Contexts defined")
   }
-
-  private def setupContexts(appFile:String): Unit ={
-
-      System.out.println("war="+appFile)
+  private def setupContexts(appFile: String): Unit = {
+    System.out.println("war=" + appFile)
     //TomcatURLStreamHandlerFactory.disable()
-
     // process contexts
-    if (!runnerServerInitialized) { // log handlers not registered, server maybe not created, etc
+    if (!runnerServerInitialized) {
+      // log handlers not registered, server maybe not created, etc
       if (_server == null) { // server not initialized yet
         // build the server
         _server = new Server
@@ -204,7 +190,8 @@ class PasterRunner() {
         prependHandler(_contexts, handlers)
       }
       //ensure a DefaultHandler is present
-      if (handlers.getChildHandlerByClass(classOf[DefaultHandler]) == null) handlers.addHandler(new DefaultHandler)
+      if (handlers.getChildHandlerByClass(classOf[DefaultHandler]) == null)
+        handlers.addHandler(new DefaultHandler)
       //check a connector is configured to listen on
       val connectors = _server.getConnectors
       if (connectors == null || connectors.isEmpty) {
@@ -224,16 +211,14 @@ class PasterRunner() {
       if (contextPathSet && !contextPath.startsWith("/"))
         contextPath = "/" + contextPath
       PasterRunner.LOG.debug(s"war file: ${ctx.getURI.toURL}")
-
       // Configure the context
       // assume it is a WAR file
       val webapp = new WebAppContext(_contexts, ctx.toString, contextPath)
-
-      webapp.setClassLoader(new LiveWarClassLoader(true,ctx.getURI.toURL,Thread.currentThread.getContextClassLoader))
+      webapp.setClassLoader(new LiveWarClassLoader(true, ctx.getURI.toURL,
+        Thread.currentThread.getContextClassLoader))
       import java.io.File
       val warFile = new File(ctx.getURI)
       System.setProperty("org.eclipse.jetty.livewar.LOCATION", warFile.getAbsolutePath)
-
       webapp.setExtractWAR(false)
       //              webapp.setInitParameter("org.eclipse.jetty.jsp.precompiled", "true")
       webapp.setInitParameter("org.eclipse.jetty.servlet.Default.useFileMappedBuffer", "false")
@@ -241,9 +226,7 @@ class PasterRunner() {
       var fname = getClass.getProtectionDomain.getCodeSource.getLocation.getFile
       fname = fname.substring(fname.lastIndexOf('/'))
       val incPattern = ".*" + fname.replace(".", "\\\\.") + "$"
-
       //System.out.println("pattern="+incPattern)
-
       webapp.setAttribute(MetaInfConfiguration.CONTAINER_JAR_PATTERN, incPattern)
     } finally
       if (ctx != null)
@@ -252,11 +235,10 @@ class PasterRunner() {
     //reset
     contextPathSet = false
     contextPath = PasterRunner.DEFAULT_CONTEXT_PATH
-
   }
-
   protected def prependHandler(handler: Handler, handlers: HandlerCollection): Unit = {
-    if (handler == null || handlers == null) return
+    if (handler == null || handlers == null)
+      return
     val existing = handlers.getChildHandlers
     val children = new Array[Handler](existing.length + 1)
     children(0) = handler
@@ -276,9 +258,9 @@ class PasterRunner() {
     if (_classLoader == null && paths.length > 0) {
       val context = Thread.currentThread.getContextClassLoader
       if (context == null)
-          _classLoader = new URLClassLoader(paths)
+        _classLoader = new URLClassLoader(paths)
       else
-          _classLoader = new URLClassLoader(paths, context)
+        _classLoader = new URLClassLoader(paths, context)
       Thread.currentThread.setContextClassLoader(_classLoader)
     }
   }

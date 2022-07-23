@@ -51,7 +51,8 @@ abstract class AbstractI18nMessageStore protected( // default bundle name
     if (this.defaultBundle.containsKey(key))
       return this.defaultBundle.getString(key)
     for (r <- this.additionalBundles.asScala) {
-      if (r.containsKey(key)) return r.getString(key)
+      if (r.containsKey(key))
+        return r.getString(key)
     }
     null
   }

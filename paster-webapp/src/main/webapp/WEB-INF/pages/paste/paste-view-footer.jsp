@@ -1,7 +1,6 @@
 <%@ include file="/WEB-INF/pages/common/taglibs.jsp"%>
 
 
-
 <script src="<c:url value='/main/resources/${appId}/local_components/syntax_highlighter/XRegExp.js'/>"></script>
 <script src="<c:url value='/main/resources/${appId}/local_components/syntax_highlighter/shCore.js'/>"></script>
 <script src="<c:url value='/main/resources/${appId}/local_components/syntax_highlighter/shAll.js'/>"></script>
@@ -11,11 +10,8 @@
     src="<c:url value='/main/resources/${appId}/local_components/marked/marked.min.js'/>"></script>
 <script type="text/javascript"
     src="<c:url value='/main/resources/${appId}/local_components/sketchjs/sketch.js'/>"></script>
-
 <script src="<c:url value='/main/resources/${appId}/paster/js/paste-view/paste-view.js'/>"></script>
-
 <script type="text/javascript">
-
 
         SyntaxHighlighter.config.tagName = "pre";
      
@@ -91,7 +87,6 @@
 <script type="text/javascript">
 
     const MODEL_ID = '${model.id}';
-
     const ALLOW_EDIT =  "true" === '${not empty currentUser or allowAnonymousCommentsCreate}';
 
     var pasterView = new PasterView();
@@ -99,20 +94,16 @@
     window.addEventListener('load', function () {
 
         pasterView.init(MODEL_ID,ALLOW_EDIT);
-
         pasterView.setupCommentsAdd(MODEL_ID); 
-      
         
     <c:if test="${availablePrevList.count > 0}">
         pasterView.setupLazy("<c:url value='/main/paste/raw/view'/>",  "<c:url value='/main/paste'/>",
         ${availablePrevList.count},  ${model.id}, [${availablePrevList.itemsAsString}]);
     </c:if>
 
-
     });
 
 </script>
-
 
 
 <jsp:include page="/WEB-INF/pages/common/paste-update-poll.jsp"/>

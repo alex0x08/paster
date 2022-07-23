@@ -3,9 +3,9 @@
 
 <%--
 
-        Headers for all pages
+    Headers for all pages
 
-        --%>
+--%>
 
 <link rel="apple-touch-icon" sizes="57x57" href="${ctx}/main/resources/${appId}/static/favicon/apple-touch-icon-57x57.png">
 <link rel="apple-touch-icon" sizes="60x60" href="${ctx}/main/resources/${appId}/static/favicon/apple-touch-icon-60x60.png">
@@ -25,7 +25,6 @@
 <meta name="msapplication-TileColor" content="#00aba9">
 <meta name="msapplication-TileImage" content="${ctx}/main/resources/${appId}/static/favicon/mstile-144x144.png">
 <meta name="theme-color" content="#ffffff">
-
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
 <!-- HTTP 1.1 -->
@@ -34,7 +33,6 @@
 <meta http-equiv="Pragma" content="no-cache" />
 <!-- Prevents caching at the Proxy Server -->
 <meta http-equiv="Expires" content="0" />
-
 
 <link href="<c:url value='/main/resources/${appId}/paster/css/all/bootstrap.min.css'/>" rel="stylesheet"
     type="text/css" />

@@ -159,7 +159,9 @@ class PasteListCtrl extends SearchCtrl[Paste, AuthorQuery] {
                sortColumn: String,
                sortAsc: java.lang.Boolean = false,
                channelCode: String, integrationCode: String): java.util.List[Paste] = {
+
     logger.debug("_paste listImpl, pageSize {}", pageSize)
+
     fillListModel(model)
     val ps = if (channelCode != null && channelDao.exist(channelCode)) {
       model.addAttribute("sourceType", channelCode.toLowerCase)

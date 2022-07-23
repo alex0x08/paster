@@ -112,7 +112,7 @@ abstract class GenericListCtrl[T <: Struct] extends AbstractCtrl {
     if (pagedListHolder == null ||
       (page == null && NPpage == null && pageSize == null && sortColumn == null)) {
       pagedListHolder = callback.invokeCreate()
-      if (logger.isDebugEnabled())
+      if (logger.isDebugEnabled)
         logger.debug("pagedListHolder created pageSize={}", pageSize)
     } else {
       if (sortColumn != null) {
@@ -134,12 +134,10 @@ abstract class GenericListCtrl[T <: Struct] extends AbstractCtrl {
          * if page number was specified
          */
       } else if (page != null) pagedListHolder.setPage(
-        (
-          if (page < 1) 1
+        (if (page < 1) 1
           else if (page > pagedListHolder.getPageCount)
             pagedListHolder.getPageCount
-          else page
-          ).asInstanceOf[Integer] - 1)
+          else page ).asInstanceOf[Integer] - 1)
     }
 
     /**
@@ -156,7 +154,8 @@ abstract class GenericListCtrl[T <: Struct] extends AbstractCtrl {
     pagedListHolder.getPageList
   }
   @ModelAttribute("availableSortColumns")
-  def getAvailableSortColumns: List[SortColumn] = List[SortColumn](new SortColumn("id", "struct.id"),
+  def getAvailableSortColumns: List[SortColumn] = List[SortColumn](
+    new SortColumn("id", "struct.id"),
     new SortColumn("name", "struct.name"),
     new SortColumn("lastModified", "struct.lastModified"))
   @RequestMapping(value = Array("/list/sort/{sortColumn:[a-z0-9A-Z]+}",

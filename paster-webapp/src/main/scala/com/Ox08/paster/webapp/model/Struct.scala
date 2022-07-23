@@ -20,7 +20,6 @@ import com.thoughtworks.xstream.annotations.XStreamAsAttribute
 import jakarta.persistence._
 import org.hibernate.annotations.GenericGenerator
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField
-
 import java.text.SimpleDateFormat
 import java.time.{LocalDateTime, ZoneOffset}
 import java.util.{Date, Objects}
@@ -58,10 +57,10 @@ abstract class Struct extends DBObject with SearchObject with java.io.Serializab
   def touch(): Unit = {
     lastModified = LocalDateTime.now()
   }
-  def getLastModifiedDt: Date = if (lastModified==null.asInstanceOf[LocalDateTime]) null
-                                            else Date.from(lastModified.toInstant(ZoneOffset.UTC))
-  def getCreatedDt: Date = if (created==null.asInstanceOf[LocalDateTime]) null
-                                            else Date.from(created.toInstant(ZoneOffset.UTC))
+  def getLastModifiedDt: Date = if (lastModified == null.asInstanceOf[LocalDateTime]) null
+  else Date.from(lastModified.toInstant(ZoneOffset.UTC))
+  def getCreatedDt: Date = if (created == null.asInstanceOf[LocalDateTime]) null
+  else Date.from(created.toInstant(ZoneOffset.UTC))
   @JsonIgnore
   def getLastModified: LocalDateTime = lastModified
   @JsonIgnore

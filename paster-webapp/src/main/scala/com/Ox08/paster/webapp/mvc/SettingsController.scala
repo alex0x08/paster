@@ -13,25 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.Ox08.paster.webapp.mvc
-
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.{RequestMapping, RequestMethod}
 import java.util.Locale
-
 @Controller
 @RequestMapping(Array("/admin/settings"))
 class SettingsController extends AbstractCtrl {
-
   def editPage = "/admin/settings/edit"
   def manager() = null
-
   @RequestMapping(value = Array("/dbconsole"), method = Array(RequestMethod.GET))
   def dbconsole(model: Model, locale: Locale): String = {
     "/admin/settings/dbconsole"
   }
-
-
 }

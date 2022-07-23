@@ -84,7 +84,6 @@ class SystemManagementServiceImpl extends SystemManagementService with Logged {
           try builder.start
           catch {
             case _: IOException =>
-
             // e.printStackTrace();
           }
         }

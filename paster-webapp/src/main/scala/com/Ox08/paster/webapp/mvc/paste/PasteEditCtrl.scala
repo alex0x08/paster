@@ -64,8 +64,8 @@ class PasteEditCtrl extends GenericEditCtrl[Paste] {
   override def fillEditModel(obj: Paste, model: Model, locale: Locale): Unit = {
     super.fillEditModel(obj, model, locale)
     if (obj.isBlank)
-      model.addAttribute("title", getResource("paste.new", locale)) else {
-
+      model.addAttribute("title", getResource("paste.new", locale))
+    else {
       model.addAttribute("title", StringEscapeUtils.escapeHtml4(
         getResource("paste.edit.title", Array(obj.id, obj.title), locale)))
       obj.comments.addAll(
@@ -160,13 +160,15 @@ class PasteEditCtrl extends GenericEditCtrl[Paste] {
   def saveComment(@Valid b: Comment,
                   result: BindingResult, model: Model, locale: Locale): String = {
     logger.debug("adding comment {}", b)
-    if (!isCurrentUserLoggedIn && !allowAnonymousCommentsCreate) return MvcConstants.page403
+    if (!isCurrentUserLoggedIn && !allowAnonymousCommentsCreate)
+      return MvcConstants.page403
     val p = manager().get(b.pasteId)
-    if (p == null) return MvcConstants.page404
+    if (p == null)
+      return MvcConstants.page404
     if (result.hasErrors) {
       logger.debug("form has errors {}", result.getErrorCount)
-      for (e<-result.getAllErrors.asScala) {
-        logger.debug("error: {} code: {} msg: {}" ,e.getObjectName,e.getCode,e.getDefaultMessage)
+      for (e <- result.getAllErrors.asScala) {
+        logger.debug("error: {} code: {} msg: {}", e.getObjectName, e.getCode, e.getDefaultMessage)
       }
       model.addAttribute("comment", b)
       fillEditModel(p, model, locale)
@@ -189,7 +191,8 @@ class PasteEditCtrl extends GenericEditCtrl[Paste] {
                     @Valid @ModelAttribute(MvcConstants.MODEL_KEY) b: Paste,
                     result: BindingResult, model: Model, locale: Locale,
                     redirectAttributes: RedirectAttributes): String = {
-    if (!isCurrentUserLoggedIn && !allowAnonymousPasteCreate) return MvcConstants.page403
+    if (!isCurrentUserLoggedIn && !allowAnonymousPasteCreate)
+      return MvcConstants.page403
     logger.debug("saving paste..")
 
     /**
@@ -210,9 +213,8 @@ class PasteEditCtrl extends GenericEditCtrl[Paste] {
     b.getTagsMap.clear()
     val allTags = tagDao.getTagsMap
     for (s <- b.tagsAsString.split(" ")) {
-      if (!StringUtils.isBlank(s)
-        && s.length >= 3 // name min size
-      ) if (allTags contains s)
+      if (!StringUtils.isBlank(s) && s.length >= 3   )
+        if (allTags contains s)
         b.getTagsMap.put(s, allTags(s))
       else
         b.getTagsMap.put(s, new Tag(s))
@@ -262,8 +264,7 @@ class PasteEditCtrl extends GenericEditCtrl[Paste] {
           summary
       } else b.text
     if (logger.isDebugEnabled())
-        logger.debug("__found thumbnail {} comments {}", b.thumbImage, b.commentsCount)
-
+      logger.debug("__found thumbnail {} comments {}", b.thumbImage, b.commentsCount)
     if (b.thumbImage != null) {
       b.thumbImage = resourceDao.saveResource('t', b.uuid, b.thumbImage)
     }
