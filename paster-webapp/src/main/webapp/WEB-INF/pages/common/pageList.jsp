@@ -1,11 +1,11 @@
 <%@ include file="/WEB-INF/pages/common/taglibs.jsp"%>
 
 
-        <%--
+<%--
 
         Generic paginated and sortable list
         
-        --%>    
+--%>    
 
 <tiles:importAttribute name="listMode" />
 <tiles:importAttribute name="pageItems" />
@@ -16,17 +16,11 @@
     <tiles:importAttribute name="result" />
 </c:if>
 
-
 <%-- processing elements per page and sort setup --%>
-
 <div class="paging"  >
-        
-    
     <c:choose>
         <c:when test="${listMode eq 'search' }">
-
             <c:forEach var="page" items="${pageSet}" varStatus="loopStatus">
-
                 <c:choose>
                     <c:when test="${pageItems.pageSize eq page}">
                         <span style="font-size: larger; "><c:out value="${page}"/> </span>
@@ -35,16 +29,11 @@
                         <a href="<c:url value='/main/paste/list/search/${result}/limit/${page}'/>">${page}</a>
                     </c:otherwise>
                 </c:choose>
-
                 <c:if test="${!loopStatus.last}"> | </c:if>
             </c:forEach>
-
-
         </c:when>
         <c:when test="${listMode eq 'list' }">
-
               <span >
-                  
             <c:choose>
                 <c:when test="${pageItems.sort.ascending == false}">
                     <span style="font-size: larger; "> &#x2191; </span>
@@ -58,7 +47,6 @@
         </span>
             
             <c:forEach var="page" items="${pageSet}" varStatus="loopStatus">
-
                 <c:choose>
                     <c:when test="${pageItems.pageSize eq page}">
                         <span style="font-size: larger; "><c:out value="${page}"/> </span>
@@ -67,30 +55,19 @@
                         <a href="<c:url value='/main/paste/list/${sourceType}/limit/${page}'/>">${page}</a>
                     </c:otherwise>
                 </c:choose>
-
                 <c:if test="${!loopStatus.last}"> | </c:if>
             </c:forEach>
-
-                  
-
-
         </c:when>
-
     </c:choose>
-
-
 </div>
 
 <%-- processing page list --%>
 
 <c:if test="${pageItems.pageCount > 1}">
-
     <div class="paging" style="margin: auto; text-align: center; background-color: #eeeeee; " >
-
     <c:choose>
         <%-- for search results --%>
         <c:when test="${listMode eq 'search' }">
-           
             <c:if test="${!pageItems.firstPage}">
                 <a href="<c:url value='/main/paste/list/search/${result}/prev'/>">&#8592;</a>
             </c:if>
@@ -109,16 +86,12 @@
                     &nbsp;
                 </c:forEach>
             </c:if>
-
             <c:if test="${!pageItems.lastPage}">
                 <a href="<c:url value='/main/paste/list/search/${result}/next'/>">&#8594;</a>
             </c:if>
-
         </c:when>
         <c:when test="${listMode eq 'list'}">
             <%-- for list --%>
-
-             
                 <c:forEach begin="1" end="${pageItems.pageCount}" step="1" var="pnumber">
                     <c:choose>
                         <c:when test="${pnumber==pageItems.page+1}">
@@ -131,9 +104,7 @@
                         </c:otherwise>
                     </c:choose>
                     &nbsp;
-                </c:forEach>
-
-          
+                </c:forEach>          
             <br/>
              <c:if test="${!pageItems.firstPage}">
                 <a href="<c:url value='/main/paste/list/${sourceType}/prev'/>">&#8592;</a>
@@ -142,18 +113,7 @@
             <c:if test="${!pageItems.lastPage}">
                 <a href="<c:url value='/main/paste/list/${sourceType}/next'/>">&#8594;</a>
             </c:if>
-
-
         </c:when>
     </c:choose>
-
-
-
-</div>
-
-
-    
-    
+</div>    
 </c:if>
-
-

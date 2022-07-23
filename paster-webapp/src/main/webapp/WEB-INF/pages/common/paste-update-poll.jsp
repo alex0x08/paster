@@ -23,7 +23,6 @@
         xmlhttp.onreadystatechange = function() {
             if (xmlhttp.readyState == XMLHttpRequest.DONE) {
                if (xmlhttp.status == 200) {
-
                   const obj = JSON.parse(xmlhttp.responseText, true);
                         const pcount = obj['count'];
                         if (pcount>0) {
@@ -32,7 +31,6 @@
                             cb.text = pcount;
                           	Tinycon.setBubble(pcount);
                         }
-
                } else {
                     cb.text= 'Sorry, your request failed :(';
                }
