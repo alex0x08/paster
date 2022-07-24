@@ -65,7 +65,8 @@ abstract class AbstractStringBasedDao(elementsAsString: String,
     for (ch <- elementsAsString.split(",")) {
       elements +=ch
     }
-    if (!elements.contains(defaultElement)) elements.add(defaultElement)
+    if (!elements.contains(defaultElement))
+      elements.add(defaultElement)
   }
   def getAvailableElements: Set[String] = elements.toSet
   def getDefault: String = defaultElement

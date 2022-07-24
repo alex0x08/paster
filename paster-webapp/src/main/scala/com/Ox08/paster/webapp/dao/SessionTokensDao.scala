@@ -17,6 +17,9 @@ package com.Ox08.paster.webapp.dao
 import com.Ox08.paster.webapp.model.SessionToken
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
+/**
+ * Sessions tokens storage
+ */
 @Repository("tokenDao")
 @Transactional(readOnly = true, rollbackFor = Array(classOf[Exception]))
 class SessionTokensDao extends BaseDao[SessionToken, java.lang.String](classOf[SessionToken]) {

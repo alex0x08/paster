@@ -109,7 +109,6 @@ abstract class SearchableDaoImpl[T <: Struct](model: Class[T])
      */
     if (StringUtils.isBlank(query) || query.trim().equals("*"))
       return getList
-
      new FSearch(
       if (!query.contains(":") && !query.contains("*"))
         query + "*"
@@ -118,4 +117,3 @@ abstract class SearchableDaoImpl[T <: Struct](model: Class[T])
     ).getResults
   }
 }
-

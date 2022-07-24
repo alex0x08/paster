@@ -164,7 +164,8 @@ class PasteDao extends SearchableDaoImpl[Paste](classOf[Paste]) {
       cb.equal(r.get("channel"), channel)): _*)
     em.createQuery[java.lang.Long](cq).getSingleResult
   }
-  override def fillHighlighted(highlighter: Highlighter, queryParser: QueryParser, model: Paste): Unit = {
+  override def fillHighlighted(highlighter: Highlighter,
+                               queryParser: QueryParser, model: Paste): Unit = {
     try {
       val hl = highlighter
         .getBestFragments(queryParser.getAnalyzer

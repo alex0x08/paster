@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Security configuration, used for 'public' mode: when pastas can be observed anonymously
+-->
 <beans:beans profile="paster-security-public" xmlns="http://www.springframework.org/schema/security"
              xmlns:beans="http://www.springframework.org/schema/beans"
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -6,84 +9,59 @@
              xsi:schemaLocation="http://www.springframework.org/schema/beans
                         http://www.springframework.org/schema/beans/spring-beans.xsd
                         http://www.springframework.org/schema/security 
-                        http://www.springframework.org/schema/security/spring-security.xsd"
->
-
+                        http://www.springframework.org/schema/security/spring-security.xsd">
     <global-method-security secured-annotations="enabled" jsr250-annotations="enabled"/>
-
     <http pattern="/images/**" security="none"/>
     <http pattern="/css/**" security="none"/>
     <http pattern="/js/**" security="none"/>
     <http pattern="/errors/*" security="none"/>
     <http pattern="/libs/**" security="none"/>
-
     <http pattern="/main/assets/${paste.app.id}/**" security="none"/>
     <http pattern="/main/static/${paste.app.id}/**" security="none"/>
     <http pattern="/main/resources/${paste.app.id}/**" security="none"/>
-
     <http realm="Paster Realm Public" auto-config="false" use-expressions="true"
           authentication-manager-ref="normal-auth-manager"
           disable-url-rewriting="true">
-
-
         <!--anonymous/-->
         <intercept-url pattern="/main/user*" access="hasRole('ROLE_ADMIN')"/>
         <intercept-url pattern="/main/user/**" access="hasRole('ROLE_ADMIN')"/>
         <intercept-url pattern="/main/admin/**" access="hasRole('ROLE_ADMIN')"/>
         <intercept-url pattern="/act/admin/**" access="hasRole('ROLE_ADMIN')"/>
-
         <intercept-url pattern="/**" access="permitAll()"/>
-
-
         <form-login login-page="/main/login"
                     default-target-url='/main/paste/list'
                     authentication-failure-url="/main/login?authfailed=true"
                     always-use-default-target='true'
                     login-processing-url="/act/doAuth"/>
-
-
         <session-management>
             <concurrency-control error-if-maximum-exceeded="false" max-sessions="10"
                                  session-registry-ref="sessionRegistry"/>
         </session-management>
-
         <remember-me services-ref="customRememberMeServices"/>
-
         <csrf request-matcher-ref="csrfSecurityRequestMatcher"/>
-
-
         <headers defaults-disabled="true">
-
             <cache-control/>
             <content-type-options/>
             <hsts/>
             <!--frame-options  /-->
             <xss-protection/>
         </headers>
-
         <logout logout-url="/act/logout"
                 logout-success-url="/main/login?exit"
                 delete-cookies="JSESSIONID"
                 invalidate-session="true"/>
-
         <!--   <remember-me /> -->
-
     </http>
-
-
     <beans:bean id="csrfSecurityRequestMatcher" class="com.Ox08.paster.webapp.web.CsrfSecurityRequestMatcher"/>
-
     <beans:bean id="userManager"
                 class="com.Ox08.paster.webapp.manager.UserManager">
     </beans:bean>
-
     <authentication-manager alias="normal-auth-manager">
         <authentication-provider user-service-ref="userManager">
             <password-encoder ref="passwordEncoder"/>
         </authentication-provider>
         <authentication-provider ref="rememberMeAuthenticationProvider"/>
     </authentication-manager>
-
     <beans:bean id="customRememberMeServices"
                 class="com.Ox08.paster.webapp.web.security.PasterPersistentRememberMeServices">
         <!-- This ensures that remember-me is added as an authentication provider -->
@@ -91,24 +69,13 @@
         <beans:constructor-arg ref="userManager"/>
         <beans:constructor-arg ref="tokenDao"/>
     </beans:bean>
-
     <beans:bean id="rememberMeAuthenticationProvider"
                 class="org.springframework.security.authentication.RememberMeAuthenticationProvider">
         <!-- This ensures that remember-me is added as an authentication provider -->
         <beans:constructor-arg value="${paster.security.session.salt}"/>
-
     </beans:bean>
-
-
     <beans:bean id="sessionRegistry" class="org.springframework.security.core.session.SessionRegistryImpl"/>
-
     <beans:bean id="passwordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
-
     <!-- Automatically receives AuthenticationEvent messages -->
     <beans:bean id="loggerListener" class="org.springframework.security.authentication.event.LoggerListener"/>
-
-
 </beans:beans>
-
-
-

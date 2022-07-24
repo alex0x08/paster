@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Main Paster configuration
+-->
 <beans profile="main" xmlns="http://www.springframework.org/schema/beans"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:p="http://www.springframework.org/schema/p"
@@ -22,42 +25,19 @@
 
     <bean id="propertyConfigurer-app"
           class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">
-
          <property name="locations">
             <list>
                 <value>file:${paster.app.home}/config.properties</value>
                 <value>classpath:default.properties</value>
             </list>
         </property>
-      
     </bean>
-    
-      <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource"
+    <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource"
           p:basenames="i18n.messages" />
-
-    <bean id="mimeTypeSource" class="org.springframework.context.support.ResourceBundleMessageSource"
-          p:basenames="mimeType" />
-
-    <bean id="mimeExtSource" class="org.springframework.context.support.ResourceBundleMessageSource"
-          p:basenames="mimeExt" />
-
-   <!--bean id="pasteRuntimeContext" class="uber.paste.base.PasterSpringRuntimeContext"/-->
-
-
-  <!--bean id="servletContextAttributeExporter" class="org.springframework.web.context.support.ServletContextAttributeExporter">
-        <property name="attributes">
-            <map>
-                <entry key="pasteRuntime" value-ref="pasteRuntimeContext" />
-            </map>
-        </property>
-    </bean-->
-
 
     <!-- Imports the configurations of the different infrastructure systems of the application -->
     <import resource="dao.xml" />
     <import resource="mvc.xml" />
     <import resource="security-public.xml" />
     <import resource="security-private.xml" />
-
-
 </beans>

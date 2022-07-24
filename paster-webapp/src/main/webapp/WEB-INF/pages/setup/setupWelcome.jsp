@@ -5,7 +5,6 @@
     <div class='col-md-offset-3 col-xs-4 col-md-5'>
 
 
-
    <c:url var="stepUrl" value='/main/setup/welcome' />
 
    <form:form
@@ -17,35 +16,24 @@
       <fieldset class="row mb-3">
          <legend class="col-form-label col-sm-2 pt-0">Languages</legend>
          <div class="col-sm-10">
-
                <c:forEach var="l" items="${availableLocales}" varStatus="loopStatus">
-
                  <div class="form-check">
                               <form:radiobutton cssClass="form-check-input" path="defaultLang" name="defaultLang"
                                value="${l.language}"
                                                      />
                                                  <form:errors element="div" path="defaultLang" cssClass="alert alert-danger" />
-
                      <label class="form-check-label" >
                          <c:out value="${l.displayName}"/>
                     </label>
-               </div>
-
-               </c:forEach>
-
-
-
-         </div>
-       </fieldset>
-
+                 </div>
+               </c:forEach>  
+               
   <div class="row mb-3">
      <div class="col-sm-10 offset-sm-2">
        <div class="form-check">
-                <form:checkbox cssClass="form-check-input" path="switchToUserLocale" name="switchToUserLocale"
-                                       value="${l.language}"
-                                                              />
-                                                          <form:errors element="div" path="switchToUserLocale" cssClass="alert alert-danger" />
-
+               <form:checkbox cssClass="form-check-input" path="switchToUserLocale" name="switchToUserLocale"
+                                       value="${l.language}" />
+               <form:errors element="div" path="switchToUserLocale" cssClass="alert alert-danger" />
          <label class="form-check-label">
            Allow locale switch to browser locale
          </label>
@@ -57,10 +45,7 @@
        Next
    </button>
 
-   </form:form>
-
-
-
+  </form:form>
     </div>
 </div>
 

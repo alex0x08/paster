@@ -71,7 +71,8 @@ class Boot private() extends Logged {
     logger.info(SystemMessage.of("paster.system.message.filesDir", files_dir.getAbsolutePath))
     system.setFilesDir(files_dir)*/
     val config = new File(app_home, "config.properties")
-    if (!config.exists || !config.isFile) initialConfig = true
+    if (!config.exists || !config.isFile)
+      initialConfig = true
     doResourceCheck(app_home, "users.csv")
     doResourceCheck(app_home, "config.properties")
     // load release details

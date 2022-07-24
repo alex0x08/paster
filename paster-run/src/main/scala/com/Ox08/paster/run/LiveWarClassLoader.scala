@@ -150,7 +150,7 @@ class LiveWarClassLoader(debug: Boolean, warFileUrl: URL, parent: ClassLoader)
     Collections.enumeration(urls)
   }
   @throws[IOException]
-  private def loadClass(name: String, entry: ZipEntry): Class[_] = try {
+  private def loadClass(name: String, entry: ZipEntry): Class[_] =  {
     val in = warFile.getInputStream(entry)
     try {
       val classBytes = readBytes(in, 4096)
