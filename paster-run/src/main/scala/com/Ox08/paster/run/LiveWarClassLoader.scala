@@ -182,7 +182,6 @@ class VirtualWARUrlStreamHandler(val debug: Boolean) extends URLStreamHandler {
     var fileName = u.getFile
     if (debug)
         debug(s"opening file $fileName")
-
     if (fileName.startsWith("war-virtual:"))
       fileName = fileName.substring(0, "war-virtual:".length)
     if (fileName.startsWith("dup:")) {

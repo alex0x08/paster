@@ -25,7 +25,7 @@
         <dependency>  
             <groupId>com.Ox08.paster.webapp</groupId>
             <artifactId>paster-tiles-jakarta</artifactId>
-            <version>${parent.version}</version>  
+            <version>${project.parent.version}</version>
             <scope>provided</scope>
         </dependency>
 

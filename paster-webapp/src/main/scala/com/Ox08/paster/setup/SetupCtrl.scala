@@ -14,20 +14,15 @@ import java.util.Locale
 /**
  * This is 'all-in-one' configuration controller, used for setup stage
  */
-
 @Controller
-class SetupCtrl extends Logged{
-
+class SetupCtrl extends Logged {
   @Autowired
   private val sysService: SystemManagementService = null
-
   @Autowired
   protected val messageSource: MessageSource = null
   protected val systemInfo: BOOT.SystemInfo = Boot.BOOT.getSystemInfo
-
   @Value("${paste.app.id}")
   val appId: String = null
-
   @ModelAttribute("appId")
   def getAppId: String = appId
   @ModelAttribute("systemInfo")
@@ -37,19 +32,15 @@ class SetupCtrl extends Logged{
     Locale.US,
     Locale.forLanguageTag("ru_RU")
   )
-
   protected def getResource(key: String, locale: Locale): String =
     messageSource.getMessage(key, new Array[java.lang.Object](0), locale)
   protected def getResource(key: String, args: Array[Any], locale: Locale): String =
     messageSource.getMessage(key, args.asInstanceOf[Array[java.lang.Object]], locale)
-
   @ExceptionHandler(Array(classOf[Throwable]))
   protected def handleAllExceptions(ex: Throwable): String = {
     logger.error(ex.getMessage, ex)
     MvcConstants.page500
   }
-
-
   @RequestMapping(value = Array("/"))
   def index(model: Model): String = {
     model.asMap().clear()
@@ -57,12 +48,13 @@ class SetupCtrl extends Logged{
   }
   /**
    * Handles error pages
+   *
    * @param response
    * @param errorCode
    * @return
    */
   @RequestMapping(Array("/error/{errorCode:[0-9_]+}"))
-  def error(response: HttpServletResponse,model: Model,
+  def error(response: HttpServletResponse, model: Model,
             @PathVariable("errorCode") errorCode: Int): String = errorCode match {
     case 403 | 404 | 500 =>
       model.asMap().clear()
@@ -73,24 +65,16 @@ class SetupCtrl extends Logged{
   }
   @RequestMapping(Array("/setup/welcome"))
   def setupWelcome(model: Model): String = "/setup/welcome"
-
   @RequestMapping(Array("/setup/db"))
   def setupDatabase(model: Model): String = "/setup/db"
-
-
   @RequestMapping(value = Array("/setup/finalizeInstall"), method = Array(RequestMethod.POST))
   def finalizeInstall(
-                   model: Model, locale: Locale): String = {
+                       model: Model, locale: Locale): String = {
     model.asMap().clear()
     Boot.BOOT.markInstalled()
-
     sysService.restartApplication()
-
     "redirect:/main/restarting"
   }
-
   @RequestMapping(Array("/restarting"))
   def restarting(model: Model): String = "/restarting"
-
-
 }

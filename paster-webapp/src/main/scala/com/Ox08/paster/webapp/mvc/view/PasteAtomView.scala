@@ -15,7 +15,8 @@ import java.util.{Collections, Date}
  * To change this template use File | Settings | File Templates.
  */
 class PasteAtomView extends AbstractAtomFeedView {
-  override protected def buildFeedMetadata(model: java.util.Map[String, Object], feed: Feed, request: HttpServletRequest): Unit = {
+  override protected def buildFeedMetadata(model: java.util.Map[String, Object],
+                                           feed: Feed, request: HttpServletRequest): Unit = {
     feed.setId("tag:paster")
     feed.setTitle("Latest pastas")
     val contentList = model.get(MvcConstants.NODE_LIST_MODEL).asInstanceOf[java.util.List[Paste]]

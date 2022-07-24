@@ -7,7 +7,8 @@
                 <fmt:param value="<span id='newPastasCount'></span>"/>
             </fmt:message>
                 <span class="right">
-                    <a href="<c:url value='/main/paste/list/${sourceType}'/>" title="<fmt:message key='button.refresh'/>">
+                    <a href="<c:url value='/main/paste/list/${sourceType}'/>" 
+                        title="<fmt:message key='button.refresh'/>">
                    <span class="i" style="font-size: 1.3em;">P</span> </a>        
                 </span>              
         </p>    
@@ -23,7 +24,6 @@
         xmlhttp.onreadystatechange = function() {
             if (xmlhttp.readyState == XMLHttpRequest.DONE) {
                if (xmlhttp.status == 200) {
-
                   const obj = JSON.parse(xmlhttp.responseText, true);
                         const pcount = obj['count'];
                         if (pcount>0) {
@@ -32,7 +32,6 @@
                             cb.text = pcount;
                           	Tinycon.setBubble(pcount);
                         }
-
                } else {
                     cb.text= 'Sorry, your request failed :(';
                }
@@ -43,9 +42,7 @@
         xmlhttp.send();
     }
 
-
     window.addEventListener('load', function() {
             setInterval(checkNewPastas,10000);
-
     }); 
 </script>

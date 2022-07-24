@@ -49,11 +49,10 @@ object UserManager extends Logged {
           SecurityContextHolder.getContext
             .getAuthentication.getPrincipal.asInstanceOf[PasterUser]
         case _ =>
-
           /**
            * this almost all time means that we got anonymous user
            */
-          if (logger.isDebugEnabled())
+          if (logger.isDebugEnabled)
               logger.debug("getCurrentUser ,unknown principal type: {}",
               SecurityContextHolder.getContext.getAuthentication.getPrincipal.toString)
           null
@@ -66,7 +65,6 @@ object UserManager extends Logged {
 class UserManager extends UserDetailsService with Logged {
   // runtime storage for users
   private val users = mutable.Map[String, PasterUser]()
-
   @Autowired
   @Qualifier("sessionRegistry")
   val sessionRegistry: SessionRegistry = null
@@ -75,9 +73,8 @@ class UserManager extends UserDetailsService with Logged {
   def loadUsers(): Unit = {
     val csv = new File(Boot.BOOT.getSystemInfo.getAppHome, "users.csv")
     loadUsersFromCSV(csv, (record: CSVRecord) => {
-      if (logger.isDebugEnabled())
+      if (logger.isDebugEnabled)
         logger.debug("processing record : {}", record)
-
       val u = new PasterUser(record.get("NAME"),
         record.get("USERNAME"),
         record.get("PASSWORD"), util.Set.of(
@@ -96,12 +93,10 @@ class UserManager extends UserDetailsService with Logged {
    *    callback for single record
    */
   def loadUsersFromCSV(csv: File, callback: CSVRecord => Unit): Unit = {
-    if (!csv.exists() || !csv.isFile) {
+    if (!csv.exists() || !csv.isFile)
       throw SystemError.withError(0x6001, s"CSV file '${csv.getName}' with users does not exist!")
-    }
-    if (csv.length()==0) {
+    if (csv.length()==0)
       throw SystemError.withError(0x6001, s"CSV file '${csv.getName}' with users is empty!")
-    }
     val r = new FileReader(csv)
     try {
       val records = CSVFormat.DEFAULT.builder().setHeader()
@@ -124,14 +119,14 @@ class UserManager extends UserDetailsService with Logged {
    */
   def save(u: PasterUser): Unit = {
     users.put(u.getUsername(), u)
-    if (logger.isDebugEnabled())
+    if (logger.isDebugEnabled)
         logger.debug("saved {}", u.getUsername())
   }
   @Override
   def getUser(username: String): PasterUser = {
-    if (users contains username) {
+    if (users contains username)
       users(username)
-    } else null
+    else null
   }
   @Override
   @throws(classOf[UsernameNotFoundException])
@@ -150,7 +145,7 @@ class UserManager extends UserDetailsService with Logged {
   @throws(classOf[DataAccessException])
   override def loadUserByUsername(username: String): UserDetails = {
     val out: PasterUser = getUser(username)
-    if (logger.isDebugEnabled())
+    if (logger.isDebugEnabled)
         logger.debug("loaded by username {} , user {}", username, out)
     if (out == null)
       throw new UsernameNotFoundException(s"User $username not found")
@@ -158,8 +153,8 @@ class UserManager extends UserDetailsService with Logged {
   }
   def changePassword(user: PasterUser, newPassword: String): PasterUser = {
     val encodedPass = passwordEncoder.encode(newPassword)
-    if (logger.isDebugEnabled())
-      logger.debug("changing password for user {}", user.getUsername())
+    if (logger.isDebugEnabled)
+      logger.debug("changing password for user {}", user.getUsername)
     user.setPassword(encodedPass)
     user
   }

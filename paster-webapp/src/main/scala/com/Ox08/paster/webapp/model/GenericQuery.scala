@@ -32,11 +32,6 @@ trait Query {
    */
   def getPage: Int
   def setPage(page: Int): Unit
-
-  /**
-   * build CompassQuery from CompassSession
-   */
-  //def fillQuery(qb: QueryBuilder): org.apache.lucene.search.Query
 }
 class GenericQuery extends Query {
   var query: String = _

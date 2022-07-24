@@ -41,8 +41,9 @@ abstract class BaseDao[T <: java.io.Serializable, PK <: java.io.Serializable](mo
     val r: Root[T] = cr.from(model) // query and root instances
     val ct: CriteriaQuery[Tuple] = cb.createTupleQuery() // tuple query
   }
+  // famous JPA entity manager instance
   @PersistenceContext
-  protected val em: EntityManager = null // famous JPA entity manager instance, = null is required because of Scala
+  protected val em: EntityManager = _
   /**
    * @return model class
    */
@@ -60,7 +61,7 @@ abstract class BaseDao[T <: java.io.Serializable, PK <: java.io.Serializable](mo
   @Transactional(readOnly = false,
     rollbackFor = Array(classOf[Exception]), propagation = Propagation.REQUIRED)
   def save(obj: T): T = {
-    if (logger.isDebugEnabled())
+    if (logger.isDebugEnabled)
         logger.debug("saving obj {}", obj)
     val out: T = em.merge(obj)
     em.flush()
@@ -124,7 +125,10 @@ abstract class BaseDao[T <: java.io.Serializable, PK <: java.io.Serializable](mo
                           order: Option[String] = None,
                           asc: Option[Boolean] = None): T = {
     val results = getListByKeyValue(key, value, order, asc)
-    if (results.isEmpty) null.asInstanceOf[T] else results.get(0)
+    if (results.isEmpty)
+      null.asInstanceOf[T]
+    else
+      results.get(0)
   }
   /**
    * get list of objects by criteria (key-value)
@@ -178,9 +182,8 @@ abstract class BaseDao[T <: java.io.Serializable, PK <: java.io.Serializable](mo
     val out = new util.ArrayList[PK]
     val cr = new CriteriaSet
     cr.ct.multiselect(cr.r.get("id"))
-    if (from.isInstanceOf[Long] && from.asInstanceOf[Long] > 0) {
+    if (from.isInstanceOf[Long] && from.asInstanceOf[Long] > 0)
       cr.ct.where(Array(cr.cb.lt(cr.r.get("id"), from.asInstanceOf[Long])): _*)
-    }
     val tupleResult: java.util.List[Tuple] = em.createQuery(cr.ct)
       .setMaxResults(BaseDao.MAX_RESULTS).getResultList
     for (t <- tupleResult.asScala) {

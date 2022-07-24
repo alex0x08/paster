@@ -19,10 +19,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute
 import com.thoughtworks.xstream.annotations.XStreamOmitField
 import com.thoughtworks.xstream.annotations.XStreamAlias
-
 import jakarta.persistence.{CascadeType, Column, Entity, FetchType, Lob, ManyToMany, MapKey, PrePersist, PreUpdate, Table}
 import jakarta.validation.constraints.{NotNull, Size}
-
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.{FullTextField, Indexed, KeywordField}
 import java.util
 import java.util.UUID
@@ -179,7 +177,6 @@ class Paste(ptitle: String) extends Struct with java.io.Serializable {
   def getSymbolsCount: Int = symbolsCount
   def getIntegrationCode: String = integrationCode
   def getReviewImgData: String = reviewImgData
-
   @JsonIgnore
   def getComments: util.List[Comment] = comments
   override def terms(): List[String] = super.terms() ::: List[String]("text", "tags")
@@ -198,9 +195,8 @@ class Paste(ptitle: String) extends Struct with java.io.Serializable {
    * MUST be called with opened hibernate session
    */
   override def loadFull(): Unit = {
-    if (Struct.logger.isDebugEnabled())
-        Struct.logger.debug("called loadFull for {}", id)
-
+    if (Struct.logger.isDebugEnabled)
+      Struct.logger.debug("called loadFull for {}", id)
     for (t <- tagsMap.entrySet().asScala) {
       t.getValue.name
     }

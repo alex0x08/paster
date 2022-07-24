@@ -68,7 +68,7 @@ class PasterPersistentRememberMeServices(key: String, uds: UserDetailsService, t
                                 request: HttpServletRequest, response: HttpServletResponse,
                                 successfulAuthentication: Authentication): Unit = {
     val login = successfulAuthentication.getName
-    if (log.isDebugEnabled())
+    if (log.isDebugEnabled)
       log.debug("Creating new persistent login for user {}", login)
 
     val user = getUserDetailsService.loadUserByUsername(login).asInstanceOf[PasterUser]
@@ -85,7 +85,7 @@ class PasterPersistentRememberMeServices(key: String, uds: UserDetailsService, t
     } catch {
       case e@(_: DataAccessException
         ) =>
-        log.error(e.getLocalizedMessage, e)
+        log.error(e.getMessage, e)
     }
   }
   /**
@@ -94,7 +94,9 @@ class PasterPersistentRememberMeServices(key: String, uds: UserDetailsService, t
    * The standard Spring Security implementations are too basic: they invalidate all tokens for the
    * current user, so when he logs out from one browser, all his other sessions are destroyed.
    */
-  override def logout(request: HttpServletRequest, response: HttpServletResponse, authentication: Authentication): Unit = {
+  override def logout(request: HttpServletRequest,
+                      response: HttpServletResponse,
+                      authentication: Authentication): Unit = {
     val rememberMeCookie = extractRememberMeCookie(request)
     if (rememberMeCookie != null && rememberMeCookie.nonEmpty) try {
       val cookieTokens = decodeCookie(rememberMeCookie)
@@ -104,7 +106,7 @@ class PasterPersistentRememberMeServices(key: String, uds: UserDetailsService, t
       case e@(_: InvalidCookieException
               | _: RememberMeAuthenticationException
         ) =>
-        log.error(e.getLocalizedMessage, e)
+        log.error(e.getMessage, e)
     }
     super.logout(request, response, authentication)
   }
@@ -113,14 +115,16 @@ class PasterPersistentRememberMeServices(key: String, uds: UserDetailsService, t
    */
   def getPersistentToken(cookieTokens: Array[String]): SessionToken = {
     if (cookieTokens.length != 2) {
-      throw new InvalidCookieException(s"Cookie token did not contain 2 tokens, but contained '${util.Arrays.asList(cookieTokens)}'")
+      throw new InvalidCookieException(
+        s"Cookie token did not contain 2 tokens, but contained '${util.Arrays.asList(cookieTokens)}'")
     }
     val presentedSeries = cookieTokens(0)
     val presentedToken = cookieTokens(1)
     val token = tokenDao.get(presentedSeries)
     if (token == null) {
       // No series match, so we can't authenticate using this cookie
-      throw new RememberMeAuthenticationException(s"No persistent token found for series id: $presentedSeries")
+      throw new RememberMeAuthenticationException(
+        s"No persistent token found for series id: $presentedSeries")
     }
     // We have a match for this user/series combination
     log.info("presentedToken={} / tokenValue={}",
@@ -128,7 +132,8 @@ class PasterPersistentRememberMeServices(key: String, uds: UserDetailsService, t
     if (!presentedToken.equals(token.tokenValue)) {
       // Token doesn't match series value. Delete this session and throw an exception.
       tokenDao.remove(token.series)
-      throw new RememberMeAuthenticationException("Invalid remember-me token (Series/token) mismatch. Implies previous cookie theft attack.")
+      throw new RememberMeAuthenticationException(
+        "Invalid remember-me token (Series/token) mismatch. Implies previous cookie theft attack.")
     }
     if (LocalDate.ofInstant(token.tokenDate.toInstant, ZoneId.systemDefault())
       .plusDays(CPRConstants.TOKEN_VALIDITY_DAYS).isBefore(LocalDate.now())) {

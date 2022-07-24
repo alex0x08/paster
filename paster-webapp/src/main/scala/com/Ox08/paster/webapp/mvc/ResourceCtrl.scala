@@ -39,7 +39,8 @@ class ResourceCtrl extends AbstractCtrl {
                    @PathVariable("type") ptype: Char,
                    response: HttpServletResponse
                  ): InputStreamResource = {
-    logger.debug("get {} type: {} lm: {}", path, ptype, lastModified)
+    if (logger.isDebugEnabled)
+      logger.debug("get {} type: {} lm: {}", path, ptype, lastModified)
     ptype match {
       case 't' | 'r' | 'a' | 'b' =>
       //allow

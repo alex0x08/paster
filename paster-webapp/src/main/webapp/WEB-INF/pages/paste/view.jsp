@@ -1,11 +1,8 @@
 <%@ include file="/WEB-INF/pages/common/taglibs.jsp"%>
 
 
-
-
 <jsp:include page="/WEB-INF/pages/paste/common/paste-view-top.jsp"/>
 <jsp:include page="/WEB-INF/pages/paste/common/paste-view-common.jsp"/>
-
 
 <div id="numSpace" class="line" >
 </div>
@@ -21,7 +18,6 @@
 <span id="pasteLineToCopy" style="display:none;">
     NONE
 </span>
-
 
 <div id="pageLoadSpinner" >
     <i class="fa fa-spinner"></i>
