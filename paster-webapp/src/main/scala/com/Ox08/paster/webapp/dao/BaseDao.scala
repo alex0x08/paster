@@ -43,7 +43,7 @@ abstract class BaseDao[T <: java.io.Serializable, PK <: java.io.Serializable](mo
   }
   // famous JPA entity manager instance
   @PersistenceContext
-  protected val em: EntityManager = _
+  protected val em: EntityManager = null
   /**
    * @return model class
    */

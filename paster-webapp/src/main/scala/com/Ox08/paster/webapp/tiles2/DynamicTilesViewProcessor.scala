@@ -148,7 +148,8 @@ class DynamicTilesViewProcessor extends Logged {
     else if (container.isValidDefinition(beanName, tilesRequest)) {
       derivedDefinitionName = beanName
       beanName
-    } else throw new TilesException(s"No definition found for '$beanName'")
+    } else
+      throw new TilesException(s"No definition found for '$beanName'")
   }
   protected def createTilesRequest(applicationContext: ApplicationContext,
                                    request: HttpServletRequest, response: HttpServletResponse): Request =

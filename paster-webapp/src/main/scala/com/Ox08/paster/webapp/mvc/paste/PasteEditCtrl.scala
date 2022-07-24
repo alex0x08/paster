@@ -166,7 +166,7 @@ class PasteEditCtrl extends GenericEditCtrl[Paste] {
   def saveComment(@Valid b: Comment,
                   result: BindingResult, model: Model, locale: Locale): String = {
     if (logger.isDebugEnabled)
-      logger.debug("adding comment, title: '{}'", b.title)
+      logger.debug("adding comment, text sz: {}", if (b.text !=null) b.text.length else -1)
     if (!isCurrentUserLoggedIn && !allowAnonymousCommentsCreate)
       return MvcConstants.page403
     val p = manager().get(b.pasteId)

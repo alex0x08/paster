@@ -18,7 +18,7 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="paster-libs" options="" />
+      <module name="paster-libs" options="-Xlint:all,-processing -Xlint:-serial" />
       <module name="paster-run" options="-Xlint:all,-processing -Xlint:-serial" />
       <module name="paster-spring-tiles3-jakarta" options="-Xlint:all,-processing -Xlint:-serial" />
       <module name="paster-tiles-jakarta" options="-Xlint:all,-processing -Xlint:-serial" />

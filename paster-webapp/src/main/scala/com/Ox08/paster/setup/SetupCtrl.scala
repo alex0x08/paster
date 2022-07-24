@@ -65,8 +65,16 @@ class SetupCtrl extends Logged {
   }
   @RequestMapping(Array("/setup/welcome"))
   def setupWelcome(model: Model): String = "/setup/welcome"
+
+
   @RequestMapping(Array("/setup/db"))
-  def setupDatabase(model: Model): String = "/setup/db"
+  def setupDatabase(model: Model): String = {
+
+
+
+    "/setup/db"
+  }
+
   @RequestMapping(value = Array("/setup/finalizeInstall"), method = Array(RequestMethod.POST))
   def finalizeInstall(
                        model: Model, locale: Locale): String = {

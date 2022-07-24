@@ -4,7 +4,7 @@ import jakarta.servlet.{ServletContextEvent, ServletContextListener}
 import org.slf4j.bridge.SLF4JBridgeHandler
 import org.springframework.context.i18n.LocaleContextHolder
 
-import java.io.IOException
+import java.io.{File, IOException}
 import java.util.Locale
 object SystemConstants {
   val APP_BASE: String = ".apps"
@@ -14,6 +14,10 @@ class SystemPropertiesListener extends ServletContextListener with Logged {
   override def contextInitialized(event: ServletContextEvent): Unit = {
     try {
       doBoot()
+
+      event.getServletContext.setAttribute("jakarta.servlet.context.tempdir",
+        new File(Boot.BOOT.getSystemInfo.getTempDir,"servletTmp"))
+
       var springProfiles = ""
       if (Boot.BOOT.getSystemInfo.isInstalled)
         springProfiles += "main"

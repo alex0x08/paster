@@ -65,7 +65,8 @@ abstract class GenericEditCtrl[T <: Struct] extends AbstractCtrl {
       return listPage
     }
     if (result.hasErrors) {
-      logger.debug("form has errors {}", result.getErrorCount)
+      if (logger.isDebugEnabled)
+        logger.debug("form has errors {}", result.getErrorCount)
       fillEditModel(b, model, locale)
       return editPage
     }

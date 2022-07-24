@@ -20,24 +20,26 @@ class H2ConsoleExtendedServlet extends JakartaWebServlet with Logged {
   private var dataSource: DataSource = _
   private var server:WebServer = _
 
+  override def destroy(): Unit = {
+    if (server!=null)
+        server.stop()
+  }
+
   override def init(): Unit = {
-
     if (!Boot.BOOT.getSystemInfo.isInstalled) return
-
     server = new WebServer
-    logger.debug("h2 servlet init..")
+    if (logger.isDebugEnabled) {
+      logger.debug("h2 servlet init..")
+    }
     val ctx: ApplicationContext = WebApplicationContextUtils
       .getWebApplicationContext(getServletContext)
-
       dataSource = ctx.getBean("dataSource").asInstanceOf[DataSource]
-
     try {
       server.setAllowChunked(false)
       server.init()
       val f = getClass.getSuperclass.getDeclaredField("server")
       f.setAccessible(true)
       f.set(this, server)
-
       //    val session = createAndRegLocalSession()
       //   val ss = session.get("sessionId").asInstanceOf[String]
       //  logger.debug("h2 sessionId: {}",ss);
@@ -53,9 +55,8 @@ class H2ConsoleExtendedServlet extends JakartaWebServlet with Logged {
   }
   @throws(classOf[java.io.IOException])
   override def doGet(req: HttpServletRequest, res: HttpServletResponse): Unit = {
-
-    if (!Boot.BOOT.getSystemInfo.isInstalled) return
-
+    if (!Boot.BOOT.getSystemInfo.isInstalled)
+      return
     val h2console_db_session_id = getH2SessionIdFromContext
     var session: WebSession = null
     if (h2console_db_session_id != null) {
@@ -63,8 +64,10 @@ class H2ConsoleExtendedServlet extends JakartaWebServlet with Logged {
       if (session == null)
         session = createAndRegLocalSession()
       else
-        logger.debug("using existing session {}", h2console_db_session_id)
-    } else session = createAndRegLocalSession()
+        if (logger.isDebugEnabled)
+          logger.debug("using existing session {}", h2console_db_session_id)
+    } else
+      session = createAndRegLocalSession()
     /**
      * refresh connection if closed
      *
@@ -74,7 +77,8 @@ class H2ConsoleExtendedServlet extends JakartaWebServlet with Logged {
       con = dataSource.getConnection //.unwrap(Class[org.h2.jdbc.JdbcConnection])
       session.setConnection(con)
       session.put("url", con.getMetaData.getURL)
-      logger.debug("reopened connection to db")
+      if (logger.isDebugEnabled)
+        logger.debug("reopened connection to db")
     }
     /**
      * attributes are filled from both httpservlet attributes and params
@@ -99,11 +103,12 @@ class H2ConsoleExtendedServlet extends JakartaWebServlet with Logged {
   private def createAndRegLocalSession(): WebSession = {
     this.synchronized {
       val conn = dataSource.getConnection()
-      val cconn: Connection = conn.unwrap(classOf[Connection])
-      logger.debug("driver: {}", cconn.getClass.getCanonicalName)
+      val unwrappedConnection: Connection = conn.unwrap(classOf[Connection])
+      if (logger.isDebugEnabled)
+        logger.debug("driver: {}", unwrappedConnection.getClass.getCanonicalName)
       val session = server.createNewSession("local")
       session.setShutdownServerOnDisconnect()
-      session.setConnection(cconn)
+      session.setConnection(unwrappedConnection)
       session.put("url", conn.getMetaData.getURL)
       /**
        *
@@ -120,7 +125,8 @@ class H2ConsoleExtendedServlet extends JakartaWebServlet with Logged {
        *
        */
       val ss = session.get("sessionId").asInstanceOf[String]
-      logger.debug("created h2 session {}", ss)
+      if (logger.isDebugEnabled)
+        logger.debug("created h2 session {}", ss)
       getServletContext.setAttribute("h2console-session-id", ss)
       return session
     }
