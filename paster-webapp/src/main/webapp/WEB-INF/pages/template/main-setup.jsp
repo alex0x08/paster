@@ -49,6 +49,33 @@
         </div>
         <div class="row">
             <div class="col-xs-10 col-sm-12 col-md-12 col-lg-16 ">
+
+                <nav aria-label="breadcrumb">
+                  <ol class="breadcrumb">
+                        <c:forEach var="s" items="${availableSteps}" varStatus="loopStatus">
+                        <c:choose>
+                             <c:when test="${s.value eq step.stepName}">
+                                   <li class="breadcrumb-item active" aria-current="page">
+                                      <c:out value="${s.value}"/>
+                                   </li>
+                             </c:when>
+                             <c:otherwise>
+                                <c:url var="stepUrl" value='/main/setup/${s.key}' />
+                                <li class="breadcrumb-item">
+                                               <a href="${stepUrl}">
+                                                   <c:out value="${s.value}"/>
+                                               </a>
+                                </li>
+                             </c:otherwise>
+                         </c:choose>
+                      </c:forEach>
+
+                    <li class="breadcrumb-item active" aria-current="page">Complete</li>
+                  </ol>
+                </nav>
+
+
+
                 <tiles:insertAttribute name="content" />
             </div>
         </div>

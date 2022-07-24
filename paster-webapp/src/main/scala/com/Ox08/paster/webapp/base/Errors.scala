@@ -1,10 +1,10 @@
 package com.Ox08.paster.webapp.base
 import org.slf4j.helpers.MessageFormatter
 import org.springframework.util.Assert
+
 import java.lang.reflect.InvocationTargetException
 import java.util
 import java.util.{Locale, ResourceBundle}
-import scala.collection.mutable
 import scala.jdk.CollectionConverters._
 /**
  * Custom storage for i18n bundles
@@ -74,9 +74,9 @@ class PasterRuntimeException(code: Int, // error code ( ex. 0x06001 )
  * @since 1.0
  */
 class SystemError extends AbstractI18nMessageStore("bundles/errorMessages") {
-  private def createException[T <: PasterRuntimeException](clazz: Class[T], code: Int, params: Any*)
+  private def createException[T <: PasterRuntimeException](clazz: Class[T], code: Int, params: AnyRef*)
   = createExceptionImpl(clazz, code, null, null, params)
-  private def createException[T <: PasterRuntimeException](clazz: Class[T], code: Int, message: String, params: Any*)
+  private def createException[T <: PasterRuntimeException](clazz: Class[T], code: Int, message: String, params: AnyRef*)
   = createExceptionImpl(clazz, code, message, null, params)
   /**
    * создать объект исключения со сформированным сообщением об ошибке
@@ -89,7 +89,7 @@ class SystemError extends AbstractI18nMessageStore("bundles/errorMessages") {
    * @return сформированное исключение
    */
   private def createExceptionImpl[T <: PasterRuntimeException](clazz: Class[T], code: Int, message: String,
-                                                               parent: Exception, params: Any*) = {
+                                                               parent: Exception, params: AnyRef*) = {
     val errorMsg = getErrorMessage(code, message, parent, true, params)
     try clazz.getConstructor(classOf[Int], classOf[String], classOf[Exception])
       .newInstance(code, errorMsg, parent)
@@ -158,7 +158,7 @@ class SystemError extends AbstractI18nMessageStore("bundles/errorMessages") {
    * @param message добаляемое сообщение
    * @return новый массив параметров
    */
-  private def prepareParams(message: String, params: Any*): Array[AnyRef] = {
+  private def prepareParams(message: String, params: AnyRef*): Array[AnyRef] = {
     if (params.nonEmpty) {
       val appendedParams = new Array[AnyRef](params.length + 1)
       appendedParams(0) = message
@@ -196,7 +196,7 @@ object SystemError { // синглтон
    * @param params параметры
    * @return сформированное сообщение
    */
-  def messageFor(code: Int, params: Any*): String = INSTANCE
+  def messageFor(code: Int, params: AnyRef*): String = INSTANCE
           .getErrorMessage(code, null, null, true, params)
   /**
    * получить сформированное сообщение об ошибке * с настройкой префикса
@@ -206,7 +206,7 @@ object SystemError { // синглтон
    * @param params параметры
    * @return сформированное сообщение
    */
-  def messageForPrefix(code: Int, prefix: Boolean, params: Any*): String = INSTANCE
+  def messageForPrefix(code: Int, prefix: Boolean, params: AnyRef*): String = INSTANCE
           .getErrorMessage(code, null, null, prefix, params)
   /**
    * получить сформированное исключение для ошибки
@@ -215,13 +215,13 @@ object SystemError { // синглтон
    * @param params параметры
    * @return сформированное исключение
    */
-  def withCode(code: Int, params: Any*): PasterRuntimeException = INSTANCE
+  def withCode(code: Int, params: AnyRef*): PasterRuntimeException = INSTANCE
             .createException(classOf[PasterRuntimeException], code, params)
-  def withMessage(code: Int, message: String, params: Any*): PasterRuntimeException = INSTANCE
+  def withMessage(code: Int, message: String, params: AnyRef*): PasterRuntimeException = INSTANCE
             .createException(classOf[PasterRuntimeException], code, message, params)
-  def withError(code: Int, parent: Exception, params: Any*): PasterRuntimeException = INSTANCE
+  def withError(code: Int, parent: Exception, params: AnyRef*): PasterRuntimeException = INSTANCE
             .createExceptionImpl(classOf[PasterRuntimeException], code, null, parent, params)
-  def withError(code: Int, params: Any*): PasterRuntimeException = INSTANCE
+  def withError(code: Int, params: AnyRef*): PasterRuntimeException = INSTANCE
             .createExceptionImpl(classOf[PasterRuntimeException], code, null, null, params)
 }
 /**

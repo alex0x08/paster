@@ -2,4 +2,4 @@
 
 <c:url var="url" value='/' />
 
-<META HTTP-EQUIV="REFRESH" CONTENT="5;URL='${url}'"/>
+<META HTTP-EQUIV="REFRESH" CONTENT="15;URL='${url}'"/>

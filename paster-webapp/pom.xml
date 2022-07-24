@@ -30,10 +30,10 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
     </properties>
-<dependencyManagement>
+    <dependencyManagement>
 
 
-</dependencyManagement>
+    </dependencyManagement>
 
     <dependencies>
 
@@ -219,7 +219,7 @@
             <artifactId>jackson-core</artifactId>
             <version>2.13.3</version>
         </dependency>
-            
+
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
@@ -391,45 +391,6 @@
 
     </dependencies>
 
-    <profiles>
-        
-        <profile>
-            <id>dev</id>
-             <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <properties>
-                <paster.app.build.profile>DEVELOPMENT</paster.app.build.profile>
-            </properties>    
-            
-        </profile>
-        
-        <profile>
-            <id>prod</id>
-                
-            <properties>
-                <paster.app.build.profile>PRODUCTION</paster.app.build.profile>
-            </properties>    
-                
-            <build>
-                <plugins>                    
-                     <plugin>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-jspc-maven-plugin</artifactId>
-                <version>11.0.11</version>
-                <executions>
-                    <execution>
-                        <id>jspc</id>
-                        <goals>
-                            <goal>jspc</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
 
     <build>
         <defaultGoal>package</defaultGoal>
@@ -498,7 +459,8 @@
 
                     <skip>false</skip>
                     <failOnNoGitDirectory>true</failOnNoGitDirectory>
-                    <generateGitPropertiesFilename>${project.build.outputDirectory}/git.properties</generateGitPropertiesFilename>
+                    <generateGitPropertiesFilename>${project.build.outputDirectory}/git.properties
+                    </generateGitPropertiesFilename>
 
                     <!-- Denotes the format to save properties in. Valid options are "properties" (default) and "json".
                     Properties will be saved to the generateGitPropertiesFilename if generateGitPropertiesFile is set to `true`. -->
@@ -547,26 +509,8 @@
                     </nonFilteredFileExtensions>
                 </configuration>
             </plugin>
-           
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
-                 <configuration>
-                    <attachClasses>true</attachClasses>
-                    <classesClassifier>classes</classesClassifier>
-                    <failOnMissingWebXml>true</failOnMissingWebXml>
-                    <archive>
-                        <manifest>
-                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-                        </manifest>
-                        <manifestEntries>
-                            <Paster-Implementation-Version>${project.version}</Paster-Implementation-Version>
-                            <Paster-Implementation-Build>${buildNumber}</Paster-Implementation-Build>
-                            <Paster-Implementation-Build-Time>${maven.build.timestamp}</Paster-Implementation-Build-Time>
-                        </manifestEntries>
-                    </archive>
-                </configuration>
-            </plugin>
+
+
             <plugin>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
@@ -631,6 +575,99 @@
 
         </resources>
     </build>
+
+    <profiles>
+
+        <profile>
+            <id>dev</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <paster.app.build.profile>DEVELOPMENT</paster.app.build.profile>
+            </properties>
+
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-war-plugin</artifactId>
+                        <configuration>
+                            <attachClasses>true</attachClasses>
+                            <classesClassifier>classes</classesClassifier>
+                            <failOnMissingWebXml>true</failOnMissingWebXml>
+                            <archive>
+                                <manifest>
+                                    <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                                </manifest>
+                                <manifestEntries>
+                                    <Paster-Implementation-Version>${project.version}</Paster-Implementation-Version>
+                                    <Paster-Implementation-Build>${buildNumber}</Paster-Implementation-Build>
+                                    <Paster-Implementation-Build-Time>${maven.build.timestamp}
+                                    </Paster-Implementation-Build-Time>
+                                </manifestEntries>
+                            </archive>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+
+        </profile>
+
+        <profile>
+            <id>prod</id>
+
+            <properties>
+                <paster.app.build.profile>PRODUCTION</paster.app.build.profile>
+            </properties>
+
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.eclipse.jetty</groupId>
+                        <artifactId>jetty-jspc-maven-plugin</artifactId>
+                        <version>11.0.11</version>
+                        <executions>
+                            <execution>
+                                <id>jspc</id>
+                                <goals>
+                                    <goal>jspc</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+
+                        </configuration>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-war-plugin</artifactId>
+                        <configuration>
+                            <attachClasses>true</attachClasses>
+                            <classesClassifier>classes</classesClassifier>
+                            <failOnMissingWebXml>true</failOnMissingWebXml>
+                            <webXml>${project.basedir}/target/web.xml</webXml>
+                            <archive>
+                                <manifest>
+                                    <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                                </manifest>
+                                <manifestEntries>
+                                    <Paster-Implementation-Version>${project.version}</Paster-Implementation-Version>
+                                    <Paster-Implementation-Build>${buildNumber}</Paster-Implementation-Build>
+                                    <Paster-Implementation-Build-Time>${maven.build.timestamp}
+                                    </Paster-Implementation-Build-Time>
+                                </manifestEntries>
+                            </archive>
+                        </configuration>
+                    </plugin>
+
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+
     <repositories>
 
     </repositories>

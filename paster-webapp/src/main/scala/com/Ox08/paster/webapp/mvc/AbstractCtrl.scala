@@ -64,7 +64,7 @@ abstract class AbstractCtrl extends Logged {
   @ModelAttribute("availableLocales")
   def getAvailableLocales: Array[Locale] = Array(
     Locale.US,
-    Locale.forLanguageTag("ru_RU")
+    Locale.forLanguageTag("ru-RU")
   )
   @JsonIgnore
   @ModelAttribute("currentUser")

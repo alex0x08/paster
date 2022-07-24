@@ -85,7 +85,8 @@ class SystemManagementServiceImpl extends SystemManagementService with Logged {
       // resources have been disposed before restarting the application
       Runtime.getRuntime.addShutdownHook(new Thread() {
         override def run(): Unit = {
-          try builder.start
+          try
+            builder.start
           catch {
             case _: IOException =>
             // e.printStackTrace();

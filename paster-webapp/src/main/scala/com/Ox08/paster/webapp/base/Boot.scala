@@ -147,6 +147,17 @@ class Boot private() extends Logged {
     val pidFile = new File(appHome, "app.pid")
     val pid = ProcessHandle.current.pid()
     FileUtils.writeStringToFile(pidFile, pid.toString, "UTF-8")
+    Runtime.getRuntime.addShutdownHook(new Thread() {
+      override def run(): Unit = {
+        try
+          if (pidFile.exists())
+            pidFile.delete()
+        catch {
+          case _: IOException =>
+          // e.printStackTrace();
+        }
+      }
+    })
   }
   /**
    * Tries to kill previous JVM instance, lookup by PID from 'app.pid' file

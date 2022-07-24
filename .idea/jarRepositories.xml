@@ -7,6 +7,11 @@
       <option name="url" value="https://repo.maven.apache.org/maven2" />
     </remote-repository>
     <remote-repository>
+      <option name="id" value="alfresco-public-releases" />
+      <option name="name" value="alfresco-public-releases" />
+      <option name="url" value="http://maven.alfresco.com/nexus/content/groups/public" />
+    </remote-repository>
+    <remote-repository>
       <option name="id" value="scala" />
       <option name="name" value="Scala tools" />
       <option name="url" value="http://scala-tools.org/repo" />
@@ -32,14 +37,9 @@
       <option name="url" value="https://repo1.maven.org/maven2" />
     </remote-repository>
     <remote-repository>
-      <option name="id" value="scala" />
-      <option name="name" value="Scala tools" />
-      <option name="url" value="https://scala-tools.org/repo" />
-    </remote-repository>
-    <remote-repository>
-      <option name="id" value="maven2 Artifacts" />
-      <option name="name" value="maven2-releases" />
-      <option name="url" value="https://repo1.maven.org/maven2" />
+      <option name="id" value="jboss-thirdparty" />
+      <option name="name" value="jboss-thirdparty" />
+      <option name="url" value="http://repository.jboss.org/nexus/content/repositories/thirdparty-releases" />
     </remote-repository>
     <remote-repository>
       <option name="id" value="spring-milestones" />
@@ -57,29 +57,14 @@
       <option name="url" value="https://repo.spring.io/snapshot" />
     </remote-repository>
     <remote-repository>
-      <option name="id" value="jboss-thirdparty" />
-      <option name="name" value="jboss-thirdparty" />
-      <option name="url" value="https://repository.jboss.org/nexus/content/repositories/thirdparty-releases" />
-    </remote-repository>
-    <remote-repository>
       <option name="id" value="jboss-snapshots" />
       <option name="name" value="jboss snapshots" />
       <option name="url" value="http://snapshots.jboss.org/maven2" />
     </remote-repository>
     <remote-repository>
-      <option name="id" value="jboss-snapshots" />
-      <option name="name" value="jboss snapshots" />
-      <option name="url" value="https://snapshots.jboss.org/maven2" />
-    </remote-repository>
-    <remote-repository>
       <option name="id" value="maven2 Artifacts" />
       <option name="name" value="maven2-releases" />
       <option name="url" value="http://repo1.maven.org/maven2" />
-    </remote-repository>
-    <remote-repository>
-      <option name="id" value="alfresco-public-releases" />
-      <option name="name" value="alfresco-public-releases" />
-      <option name="url" value="https://maven.alfresco.com/nexus/content/groups/public" />
     </remote-repository>
     <remote-repository>
       <option name="id" value="spring" />

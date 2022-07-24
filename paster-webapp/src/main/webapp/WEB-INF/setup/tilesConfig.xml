@@ -27,6 +27,11 @@
     </definition>
 
 
+    <definition name="/setup/finalizeInstall" extends=".setupTemplate">
+        <put-attribute name="content" value="/WEB-INF/pages/setup/finalizeInstall.jsp"/>
+    </definition>
+
+
     <definition name="/setup/welcome" extends=".setupTemplate">
         <put-attribute name="content" value="/WEB-INF/pages/setup/setupWelcome.jsp"/>
     </definition>
@@ -37,6 +42,11 @@
 
     <definition name="/setup/security" extends=".setupTemplate">
         <put-attribute name="content" value="/WEB-INF/pages/setup/setupSecurity.jsp"/>
+    </definition>
+
+
+    <definition name="/setup/users" extends=".setupTemplate">
+        <put-attribute name="content" value="/WEB-INF/pages/setup/setupUsers.jsp"/>
     </definition>
 
 
