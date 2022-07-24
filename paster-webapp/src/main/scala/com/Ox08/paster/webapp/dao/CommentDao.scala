@@ -9,9 +9,19 @@ import java.io.IOException
 import java.util
 import scala.:+
 import scala.jdk.CollectionConverters._
+/**
+ * A repository for comments
+ */
 @Repository("commentDao")
 @Transactional(readOnly = true, rollbackFor = Array(classOf[Exception]))
 class CommentDao extends SearchableDaoImpl[Comment](classOf[Comment]) {
+  /**
+   * Fetch list of ids of sub comments (replies) to specified comment
+   * @param commentId
+   *        selected comment's id
+   * @return
+   *      list of IDs
+   */
   def getSubCommentsIdsFor(commentId: Integer): List[Integer] = {
     val out = List[Integer]()
     val cr = new CriteriaSet
@@ -24,11 +34,22 @@ class CommentDao extends SearchableDaoImpl[Comment](classOf[Comment]) {
     }
     out
   }
+  /**
+   * Return all comments for selected paste object
+   * @param pasteId
+   *        selected paste's id
+   * @return
+   *    list of comments
+   */
   def getCommentsForPaste(pasteId: Integer): java.util.List[Comment] =
     getListByKeyValue("pasteId", pasteId,
       Option("lastModified"),
       Option(true))
-  override def fillHighlighted(highlighter: Highlighter, queryParser: QueryParser, model: Comment): Unit = {
+
+
+  override def fillHighlighted(highlighter: Highlighter,
+                               queryParser: QueryParser,
+                               model: Comment): Unit = {
     try {
       val hl = highlighter
         .getBestFragments(queryParser.getAnalyzer

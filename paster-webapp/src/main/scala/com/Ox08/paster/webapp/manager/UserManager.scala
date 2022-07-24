@@ -49,7 +49,6 @@ object UserManager extends Logged {
           SecurityContextHolder.getContext
             .getAuthentication.getPrincipal.asInstanceOf[PasterUser]
         case _ =>
-
           /**
            * this almost all time means that we got anonymous user
            */
@@ -66,7 +65,6 @@ object UserManager extends Logged {
 class UserManager extends UserDetailsService with Logged {
   // runtime storage for users
   private val users = mutable.Map[String, PasterUser]()
-
   @Autowired
   @Qualifier("sessionRegistry")
   val sessionRegistry: SessionRegistry = null

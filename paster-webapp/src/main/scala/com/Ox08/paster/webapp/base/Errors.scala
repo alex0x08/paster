@@ -40,7 +40,8 @@ abstract class AbstractI18nMessageStore protected( // default bundle name
     this.messageLocale = locale
     this.reloadMessages()
   }
-  protected def formatMessage(raw: String, args: Array[AnyRef]): String = MessageFormatter.arrayFormat(raw, args).getMessage
+  protected def formatMessage(raw: String, args: Array[AnyRef]): String =
+    MessageFormatter.arrayFormat(raw, args).getMessage
   /**
    * get formatted text by key, with lookup in additional bundles
    *
@@ -60,7 +61,7 @@ abstract class AbstractI18nMessageStore protected( // default bundle name
 class PasterRuntimeException(code: Int, // error code ( ex. 0x06001 )
                              message: String, parent: Exception) extends RuntimeException(message, parent) {
   updateTrace(parent)
-  def updateTrace(parent: Exception): Unit = {
+  final def updateTrace(parent: Exception): Unit = {
     if (parent != null)
       setStackTrace(parent.getStackTrace)
   }
@@ -90,7 +91,8 @@ class SystemError extends AbstractI18nMessageStore("bundles/errorMessages") {
   private def createExceptionImpl[T <: PasterRuntimeException](clazz: Class[T], code: Int, message: String,
                                                                parent: Exception, params: Any*) = {
     val errorMsg = getErrorMessage(code, message, parent, true, params)
-    try clazz.getConstructor(classOf[Int], classOf[String], classOf[Exception]).newInstance(code, errorMsg, parent)
+    try clazz.getConstructor(classOf[Int], classOf[String], classOf[Exception])
+      .newInstance(code, errorMsg, parent)
     catch {
       case ex@(_: NoSuchMethodException | _: SecurityException | _: InstantiationException |
                _: IllegalAccessException |
@@ -119,22 +121,26 @@ class SystemError extends AbstractI18nMessageStore("bundles/errorMessages") {
       currentCode = 0x6000
     }
     // если нет доп. сообщения
-    if (message == null) { // если нет исключения
-      if (parent == null) { // формируем выходное сообщение, подставляем в шаблон переданные параметры
+    if (message == null) {
+      // если нет исключения
+      if (parent == null) {
+        // формируем выходное сообщение, подставляем в шаблон переданные параметры
         errorMsg = formatMessage(errorMsg, params.toArray)
       }
-      else { // если есть исключение - добавляем в набор параметров
+      else {
+        // если есть исключение - добавляем в набор параметров
         // сообщение об ошибке первым аргументом
         val pparams = prepareParams(getMessage(parent), params)
         // формируем выходное сообщение
         errorMsg = formatMessage(errorMsg, pparams)
       }
     }
-    else { // если есть доп. сообщение
-      if (parent == null) { // формируем выходное сообщение, используем доп. сообщение как шаблон
+    else {
+      // если есть доп. сообщение
+      if (parent == null) {
+        // формируем выходное сообщение, используем доп. сообщение как шаблон
         errorMsg = formatMessage(message, params.toArray)
-      }
-      else {
+      } else {
         val preparedParams = prepareParams(getMessage(parent), params)
         errorMsg = formatMessage(message, preparedParams)
       }

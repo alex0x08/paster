@@ -71,9 +71,17 @@ abstract class AbstractStringBasedDao(elementsAsString: String,
   def getDefault: String = defaultElement
   def exist(name: String): Boolean = elements.contains(name)
 }
+/**
+ * A repository for tags
+ */
 @Repository("tagDao")
 @Transactional(readOnly = true, rollbackFor = Array(classOf[Exception]))
 class TagDao extends BaseDao[Tag, java.lang.Long](classOf[Tag]) {
+  /**
+   * Fetch all available tags as map
+   * @return
+   *    map with key = tag string and value = tag object
+   */
   def getTagsMap: Map[String, Tag] = {
     val out = mutable.Map[String, Tag]()
     for (t <- getAll.asScala) {
@@ -81,6 +89,11 @@ class TagDao extends BaseDao[Tag, java.lang.Long](classOf[Tag]) {
     }
     out.toMap
   }
+  /**
+   * Fetch all tags as list with count for each tag
+   * @return
+   *    list of all tags
+   */
   def getTags: List[Tag] = {
     var out = List[Tag]()
     val l = em.createQuery("select t, count(t) from Paste p join p.tagsMap t group by t")

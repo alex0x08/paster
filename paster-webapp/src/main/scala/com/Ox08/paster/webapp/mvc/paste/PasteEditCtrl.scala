@@ -139,11 +139,17 @@ class PasteEditCtrl extends GenericEditCtrl[Paste] {
                       @RequestParam(required = true) reviewImgData: String,
                       @RequestParam(required = true) thumbImgData: String,
                       model: Model): String = {
-    if (!isCurrentUserLoggedIn && !allowAnonymousCommentsCreate) return MvcConstants.page403
+    if (!isCurrentUserLoggedIn && !allowAnonymousCommentsCreate)
+      return MvcConstants.page403
     var p = pasteDao.get(pasteId)
-    if (p == null) return MvcConstants.page404
-    if (reviewImgData == null || thumbImgData == null) return MvcConstants.page500
-    logger.info("adding reviewImg to {}, data {}", Array(pasteId, reviewImgData))
+    if (p == null)
+      return MvcConstants.page404
+    if (reviewImgData == null || thumbImgData == null)
+      return MvcConstants.page500
+
+    if (logger.isDebugEnabled)
+      logger.debug("adding reviewImg to {}, data sz {}", Array(pasteId, reviewImgData.length))
+
     p.reviewImgData = resourceDao.saveResource('r', p.uuid, reviewImgData)
     p.thumbImage = resourceDao.saveResource('t', p.uuid, thumbImgData)
     p.touch()
@@ -159,16 +165,19 @@ class PasteEditCtrl extends GenericEditCtrl[Paste] {
   @RequestMapping(value = Array("/saveComment"), method = Array(RequestMethod.POST))
   def saveComment(@Valid b: Comment,
                   result: BindingResult, model: Model, locale: Locale): String = {
-    logger.debug("adding comment {}", b)
+    if (logger.isDebugEnabled)
+      logger.debug("adding comment, title: '{}'", b.title)
     if (!isCurrentUserLoggedIn && !allowAnonymousCommentsCreate)
       return MvcConstants.page403
     val p = manager().get(b.pasteId)
     if (p == null)
       return MvcConstants.page404
     if (result.hasErrors) {
-      logger.debug("form has errors {}", result.getErrorCount)
-      for (e <- result.getAllErrors.asScala) {
-        logger.debug("error: {} code: {} msg: {}", e.getObjectName, e.getCode, e.getDefaultMessage)
+      if (logger.isDebugEnabled) {
+        logger.debug("form has {} errors", result.getErrorCount)
+        for (e <- result.getAllErrors.asScala) {
+          logger.debug("error: {} code: {} msg: {}", e.getObjectName, e.getCode, e.getDefaultMessage)
+        }
       }
       model.addAttribute("comment", b)
       fillEditModel(p, model, locale)
@@ -226,7 +235,6 @@ class PasteEditCtrl extends GenericEditCtrl[Paste] {
     if (b.normalized) {
       b.codeType match {
         case "js" =>
-
           /**
            * try to normalize json
            */
@@ -240,7 +248,6 @@ class PasteEditCtrl extends GenericEditCtrl[Paste] {
             //ignore
           }
         case "plain" =>
-
           /**
            * set word wrap for plain
            */
@@ -263,8 +270,8 @@ class PasteEditCtrl extends GenericEditCtrl[Paste] {
         else
           summary
       } else b.text
-    if (logger.isDebugEnabled())
-      logger.debug("__found thumbnail {} comments {}", b.thumbImage, b.commentsCount)
+    if (logger.isDebugEnabled)
+      logger.debug("__found thumbnail sz: {} comments {}", b.thumbImage.length, b.commentsCount)
     if (b.thumbImage != null) {
       b.thumbImage = resourceDao.saveResource('t', b.uuid, b.thumbImage)
     }

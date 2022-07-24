@@ -32,7 +32,6 @@ class Boot private() extends Logged {
     // system state locked?
     if (system.isLocked)
       throw SystemError.withCode(0x6002)
-
     // set codename
     system.setAppCode(appCode)
     // check 'appDebug' flag
@@ -53,8 +52,8 @@ class Boot private() extends Logged {
       }
       // set app's home folder as system variable, it will be used in EL expressions
       System.setProperty(appVar, app_home.getAbsolutePath)
-    }
-    else { // if app's home variable was found in environment
+    } else {
+      // if app's home variable was found in environment
       // ex. as JVM argument:  -Dcodename.app.home=...
       app_home = new File(System.getProperty(appVar))
     }
@@ -79,7 +78,8 @@ class Boot private() extends Logged {
     // if these files missing - the release is broken!
     val build_info = new Properties()
     val git_info = new Properties()
-    try { // load build details
+    try {
+      // load build details
       build_info.load(getClass.getResourceAsStream("/release.properties"))
       // load git commit details
       git_info.load(getClass.getResourceAsStream("/git.properties"))
@@ -154,7 +154,8 @@ class Boot private() extends Logged {
    * @param appHome application codename
    */
   private def killPreviousInstance(appHome: File): Unit = {
-    try { // lookup PID file
+    try {
+      // lookup PID file
       val pid = new File(appHome, "app.pid")
       if (pid.exists && pid.isFile) { // read PID
         val previousPidStr = FileUtils.readFileToString(pid, "UTF-8")
@@ -192,7 +193,7 @@ class Boot private() extends Logged {
     Assert.notNull(name, SystemError.messageFor(0x6006))
     val rScript = new File(js_store, name)
     if (!rScript.exists() || !rScript.isFile || (rScript.length() == 0))
-      try FileUtils.copyURLToFile(getClass.getResource("/default/" + name), rScript)
+      try FileUtils.copyURLToFile(getClass.getResource(s"/default/$name"), rScript)
       catch {
         case ex: IOException =>
           throw SystemError.withError(0x6001, ex)

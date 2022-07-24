@@ -41,8 +41,9 @@ abstract class BaseDao[T <: java.io.Serializable, PK <: java.io.Serializable](mo
     val r: Root[T] = cr.from(model) // query and root instances
     val ct: CriteriaQuery[Tuple] = cb.createTupleQuery() // tuple query
   }
+  // famous JPA entity manager instance
   @PersistenceContext
-  protected val em: EntityManager = null // famous JPA entity manager instance, = null is required because of Scala
+  protected val em: EntityManager = _
   /**
    * @return model class
    */
@@ -60,7 +61,7 @@ abstract class BaseDao[T <: java.io.Serializable, PK <: java.io.Serializable](mo
   @Transactional(readOnly = false,
     rollbackFor = Array(classOf[Exception]), propagation = Propagation.REQUIRED)
   def save(obj: T): T = {
-    if (logger.isDebugEnabled())
+    if (logger.isDebugEnabled)
         logger.debug("saving obj {}", obj)
     val out: T = em.merge(obj)
     em.flush()
