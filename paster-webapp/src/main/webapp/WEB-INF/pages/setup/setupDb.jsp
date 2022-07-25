@@ -1,8 +1,7 @@
 <%@ include file="/WEB-INF/pages/common/taglibs.jsp"%>
 
-<div class='row'>
+<div class='row justify-content-md-center' >
     <div class='col-auto'>
-
 
    <c:url var="stepUrl" value='/main/setup/db' />
 
@@ -11,51 +10,85 @@
         role="form"
         modelAttribute="updatedStep.step"
         method="POST">
-
       <fieldset class="row mb-3">
          <legend class="col-form-label">Supported databases</legend>
          <div class="col-sm-10">
-               <c:forEach var="l" items="${availableDrivers}" varStatus="loopStatus">
+                <c:forEach var="l" items="${availableDrivers}" varStatus="loopStatus">
                  <div class="form-check">
-                            <input type="radio" name="${l.driver}" value="${l.url}" class="form-check-input" ${l.current ? 'checked' : '' } />
-
-                      <label class="form-check-label" >
-                         <c:out value="${l.name}"/>
-                    </label>
+                        <input class="form-check-input driverInput"
+                            type="radio" 
+                            id="${'driver_'.concat(loopStatus.index)}"
+                            name="selectedDriver"
+                            x-driver-class="${l.driver}"
+                            value="${l.url}"
+                            ${l.current ? 'checked' : '' } />
+                        <label class="form-check-label" >
+                                <c:out value="${l.name}"/>
+                        </label>
                  </div>
                </c:forEach>  
          </div>               
-        </fieldset>
+      </fieldset>
 
-    <div class="row mb-3">
+   <div class="row mb-3">
         <div class="col-md-12">
             <label >Url</label>
-            <input type="text" class="form-control"  placeholder="Enter database url">
+            <input id="dbUrl" type="text" class="form-control"  placeholder="Enter database url">
         </div>
-    </div>              
-
-    <div class="row mb-3">
-    
-        <div class="col-auto">
-        <label >Username</label>
-        <input type="text" class="form-control" id="autoSizingInput" placeholder="Jane Doe">
-      </div>
-      <div class="col-auto">
-        <label >Password</label>
-        <div class="input-group">
-          <div class="input-group-text">@</div>
-          <input type="text" class="form-control" id="autoSizingInputGroup" placeholder="Username">
-        </div>
-      </div>
-
    </div>
-   <button type="submit" class="btn btn-primary">
-      <i class="fa fa-sign-in"></i>
-       Next
-   </button>
+   <div class="row mb-3">
+        <div class="col-md-8">
+            <label >Driver class</label>
+            <input id="dbDriver" type="text" class="form-control"  placeholder="Enter driver class name">
+        </div>
+   </div>
+
+   <div class="row mb-3">
+        <div class="col-auto">
+            <label >Username</label>
+            <input id="dbUsername" type="text" class="form-control" placeholder="Jane Doe">
+        </div>
+        <div class="col-auto">
+            <label >Password</label>
+                <div class="input-group">
+                    <div class="input-group-text">@</div>
+                    <input id="dbPassword" type="secret" class="form-control"  placeholder="Password">
+                </div>
+        </div>
+   </div>
+
+   <jsp:include page="/WEB-INF/pages/setup/setup-buttons.jsp"/>
+
 
   </form:form>
     </div>
 </div>
 
 
+<script type="text/javascript">
+    
+    function processChecked(el) {
+        if (el.checked) {
+                        const dbUrl = el.getAttribute('value');
+                        const driver = el.getAttribute('x-driver-class');
+
+                        console.log('url: ',dbUrl,'driver: ',driver)
+
+                        document.getElementById('dbUrl').setAttribute('value',dbUrl)
+                        document.getElementById('dbDriver').setAttribute('value',driver)
+                
+                    }
+    }
+
+    window.addEventListener('load', function () {
+
+        Array.from(document.getElementsByClassName("driverInput")).forEach(
+            function (el, i, array) {
+                processChecked(el);  
+                el.addEventListener("change", function (event) {
+                    event.preventDefault();
+                    processChecked(el);            
+                });
+            });
+    });
+</script>

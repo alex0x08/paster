@@ -44,18 +44,14 @@
 
 <script type="text/javascript"
     src="<c:url value='/main/resources/${appId}/local_components/fastdom.js'/>"></script>
-
 <script type="text/javascript"
     src="<c:url value='/main/resources/${appId}/local_components/bootstrap/bootstrap.bundle.min.js'/>"></script>
 <script type="text/javascript"
     src="<c:url value='/main/resources/${appId}/local_components/tinyicon/tinycon.js'/>"></script>
-   
 <script src="<c:url value='/main/resources/${appId}/local_components/pixastic/canvas-to-blob.min.js'/>"></script>
-
 <script src="<c:url value='/main/resources/${appId}/local_components/pixastic/html2canvas.js'/>"></script>
 <script src="<c:url value='/main/resources/${appId}/local_components/pixastic/canvas2image.js'/>"></script>
 <script src="<c:url value='/main/resources/${appId}/local_components/pixastic/pica.min.js'/>"></script>
-
 <script type="text/javascript" src="<c:url value='/main/resources/${appId}/paster/js/all/paster-app.js'/>"></script>
 
 <script type="text/javascript">
@@ -80,7 +76,6 @@
     }
 
     const PasterI18n = new PasterI18nClass();
-
     var pasterApp = new PasterApp();
 
     window.addEventListener('load', function () {

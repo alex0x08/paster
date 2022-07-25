@@ -40,10 +40,8 @@
        </div>
      </div>
    </div>
-   <button type="submit" class="btn btn-primary">
-      <i class="fa fa-sign-in"></i>
-       Next
-   </button>
+
+      <jsp:include page="/WEB-INF/pages/setup/setup-buttons.jsp"/>
 
   </form:form>
     </div>
