@@ -9,12 +9,17 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.context.support.SpringBeanAutowiringSupport
+import org.springframework.web.servlet.LocaleResolver
+import org.springframework.web.servlet.i18n.SessionLocaleResolver
+
 import java.security.SecureRandom
 class BootContext {
   @Autowired
   val users: UserManager = null
   @Autowired
   val pasteDao: PasteDao = null
+  @Autowired
+  val localeResolver: SessionLocaleResolver = null
 }
 class StartupListener extends ServletContextListener with Logged {
   override def contextInitialized(event: ServletContextEvent): Unit = {
@@ -22,6 +27,9 @@ class StartupListener extends ServletContextListener with Logged {
       val bootContext = new BootContext()
       SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(bootContext, event.getServletContext)
       try {
+        // setup default locale
+        bootContext.localeResolver.setDefaultLocale(Boot.BOOT.getSystemInfo.getSystemLocale)
+
         setupSecurityContext() // setup security context
         bootContext.users.loadUsers()
         logger.info("db generation completed successfully.")

@@ -46,16 +46,12 @@ class SystemPropertiesListener extends ServletContextListener with Logged {
     // re-install parent logger
     SLF4JBridgeHandler.install()
     // use English locale as default
-    val en: Locale = Locale.ENGLISH //.f.forLanguageTag("en_US")
-
-    LocaleContextHolder.setDefaultLocale(en)
-
-
+    val en: Locale = Locale.ENGLISH
     //System.out.println("locale=" + en)
     // all system errors will be in English
-    SystemError.instance.setErrorLocale(en)
+    SystemError.instance.setLocale(en)
     // all system messages will be in English
-    SystemMessage.instance.setErrorLocale(en)
+    SystemMessage.instance.setLocale(en)
     // explicitly disable devtools restart
     System.setProperty("spring.devtools.restart.enabled", "false")
     // run boot sequence before Spring container starts

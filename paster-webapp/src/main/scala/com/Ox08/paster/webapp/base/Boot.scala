@@ -2,11 +2,13 @@ package com.Ox08.paster.webapp.base
 import org.apache.commons.io.FileUtils
 import org.apache.commons.lang3.StringUtils
 import org.apache.commons.lang3.math.NumberUtils
+import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.util.Assert
+
 import java.io.{File, FileInputStream, IOException, StringReader, StringWriter}
 import java.nio.file.Paths
 import java.text.{ParseException, SimpleDateFormat}
-import java.util.{Calendar, Date, Properties}
+import java.util.{Calendar, Date, Locale, Properties}
 object Boot {
   private val INSTALLED_TS_FORMAT: SimpleDateFormat = new SimpleDateFormat("MM.dd.yyyy HH:mm")
   val BOOT = new Boot
@@ -102,6 +104,20 @@ class Boot private() extends Logged {
       mf_version.getGitState.getProperty("git.branch", null)))
     // load customized config ( 'config.properties' file)
     createLoadAppConfig(system, app_home)
+
+    val systemLang:String = system.getSetting("paster.i18n.defaultLang","en").toLowerCase
+
+    val systemLocale:Locale = systemLang match {
+      case "en" => Locale.ENGLISH
+      case "ru" => Locale.forLanguageTag("ru-RU")
+    }
+    logger.info("system lang: {} locale: {}",systemLang,systemLocale)
+
+    system.setSystemLocale(systemLocale)
+
+    SystemError.instance.setLocale(systemLocale)
+    SystemMessage.instance.setLocale(systemLocale)
+
     if (system.getExternalUrlPrefix != null) {
       System.setProperty("app.externalUrlPrefix", system.getExternalUrlPrefix)
       logger.info(SystemMessage.of("paster.system.message.appExternalUrl", system.getExternalUrlPrefix))
@@ -290,6 +306,14 @@ class Boot private() extends Logged {
     // прокси-сервером и не знает о
     // своем внешнем имени
     private var appCode: String = _ // кодовое обозначение системы
+
+    private var systemLocale: Locale = _
+
+    def getSystemLocale: Locale = systemLocale
+    private[base] def setSystemLocale(locale:Locale):Unit = {
+      checkLock()
+      this.systemLocale = locale
+    }
     def getAppCode: String = appCode
     private[base] def setAppCode(appCode: String): Unit = {
       checkLock()

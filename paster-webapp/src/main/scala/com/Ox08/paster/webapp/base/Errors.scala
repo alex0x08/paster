@@ -34,8 +34,8 @@ abstract class AbstractI18nMessageStore protected( // default bundle name
     Assert.notNull(r, "bundle should be non null")
     this.additionalBundles.add(r)
   }
-  def getErrorLocale: Locale = messageLocale
-  def setErrorLocale(locale: Locale): Unit = {
+  def getLocale: Locale = messageLocale
+  def setLocale(locale: Locale): Unit = {
     Assert.notNull(locale, "locale should be non null")
     this.messageLocale = locale
     this.reloadMessages()
