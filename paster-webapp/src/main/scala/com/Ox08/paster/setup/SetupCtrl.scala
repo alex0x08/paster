@@ -291,11 +291,9 @@ class WelcomeStep extends SetupStep("welcome", "Setup language") {
   def setSwitchToUserLocale(switch:Boolean):Unit = {
     this.switchToUserLocale = switch
   }
-
   override def update(dto: SetupStep): Unit = {
     if (logger.isDebugEnabled)
       logger.debug(s"called update dto: ${dto.getClass.getName}")
-
     val update: WelcomeStep = dto.asInstanceOf[WelcomeStep]
     this.defaultLang = update.getDefaultLang
     this.switchToUserLocale = update.isSwitchToUserLocale

@@ -15,8 +15,10 @@ class SystemPropertiesListener extends ServletContextListener with Logged {
     try {
       doBoot()
 
-      event.getServletContext.setAttribute("jakarta.servlet.context.tempdir",
-        new File(Boot.BOOT.getSystemInfo.getTempDir,"servletTmp"))
+      val scratchDir = new File(Boot.BOOT.getSystemInfo.getTempDir,"servletTmp")
+
+      event.getServletContext.setAttribute("javax.servlet.context.tempdir", scratchDir)
+      event.getServletContext.setAttribute("jakarta.servlet.context.tempdir",scratchDir)
 
       var springProfiles = ""
       if (Boot.BOOT.getSystemInfo.isInstalled)

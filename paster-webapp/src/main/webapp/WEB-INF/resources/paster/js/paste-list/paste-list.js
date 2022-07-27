@@ -16,15 +16,11 @@
 
 
 class PasterList {
-   
-    
+
     init(pageUrl, userPageUrl, maxRequests, currentPage) {
-
-        var mainThis = this;
-
-      this.lazy = new LazyPagination()
-
-      this.lazy.initialize({
+        const self = this;
+        this.lazy = new LazyPagination();
+        this.lazy.initialize({
             url: pageUrl,
             method: 'get',
             maxRequests: maxRequests,
@@ -35,12 +31,11 @@ class PasterList {
             },
             inject: {
                 element: 'morePages'
-
-            }, beforeLoad: function () {
+            }, 
+            beforeLoad: function () {
                 document.getElementById('pageLoadSpinner').style.display = '';
-                
             },
-             afterAppend: function (block, page) {
+            afterAppend: function (block, page) {
                 try {
                     history.pushState({ page: page }, "Page " + page, userPageUrl + "/" + page);
                 } catch (e) {
@@ -51,23 +46,20 @@ class PasterList {
                 elSpinner.insertAdjacentHTML('afterEnd', newPage);
                 elSpinner.style.display = 'none';
 
-                mainThis.parseSearchResults(block);
+                self.parseSearchResults(block);
                 pasterApp.bindDeleteDlg(block);
             }
         });
-        mainThis.parseSearchResults(document.getElementById('pastas'));
+        self.parseSearchResults(document.getElementById('pastas'));
     }
-
     parseSearchResults(parent) {
         Array.from(parent.getElementsByClassName('pasteTitle')).forEach(
             function (el, i, array) {
-                el.innerHTML =  el.innerHTML
+                el.innerHTML = el.innerHTML
                     .replace(/\[result[^\]]*\]([\s\S]*?)\[\/result\]/gi,
                         "<span style='background-color: #e3e658; '>$1</span>")
-                ;
+                    ;
             }
         );
-
     }
-
 };

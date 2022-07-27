@@ -74,10 +74,12 @@ class PasterRuntimeException(code: Int, // error code ( ex. 0x06001 )
  * @since 1.0
  */
 class SystemError extends AbstractI18nMessageStore("bundles/errorMessages") {
-  private def createException[T <: PasterRuntimeException](clazz: Class[T], code: Int, params: AnyRef*)
-  = createExceptionImpl(clazz, code, null, null, params)
-  private def createException[T <: PasterRuntimeException](clazz: Class[T], code: Int, message: String, params: AnyRef*)
-  = createExceptionImpl(clazz, code, message, null, params)
+  private def createException[T <: PasterRuntimeException](clazz: Class[T],
+                                                           code: Int, params: AnyRef*)
+            = createExceptionImpl(clazz, code, null, null, params.toArray)
+  private def createException[T <: PasterRuntimeException](clazz: Class[T],
+                                                           code: Int, message: String, params: AnyRef*)
+            = createExceptionImpl(clazz, code, message, null, params.toArray)
   /**
    * создать объект исключения со сформированным сообщением об ошибке
    *
@@ -89,9 +91,10 @@ class SystemError extends AbstractI18nMessageStore("bundles/errorMessages") {
    * @return сформированное исключение
    */
   private def createExceptionImpl[T <: PasterRuntimeException](clazz: Class[T], code: Int, message: String,
-                                                               parent: Exception, params: AnyRef*) = {
+                                                               parent: Exception, params: Array[AnyRef]) = {
     val errorMsg = getErrorMessage(code, message, parent, true, params)
-    try clazz.getConstructor(classOf[Int], classOf[String], classOf[Exception])
+    try
+      clazz.getConstructor(classOf[Int], classOf[String], classOf[Exception])
       .newInstance(code, errorMsg, parent)
     catch {
       case ex@(_: NoSuchMethodException | _: SecurityException | _: InstantiationException |
@@ -111,7 +114,7 @@ class SystemError extends AbstractI18nMessageStore("bundles/errorMessages") {
    * @param params  дополнительные параметры ( для подстановки в шаблон )
    * @return
    */
-  private def getErrorMessage(code: Int, message: String, parent: Exception, prefix: Boolean, params: AnyRef*) = {
+  private def getErrorMessage(code: Int, message: String, parent: Exception, prefix: Boolean, params: Array[AnyRef]) = {
     // пытаемся найти текст ошибки по коду
     var errorMsg = getMessage("paster.system.error." + String.format("0x%x", code))
     var currentCode = code
@@ -125,7 +128,7 @@ class SystemError extends AbstractI18nMessageStore("bundles/errorMessages") {
       // если нет исключения
       if (parent == null) {
         // формируем выходное сообщение, подставляем в шаблон переданные параметры
-        errorMsg = formatMessage(errorMsg, params.toArray)
+        errorMsg = formatMessage(errorMsg, params)
       }
       else {
         // если есть исключение - добавляем в набор параметров
@@ -158,7 +161,7 @@ class SystemError extends AbstractI18nMessageStore("bundles/errorMessages") {
    * @param message добаляемое сообщение
    * @return новый массив параметров
    */
-  private def prepareParams(message: String, params: AnyRef*): Array[AnyRef] = {
+  private def prepareParams(message: String, params: Array[AnyRef]): Array[AnyRef] = {
     if (params.nonEmpty) {
       val appendedParams = new Array[AnyRef](params.length + 1)
       appendedParams(0) = message
@@ -197,7 +200,7 @@ object SystemError { // синглтон
    * @return сформированное сообщение
    */
   def messageFor(code: Int, params: AnyRef*): String = INSTANCE
-          .getErrorMessage(code, null, null, true, params)
+          .getErrorMessage(code, null, null, true, params.toArray)
   /**
    * получить сформированное сообщение об ошибке * с настройкой префикса
    *
@@ -207,7 +210,7 @@ object SystemError { // синглтон
    * @return сформированное сообщение
    */
   def messageForPrefix(code: Int, prefix: Boolean, params: AnyRef*): String = INSTANCE
-          .getErrorMessage(code, null, null, prefix, params)
+          .getErrorMessage(code, null, null, prefix, params.asJava.toArray)
   /**
    * получить сформированное исключение для ошибки
    *
@@ -220,9 +223,9 @@ object SystemError { // синглтон
   def withMessage(code: Int, message: String, params: AnyRef*): PasterRuntimeException = INSTANCE
             .createException(classOf[PasterRuntimeException], code, message, params)
   def withError(code: Int, parent: Exception, params: AnyRef*): PasterRuntimeException = INSTANCE
-            .createExceptionImpl(classOf[PasterRuntimeException], code, null, parent, params)
+            .createExceptionImpl(classOf[PasterRuntimeException], code, null, parent, params.toArray)
   def withError(code: Int, params: AnyRef*): PasterRuntimeException = INSTANCE
-            .createExceptionImpl(classOf[PasterRuntimeException], code, null, null, params)
+            .createExceptionImpl(classOf[PasterRuntimeException], code, null, null, params.toArray)
 }
 /**
  * Системное сообщение шлюза

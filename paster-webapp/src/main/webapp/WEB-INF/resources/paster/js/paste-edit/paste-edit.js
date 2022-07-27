@@ -23,7 +23,6 @@ class PasterEdit {
     counter = undefined;
 
     getEditorType(codeType) {
-
         switch (codeType) {
             case 'bash':
                 return 'sh';
@@ -40,9 +39,7 @@ class PasterEdit {
             default:
                 return codeType;
         }
-
     }
-
     init(codeType) {
         const self = this;
         this.counter = new WordCount();
@@ -60,10 +57,8 @@ class PasterEdit {
         })
 
         var counter = this.counter;
-
         this.editor = ace.edit("editor");
-
-        var editor = this.editor;
+        const editor = this.editor;
 
         editor.setTheme("ace/theme/chrome");
         editor.setOptions({
@@ -91,18 +86,13 @@ class PasterEdit {
         //Go to end of the last line
         editor.gotoLine(count, editor.getSession().getLine(count - 1).length);
 
-        editor.setOption("showPrintMargin", false)
-
-          
+        editor.setOption("showPrintMargin", false);
 
         editor.getSession().on('change', function () {
             const text = editor.getSession().getValue();
             textarea.value = text;
             counter.getCount(text);
         });
-
-       
-
         document.getElementById('normalized').addEventListener('click', function (event) {
             Logger.debug('click normalized',event)
             if (event.target.checked) {
@@ -117,39 +107,30 @@ class PasterEdit {
               //  editor.renderer.setPrintMarginColumn(80);
             }
         });
-
         //onclick="cleanTitle();"
         document.getElementById('cleanTitleBtn').addEventListener('click', function (event) {
             self.clearTitle();    
         });
-
-
         document.getElementById('fontsize').addEventListener('change', function (event) {
             editor.setFontSize(this.querySelector('option:checked').getAttribute("value"));
         });
-
         document.getElementById('ptype').addEventListener('change', function (event) {
             editor.getSession()
                 .setMode("ace/mode/" + self.getEditorType(this.querySelector('option:checked').getAttribute("value")));
         });
-
         document.getElementById('pprior').addEventListener('change', function (event) {
-            Logger.debug('selected: ', this.querySelector('option:checked'))
-
+            Logger.debug('selected: ', this.querySelector('option:checked'));
             var prPreview = document.getElementById('priorPreview');
-
             prPreview.className = 'i ' + this.querySelector('option:checked').getAttribute("x-css-class-name");
         });
-
         Array.from(document.getElementsByClassName('submitBtn')).forEach(
             function (el, i, array) {
                 el.addEventListener('click', function (event) {
+                    event.preventDefault();
                     const el2 = document.getElementById('btnCaption');
                     el2.text = PasterI18n.text.notify.transmitMessage;
                     el2.disabled = true;
                     document.getElementById('btnIcon').style.display = '';
-
-                    event.preventDefault();
                     self.onSave();
                 });
             });
@@ -157,57 +138,43 @@ class PasterEdit {
     clearTitle() {
         document.getElementById('pname').value = '';
     }
-    readLocalFile(e) {        
-
+    readLocalFile(e) {
         const file = e.target.files[0];
         if (!file) {
             return;
         }
-
-        console.log('file sz:',file.size,this.MAX_FILE_SIZE);
-
+        Logger.debug('file sz:',file.size,this.MAX_FILE_SIZE);
         if(file.size > this.MAX_FILE_SIZE){
             pasterApp.showNotify('File is too large');
             return;
          };
-
         const self = this;
-
         const freader = new FileReader();
         freader.onload = function (e) {
             self.editor.getSession().setValue(e.target.result);
         };
         freader.readAsText(file);
-
     }
     onPaste(event) {
-
-        let text = (event.clipboardData || window.clipboardData).getData('text/plain');
-
-        Logger.debug('paste event: ', text)
-
+        const text = (event.clipboardData || window.clipboardData).getData('text/plain');
+        Logger.debug('paste event: ', text);
         if (text) {
             const block = (text.length < this.MAX_TITLE_LENGTH - 2)
                 ? text.substring(0, text.length) :
                 text.substring(0, this.MAX_TITLE_LENGTH - 2) + '..';
-
             const ptitleEl = document.getElementById('pname');
-
             if (ptitleEl.getAttribute('value') == '') {
                 ptitleEl.setAttribute('value', block);
             }
         }
-
     }
     onSave() {
         const thumbImg = document.getElementById('thumbImg');
         const editorEl = document.getElementById('editor');
-
         pasterApp.takeScreenshot(editorEl, function (img) {
             thumbImg.setAttribute('value', img.src);
             document.getElementById('editForm').submit();
         });
-
     }
 }
 

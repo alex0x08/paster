@@ -16,50 +16,41 @@
 
 
 class PasterApp {
-
     appInit() {
         this.growl = new bootstrap.Toast(document.getElementById('pasterToast'));
         this.bindDeleteDlg(document.body);
         this.resizer = window.pica({
             features: ['all']
         });
-  
     }
     showNotify(message) {
         document.getElementById('pasterToast').getElementsByClassName('toast-body')[0].innerText = message
-        this.growl.show()
+        this.growl.show();
         Logger.debug('notify ', message);
     }
     showModal(dlg, redirectUrl, action, title, message) {
-
         if (title) {
             dlg.querySelector('#dialogTitle').text = title;
         }
-
         if (action) {
             const el = dlg.querySelector('#dialogAction');
             el.text = action;
             el.href = redirectUrl;
         }
-
         dlg.querySelector('#dialogMessage').innerHTML = message;
-
         if (!this.modalDlg) {
             this.modalDlg = new bootstrap.Modal(dlg, { animate: false, closeOnEsc: true });
         }
         this.modalDlg.show();
     }
     bindDeleteDlg(parent) {
-        console.log('parent:',parent)
-
         var self = this;
-
         Array.from(parent.getElementsByClassName('deleteBtn')).forEach(
             function (el, i, array) {
                 el.addEventListener("click", function (e) {
                     e.preventDefault();
                     var source = e.target || e.srcElement;
-                    console.log('dialog ',source.parentElement)
+                    Logger.debug('dialog ', source.parentElement);
                     self.showModal(
                         document.getElementById('deletePopup'),
                         source.href,
@@ -68,12 +59,10 @@ class PasterApp {
                         source.parentElement.parentElement.querySelector('#dialogMsg').innerHTML);
                 });
             });
-
     }
     takeScreenshot(source, onComplete) {
         var self = this;
-        Logger.debug('taking screenshot for ', source)
-
+        Logger.debug('taking screenshot for ', source);
         html2canvas(source, {
             allowTaint: true,
             taintTest: false
@@ -82,7 +71,6 @@ class PasterApp {
             const img = document.createElement("canvas");
             img.width = canvas.width;
             img.height = canvas.height;
-
             self.resizer.resize(canvas, img, {
                 quality: 3,
                 alpha: true,

@@ -17,7 +17,6 @@ Note: rewritten to work without Mootools
 ...
 */
 class WordCount {
-
 	options = {
                 countWordsTo: null,
                 countSymbolsTo: null,                
@@ -30,36 +29,30 @@ class WordCount {
 		liveCount: false,				//Whether or not to use the event trigger, set false if you'd like to call the getCount function separately
 		eventTrigger: 'keyup'			//The event that triggers the count update
 	}
-
-
 	initialize(targetId, options){
 		this.options = options;
 		this.target = document.getElementById(targetId);
-		
 		if ((this.options.liveCount)&&(this.options.inputName)){
-			var input = document.getElementsByName(this.options.inputName);
+			const input = document.getElementsByName(this.options.inputName);
 			input.addEventListener(this.options.eventTrigger, function(){
 				this.getCount(input.getAttribute('value'));
 			}.bind(this));
 		}
 	}
-	
 	getCount(text){
-		var numChars = text.length;
-		var numWords = (numChars != 0) ? text.split(' ').length : 0;
-                
+		const numChars = text.length;
+		const numWords = (numChars != 0) ? text.split(' ').length : 0;
                 if (this.options.countWordsTo!=null) {
                     this.options.countWordsTo.value =  numWords;
                 }
-                
                  if (this.options.countSymbolsTo!=null) {
                     this.options.countSymbolsTo.value =numChars;
                 }
-                
+        let insertText;
 		if ((this.options.countWords) && (this.options.countChars)) {
-			var insertText = numWords + ' ' + this.options.wordText + this.options.separator + numChars + ' ' + this.options.charText;
+		    insertText = numWords + ' ' + this.options.wordText + this.options.separator + numChars + ' ' + this.options.charText;
 		} else {
-			var insertText = (this.options.countWords) ? numWords + ' ' + this.options.wordText : numChars + ' ' + this.options.charText;
+			insertText = (this.options.countWords) ? numWords + ' ' + this.options.wordText : numChars + ' ' + this.options.charText;
 		} 
 		if (insertText){ this.target.innerHTML = insertText; }
 	}
