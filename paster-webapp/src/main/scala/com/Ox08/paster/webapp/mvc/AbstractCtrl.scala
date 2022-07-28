@@ -24,14 +24,24 @@ import org.springframework.context.MessageSource
 import org.springframework.orm.ObjectRetrievalFailureException
 import org.springframework.web.bind.annotation._
 import java.util.Locale
+/**
+ * Global constants, used in controllers
+ */
 object MvcConstants {
+  //error templates
   val page404 = "/error/404"
   val page403 = "/error/403"
   val page500 = "/error/500"
+  // model key for list of objects
   final val NODE_LIST_MODEL = "items"
+  // model key for single page of objects
   final val NODE_LIST_MODEL_PAGE = "pageItems"
+  // model key for single entity object
   final val MODEL_KEY = "model"
 }
+/**
+ * Abstract parent controller
+ */
 abstract class AbstractCtrl extends Logged {
   @Autowired
   protected val messageSource: MessageSource = null
@@ -48,13 +58,24 @@ abstract class AbstractCtrl extends Logged {
   @ModelAttribute("allowAnonymousPasteCreate")
   @JsonIgnore
   def isAllowAnonymousPasteCreate: Boolean = allowAnonymousPasteCreate
+
   protected def getResource(key: String, locale: Locale): String =
     messageSource.getMessage(key, new Array[java.lang.Object](0), locale)
+
   protected def getResource(key: String, args: Array[Any], locale: Locale): String =
     messageSource.getMessage(key, args.asInstanceOf[Array[java.lang.Object]], locale)
+  /**
+   * Global exception handler for controllers.
+   * Used to show error page and dump trace to log
+   * @param ex
+   *      raised exception
+   * @return
+   *      error page
+   */
   @ExceptionHandler(Array(classOf[Throwable]))
-  protected def handleAllExceptions(ex: ObjectRetrievalFailureException): String = {
-    logger.error(ex.getLocalizedMessage, ex)
+  protected def handleAllExceptions(ex: Throwable): String = {
+    // all such errors are *not* optional, so we log them with 'error' level
+    logger.error(ex.getMessage, ex)
     MvcConstants.page500
   }
   @ModelAttribute("appId")
@@ -62,15 +83,17 @@ abstract class AbstractCtrl extends Logged {
   @ModelAttribute("systemInfo")
   def getSystemInfo: BOOT.SystemInfo = systemInfo
   @ModelAttribute("availableLocales")
-  def getAvailableLocales: Array[Locale] = Array(
-    Locale.US,
-    Locale.forLanguageTag("ru-RU")
-  )
+  def getAvailableLocales: Array[Locale] = systemInfo.getAvailableLocales
   @JsonIgnore
   @ModelAttribute("currentUser")
   def getCurrentUser: PasterUser = UserManager.getCurrentUser
   @JsonIgnore
   def isCurrentUserLoggedIn: Boolean = UserManager.getCurrentUser != null
+  /**
+   *
+   * @return
+   *      true if currently authenticated user has administrator role
+   */
   @JsonIgnore
   def isCurrentUserAdmin: Boolean = {
     val u: PasterUser = UserManager.getCurrentUser

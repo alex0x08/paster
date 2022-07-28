@@ -21,11 +21,9 @@
         <put-attribute name="footer" value=""/>
     </definition>
 
-
     <definition name=".errorTemplate" template="/WEB-INF/pages/template/main-error.jsp">
         <put-attribute name="content" value=""/>
     </definition>
-
 
     <definition name=".rawTemplate" template="/WEB-INF/pages/template/raw.jsp">
         <put-attribute name="pageTitle" expression=""/>
@@ -98,7 +96,7 @@
         <put-attribute name="modelName" value=""/>
     </definition>
 
-  
+
     <definition name="/common/pageList" template="/WEB-INF/pages/common/pageList.jsp">
         <put-attribute name="sourceType" value=""/>
         <put-attribute name="listMode" value=""/>
@@ -124,13 +122,9 @@
     <definition name="/error/404" extends=".errorTemplate">
         <put-attribute name="content" value="/WEB-INF/pages/error/404.jsp"/>
     </definition>
-
-
     <definition name="/error/403" extends=".errorTemplate">
         <put-attribute name="content" value="/WEB-INF/pages/error/403.jsp"/>
     </definition>
-
-
     <definition name="/error/500" extends=".errorTemplate">
         <put-attribute name="content" value="/WEB-INF/pages/error/500.jsp"/>
     </definition>
@@ -138,8 +132,6 @@
     <definition name="/restarting" extends=".errorTemplate">
         <put-attribute name="content" value="/WEB-INF/pages/restarting.jsp"/>
         <put-attribute name="head" value="/WEB-INF/pages/common/restarting-head.jsp"/>
-
     </definition>
-
 
 </tiles-definitions>

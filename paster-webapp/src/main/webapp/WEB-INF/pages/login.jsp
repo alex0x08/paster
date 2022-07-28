@@ -3,8 +3,8 @@
 
 <c:url var="url" value='/act/doAuth' />
 
-<div class='row'>
-    <div class='col-md-offset-3 col-xs-4 col-md-5'>
+<div class='row justify-content-md-center'>
+    <div class='col-md-4'>
         <form:form  role="form" action="${url}"  method="POST" >
             <legend><fmt:message key="login.title"/></legend>
             <c:if test="${param.authfailed ne null}">

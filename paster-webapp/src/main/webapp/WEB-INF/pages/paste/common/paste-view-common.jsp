@@ -20,9 +20,15 @@
 --%>
 
 <div id='pasteViewControls' class="btn-group" role="group" aria-label="Controls">
-    <button id="${model.id}_btnShowAll" type="button" class="btn btn-primary active">All</button>
-    <button id="${model.id}_btnShowComments" type="button" class="btn btn-primary">Comments</button>
-    <button id="${model.id}_btnShowDraw" type="button" class="btn btn-primary">Draw</button>
+    <button id="${model.id}_btnShowAll" type="button" class="btn btn-primary active">
+        <fmt:message key="button.paste.all" />
+    </button>
+    <button id="${model.id}_btnShowComments" type="button" class="btn btn-primary">
+        <fmt:message key="button.paste.comments" />
+    </button>
+    <button id="${model.id}_btnShowDraw" type="button" class="btn btn-primary">
+        <fmt:message key="button.paste.draw" />
+    </button>
 </div>
  
 

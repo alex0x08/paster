@@ -20,7 +20,6 @@
     function checkNewPastas() {
         const xmlhttp = new XMLHttpRequest();
         const cb = document.getElementById('newPastasCountBlock');
-
         xmlhttp.onreadystatechange = function() {
             if (xmlhttp.readyState == XMLHttpRequest.DONE) {
                if (xmlhttp.status == 200) {
@@ -37,7 +36,6 @@
                }
             }
         };
-
         xmlhttp.open("GET", '${ctx}/main/paste/count/form/'+new Date().getTime()+'.json', true);
         xmlhttp.send();
     }

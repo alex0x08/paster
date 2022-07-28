@@ -83,7 +83,7 @@
                                     <fmt:message key="paste.priority" />
                                 </form:label>
                                 <p>
-                                     <form:select path="priority" multiple="false" id="pprior" cssClass="form-control" style="display: inline;width: 5em;">
+                                     <form:select path="priority" multiple="false" id="pprior" cssClass="form-select" style="display: inline;width: 8em;">
                                         <c:forEach items="${availablePriorities}" var="prior">
                                             <form:option value="${prior}" cssClass="${prior}"
                                                 x-css-class-name="${ 'priority_'.concat(prior.toLowerCase())}">
@@ -96,12 +96,12 @@
                                 </p>
                             </div>
 
-                            <div class="col-auto me-auto">
+                            <div class="col-md-2 me-auto">
                                 <form:label cssClass="control-label" path="channel">
                                     <fmt:message key="paste.channel" />
                                 </form:label>
                                 <p>
-                                    <form:select path="channel" multiple="false" id="pchan"  cssClass="form-control">
+                                    <form:select path="channel" multiple="false" id="pchan"  cssClass="form-select">
                                         <c:forEach items="${availableChannels}" var="channel">
                                             <form:option value="${channel}">
                                                 <c:out value="${channel}"/>
@@ -164,7 +164,7 @@
                                 <form:label path="codeType" cssClass="control-label" title="Select syntax">
                                     Syntax
                                 </form:label>
-                                <form:select path="codeType" multiple="false" id="ptype" cssClass="form-control">
+                                <form:select path="codeType" multiple="false" id="ptype" cssClass="form-select">
                                     <c:forEach items="${availableCodeTypes}" var="codeType">
                                         <form:option value="${codeType}" >
                                             <fmt:message key="${'code.type.'.concat(codeType)}" />
@@ -246,12 +246,7 @@
                             </select>
                         </div>
                     </div>
-                    <div class="tab-pane fade" id="syntaxTab" 
-                    role="tabpanel" aria-labelledby="syntax-tab-header">               
 
-
-
-                    </div>
                 </div>
             </div>
 

@@ -23,8 +23,19 @@ import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation._
 import java.util.Locale
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
+/**
+ * Abstract generic controller for edit/view actions
+ *
+ * @tparam T
+ *      model type
+ */
 abstract class GenericEditCtrl[T <: Struct] extends AbstractCtrl {
+  /**
+   * abstract method to instantiate new model object
+   * @return
+   */
   protected def getNewModelInstance: T
+
   /**
    * link to list page
    */
@@ -33,15 +44,44 @@ abstract class GenericEditCtrl[T <: Struct] extends AbstractCtrl {
    * edit page
    */
   protected def editPage: String
+  /**
+   * link to view page for selected model
+   * @return
+   */
   protected def viewPage: String
   /**
-   * binded DAO service
+   * assigned DAO service
    */
   protected def manager(): StructDaoImpl[T]
+  /**
+   * Fills page model, called before rendering view
+   * @param obj
+   *      model instance
+   * @param model
+   *     page model (Spring MVC)
+   * @param locale
+   *    request context locale
+   */
   protected def fillEditModel(obj: T, model: Model, locale: Locale): Unit = {
     model.addAttribute(MvcConstants.MODEL_KEY, obj)
   }
-  def loadModel(id: Integer): T = manager().getFull(id)
+  /**
+   * loads model entity from DAO
+   * @param id
+   *    model id
+   * @return
+   *    loaded entity object
+   */
+  protected def loadModel(id: Integer): T = manager().getFull(id)
+  /**
+   * 'Create new' feature
+   * Instantiates new model object and returns edit page, assigned to this model in child controller
+   * @param model
+   *      page model
+   * @param locale
+   *      request context locale
+   * @return
+   */
   @RequestMapping(value = Array("/new"), method = Array(RequestMethod.GET))
   @ResponseStatus(HttpStatus.CREATED)
   def createNew(model: Model, locale: Locale): String = {
@@ -72,9 +112,8 @@ abstract class GenericEditCtrl[T <: Struct] extends AbstractCtrl {
     }
     val r: T = manager().save(b)
     // set id from create
-    if (b.isBlank) {
+    if (b.isBlank)
       b.id = r.id
-    }
     redirectAttributes.addFlashAttribute("statusMessageKey", "action.success")
     listPage
   }
@@ -84,6 +123,16 @@ abstract class GenericEditCtrl[T <: Struct] extends AbstractCtrl {
     manager().remove(id)
     listPage
   }
+  /**
+   * Find and load model entity by id,taken from path
+   * @param id
+   *      model id
+   * @param model
+   *      page model
+   * @param locale
+   *      request context locale
+   * @return
+   */
   @RequestMapping(value = Array("/{id:[0-9]+}"), method = Array(RequestMethod.GET))
   def getByPath(@PathVariable("id") id: Integer, model: Model, locale: Locale): String = {
     val m = loadModel(id)

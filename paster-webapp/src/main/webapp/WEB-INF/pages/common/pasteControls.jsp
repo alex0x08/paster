@@ -1,7 +1,5 @@
 <%@ include file="/WEB-INF/pages/common/taglibs.jsp"%>
 
-
-
 <%--
 
     Renders paste's control buttons
@@ -27,8 +25,8 @@
                     <tiles:putAttribute name="model" value="${model}"/>
                     <tiles:putAttribute name="modelName" value="paste"/>
                 </tiles:insertDefinition>
-               Created by
-                <tiles:insertDefinition name="/common/owner" >
+               <fmt:message key="paste.createdBy" />
+                   <tiles:insertDefinition name="/common/owner" >
                     <tiles:putAttribute name="model" value="${model}"/>
                     <tiles:putAttribute name="modelName" value="paste"/>
                 </tiles:insertDefinition>,

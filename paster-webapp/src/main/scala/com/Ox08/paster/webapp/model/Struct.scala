@@ -56,6 +56,8 @@ abstract class Struct extends DBObject with SearchObject with java.io.Serializab
   @PreUpdate
   def touch(): Unit = {
     lastModified = LocalDateTime.now()
+    if (Struct.logger.isDebugEnabled)
+      Struct.logger.debug("set lastModified to {} objId={}",lastModified,id)
   }
   def getLastModifiedDt: Date = if (lastModified == null.asInstanceOf[LocalDateTime]) null
   else Date.from(lastModified.toInstant(ZoneOffset.UTC))

@@ -46,7 +46,7 @@
             </bean>
         </mvc:interceptor>
     </mvc:interceptors>
-    <bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver"/>
+    <bean id="localeResolver" class="com.Ox08.paster.webapp.web.PasterLocaleResolver"/>
     <!-- tiles-->
     <bean id="tilesConfigurer" class="org.springframework.web.servlet.view.tiles3.TilesConfigurer">
         <property name="definitions">

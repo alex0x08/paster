@@ -23,7 +23,7 @@
             <div class="container-fluid">
                 <a class="navbar-brand" href="<c:url value='/'/>">
                     <span class="i">/</span>
-                    Paster
+                    <fmt:message key="site.title" />
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
                     aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
@@ -53,7 +53,7 @@
                         <li class="nav-item dropdown">
                             <a href="#" id="main-menu-dropdown" role="button" class="nav-link dropdown-toggle"
                                 data-bs-toggle="dropdown" aria-expanded="false">
-                                New
+                                <fmt:message key="button.create" />
                                 <span class="caret"></span>
                             </a>  
                             <ul class="dropdown-menu" role="menu" id="pasteNewMenu">
@@ -110,7 +110,7 @@
                         <p class="navbar-text hidden-sm hidden-xs" style="padding:0; margin:0;" >
                             <a href="<c:url value='/main/login'/>">
                                 <span class="i" title="Login here">x</span>
-                                Sign in
+                                <fmt:message key="button.login" />
                             </a>
                         </p>
                     </sec:authorize>    

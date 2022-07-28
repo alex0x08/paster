@@ -107,10 +107,9 @@ class Boot private() extends Logged {
 
     val systemLang:String = system.getSetting("paster.i18n.defaultLang","en").toLowerCase
 
-    val systemLocale:Locale = systemLang match {
-      case "en" => Locale.ENGLISH
-      case "ru" => Locale.forLanguageTag("ru-RU")
-    }
+    val systemLocale:Locale = system.getAvailableLocaleFrom(systemLang)
+
+
     logger.info("system lang: {} locale: {}",systemLang,systemLocale)
 
     system.setSystemLocale(systemLocale)
@@ -306,8 +305,24 @@ class Boot private() extends Logged {
     // прокси-сервером и не знает о
     // своем внешнем имени
     private var appCode: String = _ // кодовое обозначение системы
-
     private var systemLocale: Locale = _
+
+    private val availableLocales =Array(
+      Locale.US,
+      Locale.forLanguageTag("ru-RU")
+    )
+
+    def getAvailableLocales: Array[Locale] = availableLocales
+
+    def getAvailableLocaleFrom(lang:String): Locale = {
+      if (StringUtils.isBlank(lang))
+        return Locale.ENGLISH
+      for (l<-availableLocales) {
+        if (l.toLanguageTag.equalsIgnoreCase(lang) || l.getLanguage.equalsIgnoreCase(lang))
+          return l
+      }
+      Locale.ENGLISH
+    }
 
     def getSystemLocale: Locale = systemLocale
     private[base] def setSystemLocale(locale:Locale):Unit = {
