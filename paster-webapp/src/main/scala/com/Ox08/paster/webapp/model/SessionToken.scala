@@ -19,7 +19,6 @@ import jakarta.validation.constraints.{NotNull, Size}
 import java.text.SimpleDateFormat
 import java.util.Date
 object SessionToken {
-  val DATE_TIME_FORMATTER = new SimpleDateFormat("d MMMM yyyy")
   val MAX_USER_AGENT_LEN = 255
 }
 @Entity
@@ -41,8 +40,6 @@ class SessionToken extends java.io.Serializable {
   private var userAgent: String = _
   @Column(name = "username")
   var username: String = _
-  def getFormattedTokenDate: String =
-    SessionToken.DATE_TIME_FORMATTER.format(this.tokenDate.getTime)
   def getUserAgent: String = userAgent
   def setUserAgent(userAgent: String): Unit = {
     if (userAgent.length() >= SessionToken.MAX_USER_AGENT_LEN) {

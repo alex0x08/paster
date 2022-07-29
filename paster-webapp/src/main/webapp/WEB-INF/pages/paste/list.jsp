@@ -2,26 +2,28 @@
 
 <div class="row justify-content-between">
     <div class="col-md-8">
-        <a  href="<c:url value='/main/paste/list/${sourceType}'/>">
+        <a  href="<c:url value='/main/paste/list/${sourceType}'/>" title="<fmt:message key='button.refresh'/>">
             <span class="i" style="font-size: 1.5em;">P</span>
         </a>
 
-        <sec:authorize access="hasRole('ROLE_ADMIN')">
             <c:forEach var="source" items="${availableSourceTypes}" varStatus="loopStatus">
+
+               <c:set var="sourceKey" value="${source.toLowerCase()}"/>
+
                 <c:choose>
-                    <c:when test="${source eq sourceType}">
+                    <c:when test="${sourceKey eq sourceType}">
                         <span style="font-size: 14px; font-weight: bold; ">
                             <c:out value="${source}"/>
                     </c:when>
                     <c:otherwise>
-                        <a href="<c:url value='/main/paste/list/${source}'/>">
+                        <a href="<c:url value='/main/paste/list/${sourceKey}'/>">
                             <c:out value="${source}"/>
                         </a>
                     </c:otherwise>
                 </c:choose>
                 <c:if test="${!loopStatus.last}"> | </c:if>
             </c:forEach>
-        </sec:authorize>
+
     </div>
     <div class="col-md-2 hidden-sm hidden-xs">        
         <a class="img-map img-xml" href="<c:url value='/main/paste/list/body.xml'/>" title="xml" alt="xml" target="_blank">

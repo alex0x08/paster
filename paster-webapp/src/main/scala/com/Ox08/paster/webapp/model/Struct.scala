@@ -25,8 +25,7 @@ import java.time.{LocalDateTime, ZoneOffset}
 import java.util.{Date, Objects}
 object Struct extends Logged {
   protected val terms: List[String] = List[String]("id", "name")
-  final val DB_DATE_FORMAT_FULL = "dd.MM.yyyy HH:mm:ss"
-  final val SD_FULL = new SimpleDateFormat(DB_DATE_FORMAT_FULL)
+
   abstract class Builder[T <: java.io.Serializable](obj: T) extends Logged {
     def get(): T = obj
   }
@@ -59,10 +58,16 @@ abstract class Struct extends DBObject with SearchObject with java.io.Serializab
     if (Struct.logger.isDebugEnabled)
       Struct.logger.debug("set lastModified to {} objId={}",lastModified,id)
   }
-  def getLastModifiedDt: Date = if (lastModified == null.asInstanceOf[LocalDateTime]) null
-  else Date.from(lastModified.toInstant(ZoneOffset.UTC))
-  def getCreatedDt: Date = if (created == null.asInstanceOf[LocalDateTime]) null
-  else Date.from(created.toInstant(ZoneOffset.UTC))
+  def getLastModifiedDt: Date =
+    if (lastModified == null.asInstanceOf[LocalDateTime])
+      null
+  else
+      Date.from(lastModified.toInstant(ZoneOffset.UTC))
+  def getCreatedDt: Date =
+    if (created == null.asInstanceOf[LocalDateTime])
+      null
+    else
+      Date.from(created.toInstant(ZoneOffset.UTC))
   @JsonIgnore
   def getLastModified: LocalDateTime = lastModified
   @JsonIgnore

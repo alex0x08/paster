@@ -160,7 +160,7 @@ class PasteListCtrl extends SearchCtrl[Paste, AuthorQuery] {
                sortAsc: java.lang.Boolean = false,
                channelCode: String, integrationCode: String): java.util.List[Paste] = {
     if (logger.isDebugEnabled)
-      logger.debug("_paste listImpl, pageSize {}", pageSize)
+      logger.debug("_paste listImpl, channel: {} pageSize {}", channelCode,pageSize)
     fillListModel(model)
     val ps = if (channelCode != null && channelDao.exist(channelCode)) {
       model.addAttribute("sourceType", channelCode.toLowerCase)
@@ -168,9 +168,10 @@ class PasteListCtrl extends SearchCtrl[Paste, AuthorQuery] {
       channelCode
     } else null
     processPageListHolder(request, model, page, NPpage, pageSize, sortColumn, sortAsc,
-      if (ps == null)
+      if (ps == null) {
+        model.addAttribute("sourceType", channelDao.getDefault.toLowerCase)
         pasterListCallback
-      else
+      } else
         new PasteListCallback(ps, sortAsc, integrationCode), MvcConstants.NODE_LIST_MODEL_PAGE)
   }
   @RequestMapping(value = Array("/own/list"))

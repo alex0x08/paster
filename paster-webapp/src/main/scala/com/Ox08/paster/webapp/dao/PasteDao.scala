@@ -111,7 +111,7 @@ class PasteDao extends SearchableDaoImpl[Paste](classOf[Paste]) {
     val query: Query = em.createQuery(
       cr.cr.where(
         Array(
-          cr.cb.equal(cr.r.get("channel"), channel)
+          cr.cb.equal(cr.cb.lower(cr.r.get("channel")), channel.toLowerCase)
         ): _*)
         .orderBy(cr.cb.desc(cr.r.get("stick"))
           , if (sortAsc)

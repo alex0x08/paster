@@ -63,14 +63,15 @@ abstract class AbstractStringBasedDao(elementsAsString: String,
       elements += defaultElement
   else {
     for (ch <- elementsAsString.split(",")) {
-      elements +=ch
+      if (!StringUtils.isBlank(ch))
+            elements +=ch
     }
     if (!elements.contains(defaultElement))
       elements.add(defaultElement)
   }
   def getAvailableElements: Set[String] = elements.toSet
   def getDefault: String = defaultElement
-  def exist(name: String): Boolean = elements.contains(name)
+  def exist(name: String): Boolean = elements.exists(p => p.equals(name) || p.toLowerCase.equals(name) )
 }
 /**
  * A repository for tags

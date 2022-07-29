@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 package com.Ox08.paster.webapp.model
+import org.apache.commons.lang3.StringUtils
 /**
  * Query trait
  */
@@ -40,7 +41,7 @@ class GenericQuery extends Query {
     this.page = page
   }
   def getPage: Int = page
-  def isEmpty: Boolean = query == null || query.equals("*")
+  def isEmpty: Boolean = StringUtils.isBlank(query) || query.equals("*")
   def getQuery: String = query
   def setQuery(query: String): Unit = {
     this.query = query

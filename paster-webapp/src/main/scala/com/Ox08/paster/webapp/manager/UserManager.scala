@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.{Autowired, Qualifier}
 import org.springframework.dao.DataAccessException
 import org.springframework.security.access.annotation.Secured
 import org.springframework.security.access.prepost.PreAuthorize
+import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.session.SessionRegistry
 import org.springframework.security.core.userdetails.{UserDetails, UserDetailsService, UsernameNotFoundException}
@@ -40,23 +41,26 @@ object UserManager extends Logged {
    * @return
    *    PasterUser object or null
    */
-  def getCurrentUser: PasterUser =
-    if (SecurityContextHolder.getContext.getAuthentication == null)
+  def getCurrentUser: PasterUser = {
+    val auth:Authentication = SecurityContextHolder.getContext.getAuthentication
+    if (auth == null)
       null
-    else
-      SecurityContextHolder.getContext.getAuthentication.getPrincipal match {
+    else {
+      val principal = auth.getPrincipal
+      principal match {
         case _: PasterUser =>
-          SecurityContextHolder.getContext
-            .getAuthentication.getPrincipal.asInstanceOf[PasterUser]
+          principal.asInstanceOf[PasterUser]
         case _ =>
           /**
            * this almost all time means that we got anonymous user
            */
           if (logger.isDebugEnabled)
               logger.debug("getCurrentUser ,unknown principal type: {}",
-              SecurityContextHolder.getContext.getAuthentication.getPrincipal.toString)
+              principal.toString)
           null
       }
+    }
+  }
 }
 /**
  * A service class to work with users

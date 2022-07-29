@@ -21,7 +21,7 @@
                         style="padding-left:1em;" 
                         role="form" action="${logoutUrl}" method="POST">
                 <button type="submit" class="btn btn-sm">
-                    <i class="fa fa-sign-in"></i>Logout</a>
+                    <i class="fa fa-sign-in"></i> <fmt:message key="button.logout" /></a>
                 </button>
             </form:form>
         </li>
