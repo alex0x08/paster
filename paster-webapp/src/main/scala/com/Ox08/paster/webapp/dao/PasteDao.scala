@@ -15,7 +15,7 @@
  */
 package com.Ox08.paster.webapp.dao
 import com.Ox08.paster.webapp.model.{Paste, PasterUser}
-import jakarta.persistence.criteria.{CriteriaQuery, Predicate}
+import jakarta.persistence.criteria.{CriteriaQuery, Path, Predicate, Selection}
 import jakarta.persistence.{Query, Tuple}
 import org.apache.lucene.queryparser.classic.QueryParser
 import org.apache.lucene.search.highlight.{Highlighter, InvalidTokenOffsetsException}
@@ -23,14 +23,14 @@ import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
 import java.io.IOException
 import java.time.LocalDateTime
-import java.util
+import scala.collection.mutable
 import scala.jdk.CollectionConverters._
 @Repository("pasteDao")
 @Transactional(readOnly = true, rollbackFor = Array(classOf[Exception]))
 class PasteDao extends SearchableDaoImpl[Paste](classOf[Paste]) {
   override def getDefaultStartFields: Array[String] = Array("title", "text")
-  def getByAuthor(author: PasterUser): util.List[Paste] = getListByKeyValue("author", author)
-  def getByRemoteUrl(url: String): util.List[Paste] = getListByKeyValue("remoteUrl", url)
+  def getByAuthor(author: PasterUser): java.util.List[Paste] = getListByKeyValue("author", author)
+  def getByRemoteUrl(url: String): java.util.List[Paste] = getListByKeyValue("remoteUrl", url)
   /**
    * Gets single next paste
    *
@@ -50,16 +50,16 @@ class PasteDao extends SearchableDaoImpl[Paste](classOf[Paste]) {
   def getPreviousPastas(paste: Paste): java.util.List[Paste] =
     getNextOrPreviousPaste(paste, direction = true, BaseDao.MAX_RESULTS)
   def getPreviousPastasIdList(paste: Paste): java.util.List[Integer] = {
-    val out = new util.ArrayList[Integer]
+    val out = new java.util.ArrayList[Integer]
     val cb = em.getCriteriaBuilder
     val cr = cb.createTupleQuery()
     val r = cr.from(getModel)
     cr.multiselect(r.get("id"))
-    val select = new util.ArrayList[Predicate]
+    val select = new java.util.ArrayList[Predicate]
     select.add(cb.notEqual(r.get("id"), paste.id))
     if (paste.integrationCode != null)
       select.add(cb.equal(r.get("integrationCode"), paste.integrationCode))
-    select.add(cb.equal(r.get("channel"), paste.channel))
+    select.add(cb.equal(cb.lower(r.get("channel")), paste.channel.toLowerCase))
     select.add(cb.lessThanOrEqualTo(r.get("created")
       .as(classOf[LocalDateTime]), paste.created))
     cr.where(select.toArray(new Array[Predicate](select.size)): _*)
@@ -88,11 +88,11 @@ class PasteDao extends SearchableDaoImpl[Paste](classOf[Paste]) {
   private def getNextOrPreviousPaste(paste: Paste, direction: Boolean, maxResults: Int):
   java.util.List[Paste] = {
     val cr = new CriteriaSet()
-    val select = new util.ArrayList[Predicate]
+    val select = new java.util.ArrayList[Predicate]
     select.add(cr.cb.notEqual(cr.r.get("id"), paste.id))
     if (paste.integrationCode != null)
       select.add(cr.cb.equal(cr.r.get("integrationCode"), paste.integrationCode))
-    select.add(cr.cb.equal(cr.r.get("channel"), paste.channel))
+    select.add(cr.cb.equal(cr.cb.lower(cr.r.get("channel")), paste.channel.toLowerCase))
     if (direction)
       select.add(cr.cb.lessThanOrEqualTo(cr.r.get("created").as(classOf[LocalDateTime]), paste.created))
     else
@@ -137,6 +137,38 @@ class PasteDao extends SearchableDaoImpl[Paste](classOf[Paste]) {
       .setMaxResults(BaseDao.MAX_RESULTS)
     query.getResultList
   }
+  /**
+   *
+   *
+   * SELECT COUNT(p.*) AS TOTAL,
+   * sum(case when p."P_CHANNEL" = 'Main' then 1 else 0 end) AS Main,
+   * sum(case when p."P_CHANNEL" = 'Tech' then 1 else 0 end) AS Tech FROM P_PASTAS p;
+   *
+   * @param p
+   * @return
+   */
+  def countStats(channels: Array[String]): Map[String, Long] = {
+    val cb = em.getCriteriaBuilder
+    val cq: CriteriaQuery[Tuple] = cb.createTupleQuery()
+    val r = cq.from(getModel)
+    val paths = new java.util.ArrayList[Selection[_]]()
+    paths.add(cb.count(r).alias("total"))
+    for (c <- channels) {
+      paths.add(cb.sum(
+        cb.selectCase()
+          .when(cb.equal(cb.lower(r.get("channel")), c.toLowerCase), 1)
+          .otherwise(0).as(classOf[Integer]))
+        .alias(c))
+    }
+    cq.multiselect(paths)
+    val results = em.createQuery[Tuple](cq).getResultList
+    val out = mutable.Map[String, Long]()
+    out.put("total", results.get(0).get("total").asInstanceOf[Long])
+    for (c <- channels) {
+      out.put(c, results.get(0).get(c).asInstanceOf[Integer].longValue())
+    }
+    out.toMap
+  }
   def countAll(p: String): java.lang.Long = {
     val cb = em.getCriteriaBuilder
     val cq: CriteriaQuery[java.lang.Long] = cb.createQuery(classOf[java.lang.Long])
@@ -161,7 +193,7 @@ class PasteDao extends SearchableDaoImpl[Paste](classOf[Paste]) {
     cq.where(Array(
       cb.greaterThan(r.get("lastModified")
         .as(classOf[java.util.Date]), new java.util.Date(dateFrom)),
-      cb.equal(r.get("channel"), channel)): _*)
+      cb.equal(cb.lower(r.get("channel")), channel.toLowerCase)): _*)
     em.createQuery[java.lang.Long](cq).getSingleResult
   }
   override def fillHighlighted(highlighter: Highlighter,

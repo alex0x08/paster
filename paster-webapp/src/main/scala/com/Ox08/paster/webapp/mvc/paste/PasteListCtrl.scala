@@ -23,11 +23,10 @@ import org.springframework.beans.support.{MutableSortDefinition, PagedListHolder
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation._
-
 import java.util
 import java.util.concurrent.TimeUnit
 import java.util.{Date, Locale}
-import scala.jdk.CollectionConverters.SetHasAsJava
+import scala.jdk.CollectionConverters._
 import scala.math.abs
 @Controller
 @RequestMapping(value = Array("/paste"))
@@ -57,6 +56,10 @@ class PasteListCtrl extends SearchCtrl[Paste, AuthorQuery] {
     model.addAttribute("availableSourceTypes", channelDao.getAvailableElements.asJava)
     model.addAttribute("splitHelper", new DateSplitHelper(splitDays, Locale.getDefault))
     model.addAttribute("sortDesc", false)
+
+    val stats: java.util.Map[String,Long] = pasteDao.countStats(channelDao.getAvailableElements.toArray).asJava
+    model.addAttribute("pasteStats", stats)
+
   }
   @RequestMapping(value = Array("/search/{result:[a-z]+}/{page:[0-9]+}",
     "/raw/search/{result:[a-z]+}/{page:[0-9]+}"),

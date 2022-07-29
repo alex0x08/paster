@@ -9,7 +9,6 @@
             <c:forEach var="source" items="${availableSourceTypes}" varStatus="loopStatus">
 
                <c:set var="sourceKey" value="${source.toLowerCase()}"/>
-
                 <c:choose>
                     <c:when test="${sourceKey eq sourceType}">
                         <span style="font-size: 14px; font-weight: bold; ">
@@ -21,6 +20,9 @@
                         </a>
                     </c:otherwise>
                 </c:choose>
+                 <span style="font-size: 0.6em;">
+                     <c:out value="${pasteStats.get(source)}"/>
+                 </span>
                 <c:if test="${!loopStatus.last}"> | </c:if>
             </c:forEach>
 
