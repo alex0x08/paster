@@ -14,15 +14,11 @@
                            http://www.springframework.org/schema/context 
                            http://www.springframework.org/schema/context/spring-context.xsd">
 
-
     <context:component-scan base-package="com.Ox08.paster.common,com.Ox08.paster.webapp" />
-
     <task:executor id="pasterTaskExecutor" pool-size="5" queue-capacity="10"   />
     <task:annotation-driven executor="pasterTaskExecutor"  />
-
     <!-- Activates annotation-based bean configuration -->
     <context:annotation-config />
-
     <bean id="propertyConfigurer-app"
           class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">
          <property name="locations">
@@ -35,7 +31,6 @@
     </bean>
     <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource"
           p:basenames="i18n.messages" />
-
     <!-- Imports the configurations of the different infrastructure systems of the application -->
     <import resource="dao.xml" />
     <import resource="mvc.xml" />

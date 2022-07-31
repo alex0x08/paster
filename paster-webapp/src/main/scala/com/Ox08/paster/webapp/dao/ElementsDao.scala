@@ -20,18 +20,21 @@ import org.apache.commons.lang3.StringUtils
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.{Repository, Service}
 import org.springframework.transaction.annotation.Transactional
-
-import java.util
 import scala.collection.mutable
 import scala.jdk.CollectionConverters._
 /**
- * A preudo-DAO class to store collection of supported code types
+ * A preudo-DAO classes to store collection of supported code types
  *
  * @param codeTypesString
  * list of supported code types, separated by comma (,)
  * @param codeTypeDefault
  * a default code type
  */
+
+object ElementsDao {
+  val FORBIDDEN_CHARS = "@\"'[]{}$#!^&*()`:;?=,./\\".toCharArray
+}
+
 @Service
 class CodeTypeDao(@Value("${paster.codeTypes:null}")
                   codeTypesString: String,
@@ -63,12 +66,23 @@ abstract class AbstractStringBasedDao(elementsAsString: String,
       elements += defaultElement
   else {
     for (ch <- elementsAsString.split(",")) {
-      if (!StringUtils.isBlank(ch))
-            elements +=ch
+      if (!StringUtils.isBlank(ch)) {
+        val ch2 = removeForbidden(ch)
+        if (!StringUtils.isBlank(ch2))
+            elements += ch2
+      }
     }
     if (!elements.contains(defaultElement))
       elements.add(defaultElement)
   }
+  private[dao] def removeForbidden(ch:String): String = {
+    var out = ch
+    for (c<-ElementsDao.FORBIDDEN_CHARS) {
+      out = out.replace(c,null.asInstanceOf[Char])
+    }
+    out
+  }
+
   def getAvailableElements: Set[String] = elements.toSet
   def getDefault: String = defaultElement
   def exist(name: String): Boolean = elements.exists(p => p.equals(name) || p.toLowerCase.equals(name) )

@@ -7,6 +7,7 @@ import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
 class PasterUrlForwarder extends Filter {
   override def doFilter(servletRequest: ServletRequest, servletResponse: ServletResponse, filterChain: FilterChain): Unit = {
     val request = servletRequest.asInstanceOf[HttpServletRequest]
+    //request.setAttribute("org.eclipse.jetty.server.Request.queryEncoding", "UTF-8")
     val response = servletResponse.asInstanceOf[HttpServletResponse]
     val url = request.getRequestURI.substring(request.getContextPath.length)
       .replaceAll("/", "")

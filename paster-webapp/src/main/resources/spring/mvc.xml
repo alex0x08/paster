@@ -9,30 +9,25 @@
                           http://www.springframework.org/schema/beans/spring-beans.xsd
                           http://www.springframework.org/schema/mvc
                           http://www.springframework.org/schema/mvc/spring-mvc.xsd">
-
     <mvc:annotation-driven content-negotiation-manager="contentNegotiationManager" >
         <mvc:path-matching suffix-pattern="true"/>
     </mvc:annotation-driven>
-
     <!--general -->
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="order" value="2"/>
         <property name="exposeContextBeansAsAttributes" value="true"/>
     </bean>
-
     <!-- i18n -->
     <mvc:interceptors>
         <bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor"
               p:paramName="locale"/>
     </mvc:interceptors>
-
     <mvc:resources mapping="/assets/${paste.app.id}/**"
                    location="classpath:/META-INF/resources/webjars/"/>
     <mvc:resources mapping="/static/${paste.app.id}/**"
                    location="/WEB-INF/static/"/>
     <mvc:resources mapping="/resources/${paste.app.id}/**"
                    location="/WEB-INF/resources/"/>
-
     <mvc:interceptors>
         <mvc:interceptor>
             <mvc:mapping path="/static/**"/>

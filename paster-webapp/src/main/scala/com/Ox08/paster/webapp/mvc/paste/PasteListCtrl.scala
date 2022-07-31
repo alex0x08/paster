@@ -61,8 +61,8 @@ class PasteListCtrl extends SearchCtrl[Paste, AuthorQuery] {
     model.addAttribute("pasteStats", stats)
 
   }
-  @RequestMapping(value = Array("/search/{result:[a-z]+}/{page:[0-9]+}",
-    "/raw/search/{result:[a-z]+}/{page:[0-9]+}"),
+  @RequestMapping(value = Array("/search/{result}/{page:[0-9]+}",
+    "/raw/search/{result}/{page:[0-9]+}"),
     method = Array(RequestMethod.GET))
   @ModelAttribute(MvcConstants.NODE_LIST_MODEL)
   override def searchByPath(@PathVariable("page") page: java.lang.Integer,
@@ -78,8 +78,8 @@ class PasteListCtrl extends SearchCtrl[Paste, AuthorQuery] {
                         request: HttpServletRequest,
                         model: Model): util.List[Paste] = listImpl(request,
     model, page, null, null, null, false, null, result)
-  @RequestMapping(value = Array("/list/{source:[a-zA-Z0-9]+}/{page:[0-9]+}",
-    "/raw/list/{source:[a-zA-Z0-9]+}/{page:[0-9]+}"),
+  @RequestMapping(value = Array("/list/{source}/{page:[0-9]+}",
+    "/raw/list/{source}/{page:[0-9]+}"),
     method = Array(RequestMethod.GET))
   @ModelAttribute(MvcConstants.NODE_LIST_MODEL)
   def listByPathSource(@PathVariable("page") page: java.lang.Integer,
@@ -87,7 +87,7 @@ class PasteListCtrl extends SearchCtrl[Paste, AuthorQuery] {
                        request: HttpServletRequest,
                        model: Model): util.List[Paste] = listImpl(request, model, page, null,
     null, "lastModified", false, source, null)
-  @RequestMapping(value = Array("/list/{source:[a-zA-Z0-9]+}/limit/{pageSize:[0-9]+}"),
+  @RequestMapping(value = Array("/list/{source}/limit/{pageSize:[0-9]+}"),
     method = Array(RequestMethod.GET))
   @ModelAttribute(MvcConstants.NODE_LIST_MODEL)
   def listByPathSizeSource(@PathVariable("pageSize") pageSize: java.lang.Integer,
@@ -95,7 +95,7 @@ class PasteListCtrl extends SearchCtrl[Paste, AuthorQuery] {
                            request: HttpServletRequest,
                            model: Model): util.List[Paste] = listImpl(request, model, null,
     null, pageSize, "lastModified", false, source, null)
-  @RequestMapping(value = Array("/list/{source:[a-zA-Z0-9]+}/next"), method = Array(RequestMethod.GET))
+  @RequestMapping(value = Array("/list/{source}/next"), method = Array(RequestMethod.GET))
   @ModelAttribute(MvcConstants.NODE_LIST_MODEL)
   def listByPathNextSource(
                             request: HttpServletRequest,
@@ -105,16 +105,16 @@ class PasteListCtrl extends SearchCtrl[Paste, AuthorQuery] {
     null,
     "lastModified",
     false, source, null)
-  @RequestMapping(value = Array("/list/{source:[a-zA-Z0-9]+}/prev"), method = Array(RequestMethod.GET))
+  @RequestMapping(value = Array("/list/{source}/prev"), method = Array(RequestMethod.GET))
   @ModelAttribute(MvcConstants.NODE_LIST_MODEL)
   def listByPathPrevSource(
                             request: HttpServletRequest,
                             @PathVariable("source") source: String,
                             model: Model): util.List[Paste] = listImpl(request, model, null,
     "prev", null, "lastModified", false, source, null)
-  @RequestMapping(value = Array("/list/{source:[a-zA-Z0-9]+}",
-    "/raw/list/{source:[a-zA-Z0-9]+}",
-    "/list/{source:[a-zA-Z0-9]+}/earlier"), method = Array(RequestMethod.GET))
+  @RequestMapping(value = Array("/list/{source}",
+    "/raw/list/{source}",
+    "/list/{source}/earlier"), method = Array(RequestMethod.GET))
   @ModelAttribute(MvcConstants.NODE_LIST_MODEL)
   def listSource(request: HttpServletRequest,
                  @PathVariable("source") source: String,
@@ -124,7 +124,7 @@ class PasteListCtrl extends SearchCtrl[Paste, AuthorQuery] {
                  @RequestParam(required = false) pageSize: java.lang.Integer): java.util.List[Paste] = {
     listImpl(request, model, page, NPpage, pageSize, null, false, source, null)
   }
-  @RequestMapping(value = Array("/list/{source:[a-zA-Z0-9]+}/older"), method = Array(RequestMethod.GET))
+  @RequestMapping(value = Array("/list/{source}/older"), method = Array(RequestMethod.GET))
   @ModelAttribute(MvcConstants.NODE_LIST_MODEL)
   def listSourceOlder(request: HttpServletRequest,
                       @PathVariable("source") source: String,
@@ -148,7 +148,7 @@ class PasteListCtrl extends SearchCtrl[Paste, AuthorQuery] {
     listImpl(request, model, page, NPpage, pageSize,
       sortColumn, sortAsc, null, null)
   }
-  @RequestMapping(value = Array("/count/{source:[a-zA-Z0-9]+}/{since:[0-9]+}"),
+  @RequestMapping(value = Array("/count/{source}/{since:[0-9]+}"),
     method = Array(RequestMethod.GET), produces = Array("application/json"))
   @ModelAttribute("count")
   def countAllSince(@PathVariable("source") channelCode: String,

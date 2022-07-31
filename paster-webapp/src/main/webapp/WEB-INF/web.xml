@@ -157,4 +157,5 @@
         </jsp-property-group>
     </jsp-config>
 
+    <request-character-encoding>UTF-8</request-character-encoding>
 </web-app>
