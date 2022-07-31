@@ -45,7 +45,6 @@ class PasterPersistentRememberMeServices(key: String, uds: UserDetailsService, t
                                         response: HttpServletResponse): UserDetails = {
     val token = getPersistentToken(cookieTokens)
     val login = token.username
-
     // Token also matches, so login is valid. Update the token value, keeping the *same* series number.
     log.debug("Refreshing persistent login token for user '{}', series '{}'",
       Array(login, token.series))
@@ -70,7 +69,6 @@ class PasterPersistentRememberMeServices(key: String, uds: UserDetailsService, t
     val login = successfulAuthentication.getName
     if (log.isDebugEnabled)
       log.debug("Creating new persistent login for user {}", login)
-
     val user = getUserDetailsService.loadUserByUsername(login).asInstanceOf[PasterUser]
     val token = new SessionToken()
     token.series = generateSeriesData()

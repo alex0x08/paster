@@ -122,14 +122,12 @@ abstract class GenericListCtrl[T <: Struct] extends AbstractCtrl {
         sort.setAscending(sortAsc)
         pagedListHolder.resort()
       }
-
       /**
        * NPage is string like NEXT or PREV
        * check if exist and use it
        */
       if (NPpage != null) {
         if (NPpage.equals("next")) pagedListHolder.nextPage() else pagedListHolder.previousPage()
-
         /**
          * if page number was specified
          */
@@ -139,7 +137,6 @@ abstract class GenericListCtrl[T <: Struct] extends AbstractCtrl {
             pagedListHolder.getPageCount
           else page ).asInstanceOf[Integer] - 1)
     }
-
     /**
      * if items per page parameter was specified
      */

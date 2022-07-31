@@ -58,4 +58,3 @@ class Role(code: String, desc: String) extends GrantedAuthority {
   def getAuthority: String = code
   def getName: String = desc
 }
-

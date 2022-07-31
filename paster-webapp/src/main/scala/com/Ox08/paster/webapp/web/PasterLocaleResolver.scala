@@ -8,7 +8,6 @@ import java.util.Locale
  * Customized locale resolver, supports both 'Accept-Language' and session-based locales
  */
 class PasterLocaleResolver extends SessionLocaleResolver with Logged{
-
   @Value("${paster.i18n.switchToUserLocale}")
   val switchToUserLocale: Boolean = false // do we have 'switch to browser's locale' feature enabled?
   /**
@@ -26,7 +25,6 @@ class PasterLocaleResolver extends SessionLocaleResolver with Logged{
        // if request does not contain 'Accept-Language' header - just respond system locale
        if (request.getHeader("Accept-Language") == null)
          return systemLocale
-
        // otherwise - HttpServletRequest will contain parsed Locale object
        val requestLocale = request.getLocale
        // if so and this object is correct

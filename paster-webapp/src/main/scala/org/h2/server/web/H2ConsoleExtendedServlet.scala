@@ -19,12 +19,10 @@ import javax.sql.DataSource
 class H2ConsoleExtendedServlet extends JakartaWebServlet with Logged {
   private var dataSource: DataSource = _
   private var server:WebServer = _
-
   override def destroy(): Unit = {
     if (server!=null)
         server.stop()
   }
-
   override def init(): Unit = {
     if (!Boot.BOOT.getSystemInfo.isInstalled) return
     server = new WebServer
