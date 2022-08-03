@@ -54,7 +54,7 @@ public class TilesContextBeanELResolver extends ELResolver {
     @Override
     public Iterator<FeatureDescriptor> getFeatureDescriptors(ELContext context,
             Object base) {
-        List<FeatureDescriptor> list = new ArrayList<FeatureDescriptor>();
+        List<FeatureDescriptor> list = new ArrayList<>();
 
         Request request = (Request) context
                 .getContext(Request.class);
@@ -119,13 +119,13 @@ public class TilesContextBeanELResolver extends ELResolver {
      * @param list The list to fill.
      * @since 2.2.1
      */
-    protected void collectBeanInfo(Map<String, ? extends Object> map,
+    protected void collectBeanInfo(Map<String, ?> map,
             List<FeatureDescriptor> list) {
         if (map == null || map.isEmpty()) {
             return;
         }
 
-        for (Map.Entry<String, ? extends Object> entry : map.entrySet()) {
+        for (Map.Entry<String, ?> entry : map.entrySet()) {
             FeatureDescriptor descriptor = new FeatureDescriptor();
             descriptor.setDisplayName(entry.getKey());
             descriptor.setExpert(false);
@@ -148,7 +148,7 @@ public class TilesContextBeanELResolver extends ELResolver {
      * @since 2.2.1
      */
     protected Object findObjectByProperty(ELContext context, Object property) {
-        Object retValue = null;
+        Object retValue;
 
         Request request = (Request) context
                 .getContext(Request.class);
@@ -173,7 +173,7 @@ public class TilesContextBeanELResolver extends ELResolver {
      * @return The object, if present, or <code>null</code> otherwise.
      * @since 2.2.1
      */
-    protected Object getObject(Map<String, ? extends Object> map,
+    protected Object getObject(Map<String, ?> map,
             String property) {
         Object retValue = null;
         if (map != null) {

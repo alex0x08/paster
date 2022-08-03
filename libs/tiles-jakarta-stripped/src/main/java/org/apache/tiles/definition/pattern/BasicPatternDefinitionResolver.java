@@ -45,12 +45,12 @@ public class BasicPatternDefinitionResolver<T> extends
     /**
      * The factory of pattern matchers.
      */
-    private DefinitionPatternMatcherFactory definitionPatternMatcherFactory;
+    private final DefinitionPatternMatcherFactory definitionPatternMatcherFactory;
 
     /**
      * The pattern recognizer.
      */
-    private PatternRecognizer patternRecognizer;
+    private final PatternRecognizer patternRecognizer;
 
     /**
      * Constructor.
@@ -68,7 +68,7 @@ public class BasicPatternDefinitionResolver<T> extends
     @Override
     protected Map<String, Definition> addDefinitionsAsPatternMatchers(List<DefinitionPatternMatcher> matchers,
             Map<String, Definition> defsMap) {
-        Set<String> excludedKeys = new LinkedHashSet<String>();
+        Set<String> excludedKeys = new LinkedHashSet<>();
         for (Map.Entry<String, Definition> de : defsMap.entrySet()) {
             String key = de.getKey();
             if (patternRecognizer.isPatternRecognized(key)) {

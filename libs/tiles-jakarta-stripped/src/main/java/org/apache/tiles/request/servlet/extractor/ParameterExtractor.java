@@ -36,7 +36,7 @@ public class ParameterExtractor implements HasKeys<String> {
     /**
      * The servlet request.
      */
-    private HttpServletRequest request;
+    private final HttpServletRequest request;
 
     /**
      * Constructor.
@@ -47,7 +47,6 @@ public class ParameterExtractor implements HasKeys<String> {
         this.request = request;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public Enumeration<String> getKeys() {
         return request.getParameterNames();

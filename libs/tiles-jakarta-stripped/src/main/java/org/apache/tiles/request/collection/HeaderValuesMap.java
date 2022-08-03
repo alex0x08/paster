@@ -22,14 +22,7 @@ package org.apache.tiles.request.collection;
 
 import static org.apache.tiles.request.collection.CollectionUtil.*;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import org.apache.tiles.request.attribute.EnumeratedValuesExtractor;
 
@@ -44,7 +37,7 @@ public class HeaderValuesMap implements Map<String, String[]> {
     /**
      * The request.
      */
-    private EnumeratedValuesExtractor request;
+    private final EnumeratedValuesExtractor request;
 
     /**
      * Constructor.
@@ -70,10 +63,9 @@ public class HeaderValuesMap implements Map<String, String[]> {
 
     /** {@inheritDoc} */
     public boolean containsValue(Object value) {
-        if (!(value instanceof String[])) {
+        if (!(value instanceof String[] test)) {
             return (false);
         }
-        String[] test = (String[]) value;
         Enumeration<String> names = request.getKeys();
         while (names.hasMoreElements()) {
             String name = names.nextElement();
@@ -180,13 +172,12 @@ public class HeaderValuesMap implements Map<String, String[]> {
      * @return The values of the attribute.
      */
     private String[] getHeaderValues(String key) {
-        List<String> list = new ArrayList<String>();
+        List<String> list = new ArrayList<>();
         Enumeration<String> values = request.getValues(key);
         while (values.hasMoreElements()) {
             list.add(values.nextElement());
         }
-        String[] retValue = list.toArray(new String[list.size()]);
-        return retValue;
+        return list.toArray(new String[0]);
     }
 
     /**
@@ -196,7 +187,7 @@ public class HeaderValuesMap implements Map<String, String[]> {
      * @return The corresponding array.
      */
     private Set<String> enumeration2set(Enumeration<String> enumeration) {
-        Set<String> retValue = new HashSet<String>();
+        Set<String> retValue = new HashSet<>();
         while (enumeration.hasMoreElements()) {
             retValue.add(enumeration.nextElement());
         }
@@ -210,11 +201,7 @@ public class HeaderValuesMap implements Map<String, String[]> {
      * @return The corresponding set.
      */
     private Set<String> array2set(String[] valueArray) {
-        Set<String> values = new HashSet<String>();
-        for (int i = 0; i < valueArray.length; i++) {
-            values.add(valueArray[i]);
-        }
-        return values;
+        return new HashSet<>(Arrays.asList(valueArray));
     }
 
     /**
@@ -341,7 +328,7 @@ public class HeaderValuesMap implements Map<String, String[]> {
          * @return The collection, turned into a list.
          */
         private List<Map.Entry<String, String[]>> toList() {
-            List<Map.Entry<String, String[]>> entries = new ArrayList<Map.Entry<String, String[]>>();
+            List<Map.Entry<String, String[]>> entries = new ArrayList<>();
             Enumeration<String> names = request.getKeys();
             while (names.hasMoreElements()) {
                 entries.add(extractNextEntry(names));
@@ -358,7 +345,7 @@ public class HeaderValuesMap implements Map<String, String[]> {
         private MapEntry<String, String[]> extractNextEntry(
                 Enumeration<String> names) {
             String name = names.nextElement();
-            return new MapEntryArrayValues<String, String>(name, getHeaderValues(name), false);
+            return new MapEntryArrayValues<>(name, getHeaderValues(name), false);
         }
 
         /**
@@ -369,7 +356,7 @@ public class HeaderValuesMap implements Map<String, String[]> {
             /**
              * The enumeration to use.
              */
-            private Enumeration<String> namesEnumeration = request.getKeys();
+            private final Enumeration<String> namesEnumeration = request.getKeys();
 
             @Override
             public boolean hasNext() {
@@ -473,7 +460,7 @@ public class HeaderValuesMap implements Map<String, String[]> {
          * @return The list.
          */
         private List<String[]> toList() {
-            List<String[]> entries = new ArrayList<String[]>();
+            List<String[]> entries = new ArrayList<>();
             Enumeration<String> names = request.getKeys();
             while (names.hasMoreElements()) {
                 entries.add(enumeration2array(request.getValues(names.nextElement())));
@@ -488,12 +475,12 @@ public class HeaderValuesMap implements Map<String, String[]> {
          * @return The corresponding array.
          */
         private String[] enumeration2array(Enumeration<String> enumeration) {
-            List<String> list1 = new ArrayList<String>();
+            List<String> list1 = new ArrayList<>();
             while (enumeration.hasMoreElements()) {
                 list1.add(enumeration.nextElement());
             }
 
-            return list1.toArray(new String[list1.size()]);
+            return list1.toArray(new String[0]);
         }
 
         /**
@@ -504,7 +491,7 @@ public class HeaderValuesMap implements Map<String, String[]> {
             /**
              * The enumeration of the name of header attributes.
              */
-            private Enumeration<String> namesEnumeration = request.getKeys();
+            private final Enumeration<String> namesEnumeration = request.getKeys();
 
             @Override
             public boolean hasNext() {

@@ -44,8 +44,8 @@ public abstract class AbstractPatternDefinitionResolver<T> implements
     /**
      * Stores patterns depending on the locale they refer to.
      */
-    private Map<T, List<DefinitionPatternMatcher>> localePatternPaths =
-        new HashMap<T, List<DefinitionPatternMatcher>>();
+    private final Map<T, List<DefinitionPatternMatcher>> localePatternPaths =
+            new HashMap<>();
 
     /** {@inheritDoc} */
     public Definition resolveDefinition(String name, T customizationKey) {
@@ -61,11 +61,7 @@ public abstract class AbstractPatternDefinitionResolver<T> implements
     public Map<String, Definition> storeDefinitionPatterns(Map<String, Definition> localeDefsMap,
             T customizationKey) {
         List<DefinitionPatternMatcher> lpaths = localePatternPaths
-                .get(customizationKey);
-        if (lpaths == null) {
-            lpaths = new ArrayList<DefinitionPatternMatcher>();
-            localePatternPaths.put(customizationKey, lpaths);
-        }
+                .computeIfAbsent(customizationKey, k -> new ArrayList<>());
 
         return addDefinitionsAsPatternMatchers(lpaths, localeDefsMap);
     }

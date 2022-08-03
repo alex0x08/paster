@@ -38,7 +38,7 @@ public class JspPrintWriterAdapter extends PrintWriter {
     /**
      * The JSP writer.
      */
-    private JspWriter writer;
+    private final JspWriter writer;
 
     /**
      * The logging object.

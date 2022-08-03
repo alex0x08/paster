@@ -34,7 +34,7 @@ public class TilesRequestContextHolder {
     /**
      * The Tiles request context holder.
      */
-    private ThreadLocal<Request> requestHolder = new ThreadLocal<Request>();
+    private final ThreadLocal<Request> requestHolder = new ThreadLocal<Request>();
 
     /**
      * Sets the Tiles request context to use.

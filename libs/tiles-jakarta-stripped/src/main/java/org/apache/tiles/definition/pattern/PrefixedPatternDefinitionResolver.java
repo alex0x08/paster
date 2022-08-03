@@ -49,13 +49,13 @@ public class PrefixedPatternDefinitionResolver<T> extends
     /**
      * The logging object.
      */
-    private Logger logger = LoggerFactory.getLogger(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     /**
      * Matches languages names to the corresponding
      * {@link DefinitionPatternMatcherFactory}.
      */
-    private Map<String, DefinitionPatternMatcherFactory> language2matcherFactory;
+    private final Map<String, DefinitionPatternMatcherFactory> language2matcherFactory;
 
     /**
      * Constructor.
@@ -63,7 +63,7 @@ public class PrefixedPatternDefinitionResolver<T> extends
      * @since 2.2.0
      */
     public PrefixedPatternDefinitionResolver() {
-        language2matcherFactory = new HashMap<String, DefinitionPatternMatcherFactory>();
+        language2matcherFactory = new HashMap<>();
     }
 
     /**
@@ -84,7 +84,7 @@ public class PrefixedPatternDefinitionResolver<T> extends
     protected Map<String, Definition> addDefinitionsAsPatternMatchers(
             List<DefinitionPatternMatcher> matchers,
             Map<String, Definition> defsMap) {
-        Set<String> excludedKeys = new LinkedHashSet<String>();
+        Set<String> excludedKeys = new LinkedHashSet<>();
         for (Map.Entry<String, Definition> entry : defsMap.entrySet()) {
             String key = entry.getKey();
             Expression expression = Expression

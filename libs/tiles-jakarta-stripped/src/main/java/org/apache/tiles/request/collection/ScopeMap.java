@@ -20,16 +20,9 @@
  */
 package org.apache.tiles.request.collection;
 
-import static org.apache.tiles.request.collection.CollectionUtil.*;
-
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
-
 import org.apache.tiles.request.attribute.AttributeExtractor;
+import java.util.*;
+import static org.apache.tiles.request.collection.CollectionUtil.key;
 
 /**
  * Exposes a scope context as a <String, Object> map.
@@ -42,7 +35,7 @@ public class ScopeMap extends ReadOnlyEnumerationMap<Object> {
     /**
      * The context to read.
      */
-    private AttributeExtractor context;
+    private final AttributeExtractor context;
 
     /**
      * Constructor.
@@ -82,10 +75,8 @@ public class ScopeMap extends ReadOnlyEnumerationMap<Object> {
     }
 
     /** {@inheritDoc} */
-    public void putAll(Map<? extends String, ? extends Object> map) {
-        Iterator<? extends String> keys = map.keySet().iterator();
-        while (keys.hasNext()) {
-            String key = keys.next();
+    public void putAll(Map<? extends String, ?> map) {
+        for (String key : map.keySet()) {
             context.setValue(key, map.get(key));
         }
     }
@@ -159,11 +150,11 @@ public class ScopeMap extends ReadOnlyEnumerationMap<Object> {
         public boolean retainAll(Collection<?> c) {
             Collection<Map.Entry<String, Object>> realCollection = (Collection<java.util.Map.Entry<String, Object>>) c;
             boolean retValue = false;
-            Set<String> keysToRemove = new LinkedHashSet<String>();
+            Set<String> keysToRemove = new LinkedHashSet<>();
             for (Enumeration<String> keys = context.getKeys(); keys.hasMoreElements();) {
                 String key = keys.nextElement();
                 Object value = context.getValue(key);
-                Map.Entry<String, Object> entry = new MapEntry<String, Object>(key, value, false);
+                Map.Entry<String, Object> entry = new MapEntry<>(key, value, false);
                 if (!realCollection.contains(entry)) {
                     retValue = true;
                     keysToRemove.add(key);

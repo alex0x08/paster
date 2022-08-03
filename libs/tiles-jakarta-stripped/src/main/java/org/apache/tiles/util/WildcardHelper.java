@@ -21,7 +21,6 @@
 package org.apache.tiles.util;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -203,7 +202,7 @@ public class WildcardHelper {
         int exprpos = 0;
         int buffpos = 0;
         int rsltpos = 0;
-        int offset = -1;
+        int offset;
 
         // First check for MATCH_BEGIN
         boolean matchBegin = false;
@@ -240,32 +239,32 @@ public class WildcardHelper {
             }
 
             // Check for MATCH_BEGIN
-            if (matchBegin) {
+            /*if (matchBegin) {
                 if (offset != 0) {
                     return null;
                 }
 
                 matchBegin = false;
-            }
+            }*/
 
             // Advance buffpos
             buffpos += (charpos - exprpos);
 
             // Check for END's
             if (exprchr == MATCH_END) {
-                if (rsltpos > 0) {
+                /*if (rsltpos > 0) {
                     varsValues = addAndCreateList(varsValues, new String(rslt,
                             0, rsltpos));
-                }
+                }*/
 
                 // Don't care about rest of input buffer
                 varsValues = addElementOnTop(varsValues, data);
                 return varsValues;
             } else if (exprchr == MATCH_THEEND) {
-                if (rsltpos > 0) {
+                /*if (rsltpos > 0) {
                     varsValues = addAndCreateList(varsValues, new String(rslt,
                             0, rsltpos));
-                }
+                }*/
 
                 // Check that we reach buffer's end
                 if (buffpos == buff.length) {
@@ -489,19 +488,18 @@ public class WildcardHelper {
     public static String convertParam(String val, Map<Integer, String> vars) {
         if (val == null) {
             return null;
-        } else if (val.indexOf("{") == -1) {
+        } else if (!val.contains("{")) {
             return val;
         }
 
         Map.Entry<Integer, String> entry;
-        StringBuffer key = new StringBuffer("{0}");
-        StringBuffer ret = new StringBuffer(val);
+        StringBuilder key = new StringBuilder("{0}");
+        StringBuilder ret = new StringBuilder(val);
         String keyTmp;
         int x;
 
-        for (Iterator<Map.Entry<Integer, String>> i = vars.entrySet()
-                .iterator(); i.hasNext();) {
-            entry = i.next();
+        for (Map.Entry<Integer, String> integerStringEntry : vars.entrySet()) {
+            entry = integerStringEntry;
             key.setCharAt(1, entry.getKey().toString().charAt(0));
             keyTmp = key.toString();
 
@@ -524,7 +522,7 @@ public class WildcardHelper {
      */
     private <T> List<T> addAndCreateList(List<T> list, T data) {
         if (list == null) {
-            list = new ArrayList<T>();
+            list = new ArrayList<>();
         }
         list.add(data);
         return list;
@@ -540,7 +538,7 @@ public class WildcardHelper {
      */
     private <T> List<T> addElementOnTop(List<T> list, T data) {
         if (list == null) {
-            list = new ArrayList<T>();
+            list = new ArrayList<>();
         }
         list.add(0, data);
         return list;

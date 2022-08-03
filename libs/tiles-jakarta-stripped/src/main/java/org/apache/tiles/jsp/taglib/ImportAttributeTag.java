@@ -25,7 +25,7 @@ public class ImportAttributeTag extends SimpleTagSupport {
     /**
      * The template model.
      */
-    private org.apache.tiles.template.ImportAttributeModel model = new org.apache.tiles.template.ImportAttributeModel();
+    private final org.apache.tiles.template.ImportAttributeModel model = new org.apache.tiles.template.ImportAttributeModel();
 
     /**
      * The name of the attribute to import. If it is
@@ -146,14 +146,12 @@ public class ImportAttributeTag extends SimpleTagSupport {
     @Override
     public void doTag() throws JspException, IOException {
         AutotagRuntime<org.apache.tiles.request.Request> runtime = new org.apache.tiles.request.jsp.autotag.JspAutotagRuntime();
-        if (runtime instanceof SimpleTagSupport) {
-            SimpleTagSupport tag = (SimpleTagSupport) runtime;
-            tag.setJspContext(getJspContext());
-            tag.setJspBody(getJspBody());
-            tag.setParent(getParent());
-            tag.doTag();
-        }
-        org.apache.tiles.request.Request request = runtime.createRequest();        
+        SimpleTagSupport tag = (SimpleTagSupport) runtime;
+        tag.setJspContext(getJspContext());
+        tag.setJspBody(getJspBody());
+        tag.setParent(getParent());
+        tag.doTag();
+        org.apache.tiles.request.Request request = runtime.createRequest();
         model.execute(
             name,
             scope,

@@ -24,6 +24,7 @@ package org.apache.tiles;
 import static org.apache.tiles.CompareUtil.*;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -225,10 +226,8 @@ public class Attribute implements Serializable, Cloneable {
     public void setRole(String role) {
         if (role != null && role.trim().length() > 0) {
             String[] rolesStrings = role.split("\\s*,\\s*");
-            roles = new HashSet<String>();
-            for (int i = 0; i < rolesStrings.length; i++) {
-                roles.add(rolesStrings[i]);
-            }
+            roles = new HashSet<>();
+            roles.addAll(Arrays.asList(rolesStrings));
         } else {
             roles = null;
         }

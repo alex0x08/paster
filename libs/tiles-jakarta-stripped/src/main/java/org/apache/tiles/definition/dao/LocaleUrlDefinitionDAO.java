@@ -65,7 +65,7 @@ public class LocaleUrlDefinitionDAO extends BaseLocaleUrlDefinitionDAO {
     /** {@inheritDoc} */
     public Map<String, Definition> getDefinitions(Locale customizationKey) {
         ArrayList<Locale> postfixes = computeLocales(customizationKey);
-        Map<String, Definition> localeDefsMap = new HashMap<String, Definition>();
+        Map<String, Definition> localeDefsMap = new HashMap<>();
         // process the postfixes from the root to the most specific
         for (Locale postfix : postfixes) {
             // For each postfix, all the sources must be loaded.
@@ -94,7 +94,7 @@ public class LocaleUrlDefinitionDAO extends BaseLocaleUrlDefinitionDAO {
         } else {
             postfix = customizationKey;
         }
-        ArrayList<Locale> postfixes = new ArrayList<Locale>();
+        ArrayList<Locale> postfixes = new ArrayList<>();
         while (postfix != null) {
             postfixes.add(postfix);
             postfix = LocaleUtil.getParentLocale(postfix);

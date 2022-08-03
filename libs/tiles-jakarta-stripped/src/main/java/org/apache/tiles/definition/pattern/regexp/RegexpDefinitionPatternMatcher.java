@@ -39,12 +39,12 @@ public class RegexpDefinitionPatternMatcher implements DefinitionPatternMatcher 
     /**
      * The pattern to match.
      */
-    private Pattern pattern;
+    private final Pattern pattern;
 
     /**
      * The definition to use as a basis.
      */
-    private Definition definition;
+    private final Definition definition;
 
     /**
      * Constructor.

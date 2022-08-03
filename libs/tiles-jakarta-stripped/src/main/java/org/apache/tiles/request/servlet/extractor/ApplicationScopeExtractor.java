@@ -36,7 +36,7 @@ public class ApplicationScopeExtractor implements AttributeExtractor {
     /**
      * The servlet context.
      */
-    private ServletContext context;
+    private final ServletContext context;
 
     /**
      * Constructor.

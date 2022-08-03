@@ -37,7 +37,7 @@ public class ExternalWriterHttpServletResponse extends
     /**
      * The print writer to use, instead of the response's one.
      */
-    private PrintWriter writer;
+    private final PrintWriter writer;
 
     /**
      * Constructor.

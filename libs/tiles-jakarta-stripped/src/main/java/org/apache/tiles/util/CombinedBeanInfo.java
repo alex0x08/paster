@@ -41,12 +41,12 @@ public class CombinedBeanInfo {
     /**
      * The descriptors of the introspected classes.
      */
-    private List<FeatureDescriptor> descriptors;
+    private final List<FeatureDescriptor> descriptors;
 
     /**
      * Maps analyzed classes to the map of introspected properties.
      */
-    private Map<Class<?>, Map<String, PropertyDescriptor>> class2descriptors;
+    private final Map<Class<?>, Map<String, PropertyDescriptor>> class2descriptors;
 
     /**
      * Constructor.
@@ -55,11 +55,10 @@ public class CombinedBeanInfo {
      * @since 2.2.0
      */
     public CombinedBeanInfo(Class<?>... clazzes) {
-        descriptors = new ArrayList<FeatureDescriptor>();
-        class2descriptors = new LinkedHashMap<Class<?>, Map<String, PropertyDescriptor>>();
-        for (int i = 0; i < clazzes.length; i++) {
-            Class<?> clazz = clazzes[i];
-            Map<String, PropertyDescriptor> mappedDescriptors = new LinkedHashMap<String, PropertyDescriptor>();
+        descriptors = new ArrayList<>();
+        class2descriptors = new LinkedHashMap<>();
+        for (Class<?> clazz : clazzes) {
+            Map<String, PropertyDescriptor> mappedDescriptors = new LinkedHashMap<>();
             ClassUtil.collectBeanInfo(clazz, mappedDescriptors);
             descriptors.addAll(mappedDescriptors.values());
             class2descriptors.put(clazz, mappedDescriptors);

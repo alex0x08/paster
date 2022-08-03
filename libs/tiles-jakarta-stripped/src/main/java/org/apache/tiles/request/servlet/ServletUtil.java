@@ -22,6 +22,7 @@
 package org.apache.tiles.request.servlet;
 
 import java.io.IOException;
+import java.util.Objects;
 
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
@@ -55,13 +56,9 @@ public final class ServletUtil {
             String message) {
         IOException retValue;
         Throwable rootCause = ex.getRootCause();
-        if (rootCause != null) {
-            // Replace the ServletException with an IOException, with the root
-            // cause of the first as the cause of the latter.
-            retValue = new IOException(message, rootCause);
-        } else {
-            retValue = new IOException(message, ex);
-        }
+        // Replace the ServletException with an IOException, with the root
+        // cause of the first as the cause of the latter.
+        retValue = new IOException(message, Objects.requireNonNullElse(rootCause, ex));
 
         return retValue;
     }
@@ -114,7 +111,7 @@ public final class ServletUtil {
      */
     public static ServletContext getServletContext(ApplicationContext applicationContext) {
         if (applicationContext instanceof ServletApplicationContext) {
-            return (ServletContext) ((ServletApplicationContext) applicationContext).getContext();
+            return (ServletContext) applicationContext.getContext();
         }
 
         throw new NotAServletEnvironmentException("Not a Servlet-based environment");

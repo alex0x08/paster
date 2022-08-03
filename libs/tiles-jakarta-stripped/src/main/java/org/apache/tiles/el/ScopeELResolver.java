@@ -65,7 +65,7 @@ public class ScopeELResolver extends ELResolver {
             return retValue.iterator();
         }
 
-        List<FeatureDescriptor> list = new ArrayList<FeatureDescriptor>();
+        List<FeatureDescriptor> list = new ArrayList<>();
 
         Request request = (Request) context
                 .getContext(Request.class);
@@ -88,7 +88,7 @@ public class ScopeELResolver extends ELResolver {
     /** {@inheritDoc} */
     @Override
     public Class<?> getType(ELContext context, Object base, Object property) {
-        if (base != null || property == null || !(property instanceof String)
+        if (base != null || !(property instanceof String)
                 || !((String) property).endsWith("Scope")) {
             return null;
         }

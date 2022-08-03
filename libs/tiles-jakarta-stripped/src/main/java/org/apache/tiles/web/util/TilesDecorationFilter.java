@@ -94,7 +94,7 @@ public class TilesDecorationFilter implements Filter {
     /**
      * The logging object.
      */
-    private Logger log = LoggerFactory.getLogger(TilesDecorationFilter.class);
+    private final Logger log = LoggerFactory.getLogger(TilesDecorationFilter.class);
 
     /**
      * Filter configuration.
@@ -183,9 +183,8 @@ public class TilesDecorationFilter implements Filter {
      *
      * @return The alternate definitions map.
      */
-    @SuppressWarnings("unchecked")
     protected Map<String, String> parseAlternateDefinitions() {
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, String> map = new HashMap<>();
         Enumeration<String> e = filterConfig.getInitParameterNames();
         while (e.hasMoreElements()) {
             String parm = e.nextElement();

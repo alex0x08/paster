@@ -99,7 +99,7 @@ public class BasicAttributeContext implements AttributeContext, Serializable {
                 this.templateAttribute = new Attribute(parentTemplateAttribute);
             }
             this.preparer = context.getPreparer();
-            this.attributes = new HashMap<String, Attribute>();
+            this.attributes = new HashMap<>();
             Set<String> parentAttributeNames = context.getLocalAttributeNames();
             if (parentAttributeNames != null) {
                 for (String name : parentAttributeNames) {
@@ -145,7 +145,7 @@ public class BasicAttributeContext implements AttributeContext, Serializable {
         if (context instanceof BasicAttributeContext) {
             copyCascadedAttributes((BasicAttributeContext) context);
         } else {
-            this.cascadedAttributes = new HashMap<String, Attribute>();
+            this.cascadedAttributes = new HashMap<>();
             Set<String> parentAttributeNames = context.getCascadedAttributeNames();
             if (parentAttributeNames != null) {
                 for (String name : parentAttributeNames) {
@@ -235,7 +235,7 @@ public class BasicAttributeContext implements AttributeContext, Serializable {
         }
 
         if (attributes == null) {
-            attributes = new HashMap<String, Attribute>(newAttributes);
+            attributes = new HashMap<>(newAttributes);
             return;
         }
 
@@ -257,7 +257,7 @@ public class BasicAttributeContext implements AttributeContext, Serializable {
         }
 
         if (attributes == null) {
-            attributes = new HashMap<String, Attribute>();
+            attributes = new HashMap<>();
             if (cascadedAttributes == null || cascadedAttributes.isEmpty()) {
                 attributes.putAll(defaultAttributes);
                 return;
@@ -326,7 +326,7 @@ public class BasicAttributeContext implements AttributeContext, Serializable {
     /** {@inheritDoc} */
     public void putAttribute(String name, Attribute value) {
         if (attributes == null) {
-            attributes = new HashMap<String, Attribute>();
+            attributes = new HashMap<>();
         }
 
         attributes.put(name, value);
@@ -337,12 +337,12 @@ public class BasicAttributeContext implements AttributeContext, Serializable {
         Map<String, Attribute> mapToUse;
         if (cascade) {
             if (cascadedAttributes == null) {
-                cascadedAttributes = new HashMap<String, Attribute>();
+                cascadedAttributes = new HashMap<>();
             }
             mapToUse = cascadedAttributes;
         } else {
             if (attributes == null) {
-                attributes = new HashMap<String, Attribute>();
+                attributes = new HashMap<>();
             }
             mapToUse = attributes;
         }
@@ -431,7 +431,7 @@ public class BasicAttributeContext implements AttributeContext, Serializable {
             Map<String, Attribute> destination) {
         if (source != null && !source.isEmpty()) {
             if (destination == null) {
-                destination = new HashMap<String, Attribute>();
+                destination = new HashMap<>();
             }
             for (Map.Entry<String, Attribute> entry : source.entrySet()) {
                 String key = entry.getKey();

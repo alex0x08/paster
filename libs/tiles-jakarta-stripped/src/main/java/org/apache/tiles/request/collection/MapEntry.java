@@ -39,7 +39,7 @@ public class MapEntry<K, V> implements Map.Entry<K, V> {
     /**
      * <p>The entry key.</p>
      */
-    private K key;
+    private final K key;
 
     /**
      * <p>The entry value.</p>
@@ -49,7 +49,7 @@ public class MapEntry<K, V> implements Map.Entry<K, V> {
     /**
      * <p>Whether the entry can be modified.</p>
      */
-    private boolean modifiable = false;
+    private final boolean modifiable;
 
 
     /**
@@ -112,7 +112,7 @@ public class MapEntry<K, V> implements Map.Entry<K, V> {
     @Override
     @SuppressWarnings("unchecked")
     public boolean equals(Object o) {
-        if (o != null && o instanceof Map.Entry) {
+        if (o instanceof Map.Entry) {
             Map.Entry<K, V> entry = (Map.Entry<K, V>) o;
             return (this.getKey() == null ? entry.getKey() == null : this
                     .getKey().equals(entry.getKey()))

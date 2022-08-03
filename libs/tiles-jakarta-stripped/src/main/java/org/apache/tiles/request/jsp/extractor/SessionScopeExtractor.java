@@ -36,7 +36,7 @@ public class SessionScopeExtractor implements AttributeExtractor {
     /**
      * The page context.
      */
-    private PageContext context;
+    private final PageContext context;
 
     /**
      * Constructor.

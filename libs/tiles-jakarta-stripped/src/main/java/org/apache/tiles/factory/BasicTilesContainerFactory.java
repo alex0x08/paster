@@ -162,8 +162,7 @@ public class BasicTilesContainerFactory extends AbstractTilesContainerFactory {
      */
     protected BaseLocaleUrlDefinitionDAO instantiateLocaleDefinitionDao(ApplicationContext applicationContext,
             LocaleResolver resolver) {
-        ResolvingLocaleUrlDefinitionDAO dao = new ResolvingLocaleUrlDefinitionDAO(applicationContext);
-        return dao;
+        return new ResolvingLocaleUrlDefinitionDAO(applicationContext);
     }
 
     /**

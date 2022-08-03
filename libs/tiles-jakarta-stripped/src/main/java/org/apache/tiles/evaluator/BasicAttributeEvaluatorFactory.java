@@ -41,14 +41,14 @@ public class BasicAttributeEvaluatorFactory implements
      * The default evaluator to return if it is not found in the map of known
      * languages.
      */
-    private AttributeEvaluator defaultEvaluator;
+    private final AttributeEvaluator defaultEvaluator;
 
     /**
      * Maps names of expression languages to their attribute evaluator.
      *
      * @since 2.2.0
      */
-    private Map<String, AttributeEvaluator> language2evaluator;
+    private final Map<String, AttributeEvaluator> language2evaluator;
 
     /**
      * Constructor.
@@ -59,7 +59,7 @@ public class BasicAttributeEvaluatorFactory implements
      */
     public BasicAttributeEvaluatorFactory(AttributeEvaluator defaultEvaluator) {
         this.defaultEvaluator = defaultEvaluator;
-        language2evaluator = new HashMap<String, AttributeEvaluator>();
+        language2evaluator = new HashMap<>();
     }
 
     /**

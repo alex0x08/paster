@@ -140,7 +140,7 @@ public class ReadOnlyEnumerationMap<V> implements Map<String, V> {
     public boolean equals(Object o) {
         HasKeys<V> otherRequest = ((ReadOnlyEnumerationMap<V>) o).request;
         boolean retValue = true;
-        Set<String> otherKeys = new HashSet<String>();
+        Set<String> otherKeys = new HashSet<>();
         for (Enumeration<String> attribs = otherRequest.getKeys(); attribs
                 .hasMoreElements();) {
             otherKeys.add(attribs.nextElement());
@@ -284,7 +284,7 @@ public class ReadOnlyEnumerationMap<V> implements Map<String, V> {
         private MapEntry<String, V> extractNextEntry(
                 Enumeration<String> names) {
             String name = names.nextElement();
-            return new MapEntry<String, V>(name, request.getValue(name),
+            return new MapEntry<>(name, request.getValue(name),
                     false);
         }
 
@@ -345,7 +345,7 @@ public class ReadOnlyEnumerationMap<V> implements Map<String, V> {
         @Override
         public boolean containsAll(Collection<?> c) {
             Collection<String> realCollection = (Collection<String>) c;
-            List<String> valueList = new ArrayList<String>(realCollection);
+            List<String> valueList = new ArrayList<>(realCollection);
             for (Enumeration<String> keysEnum = request.getKeys(); keysEnum.hasMoreElements();) {
                 valueList.remove(request.getValue(keysEnum.nextElement()));
                 if (valueList.isEmpty()) {
@@ -401,7 +401,7 @@ public class ReadOnlyEnumerationMap<V> implements Map<String, V> {
          * @return The list.
          */
         private List<V> toList() {
-            List<V> entries = new ArrayList<V>();
+            List<V> entries = new ArrayList<>();
             Enumeration<String> names = request.getKeys();
             while (names.hasMoreElements()) {
                 entries.add(request.getValue(names.nextElement()));
@@ -417,7 +417,7 @@ public class ReadOnlyEnumerationMap<V> implements Map<String, V> {
             /**
              * Enumerates attribute keys.
              */
-            private Enumeration<String> namesEnumeration = request.getKeys();
+            private final Enumeration<String> namesEnumeration = request.getKeys();
 
             @Override
             public boolean hasNext() {

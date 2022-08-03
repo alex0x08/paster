@@ -62,7 +62,6 @@ public class ServletContextAdapter implements ServletContext {
      *
      * @param config The servlet configuration object.
      */
-    @SuppressWarnings("unchecked")
     public ServletContextAdapter(ServletConfig config) {
         this.rootContext = config.getServletContext();
         initParameters = new TreeMap<>();
@@ -110,7 +109,6 @@ public class ServletContextAdapter implements ServletContext {
     /**
      * {@inheritDoc}
      */
-    @SuppressWarnings({"rawtypes"})
     @Override
     public Set<String> getResourcePaths(String string) {
         return rootContext.getResourcePaths(string);
@@ -209,7 +207,6 @@ public class ServletContextAdapter implements ServletContext {
     /**
      * {@inheritDoc}
      */
-    @SuppressWarnings("rawtypes")
     @Override
     public Enumeration<String> getInitParameterNames() {
         return Collections.enumeration(initParameters.keySet());
@@ -224,7 +221,6 @@ public class ServletContextAdapter implements ServletContext {
     /**
      * {@inheritDoc}
      */
-    @SuppressWarnings("rawtypes")
     @Override
     public Enumeration<String> getAttributeNames() {
         return rootContext.getAttributeNames();
@@ -286,7 +282,7 @@ public class ServletContextAdapter implements ServletContext {
         return null;
     }
     @Override
-    public <T extends Servlet> T createServlet(Class<T> type) throws ServletException {
+    public <T extends Servlet> T createServlet(Class<T> type)  {
         return null;
     }
     @Override
@@ -310,7 +306,7 @@ public class ServletContextAdapter implements ServletContext {
         return null;
     }
     @Override
-    public <T extends Filter> T createFilter(Class<T> type) throws ServletException {
+    public <T extends Filter> T createFilter(Class<T> type)  {
         return null;
     }
     @Override
@@ -346,7 +342,7 @@ public class ServletContextAdapter implements ServletContext {
     public void addListener(Class<? extends EventListener> type) {
     }
     @Override
-    public <T extends EventListener> T createListener(Class<T> type) throws ServletException {
+    public <T extends EventListener> T createListener(Class<T> type)  {
         return null;
     }
     @Override

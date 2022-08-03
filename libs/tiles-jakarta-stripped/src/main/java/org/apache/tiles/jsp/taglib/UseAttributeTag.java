@@ -44,7 +44,7 @@ public class UseAttributeTag extends SimpleTagSupport {
     /**
      * The template model.
      */
-    private ImportAttributeModel model = new ImportAttributeModel();
+    private final ImportAttributeModel model = new ImportAttributeModel();
 
     /**
      * The id of the imported scripting variable.
@@ -179,14 +179,12 @@ public class UseAttributeTag extends SimpleTagSupport {
     @Override
     public void doTag() throws JspException, IOException {
         AutotagRuntime<Request> runtime = new org.apache.tiles.request.jsp.autotag.JspAutotagRuntime();
-        if (runtime instanceof SimpleTagSupport) {
-            SimpleTagSupport tag = (SimpleTagSupport) runtime;
-            tag.setJspContext(getJspContext());
-            tag.setJspBody(getJspBody());
-            tag.setParent(getParent());
-            tag.doTag();
-        }
-        Request request = runtime.createRequest();        
+        SimpleTagSupport tag = (SimpleTagSupport) runtime;
+        tag.setJspContext(getJspContext());
+        tag.setJspBody(getJspBody());
+        tag.setParent(getParent());
+        tag.doTag();
+        Request request = runtime.createRequest();
         model.execute(name, scopeName, id, ignore, request);
     }
 

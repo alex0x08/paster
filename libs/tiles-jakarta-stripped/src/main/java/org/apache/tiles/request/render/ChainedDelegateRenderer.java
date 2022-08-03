@@ -37,13 +37,13 @@ public class ChainedDelegateRenderer implements Renderer {
     /**
      * The list of chained renderers.
      */
-    private List<Renderer> renderers;
+    private final List<Renderer> renderers;
 
     /**
      * Constructor.
      */
     public ChainedDelegateRenderer() {
-        renderers = new ArrayList<Renderer>();
+        renderers = new ArrayList<>();
     }
 
     /**

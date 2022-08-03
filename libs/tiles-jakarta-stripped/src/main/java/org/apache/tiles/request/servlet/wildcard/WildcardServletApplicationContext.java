@@ -87,18 +87,18 @@ public class WildcardServletApplicationContext extends ServletApplicationContext
         try {
             resources = resolver.getResources(path);
         } catch (IOException e) {
-            return Collections.<ApplicationResource> emptyList();
+            return Collections.emptyList();
         }
-        Collection<ApplicationResource> resourceList = new ArrayList<ApplicationResource>();
-        if (resources != null && resources.length > 0) {
-            for (int i = 0; i < resources.length; i++) {
+        Collection<ApplicationResource> resourceList = new ArrayList<>();
+        if (resources.length > 0) {
+            for (Resource resource : resources) {
                 URL url;
                 try {
-                    url = resources[i].getURL();
+                    url = resource.getURL();
                     resourceList.add(new URLApplicationResource(url.toExternalForm(), url));
                 } catch (IOException e) {
                     // shouldn't happen with the kind of resources we're using
-                    throw new IllegalArgumentException("no URL for " + resources[i].toString(), e);
+                    throw new IllegalArgumentException("no URL for " + resource, e);
                 }
             }
         }

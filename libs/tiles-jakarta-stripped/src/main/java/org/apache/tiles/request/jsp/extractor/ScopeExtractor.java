@@ -36,12 +36,12 @@ public class ScopeExtractor implements AttributeExtractor {
     /**
      * The JSP context.
      */
-    private JspContext context;
+    private final JspContext context;
 
     /**
      * The scope number to use.
      */
-    private int scope;
+    private final int scope;
 
     /**
      * Constructor.

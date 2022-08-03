@@ -49,13 +49,13 @@ import org.apache.tiles.request.locale.LocaleUtil;
 public class CachingLocaleUrlDefinitionDAO extends BaseLocaleUrlDefinitionDAO
         implements PatternDefinitionResolverAware<Locale> {
 
-    /**
+    /*
      * Initialization parameter to set whether we want to refresh URLs when they
      * change.
      *
      * @since 2.1.0
      */
-    public static final String CHECK_REFRESH_INIT_PARAMETER =
+     public static final String CHECK_REFRESH_INIT_PARAMETER =
         "org.apache.tiles.definition.dao.LocaleUrlDefinitionDAO.CHECK_REFRESH";
 
     /**
@@ -87,7 +87,7 @@ public class CachingLocaleUrlDefinitionDAO extends BaseLocaleUrlDefinitionDAO
      */
     public CachingLocaleUrlDefinitionDAO(ApplicationContext applicationContext) {
         super(applicationContext);
-        locale2definitionMap = new HashMap<Locale, Map<String, Definition>>();
+        locale2definitionMap = new HashMap<>();
     }
 
     /** {@inheritDoc} */
@@ -110,9 +110,9 @@ public class CachingLocaleUrlDefinitionDAO extends BaseLocaleUrlDefinitionDAO
                 retValue = getDefinitionFromResolver(name, customizationKey);
 
                 if (retValue != null) {
-                    synchronized (definitions) {
+                    //synchronized (definitions) {
                         definitions.put(name, retValue);
-                    }
+                    //}
                 }
             }
         }
@@ -225,7 +225,7 @@ public class CachingLocaleUrlDefinitionDAO extends BaseLocaleUrlDefinitionDAO
         Map<String, Definition> localeDefsMap;
 
         Locale parentLocale = LocaleUtil.getParentLocale(customizationKey);
-        localeDefsMap = new LinkedHashMap<String, Definition>();
+        localeDefsMap = new LinkedHashMap<>();
         if (parentLocale != null) {
             Map<String, Definition> parentDefs = loadRawDefinitionsFromResources(parentLocale);
             if (parentDefs != null) {
@@ -245,7 +245,7 @@ public class CachingLocaleUrlDefinitionDAO extends BaseLocaleUrlDefinitionDAO
         return localeDefsMap;
     }
 
-    /**
+    /*
      * Loads parent definitions, i.e. definitions mapped to a parent locale.
      *
      * @param parentLocale The locale to use when loading URLs.

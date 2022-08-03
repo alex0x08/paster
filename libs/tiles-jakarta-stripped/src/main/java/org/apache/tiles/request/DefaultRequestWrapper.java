@@ -42,7 +42,7 @@ public class DefaultRequestWrapper implements RequestWrapper {
     /**
      * The wrapper request context object.
      */
-    private Request context;
+    private final Request context;
 
     /**
      * Constructor.

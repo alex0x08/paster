@@ -89,12 +89,12 @@ public abstract class BaseLocaleUrlDefinitionDAO implements
      */
     public BaseLocaleUrlDefinitionDAO(ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
-        lastModifiedDates = new HashMap<String, Long>();
+        lastModifiedDates = new HashMap<>();
     }
 
     public void setSources(List<ApplicationResource> sources) {
         // filter out any sources that are already localized
-        ArrayList<ApplicationResource> defaultSources = new ArrayList<ApplicationResource>();
+        ArrayList<ApplicationResource> defaultSources = new ArrayList<>();
         for(ApplicationResource source: sources) {
             if(Locale.ROOT.equals(source.getLocale())) {
                 defaultSources.add(source);
@@ -151,7 +151,7 @@ public abstract class BaseLocaleUrlDefinitionDAO implements
         } catch (FileNotFoundException e) {
             // File not found. continue.
             if (log.isDebugEnabled()) {
-                log.debug("File " + resource.toString() + " not found, continue");
+                log.debug("File " + resource + " not found, continue");
             }
         } catch (IOException e) {
             throw new DefinitionsFactoryException(

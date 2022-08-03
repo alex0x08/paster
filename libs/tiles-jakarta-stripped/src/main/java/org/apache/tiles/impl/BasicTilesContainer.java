@@ -283,9 +283,7 @@ public class BasicTilesContainer implements TilesContainer,
     @Override
     public Definition getDefinition(String definitionName,
             Request request) {
-        Definition definition =
-            definitionsFactory.getDefinition(definitionName, request);
-        return definition;
+        return definitionsFactory.getDefinition(definitionName, request);
     }
 
     /**
@@ -325,12 +323,11 @@ public class BasicTilesContainer implements TilesContainer,
      * Pops a context object out of the stack.
      *
      * @param tilesContext The Tiles context object to use.
-     * @return The popped context object.
      * @since 2.0.6
      */
-    protected AttributeContext popContext(Request tilesContext) {
+    protected void popContext(Request tilesContext) {
         Deque<AttributeContext> contextStack = getContextStack(tilesContext);
-        return contextStack.pop();
+        contextStack.pop();
     }
 
     /**

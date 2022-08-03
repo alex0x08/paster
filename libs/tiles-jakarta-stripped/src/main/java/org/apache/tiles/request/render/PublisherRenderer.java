@@ -44,8 +44,8 @@ public class PublisherRenderer implements Renderer {
     }
 
     private final Renderer renderer;
-    private final List<RendererListener> listeners = new ArrayList<RendererListener>();
-    private final List<RendererListener> listenersReversed = new ArrayList<RendererListener>();
+    private final List<RendererListener> listeners = new ArrayList<>();
+    private final List<RendererListener> listenersReversed = new ArrayList<>();
 
     public PublisherRenderer(Renderer renderer){
         this.renderer = renderer;

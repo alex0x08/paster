@@ -36,7 +36,7 @@ public class AddableParameterMap extends ReadOnlyEnumerationMap<String> {
     /**
      * The request.
      */
-    private HasAddableKeys<String> request;
+    private final HasAddableKeys<String> request;
 
     /**
      * Constructor.

@@ -197,7 +197,7 @@ public class CachingTilesContainer extends TilesContainerWrapper implements Muta
         Map<String, Definition> definitions =
             (Map<String, Definition>) request.getContext("request").get(definitionsAttributeName);
         if (definitions == null) {
-            definitions = new HashMap<String, Definition>();
+            definitions = new HashMap<>();
             request.getContext("request")
                     .put(definitionsAttributeName, definitions);
         }

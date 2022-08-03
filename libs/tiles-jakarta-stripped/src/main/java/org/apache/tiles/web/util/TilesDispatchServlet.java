@@ -133,7 +133,7 @@ public class TilesDispatchServlet extends HttpServlet {
     /**
      * Default no-op mutator.
      */
-    class DefaultMutator implements AttributeContextMutator {
+    static class DefaultMutator implements AttributeContextMutator {
 
         /** {@inheritDoc} */
         public void mutate(AttributeContext context, jakarta.servlet.ServletRequest request) {

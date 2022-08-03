@@ -28,7 +28,7 @@ public class GetAsStringTag extends SimpleTagSupport {
     /**
      * The template model.
      */
-    private org.apache.tiles.template.GetAsStringModel model = new org.apache.tiles.template.GetAsStringModel();
+    private final org.apache.tiles.template.GetAsStringModel model = new org.apache.tiles.template.GetAsStringModel();
 
     /**
      * If <code>true</code>, if an exception happens during
@@ -249,14 +249,12 @@ public class GetAsStringTag extends SimpleTagSupport {
     @Override
     public void doTag() throws JspException, IOException {
         AutotagRuntime<org.apache.tiles.request.Request> runtime = new org.apache.tiles.request.jsp.autotag.JspAutotagRuntime();
-        if (runtime instanceof SimpleTagSupport) {
-            SimpleTagSupport tag = (SimpleTagSupport) runtime;
-            tag.setJspContext(getJspContext());
-            tag.setJspBody(getJspBody());
-            tag.setParent(getParent());
-            tag.doTag();
-        }
-        org.apache.tiles.request.Request request = runtime.createRequest();        
+        SimpleTagSupport tag = (SimpleTagSupport) runtime;
+        tag.setJspContext(getJspContext());
+        tag.setJspBody(getJspBody());
+        tag.setParent(getParent());
+        tag.doTag();
+        org.apache.tiles.request.Request request = runtime.createRequest();
         ModelBody modelBody = runtime.createModelBody();
         model.execute(
             ignore,

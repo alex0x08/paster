@@ -45,7 +45,7 @@ public class BasicRendererFactory implements RendererFactory {
      * Constructor.
      */
     public BasicRendererFactory() {
-        renderers = new HashMap<String, Renderer>();
+        renderers = new HashMap<>();
     }
 
     /** {@inheritDoc} */

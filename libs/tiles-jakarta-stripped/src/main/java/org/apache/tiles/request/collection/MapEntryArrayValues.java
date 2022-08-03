@@ -22,6 +22,7 @@ package org.apache.tiles.request.collection;
 
 
 import java.util.Map;
+import java.util.Objects;
 
 
 /**
@@ -56,8 +57,8 @@ public class MapEntryArrayValues<K, V> extends MapEntry<K, V[]> {
         int valueHash = 0;
         V[] value = getValue();
         if (value != null) {
-            for (int i = 0; i < value.length; i++) {
-                valueHash += value[i].hashCode();
+            for (V v : value) {
+                valueHash += v.hashCode();
             }
         }
 
@@ -74,7 +75,7 @@ public class MapEntryArrayValues<K, V> extends MapEntry<K, V[]> {
     @Override
     @SuppressWarnings("unchecked")
     public boolean equals(Object o) {
-        if (o != null && o instanceof Map.Entry) {
+        if (o instanceof Map.Entry) {
             Map.Entry<K, V[]> entry = (Map.Entry<K, V[]>) o;
             if (this.getKey() == null ? entry.getKey() == null : this
                     .getKey().equals(entry.getKey())) {
@@ -85,8 +86,7 @@ public class MapEntryArrayValues<K, V> extends MapEntry<K, V[]> {
                         if (values.length == otherValues.length) {
                             boolean same = true;
                             for (int i = 0; i < values.length && same; i++) {
-                                same = values[i] == null ? otherValues[i] == null
-                                        : values[i].equals(otherValues[i]);
+                                same = Objects.equals(values[i], otherValues[i]);
                             }
                             return same;
                         }

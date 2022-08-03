@@ -40,7 +40,7 @@ public abstract class AbstractModelBody implements ModelBody {
     /**
      * The default writer to use.
      */
-    private Writer defaultWriter;
+    private final Writer defaultWriter;
 
     /**
      * Constructor.
@@ -59,10 +59,8 @@ public abstract class AbstractModelBody implements ModelBody {
     @Override
     public String evaluateAsString() throws IOException {
         StringWriter writer = new StringWriter();
-        try {
+        try (writer) {
             evaluate(writer);
-        } finally {
-            writer.close();
         }
         String body = writer.toString();
         if (body != null) {
@@ -76,11 +74,8 @@ public abstract class AbstractModelBody implements ModelBody {
 
     @Override
     public void evaluateWithoutWriting() throws IOException {
-        NullWriter writer = new NullWriter();
-        try {
+        try (NullWriter writer = new NullWriter()) {
             evaluate(writer);
-        } finally {
-            writer.close();
         }
     }
 

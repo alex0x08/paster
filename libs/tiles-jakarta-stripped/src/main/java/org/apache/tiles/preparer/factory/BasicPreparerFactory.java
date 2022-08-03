@@ -54,7 +54,7 @@ public class BasicPreparerFactory implements PreparerFactory {
      * Constructor.
      */
     public BasicPreparerFactory() {
-        this.preparers = new HashMap<String, ViewPreparer>();
+        this.preparers = new HashMap<>();
     }
 
 

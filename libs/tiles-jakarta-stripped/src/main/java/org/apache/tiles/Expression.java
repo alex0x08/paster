@@ -35,12 +35,12 @@ public class Expression {
     /**
      * The expression itself.
      */
-    private String expression;
+    private final String expression;
 
     /**
      * The language of the expression.
      */
-    private String language;
+    private final String language;
 
     /**
      * Constructor.
@@ -138,7 +138,9 @@ public class Expression {
     /** {@inheritDoc} */
     @Override
     public boolean equals(Object obj) {
-        Expression exp = (Expression) obj;
+        if (!(obj instanceof Expression exp)) {
+            return false;
+        }
         return nullSafeEquals(expression, exp.expression)
                 && nullSafeEquals(language, exp.language);
     }

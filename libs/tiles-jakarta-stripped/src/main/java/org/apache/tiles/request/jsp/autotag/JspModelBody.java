@@ -39,7 +39,7 @@ public class JspModelBody extends AbstractModelBody {
     /**
      * The real body.
      */
-    private JspFragment jspFragment;
+    private final JspFragment jspFragment;
 
     /**
      * Constructor.

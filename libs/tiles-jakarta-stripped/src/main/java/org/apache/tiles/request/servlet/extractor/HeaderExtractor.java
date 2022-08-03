@@ -37,12 +37,12 @@ public class HeaderExtractor implements EnumeratedValuesExtractor {
     /**
      * The request.
      */
-    private HttpServletRequest request;
+    private final HttpServletRequest request;
 
     /**
      * The response.
      */
-    private HttpServletResponse response;
+    private final HttpServletResponse response;
 
     /**
      * Constructor.
@@ -56,7 +56,6 @@ public class HeaderExtractor implements EnumeratedValuesExtractor {
         this.response = response;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public Enumeration<String> getKeys() {
         return request.getHeaderNames();
@@ -67,7 +66,6 @@ public class HeaderExtractor implements EnumeratedValuesExtractor {
         return request.getHeader(key);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public Enumeration<String> getValues(String key) {
         return request.getHeaders(key);

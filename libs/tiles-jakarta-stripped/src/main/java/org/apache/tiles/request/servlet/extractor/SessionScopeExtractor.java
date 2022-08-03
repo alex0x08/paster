@@ -38,7 +38,7 @@ public class SessionScopeExtractor implements AttributeExtractor {
     /**
      * The servlet request.
      */
-    private HttpServletRequest request;
+    private final HttpServletRequest request;
 
     /**
      * Constructor.
@@ -62,14 +62,13 @@ public class SessionScopeExtractor implements AttributeExtractor {
         }
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public Enumeration<String> getKeys() {
         HttpSession session = request.getSession(false);
         if (session != null) {
             return session.getAttributeNames();
         }
-        return Collections.enumeration(Collections.<String>emptySet());
+        return Collections.enumeration(Collections.emptySet());
     }
 
     @Override

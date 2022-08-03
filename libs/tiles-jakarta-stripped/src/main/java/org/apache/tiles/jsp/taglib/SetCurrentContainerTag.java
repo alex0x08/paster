@@ -18,7 +18,7 @@ public class SetCurrentContainerTag extends SimpleTagSupport {
     /**
      * The template model.
      */
-    private org.apache.tiles.template.SetCurrentContainerModel model = new org.apache.tiles.template.SetCurrentContainerModel();
+    private final org.apache.tiles.template.SetCurrentContainerModel model = new org.apache.tiles.template.SetCurrentContainerModel();
 
     /**
      * The key of the container to be used as "current". If
@@ -52,14 +52,12 @@ public class SetCurrentContainerTag extends SimpleTagSupport {
     @Override
     public void doTag() throws JspException, IOException {
         AutotagRuntime<org.apache.tiles.request.Request> runtime = new org.apache.tiles.request.jsp.autotag.JspAutotagRuntime();
-        if (runtime instanceof SimpleTagSupport) {
-            SimpleTagSupport tag = (SimpleTagSupport) runtime;
-            tag.setJspContext(getJspContext());
-            tag.setJspBody(getJspBody());
-            tag.setParent(getParent());
-            tag.doTag();
-        }
-        org.apache.tiles.request.Request request = runtime.createRequest();        
+        SimpleTagSupport tag = (SimpleTagSupport) runtime;
+        tag.setJspContext(getJspContext());
+        tag.setJspBody(getJspBody());
+        tag.setParent(getParent());
+        tag.doTag();
+        org.apache.tiles.request.Request request = runtime.createRequest();
         model.execute(
             containerKey,
             request

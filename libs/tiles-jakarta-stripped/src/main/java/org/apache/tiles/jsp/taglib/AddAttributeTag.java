@@ -28,7 +28,7 @@ public class AddAttributeTag extends SimpleTagSupport {
     /**
      * The template model.
      */
-    private org.apache.tiles.template.AddAttributeModel model = new org.apache.tiles.template.AddAttributeModel();
+    private final org.apache.tiles.template.AddAttributeModel model = new org.apache.tiles.template.AddAttributeModel();
 
     /**
      * The value of the attribute. Use this parameter, or
@@ -143,14 +143,12 @@ public class AddAttributeTag extends SimpleTagSupport {
     @Override
     public void doTag() throws JspException, IOException {
         AutotagRuntime<org.apache.tiles.request.Request> runtime = new org.apache.tiles.request.jsp.autotag.JspAutotagRuntime();
-        if (runtime instanceof SimpleTagSupport) {
-            SimpleTagSupport tag = (SimpleTagSupport) runtime;
-            tag.setJspContext(getJspContext());
-            tag.setJspBody(getJspBody());
-            tag.setParent(getParent());
-            tag.doTag();
-        }
-        org.apache.tiles.request.Request request = runtime.createRequest();        
+        SimpleTagSupport tag = (SimpleTagSupport) runtime;
+        tag.setJspContext(getJspContext());
+        tag.setJspBody(getJspBody());
+        tag.setParent(getParent());
+        tag.doTag();
+        org.apache.tiles.request.Request request = runtime.createRequest();
         ModelBody modelBody = runtime.createModelBody();
         model.execute(
             value,

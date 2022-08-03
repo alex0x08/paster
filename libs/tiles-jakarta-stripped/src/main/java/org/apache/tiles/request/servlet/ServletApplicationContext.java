@@ -26,9 +26,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Locale;
 import java.util.Map;
-
 import jakarta.servlet.ServletContext;
-
 import org.apache.tiles.request.ApplicationContext;
 import org.apache.tiles.request.ApplicationResource;
 import org.apache.tiles.request.collection.ReadOnlyEnumerationMap;
@@ -47,7 +45,7 @@ public class ServletApplicationContext implements ApplicationContext {
     /**
      * The servlet context to use.
      */
-    private ServletContext servletContext;
+    private final ServletContext servletContext;
 
     /**
      * <p>The lazily instantiated <code>Map</code> of application scope
@@ -89,7 +87,7 @@ public class ServletApplicationContext implements ApplicationContext {
     public Map<String, String> getInitParams() {
 
         if ((initParam == null) && (servletContext != null)) {
-            initParam = new ReadOnlyEnumerationMap<String>(new InitParameterExtractor(servletContext));
+            initParam = new ReadOnlyEnumerationMap<>(new InitParameterExtractor(servletContext));
         }
         return (initParam);
 
@@ -125,7 +123,7 @@ public class ServletApplicationContext implements ApplicationContext {
 
     /** {@inheritDoc} */
     public Collection<ApplicationResource> getResources(String path) {
-        ArrayList<ApplicationResource> resources = new ArrayList<ApplicationResource>();
+        ArrayList<ApplicationResource> resources = new ArrayList<>();
         resources.add(getResource(path));
         return resources;
     }

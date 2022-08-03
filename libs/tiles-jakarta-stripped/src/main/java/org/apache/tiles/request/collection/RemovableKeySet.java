@@ -39,7 +39,7 @@ public class RemovableKeySet extends KeySet {
     /**
      * The request.
      */
-    private HasRemovableKeys<?> request;
+    private final HasRemovableKeys<?> request;
 
     /**
      * Constructor.
@@ -78,7 +78,7 @@ public class RemovableKeySet extends KeySet {
     public boolean retainAll(Collection<?> c) {
         Collection<String> realCollection = (Collection<String>) c;
         boolean retValue = false;
-        Set<String> keysToRemove = new LinkedHashSet<String>();
+        Set<String> keysToRemove = new LinkedHashSet<>();
         for (Enumeration<String> keys = request.getKeys(); keys.hasMoreElements();) {
             String key = keys.nextElement();
             if (!realCollection.contains(key)) {

@@ -21,14 +21,13 @@
 
 package org.apache.tiles.request.locale;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.Locale;
 import org.apache.tiles.request.ApplicationResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Locale;
+import java.util.Set;
 
 /**
  * An ApplicationResource whose localization is managed by postfixing the file name.
@@ -53,9 +52,9 @@ public abstract class PostfixedApplicationResource implements ApplicationResourc
     /** The path without its suffix and its locale postfix. */
     private String pathPrefix;
     /** The suffix. */
-    private String suffix;
+    private final String suffix;
     /** The Locale. */
-    private Locale locale;
+    private final Locale locale;
 
     /**
      * Create a new PostfixedApplicationResource for the specified path.
@@ -79,7 +78,7 @@ public abstract class PostfixedApplicationResource implements ApplicationResourc
             Locale found = localeFrom(localeString);
             locale = validateLocale(found);
             if (Locale.ROOT.equals(locale)) {
-                pathPrefix = suffixIndex < 0 ? localePath : localePath.substring(0, suffixIndex);
+                pathPrefix = localePath.substring(0, suffixIndex);
 
                 LOG.warn("No supported matching language for locale \"" + localeString + "\". Using "
                         + getPath() + " as a non-localized resource path. see TILES-571");
@@ -132,7 +131,7 @@ public abstract class PostfixedApplicationResource implements ApplicationResourc
      * @param locale a locale.
      * @return the matching postfix.
      */
-    private static final String getPostfix(Locale locale) {
+    private static String getPostfix(Locale locale) {
         if (locale == null) {
             return "";
         }
@@ -194,11 +193,8 @@ public abstract class PostfixedApplicationResource implements ApplicationResourc
         } else if (!pathPrefix.equals(other.pathPrefix))
             return false;
         if (suffix == null) {
-            if (other.suffix != null)
-                return false;
-        } else if (!suffix.equals(other.suffix))
-            return false;
-        return true;
+            return other.suffix == null;
+        } else return suffix.equals(other.suffix);
     }
 
     private static Locale localeFrom(String localeString) {
@@ -245,7 +241,7 @@ public abstract class PostfixedApplicationResource implements ApplicationResourc
     }
     */
 
-    private static Set<Locale> availableLocales = new HashSet<Locale>(Arrays.asList(Locale.getAvailableLocales()));
+    private static final Set<Locale> availableLocales = new HashSet<>(Arrays.asList(Locale.getAvailableLocales()));
 
     private static Locale validateLocale(Locale locale) {
         Locale withoutVariant = locale.getVariant().isEmpty()

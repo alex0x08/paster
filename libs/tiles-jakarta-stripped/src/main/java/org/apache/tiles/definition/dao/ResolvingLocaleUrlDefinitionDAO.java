@@ -97,7 +97,7 @@ public class ResolvingLocaleUrlDefinitionDAO extends
      */
     protected void resolveInheritances(Map<String, Definition> map, Locale locale) {
         if (map != null) {
-            Set<String> alreadyResolvedDefinitions = new HashSet<String>();
+            Set<String> alreadyResolvedDefinitions = new HashSet<>();
             for (Definition definition : map.values()) {
                 resolveInheritance(definition, map, locale,
                         alreadyResolvedDefinitions);
@@ -165,7 +165,7 @@ public class ResolvingLocaleUrlDefinitionDAO extends
     @Override
     protected Map<String, Definition> copyDefinitionMap(
             Map<String, Definition> localeDefsMap) {
-        Map<String, Definition> retValue = new LinkedHashMap<String, Definition>(
+        Map<String, Definition> retValue = new LinkedHashMap<>(
                 localeDefsMap.size());
 
         for (Map.Entry<String, Definition> entry : localeDefsMap.entrySet()) {

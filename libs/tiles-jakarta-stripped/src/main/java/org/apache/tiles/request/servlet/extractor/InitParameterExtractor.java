@@ -36,7 +36,7 @@ public class InitParameterExtractor implements HasKeys<String> {
     /**
      * The servlet context.
      */
-    private ServletContext context;
+    private final ServletContext context;
 
     /**
      * Constructor.
@@ -47,7 +47,6 @@ public class InitParameterExtractor implements HasKeys<String> {
         this.context = context;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public Enumeration<String> getKeys() {
         return context.getInitParameterNames();

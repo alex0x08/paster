@@ -56,7 +56,7 @@ public class TilesContextELResolver extends ELResolver {
     /**
      * The beaninfos about {@link Request} and {@link ApplicationContext}.
      */
-    private CombinedBeanInfo requestBeanInfo = new CombinedBeanInfo(
+    private final CombinedBeanInfo requestBeanInfo = new CombinedBeanInfo(
             Request.class, ApplicationContext.class);
 
     /** {@inheritDoc} */

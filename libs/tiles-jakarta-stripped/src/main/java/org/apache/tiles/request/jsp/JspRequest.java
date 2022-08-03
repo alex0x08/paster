@@ -59,7 +59,7 @@ public class JspRequest extends AbstractViewRequest {
     /**
      * The current page context.
      */
-    private PageContext pageContext;
+    private final PageContext pageContext;
 
     /**
      * <p>The lazily instantiated <code>Map</code> of page scope

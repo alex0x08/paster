@@ -165,7 +165,11 @@ class PasteDao extends SearchableDaoImpl[Paste](classOf[Paste]) {
     val out = mutable.Map[String, Long]()
     out.put("total", results.get(0).get("total").asInstanceOf[Long])
     for (c <- channels) {
-      out.put(c, results.get(0).get(c).asInstanceOf[Integer].longValue())
+      out.put(c,
+        if (results.get(0).get(c) == null)
+          0
+            else
+        results.get(0).get(c).asInstanceOf[Integer].longValue())
     }
     out.toMap
   }

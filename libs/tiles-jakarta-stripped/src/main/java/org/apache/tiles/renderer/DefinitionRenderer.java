@@ -38,7 +38,7 @@ public class DefinitionRenderer implements Renderer {
     /**
      * The Tiles container.
      */
-    private TilesContainer container;
+    private final TilesContainer container;
 
     /**
      * Constructor.

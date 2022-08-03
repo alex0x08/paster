@@ -89,7 +89,7 @@ public class URLApplicationResource extends PostfixedApplicationResource {
      * @return Unmodifiable set of remote protocols, never {@code null}
      */
     static Set<String> initRemoteProtocols() {
-        Set<String> remoteProtocols = new HashSet<String>();
+        Set<String> remoteProtocols = new HashSet<>();
         remoteProtocols.add("ftp");
         remoteProtocols.add("http");
         remoteProtocols.add("https");
@@ -192,8 +192,7 @@ public class URLApplicationResource extends PostfixedApplicationResource {
             if (connection instanceof JarURLConnection) {
                 return ((JarURLConnection) connection).getJarEntry().getTime();
             } else {
-                long result = connection.getLastModified();
-                return result;
+                return connection.getLastModified();
             }
         }
     }

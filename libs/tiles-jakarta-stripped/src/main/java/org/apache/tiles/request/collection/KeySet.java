@@ -41,7 +41,7 @@ public class KeySet implements Set<String> {
     /**
      * The request to read.
      */
-    private HasKeys<?> request;
+    private final HasKeys<?> request;
 
     /**
      * Constructor.
@@ -130,7 +130,7 @@ public class KeySet implements Set<String> {
      * @return The corresponding list.
      */
     private List<String> toList() {
-        List<String> entries = new ArrayList<String>();
+        List<String> entries = new ArrayList<>();
         Enumeration<String> names = request.getKeys();
         while (names.hasMoreElements()) {
             entries.add(names.nextElement());
@@ -146,7 +146,7 @@ public class KeySet implements Set<String> {
         /**
          * The key names enumeration.
          */
-        private Enumeration<String> namesEnumeration = request.getKeys();
+        private final Enumeration<String> namesEnumeration = request.getKeys();
 
         @Override
         public boolean hasNext() {

@@ -36,7 +36,7 @@ public abstract class AbstractClientRequest extends AbstractRequest {
     /**
      * The application context.
      */
-    private ApplicationContext applicationContext;
+    private final ApplicationContext applicationContext;
 
     /**
      * Constructor.

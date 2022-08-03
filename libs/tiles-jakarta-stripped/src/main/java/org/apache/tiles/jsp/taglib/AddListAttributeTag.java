@@ -26,7 +26,7 @@ public class AddListAttributeTag extends SimpleTagSupport {
     /**
      * The template model.
      */
-    private org.apache.tiles.template.AddListAttributeModel model = new org.apache.tiles.template.AddListAttributeModel();
+    private final org.apache.tiles.template.AddListAttributeModel model = new org.apache.tiles.template.AddListAttributeModel();
 
     /**
      * The comma-separated list of roles that can use the list attribute.
@@ -57,14 +57,12 @@ public class AddListAttributeTag extends SimpleTagSupport {
     @Override
     public void doTag() throws JspException, IOException {
         AutotagRuntime<org.apache.tiles.request.Request> runtime = new org.apache.tiles.request.jsp.autotag.JspAutotagRuntime();
-        if (runtime instanceof SimpleTagSupport) {
-            SimpleTagSupport tag = (SimpleTagSupport) runtime;
-            tag.setJspContext(getJspContext());
-            tag.setJspBody(getJspBody());
-            tag.setParent(getParent());
-            tag.doTag();
-        }
-        org.apache.tiles.request.Request request = runtime.createRequest();        
+        SimpleTagSupport tag = (SimpleTagSupport) runtime;
+        tag.setJspContext(getJspContext());
+        tag.setJspBody(getJspBody());
+        tag.setParent(getParent());
+        tag.doTag();
+        org.apache.tiles.request.Request request = runtime.createRequest();
         ModelBody modelBody = runtime.createModelBody();
         model.execute(
             role,

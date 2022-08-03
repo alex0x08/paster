@@ -13,7 +13,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="paster-oak" target="1.7" />
+      <module name="paster-oak" target="1.5" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
