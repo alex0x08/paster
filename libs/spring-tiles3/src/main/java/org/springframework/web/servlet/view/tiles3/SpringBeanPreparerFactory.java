@@ -33,7 +33,6 @@ import org.springframework.web.context.WebApplicationContext;
  * @see SimpleSpringPreparerFactory
  */
 public class SpringBeanPreparerFactory extends AbstractSpringPreparerFactory {
-
 	@Override
 	protected ViewPreparer getPreparer(String name, WebApplicationContext context) throws TilesException {
 		return context.getBean(name, ViewPreparer.class);

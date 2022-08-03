@@ -1,5 +1,5 @@
-org/springframework/web/servlet/view/tiles3/TilesView$1.class
 org/springframework/web/servlet/view/tiles3/TilesConfigurer$SpringTilesInitializer.class
+org/springframework/web/servlet/view/tiles3/TilesView$1.class
 org/springframework/web/servlet/view/tiles3/AbstractSpringPreparerFactory.class
 org/springframework/web/servlet/view/tiles3/SpringWildcardServletTilesApplicationContext.class
 org/springframework/web/servlet/view/tiles3/TilesViewResolver.class

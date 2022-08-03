@@ -44,16 +44,11 @@ import org.springframework.web.context.support.ServletContextResourcePatternReso
  * @since 3.2
  */
 public class SpringWildcardServletTilesApplicationContext extends ServletApplicationContext {
-
 	private final ResourcePatternResolver resolver;
-
-
 	public SpringWildcardServletTilesApplicationContext(ServletContext servletContext) {
 		super(servletContext);
 		this.resolver = new ServletContextResourcePatternResolver(servletContext);
 	}
-
-
 	@Override
 	@Nullable
 	public ApplicationResource getResource(String localePath) {
@@ -88,7 +83,6 @@ public class SpringWildcardServletTilesApplicationContext extends ServletApplica
 			((ServletContext) getContext()).log("No resources found for path pattern: " + path);
 			return Collections.emptyList();
 		}
-
 		Collection<ApplicationResource> resourceList = new ArrayList<>(resources.length);
 		for (Resource resource : resources) {
 			try {

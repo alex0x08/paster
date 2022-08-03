@@ -39,7 +39,6 @@ import org.springframework.web.servlet.support.RequestContextUtils;
  * @see org.apache.tiles.definition.UrlDefinitionsFactory#LOCALE_RESOLVER_IMPL_PROPERTY
  */
 public class SpringLocaleResolver extends DefaultLocaleResolver {
-
 	@Override
 	public Locale resolveLocale(Request request) {
 		try {
@@ -53,5 +52,4 @@ public class SpringLocaleResolver extends DefaultLocaleResolver {
 		}
 		return super.resolveLocale(request);
 	}
-
 }

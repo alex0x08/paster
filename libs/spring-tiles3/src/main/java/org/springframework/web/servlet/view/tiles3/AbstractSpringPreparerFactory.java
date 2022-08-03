@@ -36,7 +36,6 @@ import org.springframework.web.servlet.DispatcherServlet;
  * @see SpringBeanPreparerFactory
  */
 public abstract class AbstractSpringPreparerFactory implements PreparerFactory {
-
 	@Override
 	public ViewPreparer getPreparer(String name, Request context) {
 		WebApplicationContext webApplicationContext = (WebApplicationContext) context.getContext("request").get(
@@ -60,5 +59,4 @@ public abstract class AbstractSpringPreparerFactory implements PreparerFactory {
 	 * @throws TilesException in case of failure
 	 */
 	protected abstract ViewPreparer getPreparer(String name, WebApplicationContext context) throws TilesException;
-
 }

@@ -38,11 +38,8 @@ import org.springframework.web.context.WebApplicationContext;
  * @see SpringBeanPreparerFactory
  */
 public class SimpleSpringPreparerFactory extends AbstractSpringPreparerFactory {
-
 	/** Cache of shared ViewPreparer instances: bean name -> bean instance. */
 	private final Map<String, ViewPreparer> sharedPreparers = new ConcurrentHashMap<>(16);
-
-
 	@Override
 	protected ViewPreparer getPreparer(String name, WebApplicationContext context) throws TilesException {
 		// Quick check on the concurrent map first, with minimal locking.
@@ -68,5 +65,4 @@ public class SimpleSpringPreparerFactory extends AbstractSpringPreparerFactory {
 		}
 		return preparer;
 	}
-
 }
