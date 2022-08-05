@@ -59,18 +59,24 @@
                   <ol class="breadcrumb">
                         <c:forEach var="s" items="${availableSteps}" varStatus="loopStatus">
                         <c:choose>
-                             <c:when test="${s.value eq step.stepName}">
+                             <c:when test="${s.stepKey eq step.stepKey}">
                                    <li class="breadcrumb-item active" aria-current="page">
-                                     <c:out value="${loopStatus.index+1}"/>. <c:out value="${s.value}"/>
+                                     <c:out value="${loopStatus.index+1}"/>. <c:out value="${s.stepName}"/>
+                                     <c:if test="${s.completed}">
+                                        <i class="fa fa-check" aria-hidden="true"></i>
+                                     </c:if>
                                    </li>
                              </c:when>
                              <c:otherwise>
-                                <c:url var="stepUrl" value='/main/setup/${s.key}' />
+                                <c:url var="stepUrl" value='/main/setup/${s.stepKey}' />
                                 <li class="breadcrumb-item">
                                                <c:out value="${loopStatus.index+1}"/>.
                                                <a href="${stepUrl}">
-                                                   <c:out value="${s.value}"/>
+                                                   <c:out value="${s.stepName}"/>
                                                </a>
+                                               <c:if test="${s.completed}">
+                                                     <i class="fa fa-check" aria-hidden="true"></i>
+                                               </c:if>
                                 </li>
                              </c:otherwise>
                          </c:choose>

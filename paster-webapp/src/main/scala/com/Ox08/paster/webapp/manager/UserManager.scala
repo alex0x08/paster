@@ -60,34 +60,7 @@ object UserManager extends Logged {
       }
     }
   }
-}
-/**
- * A service class to work with users
- * We store users in .csv file for simplicity, load them during boot and put in hashmap.
- */
-class UserManager extends UserDetailsService with Logged {
-  // runtime storage for users
-  private val users = mutable.Map[String, PasterUser]()
-  @Autowired
-  @Qualifier("sessionRegistry")
-  val sessionRegistry: SessionRegistry = null
-  @Autowired
-  val passwordEncoder: PasswordEncoder = null
-  def loadUsers(): Unit = {
-    val csv = new File(Boot.BOOT.getSystemInfo.getAppHome, "users.csv")
-    loadUsersFromCSV(csv, (record: CSVRecord) => {
-      if (logger.isDebugEnabled)
-        logger.debug("processing record : {}", record)
-      val u = new PasterUser(record.get("NAME"),
-        record.get("USERNAME"),
-        record.get("PASSWORD"), util.Set.of(
-          if (record.get("ISADMIN").toBoolean)
-            Role.ROLE_ADMIN
-          else
-            Role.ROLE_USER))
-      save(changePassword(u, u.getPassword()))
-    })
-  }
+
   /**
    * Loads users from CSV file
    * @param csv
@@ -107,14 +80,43 @@ class UserManager extends UserDetailsService with Logged {
       var usersCount:Int = 0
       for (record <- records.asScala) {
         if (usersCount> 500) {
-          logger.error("Too many users defined: {} Processed only first 500",records.getRecords.size())
-          return
+          throw new RuntimeException(s"Too many users defined: ${records.getRecords.size()} Processed only first 500")
+          //return
         }
         callback(record)
         usersCount+=1
       }
     } finally r.close()
   }
+}
+/**
+ * A service class to work with users
+ * We store users in .csv file for simplicity, load them during boot and put in hashmap.
+ */
+class UserManager extends UserDetailsService with Logged {
+  // runtime storage for users
+  private val users = mutable.Map[String, PasterUser]()
+  @Autowired
+  @Qualifier("sessionRegistry")
+  val sessionRegistry: SessionRegistry = null
+  @Autowired
+  val passwordEncoder: PasswordEncoder = null
+  def loadUsers(): Unit = {
+    val csv = new File(Boot.BOOT.getSystemInfo.getAppHome, "users.csv")
+    UserManager.loadUsersFromCSV(csv, (record: CSVRecord) => {
+      if (logger.isDebugEnabled)
+        logger.debug("processing record : {}", record)
+      val u = new PasterUser(record.get("NAME"),
+        record.get("USERNAME"),
+        record.get("PASSWORD"), util.Set.of(
+          if (record.get("ISADMIN").toBoolean)
+            Role.ROLE_ADMIN
+          else
+            Role.ROLE_USER))
+      save(changePassword(u, u.getPassword()))
+    })
+  }
+
   /**
    *  Virtually saves user
    * @param u

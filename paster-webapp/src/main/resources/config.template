@@ -1,0 +1,57 @@
+
+# Paster default language. en and ru are currently supported
+paster.i18n.defaultLang=${welcome.defaultLang}
+
+# switch locale based on browser's header setting
+paster.i18n.switchToUserLocale=${welcome.switchToUserLocale}
+
+# Comma-separated list of channels
+paster.channels=Main,Support,Tech
+
+# Default channel
+paster.channels.default=Main
+
+# Comma-separated list of priorities
+paster.priorities=Blocker,Normal,Trivial
+# Default priority
+paster.priorities.default=Normal
+
+# Comma-separated list of code types
+# These codes are used for syntax highlighting on paste edit and view pages
+# Code types are hardcoded, there is a match between code type and setting/specific javascript class on UI,
+# responsible for visual highlighting of this type
+# So this list can be reduced but not extended, just remove types that you're not going to use.
+paster.codeTypes=bash,csharp,c_cpp,css,diff,erlang,js,java,perl,php,plain,powershell,py,ruby,scala,sql,vb,xml
+# By default, there is 'plain' mode, without highlight at all
+paster.codeTypes.default=plain
+
+
+# Do re-indexing on each boot
+paster.reindexOnBoot=true
+
+#
+# Paster supports 2 access modes:
+# 'public' - authentication is optional, anonymous users can view/list pages
+# 'private' - authentication is required, no content can be observed without authorization
+paster.security.access.mode=public
+
+# Allow commenting for anonymous users
+paster.security.comments.allow-anonymous.create=false
+# Allow adding pastas for anonymous users
+paster.security.pastas.allow-anonymous.create=false
+
+# Put horizontal divider in pastas list after each 'x' days
+# Works as milestone.
+paster.paste.list.splitter.days=7
+# Allow lazy-loading for a new page in pastas list, when user scrolls to bottom
+paster.paste.list.allow-lazy-loading-on-scroll=true
+# Allow lazy-loading on paste view page, also when user scrolls to bottom
+paster.paste.view.allow-lazy-loading-on-scroll=true
+
+#
+# Database configuration
+# By default, Paster will use local H2 database, with files stored inside current application's home
+db.driverClassName=${db.dbType}
+db.url=${db.dbUrl}
+db.pwd=${db.dbPassword}
+db.username=${db.dbUser}

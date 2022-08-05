@@ -10,6 +10,8 @@
         role="form"
         modelAttribute="updatedStep.step"
         method="POST">
+        <form:input id="origName" path="origName" cssStyle="display:none;" />
+
       <fieldset class="row mb-3">
          <legend class="col-form-label">Supported databases</legend>
          <div class="col-sm-10">
@@ -21,6 +23,7 @@
                             name="selectedDriver"
                             x-driver-class="${l.driver}"
                             x-editable="${l.editable}"
+                            x-name="${l.name}"
                             value="${l.url}"
                             ${l.current ? 'checked' : '' } />
                         <label class="form-check-label" >
@@ -84,45 +87,52 @@
 
 
 <script type="text/javascript">
-    
+
+    function toggleDisabled(els,value) {
+        els.forEach(
+                function (el, i, array) {
+                    if (value) {
+                        el.setAttribute('disabled','true');
+                    } else {
+                        el.removeAttribute('disabled');
+                    }
+        });
+    }
+
     function processChecked(el) {
         if (el.checked) {
                         const editable = el.getAttribute('x-editable');
 
-                        const dbUrl = el.getAttribute('value');
-                        const driver = el.getAttribute('x-driver-class');
+                        const dbUrl = el.getAttribute('value'),
+                              driver = el.getAttribute('x-driver-class'),
+                              origName = el.getAttribute('x-name');
 
                         console.log('editable:',editable, 'url: ',dbUrl,'driver: ',driver)
 
-                        const elUrl = document.getElementById('dbUrl');
-                        const elDriver = document.getElementById('dbDriver');
+                        const elUrl = document.getElementById('dbUrl'),
+                              elDriver = document.getElementById('dbDriver'),
+                              elOrigName = document.getElementById('origName');
 
                         elUrl.setAttribute('value',dbUrl);
                         elDriver.setAttribute('value',driver);
+                        elOrigName.setAttribute('value',origName);
 
-                        if (editable == 'false') {
-                            elUrl.setAttribute('disabled','true');
-                            elDriver.setAttribute('disabled','true');
+                        toggleDisabled([elUrl,
+                                        elDriver,
+                                        document.getElementById('dbUser'),
+                                        document.getElementById('dbPassword')],editable == 'false');
 
-                            document.getElementById('dbUser').setAttribute('disabled','true');
-                            document.getElementById('dbPassword').setAttribute('disabled','true');
-
-                            console.log('disabled');
-                        } else {
-                            elUrl.removeAttribute('disabled');
-                            elDriver.removeAttribute('disabled');
-
-                            document.getElementById('dbUser').removeAttribute('disabled');
-                            document.getElementById('dbPassword').removeAttribute('disabled');
-                        }
                  }
     }
 
     window.addEventListener('load', function () {
-
+        var once=true;
         Array.from(document.getElementsByClassName("driverInput")).forEach(
             function (el, i, array) {
-                processChecked(el);  
+                if (once) {
+                    processChecked(el);
+                    once = false;
+                }
                 el.addEventListener("change", function (event) {
                     event.preventDefault();
                     processChecked(el);            
