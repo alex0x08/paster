@@ -22,19 +22,19 @@ import org.springframework.stereotype.{Repository, Service}
 import org.springframework.transaction.annotation.Transactional
 import scala.collection.mutable
 import scala.jdk.CollectionConverters._
+
+object ElementsDao {
+  val FORBIDDEN_CHARS: Array[Char] = "@\"'[]{}$#!^&*()`:;?=,./\\".toCharArray
+}
+
 /**
  * A preudo-DAO classes to store collection of supported code types
  *
  * @param codeTypesString
- * list of supported code types, separated by comma (,)
+ *        list of supported code types, separated by comma (,)
  * @param codeTypeDefault
- * a default code type
+ *        a default code type
  */
-
-object ElementsDao {
-  val FORBIDDEN_CHARS = "@\"'[]{}$#!^&*()`:;?=,./\\".toCharArray
-}
-
 @Service
 class CodeTypeDao(@Value("${paster.codeTypes:null}")
                   codeTypesString: String,

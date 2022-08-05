@@ -7,6 +7,7 @@ import jakarta.annotation.PostConstruct
 import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
 import jakarta.validation.Valid
 import jakarta.validation.constraints.NotNull
+import org.apache.commons.lang3.StringUtils
 import org.springframework.beans.factory.annotation.{Autowired, Value}
 import org.springframework.context.MessageSource
 import org.springframework.stereotype.{Controller, Service}
@@ -61,14 +62,12 @@ class SetupCtrl extends Logged {
     if (nonCastedTarget == null || !nonCastedTarget.isInstanceOf[StepModel])
       return
     if (logger.isDebugEnabled)
-        logger.debug(s"init binder: '${servletRequest.getRequestURI}' , method:  ${servletRequest.getMethod} , target: $nonCastedTarget ")
-
+      logger.debug(s"init binder: '${servletRequest.getRequestURI}' , method:  ${servletRequest.getMethod} , target: $nonCastedTarget ")
     val target = nonCastedTarget.asInstanceOf[StepModel]
     val url = servletRequest.getRequestURI.substring(servletRequest.getContextPath.length).toLowerCase
     val step = url.substring("/main/setup/".length)
     if (logger.isDebugEnabled)
       logger.debug("step: '{}'", step)
-
     if (!setupService.containsStep(step))
       throw SystemError.withCode(0x6001, s"Incorrect step type:$step")
     target.setStep(setupService.getStep(step))
@@ -82,7 +81,9 @@ class SetupCtrl extends Logged {
    * Handles error pages
    *
    * @param response
+   * error page
    * @param errorCode
+   * http error code
    * @return
    */
   @RequestMapping(Array("/error/{errorCode:[0-9_]+}"))
@@ -95,27 +96,29 @@ class SetupCtrl extends Logged {
     case _ =>
       "/error/500"
   }
-
-  private def fillModel(step:String,model:Model): Unit = {
-    model.addAttribute("step", setupService.getStep(step))
-
-    model.addAttribute("nextStep",setupService.getNextStep(step))
-    model.addAttribute("previousStep",setupService.getPreviousStep(step))
-
+  private def fillModel(step: String, model: Model): Unit = {
+    val cs = setupService.getStep(step)
+    model.addAttribute("step", cs)
+    model.addAttribute("nextStep", setupService.getNextStep(step))
+    model.addAttribute("previousStep", setupService.getPreviousStep(step))
     if ("db".equalsIgnoreCase(step)) {
+      val dbs: SetupDbStep = cs.asInstanceOf[SetupDbStep]
       val availableDrivers = Array(new DbType("H2 Embedded",
         "jdbc:h2:file:${paster.app.home}/db/pastedb;DB_CLOSE_ON_EXIT=TRUE;LOCK_TIMEOUT=10000",
-        "org.h2.jdbcx.JdbcDataSource",current = true),
+        "org.h2.jdbcx.JdbcDataSource", current = true, editable = false),
         new DbType("PostgreSQL",
           "jdbc:pgsql://127.0.0.1/test-db",
-          "com.impossibl.postgres.jdbc.PGDataSource",current = false),
+          "com.impossibl.postgres.jdbc.PGDataSource", current = false, editable = true),
         new DbType("MySQL",
           "jdbc:mysql://localhost/testdb",
-          "com.mysql.cj.jdbc.Driver",current = false))
-      model.addAttribute("availableDrivers",availableDrivers)
+          "com.mysql.cj.jdbc.Driver", current = false, editable = true))
+      if (!StringUtils.isBlank(dbs.origName))
+        for (a <- availableDrivers) {
+          a.setCurrent(dbs.origName.equals(a.getName))
+        }
+      model.addAttribute("availableDrivers", availableDrivers)
     }
   }
-
   @RequestMapping(value = Array("/setup/{step}"), method = Array(RequestMethod.GET))
   def setupStep(model: Model, @PathVariable("step") step: String): String = {
     if (!setupService.containsStep(step)) {
@@ -123,10 +126,8 @@ class SetupCtrl extends Logged {
         logger.debug("Cannot find step: {}", step)
       return MvcConstants.page500
     }
-
-    fillModel(step,model)
+    fillModel(step, model)
     model.addAttribute("updatedStep", new StepModel)
-
     s"/setup/$step"
   }
   @RequestMapping(value = Array("/setup/{stepName}"), method = Array(RequestMethod.POST))
@@ -149,8 +150,7 @@ class SetupCtrl extends Logged {
       return s"/setup/$step"
     }
     if (logger.isDebugEnabled)
-    logger.debug("step: {}", updatedStep.getStep.getClass.getName)
-
+      logger.debug("step: {}", updatedStep.getStep.getClass.getName)
     setupService.updateStep(updatedStep.getStep)
     val nextStep: SetupStep = setupService.getNextStep(updatedStep.getStep.getStepKey)
     // all steps done
@@ -164,7 +164,7 @@ class SetupCtrl extends Logged {
     } else {
       if (logger.isDebugEnabled)
         logger.debug(s"next step: ${nextStep.getStepName}")
-      fillModel(nextStep.getStepKey,model)
+      fillModel(nextStep.getStepKey, model)
       s"/setup/${nextStep.getStepKey}"
     }
   }
@@ -247,28 +247,34 @@ class PasterSetupService extends Logged {
 }
 class SetupUsersStep extends SetupStep("users", "Setup users") {
   override def update(dto: SetupStep): Unit = {
-    val update: SetupUsersStep = dto.asInstanceOf[SetupUsersStep]
     markCompleted()
   }
 }
 class SetupDbStep extends SetupStep("db", "Setup database") {
   @NotNull(message = "{validator.not-null}")
   var dbUrl: String = _
-  var dbUser: String = _
-  var dbPassword: String = _
+  var dbUser: String = "paster"
+  var dbPassword: String = "paster"
+  // link to dbtype below
+  @NotNull(message = "{validator.not-null}")
+  var origName: String = _
+  // driver
   @NotNull(message = "{validator.not-null}")
   var dbType: String = _
   def getDbUrl: String = dbUrl
-  def getUser: String = dbUser
-  def getPassword: String = dbPassword
-  def setDbUrl(url:String):Unit = {
+  def getDbUser: String = dbUser
+  def getDbPassword: String = dbPassword
+  def setOrigName(name: String): Unit = {
+    this.origName = name
+  }
+  def setDbUrl(url: String): Unit = {
     this.dbUrl = url
   }
-  def setUser(user:String):Unit = {
+  def setDbUser(user: String): Unit = {
     this.dbUser = user
   }
-  def setPassword(pwd:String):Unit = {
-    this.dbPassword =pwd
+  def setDbPassword(pwd: String): Unit = {
+    this.dbPassword = pwd
   }
   override def update(dto: SetupStep): Unit = {
     val update: SetupDbStep = dto.asInstanceOf[SetupDbStep]
@@ -284,11 +290,10 @@ class WelcomeStep extends SetupStep("welcome", "Setup language") {
   var switchToUserLocale: Boolean = true
   def getDefaultLang: String = defaultLang
   def isSwitchToUserLocale: Boolean = switchToUserLocale
-
-  def setDefaultLang(lang:String):Unit = {
+  def setDefaultLang(lang: String): Unit = {
     this.defaultLang = lang
   }
-  def setSwitchToUserLocale(switch:Boolean):Unit = {
+  def setSwitchToUserLocale(switch: Boolean): Unit = {
     this.switchToUserLocale = switch
   }
   override def update(dto: SetupStep): Unit = {
@@ -320,10 +325,14 @@ abstract class SetupStep(stepKey: String, stepName: String) extends Logged {
   def getStepName: String = stepName
   def update(dto: SetupStep): Unit
 }
-
-class DbType(name:String,url:String,driver:String,current:Boolean) {
+class DbType(name: String, url: String, driver: String, current: Boolean, editable: Boolean) {
+  private var ccurrent: Boolean = current
   def getName: String = name
   def getUrl: String = url
   def getDriver: String = driver
-  def isCurrent: Boolean = current
+  def isCurrent: Boolean = ccurrent
+  def isEditable: Boolean = editable
+  def setCurrent(v: Boolean): Unit = {
+    ccurrent = v
+  }
 }

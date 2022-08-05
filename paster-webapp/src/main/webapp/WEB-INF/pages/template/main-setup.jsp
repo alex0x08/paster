@@ -3,7 +3,7 @@
 
 <%--
 
-        Main template
+        Main configuration template
 
 --%>
 <!DOCTYPE html>
@@ -30,6 +30,11 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
+                 <ul class="nav navbar-nav me-auto">
+                 </ul>
+                      <p class="navbar-text hidden-sm hidden-xs" >
+                        Installation
+                      </p>
                 </div>
             </div>
         </nav>
@@ -56,12 +61,13 @@
                         <c:choose>
                              <c:when test="${s.value eq step.stepName}">
                                    <li class="breadcrumb-item active" aria-current="page">
-                                      <c:out value="${s.value}"/>
+                                     <c:out value="${loopStatus.index+1}"/>. <c:out value="${s.value}"/>
                                    </li>
                              </c:when>
                              <c:otherwise>
                                 <c:url var="stepUrl" value='/main/setup/${s.key}' />
                                 <li class="breadcrumb-item">
+                                               <c:out value="${loopStatus.index+1}"/>.
                                                <a href="${stepUrl}">
                                                    <c:out value="${s.value}"/>
                                                </a>
@@ -73,9 +79,6 @@
                     <li class="breadcrumb-item active" aria-current="page">Complete</li>
                   </ol>
                 </nav>
-
-
-
                 <tiles:insertAttribute name="content" />
             </div>
         </div>

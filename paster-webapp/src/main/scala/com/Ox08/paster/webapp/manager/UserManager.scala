@@ -31,7 +31,6 @@ import java.io.{File, FileReader}
 import java.util
 import scala.collection.mutable
 import scala.jdk.CollectionConverters._
-import scala.util.control.Breaks.break
 /**
  * Static object to deal with security context and sessions
  */

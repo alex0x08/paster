@@ -14,12 +14,9 @@ class SystemPropertiesListener extends ServletContextListener with Logged {
   override def contextInitialized(event: ServletContextEvent): Unit = {
     try {
       doBoot()
-
       val scratchDir = new File(Boot.BOOT.getSystemInfo.getTempDir,"servletTmp")
-
       event.getServletContext.setAttribute("javax.servlet.context.tempdir", scratchDir)
       event.getServletContext.setAttribute("jakarta.servlet.context.tempdir",scratchDir)
-
       var springProfiles = ""
       if (Boot.BOOT.getSystemInfo.isInstalled)
         springProfiles += "main"
@@ -62,5 +59,3 @@ class SystemPropertiesListener extends ServletContextListener with Logged {
     //System.setProperty("org.jboss.logging.provider", "slf4j")
   }
 }
-
-

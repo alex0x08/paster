@@ -19,7 +19,6 @@
  * under the License.
  */
 package org.apache.tiles.access;
-
 import java.util.Map;
 
 import org.apache.tiles.NoSuchContainerException;
@@ -28,61 +27,53 @@ import org.apache.tiles.request.ApplicationContext;
 import org.apache.tiles.request.Request;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-
 /**
  * Provides static access to the tiles container.
  *
  * @version $Rev: 1044659 $ $Date: 2010-12-12 01:16:04 +1100 (Sun, 12 Dec 2010) $
  */
 public final class TilesAccess {
-
     /**
      * Name of the attribute used to store the current used container.
      */
     public static final String CURRENT_CONTAINER_ATTRIBUTE_NAME =
-        "org.apache.tiles.servlet.context.ServletTilesRequestContext.CURRENT_CONTAINER_KEY";
-
+            "org.apache.tiles.servlet.context.ServletTilesRequestContext.CURRENT_CONTAINER_KEY";
     /**
      * Constructor, private to avoid instantiation.
      */
     private TilesAccess() {
     }
-
     /**
      * The name of the attribute to use when getting and setting the container
      * object in a context.
      */
     public static final String CONTAINER_ATTRIBUTE =
-        "org.apache.tiles.CONTAINER";
-
+            "org.apache.tiles.CONTAINER";
     /**
      * Configures the default container to be used in the application.
      *
-     * @param context The Tiles application context object to use.
+     * @param context   The Tiles application context object to use.
      * @param container The container object to set.
      * @since 2.1.2
      */
     public static void setContainer(ApplicationContext context,
-            TilesContainer container) {
+                                    TilesContainer container) {
         setContainer(context, container, CONTAINER_ATTRIBUTE);
     }
-
     /**
      * Configures the container to be used in the application.
      *
-     * @param context The Tiles application context object to use.
+     * @param context   The Tiles application context object to use.
      * @param container The container object to set.
-     * @param key The key under which the container will be stored.
+     * @param key       The key under which the container will be stored.
      * @since 2.1.2
      */
     public static void setContainer(ApplicationContext context,
-            TilesContainer container, String key) {
+                                    TilesContainer container, String key) {
         Logger log = LoggerFactory.getLogger(TilesAccess.class);
         if (key == null) {
             key = CONTAINER_ATTRIBUTE;
         }
-
         if (container == null) {
             if (log.isInfoEnabled()) {
                 log.info("Removing TilesContext for context: " + context.getClass().getName());
@@ -95,7 +86,6 @@ public final class TilesAccess {
             context.getApplicationScope().put(key, container);
         }
     }
-
     /**
      * Returns default the container to be used in the application.
      *
@@ -106,33 +96,30 @@ public final class TilesAccess {
     public static TilesContainer getContainer(ApplicationContext context) {
         return getContainer(context, CONTAINER_ATTRIBUTE);
     }
-
     /**
      * Returns the container to be used in the application registered under a specific key.
      *
      * @param context The Tiles application context object to use.
-     * @param key The key under which the container will be stored.
+     * @param key     The key under which the container will be stored.
      * @return The container object.
      * @since 3.0.0
      */
     public static TilesContainer getContainer(ApplicationContext context,
-            String key) {
+                                              String key) {
         if (key == null) {
             key = CONTAINER_ATTRIBUTE;
         }
-
         return (TilesContainer) context.getApplicationScope().get(key);
     }
-
     /**
      * Sets the current container to use in web pages.
      *
      * @param request The request to use.
-     * @param key The key under which the container is stored.
+     * @param key     The key under which the container is stored.
      * @since 2.1.0
      */
     public static void setCurrentContainer(Request request,
-            String key) {
+                                           String key) {
         ApplicationContext applicationContext = request.getApplicationContext();
         TilesContainer container = getContainer(applicationContext, key);
         if (container != null) {
@@ -142,23 +129,21 @@ public final class TilesAccess {
                     + key + "' cannot be found");
         }
     }
-
     /**
      * Sets the current container to use in web pages.
      *
-     * @param request The request to use.
+     * @param request   The request to use.
      * @param container The container to use as the current container.
      * @since 2.1.0
      */
     public static void setCurrentContainer(Request request,
-            TilesContainer container) {
+                                           TilesContainer container) {
         if (container != null) {
             request.getContext("request").put(CURRENT_CONTAINER_ATTRIBUTE_NAME, container);
         } else {
             throw new NullPointerException("The container cannot be null");
         }
     }
-
     /**
      * Returns the current container that has been set, or the default one.
      *
@@ -174,7 +159,6 @@ public final class TilesAccess {
             container = getContainer(context);
             requestScope.put(CURRENT_CONTAINER_ATTRIBUTE_NAME, container);
         }
-
         return container;
     }
 }

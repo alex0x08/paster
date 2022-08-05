@@ -15,7 +15,7 @@
  */
 package com.Ox08.paster.webapp.dao
 import com.Ox08.paster.webapp.model.{Paste, PasterUser}
-import jakarta.persistence.criteria.{CriteriaQuery, Path, Predicate, Selection}
+import jakarta.persistence.criteria.{CriteriaQuery, Predicate, Selection}
 import jakarta.persistence.{Query, Tuple}
 import org.apache.lucene.queryparser.classic.QueryParser
 import org.apache.lucene.search.highlight.{Highlighter, InvalidTokenOffsetsException}

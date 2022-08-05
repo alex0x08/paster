@@ -13,16 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.springframework.web.servlet.view.tiles3;
-
 import java.util.Locale;
 import java.util.Map;
 
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
 import org.apache.tiles.TilesContainer;
 import org.apache.tiles.access.TilesAccess;
 import org.apache.tiles.renderer.DefinitionRenderer;
@@ -32,7 +29,6 @@ import org.apache.tiles.request.Request;
 import org.apache.tiles.request.render.Renderer;
 import org.apache.tiles.request.servlet.ServletRequest;
 import org.apache.tiles.request.servlet.ServletUtil;
-
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 import org.springframework.web.context.request.RequestAttributes;
@@ -42,7 +38,6 @@ import org.springframework.web.servlet.support.JstlUtils;
 import org.springframework.web.servlet.support.RequestContext;
 import org.springframework.web.servlet.support.RequestContextUtils;
 import org.springframework.web.servlet.view.AbstractUrlBasedView;
-
 /**
  * {@link org.springframework.web.servlet.View} implementation that renders
  * through the Tiles Request API. The "url" property is interpreted as name of a
@@ -55,18 +50,12 @@ import org.springframework.web.servlet.view.AbstractUrlBasedView;
  * @since 3.2
  */
 public class TilesView extends AbstractUrlBasedView {
-
     @Nullable
     private Renderer renderer;
-
     private boolean exposeJstlAttributes = true;
-
     private boolean alwaysInclude = false;
-
     @Nullable
     private ApplicationContext applicationContext;
-
-
     /**
      * Set the {@link Renderer} to use.
      * If not set, by default {@link DefinitionRenderer} is used.
@@ -74,7 +63,6 @@ public class TilesView extends AbstractUrlBasedView {
     public void setRenderer(Renderer renderer) {
         this.renderer = renderer;
     }
-
     /**
      * Whether to expose JSTL attributes. By default set to {@code true}.
      *
@@ -83,7 +71,6 @@ public class TilesView extends AbstractUrlBasedView {
     protected void setExposeJstlAttributes(boolean exposeJstlAttributes) {
         this.exposeJstlAttributes = exposeJstlAttributes;
     }
-
     /**
      * Specify whether to always include the view rather than forward to it.
      * <p>Default is "false". Switch this flag on to enforce the use of a
@@ -95,22 +82,17 @@ public class TilesView extends AbstractUrlBasedView {
     public void setAlwaysInclude(boolean alwaysInclude) {
         this.alwaysInclude = alwaysInclude;
     }
-
     @Override
     public void afterPropertiesSet() throws Exception {
         super.afterPropertiesSet();
-
         ServletContext servletContext = getServletContext();
         Assert.state(servletContext != null, "No ServletContext");
         this.applicationContext = ServletUtil.getApplicationContext(servletContext);
-
         if (this.renderer == null) {
             TilesContainer container = TilesAccess.getContainer(this.applicationContext);
             this.renderer = new DefinitionRenderer(container);
         }
     }
-
-
     @Override
     public boolean checkResource(final Locale locale) {
         Assert.state(this.renderer != null, "No Renderer set");
@@ -127,7 +109,6 @@ public class TilesView extends AbstractUrlBasedView {
         };
         return this.renderer.isRenderable(getUrl(), request);
     }
-
     @Override
     protected void renderMergedOutputModel(Map<String, Object> model, HttpServletRequest request,
                                            HttpServletResponse response) throws Exception {
@@ -142,7 +123,6 @@ public class TilesView extends AbstractUrlBasedView {
         Request tilesRequest = createTilesRequest(request, response);
         this.renderer.render(getUrl(), tilesRequest);
     }
-
     /**
      * Create a Tiles {@link Request}.
      * <p>This implementation creates a {@link ServletRequest}.
@@ -159,5 +139,4 @@ public class TilesView extends AbstractUrlBasedView {
             }
         };
     }
-
 }
