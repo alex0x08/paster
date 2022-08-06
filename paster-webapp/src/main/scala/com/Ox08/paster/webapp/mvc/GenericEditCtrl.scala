@@ -35,7 +35,6 @@ abstract class GenericEditCtrl[T <: Struct] extends AbstractCtrl {
    * @return
    */
   protected def getNewModelInstance: T
-
   /**
    * link to list page
    */

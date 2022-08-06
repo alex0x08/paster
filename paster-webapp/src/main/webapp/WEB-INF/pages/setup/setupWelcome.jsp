@@ -23,7 +23,7 @@
                                                      />
                                                  <form:errors element="div" path="defaultLang" cssClass="alert alert-danger" />
                      <label class="form-check-label" >
-                         <c:out value="${l.displayName}"/>
+                         <c:out value="${l.getDisplayLanguage(l)}"/>
                     </label>
                  </div>
                </c:forEach>  

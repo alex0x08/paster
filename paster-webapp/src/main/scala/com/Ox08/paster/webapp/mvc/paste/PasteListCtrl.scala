@@ -56,10 +56,8 @@ class PasteListCtrl extends SearchCtrl[Paste, AuthorQuery] {
     model.addAttribute("availableSourceTypes", channelDao.getAvailableElements.asJava)
     model.addAttribute("splitHelper", new DateSplitHelper(splitDays, Locale.getDefault))
     model.addAttribute("sortDesc", false)
-
     val stats: java.util.Map[String,Long] = pasteDao.countStats(channelDao.getAvailableElements.toArray).asJava
     model.addAttribute("pasteStats", stats)
-
   }
   @RequestMapping(value = Array("/search/{result}/{page:[0-9]+}",
     "/raw/search/{result}/{page:[0-9]+}"),
@@ -196,7 +194,6 @@ class PasteListCtrl extends SearchCtrl[Paste, AuthorQuery] {
         else
           manager().getByChannel(channel, sortAsc))
       val sort = ph.getSort.asInstanceOf[MutableSortDefinition]
-
       /**
        * default sort
        */
@@ -232,5 +229,4 @@ class PasteListCtrl extends SearchCtrl[Paste, AuthorQuery] {
       } else false
     }
   }
-
 }

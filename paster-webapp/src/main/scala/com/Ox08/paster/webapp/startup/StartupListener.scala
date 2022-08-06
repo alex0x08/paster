@@ -27,7 +27,6 @@ class StartupListener extends ServletContextListener with Logged {
       try {
         // setup default locale
         bootContext.localeResolver.setDefaultLocale(Boot.BOOT.getSystemInfo.getSystemLocale)
-
         setupSecurityContext() // setup security context
         bootContext.users.loadUsers()
         logger.info("db generation completed successfully.")

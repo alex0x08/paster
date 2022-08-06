@@ -25,7 +25,6 @@ import java.time.{LocalDateTime, ZoneOffset}
 import java.util.{Date, Objects}
 object Struct extends Logged {
   protected val terms: List[String] = List[String]("id", "name")
-
   abstract class Builder[T <: java.io.Serializable](obj: T) extends Logged {
     def get(): T = obj
   }

@@ -44,6 +44,8 @@
               disable-url-rewriting="true">
     </sec:http>
     <mvc:annotation-driven/>
+    <bean id="localeResolver" class="com.Ox08.paster.webapp.web.PasterLocaleResolver"/>
+
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="order" value="2"/>
         <property name="exposeContextBeansAsAttributes" value="true"/>

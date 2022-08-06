@@ -78,6 +78,29 @@
         </div>
    </div>
 
+    <div class="row mb-3">
+           <div class="col-auto">
+
+            <c:url var="checkUrl" value='/main/setup/checkConnection' />
+
+    <button type="submit" formaction="${checkUrl}" class="btn btn-danger">
+       Check connection
+    </button>
+           </div>
+    </div>
+
+    <c:if test="${updatedStep.step.connectionLog!=null}">
+
+     <div class="row mb-3">
+               <div class="col-auto">
+                <textarea class="form-control" rows="6" cols="80">
+                    <c:out value="${updatedStep.step.connectionLog}"/>
+                </textarea>
+           </div>
+    </div>
+
+    </c:if>
+
    <jsp:include page="/WEB-INF/pages/setup/setup-buttons.jsp"/>
 
 

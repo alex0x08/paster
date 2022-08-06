@@ -9,7 +9,7 @@ import java.util.Locale
  */
 class PasterLocaleResolver extends SessionLocaleResolver with Logged{
   @Value("${paster.i18n.switchToUserLocale}")
-  val switchToUserLocale: Boolean = false // do we have 'switch to browser's locale' feature enabled?
+  var switchToUserLocale: Boolean = false // do we have 'switch to browser's locale' feature enabled?
   /**
    * Resolves default locale. If not ajusted via '?locale=' parameter - this locale will be used till session lives
    *

@@ -103,9 +103,8 @@ abstract class GenericListCtrl[T <: Struct] extends AbstractCtrl {
                                       pageHolderName: String,
                                       createDefaultItemModel: Boolean = true): java.util.List[T] = {
     var pagedListHolder: PagedListHolder[T] = request.getSession()
-      .getAttribute(getClass.getName + "_" + pageHolderName)
+      .getAttribute(s"${getClass.getName}_$pageHolderName")
       .asInstanceOf[PagedListHolder[T]]
-
     /**
      * if no pageListHolder found or no page controls is set - recreate pageListHolder (load data from db)
      */

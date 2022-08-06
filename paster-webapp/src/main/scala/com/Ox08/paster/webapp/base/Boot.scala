@@ -2,9 +2,7 @@ package com.Ox08.paster.webapp.base
 import org.apache.commons.io.FileUtils
 import org.apache.commons.lang3.StringUtils
 import org.apache.commons.lang3.math.NumberUtils
-import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.util.Assert
-
 import java.io.{File, FileInputStream, IOException, StringReader, StringWriter}
 import java.nio.file.Paths
 import java.text.{ParseException, SimpleDateFormat}
@@ -325,8 +323,18 @@ class Boot private() extends Logged {
     }
 
     def getSystemLocale: Locale = systemLocale
+
+    def setSystemLocale(lang:String):Unit = {
+
+      val locale:Option[Locale] = getAvailableLocales.find(p = p => {
+        p.getLanguage.equals(lang)
+      })
+      if (locale.isDefined) this.systemLocale = locale.get
+    }
+
     private[base] def setSystemLocale(locale:Locale):Unit = {
-      checkLock()
+      Assert.notNull(locale,"should be non null")
+      //checkLock()
       this.systemLocale = locale
     }
     def getAppCode: String = appCode
