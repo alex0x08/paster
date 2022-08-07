@@ -18,7 +18,7 @@
                 <c:forEach var="l" items="${availableDrivers}" varStatus="loopStatus">
                  <div class="form-check">
                         <input class="form-check-input driverInput"
-                            type="radio" 
+                            type="radio"
                             id="${'driver_'.concat(loopStatus.index)}"
                             name="selectedDriver"
                             x-driver-class="${l.driver}"

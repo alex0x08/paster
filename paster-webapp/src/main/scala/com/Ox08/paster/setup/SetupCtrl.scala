@@ -24,8 +24,6 @@ import org.springframework.util.Assert
 import org.springframework.validation.BindingResult
 import org.springframework.web.bind.WebDataBinder
 import org.springframework.web.bind.annotation._
-import org.springframework.web.servlet.i18n.SessionLocaleResolver
-
 import java.io.File
 import java.nio.charset.StandardCharsets
 import java.util
@@ -54,6 +52,18 @@ class SetupCtrl extends Logged {
   def getAvailableSteps: java.util.Collection[SetupStep] = setupService.getSteps
   @ModelAttribute("availableLocales")
   def getAvailableLocales: Array[Locale] = Boot.BOOT.getSystemInfo.getAvailableLocales
+
+  def getAvailableDrivers = Array(new DbType("H2 Embedded Database (Default)",
+    "jdbc:h2:file:${paster.app.home}/db/pastedb;DB_CLOSE_ON_EXIT=TRUE;LOCK_TIMEOUT=10000",
+    "org.h2.jdbcx.JdbcDataSource", current = true, editable = false),
+    new DbType("PostgreSQL",
+      "jdbc:pgsql://127.0.0.1/test-db",
+      "com.impossibl.postgres.jdbc.PGDataSource", current = false, editable = true),
+    new DbType("MySQL",
+      "jdbc:mysql://localhost/testdb",
+      "com.mysql.cj.jdbc.Driver", current = false, editable = true))
+
+
   protected def getResource(key: String, locale: Locale): String =
     messageSource.getMessage(key, new Array[java.lang.Object](0), locale)
   protected def getResource(key: String, args: Array[Any], locale: Locale): String =
@@ -117,6 +127,17 @@ class SetupCtrl extends Logged {
                       result: BindingResult,
                       model: Model): String = {
     val step: SetupDbStep = updatedStep.getStep.asInstanceOf[SetupDbStep]
+    if (StringUtils.isBlank(step.dbType)) {
+
+      val dbType= getAvailableDrivers.find( p => step.origName.equalsIgnoreCase( p.getName))
+        .orElse(throw  new RuntimeException("Cannot find type "+step.origName)).get
+
+      step.dbType =  dbType.getDriver
+      if ("H2 Embedded Database (Default)".equals(dbType.getName)) {
+        step.dbUrl = dbType.getUrl.replace("${paster.app.home}",Boot.BOOT.getSystemInfo.getAppHome.getAbsolutePath)
+      }
+    }
+
 
     if (result.hasErrors) {
       // dump errors
@@ -134,11 +155,19 @@ class SetupCtrl extends Logged {
     //model.asMap().clear()
     var log: String = null
     try {
-      logger.debug("loading class: {}",step.dbType)
-      val clazz = Class.forName(step.dbType)
-      val ds = clazz.getDeclaredConstructor().newInstance().asInstanceOf[javax.sql.DataSource]
-      val con = ds.getConnection
+      logger.debug("checking driver: {} url: {}",step.dbType,step.dbUrl)
+      //val clazz = Class.forName(step.dbType)
+      //val ds:javax.sql.DataSource = clazz.getDeclaredConstructor().newInstance().asInstanceOf[javax.sql.DataSource]
+      import org.springframework.jdbc.datasource.DriverManagerDataSource
+      val ds2 = new DriverManagerDataSource
+      ds2.setDriverClassName(step.getDbType)
+      ds2.setUrl(step.dbUrl)
+      ds2.setUsername(step.dbUser)
+      ds2.setPassword(step.dbPassword)
+
+      val con = ds2.getConnection
       con.close()
+      log = "Connection established"
     } catch {
       case e@(_: Exception) =>
         logger.debug(e.getMessage, e)
@@ -149,8 +178,8 @@ class SetupCtrl extends Logged {
           if (StringUtils.isBlank(log))
             log = e.getMessage
     }
-    step.connectionLog = log
     fillModel(step.getStepKey, model)
+    step.connectionLog = log
     "/setup/db"
   }
   @RequestMapping(value = Array("/"))
@@ -209,7 +238,8 @@ class SetupCtrl extends Logged {
         }
       case "db" =>
         val dbs: SetupDbStep = cs.asInstanceOf[SetupDbStep]
-        val availableDrivers = Array(new DbType("H2 Embedded",
+        dbs.connectionLog = null
+        val availableDrivers = Array(new DbType("H2 Embedded Database (Default)",
           "jdbc:h2:file:${paster.app.home}/db/pastedb;DB_CLOSE_ON_EXIT=TRUE;LOCK_TIMEOUT=10000",
           "org.h2.jdbcx.JdbcDataSource", current = true, editable = false),
           new DbType("PostgreSQL",
@@ -363,15 +393,16 @@ class PasterSetupService extends Logged {
     logger.debug(s"updating step ${step.getClass.getName}")
     if (!setupMap.contains(step.getStepKey))
       throw SystemError.withCode(0x6001, s"Incorrect step type:${step.getClass.getName}")
+    // update configuration options
     setupMap(step.getStepKey).update(step)
 
+    // switch current locale to selected
     if ("welcome".equalsIgnoreCase(step.getStepKey) && step.completed) {
       val wstep:WelcomeStep = getStep[WelcomeStep](step.getStepKey)
       Boot.BOOT.getSystemInfo.setSystemLocale(wstep.defaultLang)
       localeResolver.setDefaultLocale(Boot.BOOT.getSystemInfo.getSystemLocale)
       localeResolver.switchToUserLocale = false
     }
-
   }
   def writeConfig(): Unit = {
     val values: java.util.Map[String, Object] = new util.HashMap()
