@@ -1,9 +1,8 @@
 <%@ include file="/WEB-INF/pages/common/taglibs.jsp"%>
 
 
-<div class='row'>
-    <div class='col-md-offset-3 col-xs-4 col-md-5'>
-
+<div class='row justify-content-md-center'>
+    <div class='col-auto'>
 
    <c:url var="stepUrl" value='/main/setup/welcome' />
 
@@ -13,9 +12,13 @@
         modelAttribute="updatedStep.step"
         method="POST">
 
+        <p>
+            Welcome to Paster, comrade!
+        </p>
+
       <fieldset class="row mb-3">
-         <legend class="col-form-label col-sm-2 pt-0">Languages</legend>
-         <div class="col-sm-10">
+         <legend class="col-form-label">Please choose application language:</legend>
+         <div class="col-md-10 offset-md-2">
                <c:forEach var="l" items="${availableLocales}" varStatus="loopStatus">
                  <div class="form-check">
                               <form:radiobutton cssClass="form-check-input" path="defaultLang" name="defaultLang"
@@ -27,9 +30,15 @@
                     </label>
                  </div>
                </c:forEach>  
-               
+         </div>
+         </fieldset>
+
   <div class="row mb-3">
-     <div class="col-sm-10 offset-sm-2">
+     <div class="col-sm-10">
+        <p>
+                Additional options
+        </p>
+
        <div class="form-check">
                <form:checkbox cssClass="form-check-input" path="switchToUserLocale" name="switchToUserLocale"
                                        value="${l.language}" />

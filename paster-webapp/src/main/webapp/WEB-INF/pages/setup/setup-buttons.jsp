@@ -5,20 +5,23 @@
 
     <button type="submit" formaction="${prevUrl}" class="btn btn-primary">
       <i class="fa fa-arrow-left" aria-hidden="true"></i>
-         <fmt:message key="button.prev" /></span>
+         <fmt:message key="button.prev" />
     </button>
 </c:if>
 
 <c:if test="${nextStep!=null}">
  <button type="submit" class="btn btn-primary">
      <i class="fa fa-arrow-right" aria-hidden="true"></i>
-         <fmt:message key="button.next" /></span>
+         <fmt:message key="button.next" />
 </button>
 </c:if>
 
 <c:if test="${nextStep==null}">
+
  <button type="submit" class="btn btn-primary">
-       <i class="fa fa-sign-in"></i>
-        Complete
- </button>
+     <i class="fa fa-arrow-right" aria-hidden="true"></i>
+         <fmt:message key="button.complete" />
+</button>
+
+
 </c:if>

@@ -24,10 +24,11 @@ import org.springframework.util.Assert
 import org.springframework.validation.BindingResult
 import org.springframework.web.bind.WebDataBinder
 import org.springframework.web.bind.annotation._
+
 import java.io.File
 import java.nio.charset.StandardCharsets
 import java.util
-import java.util.Locale
+import java.util.{Locale, UUID}
 import scala.collection.mutable
 import scala.jdk.CollectionConverters._
 /**
@@ -53,7 +54,10 @@ class SetupCtrl extends Logged {
   @ModelAttribute("availableLocales")
   def getAvailableLocales: Array[Locale] = Boot.BOOT.getSystemInfo.getAvailableLocales
 
-  def getAvailableDrivers = Array(new DbType("H2 Embedded Database (Default)",
+  def getAvailableSecurityModes: Array[SecurityMode] = Array(new SecurityMode("Public","public"),
+    new SecurityMode("Private","private"))
+
+  def getAvailableDrivers: Array[DbType] = Array(new DbType("H2 Embedded Database (Default)",
     "jdbc:h2:file:${paster.app.home}/db/pastedb;DB_CLOSE_ON_EXIT=TRUE;LOCK_TIMEOUT=10000",
     "org.h2.jdbcx.JdbcDataSource", current = true, editable = false),
     new DbType("PostgreSQL",
@@ -90,8 +94,10 @@ class SetupCtrl extends Logged {
     }
     val url = servletRequest.getRequestURI.substring(servletRequest.getContextPath.length).toLowerCase
     var step = url.substring("/main/setup/".length)
-    if ("checkconnection".equalsIgnoreCase(step)) {
-      step = "db"
+    step match {
+      case "checkconnection" => step = "db"
+      case "adduser" | "removeuser" => step = "users"
+      case _ =>
     }
     if (logger.isDebugEnabled)
       logger.debug("step: '{}'", step)
@@ -99,25 +105,36 @@ class SetupCtrl extends Logged {
       throw SystemError.withCode(0x6001, s"Incorrect step type: $step")
     target.setStep(setupService.getStep(step))
   }
-  @RequestMapping(value = Array("/removeUser"), method = Array(RequestMethod.POST))
+  @RequestMapping(value = Array("/setup/removeUser"), method = Array(RequestMethod.POST))
   def removeUser(model: Model,
                  @RequestParam index: Int
                 ): String = {
-    model.asMap().clear()
     val users = setupService.getStep[SetupUsersStep]("users").users
     if (!users.isEmpty && index < users.size())
       users.remove(index)
+    fillModel("users", model)
     "/setup/users"
   }
-  @RequestMapping(value = Array("/addUser"), method = Array(RequestMethod.POST))
-  def addUser(model: Model): String = {
-    model.asMap().clear()
+  @RequestMapping(value = Array("/setup/addUser"), method = Array(RequestMethod.POST))
+  def addUser(@Valid
+              @ModelAttribute("updatedStep")
+              updatedStep: StepModel,
+              result: BindingResult,
+              model: Model): String = {
+
+    val uModel:SetupUsersStep = updatedStep.getStep[SetupUsersStep]
+
+    for (u<-uModel.users.asScala) {
+      logger.debug("user: {} - {} ",u.getName,u.getUsername)
+    }
+
     val users = setupService.getStep[SetupUsersStep]("users").users
     val u = new PasterUser(s"user${users.size()}",
       s"Unnamed user${users.size()}",
       "user",
       java.util.Set.of(Role.ROLE_USER))
-    users.add(u)
+    users.add(new UserDTO().fromUser(u))
+    fillModel("users", model)
     "/setup/users"
   }
   @RequestMapping(value = Array("/setup/checkConnection"), method = Array(RequestMethod.POST))
@@ -133,12 +150,12 @@ class SetupCtrl extends Logged {
         .orElse(throw  new RuntimeException("Cannot find type "+step.origName)).get
 
       step.dbType =  dbType.getDriver
-      if ("H2 Embedded Database (Default)".equals(dbType.getName)) {
-        step.dbUrl = dbType.getUrl.replace("${paster.app.home}",Boot.BOOT.getSystemInfo.getAppHome.getAbsolutePath)
+      if (dbType.getName.contains("H2")) {
+        step.dbUrl = dbType.getUrl
+          .replace("${paster.app.home}",
+            Boot.BOOT.getSystemInfo.getAppHome.getAbsolutePath)
       }
     }
-
-
     if (result.hasErrors) {
       // dump errors
       if (logger.isDebugEnabled) {
@@ -218,7 +235,7 @@ class SetupCtrl extends Logged {
       case "users" =>
         val users: SetupUsersStep = cs.asInstanceOf[SetupUsersStep]
         if (users.users.isEmpty) {
-          val availableUsers: util.ArrayList[PasterUser] = new java.util.ArrayList()
+          val availableUsers: util.ArrayList[UserDTO] = new java.util.ArrayList()
           val csv = new File(Boot.BOOT.getSystemInfo.getAppHome, "users.csv")
           UserManager.loadUsersFromCSV(csv, (record: CSVRecord) => {
             if (logger.isDebugEnabled)
@@ -230,24 +247,19 @@ class SetupCtrl extends Logged {
                   Role.ROLE_ADMIN
                 else
                   Role.ROLE_USER))
-            availableUsers.add(u)
+            availableUsers.add(new UserDTO().fromUser(u))
           })
           model.addAttribute("availableUsers", availableUsers)
+          users.getUsers.addAll(availableUsers)
         } else {
           model.addAttribute("availableUsers", users.users)
         }
+        model.addAttribute("availableSecurityModes", getAvailableSecurityModes)
+
       case "db" =>
         val dbs: SetupDbStep = cs.asInstanceOf[SetupDbStep]
         dbs.connectionLog = null
-        val availableDrivers = Array(new DbType("H2 Embedded Database (Default)",
-          "jdbc:h2:file:${paster.app.home}/db/pastedb;DB_CLOSE_ON_EXIT=TRUE;LOCK_TIMEOUT=10000",
-          "org.h2.jdbcx.JdbcDataSource", current = true, editable = false),
-          new DbType("PostgreSQL",
-            "jdbc:pgsql://127.0.0.1/test-db",
-            "com.impossibl.postgres.jdbc.PGDataSource", current = false, editable = true),
-          new DbType("MySQL",
-            "jdbc:mysql://localhost/testdb",
-            "com.mysql.cj.jdbc.Driver", current = false, editable = true))
+        val availableDrivers = getAvailableDrivers
         if (!StringUtils.isBlank(dbs.origName))
           for (a <- availableDrivers) {
             a.setCurrent(dbs.origName.equals(a.getName))
@@ -310,9 +322,10 @@ class SetupCtrl extends Logged {
       s"/setup/${nextStep.getStepKey}"
     }
   }
-  @RequestMapping(value = Array("/setup/finalizeInstall"), method = Array(RequestMethod.GET))
+  @RequestMapping(value = Array("/setup/finalizeInstall"), method = Array(RequestMethod.GET,RequestMethod.POST))
   def finalizeInstall: String = "/setup/finalizeInstall"
-  @RequestMapping(value = Array("/setup/finalizeInstall"), method = Array(RequestMethod.POST))
+
+  @RequestMapping(value = Array("/setup/doFinalizeInstall"), method = Array(RequestMethod.POST))
   def doFinalizeInstall(model: Model): String = {
     if (!setupService.isSetupCompleted) {
       logger.warn("Setup is not completed!")
@@ -421,12 +434,12 @@ class PasterSetupService extends Logged {
   }
 }
 class SetupUsersStep extends SetupStep("users", "Setup users") {
-  val users: java.util.List[PasterUser] = new util.ArrayList[PasterUser]()
+  val users: java.util.List[UserDTO] = new util.ArrayList[UserDTO]()
   @NotNull(message = "{validator.not-null}")
   var securityMode: String = _
   var allowAnonymousCommentsCreate: Boolean = _
   var allowAnonymousPastasCreate: Boolean = _
-  def getUsers: java.util.List[PasterUser] = users
+  def getUsers: java.util.List[UserDTO] = users
   def isAllowAnonymousCommentsCreate: Boolean = allowAnonymousCommentsCreate
   def isAllowAnonymousPastasCreate: Boolean = allowAnonymousPastasCreate
   def getSecurityMode: String = securityMode
@@ -514,7 +527,7 @@ class WelcomeStep extends SetupStep("welcome", "Setup language") {
 }
 class StepModel(step: SetupStep) {
   private var _step: SetupStep = step
-  def getStep: SetupStep = _step
+  def getStep[T <: SetupStep]: T = _step.asInstanceOf[T]
   def setStep(s: SetupStep): Unit = {
     _step = s
   }
@@ -539,5 +552,48 @@ class DbType(name: String, url: String, driver: String, current: Boolean, editab
   def isEditable: Boolean = editable
   def setCurrent(v: Boolean): Unit = {
     _current = v
+  }
+}
+class SecurityMode(name: String,key:String) {
+  def getName: String = name
+  def getKey: String = key
+}
+
+class UserDTO {
+  private var _username:String = _
+  private var _name:String = _
+  private var _password:String = _
+  private var _isadmin:Boolean = false
+
+  def fromUser(pasterUser: PasterUser):UserDTO = {
+    this._isadmin = pasterUser.isAdmin
+    this._name = pasterUser.getName
+    this._username = pasterUser.getUsername
+    this._password = pasterUser.getPassword
+    this
+  }
+
+  def toUser:PasterUser = new PasterUser(this._name,this._username,this._password,util.Set.of(
+    if(_isadmin)
+      Role.ROLE_ADMIN
+    else
+      Role.ROLE_USER
+    ))
+
+  def getUsername: String = _username
+  def getName:String = _name
+  def getPassword:String = _password
+  def isAdmin: Boolean = _isadmin
+  def setUsername(username:String):Unit = {
+    this._username = username
+  }
+  def setName(name:String):Unit = {
+    this._name = name
+  }
+  def setPassword(pwd:String): Unit = {
+    this._password = pwd
+  }
+  def setAdmin(value:Boolean):Unit = {
+    this._isadmin = value
   }
 }

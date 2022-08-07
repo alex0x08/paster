@@ -83,8 +83,8 @@
 
             <c:url var="checkUrl" value='/main/setup/checkConnection' />
 
-    <button type="submit" formaction="${checkUrl}" class="btn btn-danger">
-       Check connection
+    <button type="submit" formaction="${checkUrl}" class="btn btn-danger btn-sm">
+       <i class="fa fa-database" aria-hidden="true"></i> Try connect
     </button>
            </div>
     </div>
