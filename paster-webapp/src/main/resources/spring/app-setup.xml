@@ -43,7 +43,10 @@
               security="none"
               disable-url-rewriting="true">
     </sec:http>
-    <mvc:annotation-driven/>
+
+    <bean id="localBeansValidator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
+
+    <mvc:annotation-driven validator="localBeansValidator"/>
     <bean id="localeResolver" class="com.Ox08.paster.webapp.web.PasterLocaleResolver"/>
 
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">

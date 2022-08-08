@@ -16,7 +16,6 @@
                 Here you can setup users
         </p>
 
-
          <fieldset class="row mb-3">
                  <legend class="col-form-label">Security mode:</legend>
                  <div class="col-md-10 offset-md-2">
@@ -24,6 +23,8 @@
                          <div class="form-check">
                                       <form:radiobutton cssClass="form-check-input" path="securityMode" name="securityMode"
                                        value="${l.key}" />
+
+
                              <label class="form-check-label" >
                                  <c:out value="${l.name}"/>
                             </label>

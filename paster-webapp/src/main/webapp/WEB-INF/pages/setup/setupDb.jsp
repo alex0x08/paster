@@ -39,10 +39,11 @@
             <label >Url</label>
              <form:input cssClass="form-control" path="dbUrl" name="dbUrl" id="dbUrl"
                                                 placeholder="Enter database url"/>
-             <form:errors element="div" path="dbUrl" cssClass="alert alert-danger" />
+             <form:errors element="div" path="*" cssClass="alert alert-danger" />
         </div>
    </div>
    <div class="row mb-3">
+
         <div class="col-md-8">
             <label >Driver class</label>
              <form:input cssClass="form-control"
