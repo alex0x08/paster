@@ -70,9 +70,11 @@ object UserManager extends Logged {
    */
   def loadUsersFromCSV(csv: File, callback: CSVRecord => Unit): Unit = {
     if (!csv.exists() || !csv.isFile)
-      throw SystemError.withError(0x6001, s"CSV file '${csv.getName}' with users does not exist!")
+      throw SystemError.withError(0x6001,
+        s"CSV file '${csv.getName}' with users does not exist!")
     if (csv.length()==0)
-      throw SystemError.withError(0x6001, s"CSV file '${csv.getName}' with users is empty!")
+      throw SystemError.withError(0x6001,
+        s"CSV file '${csv.getName}' with users is empty!")
     val r = new FileReader(csv)
     try {
       val records = CSVFormat.DEFAULT.builder().setHeader()

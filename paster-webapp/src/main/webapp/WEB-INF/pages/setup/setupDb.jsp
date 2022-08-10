@@ -3,14 +3,16 @@
 <div class='row justify-content-md-center' >
     <div class='col-auto'>
 
+
    <c:url var="stepUrl" value='/main/setup/db' />
 
    <form:form
         action="${stepUrl}"
         role="form"
-        modelAttribute="updatedStep.step"
+        modelAttribute="updatedStep"
         method="POST">
-        <form:input id="origName" path="origName" cssStyle="display:none;" />
+        <form:input id="origName" path="step.origName" cssStyle="display:none;" />
+         <form:errors path="" />
 
       <fieldset class="row mb-3">
          <legend class="col-form-label">Supported databases</legend>
@@ -37,9 +39,9 @@
    <div class="row mb-3">
         <div class="col-md-12">
             <label >Url</label>
-             <form:input cssClass="form-control" path="dbUrl" name="dbUrl" id="dbUrl"
+             <form:input cssClass="form-control" path="step.dbUrl" name="dbUrl" id="dbUrl"
                                                 placeholder="Enter database url"/>
-             <form:errors element="div" path="*" cssClass="alert alert-danger" />
+             <form:errors element="div" path="step.dbUrl" cssClass="alert alert-danger" />
         </div>
    </div>
    <div class="row mb-3">
@@ -47,11 +49,11 @@
         <div class="col-md-8">
             <label >Driver class</label>
              <form:input cssClass="form-control"
-                        path="dbType"
+                        path="step.dbType"
                         name="dbType"
                         id="dbDriver"
                         placeholder="Enter driver class name"/>
-             <form:errors element="div" path="dbType" cssClass="alert alert-danger" />
+             <form:errors element="div" path="step.dbType" cssClass="alert alert-danger" />
         </div>
    </div>
 
@@ -59,22 +61,22 @@
         <div class="col-auto">
             <label >Username</label>
             <form:input cssClass="form-control"
-                                    path="dbUser"
+                                    path="step.dbUser"
                                     name="dbUser"
                                     id="dbUser"
                                     placeholder="Enter username"/>
-            <form:errors element="div" path="dbUser" cssClass="alert alert-danger" />
+            <form:errors element="div" path="step.dbUser" cssClass="alert alert-danger" />
         </div>
         <div class="col-auto">
             <label >Password</label>
                 <div class="input-group">
                     <div class="input-group-text">@</div>
                     <form:input cssClass="form-control" type="password"
-                                         path="dbPassword"
+                                         path="step.dbPassword"
                                          name="dbPassword"
                                          id="dbPassword"
                                          placeholder="Enter password"/>
-                 <form:errors element="div" path="dbPassword" cssClass="alert alert-danger" />
+                 <form:errors element="div" path="step.dbPassword" cssClass="alert alert-danger" />
                 </div>
         </div>
    </div>

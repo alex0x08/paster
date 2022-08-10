@@ -9,8 +9,10 @@
    <form:form
         action="${stepUrl}"
         role="form"
-        modelAttribute="updatedStep.step"
+        modelAttribute="updatedStep"
         method="POST">
+
+        <form:errors path="" />
 
         <p>
                 Here you can setup users
@@ -21,8 +23,11 @@
                  <div class="col-md-10 offset-md-2">
                        <c:forEach var="l" items="${availableSecurityModes}" varStatus="loopStatus">
                          <div class="form-check">
-                                      <form:radiobutton cssClass="form-check-input" path="securityMode" name="securityMode"
-                                       value="${l.key}" />
+                             <form:radiobutton
+                             cssClass="form-check-input"
+                             path="step.securityMode"
+                             name="securityMode"
+                             value="${l.key}" />
 
 
                              <label class="form-check-label" >
@@ -30,6 +35,8 @@
                             </label>
                          </div>
                        </c:forEach>
+                       <form:errors path="step.securityMode" />
+
                  </div>
                  </fieldset>
 
@@ -40,20 +47,23 @@
                 <p>
                         Additional options
                 </p>
-
-
-
                <div class="form-check">
-                       <form:checkbox cssClass="form-check-input" path="allowAnonymousCommentsCreate" name="allowAnonymousCommentsCreate"
-                                               value="${allowAnonymousCommentsCreate}" />
+                       <form:checkbox
+                       cssClass="form-check-input"
+                       path="step.allowAnonymousCommentsCreate"
+                       name="allowAnonymousCommentsCreate"
+                       value="${allowAnonymousCommentsCreate}" />
                  <label class="form-check-label">
                    Allow anonymous to add comments
                  </label>
                </div>
 
                <div class="form-check">
-                                      <form:checkbox cssClass="form-check-input" path="allowAnonymousPastasCreate" name="allowAnonymousPastasCreate"
-                                                              value="${allowAnonymousPastasCreate}" />
+                      <form:checkbox
+                      cssClass="form-check-input"
+                      path="step.allowAnonymousPastasCreate"
+                      name="allowAnonymousPastasCreate"
+                      value="${allowAnonymousPastasCreate}" />
                                 <label class="form-check-label">
                                   Allow anonymous to create new records
                                 </label>
@@ -61,8 +71,6 @@
 
              </div>
            </div>
-
-
 
         <c:url var="addUserUrl" value='/main/setup/addUser' />
         <p>
@@ -96,27 +104,50 @@
              <c:forEach var="user" items="${availableUsers}" varStatus="vstatus">
                  <tr>
                      <td>
-                           <form:input cssClass="form-control" path="users[${vstatus.index}].name" name="name"
-                                                                                              placeholder="Enter name"/>
-                           <form:errors element="div" path="users[${vstatus.index}].name" cssClass="alert alert-danger" />
+                           <form:input cssClass="form-control"
+                           name="name"
+                           path="step.users[${vstatus.index}].name"
+                           placeholder="Enter name"/>
+                           <form:errors element="div"
+                           path="step.users[${vstatus.index}].name"
+                           cssClass="alert alert-danger" />
                      </td>
                      <td>
-                           <form:input cssClass="form-control" path="users[${vstatus.index}].username" name="username"  placeholder="Enter username"/>
-                           <form:errors element="div" path="users[${vstatus.index}].username" cssClass="alert alert-danger" />
+                           <form:input
+                           cssClass="form-control"
+                           name="username"
+                           path="step.users[${vstatus.index}].username"
+                           placeholder="Enter username"/>
+                           <form:errors element="div"
+                           path="step.users[${vstatus.index}].username"
+                           cssClass="alert alert-danger" />
                      </td>
                      <td>
-                            <form:input cssClass="form-control" path="users[${vstatus.index}].password" name="password"  placeholder="Enter password" type="password"/>
-                            <form:errors element="div" path="users[${vstatus.index}].password" cssClass="alert alert-danger" />
+                            <form:input
+                            cssClass="form-control"
+                            name="password"
+                            path="step.users[${vstatus.index}].password"
+                            placeholder="Enter password"
+                            type="password"/>
+                            <form:errors element="div"
+                            path="step.users[${vstatus.index}].password"
+                            cssClass="alert alert-danger" />
                      </td>
                      <td>
-                           <form:checkbox cssClass="form-check-input" path="users[${vstatus.index}].admin" name="admin" value="${users[vstatus.index].admin}" />
+                           <form:checkbox
+                           cssClass="form-check-input"
+                           path="step.users[${vstatus.index}].admin"
+                           name="admin"
+                           value="${step.users[vstatus.index].admin}" />
                      </td>
                       <td>
                        <c:url var="removeUserUrl" value='/main/setup/removeUser' >
                             <c:param name="index" value="${vstatus.index}" />
                        </c:url>
 
-                              <button type="submit" formaction="${removeUserUrl}" class="btn btn-primary" title="Remove user">
+                              <button type="submit"
+                              formaction="${removeUserUrl}"
+                              class="btn btn-primary" title="Remove user">
                                  <i class="fa fa-trash" aria-hidden="true"></i>
                               </button>
                       </td>
