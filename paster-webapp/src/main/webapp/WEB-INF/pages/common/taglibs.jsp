@@ -12,15 +12,11 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%-- local tags --%>
 <%@ taglib prefix="kc" tagdir="/WEB-INF/tags"%>
-
-
 <%--
         Global variables used on all pages
---%>    
-
+--%>
 <c:set var="ctx" value="${pageContext.request.contextPath}"/>
 <c:set var="datePattern"><fmt:message key="date.format"/></c:set>
 <c:set var="dateTimePattern"><fmt:message key="date.format.hours"/></c:set>
-
 <%--<sec:authentication property="principal" var="currentUser" />--%>
 

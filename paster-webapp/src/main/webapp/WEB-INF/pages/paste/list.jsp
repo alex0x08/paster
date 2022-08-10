@@ -1,13 +1,15 @@
 <%@ include file="/WEB-INF/pages/common/taglibs.jsp"%>
+<%--
 
+    Pastas list
+
+ --%>
 <div class="row justify-content-between">
     <div class="col-md-8">
         <a  href="<c:url value='/main/paste/list/${sourceType}'/>" title="<fmt:message key='button.refresh'/>">
             <span class="i" style="font-size: 1.5em;">P</span>
         </a>
-
-            <c:forEach var="source" items="${availableSourceTypes}" varStatus="loopStatus">
-
+        <c:forEach var="source" items="${availableSourceTypes}" varStatus="loopStatus">
                <c:set var="sourceKey" value="${source.toLowerCase()}"/>
                 <c:choose>
                     <c:when test="${sourceKey eq sourceType}">
@@ -25,7 +27,6 @@
                  </span>
                 <c:if test="${!loopStatus.last}"> | </c:if>
             </c:forEach>
-
     </div>
     <div class="col-md-2 hidden-sm hidden-xs">        
         <a class="img-map img-xml" href="<c:url value='/main/paste/list/body.xml'/>" title="xml" alt="xml" target="_blank">
@@ -38,20 +39,17 @@
         <a class="img-map img-atom" href="<c:url value='/main/paste/list.atom'/>" title="atom" alt="atom" target="_blank">
         </a> 
     </div>
-
     <div class="col-auto">
         <tiles:insertDefinition name="/common/pageList" >
             <tiles:putAttribute name="listMode" value="${listMode}"/>
             <tiles:putAttribute name="pageItems" value="${pageItems}"/>
             <tiles:putAttribute name="sourceType" value="${sourceType == null ? 'main' : sourceType }"/>
-           
             <c:if test="${listMode eq 'search'}">
                 <tiles:putAttribute name="result" value="${result}"/>
             </c:if>
         </tiles:insertDefinition>
     </div>     
 </div>
-
 <c:if test="${listMode eq 'search' }">
     <div class="row">
         <div class="col-md-12" >
@@ -71,8 +69,7 @@
             </div>
         </div>
     </div>
-</c:if>       
-
+</c:if>
 <div class="row">
     <div id="pastas" class="col-md-12" >
         <c:forEach var="paste" items="${pageItems.pageList}" varStatus="status">
@@ -81,21 +78,17 @@
                     <c:if test="${not paste.stick}">
                         <c:set property="curDate" value="${paste.lastModifiedDt}" target="${splitHelper}"/>
                     </c:if>
-
                     <c:set var="priorTitle"><fmt:message key="${paste.priority}"/></c:set>
-                  
                     <div class="row justify-content-start" >
                         <div class="col-md-2" style="padding-bottom: 0.5em;">
                             <c:url value='/main/paste-resources/${appId}/t/${paste.lastModifiedDt.time}/paste_content/${paste.thumbImage}' var="thumbUrl">
                             </c:url>
-
                             <a class="pastePreviewLink" href="<c:url value='/${paste.id}'></c:url>" pasteId="${paste.id}" 
                                title="Click to view paste vol. ${paste.id}">
                                 <img src="${thumbUrl}"  
                                      class="img-thumbnail img-responsive p-comment"  />
                             </a>
-                        </div>                     
-
+                        </div>
                         <div class="col-md-10" >
                             <div class="row">
                                 <div class="pasteTitle col-lg-10 col-md-12 col-xs-12">
@@ -106,7 +99,6 @@
                                         <a class="i ${paste.priority}" style="font-size:2em;"
                                            title="<c:out value="${paste.id}"/>: ${priorTitle}. Click to search with same priority."
                                            href="<c:url value='/main/paste/list/search?query=priority:${paste.priority}'/>">/</a>
-            
 
                                         <a class="listLinkLine" href="<c:url value='/${paste.id}'></c:url>" 
                                            pasteId="${paste.id}" title="Click to view paste vol. ${paste.id}">
@@ -129,11 +121,9 @@
                                         <tiles:insertDefinition name="/common/owner" >
                                             <tiles:putAttribute name="model" value="${paste}"/>
                                             <tiles:putAttribute name="modelName" value="paste"/>
-                                        </tiles:insertDefinition>,                                
-
+                                        </tiles:insertDefinition>,
                                         <a href="<c:url value='/main/paste/list/search?query=codeType:${paste.codeType}'/>">
                                             <fmt:message key='${"code.type.".concat(paste.codeType)}'/></a>
-
                                         (
                                         <c:if test="${not empty paste.wordsCount}">
                                             <c:out value="${paste.wordsCount} "/> 
@@ -157,7 +147,6 @@
                     <a href="<c:url value='/${paste.id}'></c:url>" title="Click to view paste vol. ${paste.id}">
                         <span  class="pasteTitle"><c:out value="${paste.text}" escapeXml="true"  /></span>
                     </a>
-
                     <span  class="pasteTitle"><c:out value="${paste.text}" escapeXml="true"  /></span>
                     <small>
                         <tiles:insertDefinition name="/common/owner" >

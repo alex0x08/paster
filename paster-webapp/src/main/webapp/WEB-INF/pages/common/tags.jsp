@@ -5,7 +5,6 @@
 --%> 
 <tiles:importAttribute name="model" />
 <tiles:importAttribute name="modelName" />
-
 <c:if test="${not empty model.tags}">
     ( <c:forEach var="tag" items="${model.tags}" varStatus="loopStatus">
     <a href="<c:url value='/main/${modelName}/list/search?query=tags:${tag}'/>" 

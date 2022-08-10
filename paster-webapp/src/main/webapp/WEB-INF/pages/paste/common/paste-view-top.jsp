@@ -1,16 +1,12 @@
 <%@ include file="/WEB-INF/pages/common/taglibs.jsp"%>
-
-
 <%--
 
     Paste's view top panel (control buttons)
 
 --%>
-
 <c:set var="priorTitle">
     <fmt:message key="${model.priority}" />
 </c:set>
-
 <div class="row">
     <div class="col-md-10">
         <%--

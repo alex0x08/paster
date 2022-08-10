@@ -3,7 +3,6 @@
 
 <div class='row justify-content-md-center'>
     <div class='col-auto'>
-
         <p>
         Done. You just completed Paster setup!
         </p>
@@ -16,8 +15,6 @@
                          </a>
                      </button>
                  </form:form>
-
-
     </div>
 </div>
 

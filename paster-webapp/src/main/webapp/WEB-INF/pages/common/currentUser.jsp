@@ -1,12 +1,9 @@
 <%@ include file="/WEB-INF/pages/common/taglibs.jsp"%>
-
-
 <%--
 
         Curent user (top right) dropdown
 
 --%>
-
 <li class="nav-item dropdown">
     <a href="#" id="userProfileSwitch" role="button" 
         class="nav-link dropdown-toggle" data-bs-toggle="dropdown">

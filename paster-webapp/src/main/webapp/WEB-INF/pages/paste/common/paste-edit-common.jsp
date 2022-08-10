@@ -3,10 +3,8 @@
         Common logic for paste's edit page      
 --%>
 <fmt:message var="submit_button_text" key="button.save" />
-
 <c:url var="url" value='/main/paste/save' />
 <c:url var="urlCancel" value='/main/paste/list' />
-
 <div class="row">
     <div class="col-md-12">
         <form:form cssClass="form-horizontal" id="editForm" 
@@ -158,7 +156,6 @@
                                 </div>
                             </div>
                         </div>
-
                         <div class="row">
                             <div class="col-md-1">
                                 <form:label path="codeType" cssClass="control-label" title="Select syntax">
@@ -246,10 +243,8 @@
                             </select>
                         </div>
                     </div>
-
                 </div>
             </div>
-
             <div class="form-group">
                 <form:label path="text">
                     <fmt:message key="paste.text" />

@@ -1,10 +1,7 @@
 <%@ include file="/WEB-INF/pages/common/taglibs.jsp"%>
-
-
 <%--
 
     Shared logic (between normal and raw output) of paste's view page
-
     Paste's view main block
     
 --%>
@@ -12,13 +9,11 @@
     <div id="${model.id}_centerPanel" class="col-md-12" style="min-width:650px;">
         <c:url var="drawImg"
             value='/main/paste-resources/${appId}/r/${model.lastModifiedDt.time}/paste_content/${model.reviewImgData}' />
-
 <%--
 
         All |Comments|Draw top toggle
    
 --%>
-
 <div id='pasteViewControls' class="btn-group" role="group" aria-label="Controls">
     <button id="${model.id}_btnShowAll" type="button" class="btn btn-primary active">
         <fmt:message key="button.paste.all" />
@@ -30,28 +25,22 @@
         <fmt:message key="button.paste.draw" />
     </button>
 </div>
- 
-
 <%--
 
     Review image render (if exist)
    
 --%>
-
 <c:set var="backgroundReviewStyle"
             value="${model.reviewImgData==null ? '' : 'pointer-events:none;background: url('.concat(drawImg).concat(') no-repeat top left;') }" />
-
 <div id="${model.id}_all" style="display:none;z-index:500;position:absolute;pointer-events:none;">
         <canvas id="${model.id}_sketch_ro" with="400" height="200" style="${backgroundReviewStyle}">
         </canvas>
 </div>
-
 <%--
     
     Draw mode, paint options
 
 --%>
-
 <div id="${model.id}_drawBlock" style="display:none;padding-top: 1em;">
             <div class="row justify-content-between">
                 <div class="col-md-8">
@@ -76,49 +65,37 @@
                     </c:if>              
                 </div>
             </div>
-
     <%--
         Draw mode, draw area
     --%>
     <div id="${model.id}_drawArea" style="z-index:5000;position:absolute;cursor:crosshair;
                  background-color:rgba(100,70,0,0.1);">
     </div>
-
 </div>
-
-
-        <%--
+<%--
 
         Paste's content
   
-        --%>
-        <div id="${model.id}_pasteBodyContent">
+--%>
+<div id="${model.id}_pasteBodyContent">
             <pre id="${model.id}_pasteText"
                 class="brush: ${model.codeType};toolbar: false; auto-links:false;highlight: [${commentedLinesList}]; "
                 style="display:none; overflow-y: hidden;">
                         <c:out value="${model.text}" escapeXml="true" />
             </pre>
         </div>
-
     </div>
 </div>
-
-
-
 <%--
 
     Comments
 
-
 --%>
 <div id="${model.id}_commentsList" style="display:none;">
-
     <c:forEach var="comment" items="${model.comments}" varStatus="loopStatus">
-
         <div id="${model.id}_numSpace_l${comment.id}" class="line">
             <a href="#comment_l${comment.id}" title="<c:out value=" ${comment.id}" />">#</a>
         </div>
-
         <div id="${model.id}_comment_l${comment.id}"
             class="commentBlock ${comment.parentId==null ? 'parentComment' :'subComment'}" commentId="${comment.id}"
             lineNumber="${comment.lineNumber}" parentCommentId="${comment.parentId}">
@@ -140,7 +117,6 @@
                             <kc:prettyTime date="${comment.lastModifiedDt}" locale="${pageContext.response.locale}" />
                         </small>
                     </div>
-
                     <div class="col-auto" style="padding-right: 1em;" >
                         <c:if test="${(not empty currentUser or allowAnonymousCommentsCreate) && comment.parentId==null}">                        
                             <a href="#" class="linkLine pInsertCommentTrigger" title="<fmt:message key=" comments.sub" />"
@@ -171,9 +147,10 @@
         </div>
     </c:forEach>
 </div>
-
+<%--
+    Comment form
+--%>
 <c:url var="url" value='/main/paste/saveComment' />
-
 <div id="${model.id}_commentForm" 
         class="row p-comment" 
         style="display:none;max-width: 60em;margin-left:-10px;">
