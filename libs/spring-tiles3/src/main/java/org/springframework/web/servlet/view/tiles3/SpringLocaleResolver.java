@@ -36,13 +36,13 @@ import org.springframework.web.servlet.support.RequestContextUtils;
  *
  * @author Nicolas Le Bas
  * @since 3.2
- * @see org.apache.tiles.definition.UrlDefinitionsFactory#LOCALE_RESOLVER_IMPL_PROPERTY
+ * see org.apache.tiles.definition.UrlDefinitionsFactory#LOCALE_RESOLVER_IMPL_PROPERTY
  */
 public class SpringLocaleResolver extends DefaultLocaleResolver {
 	@Override
 	public Locale resolveLocale(Request request) {
 		try {
-			HttpServletRequest servletRequest = ServletUtil.getServletRequest(request).getRequest();
+			final HttpServletRequest servletRequest = ServletUtil.getServletRequest(request).getRequest();
 			if (servletRequest != null) {
 				return RequestContextUtils.getLocale(servletRequest);
 			}

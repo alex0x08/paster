@@ -19,8 +19,6 @@
  * under the License.
  */
 package org.apache.tiles.request.render;
-
-
 /**
  * Indicates that something went wrong during the rendering process.
  *
@@ -28,12 +26,11 @@ package org.apache.tiles.request.render;
  */
 public class CannotRenderException extends RenderException {
 
-    /**
+    /*
      * Constructor.
-     */
     public CannotRenderException() {
     }
-
+     */
     /**
      * Constructor.
      *
@@ -43,23 +40,21 @@ public class CannotRenderException extends RenderException {
         super(message);
     }
 
-    /**
+    /*
      * Constructor.
      *
      * @param e The exception to be wrapped.
-     */
     public CannotRenderException(Throwable e) {
         super(e);
     }
-
+     */
     /**
      * Constructor.
      *
      * @param message The detail message.
-     * @param e The exception to be wrapped.
+     * @param e       The exception to be wrapped.
      */
     public CannotRenderException(String message, Throwable e) {
         super(message, e);
     }
-
 }

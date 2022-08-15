@@ -47,7 +47,7 @@ public class CachingTilesContainer extends TilesContainerWrapper implements Muta
     /**
      * The name of the attribute in which storing custom definitions.
      */
-    private String definitionsAttributeName;
+    private final String definitionsAttributeName;
 
     /**
      * Constructor.
@@ -58,12 +58,11 @@ public class CachingTilesContainer extends TilesContainerWrapper implements Muta
         definitionsAttributeName = DEFAULT_DEFINITIONS_ATTRIBUTE_NAME;
     }
 
-    /**
+    /*
      * Constructor.
      * @param originalContainer The original container to wrap.
      * @param definitionsAttributeName The name of the attribute in which
      * storing custom definitions.
-     */
     public CachingTilesContainer(TilesContainer originalContainer, String definitionsAttributeName) {
         super(originalContainer);
         this.definitionsAttributeName = definitionsAttributeName;
@@ -71,6 +70,7 @@ public class CachingTilesContainer extends TilesContainerWrapper implements Muta
             this.definitionsAttributeName = DEFAULT_DEFINITIONS_ATTRIBUTE_NAME;
         }
     }
+     */
 
     /**
      * Returns a definition by name.

@@ -19,9 +19,7 @@
  * under the License.
  */
 package org.apache.tiles.definition.digester;
-
 import org.apache.tiles.TilesException;
-
 /**
  * Indicates that something went wrong during the use of
  * {@link DigesterDefinitionsReader}.
@@ -30,7 +28,6 @@ import org.apache.tiles.TilesException;
  * @since 2.1.0
  */
 public class DigesterDefinitionsReaderException extends TilesException {
-
     /**
      * Constructor.
      *
@@ -38,7 +35,6 @@ public class DigesterDefinitionsReaderException extends TilesException {
      */
     public DigesterDefinitionsReaderException() {
     }
-
     /**
      * Constructor.
      *
@@ -48,7 +44,6 @@ public class DigesterDefinitionsReaderException extends TilesException {
     public DigesterDefinitionsReaderException(String message) {
         super(message);
     }
-
     /**
      * Constructor.
      *
@@ -58,16 +53,14 @@ public class DigesterDefinitionsReaderException extends TilesException {
     public DigesterDefinitionsReaderException(Throwable e) {
         super(e);
     }
-
     /**
      * Constructor.
      *
      * @param message The detail message.
-     * @param e The exception to be wrapped.
+     * @param e       The exception to be wrapped.
      * @since 2.1.0
      */
     public DigesterDefinitionsReaderException(String message, Throwable e) {
         super(message, e);
     }
-
 }

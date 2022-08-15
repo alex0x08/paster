@@ -18,21 +18,19 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.tiles.request.locale;
-
 import org.apache.tiles.request.ApplicationResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
-
 /**
  * An ApplicationResource whose localization is managed by postfixing the file name.
  * The various localizations are file sitting next to each other, with the locale identified in the postfix.
- *
+ * <p>
  * For instance:
  * <pre>
  * /WEB-INF/tiles.xml
@@ -40,24 +38,28 @@ import java.util.Set;
  * /WEB-INF/tiles_it.xml
  * /WEB-INF/tiles_it_IT.xml
  * </pre>
- *
+ * <p>
  * Two PostfixedApplicationResources are equals if they share the same localized path and the same class.
  *
  * @version $Rev$ $Date$
  */
 public abstract class PostfixedApplicationResource implements ApplicationResource {
-
     private static final Logger LOG = LoggerFactory.getLogger(PostfixedApplicationResource.class);
-
-    /** The path without its suffix and its locale postfix. */
+    /**
+     * The path without its suffix and its locale postfix.
+     */
     private String pathPrefix;
-    /** The suffix. */
+    /**
+     * The suffix.
+     */
     private final String suffix;
-    /** The Locale. */
+    /**
+     * The Locale.
+     */
     private final Locale locale;
-
     /**
      * Create a new PostfixedApplicationResource for the specified path.
+     *
      * @param localePath the path including localization.
      */
     protected PostfixedApplicationResource(String localePath) {
@@ -79,10 +81,8 @@ public abstract class PostfixedApplicationResource implements ApplicationResourc
             locale = validateLocale(found);
             if (Locale.ROOT.equals(locale)) {
                 pathPrefix = localePath.substring(0, suffixIndex);
-
                 LOG.warn("No supported matching language for locale \"" + localeString + "\". Using "
                         + getPath() + " as a non-localized resource path. see TILES-571");
-
             } else if (!localeString.equalsIgnoreCase(getPostfix(locale).substring(1))) {
                 LOG.warn("For resource " + localePath
                         + " the closest supported matching locale to \"" + localeString + "\" is \"" + locale
@@ -90,10 +90,10 @@ public abstract class PostfixedApplicationResource implements ApplicationResourc
             }
         }
     }
-
     /**
      * Create a new PostfixedApplicationResource for the specified path.
-     * @param path the path excluding localization.
+     *
+     * @param path   the path excluding localization.
      * @param locale the Locale.
      */
     protected PostfixedApplicationResource(String path, Locale locale) {
@@ -107,27 +107,30 @@ public abstract class PostfixedApplicationResource implements ApplicationResourc
         }
         this.locale = locale;
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public final String getLocalePath() {
         return getLocalePath(locale);
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public final String getPath() {
         return pathPrefix + suffix;
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public final String getLocalePath(Locale newLocale) {
         return pathPrefix + getPostfix(newLocale) + suffix;
     }
-
     /**
      * Get the postfix for that Locale.
+     *
      * @param locale a locale.
      * @return the matching postfix.
      */
@@ -135,7 +138,6 @@ public abstract class PostfixedApplicationResource implements ApplicationResourc
         if (locale == null) {
             return "";
         }
-
         StringBuilder builder = new StringBuilder();
         String language = locale.getLanguage();
         String country = locale.getCountry();
@@ -154,14 +156,16 @@ public abstract class PostfixedApplicationResource implements ApplicationResourc
         }
         return builder.toString();
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public final Locale getLocale() {
         return locale;
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -171,8 +175,9 @@ public abstract class PostfixedApplicationResource implements ApplicationResourc
         result = prime * result + ((suffix == null) ? 0 : suffix.hashCode());
         return result;
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -196,7 +201,6 @@ public abstract class PostfixedApplicationResource implements ApplicationResourc
             return other.suffix == null;
         } else return suffix.equals(other.suffix);
     }
-
     private static Locale localeFrom(String localeString) {
         Locale result;
         int countryIndex = localeString.indexOf('_');
@@ -240,14 +244,11 @@ public abstract class PostfixedApplicationResource implements ApplicationResourc
         return builder.build();
     }
     */
-
     private static final Set<Locale> availableLocales = new HashSet<>(Arrays.asList(Locale.getAvailableLocales()));
-
     private static Locale validateLocale(Locale locale) {
         Locale withoutVariant = locale.getVariant().isEmpty()
                 ? locale
                 : new Locale(locale.getLanguage(), locale.getCountry());
-
         Locale result = locale;
         if (!availableLocales.contains(withoutVariant)) {
             if (!result.getCountry().isEmpty()) {

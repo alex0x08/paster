@@ -18,9 +18,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.tiles.definition.dao;
-
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Locale;
@@ -32,7 +30,6 @@ import org.apache.tiles.definition.NoSuchDefinitionException;
 import org.apache.tiles.request.ApplicationContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 /**
  * <p>
  * A definitions DAO (loading URLs and using Locale as a customization key) that
@@ -47,22 +44,20 @@ import org.slf4j.LoggerFactory;
  */
 public class ResolvingLocaleUrlDefinitionDAO extends
         CachingLocaleUrlDefinitionDAO {
-
     /**
      * The logging object.
      */
     private final Logger log = LoggerFactory.getLogger(ResolvingLocaleUrlDefinitionDAO.class);
-
     public ResolvingLocaleUrlDefinitionDAO(ApplicationContext applicationContext) {
         super(applicationContext);
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected Map<String, Definition> loadParentDefinitions(Locale parentLocale) {
         return loadRawDefinitionsFromResources(parentLocale);
     }
-
     @Override
     protected Map<String, Definition> loadDefinitions(Locale customizationKey) {
         Map<String, Definition> localeDefsMap = super.loadDefinitions(customizationKey);
@@ -73,24 +68,23 @@ public class ResolvingLocaleUrlDefinitionDAO extends
         locale2definitionMap.put(customizationKey, defsMap);
         return defsMap;
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected Definition getDefinitionFromResolver(String name,
-            Locale customizationKey) {
+                                                   Locale customizationKey) {
         Definition retValue = super.getDefinitionFromResolver(name, customizationKey);
         if (retValue != null && retValue.getExtends() != null) {
             Definition parent = getDefinition(retValue.getExtends(), customizationKey);
             retValue.inherit(parent);
         }
-
         return retValue;
     }
-
     /**
      * Resolve locale-specific extended instances.
      *
-     * @param map The definition map containing the definitions to resolve.
+     * @param map    The definition map containing the definitions to resolve.
      * @param locale The locale to use.
      * @throws NoSuchDefinitionException If a parent definition is not found.
      * @since 2.1.0
@@ -104,55 +98,48 @@ public class ResolvingLocaleUrlDefinitionDAO extends
             }  // end loop
         }
     }
-
     /**
      * Resolve locale-specific inheritance. First, resolve parent's inheritance,
      * then set template to the parent's template. Also copy attributes setted
      * in parent, and not set in child If instance doesn't extend anything, do
      * nothing.
      *
-     * @param definition The definition to resolve
-     * @param definitions The definitions to take when obtaining a parent
-     * definition.
-     * @param locale The locale to use.
+     * @param definition                 The definition to resolve
+     * @param definitions                The definitions to take when obtaining a parent
+     *                                   definition.
+     * @param locale                     The locale to use.
      * @param alreadyResolvedDefinitions The set of the definitions that have
-     * been already resolved.
+     *                                   been already resolved.
      * @throws NoSuchDefinitionException If an inheritance can not be solved.
      * @since 2.1.0
      */
     protected void resolveInheritance(Definition definition,
-            Map<String, Definition> definitions, Locale locale,
-            Set<String> alreadyResolvedDefinitions) {
+                                      Map<String, Definition> definitions, Locale locale,
+                                      Set<String> alreadyResolvedDefinitions) {
         // Already done, or not needed ?
         if (!definition.isExtending()
                 || alreadyResolvedDefinitions.contains(definition.getName())) {
             return;
         }
-
         log.debug("Resolve definition for child name='{}' extends='{}.",
                 definition.getName(), definition.getExtends());
-
         // Set as visited to avoid endless recursivity.
         alreadyResolvedDefinitions.add(definition.getName());
-
         // Resolve parent before itself.
         Definition parent = definitions.get(definition.getExtends());
         if (parent == null) { // error
             String msg = "Error while resolving definition inheritance: child '"
-                + definition.getName()
-                + "' can't find its ancestor '"
-                + definition.getExtends()
-                + "'. Please check your description file.";
+                    + definition.getName()
+                    + "' can't find its ancestor '"
+                    + definition.getExtends()
+                    + "'. Please check your description file.";
             // to do : find better exception
             throw new NoSuchDefinitionException(msg);
         }
-
         resolveInheritance(parent, definitions, locale,
                 alreadyResolvedDefinitions);
-
         definition.inherit(parent);
     }
-
     /**
      * Copies the definition map to be passed to a higher level of customization
      * key.
@@ -167,12 +154,10 @@ public class ResolvingLocaleUrlDefinitionDAO extends
             Map<String, Definition> localeDefsMap) {
         Map<String, Definition> retValue = new LinkedHashMap<>(
                 localeDefsMap.size());
-
         for (Map.Entry<String, Definition> entry : localeDefsMap.entrySet()) {
             Definition definition = new Definition(entry.getValue());
             retValue.put(entry.getKey(), definition);
         }
-
         return retValue;
     }
 }

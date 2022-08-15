@@ -19,7 +19,6 @@
  * under the License.
  */
 package org.apache.tiles.request.collection;
-
 import static org.apache.tiles.request.collection.CollectionUtil.*;
 
 import java.util.Collection;
@@ -28,19 +27,16 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.apache.tiles.request.attribute.HasRemovableKeys;
-
 /**
  * Wraps {@link HasRemovableKeys} keys as a set.
  *
  * @version $Rev: 1229087 $ $Date: 2012-01-09 21:35:14 +1100 (Mon, 09 Jan 2012) $
  */
 public class RemovableKeySet extends KeySet {
-
     /**
      * The request.
      */
     private final HasRemovableKeys<?> request;
-
     /**
      * Constructor.
      *
@@ -50,7 +46,6 @@ public class RemovableKeySet extends KeySet {
         super(request);
         this.request = request;
     }
-
     @Override
     public boolean remove(Object o) {
         String skey = key(o);
@@ -61,7 +56,6 @@ public class RemovableKeySet extends KeySet {
         }
         return false;
     }
-
     @SuppressWarnings("unchecked")
     @Override
     public boolean removeAll(Collection<?> c) {
@@ -72,14 +66,13 @@ public class RemovableKeySet extends KeySet {
         }
         return retValue;
     }
-
     @SuppressWarnings("unchecked")
     @Override
     public boolean retainAll(Collection<?> c) {
         Collection<String> realCollection = (Collection<String>) c;
         boolean retValue = false;
         Set<String> keysToRemove = new LinkedHashSet<>();
-        for (Enumeration<String> keys = request.getKeys(); keys.hasMoreElements();) {
+        for (Enumeration<String> keys = request.getKeys(); keys.hasMoreElements(); ) {
             String key = keys.nextElement();
             if (!realCollection.contains(key)) {
                 retValue = true;
@@ -91,5 +84,4 @@ public class RemovableKeySet extends KeySet {
         }
         return retValue;
     }
-
 }

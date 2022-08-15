@@ -18,9 +18,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.tiles.definition.pattern;
-
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -31,7 +29,6 @@ import org.apache.tiles.Definition;
 import org.apache.tiles.Expression;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 /**
  * This resolver allows the use of multiple pattern matching languages. The
  * syntax of definition names must be <code>LANGUAGENAME:expression</code>.<br>
@@ -45,18 +42,15 @@ import org.slf4j.LoggerFactory;
  */
 public class PrefixedPatternDefinitionResolver<T> extends
         AbstractPatternDefinitionResolver<T> {
-
     /**
      * The logging object.
      */
     private final Logger logger = LoggerFactory.getLogger(getClass());
-
     /**
      * Matches languages names to the corresponding
      * {@link DefinitionPatternMatcherFactory}.
      */
     private final Map<String, DefinitionPatternMatcherFactory> language2matcherFactory;
-
     /**
      * Constructor.
      *
@@ -65,21 +59,21 @@ public class PrefixedPatternDefinitionResolver<T> extends
     public PrefixedPatternDefinitionResolver() {
         language2matcherFactory = new HashMap<>();
     }
-
     /**
      * Registers a {@link DefinitionPatternMatcherFactory} connected to a
      * particular language.
      *
      * @param language The name of the language.
-     * @param factory The pattern matcher factory to register.
+     * @param factory  The pattern matcher factory to register.
      * @since 2.2.0
      */
     public void registerDefinitionPatternMatcherFactory(String language,
-            DefinitionPatternMatcherFactory factory) {
+                                                        DefinitionPatternMatcherFactory factory) {
         language2matcherFactory.put(language, factory);
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected Map<String, Definition> addDefinitionsAsPatternMatchers(
             List<DefinitionPatternMatcher> matchers,

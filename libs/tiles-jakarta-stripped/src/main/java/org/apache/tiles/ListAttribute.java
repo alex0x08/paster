@@ -42,7 +42,7 @@ public class ListAttribute extends Attribute {
      * same name of the parent definition before the ones specified here. By
      * default, it is 'false'.
      */
-    private boolean inherit = false;
+    private boolean inherit;
 
     /**
      * Constructor.
@@ -174,6 +174,7 @@ public class ListAttribute extends Attribute {
     /** {@inheritDoc} */
     @Override
     public ListAttribute clone() {
+        //ListAttribute clone = (ListAttribute) super.clone();
         return new ListAttribute(this);
     }
 }

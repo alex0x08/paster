@@ -53,7 +53,7 @@ public class TilesView extends AbstractUrlBasedView {
     @Nullable
     private Renderer renderer;
     private boolean exposeJstlAttributes = true;
-    private boolean alwaysInclude = false;
+    private boolean alwaysInclude;
     @Nullable
     private ApplicationContext applicationContext;
     /**

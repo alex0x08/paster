@@ -19,21 +19,20 @@
  * under the License.
  */
 package org.apache.tiles.request.render;
-
 import java.io.IOException;
 
 import org.apache.tiles.request.Request;
 import org.apache.tiles.request.DispatchRequest;
 import org.apache.tiles.request.RequestWrapper;
-
 /**
  * Renders an attribute that contains a reference to a template.
  *
  * @version $Rev: 1375743 $ $Date: 2012-08-22 06:05:58 +1000 (Wed, 22 Aug 2012) $
  */
 public class DispatchRenderer implements Renderer {
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void render(String path, Request request) throws IOException {
         if (path == null) {
@@ -43,15 +42,14 @@ public class DispatchRenderer implements Renderer {
         if (dispatchRequest == null) {
             throw new CannotRenderException("Cannot dispatch outside of a web environment");
         }
-
         dispatchRequest.dispatch(path);
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public boolean isRenderable(String path, Request request) {
         return path != null && getDispatchRequest(request) != null && path.startsWith("/");
     }
-
     private DispatchRequest getDispatchRequest(Request request) {
         Request result = request;
         while (!(result instanceof DispatchRequest) && result instanceof RequestWrapper) {

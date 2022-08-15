@@ -18,11 +18,8 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.tiles.evaluator;
-
 import org.apache.tiles.Attribute;
-
 /**
  * Creates an attribute evaluator using the language or an attribute.
  *
@@ -30,7 +27,6 @@ import org.apache.tiles.Attribute;
  * @since 2.2.0
  */
 public interface AttributeEvaluatorFactory {
-
     /**
      * Creates and attribute evaluator using an attribute.
      *
@@ -39,7 +35,6 @@ public interface AttributeEvaluatorFactory {
      * @since 2.2.0
      */
     AttributeEvaluator getAttributeEvaluator(Attribute attribute);
-
     /**
      * Creates and attribute evaluator for the given expression language.
      *

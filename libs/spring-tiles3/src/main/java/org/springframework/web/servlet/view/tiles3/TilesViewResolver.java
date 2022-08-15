@@ -69,7 +69,7 @@ public class TilesViewResolver extends UrlBasedViewResolver {
     }
     @Override
     protected TilesView buildView(String viewName) throws Exception {
-        TilesView view = (TilesView) super.buildView(viewName);
+        final TilesView view = (TilesView) super.buildView(viewName);
         if (this.renderer != null) {
             view.setRenderer(this.renderer);
         }

@@ -19,11 +19,9 @@
  * under the License.
  */
 package org.apache.tiles.request.render;
-
 import java.io.IOException;
 
 import org.apache.tiles.request.Request;
-
 /**
  * An object that can render a path, depending on the request passed as a
  * parameter.
@@ -31,21 +29,19 @@ import org.apache.tiles.request.Request;
  * @version $Rev: 1215008 $ $Date: 2011-12-16 11:31:49 +1100 (Fri, 16 Dec 2011) $
  */
 public interface Renderer {
-
     /**
      * Renders a path.
      *
-     * @param path The path to render.
+     * @param path    The path to render.
      * @param request The Tiles request context.
      * @throws IOException If something goes wrong during rendition.
      */
     void render(String path, Request request) throws IOException;
-
     /**
      * Checks if this renderer can render a path. Note that this does not mean
      * it is the <strong>best</strong> renderer available, but checks only its capability.
      *
-     * @param path The path to be rendered.
+     * @param path    The path to be rendered.
      * @param request The request context.
      * @return <code>true</code> if this renderer can render the attribute.
      */

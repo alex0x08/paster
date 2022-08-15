@@ -19,11 +19,9 @@
  * under the License.
  */
 package org.apache.tiles.evaluator;
-
 import org.apache.tiles.Attribute;
 import org.apache.tiles.Expression;
 import org.apache.tiles.request.Request;
-
 /**
  * Abstract class to link a correct evaluation of an attribute, by evaluating
  * {@link Attribute#getValue()} and then {@link Attribute#getExpressionObject()}.
@@ -32,15 +30,14 @@ import org.apache.tiles.request.Request;
  * @since 2.1.2
  */
 public abstract class AbstractAttributeEvaluator implements AttributeEvaluator {
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public Object evaluate(Attribute attribute, Request request) {
         if (attribute == null) {
             throw new IllegalArgumentException("The attribute cannot be null");
         }
-
         Object retValue = attribute.getValue();
-
         if (retValue == null) {
             Expression expression = attribute.getExpressionObject();
             if (expression != null) {
@@ -48,7 +45,6 @@ public abstract class AbstractAttributeEvaluator implements AttributeEvaluator {
                         .getExpression(), request);
             }
         }
-
         return retValue;
     }
 }

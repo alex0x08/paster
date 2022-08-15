@@ -18,12 +18,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.tiles.definition;
-
 import org.apache.tiles.Definition;
 import org.apache.tiles.request.Request;
-
 /**
  * Interface for creating a {@link Definition}s and managing their contents.
  * <p/>
@@ -37,20 +34,17 @@ import org.apache.tiles.request.Request;
  * @version $Rev: 833737 $ $Date: 2009-11-08 06:17:09 +1100 (Sun, 08 Nov 2009) $
  */
 public interface DefinitionsFactory {
-
     /**
      * Property name that specifies the implementation of the DefinitionsReader.
      */
     String READER_IMPL_PROPERTY =
-        "org.apache.tiles.definition.DefinitionsReader";
-
+            "org.apache.tiles.definition.DefinitionsReader";
     /**
      * Property name that specifies the implementation of
      * {@link org.apache.tiles.locale.LocaleResolver}.
      */
     String LOCALE_RESOLVER_IMPL_PROPERTY =
-        "org.apache.tiles.locale.LocaleResolver";
-
+            "org.apache.tiles.locale.LocaleResolver";
     /**
      * Constant representing the configuration parameter
      * used to define the tiles definition resources.
@@ -58,14 +52,12 @@ public interface DefinitionsFactory {
      * @since 2.1.0
      */
     String DEFINITIONS_CONFIG = "org.apache.tiles.definition.DefinitionsFactory.DEFINITIONS_CONFIG";
-
     /**
      * Constant representing the configuration parameter used to define the
      * definition DAO to use.
      */
     String DEFINITION_DAO_INIT_PARAM =
-        "org.apache.tiles.definition.DefinitionsFactory.DefinitionDAO";
-
+            "org.apache.tiles.definition.DefinitionsFactory.DefinitionDAO";
     /**
      * Returns a Definition object that matches the given name and
      * Tiles context.
@@ -73,7 +65,7 @@ public interface DefinitionsFactory {
      * @param name         The name of the Definition to return.
      * @param tilesContext The Tiles context to use to resolve the definition.
      * @return the Definition matching the given name or null if none
-     *         is found.
+     * is found.
      */
     Definition getDefinition(String name, Request tilesContext);
 }

@@ -19,17 +19,13 @@
  * under the License.
  */
 package org.apache.tiles.request;
-
 import java.io.IOException;
-
-
 /**
  * Encapsulation of request information.
  *
  * @version $Rev$ $Date$
  */
 public interface DispatchRequest extends Request {
-
     /**
      * Dispatches the request to a specified path.
      *
@@ -37,7 +33,6 @@ public interface DispatchRequest extends Request {
      * @throws IOException If something goes wrong during dispatching.
      */
     void dispatch(String path) throws IOException;
-
     /**
      * Includes the response from the specified URL in the current response output.
      *
@@ -45,12 +40,11 @@ public interface DispatchRequest extends Request {
      * @throws IOException If something goes wrong during inclusion.
      */
     void include(String path) throws IOException;
-
     /**
      * Sets the content type when rendering the result.
      *
      * @param contentType The content type. It should follow the specifications
-     * from W3C about content types.
+     *                    from W3C about content types.
      */
     void setContentType(String contentType);
 }

@@ -19,19 +19,17 @@
  * under the License.
  */
 package org.apache.tiles.request.attribute;
-
 /**
  * Allows to get and set attributes.
  *
- * @version $Rev: 1215004 $ $Date: 2011-12-16 11:29:25 +1100 (Fri, 16 Dec 2011) $
  * @param <V> The type of the value of the attribute.
+ * @version $Rev: 1215004 $ $Date: 2011-12-16 11:29:25 +1100 (Fri, 16 Dec 2011) $
  */
 public interface Addable<V> {
-
     /**
      * Sets a value for the given key.
      *
-     * @param key The key of the attribute.
+     * @param key   The key of the attribute.
      * @param value The value of the attribute.
      */
     void setValue(String key, V value);

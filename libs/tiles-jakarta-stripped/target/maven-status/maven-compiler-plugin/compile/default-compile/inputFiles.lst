@@ -17,7 +17,6 @@
 /opt/work/paster/libs/tiles-jakarta-stripped/src/main/java/org/apache/tiles/el/ELContextImpl.java
 /opt/work/paster/libs/tiles-jakarta-stripped/src/main/java/org/apache/tiles/request/render/BasicRendererFactory.java
 /opt/work/paster/libs/tiles-jakarta-stripped/src/main/java/org/apache/tiles/request/servlet/package-info.java
-/opt/work/paster/libs/tiles-jakarta-stripped/src/main/java/org/apache/tiles/request/servlet/ExternalWriterHttpServletResponse.java
 /opt/work/paster/libs/tiles-jakarta-stripped/src/main/java/org/apache/tiles/web/startup/AbstractTilesInitializerServlet.java
 /opt/work/paster/libs/tiles-jakarta-stripped/src/main/java/org/apache/tiles/definition/package-info.java
 /opt/work/paster/libs/tiles-jakarta-stripped/src/main/java/org/apache/tiles/template/GetAsStringModel.java
@@ -30,7 +29,6 @@
 /opt/work/paster/libs/tiles-jakarta-stripped/src/main/java/org/apache/tiles/autotag/core/runtime/util/NullWriter.java
 /opt/work/paster/libs/tiles-jakarta-stripped/src/main/java/org/apache/tiles/beans/package-info.java
 /opt/work/paster/libs/tiles-jakarta-stripped/src/main/java/org/apache/tiles/request/render/DispatchRenderer.java
-/opt/work/paster/libs/tiles-jakarta-stripped/src/main/java/org/apache/tiles/awareness/TilesContainerAware.java
 /opt/work/paster/libs/tiles-jakarta-stripped/src/main/java/org/apache/tiles/el/JspExpressionFactoryFactory.java
 /opt/work/paster/libs/tiles-jakarta-stripped/src/main/java/org/apache/tiles/request/jsp/autotag/package-info.java
 /opt/work/paster/libs/tiles-jakarta-stripped/src/main/java/org/apache/tiles/Attribute.java
@@ -65,7 +63,6 @@
 /opt/work/paster/libs/tiles-jakarta-stripped/src/main/java/org/apache/tiles/request/render/PublisherRenderer.java
 /opt/work/paster/libs/tiles-jakarta-stripped/src/main/java/org/apache/tiles/Definition.java
 /opt/work/paster/libs/tiles-jakarta-stripped/src/main/java/org/apache/tiles/request/locale/PostfixedApplicationResource.java
-/opt/work/paster/libs/tiles-jakarta-stripped/src/main/java/org/apache/tiles/web/util/TilesDispatchServlet.java
 /opt/work/paster/libs/tiles-jakarta-stripped/src/main/java/org/apache/tiles/evaluator/AttributeEvaluatorFactoryAware.java
 /opt/work/paster/libs/tiles-jakarta-stripped/src/main/java/org/apache/tiles/definition/pattern/regexp/RegexpDefinitionPatternMatcher.java
 /opt/work/paster/libs/tiles-jakarta-stripped/src/main/java/org/apache/tiles/definition/pattern/package-info.java
@@ -80,7 +77,6 @@
 /opt/work/paster/libs/tiles-jakarta-stripped/src/main/java/org/apache/tiles/web/startup/package-info.java
 /opt/work/paster/libs/tiles-jakarta-stripped/src/main/java/org/apache/tiles/evaluator/impl/DirectAttributeEvaluator.java
 /opt/work/paster/libs/tiles-jakarta-stripped/src/main/java/org/apache/tiles/template/NoSuchAttributeException.java
-/opt/work/paster/libs/tiles-jakarta-stripped/src/main/java/org/apache/tiles/web/util/TilesDecorationFilter.java
 /opt/work/paster/libs/tiles-jakarta-stripped/src/main/java/org/apache/tiles/el/ExpressionFactoryFactory.java
 /opt/work/paster/libs/tiles-jakarta-stripped/src/main/java/org/apache/tiles/definition/LocaleDefinitionsFactory.java
 /opt/work/paster/libs/tiles-jakarta-stripped/src/main/java/org/apache/tiles/preparer/factory/NoSuchPreparerException.java
@@ -89,7 +85,6 @@
 /opt/work/paster/libs/tiles-jakarta-stripped/src/main/java/org/apache/tiles/template/AddListAttributeModel.java
 /opt/work/paster/libs/tiles-jakarta-stripped/src/main/java/org/apache/tiles/request/collection/CollectionUtil.java
 /opt/work/paster/libs/tiles-jakarta-stripped/src/main/java/org/apache/tiles/definition/pattern/regexp/RegexpDefinitionPatternMatcherFactory.java
-/opt/work/paster/libs/tiles-jakarta-stripped/src/main/java/org/apache/tiles/request/servlet/wildcard/WildcardServletApplicationContext.java
 /opt/work/paster/libs/tiles-jakarta-stripped/src/main/java/org/apache/tiles/beans/MenuItem.java
 /opt/work/paster/libs/tiles-jakarta-stripped/src/main/java/org/apache/tiles/request/attribute/HasKeys.java
 /opt/work/paster/libs/tiles-jakarta-stripped/src/main/java/org/apache/tiles/request/collection/KeySet.java
@@ -113,7 +108,6 @@
 /opt/work/paster/libs/tiles-jakarta-stripped/src/main/java/org/apache/tiles/request/jsp/extractor/ScopeExtractor.java
 /opt/work/paster/libs/tiles-jakarta-stripped/src/main/java/org/apache/tiles/request/servlet/extractor/SessionScopeExtractor.java
 /opt/work/paster/libs/tiles-jakarta-stripped/src/main/java/org/apache/tiles/locale/impl/DefaultLocaleResolver.java
-/opt/work/paster/libs/tiles-jakarta-stripped/src/main/java/org/apache/tiles/evaluator/EvaluationException.java
 /opt/work/paster/libs/tiles-jakarta-stripped/src/main/java/org/apache/tiles/request/jsp/JspRequest.java
 /opt/work/paster/libs/tiles-jakarta-stripped/src/main/java/org/apache/tiles/package-info.java
 /opt/work/paster/libs/tiles-jakarta-stripped/src/main/java/org/apache/tiles/request/jsp/extractor/SessionScopeExtractor.java
@@ -124,7 +118,6 @@
 /opt/work/paster/libs/tiles-jakarta-stripped/src/main/java/org/apache/tiles/request/servlet/extractor/HeaderExtractor.java
 /opt/work/paster/libs/tiles-jakarta-stripped/src/main/java/org/apache/tiles/el/TilesContextBeanELResolver.java
 /opt/work/paster/libs/tiles-jakarta-stripped/src/main/java/org/apache/tiles/request/jsp/package-info.java
-/opt/work/paster/libs/tiles-jakarta-stripped/src/main/java/org/apache/tiles/request/DefaultRequestWrapper.java
 /opt/work/paster/libs/tiles-jakarta-stripped/src/main/java/org/apache/tiles/request/jsp/extractor/package-info.java
 /opt/work/paster/libs/tiles-jakarta-stripped/src/main/java/org/apache/tiles/NoSuchContainerException.java
 /opt/work/paster/libs/tiles-jakarta-stripped/src/main/java/org/apache/tiles/impl/InvalidTemplateException.java
@@ -135,7 +128,6 @@
 /opt/work/paster/libs/tiles-jakarta-stripped/src/main/java/org/apache/tiles/definition/dao/CachingLocaleUrlDefinitionDAO.java
 /opt/work/paster/libs/tiles-jakarta-stripped/src/main/java/org/apache/tiles/definition/NoSuchDefinitionException.java
 /opt/work/paster/libs/tiles-jakarta-stripped/src/main/java/org/apache/tiles/mgmt/package-info.java
-/opt/work/paster/libs/tiles-jakarta-stripped/src/main/java/org/apache/tiles/request/reflect/CannotAccessMethodException.java
 /opt/work/paster/libs/tiles-jakarta-stripped/src/main/java/org/apache/tiles/request/render/ChainedDelegateRenderer.java
 /opt/work/paster/libs/tiles-jakarta-stripped/src/main/java/org/apache/tiles/request/servlet/wildcard/package-info.java
 /opt/work/paster/libs/tiles-jakarta-stripped/src/main/java/org/apache/tiles/jsp/taglib/PutAttributeTag.java
@@ -153,7 +145,6 @@
 /opt/work/paster/libs/tiles-jakarta-stripped/src/main/java/org/apache/tiles/request/render/package-info.java
 /opt/work/paster/libs/tiles-jakarta-stripped/src/main/java/org/apache/tiles/startup/DefaultTilesInitializer.java
 /opt/work/paster/libs/tiles-jakarta-stripped/src/main/java/org/apache/tiles/evaluator/AttributeEvaluator.java
-/opt/work/paster/libs/tiles-jakarta-stripped/src/main/java/org/apache/tiles/web/util/AttributeContextMutator.java
 /opt/work/paster/libs/tiles-jakarta-stripped/src/main/java/org/apache/tiles/request/locale/LocaleUtil.java
 /opt/work/paster/libs/tiles-jakarta-stripped/src/main/java/org/apache/tiles/web/startup/simple/SimpleTilesListener.java
 /opt/work/paster/libs/tiles-jakarta-stripped/src/main/java/org/apache/tiles/web/util/ServletContextAdapter.java
@@ -186,7 +177,6 @@
 /opt/work/paster/libs/tiles-jakarta-stripped/src/main/java/org/apache/tiles/template/package-info.java
 /opt/work/paster/libs/tiles-jakarta-stripped/src/main/java/org/apache/tiles/mgmt/MutableTilesContainer.java
 /opt/work/paster/libs/tiles-jakarta-stripped/src/main/java/org/apache/tiles/factory/TilesContainerFactoryException.java
-/opt/work/paster/libs/tiles-jakarta-stripped/src/main/java/org/apache/tiles/context/TilesRequestContextHolder.java
 /opt/work/paster/libs/tiles-jakarta-stripped/src/main/java/org/apache/tiles/request/servlet/NotAServletEnvironmentException.java
 /opt/work/paster/libs/tiles-jakarta-stripped/src/main/java/org/apache/tiles/request/attribute/Addable.java
 /opt/work/paster/libs/tiles-jakarta-stripped/src/main/java/org/apache/tiles/definition/UnresolvingLocaleDefinitionsFactory.java
@@ -201,10 +191,8 @@
 /opt/work/paster/libs/tiles-jakarta-stripped/src/main/java/org/apache/tiles/request/render/StringRenderer.java
 /opt/work/paster/libs/tiles-jakarta-stripped/src/main/java/org/apache/tiles/preparer/PreparerException.java
 /opt/work/paster/libs/tiles-jakarta-stripped/src/main/java/org/apache/tiles/autotag/core/runtime/annotation/package-info.java
-/opt/work/paster/libs/tiles-jakarta-stripped/src/main/java/org/apache/tiles/request/NotAvailableFeatureException.java
 /opt/work/paster/libs/tiles-jakarta-stripped/src/main/java/org/apache/tiles/jsp/taglib/InsertDefinitionTag.java
 /opt/work/paster/libs/tiles-jakarta-stripped/src/main/java/org/apache/tiles/jsp/taglib/package-info.java
-/opt/work/paster/libs/tiles-jakarta-stripped/src/main/java/org/apache/tiles/request/ApplicationContextWrapper.java
 /opt/work/paster/libs/tiles-jakarta-stripped/src/main/java/org/apache/tiles/context/package-info.java
 /opt/work/paster/libs/tiles-jakarta-stripped/src/main/java/org/apache/tiles/request/render/CannotRenderException.java
 /opt/work/paster/libs/tiles-jakarta-stripped/src/main/java/org/apache/tiles/definition/digester/DigesterDefinitionsReaderException.java

@@ -19,7 +19,6 @@
  * under the License.
  */
 package org.apache.tiles.request.servlet;
-
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
@@ -34,7 +33,6 @@ import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
 import org.apache.tiles.request.AbstractClientRequest;
 import org.apache.tiles.request.ApplicationContext;
 import org.apache.tiles.request.attribute.Addable;
@@ -45,86 +43,69 @@ import org.apache.tiles.request.servlet.extractor.ParameterExtractor;
 import org.apache.tiles.request.servlet.extractor.RequestScopeExtractor;
 import org.apache.tiles.request.servlet.extractor.HeaderExtractor;
 import org.apache.tiles.request.servlet.extractor.SessionScopeExtractor;
-
 /**
  * Servlet-based implementation of the TilesApplicationContext interface.
  *
  * @version $Rev: 1375743 $ $Date: 2012-08-22 06:05:58 +1000 (Wed, 22 Aug 2012) $
  */
 public class ServletRequest extends AbstractClientRequest {
-
     /**
      * The native available scopes: request, session and application.
      */
     private static final List<String> SCOPES
             = List.of(REQUEST_SCOPE, "session", APPLICATION_SCOPE);
-
     /**
      * The request object to use.
      */
     private final HttpServletRequest request;
-
     /**
      * The response object to use.
      */
     private final HttpServletResponse response;
-
     /**
      * The response output stream, lazily initialized.
      */
     private OutputStream outputStream;
-
     /**
      * The response writer, lazily initialized.
      */
     private PrintWriter writer;
-
     /**
      * <p>The lazily instantiated <code>Map</code> of header name-value
      * combinations (immutable).</p>
      */
     private Map<String, String> header = null;
-
     /**
      * <p>The lazily instantiated <code>Map</code> of header name-value
      * combinations (write-only).</p>
      */
     private Addable<String> responseHeaders = null;
-
-
     /**
      * <p>The lazily instantitated <code>Map</code> of header name-values
      * combinations (immutable).</p>
      */
     private Map<String, String[]> headerValues = null;
-
-
     /**
      * <p>The lazily instantiated <code>Map</code> of request
      * parameter name-value.</p>
      */
     private Map<String, String> param = null;
-
-
     /**
      * <p>The lazily instantiated <code>Map</code> of request scope
      * attributes.</p>
      */
     private Map<String, Object> requestScope = null;
-
     /**
      * <p>The lazily instantiated <code>Map</code> of session scope
      * attributes.</p>
      */
     private Map<String, Object> sessionScope = null;
-
-
     /**
      * Creates a new instance of ServletTilesRequestContext.
      *
      * @param applicationContext The application context.
-     * @param request The request object.
-     * @param response The response object.
+     * @param request            The request object.
+     * @param response           The response object.
      */
     public ServletRequest(
             ApplicationContext applicationContext,
@@ -133,93 +114,84 @@ public class ServletRequest extends AbstractClientRequest {
         this.request = request;
         this.response = response;
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public Map<String, String> getHeader() {
-
         if ((header == null) && (request != null)) {
             header = new ReadOnlyEnumerationMap<>(new HeaderExtractor(request, null));
         }
         return (header);
-
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public Addable<String> getResponseHeaders() {
-
         if ((responseHeaders == null) && (response != null)) {
             responseHeaders = new HeaderExtractor(null, response);
         }
         return (responseHeaders);
-
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public Map<String, String[]> getHeaderValues() {
-
         if ((headerValues == null) && (request != null)) {
             headerValues = new HeaderValuesMap(new HeaderExtractor(request, response));
         }
         return (headerValues);
-
     }
-
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public Map<String, String> getParam() {
-
         if ((param == null) && (request != null)) {
             param = new ReadOnlyEnumerationMap<>(new ParameterExtractor(request));
         }
         return (param);
-
     }
-
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public Map<String, String[]> getParamValues() {
         return request.getParameterMap();
     }
-
     @Override
     public Map<String, Object> getContext(String scope) {
-        if(REQUEST_SCOPE.equals(scope)){
+        if (REQUEST_SCOPE.equals(scope)) {
             return getRequestScope();
-        }else if("session".equals(scope)){
+        } else if ("session".equals(scope)) {
             return getSessionScope();
-        }else if(APPLICATION_SCOPE.equals(scope)){
+        } else if (APPLICATION_SCOPE.equals(scope)) {
             return getApplicationScope();
         }
         throw new IllegalArgumentException(scope + " does not exist. Call getAvailableScopes() first to check.");
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public Map<String, Object> getRequestScope() {
-
         if ((requestScope == null) && (request != null)) {
             requestScope = new ScopeMap(new RequestScopeExtractor(request));
         }
         return (requestScope);
-
     }
-
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public Map<String, Object> getSessionScope() {
-
         if ((sessionScope == null) && (request != null)) {
             sessionScope = new ScopeMap(new SessionScopeExtractor(request));
         }
         return (sessionScope);
-
     }
-
     @Override
     public List<String> getAvailableScopes() {
         return SCOPES;
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public void doForward(String path) throws IOException {
         if (response.isCommitted()) {
             doInclude(path);
@@ -227,17 +199,15 @@ public class ServletRequest extends AbstractClientRequest {
             forward(path);
         }
     }
-
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public void doInclude(String path) throws IOException {
         RequestDispatcher rd = request.getRequestDispatcher(path);
-
         if (rd == null) {
             throw new IOException("No request dispatcher returned for path '"
                     + path + "'");
         }
-
         try {
             rd.include(request, response);
         } catch (ServletException ex) {
@@ -245,7 +215,6 @@ public class ServletRequest extends AbstractClientRequest {
                     + path + "'.");
         }
     }
-
     /**
      * Forwards to a path.
      *
@@ -254,12 +223,10 @@ public class ServletRequest extends AbstractClientRequest {
      */
     private void forward(String path) throws IOException {
         RequestDispatcher rd = request.getRequestDispatcher(path);
-
         if (rd == null) {
             throw new IOException("No request dispatcher returned for path '"
                     + path + "'");
         }
-
         try {
             rd.forward(request, response);
         } catch (ServletException ex) {
@@ -267,52 +234,57 @@ public class ServletRequest extends AbstractClientRequest {
                     + path + "'.");
         }
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public OutputStream getOutputStream() throws IOException {
         if (outputStream == null) {
             outputStream = response.getOutputStream();
         }
         return outputStream;
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public Writer getWriter() throws IOException {
         return getPrintWriter();
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public PrintWriter getPrintWriter() throws IOException {
         if (writer == null) {
             writer = response.getWriter();
         }
         return writer;
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public boolean isResponseCommitted() {
         return response.isCommitted();
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public void setContentType(String contentType) {
         response.setContentType(contentType);
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public Locale getRequestLocale() {
         return request.getLocale();
     }
-
     public HttpServletRequest getRequest() {
         return request;
     }
-
     public HttpServletResponse getResponse() {
         return response;
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public boolean isUserInRole(String role) {
         return request.isUserInRole(role);
     }

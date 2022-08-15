@@ -19,31 +19,26 @@
  * under the License.
  */
 package org.apache.tiles.request;
-
 /**
  * Base request.
  *
  * @version $Rev: 1375743 $ $Date: 2010-11-14 21:32:50 +0100 (dom, 14 nov 2010)$
  */
 public abstract class AbstractRequest implements DispatchRequest {
-
     /**
      * Name of the attribute used to store the force-include option.
-     *
      */
     public static final String FORCE_INCLUDE_ATTRIBUTE_NAME = AbstractRequest.class
             .getName() + ".FORCE_INCLUDE";
-
     /**
      * Sets the flag to force inclusion at next dispatch.
      *
      * @param forceInclude <code>true</code> means that, at the next dispatch, response
-     * will be included and never forwarded.
+     *                     will be included and never forwarded.
      */
     protected void setForceInclude(boolean forceInclude) {
         getContext(REQUEST_SCOPE).put(FORCE_INCLUDE_ATTRIBUTE_NAME, forceInclude);
     }
-
     /**
      * Checks if, when dispatching to a resource, the result must be included
      * and not forwarded to.

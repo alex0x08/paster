@@ -18,9 +18,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.tiles.request.locale;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -40,13 +38,11 @@ import org.slf4j.LoggerFactory;
 
 import static java.lang.System.getProperty;
 import static java.util.Collections.unmodifiableSet;
-
 /**
  * A {@link PostfixedApplicationResource} that can be accessed through a URL.
  *
  * @version $Rev$ $Date$
  */
-
 public class URLApplicationResource extends PostfixedApplicationResource {
     /**
      * System parameter to specify additional remote protocols. If a url has a remote protocol, then any
@@ -56,11 +52,9 @@ public class URLApplicationResource extends PostfixedApplicationResource {
     static final String REMOTE_PROTOCOLS_PROPERTY = "tiles.remoteProtocols";
     private static final Logger LOG = LoggerFactory.getLogger(URLApplicationResource.class);
     private static final Set<String> REMOTE_PROTOCOLS;
-
     static {
         REMOTE_PROTOCOLS = initRemoteProtocols();
     }
-
     /**
      * Creates an unmodifiable set of <em>remote</em> protocols which are used in {@link URL} objects, see {@link URL#getProtocol()}.
      * A url with a remote protocol establishes a network connection when its {@link URL#openConnection()} is being called.
@@ -95,7 +89,6 @@ public class URLApplicationResource extends PostfixedApplicationResource {
         remoteProtocols.add("https");
         remoteProtocols.add("mailto");
         remoteProtocols.add("netdoc");
-
         String protocolsProp = getProperty(REMOTE_PROTOCOLS_PROPERTY);
         if (protocolsProp != null) {
             for (String protocol : protocolsProp.split(";")) {
@@ -104,23 +97,26 @@ public class URLApplicationResource extends PostfixedApplicationResource {
         }
         return unmodifiableSet(remoteProtocols);
     }
-
     private static boolean isLocal(URL url) {
         return !REMOTE_PROTOCOLS.contains(url.getProtocol());
     }
-
-    /** the URL where the contents can be found. */
+    /**
+     * the URL where the contents can be found.
+     */
     private final URL url;
-    /** if the URL matches a file, this is the file. */
+    /**
+     * if the URL matches a file, this is the file.
+     */
     private File file;
-    /** if the URL points to a local resource */
+    /**
+     * if the URL points to a local resource
+     */
     private final boolean local;
-
     /**
      * Creates a URLApplicationResource for the specified path that can be accessed through the specified URL.
      *
      * @param localePath the path including localization.
-     * @param url the URL where the contents can be found.
+     * @param url        the URL where the contents can be found.
      */
     public URLApplicationResource(String localePath, URL url) {
         super(localePath);
@@ -130,13 +126,12 @@ public class URLApplicationResource extends PostfixedApplicationResource {
         }
         local = isLocal(url);
     }
-
     /**
      * Creates a URLApplicationResource for the specified path that can be accessed through the specified URL.
      *
-     * @param path the path excluding localization.
+     * @param path   the path excluding localization.
      * @param locale the Locale.
-     * @param url the URL where the contents can be found.
+     * @param url    the URL where the contents can be found.
      */
     public URLApplicationResource(String path, Locale locale, URL url) {
         super(path, locale);
@@ -146,7 +141,6 @@ public class URLApplicationResource extends PostfixedApplicationResource {
         }
         local = isLocal(url);
     }
-
     private URLConnection openConnection() throws IOException {
         try {
             return url.openConnection();
@@ -162,7 +156,6 @@ public class URLApplicationResource extends PostfixedApplicationResource {
             throw e;
         }
     }
-
     private static File getFile(URL url) {
         try {
             return new File(new URI(url.toExternalForm()).getSchemeSpecificPart());
@@ -171,8 +164,9 @@ public class URLApplicationResource extends PostfixedApplicationResource {
             return null;
         }
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public InputStream getInputStream() throws IOException {
         if (file != null) {
@@ -181,8 +175,9 @@ public class URLApplicationResource extends PostfixedApplicationResource {
             return openConnection().getInputStream();
         }
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public long getLastModified() throws IOException {
         if (file != null) {
@@ -196,18 +191,19 @@ public class URLApplicationResource extends PostfixedApplicationResource {
             }
         }
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
         return "Resource " + getLocalePath() + " at " + url.toString();
     }
-
+    /*
     protected URL getURL(){
         return url;
     }
 
     protected File getFile(){
         return file;
-    }
+    }*/
 }

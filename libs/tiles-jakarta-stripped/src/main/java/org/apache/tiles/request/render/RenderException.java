@@ -19,22 +19,18 @@
  * under the License.
  */
 package org.apache.tiles.request.render;
-
 import org.apache.tiles.request.RequestException;
-
 /**
  * Thrown when rendering fails.
  *
  * @version $Rev: 1064782 $ $Date: 2011-01-29 04:08:52 +1100 (Sat, 29 Jan 2011) $
  */
 public class RenderException extends RequestException {
-
     /**
      * Constructor.
      */
     public RenderException() {
     }
-
     /**
      * Constructor.
      *
@@ -43,7 +39,6 @@ public class RenderException extends RequestException {
     public RenderException(String message) {
         super(message);
     }
-
     /**
      * Constructor.
      *
@@ -52,12 +47,11 @@ public class RenderException extends RequestException {
     public RenderException(Throwable cause) {
         super(cause);
     }
-
     /**
      * Constructor.
      *
      * @param message The message of the exception.
-     * @param cause The cause.
+     * @param cause   The cause.
      */
     public RenderException(String message, Throwable cause) {
         super(message, cause);

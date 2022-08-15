@@ -19,12 +19,9 @@
  * under the License.
  */
 package org.apache.tiles.request;
-
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-
-
 /**
  * Base class for "client" requests, i.e. requests that come unchanged by the
  * container, such as ServletRequest and PortletRequest.
@@ -32,12 +29,10 @@ import java.util.Map;
  * @version $Rev: 1332134 $ $Date: 2012-04-30 19:23:19 +1000 (Mon, 30 Apr 2012) $
  */
 public abstract class AbstractClientRequest extends AbstractRequest {
-
     /**
      * The application context.
      */
     private final ApplicationContext applicationContext;
-
     /**
      * Constructor.
      *
@@ -46,8 +41,6 @@ public abstract class AbstractClientRequest extends AbstractRequest {
     public AbstractClientRequest(ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
     }
-
-
     @Override
     public void dispatch(String path) throws IOException {
         if (isForceInclude()) {
@@ -57,18 +50,15 @@ public abstract class AbstractClientRequest extends AbstractRequest {
             doForward(path);
         }
     }
-
     @Override
     public void include(String path) throws IOException {
         setForceInclude(true);
         doInclude(path);
     }
-
     @Override
     public ApplicationContext getApplicationContext() {
         return applicationContext;
     }
-
     /**
      * Returns the application scope.
      *
@@ -77,7 +67,6 @@ public abstract class AbstractClientRequest extends AbstractRequest {
     public Map<String, Object> getApplicationScope() {
         return applicationContext.getApplicationScope();
     }
-
     /**
      * Forwards to a path.
      *
@@ -85,7 +74,6 @@ public abstract class AbstractClientRequest extends AbstractRequest {
      * @throws IOException If something goes wrong when forwarding.
      */
     protected abstract void doForward(String path) throws IOException;
-
     /**
      * Includes the result of a path.
      *
@@ -93,5 +81,4 @@ public abstract class AbstractClientRequest extends AbstractRequest {
      * @throws IOException If something goes wrong when forwarding.
      */
     protected abstract void doInclude(String path) throws IOException;
-
 }

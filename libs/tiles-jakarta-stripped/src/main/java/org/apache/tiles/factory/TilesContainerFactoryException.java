@@ -19,25 +19,22 @@
  * under the License.
  */
 package org.apache.tiles.factory;
-
 import org.apache.tiles.TilesException;
-
 /**
- * Indicates that something went wrong in {@link TilesContainerFactory} use.
+ * Indicates that something went wrong in {link TilesContainerFactory} use.
  *
  * @version $Rev: 943645 $ $Date: 2010-05-13 05:33:19 +1000 (Thu, 13 May 2010) $
  * @since 2.1.0
  */
 public class TilesContainerFactoryException extends TilesException {
 
-    /**
+    /*
      * Constructor.
      *
      * @since 2.1.0
-     */
     public TilesContainerFactoryException() {
     }
-
+     */
     /**
      * Constructor.
      *
@@ -48,25 +45,24 @@ public class TilesContainerFactoryException extends TilesException {
         super(message);
     }
 
-    /**
+    /*
      * Constructor.
      *
      * @param e The exception to be wrapped.
      * @since 2.1.0
-     */
     public TilesContainerFactoryException(Throwable e) {
         super(e);
     }
+     */
 
-    /**
+    /*
      * Constructor.
      *
      * @param message The detail message.
      * @param e The exception to be wrapped.
      * @since 2.1.0
-     */
     public TilesContainerFactoryException(String message, Throwable e) {
         super(message, e);
     }
-
+     */
 }

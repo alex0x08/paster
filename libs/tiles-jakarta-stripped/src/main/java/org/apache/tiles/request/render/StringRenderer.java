@@ -19,19 +19,18 @@
  * under the License.
  */
 package org.apache.tiles.request.render;
-
 import java.io.IOException;
 
 import org.apache.tiles.request.Request;
-
 /**
  * Renders an attribute that contains a string.
  *
  * @version $Rev: 1215008 $ $Date: 2011-12-16 11:31:49 +1100 (Fri, 16 Dec 2011) $
  */
 public class StringRenderer implements Renderer {
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void render(String value, Request request) throws IOException {
         if (value == null) {
@@ -39,8 +38,9 @@ public class StringRenderer implements Renderer {
         }
         request.getWriter().write(value);
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public boolean isRenderable(String value, Request request) {
         return value != null;
     }

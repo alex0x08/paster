@@ -18,15 +18,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.tiles.definition.pattern.wildcard;
-
 import org.apache.tiles.Definition;
 import org.apache.tiles.definition.pattern.DefinitionPatternMatcher;
 import org.apache.tiles.definition.pattern.DefinitionPatternMatcherFactory;
 import org.apache.tiles.definition.pattern.PatternRecognizer;
 import org.apache.tiles.util.WildcardHelper;
-
 /**
  * Creates instances of {@link WildcardDefinitionPatternMatcher}.
  *
@@ -35,20 +32,21 @@ import org.apache.tiles.util.WildcardHelper;
  */
 public class WildcardDefinitionPatternMatcherFactory implements
         DefinitionPatternMatcherFactory, PatternRecognizer {
-
     /**
      * Allows to parse wildcard expressions and to recognize substitution
      * variables.
      */
-    private WildcardHelper wildcardHelper = new WildcardHelper();
-
-    /** {@inheritDoc} */
+    private final WildcardHelper wildcardHelper = new WildcardHelper();
+    /**
+     * {@inheritDoc}
+     */
     public DefinitionPatternMatcher createDefinitionPatternMatcher(
             String pattern, Definition definition) {
         return new WildcardDefinitionPatternMatcher(pattern, definition, wildcardHelper);
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public boolean isPatternRecognized(String candidatePattern) {
         return candidatePattern.indexOf('*') >= 0;
     }

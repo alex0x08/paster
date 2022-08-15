@@ -18,16 +18,13 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.tiles.definition;
-
 import java.util.Locale;
 
 import org.apache.tiles.Definition;
 import org.apache.tiles.definition.dao.DefinitionDAO;
 import org.apache.tiles.locale.LocaleResolver;
 import org.apache.tiles.request.Request;
-
 /**
  * {@link DefinitionsFactory DefinitionsFactory} implementation that manages
  * Definitions configuration data from URLs, without resolving definition
@@ -42,21 +39,18 @@ import org.apache.tiles.request.Request;
  * @since 2.2.1
  */
 public class UnresolvingLocaleDefinitionsFactory implements DefinitionsFactory {
-
     /**
      * The definition DAO that extracts the definitions from the sources.
      *
      * @since 2.2.1
      */
     protected DefinitionDAO<Locale> definitionDao;
-
     /**
      * The locale resolver object.
      *
      * @since 2.2.1
      */
     protected LocaleResolver localeResolver;
-
     /**
      * Sets the locale resolver to use.
      *
@@ -66,7 +60,6 @@ public class UnresolvingLocaleDefinitionsFactory implements DefinitionsFactory {
     public void setLocaleResolver(LocaleResolver localeResolver) {
         this.localeResolver = localeResolver;
     }
-
     /**
      * Sets the definition DAO to use. It must be locale-based.
      *
@@ -76,16 +69,15 @@ public class UnresolvingLocaleDefinitionsFactory implements DefinitionsFactory {
     public void setDefinitionDAO(DefinitionDAO<Locale> definitionDao) {
         this.definitionDao = definitionDao;
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public Definition getDefinition(String name,
-            Request tilesContext) {
+                                    Request tilesContext) {
         Locale locale = null;
-
         if (tilesContext != null) {
             locale = localeResolver.resolveLocale(tilesContext);
         }
-
         return definitionDao.getDefinition(name, locale);
     }
 }

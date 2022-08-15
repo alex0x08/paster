@@ -19,16 +19,13 @@
  * under the License.
  */
 package org.apache.tiles.request.attribute;
-
 import java.util.Enumeration;
-
 /**
  * Allows to get values from multi-valued attributes.
  *
  * @version $Rev: 1064782 $ $Date: 2011-01-29 04:08:52 +1100 (Sat, 29 Jan 2011) $
  */
 public interface EnumeratedValuesExtractor extends HasAddableKeys<String> {
-
     /**
      * Returns the values stored at the given key.
      *

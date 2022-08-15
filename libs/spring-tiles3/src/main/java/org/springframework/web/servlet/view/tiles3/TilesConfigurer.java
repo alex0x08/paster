@@ -17,7 +17,6 @@ package org.springframework.web.servlet.view.tiles3;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
 import jakarta.el.ArrayELResolver;
 import jakarta.el.BeanELResolver;
 import jakarta.el.CompositeELResolver;
@@ -120,7 +119,8 @@ import org.springframework.web.context.ServletContextAware;
  */
 public class TilesConfigurer implements ServletContextAware, InitializingBean, DisposableBean {
     private static final boolean tilesElPresent =
-            ClassUtils.isPresent("org.apache.tiles.el.ELAttributeEvaluator", TilesConfigurer.class.getClassLoader());
+            ClassUtils.isPresent("org.apache.tiles.el.ELAttributeEvaluator",
+                    TilesConfigurer.class.getClassLoader());
     protected final Log logger = LogFactory.getLog(getClass());
     @Nullable
     private TilesInitializer tilesInitializer;
@@ -341,7 +341,7 @@ public class TilesConfigurer implements ServletContextAware, InitializingBean, D
         @Override
         protected AttributeEvaluatorFactory createAttributeEvaluatorFactory(ApplicationContext context,
                                                                             LocaleResolver resolver) {
-            AttributeEvaluator evaluator;
+            final AttributeEvaluator evaluator;
             if (tilesElPresent && JspFactory.getDefaultFactory() != null) {
                 evaluator = new TilesElActivator().createEvaluator();
             } else {

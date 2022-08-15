@@ -18,15 +18,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.tiles.template;
-
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.Map;
 
 import org.apache.tiles.request.Request;
-
 /**
  * Utilities to work with compose stacks.
  *
@@ -34,24 +31,20 @@ import org.apache.tiles.request.Request;
  * @since 3.0.0
  */
 public final class ComposeStackUtil {
-
     /**
      * The name of the attribute that holds the compose stack.
      */
     public static final String COMPOSE_STACK_ATTRIBUTE_NAME = "org.apache.tiles.template.COMPOSE_STACK";
-
     /**
      * Private constructor to avoid instantiation.
      */
     private ComposeStackUtil() {
-
     }
-
     /**
      * Finds the first ancestor in the stack, that is assignable to the given class.
      *
      * @param composeStack The compose stack to evaluate.
-     * @param clazz The class to check.
+     * @param clazz        The class to check.
      * @return The first ancestor that is assignable to the class, or null if not found.
      * @since 3.0.0
      */
@@ -61,10 +54,8 @@ public final class ComposeStackUtil {
                 return obj;
             }
         }
-
         return null;
     }
-
     /**
      * Returns the current compose stack, or creates a new one if not present.
      *

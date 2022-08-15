@@ -18,15 +18,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.tiles.startup;
-
 import org.apache.tiles.TilesContainer;
 import org.apache.tiles.access.TilesAccess;
 import org.apache.tiles.factory.AbstractTilesContainerFactory;
 import org.apache.tiles.request.ApplicationAccess;
 import org.apache.tiles.request.ApplicationContext;
-
 /**
  * Default Tiles initialization delegate implementation under a servlet
  * environment. It uses init parameters to create the
@@ -36,7 +33,6 @@ import org.apache.tiles.request.ApplicationContext;
  * @since 2.2.0
  */
 public abstract class AbstractTilesInitializer implements TilesInitializer {
-
     /**
      * Init parameter to define the key under which the container will be
      * stored.
@@ -44,38 +40,36 @@ public abstract class AbstractTilesInitializer implements TilesInitializer {
      * @since 2.1.2
      */
     public static final String CONTAINER_KEY_INIT_PARAMETER =
-        "org.apache.tiles.startup.AbstractTilesInitializer.CONTAINER_KEY";
-
+            "org.apache.tiles.startup.AbstractTilesInitializer.CONTAINER_KEY";
     /**
      * The initialized application context.
      */
     private ApplicationContext applicationContext;
-
     /**
-     * The initialized container.
+     * {@inheritDoc}
      */
-    private TilesContainer container;
-
-    /** {@inheritDoc} */
     public void initialize(ApplicationContext applicationContext) {
         this.applicationContext = createTilesApplicationContext(applicationContext);
         ApplicationAccess.register(applicationContext);
         String key = getContainerKey(this.applicationContext);
-        container = createContainer(this.applicationContext);
+        /**
+         * The initialized container.
+         */
+        TilesContainer container = createContainer(this.applicationContext);
         TilesAccess.setContainer(this.applicationContext, container, key);
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public void destroy() {
         TilesAccess.setContainer(applicationContext, null,
                 getContainerKey(applicationContext));
     }
-
     /**
      * Creates the Tiles application context, to be used across all the
      * Tiles-based application. If you override this class, please override this
      * method or
-     * {@link #createAndInitializeTilesApplicationContextFactory(ApplicationContext)}
+     * {link #createAndInitializeTilesApplicationContextFactory(ApplicationContext)}
      * .<br>
      * This implementation returns the preliminary context passed as a parameter
      *
@@ -87,7 +81,6 @@ public abstract class AbstractTilesInitializer implements TilesInitializer {
             ApplicationContext preliminaryContext) {
         return preliminaryContext;
     }
-
     /**
      * Returns the container key under which the container will be stored.
      * This implementation returns <code>null</code> so that the container will
@@ -100,7 +93,6 @@ public abstract class AbstractTilesInitializer implements TilesInitializer {
     protected String getContainerKey(ApplicationContext applicationContext) {
         return null;
     }
-
     /**
      * Creates a Tiles container. If you override this class, please override
      * this method or {@link #createContainerFactory(ApplicationContext)}.
@@ -113,7 +105,6 @@ public abstract class AbstractTilesInitializer implements TilesInitializer {
         AbstractTilesContainerFactory factory = createContainerFactory(context);
         return factory.createContainer(context);
     }
-
     /**
      * Creates a Tiles container factory. If you override this class, please
      * override this method or {@link #createContainer(ApplicationContext)}.

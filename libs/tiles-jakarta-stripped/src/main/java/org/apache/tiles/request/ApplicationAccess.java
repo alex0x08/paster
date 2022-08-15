@@ -19,27 +19,22 @@
  * under the License.
  */
 package org.apache.tiles.request;
-
-
 /**
  * Entry point to get information about the application.
  *
  * @version $Rev: 1064782 $ $Date: 2011-01-28 18:08:52 +0100 (Fri, 28 Jan 2011) $
  */
 public final class ApplicationAccess {
-
     /**
      * The attribute name that will be used to store the application context itself.
      */
     public static final String APPLICATION_CONTEXT_ATTRIBUTE =
-        ApplicationContext.class.getName() + ".ATTRIBUTE";
-
+            ApplicationContext.class.getName() + ".ATTRIBUTE";
     /**
      * Constructor.
      */
     private ApplicationAccess() {
     }
-
     /**
      * Registers an application context. It will be registered into itself as an
      * attribute, using the {@link #APPLICATION_CONTEXT_ATTRIBUTE} name.
@@ -50,5 +45,4 @@ public final class ApplicationAccess {
         applicationContext.getApplicationScope().put(
                 APPLICATION_CONTEXT_ATTRIBUTE, applicationContext);
     }
-
 }

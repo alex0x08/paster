@@ -71,7 +71,7 @@ public class SpringWildcardServletTilesApplicationContext extends ServletApplica
 
 	@Override
 	public Collection<ApplicationResource> getResources(String path) {
-		Resource[] resources;
+		final Resource[] resources;
 		try {
 			resources = this.resolver.getResources(path);
 		}

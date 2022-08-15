@@ -18,16 +18,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.tiles.el;
-
 import jakarta.el.ExpressionFactory;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.jsp.JspFactory;
-
 import org.apache.tiles.request.ApplicationContext;
 import org.apache.tiles.request.ApplicationContextAware;
-
 /**
  * Uses the JSP 2.1 {@link ExpressionFactory} to be used in Tiles.
  *
@@ -36,15 +32,15 @@ import org.apache.tiles.request.ApplicationContextAware;
  */
 public class JspExpressionFactoryFactory implements ExpressionFactoryFactory,
         ApplicationContextAware {
-
     /**
      * The servlet context.
      *
      * @since 2.2.1
      */
     protected ServletContext servletContext;
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public void setApplicationContext(ApplicationContext applicationContext) {
         Object context = applicationContext.getContext();
         if (context instanceof ServletContext) {
@@ -52,11 +48,12 @@ public class JspExpressionFactoryFactory implements ExpressionFactoryFactory,
         } else {
             throw new IllegalArgumentException(
                     "The application context does not hold an instance of "
-                    + "ServletContext, consider using JuelExpressionFactoryFactory");
+                            + "ServletContext, consider using JuelExpressionFactoryFactory");
         }
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public ExpressionFactory getExpressionFactory() {
         return JspFactory.getDefaultFactory().getJspApplicationContext(
                 servletContext).getExpressionFactory();

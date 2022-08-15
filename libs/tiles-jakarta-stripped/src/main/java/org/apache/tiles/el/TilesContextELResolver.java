@@ -42,7 +42,7 @@ public class TilesContextELResolver extends ELResolver {
     /**
      * Internal bean resolver to resolve beans in any context.
      */
-    private ELResolver beanElResolver;
+    private final ELResolver beanElResolver;
 
     /**
      * Constructor.

@@ -18,12 +18,8 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
-
 package org.apache.tiles.definition;
-
 import org.apache.tiles.TilesException;
-
 /**
  * Exception thrown when an error occurs while the impl tries to
  * create a new instance mapper.
@@ -37,7 +33,6 @@ public class DefinitionsFactoryException extends TilesException {
     public DefinitionsFactoryException() {
         super();
     }
-
     /**
      * Constructor.
      *
@@ -46,8 +41,6 @@ public class DefinitionsFactoryException extends TilesException {
     public DefinitionsFactoryException(String message) {
         super(message);
     }
-
-
     /**
      * Create a new <code>DefinitionsFactoryException</code> wrapping an existing exception.
      * <p/>
@@ -60,8 +53,6 @@ public class DefinitionsFactoryException extends TilesException {
     public DefinitionsFactoryException(Throwable e) {
         super(e);
     }
-
-
     /**
      * Create a new <code>DefinitionsFactoryException</code> from an existing exception.
      * <p/>

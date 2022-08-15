@@ -18,9 +18,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.tiles.definition.dao;
-
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Locale;
@@ -32,7 +30,6 @@ import org.apache.tiles.definition.pattern.PatternDefinitionResolverAware;
 import org.apache.tiles.request.ApplicationContext;
 import org.apache.tiles.request.ApplicationResource;
 import org.apache.tiles.request.locale.LocaleUtil;
-
 /**
  * <p>
  * A definitions DAO (loading URLs and using Locale as a customization key) that
@@ -48,23 +45,20 @@ import org.apache.tiles.request.locale.LocaleUtil;
  */
 public class CachingLocaleUrlDefinitionDAO extends BaseLocaleUrlDefinitionDAO
         implements PatternDefinitionResolverAware<Locale> {
-
     /*
      * Initialization parameter to set whether we want to refresh URLs when they
      * change.
      *
      * @since 2.1.0
      */
-     public static final String CHECK_REFRESH_INIT_PARAMETER =
-        "org.apache.tiles.definition.dao.LocaleUrlDefinitionDAO.CHECK_REFRESH";
-
+    public static final String CHECK_REFRESH_INIT_PARAMETER =
+            "org.apache.tiles.definition.dao.LocaleUrlDefinitionDAO.CHECK_REFRESH";
     /**
      * The locale-specific set of definitions objects.
      *
      * @since 2.1.0
      */
     protected Map<Locale, Map<String, Definition>> locale2definitionMap;
-
     /**
      * Flag that, when <code>true</code>, enables automatic checking of URLs
      * changing.
@@ -72,14 +66,12 @@ public class CachingLocaleUrlDefinitionDAO extends BaseLocaleUrlDefinitionDAO
      * @since 2.1.0
      */
     protected boolean checkRefresh = false;
-
     /**
      * Resolves definitions using patterns.
      *
      * @since 2.2.0
      */
     protected PatternDefinitionResolver<Locale> definitionResolver;
-
     /**
      * Constructor.
      *
@@ -89,14 +81,16 @@ public class CachingLocaleUrlDefinitionDAO extends BaseLocaleUrlDefinitionDAO
         super(applicationContext);
         locale2definitionMap = new HashMap<>();
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public void setPatternDefinitionResolver(
             PatternDefinitionResolver<Locale> definitionResolver) {
         this.definitionResolver = definitionResolver;
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public Definition getDefinition(String name, Locale customizationKey) {
         Definition retValue = null;
         if (customizationKey == null) {
@@ -105,22 +99,20 @@ public class CachingLocaleUrlDefinitionDAO extends BaseLocaleUrlDefinitionDAO
         Map<String, Definition> definitions = getDefinitions(customizationKey);
         if (definitions != null) {
             retValue = definitions.get(name);
-
             if (retValue == null) {
                 retValue = getDefinitionFromResolver(name, customizationKey);
-
                 if (retValue != null) {
                     //synchronized (definitions) {
-                        definitions.put(name, retValue);
+                    definitions.put(name, retValue);
                     //}
                 }
             }
         }
-
         return retValue;
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public Map<String, Definition> getDefinitions(Locale customizationKey) {
         if (customizationKey == null) {
             customizationKey = Locale.ROOT;
@@ -132,32 +124,29 @@ public class CachingLocaleUrlDefinitionDAO extends BaseLocaleUrlDefinitionDAO
         }
         return retValue;
     }
-
     /**
      * Sets the flag to check source refresh. If not called, the default is
      * <code>false</code>.
      *
      * @param checkRefresh When <code>true</code>, enables automatic checking
-     * of sources changing.
+     *                     of sources changing.
      * @since 2.1.0
      */
     public void setCheckRefresh(boolean checkRefresh) {
         this.checkRefresh = checkRefresh;
     }
-
     /**
      * Returns a definition from the definition resolver.
      *
-     * @param name The name of the definition.
+     * @param name             The name of the definition.
      * @param customizationKey The customization key to use.
      * @return The resolved definition.
      */
     protected Definition getDefinitionFromResolver(String name,
-            Locale customizationKey) {
+                                                   Locale customizationKey) {
         return definitionResolver.resolveDefinition(name,
                 customizationKey);
     }
-
     /**
      * Checks if sources have changed. If yes, it clears the cache. Then continues
      * loading definitions.
@@ -179,7 +168,6 @@ public class CachingLocaleUrlDefinitionDAO extends BaseLocaleUrlDefinitionDAO
         loadDefinitions(customizationKey);
         return locale2definitionMap.get(customizationKey);
     }
-
     /**
      * Tries to load definitions if necessary.
      *
@@ -193,10 +181,8 @@ public class CachingLocaleUrlDefinitionDAO extends BaseLocaleUrlDefinitionDAO
         if (localeDefsMap != null) {
             return localeDefsMap;
         }
-
         return loadDefinitionsFromResources(customizationKey);
     }
-
     /**
      * Loads definitions from the sources.
      *
@@ -212,7 +198,6 @@ public class CachingLocaleUrlDefinitionDAO extends BaseLocaleUrlDefinitionDAO
         locale2definitionMap.put(customizationKey, defsMap);
         return localeDefsMap;
     }
-
     /**
      * Loads the raw definitions from the sources associated with a locale.
      *
@@ -223,7 +208,6 @@ public class CachingLocaleUrlDefinitionDAO extends BaseLocaleUrlDefinitionDAO
     protected Map<String, Definition> loadRawDefinitionsFromResources(
             Locale customizationKey) {
         Map<String, Definition> localeDefsMap;
-
         Locale parentLocale = LocaleUtil.getParentLocale(customizationKey);
         localeDefsMap = new LinkedHashMap<>();
         if (parentLocale != null) {
@@ -244,7 +228,6 @@ public class CachingLocaleUrlDefinitionDAO extends BaseLocaleUrlDefinitionDAO
         }
         return localeDefsMap;
     }
-
     /*
      * Loads parent definitions, i.e. definitions mapped to a parent locale.
      *
@@ -255,7 +238,6 @@ public class CachingLocaleUrlDefinitionDAO extends BaseLocaleUrlDefinitionDAO
     protected Map<String, Definition> loadParentDefinitions(Locale parentLocale) {
         return loadDefinitions(parentLocale);
     }
-
     /**
      * Copies the definition map to be passed to a higher level of customization
      * key.

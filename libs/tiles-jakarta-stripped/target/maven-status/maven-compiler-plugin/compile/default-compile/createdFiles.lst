@@ -8,7 +8,6 @@ org/apache/tiles/request/collection/HeaderValuesMap.class
 org/apache/tiles/request/collection/MapEntry.class
 org/apache/tiles/request/servlet/extractor/RequestScopeExtractor.class
 org/apache/tiles/request/ApplicationResource.class
-org/apache/tiles/request/servlet/wildcard/WildcardServletApplicationContext.class
 org/apache/tiles/locale/LocaleResolver.class
 org/apache/tiles/beans/SimpleMenuItem.class
 org/apache/tiles/template/AddListAttributeModel.class
@@ -18,9 +17,7 @@ org/apache/tiles/template/ComposeStackUtil.class
 org/apache/tiles/TilesContainerWrapper.class
 org/apache/tiles/request/attribute/HasKeys.class
 org/apache/tiles/request/servlet/extractor/ParameterExtractor.class
-org/apache/tiles/evaluator/EvaluationException.class
 org/apache/tiles/jsp/taglib/GetAsStringTag.class
-org/apache/tiles/web/util/TilesDispatchServlet.class
 org/apache/tiles/request/collection/CollectionUtil.class
 org/apache/tiles/jsp/taglib/UseAttributeTag$Tei.class
 org/apache/tiles/template/PutListAttributeModel.class
@@ -37,7 +34,6 @@ org/apache/tiles/template/SetCurrentContainerModel.class
 org/apache/tiles/request/collection/ReadOnlyEnumerationMap$ReadOnlyEnumerationMapEntrySet$ReadOnlyEnumerationMapEntrySetIterator.class
 org/apache/tiles/request/ApplicationContext.class
 org/apache/tiles/jsp/taglib/InsertTemplateTag.class
-org/apache/tiles/awareness/TilesContainerAware.class
 org/apache/tiles/evaluator/AttributeEvaluator.class
 org/apache/tiles/definition/dao/DefinitionDAO.class
 org/apache/tiles/el/ScopeELResolver.class
@@ -54,7 +50,6 @@ org/apache/tiles/definition/DefinitionsFactoryException.class
 org/apache/tiles/jsp/taglib/InsertDefinitionTag.class
 org/apache/tiles/definition/pattern/PrefixedPatternDefinitionResolver.class
 org/apache/tiles/request/collection/ScopeMap$ScopeEntrySet.class
-org/apache/tiles/web/util/TilesDispatchServlet$DefaultMutator.class
 org/apache/tiles/web/startup/simple/SimpleTilesInitializerServlet.class
 org/apache/tiles/request/render/StringRenderer.class
 org/apache/tiles/request/jsp/autotag/JspAutotagRuntime.class
@@ -78,17 +73,13 @@ org/apache/tiles/el/ExpressionFactoryFactory.class
 org/apache/tiles/request/ApplicationAccess.class
 org/apache/tiles/request/servlet/ServletUtil.class
 org/apache/tiles/preparer/PreparerException.class
-org/apache/tiles/request/ApplicationContextWrapper.class
-org/apache/tiles/request/NotAvailableFeatureException.class
 org/apache/tiles/request/servlet/ServletRequest.class
 org/apache/tiles/request/collection/ReadOnlyEnumerationMap$ReadOnlyEnumerationMapEntrySet.class
-org/apache/tiles/web/util/TilesDecorationFilter.class
 org/apache/tiles/definition/RefreshMonitor.class
 org/apache/tiles/template/GetAsStringModel.class
 org/apache/tiles/request/AbstractViewRequest.class
 org/apache/tiles/definition/pattern/PatternDefinitionResolver.class
 org/apache/tiles/definition/digester/DigesterDefinitionsReader.class
-org/apache/tiles/web/util/AttributeContextMutator.class
 org/apache/tiles/el/TilesContextBeanELResolver.class
 org/apache/tiles/request/locale/LocaleUtil.class
 org/apache/tiles/request/servlet/extractor/SessionScopeExtractor.class
@@ -140,7 +131,6 @@ org/apache/tiles/template/AddAttributeModel.class
 org/apache/tiles/definition/pattern/AbstractPatternDefinitionResolver.class
 org/apache/tiles/CompareUtil.class
 org/apache/tiles/definition/pattern/DefinitionPatternMatcherFactory.class
-org/apache/tiles/request/reflect/CannotAccessMethodException.class
 org/apache/tiles/autotag/core/runtime/annotation/Parameter.class
 org/apache/tiles/request/render/BasicRendererFactory.class
 org/apache/tiles/factory/TilesContainerFactoryException.class
@@ -149,7 +139,6 @@ org/apache/tiles/request/ApplicationContextAware.class
 org/apache/tiles/request/collection/HeaderValuesMap$HeadersEntrySet.class
 org/apache/tiles/locale/impl/DefaultLocaleResolver.class
 org/apache/tiles/beans/MenuItem.class
-org/apache/tiles/web/util/TilesDecorationFilter$DefaultMutator.class
 org/apache/tiles/web/startup/AbstractTilesInitializerServlet.class
 org/apache/tiles/request/servlet/extractor/HeaderExtractor.class
 org/apache/tiles/request/jsp/extractor/ScopeExtractor.class
@@ -179,12 +168,10 @@ org/apache/tiles/request/render/ChainedDelegateRenderer.class
 org/apache/tiles/jsp/taglib/DefinitionTag.class
 org/apache/tiles/el/JspExpressionFactoryFactory.class
 org/apache/tiles/factory/BasicTilesContainerFactory.class
-org/apache/tiles/request/servlet/ExternalWriterHttpServletResponse.class
 org/apache/tiles/jsp/taglib/PutAttributeTag.class
 org/apache/tiles/template/InsertTemplateModel.class
 org/apache/tiles/el/ELContextImpl$1.class
 org/apache/tiles/startup/TilesInitializer.class
-org/apache/tiles/request/DefaultRequestWrapper.class
 org/apache/tiles/definition/digester/DigesterDefinitionsReader$PutAttributeRule.class
 org/apache/tiles/request/collection/RemovableKeySet.class
 org/apache/tiles/access/TilesAccess.class
@@ -201,5 +188,4 @@ org/apache/tiles/definition/dao/CachingLocaleUrlDefinitionDAO.class
 org/apache/tiles/request/collection/AddableParameterMap.class
 org/apache/tiles/definition/pattern/PatternRecognizer.class
 org/apache/tiles/el/TilesContextELResolver.class
-org/apache/tiles/context/TilesRequestContextHolder.class
 org/apache/tiles/web/util/ServletContextAdapter.class

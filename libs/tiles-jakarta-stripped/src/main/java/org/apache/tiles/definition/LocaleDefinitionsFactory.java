@@ -18,14 +18,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.tiles.definition;
-
 import java.util.Locale;
 
 import org.apache.tiles.Definition;
 import org.apache.tiles.request.Request;
-
 /**
  * {@link DefinitionsFactory DefinitionsFactory} implementation that manages
  * Definitions configuration data from URLs, but resolving definition
@@ -41,18 +38,17 @@ import org.apache.tiles.request.Request;
  */
 public class LocaleDefinitionsFactory extends
         UnresolvingLocaleDefinitionsFactory {
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Definition getDefinition(String name,
-            Request tilesContext) {
+                                    Request tilesContext) {
         Definition retValue;
         Locale locale = null;
-
         if (tilesContext != null) {
             locale = localeResolver.resolveLocale(tilesContext);
         }
-
         retValue = definitionDao.getDefinition(name, locale);
         if (retValue != null) {
             retValue = new Definition(retValue);
@@ -69,7 +65,6 @@ public class LocaleDefinitionsFactory extends
                 parentDefinitionName = parent.getExtends();
             }
         }
-
         return retValue;
     }
 }

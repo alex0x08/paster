@@ -19,7 +19,6 @@
  * under the License.
  */
 package org.apache.tiles.definition.dao;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -30,7 +29,6 @@ import org.apache.tiles.Definition;
 import org.apache.tiles.request.ApplicationContext;
 import org.apache.tiles.request.ApplicationResource;
 import org.apache.tiles.request.locale.LocaleUtil;
-
 /**
  * A definition DAO that uses {@link Locale} as a customization key and loads
  * definitions from URLs. It does not cache definitions in any way.
@@ -39,11 +37,9 @@ import org.apache.tiles.request.locale.LocaleUtil;
  * @since 2.1.0
  */
 public class LocaleUrlDefinitionDAO extends BaseLocaleUrlDefinitionDAO {
-
     public LocaleUrlDefinitionDAO(ApplicationContext applicationContext) {
         super(applicationContext);
     }
-
     /**
      * <p>
      * Returns a definition, given its name and the customization key.
@@ -51,7 +47,7 @@ public class LocaleUrlDefinitionDAO extends BaseLocaleUrlDefinitionDAO {
      * <strong>WARNING!</strong> This method is slow! It loads all the
      * definitions and then selects the needed one.
      *
-     * @param name The name of the definition.
+     * @param name             The name of the definition.
      * @param customizationKey The customization key.
      * @return The requested definition, if found, otherwise <code>null</code>.
      * The inheritance of the definition must not be resolved.
@@ -61,8 +57,9 @@ public class LocaleUrlDefinitionDAO extends BaseLocaleUrlDefinitionDAO {
         Map<String, Definition> defsMap = getDefinitions(customizationKey);
         return defsMap.get(name);
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public Map<String, Definition> getDefinitions(Locale customizationKey) {
         ArrayList<Locale> postfixes = computeLocales(customizationKey);
         Map<String, Definition> localeDefsMap = new HashMap<>();
@@ -81,15 +78,15 @@ public class LocaleUrlDefinitionDAO extends BaseLocaleUrlDefinitionDAO {
         }
         return localeDefsMap;
     }
-
     /**
      * Returns a list of locales from root to the customizationKey.
+     *
      * @param customizationKey the target Locale.
      * @return the list of its ancestors.
      */
     private ArrayList<Locale> computeLocales(Locale customizationKey) {
         Locale postfix;
-        if(customizationKey == null) {
+        if (customizationKey == null) {
             postfix = Locale.ROOT;
         } else {
             postfix = customizationKey;

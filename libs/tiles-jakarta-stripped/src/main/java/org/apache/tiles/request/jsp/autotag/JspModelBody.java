@@ -19,50 +19,42 @@
  * under the License.
  */
 package org.apache.tiles.request.jsp.autotag;
-
 import java.io.IOException;
 import java.io.Writer;
 
 import jakarta.servlet.jsp.JspContext;
 import jakarta.servlet.jsp.JspException;
 import jakarta.servlet.jsp.tagext.JspFragment;
-
 import org.apache.tiles.autotag.core.runtime.AbstractModelBody;
-
 /**
  * The body abstraction in a JSP tag.
  *
  * @version $Rev: 1305546 $ $Date: 2012-03-27 07:34:37 +1100 (Tue, 27 Mar 2012) $
  */
 public class JspModelBody extends AbstractModelBody {
-
     /**
      * The real body.
      */
     private final JspFragment jspFragment;
-
     /**
      * Constructor.
      *
      * @param jspFragment The real body.
-     * @param jspContext The page context.
+     * @param jspContext  The page context.
      */
     public JspModelBody(JspFragment jspFragment, JspContext jspContext) {
         super(jspContext.getOut());
         this.jspFragment = jspFragment;
     }
-
     @Override
     public void evaluate(Writer writer) throws IOException {
         if (jspFragment == null) {
             return;
         }
-
         try {
             jspFragment.invoke(writer);
         } catch (JspException e) {
             throw new IOException("JspException when evaluating the body", e);
         }
     }
-
 }

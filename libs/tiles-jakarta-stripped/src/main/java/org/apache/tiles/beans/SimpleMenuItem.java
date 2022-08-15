@@ -19,9 +19,7 @@
  * under the License.
  */
 package org.apache.tiles.beans;
-
 import java.io.Serializable;
-
 /**
  * A MenuItem implementation.
  * Used to read menu items in definitions.
@@ -29,34 +27,28 @@ import java.io.Serializable;
  * @version $Rev: 836180 $ $Date: 2009-11-15 01:00:02 +1100 (Sun, 15 Nov 2009) $
  */
 public class SimpleMenuItem implements MenuItem, Serializable {
-
     /**
      * The value of the item, i.e. what is really visible to the user.
      */
-    private String value = null;
-
+    private String value;
     /**
      * The link where the menu item points to.
      */
-    private String link = null;
-
+    private String link;
     /**
      * The (optional) icon image URL.
      */
-    private String icon = null;
-
+    private String icon;
     /**
      * The (optional) tooltip text.
      */
-    private String tooltip = null;
-
+    private String tooltip;
     /**
      * Constructor.
      */
     public SimpleMenuItem() {
         super();
     }
-
     /**
      * Sets the value of the item, i.e. what is really visible to the user.
      *
@@ -65,7 +57,6 @@ public class SimpleMenuItem implements MenuItem, Serializable {
     public void setValue(String value) {
         this.value = value;
     }
-
     /**
      * Returns the value of the item, i.e. what is really visible to the user.
      *
@@ -74,7 +65,6 @@ public class SimpleMenuItem implements MenuItem, Serializable {
     public String getValue() {
         return value;
     }
-
     /**
      * Sets the link where the menu item points to.
      *
@@ -83,7 +73,6 @@ public class SimpleMenuItem implements MenuItem, Serializable {
     public void setLink(String link) {
         this.link = link;
     }
-
     /**
      * Returns the link where the menu item points to.
      *
@@ -92,7 +81,6 @@ public class SimpleMenuItem implements MenuItem, Serializable {
     public String getLink() {
         return link;
     }
-
     /**
      * Sets the (optional) icon image URL.
      *
@@ -101,7 +89,6 @@ public class SimpleMenuItem implements MenuItem, Serializable {
     public void setIcon(String icon) {
         this.icon = icon;
     }
-
     /**
      * Returns the (optional) icon image URL.
      *
@@ -110,7 +97,6 @@ public class SimpleMenuItem implements MenuItem, Serializable {
     public String getIcon() {
         return icon;
     }
-
     /**
      * Sets the (optional) tooltip text.
      *
@@ -119,7 +105,6 @@ public class SimpleMenuItem implements MenuItem, Serializable {
     public void setTooltip(String tooltip) {
         this.tooltip = tooltip;
     }
-
     /**
      * Returns the (optional) tooltip text.
      *
@@ -128,30 +113,25 @@ public class SimpleMenuItem implements MenuItem, Serializable {
     public String getTooltip() {
         return tooltip;
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
         StringBuilder buff = new StringBuilder("SimpleMenuItem[");
-
         if (getValue() != null) {
             buff.append("value=").append(getValue()).append(", ");
         }
-
         if (getLink() != null) {
             buff.append("link=").append(getLink()).append(", ");
         }
-
         if (getTooltip() != null) {
             buff.append("tooltip=").append(getTooltip()).append(", ");
         }
-
         if (getIcon() != null) {
             buff.append("icon=").append(getIcon()).append(", ");
         }
-
         buff.append("]");
         return buff.toString();
     }
-
 }

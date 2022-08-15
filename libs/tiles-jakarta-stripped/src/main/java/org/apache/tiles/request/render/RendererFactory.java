@@ -19,9 +19,6 @@
  * under the License.
  */
 package org.apache.tiles.request.render;
-
-
-
 /**
  * <p>
  * Factory interface used to create/retrieve instances of the
@@ -37,7 +34,6 @@ package org.apache.tiles.request.render;
  * @version $Rev: 1306435 $ $Date: 2012-03-29 02:39:11 +1100 (Thu, 29 Mar 2012) $
  */
 public interface RendererFactory {
-
     /**
      * Returns a renderer by its name.
      *

@@ -19,25 +19,20 @@
  * under the License.
  */
 package org.apache.tiles.request.servlet.extractor;
-
 import java.util.Enumeration;
 
 import jakarta.servlet.ServletContext;
-
 import org.apache.tiles.request.attribute.HasKeys;
-
 /**
  * Extract initialization parameters from the servlet context.
  *
  * @version $Rev: 1066499 $ $Date: 2011-02-03 02:33:34 +1100 (Thu, 03 Feb 2011) $
  */
 public class InitParameterExtractor implements HasKeys<String> {
-
     /**
      * The servlet context.
      */
     private final ServletContext context;
-
     /**
      * Constructor.
      *
@@ -46,15 +41,12 @@ public class InitParameterExtractor implements HasKeys<String> {
     public InitParameterExtractor(ServletContext context) {
         this.context = context;
     }
-
     @Override
     public Enumeration<String> getKeys() {
         return context.getInitParameterNames();
     }
-
     @Override
     public String getValue(String key) {
         return context.getInitParameter(key);
     }
-
 }

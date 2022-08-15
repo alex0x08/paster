@@ -19,8 +19,6 @@
  * under the License.
  */
 package org.apache.tiles.request;
-
-
 /**
  * It represents an object that can have a reference to the
  * {@link ApplicationContext}.
@@ -28,7 +26,6 @@ package org.apache.tiles.request;
  * @version $Rev: 893303 $ $Date: 2009-12-22 21:18:35 +0100 (Tue, 22 Dec 2009) $
  */
 public interface ApplicationContextAware {
-
     /**
      * Sets the Tiles application context.
      *

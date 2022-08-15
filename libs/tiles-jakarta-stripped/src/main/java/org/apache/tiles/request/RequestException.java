@@ -19,20 +19,17 @@
  * under the License.
  */
 package org.apache.tiles.request;
-
 /**
  * Thrown when something related to a request fails.
  *
  * @version $Rev: 1064782 $ $Date: 2011-01-29 04:08:52 +1100 (Sat, 29 Jan 2011) $
  */
 public class RequestException extends RuntimeException {
-
     /**
      * Constructor.
      */
     public RequestException() {
     }
-
     /**
      * Constructor.
      *
@@ -41,7 +38,6 @@ public class RequestException extends RuntimeException {
     public RequestException(String message) {
         super(message);
     }
-
     /**
      * Constructor.
      *
@@ -50,15 +46,13 @@ public class RequestException extends RuntimeException {
     public RequestException(Throwable cause) {
         super(cause);
     }
-
     /**
      * Constructor.
      *
      * @param message The message of the exception.
-     * @param cause The cause.
+     * @param cause   The cause.
      */
     public RequestException(String message, Throwable cause) {
         super(message, cause);
     }
-
 }

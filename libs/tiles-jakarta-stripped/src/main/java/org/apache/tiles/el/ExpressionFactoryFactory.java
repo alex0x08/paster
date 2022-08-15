@@ -18,11 +18,8 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.tiles.el;
-
 import jakarta.el.ExpressionFactory;
-
 /**
  * Interface to define a factory of {@link ExpressionFactory}.
  *
@@ -30,7 +27,6 @@ import jakarta.el.ExpressionFactory;
  * @since 2.2.1
  */
 public interface ExpressionFactoryFactory {
-
     /**
      * Returns the expression factory to use.
      *

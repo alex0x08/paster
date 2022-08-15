@@ -19,7 +19,6 @@
  * under the License.
  */
 package org.apache.tiles.request;
-
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
@@ -30,22 +29,19 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.apache.tiles.request.attribute.Addable;
-
 /**
  * Delegate for ease of customization.
  *
- * @deprecated prefer RequestWrapper which is more general in purpose, unless you want to override dispatch() or include().
  * @version $Rev: 1215009 $ $Date: 2011-12-16 01:32:31 +0100 (Fri, 16 Dec 2011) $
+ * @deprecated prefer RequestWrapper which is more general in purpose, unless you want to override dispatch() or include().
  */
 @Deprecated
 public class DispatchRequestWrapper extends AbstractRequest implements
         RequestWrapper {
-
     /**
      * The wrapper request context object.
      */
-    private DispatchRequest context;
-
+    private final DispatchRequest context;
     /**
      * Constructor.
      *
@@ -54,93 +50,111 @@ public class DispatchRequestWrapper extends AbstractRequest implements
     public DispatchRequestWrapper(DispatchRequest context) {
         this.context = context;
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public DispatchRequest getWrappedRequest() {
         return context;
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public Map<String, String> getHeader() {
         return context.getHeader();
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public Map<String, String[]> getHeaderValues() {
         return context.getHeaderValues();
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public Addable<String> getResponseHeaders() {
         return context.getResponseHeaders();
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public Map<String, Object> getContext(String scope) {
         return context.getContext(scope);
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public List<String> getAvailableScopes() {
         return context.getAvailableScopes();
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public ApplicationContext getApplicationContext() {
         return context.getApplicationContext();
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public void dispatch(String path) throws IOException {
         context.dispatch(path);
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public void include(String path) throws IOException {
         context.include(path);
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public OutputStream getOutputStream() throws IOException {
         return context.getOutputStream();
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public Writer getWriter() throws IOException {
         return context.getWriter();
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public PrintWriter getPrintWriter() throws IOException {
         return context.getPrintWriter();
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public boolean isResponseCommitted() {
         return context.isResponseCommitted();
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public void setContentType(String contentType) {
         context.setContentType(contentType);
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public Map<String, String> getParam() {
         return context.getParam();
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public Map<String, String[]> getParamValues() {
         return context.getParamValues();
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public Locale getRequestLocale() {
         return context.getRequestLocale();
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public boolean isUserInRole(String role) {
         return context.isUserInRole(role);
     }

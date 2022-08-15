@@ -19,16 +19,13 @@
  * under the License.
  */
 package org.apache.tiles.request.locale;
-
 import java.util.Locale;
-
 /**
  * Utilities for locale manipulation.
  *
  * @version $Rev$ $Date$
  */
 public final class LocaleUtil {
-
     /**
      * The "null" Locale, i.e. a Locale that points to no real locale.
      *
@@ -36,13 +33,11 @@ public final class LocaleUtil {
      */
     @Deprecated
     public static final Locale NULL_LOCALE = Locale.ROOT;
-
     /**
      * Private constructor to avoid instantiation.
      */
     private LocaleUtil() {
     }
-
     /**
      * <p>
      * Returns the "parent" locale of a given locale.
@@ -71,7 +66,6 @@ public final class LocaleUtil {
         } else if (!"".equals(language)) {
             retValue = Locale.ROOT;
         }
-
         return retValue;
     }
 }

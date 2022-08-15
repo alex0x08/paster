@@ -18,9 +18,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.tiles.definition.pattern;
-
 /**
  * Checks if a pattern (or a candidate one) is recognized as a pattern.
  *
@@ -28,7 +26,6 @@ package org.apache.tiles.definition.pattern;
  * @since 2.2.0
  */
 public interface PatternRecognizer {
-
     /**
      * Checks if a pattern is recognized as a pattern.
      *

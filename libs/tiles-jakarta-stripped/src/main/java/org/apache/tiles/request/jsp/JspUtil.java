@@ -19,26 +19,21 @@
  * under the License.
  */
 package org.apache.tiles.request.jsp;
-
 import jakarta.servlet.jsp.JspContext;
 import jakarta.servlet.jsp.PageContext;
-
 import org.apache.tiles.request.ApplicationAccess;
 import org.apache.tiles.request.ApplicationContext;
-
 /**
  * JSP utilities for JSP requests and related.
  *
  * @version $Rev: 1229087 $ $Date: 2012-01-09 21:35:14 +1100 (Mon, 09 Jan 2012) $
  */
 public final class JspUtil {
-
     /**
      * Constructor.
      */
     private JspUtil() {
     }
-
     /**
      * Returns the application context. It must be
      * first saved creating an {@link ApplicationContext} and using

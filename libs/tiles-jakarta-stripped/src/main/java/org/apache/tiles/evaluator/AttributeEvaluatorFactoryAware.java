@@ -18,9 +18,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.tiles.evaluator;
-
 /**
  * It represents an object that can use an {@link AttributeEvaluatorFactory}.
  *
@@ -28,7 +26,6 @@ package org.apache.tiles.evaluator;
  * @since 2.2.0
  */
 public interface AttributeEvaluatorFactoryAware {
-
     /**
      * Sets the attribute evaluator factory.
      *

@@ -18,9 +18,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.tiles.util;
-
 import java.beans.FeatureDescriptor;
 import java.beans.PropertyDescriptor;
 import java.util.ArrayList;
@@ -30,7 +28,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.tiles.request.reflect.ClassUtil;
-
 /**
  * Contains the bean infos about one or more classes.
  *
@@ -42,16 +39,14 @@ public class CombinedBeanInfo {
      * The descriptors of the introspected classes.
      */
     private final List<FeatureDescriptor> descriptors;
-
     /**
      * Maps analyzed classes to the map of introspected properties.
      */
     private final Map<Class<?>, Map<String, PropertyDescriptor>> class2descriptors;
-
     /**
      * Constructor.
-     * @param clazzes The list of classes to analyze and combine.
      *
+     * @param clazzes The list of classes to analyze and combine.
      * @since 2.2.0
      */
     public CombinedBeanInfo(Class<?>... clazzes) {
@@ -64,7 +59,6 @@ public class CombinedBeanInfo {
             class2descriptors.put(clazz, mappedDescriptors);
         }
     }
-
     /**
      * Returns the descriptors of all the introspected classes.
      *
@@ -74,7 +68,6 @@ public class CombinedBeanInfo {
     public List<FeatureDescriptor> getDescriptors() {
         return descriptors;
     }
-
     /**
      * Returns a map of the introspected properties for the given class.
      *
@@ -85,7 +78,6 @@ public class CombinedBeanInfo {
     public Map<String, PropertyDescriptor> getMappedDescriptors(Class<?> clazz) {
         return class2descriptors.get(clazz);
     }
-
     /**
      * Returns the set of properties for the given introspected class.
      *

@@ -19,7 +19,6 @@
  * under the License.
  */
 package org.apache.tiles.preparer.factory;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,36 +27,30 @@ import org.apache.tiles.request.Request;
 import org.apache.tiles.request.reflect.ClassUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 /**
  * Default implementation of the {@link PreparerFactory}.
  * This factory provides no contextual configuration.  It
  * simply instantiates the named preparerInstance and returns it.
  *
- * @since Tiles 2.0
  * @version $Rev: 1310865 $ $Date: 2012-04-08 07:01:22 +1000 (Sun, 08 Apr 2012) $
+ * @since Tiles 2.0
  */
 public class BasicPreparerFactory implements PreparerFactory {
-
     /**
      * The logging object.
      */
     private final Logger log = LoggerFactory
             .getLogger(BasicPreparerFactory.class);
-
     /**
      * Maps a preparer name to the instantiated preparer.
      */
     protected Map<String, ViewPreparer> preparers;
-
     /**
      * Constructor.
      */
     public BasicPreparerFactory() {
         this.preparers = new HashMap<>();
     }
-
-
     /**
      * Create a new instance of the named preparerInstance.  This factory
      * expects all names to be qualified class names.
@@ -67,14 +60,11 @@ public class BasicPreparerFactory implements PreparerFactory {
      * @return ViewPreparer instance
      */
     public ViewPreparer getPreparer(String name, Request context) {
-
         if (!preparers.containsKey(name)) {
             preparers.put(name, createPreparer(name));
         }
-
         return preparers.get(name);
     }
-
     /**
      * Creates a view preparer for the given name.
      *
@@ -82,12 +72,9 @@ public class BasicPreparerFactory implements PreparerFactory {
      * @return The created preparer.
      */
     protected ViewPreparer createPreparer(String name) {
-
         log.debug("Creating ViewPreparer '{}' . . .", name);
-
         Object instance = ClassUtil.instantiate(name, true);
         log.debug("ViewPreparer created successfully");
         return (ViewPreparer) instance;
-
     }
 }

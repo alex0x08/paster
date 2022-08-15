@@ -19,25 +19,20 @@
  * under the License.
  */
 package org.apache.tiles.request.servlet.extractor;
-
 import java.util.Enumeration;
 
 import jakarta.servlet.http.HttpServletRequest;
-
 import org.apache.tiles.request.attribute.AttributeExtractor;
-
 /**
  * Extracts attributes from request scope.
  *
  * @version $Rev: 1066499 $ $Date: 2011-02-03 02:33:34 +1100 (Thu, 03 Feb 2011) $
  */
 public class RequestScopeExtractor implements AttributeExtractor {
-
     /**
      * The servlet request.
      */
     private final HttpServletRequest request;
-
     /**
      * Constructor.
      *
@@ -46,22 +41,18 @@ public class RequestScopeExtractor implements AttributeExtractor {
     public RequestScopeExtractor(HttpServletRequest request) {
         this.request = request;
     }
-
     @Override
     public void setValue(String name, Object value) {
         request.setAttribute(name, value);
     }
-
     @Override
     public void removeValue(String name) {
         request.removeAttribute(name);
     }
-
     @Override
     public Enumeration<String> getKeys() {
         return request.getAttributeNames();
     }
-
     @Override
     public Object getValue(String key) {
         return request.getAttribute(key);

@@ -18,65 +18,56 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.tiles.request;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Locale;
-
 /**
  * A (localized) resource accessible through the ApplicationContext.
  * Typically this is a file inside the web application's war.
- * 
+ *
  * @version $Rev$ $Date$
  */
 public interface ApplicationResource {
-
     /**
      * Get the path name for this resource.
-     * You can access this ressource by passing the path to 
+     * You can access this ressource by passing the path to
      * {@link ApplicationContext#getResource(String) getResource}.
-     * 
+     *
      * @return the path including localization.
      */
     String getLocalePath();
-
     /**
-     * Get the path name for this resource. Multiple versions of 
+     * Get the path name for this resource. Multiple versions of
      * a resource can share the same path if the locale part is different.
-     * 
+     *
      * @return the path excluding localization.
      */
     String getPath();
-
     /**
      * Get the Locale for this resource.
-     * 
+     *
      * @return the Locale.
      */
     Locale getLocale();
-
     /**
      * Get the path name of another version of the resource.
-     * 
+     *
      * @param locale the Locale for the new version.
      * @return the path including localization.
      */
     String getLocalePath(Locale locale);
-
     /**
      * Get a java.io.InputStream to read the contents of this resource.
-     * 
+     *
      * @return the InputStream.
      * @throws IOException if the contents cannot be read.
      */
     InputStream getInputStream() throws IOException;
-
     /**
      * Get the last modification date for this resource.
-     * 
-     * @return the difference, measured in milliseconds, between the current 
+     *
+     * @return the difference, measured in milliseconds, between the current
      * time and midnight, January 1, 1970 UTC.
      * @throws IOException if the last modification date cannot be found.
      */

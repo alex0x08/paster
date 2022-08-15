@@ -18,9 +18,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.tiles.el;
-
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,7 +28,6 @@ import jakarta.el.ELResolver;
 import jakarta.el.FunctionMapper;
 import jakarta.el.ValueExpression;
 import jakarta.el.VariableMapper;
-
 /**
  * Implementation of ELContext.<br>
  * Copied from Apache Tomcat 6.0.16 source code.
@@ -38,7 +35,6 @@ import jakarta.el.VariableMapper;
  * @since 2.2.1
  */
 public class ELContextImpl extends ELContext {
-
     /**
      * A null function mapper.
      */
@@ -48,18 +44,17 @@ public class ELContextImpl extends ELContext {
             return null;
         }
     };
-
     /**
      * Default implementation for the variable mapper.
      */
     private static final class VariableMapperImpl extends VariableMapper {
-
         /**
          * The mapped variables.
          */
         private Map<String, ValueExpression> vars;
-
-        /** {@inheritDoc} */
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public ValueExpression resolveVariable(String variable) {
             if (vars == null) {
@@ -67,34 +62,30 @@ public class ELContextImpl extends ELContext {
             }
             return vars.get(variable);
         }
-
-        /** {@inheritDoc} */
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public ValueExpression setVariable(String variable,
-                ValueExpression expression) {
+                                           ValueExpression expression) {
             if (vars == null) {
                 vars = new HashMap<>();
             }
             return vars.put(variable, expression);
         }
-
     }
-
     /**
      * The EL resolver to use.
      */
     private final ELResolver resolver;
-
     /**
      * The function mapper to use.
      */
     private FunctionMapper functionMapper = NULL_FUNCTION_MAPPER;
-
     /**
      * The variable mapper to use.
      */
     private VariableMapper variableMapper;
-
     /**
      * Constructor.
      *
@@ -103,20 +94,23 @@ public class ELContextImpl extends ELContext {
     public ELContextImpl(ELResolver resolver) {
         this.resolver = resolver;
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public ELResolver getELResolver() {
         return this.resolver;
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public FunctionMapper getFunctionMapper() {
         return this.functionMapper;
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public VariableMapper getVariableMapper() {
         if (this.variableMapper == null) {
@@ -124,7 +118,6 @@ public class ELContextImpl extends ELContext {
         }
         return this.variableMapper;
     }
-
     /**
      * Sets the function mapper to use.
      *
@@ -134,7 +127,6 @@ public class ELContextImpl extends ELContext {
     public void setFunctionMapper(FunctionMapper functionMapper) {
         this.functionMapper = functionMapper;
     }
-
     /**
      * Sets the variable mapper to use.
      *

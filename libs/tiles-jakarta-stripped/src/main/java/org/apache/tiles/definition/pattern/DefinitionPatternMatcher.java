@@ -18,11 +18,8 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.tiles.definition.pattern;
-
 import org.apache.tiles.Definition;
-
 /**
  * Matches a definition name to a definition, through pattern-matching. The
  * matched pattern should be a single one.
@@ -31,7 +28,6 @@ import org.apache.tiles.Definition;
  * @since 2.2.0
  */
 public interface DefinitionPatternMatcher {
-
     /**
      * Creates a definition, given the definition name, through the use of
      * pattern matching.

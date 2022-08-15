@@ -18,16 +18,13 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.tiles.definition.pattern;
-
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.apache.tiles.Definition;
-
 /**
  * A pattern definition resolver that stores {@link DefinitionPatternMatcher}
  * separated by customization key. <br>
@@ -41,33 +38,31 @@ import org.apache.tiles.Definition;
  */
 public class BasicPatternDefinitionResolver<T> extends
         AbstractPatternDefinitionResolver<T> {
-
     /**
      * The factory of pattern matchers.
      */
     private final DefinitionPatternMatcherFactory definitionPatternMatcherFactory;
-
     /**
      * The pattern recognizer.
      */
     private final PatternRecognizer patternRecognizer;
-
     /**
      * Constructor.
      *
      * @param definitionPatternMatcherFactory The definition pattern matcher factory.
-     * @param patternRecognizer The pattern recognizer.
+     * @param patternRecognizer               The pattern recognizer.
      */
     public BasicPatternDefinitionResolver(DefinitionPatternMatcherFactory definitionPatternMatcherFactory,
-            PatternRecognizer patternRecognizer) {
+                                          PatternRecognizer patternRecognizer) {
         this.definitionPatternMatcherFactory = definitionPatternMatcherFactory;
         this.patternRecognizer = patternRecognizer;
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected Map<String, Definition> addDefinitionsAsPatternMatchers(List<DefinitionPatternMatcher> matchers,
-            Map<String, Definition> defsMap) {
+                                                                      Map<String, Definition> defsMap) {
         Set<String> excludedKeys = new LinkedHashSet<>();
         for (Map.Entry<String, Definition> de : defsMap.entrySet()) {
             String key = de.getKey();

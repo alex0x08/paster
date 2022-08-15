@@ -18,13 +18,10 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.tiles.definition.pattern.regexp;
-
 import org.apache.tiles.Definition;
 import org.apache.tiles.definition.pattern.DefinitionPatternMatcher;
 import org.apache.tiles.definition.pattern.DefinitionPatternMatcherFactory;
-
 /**
  * Creates instances of {@link RegexpDefinitionPatternMatcher}.
  *
@@ -32,8 +29,9 @@ import org.apache.tiles.definition.pattern.DefinitionPatternMatcherFactory;
  */
 public class RegexpDefinitionPatternMatcherFactory implements
         DefinitionPatternMatcherFactory {
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public DefinitionPatternMatcher createDefinitionPatternMatcher(
             String pattern, Definition definition) {
         return new RegexpDefinitionPatternMatcher(pattern, definition);

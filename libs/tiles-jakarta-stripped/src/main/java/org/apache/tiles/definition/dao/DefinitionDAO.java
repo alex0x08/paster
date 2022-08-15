@@ -19,11 +19,9 @@
  * under the License.
  */
 package org.apache.tiles.definition.dao;
-
 import java.util.Map;
 
 import org.apache.tiles.Definition;
-
 /**
  * It represents an object that provides definitions, depending on a
  * customization key.
@@ -33,18 +31,16 @@ import org.apache.tiles.Definition;
  * @since 2.1.0
  */
 public interface DefinitionDAO<K> {
-
     /**
      * Returns a definition, given its name and the customization key.
      *
-     * @param name The name of the definition.
+     * @param name             The name of the definition.
      * @param customizationKey The customization key.
      * @return The requested definition, if found, otherwise <code>null</code>.
      * The inheritance of the definition must not be resolved.
      * @since 2.1.0
      */
     Definition getDefinition(String name, K customizationKey);
-
     /**
      * Returns all the definitions used of a customization key.
      *

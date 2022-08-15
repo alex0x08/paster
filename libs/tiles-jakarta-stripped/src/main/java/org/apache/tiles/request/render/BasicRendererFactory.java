@@ -19,36 +19,31 @@
  * under the License.
  */
 package org.apache.tiles.request.render;
-
 import java.util.HashMap;
 import java.util.Map;
-
-
 /**
  * Basic renderer factory implementation.
  *
  * @version $Rev: 1306435 $ $Date: 2012-03-29 02:39:11 +1100 (Thu, 29 Mar 2012) $
  */
 public class BasicRendererFactory implements RendererFactory {
-
     /**
      * The renderer name/renderer map.
      */
     protected Map<String, Renderer> renderers;
-
     /**
      * The default renderer.
      */
     protected Renderer defaultRenderer;
-
     /**
      * Constructor.
      */
     public BasicRendererFactory() {
         renderers = new HashMap<>();
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public Renderer getRenderer(String name) {
         Renderer retValue;
         if (name != null) {
@@ -59,10 +54,8 @@ public class BasicRendererFactory implements RendererFactory {
         } else {
             retValue = defaultRenderer;
         }
-
         return retValue;
     }
-
     /**
      * Sets the default renderer.
      *
@@ -71,11 +64,10 @@ public class BasicRendererFactory implements RendererFactory {
     public void setDefaultRenderer(Renderer renderer) {
         this.defaultRenderer = renderer;
     }
-
     /**
      * Registers a renderer.
      *
-     * @param name The name of the renderer.
+     * @param name     The name of the renderer.
      * @param renderer The renderer to register.
      */
     public void registerRenderer(String name, Renderer renderer) {

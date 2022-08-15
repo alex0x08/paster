@@ -19,22 +19,18 @@
  * under the License.
  */
 package org.apache.tiles.request.reflect;
-
 import org.apache.tiles.request.RequestException;
-
 /**
  * Indicates that an object cannot be instantiated.
  *
  * @version $Rev: 1306435 $ $Date: 2012-03-29 02:39:11 +1100 (Thu, 29 Mar 2012) $
  */
 public class CannotInstantiateObjectException extends RequestException {
-
     /**
      * Constructor.
      */
     public CannotInstantiateObjectException() {
     }
-
     /**
      * Constructor.
      *
@@ -43,7 +39,6 @@ public class CannotInstantiateObjectException extends RequestException {
     public CannotInstantiateObjectException(String message) {
         super(message);
     }
-
     /**
      * Constructor.
      *
@@ -52,15 +47,13 @@ public class CannotInstantiateObjectException extends RequestException {
     public CannotInstantiateObjectException(Throwable e) {
         super(e);
     }
-
     /**
      * Constructor.
      *
      * @param message The detail message.
-     * @param e The exception to be wrapped.
+     * @param e       The exception to be wrapped.
      */
     public CannotInstantiateObjectException(String message, Throwable e) {
         super(message, e);
     }
-
 }

@@ -18,9 +18,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.tiles;
-
 import static org.apache.tiles.CompareUtil.*;
 
 import java.io.Serializable;
@@ -30,51 +28,43 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.apache.tiles.request.Request;
-
 /**
  * Common implementation of attribute definition.
  *
  * @version $Rev: 1035061 $ $Date: 2010-11-15 07:32:50 +1100 (Mon, 15 Nov 2010) $
  */
 public class Attribute implements Serializable, Cloneable {
-
     /**
      * The name of the template renderer.
      */
     private static final String TEMPLATE_RENDERER = "template";
-
     /**
      * The roles that can render this attribute.
+     *
      * @since 2.0.6
      */
-    protected Set<String> roles = null;
-
+    protected Set<String> roles;
     /**
      * The value of the attribute.
      */
-    protected Object value = null;
-
+    protected Object value;
     /**
      * The expression to evaluate. Ignored if {@link #value} is not
      * <code>null</code>.
      *
      * @since 2.2.0
      */
-    protected Expression expressionObject = null;
-
+    protected Expression expressionObject;
     /**
      * The renderer name of the attribute. Default names are <code>string</code>,
      * <code>template</code>, <code>definition</code>, <code>object</code>.
      */
-    private String renderer = null;
-
+    private String renderer;
     /**
      * Constructor.
-     *
      */
     public Attribute() {
     }
-
     /**
      * Constructor.
      *
@@ -83,7 +73,6 @@ public class Attribute implements Serializable, Cloneable {
     public Attribute(Object value) {
         this.value = value;
     }
-
     /**
      * Copy constructor.
      *
@@ -99,7 +88,6 @@ public class Attribute implements Serializable, Cloneable {
         }
         this.renderer = attribute.renderer;
     }
-
     /**
      * Constructor.
      *
@@ -110,15 +98,14 @@ public class Attribute implements Serializable, Cloneable {
         this.value = value;
         setRole(role);
     }
-
     /**
      * Constructor.
      *
-     * @param value Object to store. If specified, the <code>expression</code>
-     * parameter will be ignored.
-     * @param expression The expression to be evaluated. Ignored if the
-     * <code>value</code> is not null.
-     * @param role Associated role.
+     * @param value        Object to store. If specified, the <code>expression</code>
+     *                     parameter will be ignored.
+     * @param expression   The expression to be evaluated. Ignored if the
+     *                     <code>value</code> is not null.
+     * @param role         Associated role.
      * @param rendererName The renderer name.
      * @since 2.2.0
      */
@@ -128,7 +115,6 @@ public class Attribute implements Serializable, Cloneable {
         this.renderer = rendererName;
         setRole(role);
     }
-
     /**
      * Creates a template attribute, starting from the name of the template.
      *
@@ -142,22 +128,21 @@ public class Attribute implements Serializable, Cloneable {
         attribute.setRenderer(TEMPLATE_RENDERER);
         return attribute;
     }
-
     /**
      * Creates a template attribute, starting from the name of the template.
      *
-     * @param template The template that will be rendered.
+     * @param template           The template that will be rendered.
      * @param templateExpression The template expression that will be evaluated
-     * to a template.
-     * @param templateType The type, or renderer, of the template. If null, the
-     * default <code>template</code> will be used.
-     * @param role The comma-separated roles for which the template is
-     * authorized to be rendered.
+     *                           to a template.
+     * @param templateType       The type, or renderer, of the template. If null, the
+     *                           default <code>template</code> will be used.
+     * @param role               The comma-separated roles for which the template is
+     *                           authorized to be rendered.
      * @return The template attribute.
      * @since 2.2.2
      */
     public static Attribute createTemplateAttribute(String template,
-            String templateExpression, String templateType, String role) {
+                                                    String templateExpression, String templateType, String role) {
         Attribute templateAttribute = createTemplateAttribute(template);
         templateAttribute.setRole(role);
         if (templateType != null) {
@@ -168,7 +153,6 @@ public class Attribute implements Serializable, Cloneable {
                         .createExpressionFromDescribedExpression(templateExpression));
         return templateAttribute;
     }
-
     /**
      * Creates a template attribute, starting from the expression to evaluate to
      * obtain the template.
@@ -184,14 +168,13 @@ public class Attribute implements Serializable, Cloneable {
         attribute.setRenderer(TEMPLATE_RENDERER);
         return attribute;
     }
-
     /**
      * Get role.
+     *
      * @return the name of the required role(s)
      */
     public String getRole() {
         String retValue = null;
-
         if (roles != null && !roles.isEmpty()) {
             StringBuilder builder = new StringBuilder();
             Iterator<String> roleIt = roles.iterator();
@@ -204,10 +187,8 @@ public class Attribute implements Serializable, Cloneable {
                 retValue = builder.toString();
             }
         }
-
         return retValue;
     }
-
     /**
      * Returns the roles that can render this attribute.
      *
@@ -217,7 +198,6 @@ public class Attribute implements Serializable, Cloneable {
     public Set<String> getRoles() {
         return roles;
     }
-
     /**
      * Set role.
      *
@@ -232,7 +212,6 @@ public class Attribute implements Serializable, Cloneable {
             roles = null;
         }
     }
-
     /**
      * Sets the roles that can render this attribute.
      *
@@ -242,15 +221,14 @@ public class Attribute implements Serializable, Cloneable {
     public void setRoles(Set<String> roles) {
         this.roles = roles;
     }
-
     /**
      * Get value.
+     *
      * @return the value
      */
     public Object getValue() {
         return value;
     }
-
     /**
      * Set value.
      *
@@ -259,7 +237,6 @@ public class Attribute implements Serializable, Cloneable {
     public void setValue(Object value) {
         this.value = value;
     }
-
     /**
      * Returns The expression to evaluate. Ignored if {@link #value} is not
      * <code>null</code>.
@@ -270,7 +247,6 @@ public class Attribute implements Serializable, Cloneable {
     public Expression getExpressionObject() {
         return expressionObject;
     }
-
     /**
      * Sets The expression to evaluate. Ignored if {@link #value} is not
      * <code>null</code>.
@@ -281,8 +257,9 @@ public class Attribute implements Serializable, Cloneable {
     public void setExpressionObject(Expression expressionObject) {
         this.expressionObject = expressionObject;
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
         if (value != null) {
@@ -290,7 +267,6 @@ public class Attribute implements Serializable, Cloneable {
         }
         return null;
     }
-
     /**
      * Returns the renderer name to use.
      *
@@ -300,7 +276,6 @@ public class Attribute implements Serializable, Cloneable {
     public String getRenderer() {
         return renderer;
     }
-
     /**
      * Sets the renderer name to use.
      *
@@ -310,7 +285,6 @@ public class Attribute implements Serializable, Cloneable {
     public void setRenderer(String rendererName) {
         this.renderer = rendererName;
     }
-
     /**
      * Inherits an attribute, i.e. overwrites null properties with the ones
      * provided by the attribute.
@@ -325,7 +299,7 @@ public class Attribute implements Serializable, Cloneable {
         Expression targetExpressionObject = attribute.getExpressionObject();
         if (targetExpressionObject != null
                 && (expressionObject == null || expressionObject
-                        .getExpression() == null)) {
+                .getExpression() == null)) {
             expressionObject = new Expression(targetExpressionObject);
         }
         if (roles == null || roles.isEmpty()) {
@@ -335,8 +309,9 @@ public class Attribute implements Serializable, Cloneable {
             renderer = attribute.getRenderer();
         }
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean equals(Object obj) {
         Attribute attribute = (Attribute) obj;
@@ -345,7 +320,6 @@ public class Attribute implements Serializable, Cloneable {
                 && nullSafeEquals(roles, attribute.roles)
                 && nullSafeEquals(expressionObject, attribute.expressionObject);
     }
-
     /**
      * Checks if the current user can use this attribute.
      *
@@ -357,25 +331,24 @@ public class Attribute implements Serializable, Cloneable {
         if (roles == null || roles.isEmpty()) {
             return true;
         }
-
         boolean retValue = false;
-
         for (Iterator<String> roleIt = roles.iterator(); roleIt.hasNext()
-                && !retValue;) {
+                && !retValue; ) {
             retValue = request.isUserInRole(roleIt.next());
         }
-
         return retValue;
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int hashCode() {
         return nullSafeHashCode(value) + nullSafeHashCode(renderer)
                 + nullSafeHashCode(roles) + nullSafeHashCode(expressionObject);
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Attribute clone() {
         return new Attribute(this);

@@ -18,16 +18,13 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.tiles.definition.pattern.wildcard;
-
 import java.util.List;
 
 import org.apache.tiles.Definition;
 import org.apache.tiles.definition.pattern.DefinitionPatternMatcher;
 import org.apache.tiles.definition.pattern.PatternUtil;
 import org.apache.tiles.util.WildcardHelper;
-
 /**
  * Matches wildcard patterns in definitions.
  *
@@ -36,49 +33,44 @@ import org.apache.tiles.util.WildcardHelper;
  */
 public class WildcardDefinitionPatternMatcher implements
         DefinitionPatternMatcher {
-
     /**
      * Allows to parse wildcard expressions and to recognize substitution
      * variables.
      */
-    private WildcardHelper wildcardHelper;
-
+    private final WildcardHelper wildcardHelper;
     /**
      * The definition to use as a basis.
      */
-    private Definition definition;
-
+    private final Definition definition;
     /**
      * The pattern to use.
      */
-    private int[] pattern;
-
+    private final int[] pattern;
     /**
      * Constructor.
      *
-     * @param pattern The pattern to use, in string form.
-     * @param definition The definition to use as a basis.
+     * @param pattern        The pattern to use, in string form.
+     * @param definition     The definition to use as a basis.
      * @param wildcardHelper The object that parses wildcard expressions and
-     * recognized substitution variables.
+     *                       recognized substitution variables.
      * @since 2.2.0
      */
     public WildcardDefinitionPatternMatcher(String pattern,
-            Definition definition, WildcardHelper wildcardHelper) {
+                                            Definition definition, WildcardHelper wildcardHelper) {
         this.wildcardHelper = wildcardHelper;
         this.definition = definition;
         this.pattern = wildcardHelper.compilePattern(pattern);
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public Definition createDefinition(String definitionName) {
         List<String> vars = wildcardHelper.match(definitionName, pattern);
         Definition d = null;
-
         if (vars != null) {
             d = PatternUtil.replacePlaceholders(definition, definitionName,
                     vars.toArray());
         }
-
         return d;
     }
 }

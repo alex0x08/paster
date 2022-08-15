@@ -25,6 +25,7 @@ import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 import java.util.logging.Level;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 /**
@@ -44,14 +45,14 @@ public final class ClassUtil {
      * It tries to use the thread's current classloader first and, if it does
      * not succeed, uses the classloader of ClassUtil.
      *
-     * @param <T> The subclass to use.
+     * @param <T>       The subclass to use.
      * @param className The name of the class to load.
      * @param baseClass The base class to subclass to.
      * @return The loaded class.
      * @throws ClassNotFoundException If the class has not been found.
      */
     public static <T> Class<? extends T> getClass(String className,
-            Class<T> baseClass) throws ClassNotFoundException {
+                                                  Class<T> baseClass) throws ClassNotFoundException {
         ClassLoader classLoader = Thread.currentThread()
                 .getContextClassLoader();
         if (classLoader == null) {
@@ -60,29 +61,29 @@ public final class ClassUtil {
         return Class.forName(className, true, classLoader)
                 .asSubclass(baseClass);
     }
-    /**
+    /*
      * Returns an instance of the given class name, by calling the default
      * constructor.
      *
      * @param className The class name to load and to instantiate.
      * @return The new instance of the class name.
      * @throws CannotInstantiateObjectException If something goes wrong during
-     * instantiation.
-     */
+     *                                          instantiation.
     public static Object instantiate(String className) {
         return instantiate(className, false);
     }
-    /**
+     */
+    /*
      * Returns an instance of the given class name, by calling the default
      * constructor.
      *
-     * @param className The class name to load and to instantiate.
+     * @param className  The class name to load and to instantiate.
      * @param returnNull If <code>true</code>, if the class is not found it
-     * returns <code>true</code>, otherwise it throws a
-     * <code>TilesException</code>.
+     *                   returns <code>true</code>, otherwise it throws a
+     *                   <code>TilesException</code>.
      * @return The new instance of the class name.
      * @throws CannotInstantiateObjectException If something goes wrong during
-     * instantiation.
+     *                                          instantiation.
      */
     public static Object instantiate(String className, boolean returnNull) {
         /*ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
@@ -90,7 +91,7 @@ public final class ClassUtil {
             classLoader = ClassUtil.class.getClassLoader();
         }*/
         try {
-            Class<? extends Object> namedClass = getClass(className, Object.class);
+            Class<?> namedClass = getClass(className, Object.class);
             return namedClass.getDeclaredConstructor().newInstance();
         } catch (ClassNotFoundException e) {
             if (returnNull) {
@@ -101,23 +102,24 @@ public final class ClassUtil {
         } catch (IllegalAccessException e) {
             throw new CannotInstantiateObjectException(
                     "Unable to access factory class: '" + className + "'", e);
-        } catch (InstantiationException | NoSuchMethodException | SecurityException | IllegalArgumentException | InvocationTargetException e) {
+        } catch (InstantiationException | NoSuchMethodException | SecurityException | IllegalArgumentException |
+                 InvocationTargetException e) {
             throw new CannotInstantiateObjectException(
                     "Unable to instantiate factory class: '"
-                    + className
-                    + "'. Make sure that this class has a default constructor",
+                            + className
+                            + "'. Make sure that this class has a default constructor",
                     e);
         }
     }
     /**
      * Collects bean infos from a class and filling a list.
      *
-     * @param clazz The class to be inspected.
+     * @param clazz           The class to be inspected.
      * @param name2descriptor The map in the form: name of the property ->
-     * descriptor.
+     *                        descriptor.
      */
     public static void collectBeanInfo(Class<?> clazz,
-            Map<String, PropertyDescriptor> name2descriptor) {
+                                       Map<String, PropertyDescriptor> name2descriptor) {
         Logger log = LoggerFactory.getLogger(ClassUtil.class);
         BeanInfo info = null;
         try {

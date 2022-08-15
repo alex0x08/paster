@@ -19,11 +19,9 @@
  * under the License.
  */
 package org.apache.tiles.request;
-
 import java.util.Collection;
 import java.util.Locale;
 import java.util.Map;
-
 /**
  * Defines a set of methods which tiles use to communicate to
  * the tiles container and runtime environment.  There is only
@@ -32,14 +30,12 @@ import java.util.Map;
  * @version $Rev: 1306435 $ $Date: 2012-03-29 02:39:11 +1100 (Thu, 29 Mar 2012) $
  */
 public interface ApplicationContext {
-
     /**
      * Returns the original, technology-dependent, context.
      *
      * @return The original application context.
      */
     Object getContext();
-
     /**
      * Returns a mutable Map that maps application scope attribute names to
      * their values.
@@ -47,7 +43,6 @@ public interface ApplicationContext {
      * @return Map of key value pairs.
      */
     Map<String, Object> getApplicationScope();
-
     /**
      * Return an immutable Map that maps context application initialization
      * parameters to their values.
@@ -55,7 +50,6 @@ public interface ApplicationContext {
      * @return initialization parameters
      */
     Map<String, String> getInitParams();
-
     /**
      * Return the application resource mapped to the specified path.
      *
@@ -63,16 +57,14 @@ public interface ApplicationContext {
      * @return the first located resource which matches the given path or null if no such resource exists.
      */
     ApplicationResource getResource(String localePath);
-
     /**
      * Return a localized version of an ApplicationResource.
      *
-     * @param base the ApplicationResource.
+     * @param base   the ApplicationResource.
      * @param locale the desired Locale.
      * @return the first located resource which matches the given path or null if no such resource exists.
      */
     ApplicationResource getResource(ApplicationResource base, Locale locale);
-
     /**
      * Return the application resources mapped to the specified path.
      *

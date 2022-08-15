@@ -19,18 +19,15 @@
  * under the License.
  */
 package org.apache.tiles;
-
 import java.util.Map;
 import java.util.Set;
-
 /**
  * Encapsulation of the current state of execution.
  *
- * @since Tiles 2.0
  * @version $Rev: 829574 $ $Date: 2009-10-26 01:15:31 +1100 (Mon, 26 Oct 2009) $
+ * @since Tiles 2.0
  */
 public interface AttributeContext {
-
     /**
      * Returns the attribute that will be used to render a template.
      *
@@ -38,7 +35,6 @@ public interface AttributeContext {
      * @since 2.1.2
      */
     Attribute getTemplateAttribute();
-
     /**
      * Sets the template attribute, that will be used to render the template
      * page.
@@ -47,7 +43,6 @@ public interface AttributeContext {
      * @since 2.1.2
      */
     void setTemplateAttribute(Attribute templateAttribute);
-
     /**
      * Get associated preparer instance.
      *
@@ -55,7 +50,6 @@ public interface AttributeContext {
      * @since 2.1.0
      */
     String getPreparer();
-
     /**
      * Set associated preparer instance.
      *
@@ -63,21 +57,18 @@ public interface AttributeContext {
      * @since 2.1.0
      */
     void setPreparer(String url);
-
     /**
      * Add all attributes to the context.
      *
      * @param newAttributes the attributes to be added.
      */
     void addAll(Map<String, Attribute> newAttributes);
-
     /**
      * Add all attributes to the context.
      *
      * @param defaultAttributes attributes which should be present.
      */
     void addMissing(Map<String, Attribute> defaultAttributes);
-
     /**
      * Copies the cascaded attributes to this attribute context.
      *
@@ -85,7 +76,6 @@ public interface AttributeContext {
      * @since 2.1.0
      */
     void inheritCascadedAttributes(AttributeContext parent);
-
     /**
      * Copies all missing attributes from the <code>parent</code> attribute
      * context to this one.
@@ -94,7 +84,6 @@ public interface AttributeContext {
      * @since 2.1.0
      */
     void inherit(AttributeContext parent);
-
     /**
      * Retrieve the named attribute, either cascaded or not.
      *
@@ -102,7 +91,6 @@ public interface AttributeContext {
      * @return Attribute associated with the given name.
      */
     Attribute getAttribute(String name);
-
     /**
      * Retrieve the attribute that has been defined in this context (i.e. not
      * cascaded).
@@ -113,7 +101,6 @@ public interface AttributeContext {
      * @since 2.1.0
      */
     Attribute getLocalAttribute(String name);
-
     /**
      * Retrieve the attribute that has been cascaded at upper levels.
      *
@@ -123,7 +110,6 @@ public interface AttributeContext {
      * @since 2.1.0
      */
     Attribute getCascadedAttribute(String name);
-
     /**
      * Returns the names of the local attributes, i.e. the one that have not
      * been cascaded.
@@ -132,7 +118,6 @@ public interface AttributeContext {
      * @since 2.1.0
      */
     Set<String> getLocalAttributeNames();
-
     /**
      * Returns the names of the cascaded attributes.
      *
@@ -140,30 +125,27 @@ public interface AttributeContext {
      * @since 2.1.0
      */
     Set<String> getCascadedAttributeNames();
-
     /**
      * Add the specified attribute. The attribute value will be available only
      * in the current context, i.e. it is like calling
      * {@link AttributeContext#putAttribute(String, Attribute, boolean)} with
      * <code>cascade = false</code>.
      *
-     * @param name name of the attribute
+     * @param name  name of the attribute
      * @param value value of the attribute
      */
     void putAttribute(String name, Attribute value);
-
     /**
      * Add the specified attribute.
      *
-     * @param name name of the attribute
-     * @param value value of the attribute
+     * @param name    name of the attribute
+     * @param value   value of the attribute
      * @param cascade If <code>true</code>, the attribute value will be
-     * available in all nested contexts. If <code>false</code>, it will be
-     * available only in the current context.
+     *                available in all nested contexts. If <code>false</code>, it will be
+     *                available only in the current context.
      * @since 2.1.0
      */
     void putAttribute(String name, Attribute value, boolean cascade);
-
     /**
      * Clear the attributes.
      */

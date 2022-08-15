@@ -19,13 +19,11 @@
  * under the License.
  */
 package org.apache.tiles.request.render;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.tiles.request.Request;
-
 /**
  * Renders an attribute that has no associated renderer using delegation to
  * other renderers.
@@ -33,19 +31,16 @@ import org.apache.tiles.request.Request;
  * @version $Rev: 1306435 $ $Date: 2012-03-29 02:39:11 +1100 (Thu, 29 Mar 2012) $
  */
 public class ChainedDelegateRenderer implements Renderer {
-
     /**
      * The list of chained renderers.
      */
     private final List<Renderer> renderers;
-
     /**
      * Constructor.
      */
     public ChainedDelegateRenderer() {
         renderers = new ArrayList<>();
     }
-
     /**
      * Adds an attribute renderer to the list. The first inserted this way, the
      * first is checked when rendering.
@@ -55,25 +50,22 @@ public class ChainedDelegateRenderer implements Renderer {
     public void addAttributeRenderer(Renderer renderer) {
         renderers.add(renderer);
     }
-
-
     @Override
     public void render(String value, Request request) throws IOException {
         if (value == null) {
             throw new NullPointerException("The attribute value is null");
         }
-
         for (Renderer renderer : renderers) {
             if (renderer.isRenderable(value, request)) {
                 renderer.render(value, request);
                 return;
             }
         }
-
         throw new CannotRenderException("Cannot renderer value '" + value + "'");
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public boolean isRenderable(String value, Request request) {
         for (Renderer renderer : renderers) {
             if (renderer.isRenderable(value, request)) {

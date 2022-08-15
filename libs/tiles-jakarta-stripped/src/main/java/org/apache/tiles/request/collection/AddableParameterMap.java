@@ -19,25 +19,21 @@
  * under the License.
  */
 package org.apache.tiles.request.collection;
-
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
 import org.apache.tiles.request.attribute.HasAddableKeys;
-
 /**
  * Exposes an {@link HasAddableKeys} object as a put/get (no remove) map.
  *
  * @version $Rev: 1064782 $ $Date: 2011-01-29 04:08:52 +1100 (Sat, 29 Jan 2011) $
  */
 public class AddableParameterMap extends ReadOnlyEnumerationMap<String> {
-
     /**
      * The request.
      */
     private final HasAddableKeys<String> request;
-
     /**
      * Constructor.
      *
@@ -47,40 +43,38 @@ public class AddableParameterMap extends ReadOnlyEnumerationMap<String> {
         super(request);
         this.request = request;
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public Set<Map.Entry<String, String>> entrySet() {
         return new AddableParameterEntrySet();
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public String put(String key, String value) {
         String oldValue = request.getValue(key);
         request.setValue(key, value);
         return oldValue;
     }
-
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public void putAll(Map<? extends String, ? extends String> map) {
         for (Map.Entry<? extends String, ? extends String> entry : map
                 .entrySet()) {
             request.setValue(entry.getKey(), entry.getValue());
         }
     }
-
-
     /**
      * Entry set implementation for {@link AddableParameterMap}.
      */
     private class AddableParameterEntrySet extends ReadOnlyEnumerationMap<String>.ReadOnlyEnumerationMapEntrySet {
-
         @Override
         public boolean add(java.util.Map.Entry<String, String> e) {
             request.setValue(e.getKey(), e.getValue());
             return true;
         }
-
         @Override
         public boolean addAll(
                 Collection<? extends java.util.Map.Entry<String, String>> c) {

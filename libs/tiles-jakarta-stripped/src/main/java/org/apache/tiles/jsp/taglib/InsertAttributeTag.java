@@ -41,7 +41,7 @@ public class InsertAttributeTag extends SimpleTagSupport {
     /**
      * The template model.
      */
-    private org.apache.tiles.template.InsertAttributeModel model = new org.apache.tiles.template.InsertAttributeModel();
+    private final org.apache.tiles.template.InsertAttributeModel model = new org.apache.tiles.template.InsertAttributeModel();
 
     /**
      * If <code>true</code>, if an exception happens during

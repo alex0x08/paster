@@ -49,7 +49,7 @@ public class InsertDefinitionTag extends SimpleTagSupport {
     /**
      * The template model.
      */
-    private org.apache.tiles.template.InsertDefinitionModel model = new org.apache.tiles.template.InsertDefinitionModel();
+    private final org.apache.tiles.template.InsertDefinitionModel model = new org.apache.tiles.template.InsertDefinitionModel();
 
     /**
      * The name of the definition to render.

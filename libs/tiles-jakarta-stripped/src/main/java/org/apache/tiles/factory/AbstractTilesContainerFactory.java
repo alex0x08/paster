@@ -19,34 +19,30 @@
  * under the License.
  */
 package org.apache.tiles.factory;
-
 import org.apache.tiles.TilesContainer;
 import org.apache.tiles.request.ApplicationContext;
-
 /**
- * Abstract Factory that creates instances of {@link TilesContainerFactory}.
+ * Abstract Factory that creates instances of {link TilesContainerFactory}.
  *
  * @version $Rev: 833737 $ $Date: 2009-11-08 06:17:09 +1100 (Sun, 08 Nov 2009) $
  * @since 2.1.0
  */
 public abstract class AbstractTilesContainerFactory {
-
-    /**
+    /*
      * Initialization parameter that represents the container factory class
      * name.
      *
      * @since 2.1.0
      */
-    public static final String CONTAINER_FACTORY_INIT_PARAM =
-        "org.apache.tiles.factory.AbstractTilesContainerFactory";
-
+    //public static final String CONTAINER_FACTORY_INIT_PARAM =
+    //        "org.apache.tiles.factory.AbstractTilesContainerFactory";
     /**
      * Creates a Tiles container.
      *
      * @param applicationContext The Tiles application context object.
      * @return The created container.
      * @throws TilesContainerFactoryException If something goes wrong during
-     * instantiation.
+     *                                        instantiation.
      * @since 2.1.1
      */
     public abstract TilesContainer createContainer(ApplicationContext applicationContext);

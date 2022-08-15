@@ -19,7 +19,6 @@
  * under the License.
  */
 package org.apache.tiles.request.collection;
-
 import static org.apache.tiles.request.collection.CollectionUtil.*;
 
 import java.util.ArrayList;
@@ -30,19 +29,16 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.tiles.request.attribute.HasKeys;
-
 /**
  * Exposes keys of a {@link HasKeys} object as a set.
  *
  * @version $Rev: 1229087 $ $Date: 2012-01-09 21:35:14 +1100 (Mon, 09 Jan 2012) $
  */
 public class KeySet implements Set<String> {
-
     /**
      * The request to read.
      */
     private final HasKeys<?> request;
-
     /**
      * Constructor.
      *
@@ -51,27 +47,22 @@ public class KeySet implements Set<String> {
     public KeySet(HasKeys<?> request) {
         this.request = request;
     }
-
     @Override
     public boolean add(String e) {
         throw new UnsupportedOperationException();
     }
-
     @Override
     public boolean addAll(Collection<? extends String> c) {
         throw new UnsupportedOperationException();
     }
-
     @Override
     public void clear() {
         throw new UnsupportedOperationException();
     }
-
     @Override
     public boolean contains(Object o) {
         return request.getValue(key(o)) != null;
     }
-
     @SuppressWarnings("unchecked")
     @Override
     public boolean containsAll(Collection<?> c) {
@@ -83,47 +74,38 @@ public class KeySet implements Set<String> {
         }
         return true;
     }
-
     @Override
     public boolean isEmpty() {
         return !request.getKeys().hasMoreElements();
     }
-
     @Override
     public Iterator<String> iterator() {
         return new KeySetIterator();
     }
-
     @Override
     public boolean remove(Object o) {
         throw new UnsupportedOperationException();
     }
-
     @Override
     public boolean removeAll(Collection<?> c) {
         throw new UnsupportedOperationException();
     }
-
     @Override
     public boolean retainAll(Collection<?> c) {
         throw new UnsupportedOperationException();
     }
-
     @Override
     public int size() {
         return enumerationSize(request.getKeys());
     }
-
     @Override
     public Object[] toArray() {
         return toList().toArray();
     }
-
     @Override
     public <T> T[] toArray(T[] a) {
         return toList().toArray(a);
     }
-
     /**
      * Turns this set into a list.
      *
@@ -137,27 +119,22 @@ public class KeySet implements Set<String> {
         }
         return entries;
     }
-
     /**
      * Iterates elements of {@link KeySet}.
      */
     private class KeySetIterator implements Iterator<String> {
-
         /**
          * The key names enumeration.
          */
         private final Enumeration<String> namesEnumeration = request.getKeys();
-
         @Override
         public boolean hasNext() {
             return namesEnumeration.hasMoreElements();
         }
-
         @Override
         public String next() {
             return namesEnumeration.nextElement();
         }
-
         @Override
         public void remove() {
             throw new UnsupportedOperationException();

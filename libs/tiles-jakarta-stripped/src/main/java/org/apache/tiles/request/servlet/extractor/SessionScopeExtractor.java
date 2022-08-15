@@ -19,27 +19,22 @@
  * under the License.
  */
 package org.apache.tiles.request.servlet.extractor;
-
 import java.util.Enumeration;
 import java.util.Collections;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-
 import org.apache.tiles.request.attribute.AttributeExtractor;
-
 /**
  * Extract attributes from session scope.
  *
  * @version $Rev: 1199216 $ $Date: 2011-11-08 23:25:24 +1100 (Tue, 08 Nov 2011) $
  */
 public class SessionScopeExtractor implements AttributeExtractor {
-
     /**
      * The servlet request.
      */
     private final HttpServletRequest request;
-
     /**
      * Constructor.
      *
@@ -48,12 +43,10 @@ public class SessionScopeExtractor implements AttributeExtractor {
     public SessionScopeExtractor(HttpServletRequest request) {
         this.request = request;
     }
-
     @Override
     public void setValue(String name, Object value) {
         request.getSession().setAttribute(name, value);
     }
-
     @Override
     public void removeValue(String name) {
         HttpSession session = request.getSession(false);
@@ -61,7 +54,6 @@ public class SessionScopeExtractor implements AttributeExtractor {
             session.removeAttribute(name);
         }
     }
-
     @Override
     public Enumeration<String> getKeys() {
         HttpSession session = request.getSession(false);
@@ -70,7 +62,6 @@ public class SessionScopeExtractor implements AttributeExtractor {
         }
         return Collections.enumeration(Collections.emptySet());
     }
-
     @Override
     public Object getValue(String key) {
         HttpSession session = request.getSession(false);

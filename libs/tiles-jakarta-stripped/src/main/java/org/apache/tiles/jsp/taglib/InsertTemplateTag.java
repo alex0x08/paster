@@ -49,7 +49,7 @@ public class InsertTemplateTag extends SimpleTagSupport {
     /**
      * The template model.
      */
-    private org.apache.tiles.template.InsertTemplateModel model = new org.apache.tiles.template.InsertTemplateModel();
+    private final org.apache.tiles.template.InsertTemplateModel model = new org.apache.tiles.template.InsertTemplateModel();
 
     /**
      * The template to render.

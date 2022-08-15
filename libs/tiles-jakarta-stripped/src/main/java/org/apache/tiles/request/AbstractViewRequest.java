@@ -19,10 +19,7 @@
  * under the License.
  */
 package org.apache.tiles.request;
-
 import java.io.IOException;
-
-
 /**
  * Base class for "view" requests, i.e. requests created into view technologies,
  * such as JSP, Velocity and Freemarker. In particular, all calls to
@@ -31,7 +28,6 @@ import java.io.IOException;
  * @version $Rev: 1229087 $ $Date: 2012-01-09 21:35:14 +1100 (Mon, 09 Jan 2012) $
  */
 public class AbstractViewRequest extends DispatchRequestWrapper {
-
     /**
      * Constructor.
      *
@@ -40,19 +36,16 @@ public class AbstractViewRequest extends DispatchRequestWrapper {
     public AbstractViewRequest(DispatchRequest request) {
         super(request);
     }
-
     @Override
     public void dispatch(String path) throws IOException {
         setForceInclude(true);
         doInclude(path);
     }
-
     @Override
     public void include(String path) throws IOException {
         setForceInclude(true);
         doInclude(path);
     }
-
     /**
      * Includes the result. By default, uses the wrapped request for the inclusion.
      *

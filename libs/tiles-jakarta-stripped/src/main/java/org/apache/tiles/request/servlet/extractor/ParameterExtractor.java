@@ -19,25 +19,20 @@
  * under the License.
  */
 package org.apache.tiles.request.servlet.extractor;
-
 import java.util.Enumeration;
 
 import jakarta.servlet.http.HttpServletRequest;
-
 import org.apache.tiles.request.attribute.HasKeys;
-
 /**
  * Extract parameters from the request.
  *
  * @version $Rev: 1066499 $ $Date: 2011-02-03 02:33:34 +1100 (Thu, 03 Feb 2011) $
  */
 public class ParameterExtractor implements HasKeys<String> {
-
     /**
      * The servlet request.
      */
     private final HttpServletRequest request;
-
     /**
      * Constructor.
      *
@@ -46,12 +41,10 @@ public class ParameterExtractor implements HasKeys<String> {
     public ParameterExtractor(HttpServletRequest request) {
         this.request = request;
     }
-
     @Override
     public Enumeration<String> getKeys() {
         return request.getParameterNames();
     }
-
     @Override
     public String getValue(String key) {
         return request.getParameter(key);

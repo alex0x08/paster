@@ -19,24 +19,21 @@
  * under the License.
  */
 package org.apache.tiles.request.collection;
-
 import org.apache.tiles.request.attribute.AttributeExtractor;
-import java.util.*;
-import static org.apache.tiles.request.collection.CollectionUtil.key;
 
+import java.util.*;
+
+import static org.apache.tiles.request.collection.CollectionUtil.key;
 /**
  * Exposes a scope context as a <String, Object> map.
  *
  * @version $Rev: 1229087 $ $Date: 2012-01-09 21:35:14 +1100 (Mon, 09 Jan 2012) $
  */
-
 public class ScopeMap extends ReadOnlyEnumerationMap<Object> {
-
     /**
      * The context to read.
      */
     private final AttributeExtractor context;
-
     /**
      * Constructor.
      *
@@ -46,54 +43,57 @@ public class ScopeMap extends ReadOnlyEnumerationMap<Object> {
         super(context);
         this.context = context;
     }
-
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public void clear() {
         Enumeration<String> keys = context.getKeys();
         while (keys.hasMoreElements()) {
             context.removeValue(keys.nextElement());
         }
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public Set<Map.Entry<String, Object>> entrySet() {
         return new ScopeEntrySet();
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public Set<String> keySet() {
         return new RemovableKeySet(context);
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public Object put(String key, Object value) {
         String skey = key(key);
         Object previous = context.getValue(skey);
         context.setValue(skey, value);
         return previous;
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public void putAll(Map<? extends String, ?> map) {
         for (String key : map.keySet()) {
             context.setValue(key, map.get(key));
         }
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public Object remove(Object key) {
         String skey = key(key);
         Object previous = context.getValue(skey);
         context.removeValue(skey);
         return (previous);
     }
-
     /**
      * Entry set implementation for {@link ScopeMap}.
      */
     private class ScopeEntrySet extends ReadOnlyEnumerationMap<Object>.ReadOnlyEnumerationMapEntrySet {
-
         @Override
         public boolean add(java.util.Map.Entry<String, Object> e) {
             String key = e.getKey();
@@ -105,7 +105,6 @@ public class ScopeMap extends ReadOnlyEnumerationMap<Object> {
             }
             return false;
         }
-
         @Override
         public boolean addAll(
                 Collection<? extends java.util.Map.Entry<String, Object>> c) {
@@ -115,12 +114,10 @@ public class ScopeMap extends ReadOnlyEnumerationMap<Object> {
             }
             return retValue;
         }
-
         @Override
         public void clear() {
             ScopeMap.this.clear();
         }
-
         @SuppressWarnings("unchecked")
         @Override
         public boolean remove(Object o) {
@@ -133,7 +130,6 @@ public class ScopeMap extends ReadOnlyEnumerationMap<Object> {
             }
             return false;
         }
-
         @SuppressWarnings("unchecked")
         @Override
         public boolean removeAll(Collection<?> c) {
@@ -144,14 +140,13 @@ public class ScopeMap extends ReadOnlyEnumerationMap<Object> {
             }
             return retValue;
         }
-
         @SuppressWarnings("unchecked")
         @Override
         public boolean retainAll(Collection<?> c) {
             Collection<Map.Entry<String, Object>> realCollection = (Collection<java.util.Map.Entry<String, Object>>) c;
             boolean retValue = false;
             Set<String> keysToRemove = new LinkedHashSet<>();
-            for (Enumeration<String> keys = context.getKeys(); keys.hasMoreElements();) {
+            for (Enumeration<String> keys = context.getKeys(); keys.hasMoreElements(); ) {
                 String key = keys.nextElement();
                 Object value = context.getValue(key);
                 Map.Entry<String, Object> entry = new MapEntry<>(key, value, false);

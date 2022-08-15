@@ -19,39 +19,28 @@
  * under the License.
  */
 package org.apache.tiles.request.collection;
-
-
 import java.util.Map;
-
-
 /**
  * <p>Map.Entry implementation that can be constructed to either be read-only
  * or not.</p>
  *
- * @version $Rev: 1049711 $ $Date: 2010-12-16 08:12:00 +1100 (Thu, 16 Dec 2010) $
  * @param <K> The key type.
  * @param <V> The value type.
+ * @version $Rev: 1049711 $ $Date: 2010-12-16 08:12:00 +1100 (Thu, 16 Dec 2010) $
  */
-
 public class MapEntry<K, V> implements Map.Entry<K, V> {
-
-
     /**
      * <p>The entry key.</p>
      */
     private final K key;
-
     /**
      * <p>The entry value.</p>
      */
     private V value;
-
     /**
      * <p>Whether the entry can be modified.</p>
      */
     private final boolean modifiable;
-
-
     /**
      * <p>Creates a map entry that can either allow modifications or not.</p>
      *
@@ -64,8 +53,6 @@ public class MapEntry<K, V> implements Map.Entry<K, V> {
         this.value = value;
         this.modifiable = modifiable;
     }
-
-
     /**
      * <p>Gets the entry key.</p>
      *
@@ -74,8 +61,6 @@ public class MapEntry<K, V> implements Map.Entry<K, V> {
     public K getKey() {
         return key;
     }
-
-
     /**
      * <p>Gets the entry value.</p>
      *
@@ -84,8 +69,6 @@ public class MapEntry<K, V> implements Map.Entry<K, V> {
     public V getValue() {
         return value;
     }
-
-
     /**
      * <p>Sets the entry value if the entry can be modified.</p>
      *
@@ -101,8 +84,6 @@ public class MapEntry<K, V> implements Map.Entry<K, V> {
         }
         throw new UnsupportedOperationException("The map entry is not modifiable");
     }
-
-
     /**
      * <p>Determines if this entry is equal to the passed object.</p>
      *
@@ -117,12 +98,10 @@ public class MapEntry<K, V> implements Map.Entry<K, V> {
             return (this.getKey() == null ? entry.getKey() == null : this
                     .getKey().equals(entry.getKey()))
                     && (this.getValue() == null ? entry.getValue() == null
-                            : this.getValue().equals(entry.getValue()));
+                    : this.getValue().equals(entry.getValue()));
         }
         return false;
     }
-
-
     /**
      * <p>Returns the hashcode for this entry.</p>
      *
@@ -131,6 +110,6 @@ public class MapEntry<K, V> implements Map.Entry<K, V> {
     @Override
     public int hashCode() {
         return (this.getKey() == null ? 0 : this.getKey().hashCode())
-            ^ (this.getValue() == null ? 0 : this.getValue().hashCode());
+                ^ (this.getValue() == null ? 0 : this.getValue().hashCode());
     }
 }

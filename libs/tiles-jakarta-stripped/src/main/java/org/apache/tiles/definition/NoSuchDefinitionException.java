@@ -18,10 +18,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
-
 package org.apache.tiles.definition;
-
 /**
  * Exception thrown when a definition is not found.
  *
@@ -34,7 +31,6 @@ public class NoSuchDefinitionException extends DefinitionsFactoryException {
     public NoSuchDefinitionException() {
         super();
     }
-
     /**
      * Constructor.
      *
@@ -43,17 +39,15 @@ public class NoSuchDefinitionException extends DefinitionsFactoryException {
     public NoSuchDefinitionException(String msg) {
         super(msg);
     }
-
     /**
      * Constructor.
      *
      * @param message Message.
-     * @param e Cause.
+     * @param e       Cause.
      */
     public NoSuchDefinitionException(String message, Throwable e) {
         super(message, e);
     }
-
     /**
      * Constructor.
      *

@@ -19,32 +19,25 @@
  * under the License.
  */
 package org.apache.tiles.request.jsp;
-
 import java.io.IOException;
 import java.io.PrintWriter;
-
 import jakarta.servlet.jsp.JspWriter;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 /**
  * Adapts a {@link JspWriter} to a {@link PrintWriter}, swallowing {@link IOException}.
  *
  * @version $Rev: 1306435 $ $Date: 2012-03-29 02:39:11 +1100 (Thu, 29 Mar 2012) $
  */
 public class JspPrintWriterAdapter extends PrintWriter {
-
     /**
      * The JSP writer.
      */
     private final JspWriter writer;
-
     /**
      * The logging object.
      */
     private final Logger log = LoggerFactory.getLogger(this.getClass());
-
     /**
      * Constructor.
      *
@@ -54,17 +47,17 @@ public class JspPrintWriterAdapter extends PrintWriter {
         super(writer);
         this.writer = writer;
     }
-
-    /**
+    /*
      * Returns the original JSP writer.
      *
      * @return The JSP writer.
-     */
     public JspWriter getJspWriter() {
-        return writer;
+    return writer;
     }
-
-    /** {@inheritDoc} */
+     */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public PrintWriter append(char c) {
         try {
@@ -75,8 +68,9 @@ public class JspPrintWriterAdapter extends PrintWriter {
         }
         return this;
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public PrintWriter append(CharSequence csq, int start, int end) {
         try {
@@ -87,8 +81,9 @@ public class JspPrintWriterAdapter extends PrintWriter {
         }
         return this;
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public PrintWriter append(CharSequence csq) {
         try {
@@ -99,8 +94,9 @@ public class JspPrintWriterAdapter extends PrintWriter {
         }
         return this;
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void close() {
         try {
@@ -110,8 +106,9 @@ public class JspPrintWriterAdapter extends PrintWriter {
             setError();
         }
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void flush() {
         try {
@@ -121,8 +118,9 @@ public class JspPrintWriterAdapter extends PrintWriter {
             setError();
         }
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void print(boolean b) {
         try {
@@ -132,8 +130,9 @@ public class JspPrintWriterAdapter extends PrintWriter {
             setError();
         }
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void print(char c) {
         try {
@@ -143,8 +142,9 @@ public class JspPrintWriterAdapter extends PrintWriter {
             setError();
         }
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void print(char[] s) {
         try {
@@ -154,8 +154,9 @@ public class JspPrintWriterAdapter extends PrintWriter {
             setError();
         }
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void print(double d) {
         try {
@@ -165,8 +166,9 @@ public class JspPrintWriterAdapter extends PrintWriter {
             setError();
         }
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void print(float f) {
         try {
@@ -176,8 +178,9 @@ public class JspPrintWriterAdapter extends PrintWriter {
             setError();
         }
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void print(int i) {
         try {
@@ -187,8 +190,9 @@ public class JspPrintWriterAdapter extends PrintWriter {
             setError();
         }
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void print(long l) {
         try {
@@ -198,8 +202,9 @@ public class JspPrintWriterAdapter extends PrintWriter {
             setError();
         }
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void print(Object obj) {
         try {
@@ -209,8 +214,9 @@ public class JspPrintWriterAdapter extends PrintWriter {
             setError();
         }
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void print(String s) {
         try {
@@ -220,8 +226,9 @@ public class JspPrintWriterAdapter extends PrintWriter {
             setError();
         }
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void println() {
         try {
@@ -231,8 +238,9 @@ public class JspPrintWriterAdapter extends PrintWriter {
             setError();
         }
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void println(boolean x) {
         try {
@@ -242,8 +250,9 @@ public class JspPrintWriterAdapter extends PrintWriter {
             setError();
         }
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void println(char x) {
         try {
@@ -253,8 +262,9 @@ public class JspPrintWriterAdapter extends PrintWriter {
             setError();
         }
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void println(char[] x) {
         try {
@@ -264,8 +274,9 @@ public class JspPrintWriterAdapter extends PrintWriter {
             setError();
         }
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void println(double x) {
         try {
@@ -275,8 +286,9 @@ public class JspPrintWriterAdapter extends PrintWriter {
             setError();
         }
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void println(float x) {
         try {
@@ -286,8 +298,9 @@ public class JspPrintWriterAdapter extends PrintWriter {
             setError();
         }
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void println(int x) {
         try {
@@ -297,8 +310,9 @@ public class JspPrintWriterAdapter extends PrintWriter {
             setError();
         }
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void println(long x) {
         try {
@@ -308,8 +322,9 @@ public class JspPrintWriterAdapter extends PrintWriter {
             setError();
         }
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void println(Object x) {
         try {
@@ -319,8 +334,9 @@ public class JspPrintWriterAdapter extends PrintWriter {
             setError();
         }
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void println(String x) {
         try {
@@ -330,8 +346,9 @@ public class JspPrintWriterAdapter extends PrintWriter {
             setError();
         }
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void write(char[] buf, int off, int len) {
         try {
@@ -341,8 +358,9 @@ public class JspPrintWriterAdapter extends PrintWriter {
             setError();
         }
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void write(char[] buf) {
         try {
@@ -352,8 +370,9 @@ public class JspPrintWriterAdapter extends PrintWriter {
             setError();
         }
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void write(int c) {
         try {
@@ -363,8 +382,9 @@ public class JspPrintWriterAdapter extends PrintWriter {
             setError();
         }
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void write(String s, int off, int len) {
         try {
@@ -374,8 +394,9 @@ public class JspPrintWriterAdapter extends PrintWriter {
             setError();
         }
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void write(String s) {
         try {

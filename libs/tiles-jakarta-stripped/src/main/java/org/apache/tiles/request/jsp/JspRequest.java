@@ -19,20 +19,10 @@
  * under the License.
  */
 package org.apache.tiles.request.jsp;
-
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.Writer;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.jsp.PageContext;
-
 import org.apache.tiles.request.AbstractViewRequest;
 import org.apache.tiles.request.ApplicationContext;
 import org.apache.tiles.request.DispatchRequest;
@@ -41,7 +31,11 @@ import org.apache.tiles.request.jsp.extractor.ScopeExtractor;
 import org.apache.tiles.request.jsp.extractor.SessionScopeExtractor;
 import org.apache.tiles.request.servlet.ServletRequest;
 import org.apache.tiles.request.servlet.ServletUtil;
-
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.Writer;
+import java.util.List;
+import java.util.Map;
 /**
  * Context implementation used for executing tiles within a
  * jsp tag library.
@@ -49,74 +43,66 @@ import org.apache.tiles.request.servlet.ServletUtil;
  * @version $Rev: 1375743 $ $Date: 2012-08-22 06:05:58 +1000 (Wed, 22 Aug 2012) $
  */
 public class JspRequest extends AbstractViewRequest {
-
     /**
      * The native available scopes.
      */
     private static final List<String> SCOPES
-            = Collections.unmodifiableList(Arrays.asList("page", REQUEST_SCOPE, "session", APPLICATION_SCOPE));
-
+            = List.of("page", REQUEST_SCOPE, "session", APPLICATION_SCOPE);
     /**
      * The current page context.
      */
     private final PageContext pageContext;
-
     /**
      * <p>The lazily instantiated <code>Map</code> of page scope
      * attributes.</p>
      */
-    private Map<String, Object> pageScope = null;
-
+    private Map<String, Object> pageScope;
     /**
      * <p>The lazily instantiated <code>Map</code> of request scope
      * attributes.</p>
      */
-    private Map<String, Object> requestScope = null;
-
+    private Map<String, Object> requestScope;
     /**
      * <p>The lazily instantiated <code>Map</code> of session scope
      * attributes.</p>
      */
-    private Map<String, Object> sessionScope = null;
-
+    private Map<String, Object> sessionScope;
     /**
      * <p>The lazily instantiated <code>Map</code> of application scope
      * attributes.</p>
      */
-    private Map<String, Object> applicationScope = null;
-
+    private Map<String, Object> applicationScope;
     /**
      * Creates a JSP request.
      *
      * @param applicationContext The application context.
-     * @param pageContext The page context.
+     * @param pageContext        The page context.
      * @return A new JSP request.
      */
     public static JspRequest createServletJspRequest(ApplicationContext applicationContext, PageContext pageContext) {
         return new JspRequest(new ServletRequest(
                 applicationContext, (HttpServletRequest) pageContext
-                        .getRequest(), (HttpServletResponse) pageContext
-                        .getResponse()), pageContext);
+                .getRequest(), (HttpServletResponse) pageContext
+                .getResponse()), pageContext);
     }
-
     /**
      * Constructor.
      *
      * @param enclosedRequest The request that is wrapped here.
-     * @param pageContext The page context to use.
+     * @param pageContext     The page context to use.
      */
     public JspRequest(DispatchRequest enclosedRequest,
-            PageContext pageContext) {
+                      PageContext pageContext) {
         super(enclosedRequest);
         this.pageContext = pageContext;
     }
-
     @Override
     public List<String> getAvailableScopes() {
         return SCOPES;
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void doInclude(String path) throws IOException {
         try {
@@ -126,19 +112,20 @@ public class JspRequest extends AbstractViewRequest {
                     + path + "'.");
         }
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public PrintWriter getPrintWriter() {
         return new JspPrintWriterAdapter(pageContext.getOut());
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Writer getWriter() {
         return pageContext.getOut();
     }
-
     /**
      * Returns the page scope.
      *
@@ -151,7 +138,6 @@ public class JspRequest extends AbstractViewRequest {
         }
         return (pageScope);
     }
-
     /**
      * Returns the request scope.
      *
@@ -164,7 +150,6 @@ public class JspRequest extends AbstractViewRequest {
         }
         return (requestScope);
     }
-
     /**
      * Returns the session scope.
      *
@@ -176,7 +161,6 @@ public class JspRequest extends AbstractViewRequest {
         }
         return (sessionScope);
     }
-
     /**
      * Returns the application scope.
      *
@@ -189,25 +173,23 @@ public class JspRequest extends AbstractViewRequest {
         }
         return (applicationScope);
     }
-
     /**
      * Returns the page context that originated the request.
      *
      * @return The page context.
      */
-    public PageContext getPageContext() {
+    /*public PageContext getPageContext() {
         return pageContext;
-    }
-
+    }*/
     @Override
     public Map<String, Object> getContext(String scope) {
-        if("page".equals(scope)){
+        if ("page".equals(scope)) {
             return getPageScope();
-        }else if(REQUEST_SCOPE.equals(scope)){
+        } else if (REQUEST_SCOPE.equals(scope)) {
             return getRequestScope();
-        }else if("session".equals(scope)){
+        } else if ("session".equals(scope)) {
             return getSessionScope();
-        }else if(APPLICATION_SCOPE.equals(scope)){
+        } else if (APPLICATION_SCOPE.equals(scope)) {
             return getApplicationScope();
         }
         throw new IllegalArgumentException(scope + " does not exist. Call getAvailableScopes() first to check.");

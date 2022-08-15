@@ -18,13 +18,10 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.tiles.definition;
-
 import java.util.Map;
 
 import org.apache.tiles.Definition;
-
 /**
  * Interface for reading <code>{@link Definition}</code> from a source.
  * <p/>
@@ -39,7 +36,6 @@ import org.apache.tiles.Definition;
  * @version $Rev: 829574 $ $Date: 2009-10-26 01:15:31 +1100 (Mon, 26 Oct 2009) $
  */
 public interface DefinitionsReader {
-
     /**
      * Reads <code>{@link Definition}</code> objects from a source.
      * <p/>
@@ -47,10 +43,9 @@ public interface DefinitionsReader {
      *
      * @param source The source from which definitions will be read.
      * @return a Map of <code>Definition</code> objects read from
-     *         the source.
+     * the source.
      * @throws DefinitionsFactoryException if the source is invalid or
      *                                     an error occurs when reading definitions.
      */
     Map<String, Definition> read(Object source);
-
 }

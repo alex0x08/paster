@@ -19,25 +19,20 @@
  * under the License.
  */
 package org.apache.tiles.request.jsp.extractor;
-
 import java.util.Enumeration;
 
 import jakarta.servlet.jsp.PageContext;
-
 import org.apache.tiles.request.attribute.AttributeExtractor;
-
 /**
  * Extracts attributes from session scope from {@link PageContext}.
  *
  * @version $Rev: 1066790 $ $Date: 2011-02-03 23:06:20 +1100 (Thu, 03 Feb 2011) $
  */
 public class SessionScopeExtractor implements AttributeExtractor {
-
     /**
      * The page context.
      */
     private final PageContext context;
-
     /**
      * Constructor.
      *
@@ -46,7 +41,6 @@ public class SessionScopeExtractor implements AttributeExtractor {
     public SessionScopeExtractor(PageContext context) {
         this.context = context;
     }
-
     @Override
     public void removeValue(String name) {
         if (context.getSession() == null) {
@@ -54,7 +48,6 @@ public class SessionScopeExtractor implements AttributeExtractor {
         }
         context.removeAttribute(name, PageContext.SESSION_SCOPE);
     }
-
     @Override
     public Enumeration<String> getKeys() {
         if (context.getSession() == null) {
@@ -62,7 +55,6 @@ public class SessionScopeExtractor implements AttributeExtractor {
         }
         return context.getAttributeNamesInScope(PageContext.SESSION_SCOPE);
     }
-
     @Override
     public Object getValue(String key) {
         if (context.getSession() == null) {
@@ -70,7 +62,6 @@ public class SessionScopeExtractor implements AttributeExtractor {
         }
         return context.getAttribute(key, PageContext.SESSION_SCOPE);
     }
-
     @Override
     public void setValue(String key, Object value) {
         if (context.getSession() == null) {

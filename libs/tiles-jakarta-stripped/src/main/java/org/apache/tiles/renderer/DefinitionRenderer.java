@@ -19,14 +19,12 @@
  * under the License.
  */
 package org.apache.tiles.renderer;
-
 import java.io.IOException;
 
 import org.apache.tiles.TilesContainer;
 import org.apache.tiles.request.Request;
 import org.apache.tiles.request.render.CannotRenderException;
 import org.apache.tiles.request.render.Renderer;
-
 /**
  * Renders an attribute that contains a reference to a definition.
  *
@@ -34,12 +32,10 @@ import org.apache.tiles.request.render.Renderer;
  * @since 3.0.0
  */
 public class DefinitionRenderer implements Renderer {
-
     /**
      * The Tiles container.
      */
     private final TilesContainer container;
-
     /**
      * Constructor.
      *
@@ -48,18 +44,19 @@ public class DefinitionRenderer implements Renderer {
     public DefinitionRenderer(TilesContainer container) {
         this.container = container;
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void render(String path, Request request) throws IOException {
         if (path == null) {
             throw new CannotRenderException("Cannot dispatch a null path");
         }
-
         container.render(path, request);
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public boolean isRenderable(String path, Request request) {
         return path != null && container.isValidDefinition(path, request);
     }

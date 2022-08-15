@@ -19,10 +19,8 @@
  * under the License.
  */
 package org.apache.tiles.evaluator;
-
 import org.apache.tiles.Attribute;
 import org.apache.tiles.request.Request;
-
 /**
  * It represents an object that resolves a string to return an object.
  *
@@ -30,22 +28,20 @@ import org.apache.tiles.request.Request;
  * @since 2.1.0
  */
 public interface AttributeEvaluator {
-
     /**
      * Evaluates an expression.
      *
      * @param expression The expression to evaluate.
-     * @param request The request object.
+     * @param request    The request object.
      * @return The evaluated object.
      * @since 2.1.0
      */
     Object evaluate(String expression, Request request);
-
     /**
      * Evaluates an attribute value.
      *
      * @param attribute The attribute to evaluate.
-     * @param request The request object.
+     * @param request   The request object.
      * @return The evaluated object.
      * @since 2.1.0
      */

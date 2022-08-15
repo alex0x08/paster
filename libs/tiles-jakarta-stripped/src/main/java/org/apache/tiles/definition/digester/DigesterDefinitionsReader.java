@@ -18,9 +18,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.tiles.definition.digester;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -28,7 +26,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import org.apache.commons.digester.Digester;
 import org.apache.commons.digester.Rule;
-
 import org.apache.tiles.Attribute;
 import org.apache.tiles.Definition;
 import org.apache.tiles.Expression;
@@ -39,7 +36,6 @@ import org.xml.sax.Attributes;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
-
 /**
  * Reads {@link Definition} objects from
  * an XML InputStream using Digester. <p/>
@@ -67,85 +63,72 @@ import org.xml.sax.SAXParseException;
  * @version $Rev: 990237 $ $Date: 2010-08-28 05:33:35 +1000 (Sat, 28 Aug 2010) $
  */
 public class DigesterDefinitionsReader implements DefinitionsReader {
-
-    /**
+    /*
      * Digester validation parameter name.
-     */
     public static final String PARSER_VALIDATE_PARAMETER_NAME =
-        "org.apache.tiles.definition.digester.DigesterDefinitionsReader.PARSER_VALIDATE";
-
+            "org.apache.tiles.definition.digester.DigesterDefinitionsReader.PARSER_VALIDATE";
+     */
     // Digester rules constants for tag interception.
-
     /**
      * Intercepts a &lt;definition&gt; tag.
      */
     private static final String DEFINITION_TAG = "tiles-definitions/definition";
-
     /**
      * Intercepts a &lt;put-attribute&gt; tag.
      */
     private static final String PUT_TAG = "*/definition/put-attribute";
-
     /**
      * Intercepts a &lt;definition&gt; inside a  &lt;put-attribute&gt; tag.
      */
     private static final String PUT_DEFINITION_TAG = "*/put-attribute/definition";
-
     /**
      * Intercepts a &lt;definition&gt; inside an &lt;add-attribute&gt; tag.
      */
     private static final String ADD_DEFINITION_TAG = "*/add-attribute/definition";
-
     /**
      * Intercepts a &lt;put-list-attribute&gt; tag inside a %lt;definition&gt;
      * tag.
      */
     private static final String DEF_LIST_TAG = "*/definition/put-list-attribute";
-
     /**
      * Intercepts a &lt;add-attribute&gt; tag.
      */
     private static final String ADD_LIST_ELE_TAG = "*/add-attribute";
-
     /**
      * Intercepts a &lt;add-list-attribute&gt; tag.
      */
     private static final String NESTED_LIST = "*/add-list-attribute";
-
     // Handler class names.
-
     /**
      * The handler to create definitions.
      *
      * @since 2.1.0
      */
     protected static final String DEFINITION_HANDLER_CLASS =
-        Definition.class.getName();
-
+            Definition.class.getName();
     /**
      * The handler to create attributes.
      *
      * @since 2.1.0
      */
     protected static final String PUT_ATTRIBUTE_HANDLER_CLASS =
-        Attribute.class.getName();
-
+            Attribute.class.getName();
     /**
      * The handler to create list attributes.
      *
      * @since 2.1.0
      */
     protected static final String LIST_HANDLER_CLASS =
-        ListAttribute.class.getName();
-
+            ListAttribute.class.getName();
     /**
      * Digester rule to manage definition filling.
      *
      * @since 2.1.2
      */
     public static class FillDefinitionRule extends Rule {
-
-        /** {@inheritDoc} */
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void begin(String namespace, String name, Attributes attributes) {
             Definition definition = (Definition) digester.peek();
@@ -153,7 +136,6 @@ public class DigesterDefinitionsReader implements DefinitionsReader {
             definition.setPreparer(attributes.getValue("preparer"));
             String extendsAttribute = attributes.getValue("extends");
             definition.setExtends(extendsAttribute);
-
             String template = attributes.getValue("template");
             Attribute attribute = Attribute.createTemplateAttribute(template);
             attribute.setExpressionObject(Expression
@@ -163,21 +145,22 @@ public class DigesterDefinitionsReader implements DefinitionsReader {
             String templateType = attributes.getValue("templateType");
             if (templateType != null) {
                 attribute.setRenderer(templateType);
-            } else if (extendsAttribute != null && templateType == null) {
+                //&& templateType == null
+            } else if (extendsAttribute != null ) {
                 attribute.setRenderer(null);
             }
             definition.setTemplateAttribute(attribute);
         }
     }
-
     /**
      * Digester rule to manage attribute filling.
      *
      * @since 2.1.0
      */
     public static class FillAttributeRule extends Rule {
-
-        /** {@inheritDoc} */
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void begin(String namespace, String name, Attributes attributes) {
             Attribute attribute = (Attribute) digester.peek();
@@ -189,7 +172,6 @@ public class DigesterDefinitionsReader implements DefinitionsReader {
             attribute.setRenderer(attributes.getValue("type"));
         }
     }
-
     /**
      * Digester rule to manage assignment of the attribute to the parent
      * element.
@@ -197,8 +179,9 @@ public class DigesterDefinitionsReader implements DefinitionsReader {
      * @since 2.1.0
      */
     public static class PutAttributeRule extends Rule {
-
-        /** {@inheritDoc} */
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void begin(String namespace, String name, Attributes attributes) {
             Attribute attribute = (Attribute) digester.peek(0);
@@ -207,7 +190,6 @@ public class DigesterDefinitionsReader implements DefinitionsReader {
                     "true".equals(attributes.getValue("cascade")));
         }
     }
-
     /**
      * Digester rule to manage assignment of a nested definition in an attribute
      * value.
@@ -215,8 +197,9 @@ public class DigesterDefinitionsReader implements DefinitionsReader {
      * @since 2.1.0
      */
     public class AddNestedDefinitionRule extends Rule {
-
-        /** {@inheritDoc} */
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void begin(String namespace, String name, Attributes attributes) {
             Definition definition = (Definition) digester.peek(0);
@@ -228,31 +211,26 @@ public class DigesterDefinitionsReader implements DefinitionsReader {
             attribute.setRenderer("definition");
         }
     }
-
     /**
      * <code>Digester</code> object used to read Definition data
      * from the source.
      */
     protected Digester digester;
-
     /**
      * The set of public identifiers, and corresponding resource names for
      * the versions of the configuration file DTDs we know about.  There
      * <strong>MUST</strong> be an even number of Strings in this list!
      */
     protected String[] registrations;
-
     /**
      * Stores Definition objects.
      */
     private Map<String, Definition> definitions;
-
     /**
      * Index to be used to create unique definition names for anonymous
      * (nested) definitions.
      */
     private int anonymousDefinitionIndex = 1;
-
     /**
      * Creates a new instance of DigesterDefinitionsReader.
      */
@@ -261,31 +239,27 @@ public class DigesterDefinitionsReader implements DefinitionsReader {
         digester.setNamespaceAware(true);
         digester.setUseContextClassLoader(true);
         digester.setErrorHandler(new ThrowingErrorHandler());
-
         // Register our local copy of the DTDs that we can find
         String[] registrations = getRegistrations();
         for (int i = 0; i < registrations.length; i += 2) {
             URL url = this.getClass().getResource(
-                registrations[i + 1]);
+                    registrations[i + 1]);
             if (url != null) {
                 digester.register(registrations[i], url.toString());
             }
         }
-
         initSyntax(digester);
     }
-
     /**
      * Sets the validation of XML files.
      *
      * @param validating <code>true</code> means that XML validation is turned
-     * on. <code>false</code> otherwise.
+     *                   on. <code>false</code> otherwise.
      * @since 3.3.0
      */
     public void setValidating(boolean validating) {
         digester.setValidating(validating);
     }
-
     /**
      * Reads <code>{@link Definition}</code> objects from a source.
      * <p/>
@@ -294,49 +268,43 @@ public class DigesterDefinitionsReader implements DefinitionsReader {
      * @param source The <code>InputStream</code> source from which definitions
      *               will be read.
      * @return a Map of <code>Definition</code> objects read from
-     *         the source.
+     * the source.
      * @throws DefinitionsFactoryException If the source is invalid or
-     *          an error occurs when reading definitions.
+     *                                     an error occurs when reading definitions.
      */
     public Map<String, Definition> read(Object source) {
         // This is an instance variable instead of a local variable because
         // we want to be able to call the addDefinition method to populate it.
         // But we reset the Map here, which, of course, has threading implications.
         definitions = new LinkedHashMap<String, Definition>();
-
         if (source == null) {
             // Perhaps we should throw an exception here.
             return null;
         }
-
         InputStream input;
         try {
             input = (InputStream) source;
         } catch (ClassCastException e) {
             throw new DefinitionsFactoryException(
-                "Invalid source type.  Requires java.io.InputStream.", e);
+                    "Invalid source type.  Requires java.io.InputStream.", e);
         }
-
         try {
             // set first object in stack
             //digester.clear();
             digester.push(this);
             // parse
             digester.parse(input);
-
         } catch (SAXException e) {
             throw new DefinitionsFactoryException(
-                "XML error reading definitions.", e);
+                    "XML error reading definitions.", e);
         } catch (IOException e) {
             throw new DefinitionsFactoryException(
-                "I/O Error reading definitions.", e);
+                    "I/O Error reading definitions.", e);
         } finally {
             digester.clear();
         }
-
         return definitions;
     }
-
     /**
      * Initialised the syntax for reading XML files containing Tiles
      * definitions.
@@ -346,8 +314,6 @@ public class DigesterDefinitionsReader implements DefinitionsReader {
     protected void initSyntax(Digester digester) {
         initDigesterForTilesDefinitionsSyntax(digester);
     }
-
-
     /**
      * Init digester for Tiles syntax with first element = tiles-definitions.
      *
@@ -358,7 +324,6 @@ public class DigesterDefinitionsReader implements DefinitionsReader {
         digester.addObjectCreate(DEFINITION_TAG, DEFINITION_HANDLER_CLASS);
         digester.addRule(DEFINITION_TAG, new FillDefinitionRule());
         digester.addSetNext(DEFINITION_TAG, "addDefinition", DEFINITION_HANDLER_CLASS);
-
         // nested definition rules
         digester.addObjectCreate(PUT_DEFINITION_TAG, DEFINITION_HANDLER_CLASS);
         digester.addRule(PUT_DEFINITION_TAG, new FillDefinitionRule());
@@ -368,7 +333,6 @@ public class DigesterDefinitionsReader implements DefinitionsReader {
         digester.addRule(ADD_DEFINITION_TAG, new FillDefinitionRule());
         digester.addSetRoot(ADD_DEFINITION_TAG, "addDefinition");
         digester.addRule(ADD_DEFINITION_TAG, new AddNestedDefinitionRule());
-
         // put / putAttribute rules
         // Rules for a same pattern are called in order, but rule.end() are called
         // in reverse order.
@@ -388,14 +352,12 @@ public class DigesterDefinitionsReader implements DefinitionsReader {
         digester.addObjectCreate(ADD_LIST_ELE_TAG, PUT_ATTRIBUTE_HANDLER_CLASS);
         digester.addRule(ADD_LIST_ELE_TAG, new FillAttributeRule());
         digester.addSetNext(ADD_LIST_ELE_TAG, "add", PUT_ATTRIBUTE_HANDLER_CLASS);
-
         // nested list elements rules
         // Create a list handler, and add it to parent list
         digester.addObjectCreate(NESTED_LIST, LIST_HANDLER_CLASS);
         digester.addSetProperties(NESTED_LIST);
         digester.addSetNext(NESTED_LIST, "add", PUT_ATTRIBUTE_HANDLER_CLASS);
     }
-
     /**
      * Adds a new <code>Definition</code> to the internal Map or replaces
      * an existing one.
@@ -408,31 +370,31 @@ public class DigesterDefinitionsReader implements DefinitionsReader {
             throw new DigesterDefinitionsReaderException(
                     "A root definition has been defined with no name");
         }
-
         definitions.put(name, definition);
     }
-
     /**
      * Error Handler that throws every exception it receives.
      */
     private static class ThrowingErrorHandler implements ErrorHandler {
-
-        /** {@inheritDoc} */
+        /**
+         * {@inheritDoc}
+         */
         public void warning(SAXParseException exception) throws SAXException {
             throw exception;
         }
-
-        /** {@inheritDoc} */
+        /**
+         * {@inheritDoc}
+         */
         public void error(SAXParseException exception) throws SAXException {
             throw exception;
         }
-
-        /** {@inheritDoc} */
+        /**
+         * {@inheritDoc}
+         */
         public void fatalError(SAXParseException exception) throws SAXException {
             throw exception;
         }
     }
-
     /**
      * Returns the registrations for local DTDs.
      *
@@ -442,13 +404,12 @@ public class DigesterDefinitionsReader implements DefinitionsReader {
      */
     protected String[] getRegistrations() {
         if (registrations == null) {
-            registrations = new String[] {
-                "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN",
-                "/org/apache/tiles/resources/tiles-config_3_0.dtd"};
+            registrations = new String[]{
+                    "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN",
+                    "/org/apache/tiles/resources/tiles-config_3_0.dtd"};
         }
         return registrations;
     }
-
     /**
      * Create a unique definition name usable to store anonymous definitions.
      *
@@ -459,12 +420,10 @@ public class DigesterDefinitionsReader implements DefinitionsReader {
     protected String getNextUniqueDefinitionName(
             Map<String, Definition> definitions) {
         String candidate;
-
         do {
             candidate = "$anonymousDefinition" + anonymousDefinitionIndex;
             anonymousDefinitionIndex++;
         } while (definitions.containsKey(candidate));
-
         return candidate;
     }
 }

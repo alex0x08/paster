@@ -18,16 +18,13 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.tiles.definition.pattern.regexp;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.tiles.Definition;
 import org.apache.tiles.definition.pattern.DefinitionPatternMatcher;
 import org.apache.tiles.definition.pattern.PatternUtil;
-
 /**
  * Matches regular expression patterns in definitions.
  *
@@ -35,21 +32,18 @@ import org.apache.tiles.definition.pattern.PatternUtil;
  * @since 2.2.0
  */
 public class RegexpDefinitionPatternMatcher implements DefinitionPatternMatcher {
-
     /**
      * The pattern to match.
      */
     private final Pattern pattern;
-
     /**
      * The definition to use as a basis.
      */
     private final Definition definition;
-
     /**
      * Constructor.
      *
-     * @param pattern The pattern to use, in string form.
+     * @param pattern    The pattern to use, in string form.
      * @param definition The definition to use as a basis.
      * @since 2.2.0
      */
@@ -57,8 +51,9 @@ public class RegexpDefinitionPatternMatcher implements DefinitionPatternMatcher 
         this.pattern = Pattern.compile(pattern);
         this.definition = definition;
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public Definition createDefinition(String definitionName) {
         Definition retValue = null;
         Matcher matcher = pattern.matcher(definitionName);

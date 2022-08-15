@@ -19,26 +19,21 @@
  * under the License.
  */
 package org.apache.tiles.request.collection;
-
 import static org.apache.tiles.request.collection.CollectionUtil.*;
 
 import java.util.*;
 
 import org.apache.tiles.request.attribute.EnumeratedValuesExtractor;
-
-
 /**
  * Exposes an {@link EnumeratedValuesExtractor} object as a read-only map.
  *
  * @version $Rev: 1229087 $ $Date: 2012-01-09 21:35:14 +1100 (Mon, 09 Jan 2012) $
  */
 public class HeaderValuesMap implements Map<String, String[]> {
-
     /**
      * The request.
      */
     private final EnumeratedValuesExtractor request;
-
     /**
      * Constructor.
      *
@@ -47,21 +42,21 @@ public class HeaderValuesMap implements Map<String, String[]> {
     public HeaderValuesMap(EnumeratedValuesExtractor request) {
         this.request = request;
     }
-
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public void clear() {
         throw new UnsupportedOperationException();
     }
-
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public boolean containsKey(Object key) {
         return (request.getValue(key(key)) != null);
     }
-
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public boolean containsValue(Object value) {
         if (!(value instanceof String[] test)) {
             return (false);
@@ -75,42 +70,42 @@ public class HeaderValuesMap implements Map<String, String[]> {
         }
         return false;
     }
-
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public Set<Map.Entry<String, String[]>> entrySet() {
         return new HeadersEntrySet();
     }
-
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean equals(Object o) {
         EnumeratedValuesExtractor otherRequest = ((HeaderValuesMap) o).request;
         boolean retValue = true;
         for (Enumeration<String> attribs = request.getKeys(); attribs
                 .hasMoreElements()
-                && retValue;) {
+                && retValue; ) {
             String parameterName = attribs.nextElement();
             Set<String> valueSet = enumeration2set(otherRequest.getValues(parameterName));
             retValue = compareHeaders(parameterName, valueSet);
         }
-
         return retValue;
     }
-
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public String[] get(Object key) {
         return getHeaderValues(key(key));
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int hashCode() {
         int retValue = 0;
         for (Enumeration<String> attribs = request.getKeys(); attribs
-                .hasMoreElements();) {
+                .hasMoreElements(); ) {
             String parameterName = attribs.nextElement();
             Enumeration<String> values = request.getValues(parameterName);
             int valueHash = 0;
@@ -121,50 +116,48 @@ public class HeaderValuesMap implements Map<String, String[]> {
         }
         return retValue;
     }
-
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public boolean isEmpty() {
         return !request.getKeys().hasMoreElements();
     }
-
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public Set<String> keySet() {
         return new KeySet(request);
     }
-
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public String[] put(String key, String[] value) {
         throw new UnsupportedOperationException();
     }
-
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public void putAll(Map<? extends String, ? extends String[]> map) {
         throw new UnsupportedOperationException();
     }
-
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public String[] remove(Object key) {
         throw new UnsupportedOperationException();
     }
-
-
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public int size() {
         return enumerationSize(request.getKeys());
     }
-
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public Collection<String[]> values() {
         return new HeaderValuesCollection();
     }
-
     /**
      * Extracts values enumeration of an attribute and returns the corresponding array of values.
      *
@@ -179,7 +172,6 @@ public class HeaderValuesMap implements Map<String, String[]> {
         }
         return list.toArray(new String[0]);
     }
-
     /**
      * Converts the content of a string enumeration to an array of strings.
      *
@@ -193,7 +185,6 @@ public class HeaderValuesMap implements Map<String, String[]> {
         }
         return retValue;
     }
-
     /**
      * Transforms a string array in a string set.
      *
@@ -203,12 +194,11 @@ public class HeaderValuesMap implements Map<String, String[]> {
     private Set<String> array2set(String[] valueArray) {
         return new HashSet<>(Arrays.asList(valueArray));
     }
-
     /**
      * Checks if values of a header attribute are the same as the one passed in
      * the set.
      *
-     * @param name The name of the header.
+     * @param name    The name of the header.
      * @param testSet The set of values it must contain.
      * @return <code>true</code> if all the values, and only them, are present
      * in the header values.
@@ -223,39 +213,33 @@ public class HeaderValuesMap implements Map<String, String[]> {
         matched = matched && testSet.isEmpty();
         return matched;
     }
-
     /**
      * Entry set implementation for {@link HeaderValuesMap}.
      */
     private class HeadersEntrySet implements Set<Map.Entry<String, String[]>> {
-
         @Override
         public boolean add(java.util.Map.Entry<String, String[]> e) {
             throw new UnsupportedOperationException();
         }
-
         @Override
         public boolean addAll(
                 Collection<? extends java.util.Map.Entry<String, String[]>> c) {
             throw new UnsupportedOperationException();
         }
-
         @Override
         public void clear() {
             throw new UnsupportedOperationException();
         }
-
         @SuppressWarnings("unchecked")
         @Override
         public boolean contains(Object o) {
             return containsEntry((java.util.Map.Entry<String, String[]>) o);
         }
-
         @SuppressWarnings("unchecked")
         @Override
         public boolean containsAll(Collection<?> c) {
             Collection<Map.Entry<String, String[]>> realCollection =
-                (Collection<Map.Entry<String, String[]>>) c;
+                    (Collection<Map.Entry<String, String[]>>) c;
             for (Map.Entry<String, String[]> entry : realCollection) {
                 if (!containsEntry(entry)) {
                     return false;
@@ -263,47 +247,38 @@ public class HeaderValuesMap implements Map<String, String[]> {
             }
             return true;
         }
-
         @Override
         public boolean isEmpty() {
             return HeaderValuesMap.this.isEmpty();
         }
-
         @Override
         public Iterator<java.util.Map.Entry<String, String[]>> iterator() {
             return new HeadersEntrySetIterator();
         }
-
         @Override
         public boolean remove(Object o) {
             throw new UnsupportedOperationException();
         }
-
         @Override
         public boolean removeAll(Collection<?> c) {
             throw new UnsupportedOperationException();
         }
-
         @Override
         public boolean retainAll(Collection<?> c) {
             throw new UnsupportedOperationException();
         }
-
         @Override
         public int size() {
             return HeaderValuesMap.this.size();
         }
-
         @Override
         public Object[] toArray() {
             return toList().toArray();
         }
-
         @Override
         public <T> T[] toArray(T[] a) {
             return toList().toArray(a);
         }
-
         /**
          * Checks whether the given entry is present in the headers.
          *
@@ -321,7 +296,6 @@ public class HeaderValuesMap implements Map<String, String[]> {
             }
             return values.isEmpty();
         }
-
         /**
          * Turns this entry set into a list.
          *
@@ -335,7 +309,6 @@ public class HeaderValuesMap implements Map<String, String[]> {
             }
             return entries;
         }
-
         /**
          * Returns the next entry, by getting the next element in the given enumeration.
          *
@@ -347,61 +320,49 @@ public class HeaderValuesMap implements Map<String, String[]> {
             String name = names.nextElement();
             return new MapEntryArrayValues<>(name, getHeaderValues(name), false);
         }
-
         /**
          * Iterates {@link HeadersEntrySet} elements.
          */
         private class HeadersEntrySetIterator implements Iterator<Map.Entry<String, String[]>> {
-
             /**
              * The enumeration to use.
              */
             private final Enumeration<String> namesEnumeration = request.getKeys();
-
             @Override
             public boolean hasNext() {
                 return namesEnumeration.hasMoreElements();
             }
-
             @Override
             public Map.Entry<String, String[]> next() {
                 return extractNextEntry(namesEnumeration);
             }
-
             @Override
             public void remove() {
                 throw new UnsupportedOperationException();
             }
-
         }
     }
-
     /**
      * It is a collection of all values of the header. Each element is an array
      * of values of a single header.
      */
     private class HeaderValuesCollection implements Collection<String[]> {
-
         @Override
         public boolean add(String[] e) {
             throw new UnsupportedOperationException();
         }
-
         @Override
         public boolean addAll(Collection<? extends String[]> c) {
             throw new UnsupportedOperationException();
         }
-
         @Override
         public void clear() {
             throw new UnsupportedOperationException();
         }
-
         @Override
         public boolean contains(Object o) {
             return containsValue(o);
         }
-
         @SuppressWarnings("unchecked")
         @Override
         public boolean containsAll(Collection<?> c) {
@@ -413,47 +374,38 @@ public class HeaderValuesMap implements Map<String, String[]> {
             }
             return true;
         }
-
         @Override
         public boolean isEmpty() {
             return HeaderValuesMap.this.isEmpty();
         }
-
         @Override
         public Iterator<String[]> iterator() {
             return new HeaderValuesCollectionIterator();
         }
-
         @Override
         public boolean remove(Object o) {
             throw new UnsupportedOperationException();
         }
-
         @Override
         public boolean removeAll(Collection<?> c) {
             throw new UnsupportedOperationException();
         }
-
         @Override
         public boolean retainAll(Collection<?> c) {
             throw new UnsupportedOperationException();
         }
-
         @Override
         public int size() {
             return HeaderValuesMap.this.size();
         }
-
         @Override
         public Object[] toArray() {
             return toList().toArray();
         }
-
         @Override
         public <T> T[] toArray(T[] a) {
             return toList().toArray(a);
         }
-
         /**
          * Turns this collection into a list.
          *
@@ -467,7 +419,6 @@ public class HeaderValuesMap implements Map<String, String[]> {
             }
             return entries;
         }
-
         /**
          * Converts the content of a string enumeration to an array of strings.
          *
@@ -479,30 +430,24 @@ public class HeaderValuesMap implements Map<String, String[]> {
             while (enumeration.hasMoreElements()) {
                 list1.add(enumeration.nextElement());
             }
-
             return list1.toArray(new String[0]);
         }
-
         /**
          * Iterates elements of {@link HeaderValuesCollection}.
          */
         private class HeaderValuesCollectionIterator implements Iterator<String[]> {
-
             /**
              * The enumeration of the name of header attributes.
              */
             private final Enumeration<String> namesEnumeration = request.getKeys();
-
             @Override
             public boolean hasNext() {
                 return namesEnumeration.hasMoreElements();
             }
-
             @Override
             public String[] next() {
                 return enumeration2array(request.getValues(namesEnumeration.nextElement()));
             }
-
             @Override
             public void remove() {
                 throw new UnsupportedOperationException();

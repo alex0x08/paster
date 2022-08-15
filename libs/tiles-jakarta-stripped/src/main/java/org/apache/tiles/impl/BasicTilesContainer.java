@@ -149,14 +149,14 @@ public class BasicTilesContainer implements TilesContainer,
 
     }
 
-    /**
+    /*
      * Returns the definitions factory.
      *
      * @return The definitions factory used by this container.
-     */
     public DefinitionsFactory getDefinitionsFactory() {
         return definitionsFactory;
     }
+     */
 
     /**
      * Set the definitions factory. This method first ensures
@@ -168,14 +168,14 @@ public class BasicTilesContainer implements TilesContainer,
         this.definitionsFactory = definitionsFactory;
     }
 
-    /**
+    /*
      * Returns the preparer factory used by this container.
      *
      * @return return the preparerInstance factory used by this container.
-     */
     public PreparerFactory getPreparerFactory() {
         return preparerFactory;
     }
+     */
 
     /**
      * Set the preparerInstance factory.  This method first ensures

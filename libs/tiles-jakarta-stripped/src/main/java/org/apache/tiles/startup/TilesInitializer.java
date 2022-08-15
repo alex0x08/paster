@@ -19,9 +19,7 @@
  * under the License.
  */
 package org.apache.tiles.startup;
-
 import org.apache.tiles.request.ApplicationContext;
-
 /**
  * Tiles initialization delegate. It initializes Tiles container(s) and the
  * application context to use across all the application.
@@ -29,17 +27,15 @@ import org.apache.tiles.request.ApplicationContext;
  * @version $Rev: 833737 $ $Date: 2009-11-08 06:17:09 +1100 (Sun, 08 Nov 2009) $
  */
 public interface TilesInitializer {
-
     /**
      * Initializes Tiles.
      *
      * @param preliminaryContext The preliminary application context to use. It
-     * will be overwritten with the real instance later. Use a context usable
-     * under your current environment, like ServletTilesApplicationContext or
-     * PortletTilesApplicationContext.
+     *                           will be overwritten with the real instance later. Use a context usable
+     *                           under your current environment, like ServletTilesApplicationContext or
+     *                           PortletTilesApplicationContext.
      */
     void initialize(ApplicationContext preliminaryContext);
-
     /**
      * Destroys the Tiles container.
      *

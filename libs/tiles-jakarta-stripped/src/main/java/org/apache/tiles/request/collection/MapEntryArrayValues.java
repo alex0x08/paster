@@ -19,34 +19,26 @@
  * under the License.
  */
 package org.apache.tiles.request.collection;
-
-
 import java.util.Map;
 import java.util.Objects;
-
-
 /**
  * Multi-valued map entry.
  *
- * @version $Rev: 1064782 $ $Date: 2011-01-29 04:08:52 +1100 (Sat, 29 Jan 2011) $
  * @param <K> The key type.
  * @param <V> The value type.
+ * @version $Rev: 1064782 $ $Date: 2011-01-29 04:08:52 +1100 (Sat, 29 Jan 2011) $
  */
-
 public class MapEntryArrayValues<K, V> extends MapEntry<K, V[]> {
-
     /**
      * Constructor.
      *
-     * @param key The key of the entry.
-     * @param value The array of values.
+     * @param key        The key of the entry.
+     * @param value      The array of values.
      * @param modifiable If <code>true</code> the entry is modifiable.
      */
     public MapEntryArrayValues(K key, V[] value, boolean modifiable) {
         super(key, value, modifiable);
     }
-
-
     /**
      * <p>Returns the hashcode for this entry.</p>
      *
@@ -61,11 +53,9 @@ public class MapEntryArrayValues<K, V> extends MapEntry<K, V[]> {
                 valueHash += v.hashCode();
             }
         }
-
         return (this.getKey() == null ? 0 : this.getKey().hashCode())
                 ^ valueHash;
     }
-
     /**
      * <p>Determines if this entry is equal to the passed object.</p>
      *

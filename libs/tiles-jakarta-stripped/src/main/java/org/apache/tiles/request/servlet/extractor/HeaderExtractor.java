@@ -19,58 +19,48 @@
  * under the License.
  */
 package org.apache.tiles.request.servlet.extractor;
-
 import java.util.Enumeration;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
 import org.apache.tiles.request.attribute.EnumeratedValuesExtractor;
-
 /**
  * Extract header values from an HTTP request.
  *
  * @version $Rev: 1066499 $ $Date: 2011-02-03 02:33:34 +1100 (Thu, 03 Feb 2011) $
  */
 public class HeaderExtractor implements EnumeratedValuesExtractor {
-
     /**
      * The request.
      */
     private final HttpServletRequest request;
-
     /**
      * The response.
      */
     private final HttpServletResponse response;
-
     /**
      * Constructor.
      *
-     * @param request The request.
+     * @param request  The request.
      * @param response The response.
      */
     public HeaderExtractor(HttpServletRequest request,
-            HttpServletResponse response) {
+                           HttpServletResponse response) {
         this.request = request;
         this.response = response;
     }
-
     @Override
     public Enumeration<String> getKeys() {
         return request.getHeaderNames();
-   }
-
+    }
     @Override
     public String getValue(String key) {
         return request.getHeader(key);
     }
-
     @Override
     public Enumeration<String> getValues(String key) {
         return request.getHeaders(key);
     }
-
     @Override
     public void setValue(String key, String value) {
         response.setHeader(key, value);

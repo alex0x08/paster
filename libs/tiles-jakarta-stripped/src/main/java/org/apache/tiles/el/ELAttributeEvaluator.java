@@ -19,15 +19,12 @@
  * under the License.
  */
 package org.apache.tiles.el;
-
 import jakarta.el.ELResolver;
 import jakarta.el.ExpressionFactory;
 import jakarta.el.ValueExpression;
-
 import org.apache.tiles.evaluator.AbstractAttributeEvaluator;
 import org.apache.tiles.request.ApplicationContext;
 import org.apache.tiles.request.Request;
-
 /**
  * Evaluates string expression with typical EL syntax.<br>
  * You can use normal EL syntax, knowing that the root objects are
@@ -38,7 +35,6 @@ import org.apache.tiles.request.Request;
  * @since 2.2.1
  */
 public class ELAttributeEvaluator extends AbstractAttributeEvaluator {
-
     /**
      * Initialization parameter to decide the implementation of
      * {@link ExpressionFactoryFactory}.
@@ -46,22 +42,19 @@ public class ELAttributeEvaluator extends AbstractAttributeEvaluator {
      * @since 2.2.1
      */
     public static final String EXPRESSION_FACTORY_FACTORY_INIT_PARAM =
-        "org.apache.tiles.evaluator.el.ExpressionFactoryFactory";
-
+            "org.apache.tiles.evaluator.el.ExpressionFactoryFactory";
     /**
      * The EL expression factory.
      *
      * @since 2.2.1
      */
     protected ExpressionFactory expressionFactory;
-
     /**
      * The EL resolver to use.
      *
      * @since 2.2.1
      */
     protected ELResolver resolver;
-
     /**
      * Constructor.
      *
@@ -69,7 +62,6 @@ public class ELAttributeEvaluator extends AbstractAttributeEvaluator {
      */
     public ELAttributeEvaluator() {
     }
-
     /**
      * Sets the expression factory to use.
      *
@@ -79,7 +71,6 @@ public class ELAttributeEvaluator extends AbstractAttributeEvaluator {
     public void setExpressionFactory(ExpressionFactory expressionFactory) {
         this.expressionFactory = expressionFactory;
     }
-
     /**
      * Sets the EL resolver to use.
      *
@@ -89,8 +80,9 @@ public class ELAttributeEvaluator extends AbstractAttributeEvaluator {
     public void setResolver(ELResolver resolver) {
         this.resolver = resolver;
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public Object evaluate(String expression, Request request) {
         ELContextImpl context = new ELContextImpl(resolver);
         context.putContext(Request.class, request);
@@ -98,7 +90,6 @@ public class ELAttributeEvaluator extends AbstractAttributeEvaluator {
                 request.getApplicationContext());
         ValueExpression valueExpression = expressionFactory
                 .createValueExpression(context, expression, Object.class);
-
         return valueExpression.getValue(context);
     }
 }

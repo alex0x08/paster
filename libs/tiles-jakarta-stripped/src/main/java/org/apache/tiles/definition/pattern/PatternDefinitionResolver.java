@@ -18,13 +18,10 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.tiles.definition.pattern;
-
 import java.util.Map;
 
 import org.apache.tiles.Definition;
-
 /**
  * Resolves a definition starting from patterns stored in definition maps.
  *
@@ -33,35 +30,32 @@ import org.apache.tiles.Definition;
  * @since 2.2.0
  */
 public interface PatternDefinitionResolver<T> {
-
     /**
      * Stores definition patterns.
      *
-     * @param localeDefsMap The map of definitions that may contain also
-     * patterns.
+     * @param localeDefsMap    The map of definitions that may contain also
+     *                         patterns.
      * @param customizationKey The customization key.
      * @return The map of the definitions not recognized as containing
      * definition patterns.
      * @since 2.2.1
      */
     Map<String, Definition> storeDefinitionPatterns(Map<String, Definition> localeDefsMap,
-            T customizationKey);
-
+                                                    T customizationKey);
     /**
      * Resolves a definition searching in all patterns for the requested
      * customization key.
      *
-     * @param name The name of the definition.
+     * @param name             The name of the definition.
      * @param customizationKey The customization key.
      * @return The resolved definition.
      * @since 2.2.0
      */
     Definition resolveDefinition(String name, T customizationKey);
-
     /**
      * Used to clear all entries in the localePatternPaths for a specific locale. Necessary when reloading definition
      * files to ensure that the list is cleared first
-     * 
+     *
      * @param customizationKey
      */
     public void clearPatternPaths(T customizationKey);

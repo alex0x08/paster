@@ -18,11 +18,8 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.tiles.definition.pattern;
-
 import org.apache.tiles.Definition;
-
 /**
  * Creates a new definition pattern matcher for the given pattern and the given
  * base definition with pattern expressions.
@@ -31,17 +28,16 @@ import org.apache.tiles.Definition;
  * @since 2.2.0
  */
 public interface DefinitionPatternMatcherFactory {
-
     /**
      * Creates a new definition pattern matcher.
      *
-     * @param pattern The pattern to be matched.
+     * @param pattern    The pattern to be matched.
      * @param definition The base definition. Created definitions by
-     * {@link DefinitionPatternMatcher#createDefinition(String)} will created
-     * with this one as a basis.
+     *                   {@link DefinitionPatternMatcher#createDefinition(String)} will created
+     *                   with this one as a basis.
      * @return The definition pattern matcher.
      * @since 2.2.0
      */
     DefinitionPatternMatcher createDefinitionPatternMatcher(String pattern,
-            Definition definition);
+                                                            Definition definition);
 }

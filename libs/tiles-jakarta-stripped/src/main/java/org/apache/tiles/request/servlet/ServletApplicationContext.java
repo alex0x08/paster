@@ -19,13 +19,13 @@
  * under the License.
  */
 package org.apache.tiles.request.servlet;
-
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Locale;
 import java.util.Map;
+
 import jakarta.servlet.ServletContext;
 import org.apache.tiles.request.ApplicationContext;
 import org.apache.tiles.request.ApplicationResource;
@@ -34,31 +34,26 @@ import org.apache.tiles.request.collection.ScopeMap;
 import org.apache.tiles.request.locale.URLApplicationResource;
 import org.apache.tiles.request.servlet.extractor.ApplicationScopeExtractor;
 import org.apache.tiles.request.servlet.extractor.InitParameterExtractor;
-
 /**
  * Servlet-based implementation of the TilesApplicationContext interface.
  *
  * @version $Rev: 1297705 $ $Date: 2012-03-07 07:44:30 +1100 (Wed, 07 Mar 2012) $
  */
 public class ServletApplicationContext implements ApplicationContext {
-
     /**
      * The servlet context to use.
      */
     private final ServletContext servletContext;
-
     /**
      * <p>The lazily instantiated <code>Map</code> of application scope
      * attributes.</p>
      */
     private Map<String, Object> applicationScope = null;
-
     /**
      * <p>The lazily instantiated <code>Map</code> of context initialization
      * parameters.</p>
      */
     private Map<String, String> initParam = null;
-
     /**
      * Creates a new instance of ServletTilesApplicationContext.
      *
@@ -67,33 +62,33 @@ public class ServletApplicationContext implements ApplicationContext {
     public ServletApplicationContext(ServletContext servletContext) {
         this.servletContext = servletContext;
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public Object getContext() {
         return servletContext;
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public Map<String, Object> getApplicationScope() {
-
         if ((applicationScope == null) && (servletContext != null)) {
             applicationScope = new ScopeMap(new ApplicationScopeExtractor(servletContext));
         }
         return (applicationScope);
-
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public Map<String, String> getInitParams() {
-
         if ((initParam == null) && (servletContext != null)) {
             initParam = new ReadOnlyEnumerationMap<>(new InitParameterExtractor(servletContext));
         }
         return (initParam);
-
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public ApplicationResource getResource(String localePath) {
         try {
             URL url = servletContext.getResource(localePath);
@@ -106,8 +101,9 @@ public class ServletApplicationContext implements ApplicationContext {
             return null;
         }
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public ApplicationResource getResource(ApplicationResource base, Locale locale) {
         try {
             URL url = servletContext.getResource(base.getLocalePath(locale));
@@ -120,8 +116,9 @@ public class ServletApplicationContext implements ApplicationContext {
             return null;
         }
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public Collection<ApplicationResource> getResources(String path) {
         ArrayList<ApplicationResource> resources = new ArrayList<>();
         resources.add(getResource(path));

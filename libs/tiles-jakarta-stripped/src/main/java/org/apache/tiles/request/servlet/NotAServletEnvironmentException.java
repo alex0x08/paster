@@ -18,10 +18,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.tiles.request.servlet;
-
-
 /**
  * Exception that indicates that a resource could not be used because it is not
  * in a servlet environment.
@@ -30,12 +27,11 @@ package org.apache.tiles.request.servlet;
  */
 public class NotAServletEnvironmentException extends RuntimeException {
 
-    /**
+    /*
      * Constructor.
-     */
     public NotAServletEnvironmentException() {
     }
-
+     */
     /**
      * Constructor.
      *
@@ -45,23 +41,22 @@ public class NotAServletEnvironmentException extends RuntimeException {
         super(message);
     }
 
-    /**
+    /*
      * Constructor.
      *
      * @param e The exception to be wrapped.
-     */
     public NotAServletEnvironmentException(Throwable e) {
         super(e);
     }
+     */
 
-    /**
+    /*
      * Constructor.
      *
      * @param message The detail message.
      * @param e The exception to be wrapped.
-     */
     public NotAServletEnvironmentException(String message, Throwable e) {
         super(message, e);
     }
-
+     */
 }

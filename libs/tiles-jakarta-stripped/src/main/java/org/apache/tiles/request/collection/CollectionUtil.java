@@ -19,23 +19,18 @@
  * under the License.
  */
 package org.apache.tiles.request.collection;
-
 import java.util.Enumeration;
-
 /**
  * Utilities for requests.
  *
  * @version $Rev: 1064782 $ $Date: 2011-01-28 18:08:52 +0100 (Fri, 28 Jan 2011) $
  */
 public final class CollectionUtil {
-
     /**
      * Constructor.
      */
     private CollectionUtil() {
-
     }
-
     /**
      * Returns the string representation of the key.
      *
@@ -52,7 +47,6 @@ public final class CollectionUtil {
             return (key.toString());
         }
     }
-
     /**
      * Returns the number of elements in an enumeration, by iterating it.
      *

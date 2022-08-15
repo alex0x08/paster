@@ -18,9 +18,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.tiles.definition.pattern;
-
 /**
  * It indicates an object that uses a {@link PatternDefinitionResolver}.
  *
@@ -29,7 +27,6 @@ package org.apache.tiles.definition.pattern;
  * @since 2.2.0
  */
 public interface PatternDefinitionResolverAware<T> {
-
     /**
      * Sets the pattern definition resolver to use.
      *
