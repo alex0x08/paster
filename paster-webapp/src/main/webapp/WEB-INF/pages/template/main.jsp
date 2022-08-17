@@ -1,6 +1,4 @@
 <%@ include file="/WEB-INF/pages/common/taglibs.jsp"%>
-
-
 <%--
 
         Main template

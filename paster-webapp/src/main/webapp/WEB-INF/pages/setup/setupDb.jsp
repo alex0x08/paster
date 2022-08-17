@@ -70,7 +70,11 @@
         <div class="col-auto">
             <label >Password</label>
                 <div class="input-group">
-                    <div class="input-group-text">@</div>
+                    <div class="input-group-text">
+                        <a href="#" id="showHidePasswdLnk" >
+                            <i class="fa fa-eye" aria-hidden="true"></i>
+                        </a>
+                     </div>
                     <form:input cssClass="form-control" type="password"
                                          path="step.dbPassword"
                                          name="dbPassword"
@@ -114,13 +118,22 @@
 
 <script type="text/javascript">
 
+    function showHidePassword(el) {
+          const type = el.getAttribute('type');
+          if (type == 'text') {
+              el.setAttribute('type','password');
+          } else {
+              el.setAttribute('type','text');
+          }
+    }
+
     function toggleDisabled(els,value) {
         els.forEach(
                 function (el, i, array) {
                     if (value) {
-                        el.setAttribute('disabled','true');
+                        el.setAttribute('readonly','true');
                     } else {
-                        el.removeAttribute('disabled');
+                        el.removeAttribute('readonly');
                     }
         });
     }
@@ -152,6 +165,14 @@
     }
 
     window.addEventListener('load', function () {
+
+    document.getElementById('showHidePasswdLnk')
+            .addEventListener("click", function (event) {
+                            event.preventDefault();
+                            showHidePassword(document.getElementById('dbPassword'));
+                          });
+
+
         var once=true;
         Array.from(document.getElementsByClassName("driverInput")).forEach(
             function (el, i, array) {

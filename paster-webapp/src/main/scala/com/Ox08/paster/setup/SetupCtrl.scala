@@ -1,5 +1,4 @@
 package com.Ox08.paster.setup
-
 import com.Ox08.paster.common.SystemManagementService
 import com.Ox08.paster.webapp.base.Boot.BOOT
 import com.Ox08.paster.webapp.base.{Boot, Logged, SystemError}
@@ -9,7 +8,7 @@ import com.Ox08.paster.webapp.mvc.MvcConstants
 import com.Ox08.paster.webapp.web.PasterLocaleResolver
 import jakarta.annotation.PostConstruct
 import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
-import jakarta.validation.constraints.{NotEmpty, NotNull}
+import jakarta.validation.constraints.{NotEmpty, NotNull, Size}
 import jakarta.validation.{Valid, Validator}
 import org.apache.commons.beanutils.PropertyUtilsBean
 import org.apache.commons.csv.CSVRecord
@@ -22,7 +21,7 @@ import org.springframework.context.MessageSource
 import org.springframework.stereotype.{Controller, Service}
 import org.springframework.ui.Model
 import org.springframework.util.Assert
-import org.springframework.validation.BindingResult
+import org.springframework.validation.{BindingResult, ObjectError, ValidationUtils}
 import org.springframework.web.bind.WebDataBinder
 import org.springframework.web.bind.annotation._
 
@@ -32,7 +31,6 @@ import java.util
 import java.util.Locale
 import scala.collection.mutable
 import scala.jdk.CollectionConverters._
-
 /**
  * This is 'all-in-one' configuration controller, used for setup stage
  */
@@ -42,8 +40,8 @@ private object SetupConstants {
     new SecurityMode("Private", "private"))
   def getAvailableDrivers: Array[DbType] = Array(
     new DbType("H2 Embedded Database (Default)",
-    "jdbc:h2:file:${paster.app.home}/db/pastedb;DB_CLOSE_ON_EXIT=TRUE;LOCK_TIMEOUT=10000",
-    "org.h2.jdbcx.JdbcDataSource", current = true, editable = false),
+      "jdbc:h2:file:${paster.app.home}/db/pastedb;DB_CLOSE_ON_EXIT=TRUE;LOCK_TIMEOUT=10000",
+      "org.h2.jdbcx.JdbcDataSource", current = true, editable = false),
     new DbType("PostgreSQL",
       "jdbc:pgsql://127.0.0.1/test-db",
       "com.impossibl.postgres.jdbc.PGDataSource", current = false, editable = true),
@@ -62,35 +60,25 @@ class SetupCtrl extends Logged {
   protected val systemInfo: BOOT.SystemInfo = Boot.BOOT.getSystemInfo
   @Value("${paste.app.id}")
   val appId: String = null
-
   @ModelAttribute("appId")
   def getAppId: String = appId
-
   @ModelAttribute("systemInfo")
   def getSystemInfo: BOOT.SystemInfo = systemInfo
-
   @ModelAttribute("availableSteps")
   def getAvailableSteps: java.util.Collection[SetupStep] = setupService.getSteps
-
   @ModelAttribute("availableLocales")
   def getAvailableLocales: Array[Locale] = Boot.BOOT.getSystemInfo.getAvailableLocales
-
   def getAvailableSecurityModes: Array[SecurityMode] = SetupConstants.getAvailableSecurityModes
-
   def getAvailableDrivers: Array[DbType] = SetupConstants.getAvailableDrivers
-
   protected def getResource(key: String, locale: Locale): String =
     messageSource.getMessage(key, new Array[java.lang.Object](0), locale)
-
   protected def getResource(key: String, args: Array[Any], locale: Locale): String =
     messageSource.getMessage(key, args.asInstanceOf[Array[java.lang.Object]], locale)
-
   @ExceptionHandler(Array(classOf[Throwable]))
   def handleAllExceptions(ex: Throwable): String = {
     logger.error(ex.getMessage, ex)
     MvcConstants.page500
   }
-
   @InitBinder
   def initBinder(webDataBinder: WebDataBinder, servletRequest: HttpServletRequest): Unit = {
     if (!"POST".equalsIgnoreCase(servletRequest.getMethod)
@@ -121,7 +109,6 @@ class SetupCtrl extends Logged {
       throw SystemError.withCode(0x6001, s"Incorrect step type: $step")
     target.setStep(setupService.getStep(step))
   }
-
   @RequestMapping(value = Array("/setup/removeUser"), method = Array(RequestMethod.POST))
   def removeUser(model: Model,
                  @RequestParam index: Int
@@ -132,7 +119,6 @@ class SetupCtrl extends Logged {
     fillModel("users", null, model)
     "/setup/users"
   }
-
   /**
    * Adds new user to the list of configured users
    *
@@ -151,11 +137,9 @@ class SetupCtrl extends Logged {
               result: BindingResult,
               model: Model): String = {
     val uModel: SetupUsersStep = updatedStep.getStep[SetupUsersStep]
-
     for (u <- uModel.users.asScala) {
       logger.debug("user: {} - {} ", u.getName, u.getUsername)
     }
-
     val users = setupService.getStep[SetupUsersStep]("users").users
     val u = new PasterUser(s"user${users.size()}",
       s"Unnamed user${users.size()}",
@@ -165,7 +149,6 @@ class SetupCtrl extends Logged {
     fillModel("users", null, model)
     "/setup/users"
   }
-
   /**
    * Tries to check JDBC connection
    *
@@ -187,7 +170,6 @@ class SetupCtrl extends Logged {
     if (StringUtils.isBlank(step.dbType)) {
       val dbType = getAvailableDrivers.find(p => step.origName.equalsIgnoreCase(p.getName))
         .orElse(alternative = throw new RuntimeException(s"Cannot find type ${step.origName}")).get
-
       step.dbType = dbType.getDriver
       if (dbType.getName.contains("H2")) {
         step.dbUrl = dbType.getUrl
@@ -207,7 +189,6 @@ class SetupCtrl extends Logged {
       model.addAttribute("step", updatedStep.getStep)
       return s"/setup/${step.getStepKey}"
     }
-
     //model.asMap().clear()
     var log: String = null
     try {
@@ -220,7 +201,6 @@ class SetupCtrl extends Logged {
       ds2.setUrl(step.dbUrl)
       ds2.setUsername(step.dbUser)
       ds2.setPassword(step.dbPassword)
-
       val con = ds2.getConnection
       con.close()
       log = "Connection established"
@@ -268,7 +248,6 @@ class SetupCtrl extends Logged {
         "/error/500"
     }
   }
-
   /**
    * Fills page model with attributes
    *
@@ -284,12 +263,10 @@ class SetupCtrl extends Logged {
       setupService.getStep[SetupStep](step)
     model.addAttribute("step", cs)
     model.addAttribute("updatedStep",
-      if (updatedStep!=null)
+      if (updatedStep != null)
         updatedStep
       else
         new StepModel(cs))
-
-
     step match {
       case "users" =>
         val users: SetupUsersStep = cs.asInstanceOf[SetupUsersStep]
@@ -314,7 +291,6 @@ class SetupCtrl extends Logged {
           model.addAttribute("availableUsers", users.users)
         }
         model.addAttribute("availableSecurityModes", getAvailableSecurityModes)
-
       case "db" =>
         val dbs: SetupDbStep = cs.asInstanceOf[SetupDbStep]
         dbs.connectionLog = null
@@ -326,13 +302,10 @@ class SetupCtrl extends Logged {
         model.addAttribute("availableDrivers", availableDrivers)
       case _ =>
     }
-
     model.addAttribute("installInProgress", setupService.installInProgress)
     model.addAttribute("nextStep", setupService.getNextStep(step))
     model.addAttribute("previousStep", setupService.getPreviousStep(step))
-
   }
-
   /**
    * special method to handle moving to previous page with POST request
    *
@@ -345,7 +318,6 @@ class SetupCtrl extends Logged {
    */
   @RequestMapping(value = Array("/setup/prev/{step}"), method = Array(RequestMethod.POST))
   def goPreviousStep(model: Model, @PathVariable("step") step: String): String = setupStep(model, step)
-
   @RequestMapping(value = Array("/setup/{step}"), method = Array(RequestMethod.GET))
   def setupStep(model: Model, @PathVariable("step") step: String): String = {
     if (!setupService.containsStep(step)) {
@@ -356,7 +328,6 @@ class SetupCtrl extends Logged {
     fillModel(step, null, model)
     s"/setup/$step"
   }
-
   /**
    *
    * @param updatedStep
@@ -379,21 +350,20 @@ class SetupCtrl extends Logged {
                  model: Model): String = {
     if (logger.isDebugEnabled)
       logger.debug("updating step, class: {}", updatedStep.getStep.getClass.getName)
-
     if (result.hasErrors) {
-      // dump errors
-      if (logger.isDebugEnabled) {
-        logger.debug("form has {} errors", result.getErrorCount)
-        for (e <- result.getAllErrors.asScala) {
-          logger.debug("error: {} code: {} msg: {}",
-            e.getObjectName, e.getCode, e.getDefaultMessage)
-        }
-      }
-      result.reject("*", "Test reject")
+      dumpErrors(result)
+      result.reject("*", "Update rejected")
       fillModel(step, updatedStep, model)
       return s"/setup/$step"
     }
-    setupService.updateStep(updatedStep.getStep,result)
+    setupService.updateStep(updatedStep.getStep, result)
+    if (result.hasErrors) {
+      dumpErrors(result)
+
+      result.reject("*", "Update rejected 2")
+      fillModel(step, updatedStep, model)
+      return s"/setup/$step"
+    }
     val nextStep: SetupStep = setupService
       .getNextStep(updatedStep.getStep[SetupStep].getStepKey)
     // all steps done
@@ -434,7 +404,6 @@ class SetupCtrl extends Logged {
   }
   @RequestMapping(Array("/restarting"))
   def restarting: String = "/restarting"
-
   def dumpErrors(result: BindingResult): Unit = {
     if (logger.isDebugEnabled) {
       logger.debug("form has {} errors", result.getErrorCount)
@@ -445,7 +414,6 @@ class SetupCtrl extends Logged {
     }
   }
 }
-
 import org.springframework.core.io.ClassPathResource
 @Service
 class PasterSetupService extends Logged {
@@ -512,13 +480,12 @@ class PasterSetupService extends Logged {
                 ): Unit = {
     Assert.isTrue(!installInProgress, "Install in progress!")
     Assert.notNull(step, "Step should be non null!")
-
     if (!setupMap.contains(step.getStepKey))
       throw SystemError.withCode(0x6001,
         s"Incorrect step type:${step.getClass.getName}")
     // update configuration options
-    setupMap(step.getStepKey).update(step,result)
-      // switch current locale to selected
+    setupMap(step.getStepKey).update(step, result)
+    // switch current locale to selected
     if ("welcome".equalsIgnoreCase(step.getStepKey) && step.completed) {
       val wstep: WelcomeStep = getStep[WelcomeStep](step.getStepKey)
       Boot.BOOT.getSystemInfo.setSystemLocale(wstep.defaultLang)
@@ -561,33 +528,32 @@ class SetupUsersStep extends SetupStep("users", "Setup users") {
   def setSecurityMode(mode: String): Unit = {
     this.securityMode = mode
   }
-  override def update(dto: SetupStep,result:BindingResult): Unit = {
+  override def update(dto: SetupStep, result: BindingResult): Unit = {
     val update: SetupUsersStep = dto.asInstanceOf[SetupUsersStep]
     if (StringUtils.isBlank(update.securityMode)) {
-        result.reject("security mode is not selected")
-        return
-    }
-    if (update.users.isEmpty) {
-      result.reject("at least one user should exist")
+      result.reject("paster.setup.step.users.reject.security-mode-not-set")
       return
     }
-    var totalAdmins:Int = 0
-    for (u<-update.users.asScala) {
+    if (update.users.isEmpty) {
+      result.reject("paster.setup.step.users.reject.at-least-one-user-required")
+      return
+    }
+    var totalAdmins: Int = 0
+    for (u <- update.users.asScala) {
       if (u.isAdmin)
         totalAdmins += 1
       if (StringUtils.isBlank(u.getName) ||
-          StringUtils.isBlank(u.getUsername) ||
-          StringUtils.isBlank(u.getPassword)) {
-        result.reject("all fields in users table are required")
+        StringUtils.isBlank(u.getUsername) ||
+        StringUtils.isBlank(u.getPassword)) {
+        result.reject("paster.setup.step.users.reject.all-fields-required")
         return
       }
     }
     if (totalAdmins < 1) {
-      result.reject("at least one administrator is required")
+      result.reject("paster.setup.step.users.reject.at-least-one-admin-required")
       return
     }
     this.securityMode = update.securityMode
-
     markCompleted()
   }
 }
@@ -597,6 +563,7 @@ class SetupUsersStep extends SetupStep("users", "Setup users") {
 class SetupDbStep extends SetupStep("db", "Setup database") {
   @NotEmpty
   //(message = "{validator.not-null}")
+  @Size(min = 3, message = "{struct.name.validator}")
   var dbUrl: String = _
   var dbUser: String = "paster"
   var dbPassword: String = "paster"
@@ -630,7 +597,7 @@ class SetupDbStep extends SetupStep("db", "Setup database") {
   def setDbPassword(pwd: String): Unit = {
     this.dbPassword = pwd
   }
-  override def update(dto: SetupStep,result:BindingResult): Unit = {
+  override def update(dto: SetupStep, result: BindingResult): Unit = {
     val update: SetupDbStep = dto.asInstanceOf[SetupDbStep]
     // support for default selection
     if (StringUtils.isBlank(update.dbType)) {
@@ -664,7 +631,7 @@ class WelcomeStep extends SetupStep("welcome", "Setup language") {
   def setSwitchToUserLocale(switch: Boolean): Unit = {
     this.switchToUserLocale = switch
   }
-  override def update(dto: SetupStep,result:BindingResult): Unit = {
+  override def update(dto: SetupStep, result: BindingResult): Unit = {
     if (logger.isDebugEnabled)
       logger.debug(s"called update dto: ${dto.getClass.getName}")
     val update: WelcomeStep = dto.asInstanceOf[WelcomeStep]
@@ -698,7 +665,7 @@ abstract class SetupStep(stepKey: String, stepName: String) extends Logged {
   }
   def getStepKey: String = stepKey
   def getStepName: String = stepName
-  def update(dto: SetupStep,result:BindingResult): Unit
+  def update(dto: SetupStep, result: BindingResult): Unit
 }
 class DbType(name: String,
              url: String,
@@ -744,13 +711,13 @@ class UserDTO {
   def getName: String = _name
   def getPassword: String = _password
   def isAdmin: Boolean = _admin
-  def setUsername(u:String):Unit = {
+  def setUsername(u: String): Unit = {
     this._username = u
   }
-  def setName(n:String):Unit = {
+  def setName(n: String): Unit = {
     this._name = n
   }
-  def setPassword(p:String):Unit = {
+  def setPassword(p: String): Unit = {
     this._password = p
   }
 }
