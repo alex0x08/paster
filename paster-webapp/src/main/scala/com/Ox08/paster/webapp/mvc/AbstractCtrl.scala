@@ -21,8 +21,8 @@ import com.Ox08.paster.webapp.model.PasterUser
 import com.fasterxml.jackson.annotation.JsonIgnore
 import org.springframework.beans.factory.annotation.{Autowired, Value}
 import org.springframework.context.MessageSource
-import org.springframework.orm.ObjectRetrievalFailureException
 import org.springframework.web.bind.annotation._
+
 import java.util.Locale
 /**
  * Global constants, used in controllers

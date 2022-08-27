@@ -38,12 +38,12 @@ public class AbstractViewRequest extends DispatchRequestWrapper {
     }
     @Override
     public void dispatch(String path) throws IOException {
-        setForceInclude(true);
+        setForceInclude();
         doInclude(path);
     }
     @Override
     public void include(String path) throws IOException {
-        setForceInclude(true);
+        setForceInclude();
         doInclude(path);
     }
     /**

@@ -83,7 +83,7 @@ public class CachingTilesContainer extends TilesContainerWrapper implements Muta
      */
     public Definition getDefinition(String definition,
             Request request) {
-        Definition retValue = null;
+        Definition retValue;
         retValue = getCustomDefinition(definition, request);
         if (retValue == null) {
             retValue = super.getDefinition(definition, request);

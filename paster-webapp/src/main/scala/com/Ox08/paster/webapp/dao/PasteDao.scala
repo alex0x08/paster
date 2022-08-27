@@ -144,8 +144,6 @@ class PasteDao extends SearchableDaoImpl[Paste](classOf[Paste]) {
    * sum(case when p."P_CHANNEL" = 'Main' then 1 else 0 end) AS Main,
    * sum(case when p."P_CHANNEL" = 'Tech' then 1 else 0 end) AS Tech FROM P_PASTAS p;
    *
-   * @param p
-   * @return
    */
   def countStats(channels: Array[String]): Map[String, Long] = {
     val cb = em.getCriteriaBuilder

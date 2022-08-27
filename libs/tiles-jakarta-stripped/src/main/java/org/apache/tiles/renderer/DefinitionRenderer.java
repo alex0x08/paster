@@ -48,7 +48,7 @@ public class DefinitionRenderer implements Renderer {
      * {@inheritDoc}
      */
     @Override
-    public void render(String path, Request request) throws IOException {
+    public void render(String path, Request request) {
         if (path == null) {
             throw new CannotRenderException("Cannot dispatch a null path");
         }

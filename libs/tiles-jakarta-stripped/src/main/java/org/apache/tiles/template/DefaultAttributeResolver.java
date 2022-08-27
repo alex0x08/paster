@@ -74,7 +74,7 @@ public class DefaultAttributeResolver implements AttributeResolver {
             if (defaultValue instanceof Attribute) {
                 attribute = (Attribute) defaultValue;
             } else if (defaultValue instanceof String) {
-                attribute = new Attribute(defaultValue, (Expression) null,
+                attribute = new Attribute(defaultValue, null,
                         defaultValueRole, defaultValueType);
             }
         }

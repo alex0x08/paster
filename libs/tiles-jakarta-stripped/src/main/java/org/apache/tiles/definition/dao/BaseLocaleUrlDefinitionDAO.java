@@ -62,7 +62,7 @@ public abstract class BaseLocaleUrlDefinitionDAO implements
      *
      * @since 2.1.0
      */
-    protected Map<String, Long> lastModifiedDates;
+    protected final Map<String, Long> lastModifiedDates;
     /**
      * Reader used to get definitions from the sources.
      *
@@ -74,7 +74,7 @@ public abstract class BaseLocaleUrlDefinitionDAO implements
      *
      * @since 3.0.0
      */
-    protected ApplicationContext applicationContext;
+    protected final ApplicationContext applicationContext;
     /**
      * Constructor.
      */
@@ -124,15 +124,13 @@ public abstract class BaseLocaleUrlDefinitionDAO implements
      * @return The definition map that has been read.
      */
     protected Map<String, Definition> loadDefinitionsFromResource(ApplicationResource resource) {
-        Map<String, Definition> defsMap = null;
-        InputStream stream = null;
-        try {
+        try (InputStream stream  = resource.getInputStream()) {
             lastModifiedDates.put(resource.getLocalePath(), resource
                     .getLastModified());
             // Definition must be collected, starting from the base
             // source up to the last localized file.
-            stream = resource.getInputStream();
-            defsMap = reader.read(stream);
+
+            return reader.read(stream);
         } catch (FileNotFoundException e) {
             // File not found. continue.
             if (log.isDebugEnabled()) {
@@ -141,16 +139,7 @@ public abstract class BaseLocaleUrlDefinitionDAO implements
         } catch (IOException e) {
             throw new DefinitionsFactoryException(
                     "I/O error processing configuration.", e);
-        } finally {
-            try {
-                if (stream != null) {
-                    stream.close();
-                }
-            } catch (IOException e) {
-                throw new DefinitionsFactoryException(
-                        "I/O error closing " + resource.toString(), e);
-            }
         }
-        return defsMap;
+        return null;
     }
 }

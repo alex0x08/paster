@@ -41,7 +41,7 @@ public class ReadOnlyEnumerationMap<V> implements Map<String, V> {
     /**
      * The request.
      */
-    protected HasKeys<V> request;
+    protected final HasKeys<V> request;
     /**
      * Constructor.
      *
@@ -274,7 +274,7 @@ public class ReadOnlyEnumerationMap<V> implements Map<String, V> {
             /**
              * Enumerates keys.
              */
-            private Enumeration<String> namesEnumeration = request.getKeys();
+            private final Enumeration<String> namesEnumeration = request.getKeys();
             @Override
             public boolean hasNext() {
                 return namesEnumeration.hasMoreElements();
@@ -315,7 +315,7 @@ public class ReadOnlyEnumerationMap<V> implements Map<String, V> {
             Collection<String> realCollection = (Collection<String>) c;
             List<String> valueList = new ArrayList<>(realCollection);
             for (Enumeration<String> keysEnum = request.getKeys(); keysEnum.hasMoreElements(); ) {
-                valueList.remove(request.getValue(keysEnum.nextElement()));
+                valueList.remove(request.getValue(keysEnum.nextElement()).toString());
                 if (valueList.isEmpty()) {
                     return true;
                 }

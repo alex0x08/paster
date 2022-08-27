@@ -58,8 +58,7 @@ public class ScopeELResolver extends ELResolver {
     public Iterator<FeatureDescriptor> getFeatureDescriptors(ELContext context,
                                                              Object base) {
         if (base != null) {
-            List<FeatureDescriptor> retValue = Collections.emptyList();
-            return retValue.iterator();
+            return Collections.emptyIterator();
         }
         List<FeatureDescriptor> list = new ArrayList<>();
         Request request = (Request) context

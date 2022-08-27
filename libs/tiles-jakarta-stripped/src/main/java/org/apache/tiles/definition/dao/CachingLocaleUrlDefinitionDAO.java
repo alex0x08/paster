@@ -58,7 +58,7 @@ public class CachingLocaleUrlDefinitionDAO extends BaseLocaleUrlDefinitionDAO
      *
      * @since 2.1.0
      */
-    protected Map<Locale, Map<String, Definition>> locale2definitionMap;
+    protected final Map<Locale, Map<String, Definition>> locale2definitionMap;
     /**
      * Flag that, when <code>true</code>, enables automatic checking of URLs
      * changing.

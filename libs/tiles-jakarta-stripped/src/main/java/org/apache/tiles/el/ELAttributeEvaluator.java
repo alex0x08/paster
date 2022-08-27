@@ -35,14 +35,14 @@ import org.apache.tiles.request.Request;
  * @since 2.2.1
  */
 public class ELAttributeEvaluator extends AbstractAttributeEvaluator {
-    /**
+    /*
      * Initialization parameter to decide the implementation of
      * {@link ExpressionFactoryFactory}.
      *
      * @since 2.2.1
      */
-    public static final String EXPRESSION_FACTORY_FACTORY_INIT_PARAM =
-            "org.apache.tiles.evaluator.el.ExpressionFactoryFactory";
+    //public static final String EXPRESSION_FACTORY_FACTORY_INIT_PARAM =
+    //        "org.apache.tiles.evaluator.el.ExpressionFactoryFactory";
     /**
      * The EL expression factory.
      *

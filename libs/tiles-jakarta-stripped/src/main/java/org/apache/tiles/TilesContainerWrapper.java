@@ -35,7 +35,7 @@ public class TilesContainerWrapper implements TilesContainer {
     /**
      * The container to wrap.
      */
-    protected TilesContainer container;
+    protected final TilesContainer container;
 
     /**
      * Constructor.

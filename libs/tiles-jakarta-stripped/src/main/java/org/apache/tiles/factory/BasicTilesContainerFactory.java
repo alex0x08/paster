@@ -76,7 +76,7 @@ public class BasicTilesContainerFactory extends AbstractTilesContainerFactory {
      */
     @Override
     public TilesContainer createContainer(ApplicationContext applicationContext) {
-        BasicTilesContainer container = instantiateContainer(applicationContext);
+        BasicTilesContainer container = instantiateContainer();
         container.setApplicationContext(applicationContext);
         LocaleResolver resolver = createLocaleResolver(applicationContext);
         container.setDefinitionsFactory(createDefinitionsFactory(applicationContext,
@@ -86,19 +86,17 @@ public class BasicTilesContainerFactory extends AbstractTilesContainerFactory {
         container.setAttributeEvaluatorFactory(attributeEvaluatorFactory);
         container.setPreparerFactory(createPreparerFactory(applicationContext));
         TilesContainer injectedContainer = createDecoratedContainer(container, applicationContext);
-        container.setRendererFactory(createRendererFactory(applicationContext,
-                injectedContainer, attributeEvaluatorFactory));
+        container.setRendererFactory(createRendererFactory(
+                injectedContainer));
         return injectedContainer;
     }
     /**
      * Instantiate the container, without initialization.
      *
-     * @param context The Tiles application context object.
      * @return The instantiated container.
      * @since 2.1.1
      */
-    protected BasicTilesContainer instantiateContainer(
-            ApplicationContext context) {
+    protected BasicTilesContainer instantiateContainer() {
         return new BasicTilesContainer();
     }
     /**
@@ -125,7 +123,7 @@ public class BasicTilesContainerFactory extends AbstractTilesContainerFactory {
     protected DefinitionsFactory createDefinitionsFactory(ApplicationContext applicationContext,
                                                           LocaleResolver resolver) {
         UnresolvingLocaleDefinitionsFactory factory = instantiateDefinitionsFactory(
-                applicationContext, resolver);
+        );
         factory.setLocaleResolver(resolver);
         factory.setDefinitionDAO(createLocaleDefinitionDao(applicationContext,
                 resolver));
@@ -134,14 +132,10 @@ public class BasicTilesContainerFactory extends AbstractTilesContainerFactory {
     /**
      * Instantiate a new definitions factory based on Locale.
      *
-     * @param applicationContext The Tiles application context.
-     * @param resolver           The locale resolver.
      * @return The definitions factory.
      * @since 2.2.1
      */
-    protected UnresolvingLocaleDefinitionsFactory instantiateDefinitionsFactory(
-            ApplicationContext applicationContext,
-            LocaleResolver resolver) {
+    protected UnresolvingLocaleDefinitionsFactory instantiateDefinitionsFactory() {
         return new UnresolvingLocaleDefinitionsFactory();
     }
     /**
@@ -173,7 +167,7 @@ public class BasicTilesContainerFactory extends AbstractTilesContainerFactory {
         definitionDao.setSources(getSources(applicationContext));
         if (definitionDao instanceof PatternDefinitionResolverAware) {
             ((PatternDefinitionResolverAware<Locale>) definitionDao)
-                    .setPatternDefinitionResolver(createPatternDefinitionResolver(Locale.class));
+                    .setPatternDefinitionResolver(createPatternDefinitionResolver());
         }
         return definitionDao;
     }
@@ -209,7 +203,7 @@ public class BasicTilesContainerFactory extends AbstractTilesContainerFactory {
      * @since 2.1.1
      */
     protected List<ApplicationResource> getSources(ApplicationContext applicationContext) {
-        List<ApplicationResource> retValue = new ArrayList<ApplicationResource>(1);
+        List<ApplicationResource> retValue = new ArrayList<>(1);
         retValue.add(applicationContext.getResource("/WEB-INF/tiles.xml"));
         return retValue;
     }
@@ -242,24 +236,20 @@ public class BasicTilesContainerFactory extends AbstractTilesContainerFactory {
     /**
      * Creates a renderer factory. By default it returns a
      * {@link BasicRendererFactory}, composed of an
-     * {@link UntypedAttributeRenderer} as default, and delegates of
+     * {link UntypedAttributeRenderer} as default, and delegates of
      * {@link StringRenderer}, {@link DispatchRenderer},
      * {@link DefinitionRenderer}.
      *
-     * @param applicationContext        The Tiles application context.
      * @param container                 The container.
-     * @param attributeEvaluatorFactory The attribute evaluator factory.
      * @return The renderer factory.
      * @since 2.2.0
      */
-    protected RendererFactory createRendererFactory(ApplicationContext applicationContext,
-                                                    TilesContainer container,
-                                                    AttributeEvaluatorFactory attributeEvaluatorFactory) {
+    protected RendererFactory createRendererFactory(TilesContainer container) {
         BasicRendererFactory retValue = new BasicRendererFactory();
-        registerAttributeRenderers(retValue, applicationContext, container,
-                attributeEvaluatorFactory);
-        retValue.setDefaultRenderer(createDefaultAttributeRenderer(retValue,
-                applicationContext, container, attributeEvaluatorFactory));
+        registerAttributeRenderers(retValue, container
+        );
+        retValue.setDefaultRenderer(createDefaultAttributeRenderer(retValue
+        ));
         return retValue;
     }
     /**
@@ -267,17 +257,11 @@ public class BasicTilesContainerFactory extends AbstractTilesContainerFactory {
      * {@link ChainedDelegateRenderer}.
      *
      * @param rendererFactory           The renderer factory to configure.
-     * @param applicationContext        The Tiles application context.
-     * @param container                 The container.
-     * @param attributeEvaluatorFactory The attribute evaluator factory.
      * @return The default attribute renderer.
      * @since 3.0.0
      */
     protected Renderer createDefaultAttributeRenderer(
-            BasicRendererFactory rendererFactory,
-            ApplicationContext applicationContext,
-            TilesContainer container,
-            AttributeEvaluatorFactory attributeEvaluatorFactory) {
+            BasicRendererFactory rendererFactory) {
         ChainedDelegateRenderer retValue = new ChainedDelegateRenderer();
         retValue.addAttributeRenderer(rendererFactory.getRenderer(DEFINITION_RENDERER_NAME));
         retValue.addAttributeRenderer(rendererFactory.getRenderer(TEMPLATE_RENDERER_NAME));
@@ -291,15 +275,13 @@ public class BasicTilesContainerFactory extends AbstractTilesContainerFactory {
      * substitution.
      *
      * @param <T>                   The type of the customization key.
-     * @param customizationKeyClass The customization key class.
      * @return The pattern definition resolver.
      * @since 2.2.0
      */
-    protected <T> PatternDefinitionResolver<T> createPatternDefinitionResolver(
-            Class<T> customizationKeyClass) {
+    protected <T> PatternDefinitionResolver<T> createPatternDefinitionResolver() {
         WildcardDefinitionPatternMatcherFactory definitionPatternMatcherFactory =
                 new WildcardDefinitionPatternMatcherFactory();
-        return new BasicPatternDefinitionResolver<T>(
+        return new BasicPatternDefinitionResolver<>(
                 definitionPatternMatcherFactory,
                 definitionPatternMatcherFactory);
     }
@@ -309,75 +291,49 @@ public class BasicTilesContainerFactory extends AbstractTilesContainerFactory {
      * {@link DispatchRenderer} and {@link DefinitionRenderer}.
      *
      * @param rendererFactory           The renderer factory to configure.
-     * @param applicationContext        The Tiles application context.
      * @param container                 The container.
-     * @param attributeEvaluatorFactory The attribute evaluator factory.
      * @since 2.2.0
      */
     protected void registerAttributeRenderers(
             BasicRendererFactory rendererFactory,
-            ApplicationContext applicationContext,
-            TilesContainer container,
-            AttributeEvaluatorFactory attributeEvaluatorFactory) {
+            TilesContainer container) {
         rendererFactory.registerRenderer(STRING_RENDERER_NAME,
-                createStringAttributeRenderer(rendererFactory,
-                        applicationContext, container, attributeEvaluatorFactory));
+                createStringAttributeRenderer(
+                ));
         rendererFactory.registerRenderer(TEMPLATE_RENDERER_NAME,
-                createTemplateAttributeRenderer(rendererFactory,
-                        applicationContext, container, attributeEvaluatorFactory));
+                createTemplateAttributeRenderer(
+                ));
         rendererFactory.registerRenderer(DEFINITION_RENDERER_NAME,
-                createDefinitionAttributeRenderer(rendererFactory,
-                        applicationContext, container, attributeEvaluatorFactory));
+                createDefinitionAttributeRenderer(
+                        container));
     }
     /**
      * Creates an attribute renderer to render strings.
      *
-     * @param rendererFactory           The renderer factory to configure.
-     * @param applicationContext        The Tiles application context.
-     * @param container                 The container.
-     * @param attributeEvaluatorFactory The attribute evaluator factory.
      * @return The renderer.
      * @since 3.0.0
      */
-    protected Renderer createStringAttributeRenderer(
-            BasicRendererFactory rendererFactory,
-            ApplicationContext applicationContext,
-            TilesContainer container,
-            AttributeEvaluatorFactory attributeEvaluatorFactory) {
+    protected Renderer createStringAttributeRenderer() {
         return new StringRenderer();
     }
     /**
-     * Creates a {@link AttributeRenderer} that uses a {@link DispatchRenderer}.
+     * Creates a {link AttributeRenderer} that uses a {@link DispatchRenderer}.
      *
-     * @param rendererFactory           The renderer factory to configure.
-     * @param applicationContext        The Tiles application context.
-     * @param container                 The container.
-     * @param attributeEvaluatorFactory The attribute evaluator factory.
      * @return The renderer.
      * @since 2.2.1
      */
-    protected Renderer createTemplateAttributeRenderer(
-            BasicRendererFactory rendererFactory,
-            ApplicationContext applicationContext,
-            TilesContainer container,
-            AttributeEvaluatorFactory attributeEvaluatorFactory) {
+    protected Renderer createTemplateAttributeRenderer() {
         return new DispatchRenderer();
     }
     /**
-     * Creates a {@link AttributeRenderer} using a {@link DefinitionRenderer}.
+     * Creates a {link AttributeRenderer} using a {@link DefinitionRenderer}.
      *
-     * @param rendererFactory           The renderer factory to configure.
-     * @param applicationContext        The Tiles application context.
      * @param container                 The container.
-     * @param attributeEvaluatorFactory The attribute evaluator factory.
      * @return The renderer.
      * @since 3.0.0
      */
     protected Renderer createDefinitionAttributeRenderer(
-            BasicRendererFactory rendererFactory,
-            ApplicationContext applicationContext,
-            TilesContainer container,
-            AttributeEvaluatorFactory attributeEvaluatorFactory) {
+            TilesContainer container) {
         return new DefinitionRenderer(container);
     }
 }

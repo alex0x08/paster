@@ -30,7 +30,7 @@ public class BasicRendererFactory implements RendererFactory {
     /**
      * The renderer name/renderer map.
      */
-    protected Map<String, Renderer> renderers;
+    protected final Map<String, Renderer> renderers;
     /**
      * The default renderer.
      */

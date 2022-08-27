@@ -59,6 +59,7 @@ public class AddListAttributeModel {
         modelBody.evaluateWithoutWriting();
         listAttribute = (ListAttribute) composeStack.pop();
         ListAttribute parent = (ListAttribute) composeStack.peek();
+        assert parent != null;
         parent.add(listAttribute);
     }
 }

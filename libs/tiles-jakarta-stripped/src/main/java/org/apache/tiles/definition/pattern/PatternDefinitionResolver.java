@@ -58,5 +58,5 @@ public interface PatternDefinitionResolver<T> {
      *
      * @param customizationKey
      */
-    public void clearPatternPaths(T customizationKey);
+    void clearPatternPaths(T customizationKey);
 }

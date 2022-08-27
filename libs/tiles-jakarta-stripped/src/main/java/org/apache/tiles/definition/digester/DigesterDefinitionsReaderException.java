@@ -31,13 +31,6 @@ public class DigesterDefinitionsReaderException extends TilesException {
     /**
      * Constructor.
      *
-     * @since 2.1.0
-     */
-    public DigesterDefinitionsReaderException() {
-    }
-    /**
-     * Constructor.
-     *
      * @param message The detail message.
      * @since 2.1.0
      */

@@ -54,12 +54,12 @@ public class GetAsStringModel {
     /**
      * The logging object.
      */
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LoggerFactory.getLogger(getClass());
 
     /**
      * The attribute resolver to use.
      */
-    private AttributeResolver attributeResolver;
+    private final AttributeResolver attributeResolver;
 
     /**
      * Constructor that uses the defaut attribute resolver.

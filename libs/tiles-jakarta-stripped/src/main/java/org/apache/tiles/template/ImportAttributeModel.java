@@ -51,7 +51,7 @@ public class ImportAttributeModel {
     /**
      * The logging object.
      */
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LoggerFactory.getLogger(getClass());
 
     /**
      * Executes the model.

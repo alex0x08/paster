@@ -35,11 +35,11 @@ public class PublisherRenderer implements Renderer {
 
     public interface RendererListener{
         /** Called before the delegate's render method is called. */
-        void start(String template, Request request) throws IOException;
+        void start(String template, Request request);
         /** Called after the delegate's render method is called. */
-        void end(String template, Request request) throws IOException;
+        void end(String template, Request request);
         /** If the delegate render method throws an IOException it is passed through this. */
-        void handleIOException(IOException ex, Request request) throws IOException;
+        void handleIOException(IOException ex, Request request);
     }
 
     private final Renderer renderer;
@@ -85,13 +85,8 @@ public class PublisherRenderer implements Renderer {
         IOException ex = exception;
         boolean throwIt = listeners.isEmpty();
         for(RendererListener listener : listenersReversed){
-            try{
-                listener.handleIOException(ex, request);
-                throwIt = false;
-            }catch(IOException newEx){
-                ex = newEx;
-                throwIt = true;
-            }
+            listener.handleIOException(ex, request);
+            throwIt = false;
         }
         if(throwIt){
             throw ex;

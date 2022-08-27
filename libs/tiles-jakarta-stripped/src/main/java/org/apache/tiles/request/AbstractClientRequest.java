@@ -20,7 +20,6 @@
  */
 package org.apache.tiles.request;
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 /**
  * Base class for "client" requests, i.e. requests that come unchanged by the
@@ -46,13 +45,13 @@ public abstract class AbstractClientRequest extends AbstractRequest {
         if (isForceInclude()) {
             doInclude(path);
         } else {
-            setForceInclude(true);
+            setForceInclude();
             doForward(path);
         }
     }
     @Override
     public void include(String path) throws IOException {
-        setForceInclude(true);
+        setForceInclude();
         doInclude(path);
     }
     @Override

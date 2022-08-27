@@ -20,7 +20,6 @@ import com.thoughtworks.xstream.annotations.XStreamAsAttribute
 import jakarta.persistence._
 import org.hibernate.annotations.GenericGenerator
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField
-import java.text.SimpleDateFormat
 import java.time.{LocalDateTime, ZoneOffset}
 import java.util.{Date, Objects}
 object Struct extends Logged {

@@ -33,14 +33,14 @@ import org.apache.tiles.request.ApplicationContext;
  * @since 2.2.0
  */
 public abstract class AbstractTilesInitializer implements TilesInitializer {
-    /**
+    /*
      * Init parameter to define the key under which the container will be
      * stored.
      *
      * @since 2.1.2
      */
-    public static final String CONTAINER_KEY_INIT_PARAMETER =
-            "org.apache.tiles.startup.AbstractTilesInitializer.CONTAINER_KEY";
+    //public static final String CONTAINER_KEY_INIT_PARAMETER =
+    //        "org.apache.tiles.startup.AbstractTilesInitializer.CONTAINER_KEY";
     /**
      * The initialized application context.
      */
@@ -51,8 +51,8 @@ public abstract class AbstractTilesInitializer implements TilesInitializer {
     public void initialize(ApplicationContext applicationContext) {
         this.applicationContext = createTilesApplicationContext(applicationContext);
         ApplicationAccess.register(applicationContext);
-        String key = getContainerKey(this.applicationContext);
-        /**
+        String key = getContainerKey();
+        /*
          * The initialized container.
          */
         TilesContainer container = createContainer(this.applicationContext);
@@ -63,7 +63,7 @@ public abstract class AbstractTilesInitializer implements TilesInitializer {
      */
     public void destroy() {
         TilesAccess.setContainer(applicationContext, null,
-                getContainerKey(applicationContext));
+                getContainerKey());
     }
     /**
      * Creates the Tiles application context, to be used across all the
@@ -86,11 +86,10 @@ public abstract class AbstractTilesInitializer implements TilesInitializer {
      * This implementation returns <code>null</code> so that the container will
      * be the default one.
      *
-     * @param applicationContext The Tiles application context to use.
      * @return The container key.
      * @since 2.2.0
      */
-    protected String getContainerKey(ApplicationContext applicationContext) {
+    protected String getContainerKey() {
         return null;
     }
     /**

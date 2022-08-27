@@ -57,7 +57,6 @@ public class ApplicationScopeExtractor implements AttributeExtractor {
         context.removeAttribute(name);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public Enumeration<String> getKeys() {
         return context.getAttributeNames();

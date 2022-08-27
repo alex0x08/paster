@@ -215,7 +215,7 @@ public class DigesterDefinitionsReader implements DefinitionsReader {
      * <code>Digester</code> object used to read Definition data
      * from the source.
      */
-    protected Digester digester;
+    protected final Digester digester;
     /**
      * The set of public identifiers, and corresponding resource names for
      * the versions of the configuration file DTDs we know about.  There

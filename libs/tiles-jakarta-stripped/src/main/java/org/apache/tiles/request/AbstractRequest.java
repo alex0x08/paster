@@ -32,12 +32,9 @@ public abstract class AbstractRequest implements DispatchRequest {
             .getName() + ".FORCE_INCLUDE";
     /**
      * Sets the flag to force inclusion at next dispatch.
-     *
-     * @param forceInclude <code>true</code> means that, at the next dispatch, response
-     *                     will be included and never forwarded.
      */
-    protected void setForceInclude(boolean forceInclude) {
-        getContext(REQUEST_SCOPE).put(FORCE_INCLUDE_ATTRIBUTE_NAME, forceInclude);
+    protected void setForceInclude() {
+        getContext(REQUEST_SCOPE).put(FORCE_INCLUDE_ATTRIBUTE_NAME, true);
     }
     /**
      * Checks if, when dispatching to a resource, the result must be included
