@@ -153,21 +153,7 @@ public class Attribute implements Serializable, Cloneable {
                         .createExpressionFromDescribedExpression(templateExpression));
         return templateAttribute;
     }
-    /**
-     * Creates a template attribute, starting from the expression to evaluate to
-     * obtain the template.
-     *
-     * @param templateExpression The expression to evaluate.
-     * @return The template attribute.
-     * @since 2.1.2
-     */
-    public static Attribute createTemplateAttributeWithExpression(
-            String templateExpression) {
-        Attribute attribute = new Attribute();
-        attribute.setExpressionObject(new Expression(templateExpression));
-        attribute.setRenderer(TEMPLATE_RENDERER);
-        return attribute;
-    }
+
     /**
      * Get role.
      *

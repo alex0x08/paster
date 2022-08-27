@@ -65,7 +65,6 @@
                 <value>/WEB-INF/setup/*.xml</value>
             </list>
         </property>
-        <property name="validateDefinitions" value="false"/>
     </bean>
 
     <bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">

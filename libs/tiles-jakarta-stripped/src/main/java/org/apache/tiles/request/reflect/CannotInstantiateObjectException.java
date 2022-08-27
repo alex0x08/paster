@@ -26,27 +26,7 @@ import org.apache.tiles.request.RequestException;
  * @version $Rev: 1306435 $ $Date: 2012-03-29 02:39:11 +1100 (Thu, 29 Mar 2012) $
  */
 public class CannotInstantiateObjectException extends RequestException {
-    /**
-     * Constructor.
-     */
-    public CannotInstantiateObjectException() {
-    }
-    /**
-     * Constructor.
-     *
-     * @param message The detail message.
-     */
-    public CannotInstantiateObjectException(String message) {
-        super(message);
-    }
-    /**
-     * Constructor.
-     *
-     * @param e The exception to be wrapped.
-     */
-    public CannotInstantiateObjectException(Throwable e) {
-        super(e);
-    }
+
     /**
      * Constructor.
      *

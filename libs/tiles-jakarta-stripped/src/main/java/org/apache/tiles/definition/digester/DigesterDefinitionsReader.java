@@ -276,7 +276,7 @@ public class DigesterDefinitionsReader implements DefinitionsReader {
         // This is an instance variable instead of a local variable because
         // we want to be able to call the addDefinition method to populate it.
         // But we reset the Map here, which, of course, has threading implications.
-        definitions = new LinkedHashMap<String, Definition>();
+        definitions = new LinkedHashMap<>();
         if (source == null) {
             // Perhaps we should throw an exception here.
             return null;
@@ -359,6 +359,8 @@ public class DigesterDefinitionsReader implements DefinitionsReader {
         digester.addSetNext(NESTED_LIST, "add", PUT_ATTRIBUTE_HANDLER_CLASS);
     }
     /**
+     *
+     * THIS METHOD IS IN USE!
      * Adds a new <code>Definition</code> to the internal Map or replaces
      * an existing one.
      *

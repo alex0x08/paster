@@ -51,13 +51,7 @@ public class ResolvingLocaleUrlDefinitionDAO extends
     public ResolvingLocaleUrlDefinitionDAO(ApplicationContext applicationContext) {
         super(applicationContext);
     }
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected Map<String, Definition> loadParentDefinitions(Locale parentLocale) {
-        return loadRawDefinitionsFromResources(parentLocale);
-    }
+
     @Override
     protected Map<String, Definition> loadDefinitions(Locale customizationKey) {
         Map<String, Definition> localeDefsMap = super.loadDefinitions(customizationKey);

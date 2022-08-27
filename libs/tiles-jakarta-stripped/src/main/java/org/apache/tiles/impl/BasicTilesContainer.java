@@ -299,7 +299,7 @@ public class BasicTilesContainer implements TilesContainer,
         Deque<AttributeContext> contextStack = (Deque<AttributeContext>) requestScope
                 .get(ATTRIBUTE_CONTEXT_STACK);
         if (contextStack == null) {
-            contextStack = new LinkedList<AttributeContext>();
+            contextStack = new LinkedList<>();
             requestScope.put(ATTRIBUTE_CONTEXT_STACK, contextStack);
         }
 

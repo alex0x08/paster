@@ -122,8 +122,7 @@ public class DefinitionModel {
         }
 
         Object obj = composeStack.peek();
-        if (obj instanceof Attribute) {
-            Attribute attribute = (Attribute) obj;
+        if (obj instanceof Attribute attribute) {
             attribute.setValue(definition.getName());
             if (attribute.getRenderer() == null) {
                 attribute.setRenderer("definition");

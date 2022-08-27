@@ -248,7 +248,7 @@ public class ReadOnlyEnumerationMap<V> implements Map<String, V> {
          * @return The list.
          */
         private List<Map.Entry<String, V>> toList() {
-            List<Map.Entry<String, V>> entries = new ArrayList<Map.Entry<String, V>>();
+            List<Map.Entry<String, V>> entries = new ArrayList<>();
             Enumeration<String> names = request.getKeys();
             while (names.hasMoreElements()) {
                 entries.add(extractNextEntry(names));

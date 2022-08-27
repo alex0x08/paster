@@ -21,7 +21,7 @@
 package org.apache.tiles.util;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+
 /**
  * This class is an utility class that perform wilcard-patterns matching and
  * isolation taken from Apache Struts that is taken, in turn, from Apache
@@ -61,12 +61,7 @@ public class WildcardHelper {
      * @since 2.1.0
      */
     protected static final int MATCH_END = -3;
-    /**
-     * The length of the placeholder.
-     *
-     * @since 2.1.0
-     */
-    private static final int PLACEHOLDER_LENGTH = 3;
+
     /**
      * <p>
      * Translate the given <code>String</code> into a <code>int []</code>
@@ -410,38 +405,7 @@ public class WildcardHelper {
         }
         return (true);
     }
-    /**
-     * <p>
-     * Inserts into a value wildcard-matched strings where specified.
-     * </p>
-     *
-     * @param val  The value to convert
-     * @param vars A Map of wildcard-matched strings
-     * @return The new value
-     * @since 2.1.0
-     */
-    public static String convertParam(String val, Map<Integer, String> vars) {
-        if (val == null) {
-            return null;
-        } else if (!val.contains("{")) {
-            return val;
-        }
-        Map.Entry<Integer, String> entry;
-        StringBuilder key = new StringBuilder("{0}");
-        StringBuilder ret = new StringBuilder(val);
-        String keyTmp;
-        int x;
-        for (Map.Entry<Integer, String> integerStringEntry : vars.entrySet()) {
-            entry = integerStringEntry;
-            key.setCharAt(1, entry.getKey().toString().charAt(0));
-            keyTmp = key.toString();
-            // Replace all instances of the placeholder
-            while ((x = ret.toString().indexOf(keyTmp)) > -1) {
-                ret.replace(x, x + PLACEHOLDER_LENGTH, entry.getValue());
-            }
-        }
-        return ret.toString();
-    }
+
     /**
      * Adds and object to a list. If the list is null, it creates it.
      *

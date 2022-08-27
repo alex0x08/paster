@@ -43,7 +43,6 @@ import org.apache.tiles.evaluator.BasicAttributeEvaluatorFactory;
 import org.apache.tiles.evaluator.impl.DirectAttributeEvaluator;
 import org.apache.tiles.factory.AbstractTilesContainerFactory;
 import org.apache.tiles.factory.BasicTilesContainerFactory;
-import org.apache.tiles.impl.mgmt.CachingTilesContainer;
 import org.apache.tiles.locale.LocaleResolver;
 import org.apache.tiles.preparer.factory.PreparerFactory;
 import org.apache.tiles.request.ApplicationContext;
@@ -119,7 +118,6 @@ public class TilesConfigurer implements ServletContextAware, InitializingBean, D
     private static final boolean tilesElPresent =
             ClassUtils.isPresent("org.apache.tiles.el.ELAttributeEvaluator",
                     TilesConfigurer.class.getClassLoader());
-    protected final Log logger = LogFactory.getLog(getClass());
     @Nullable
     private TilesInitializer tilesInitializer;
     @Nullable

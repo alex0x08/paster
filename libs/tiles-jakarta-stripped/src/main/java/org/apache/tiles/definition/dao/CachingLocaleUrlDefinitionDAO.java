@@ -51,8 +51,8 @@ public class CachingLocaleUrlDefinitionDAO extends BaseLocaleUrlDefinitionDAO
      *
      * @since 2.1.0
      */
-    public static final String CHECK_REFRESH_INIT_PARAMETER =
-            "org.apache.tiles.definition.dao.LocaleUrlDefinitionDAO.CHECK_REFRESH";
+    //public static final String CHECK_REFRESH_INIT_PARAMETER =
+    //        "org.apache.tiles.definition.dao.LocaleUrlDefinitionDAO.CHECK_REFRESH";
     /**
      * The locale-specific set of definitions objects.
      *
@@ -124,7 +124,7 @@ public class CachingLocaleUrlDefinitionDAO extends BaseLocaleUrlDefinitionDAO
         }
         return retValue;
     }
-    /**
+    /*
      * Sets the flag to check source refresh. If not called, the default is
      * <code>false</code>.
      *
@@ -132,9 +132,9 @@ public class CachingLocaleUrlDefinitionDAO extends BaseLocaleUrlDefinitionDAO
      *                     of sources changing.
      * @since 2.1.0
      */
-    public void setCheckRefresh(boolean checkRefresh) {
+    /*public void setCheckRefresh(boolean checkRefresh) {
         this.checkRefresh = checkRefresh;
-    }
+    }*/
     /**
      * Returns a definition from the definition resolver.
      *
@@ -228,16 +228,7 @@ public class CachingLocaleUrlDefinitionDAO extends BaseLocaleUrlDefinitionDAO
         }
         return localeDefsMap;
     }
-    /*
-     * Loads parent definitions, i.e. definitions mapped to a parent locale.
-     *
-     * @param parentLocale The locale to use when loading URLs.
-     * @return The loaded parent definitions.
-     * @since 2.1.0
-     */
-    protected Map<String, Definition> loadParentDefinitions(Locale parentLocale) {
-        return loadDefinitions(parentLocale);
-    }
+
     /**
      * Copies the definition map to be passed to a higher level of customization
      * key.

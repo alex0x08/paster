@@ -68,16 +68,7 @@ public class CombinedBeanInfo {
     public List<FeatureDescriptor> getDescriptors() {
         return descriptors;
     }
-    /**
-     * Returns a map of the introspected properties for the given class.
-     *
-     * @param clazz The class to get the properties from.
-     * @return The map of property descriptors.
-     * @since 2.2.0
-     */
-    public Map<String, PropertyDescriptor> getMappedDescriptors(Class<?> clazz) {
-        return class2descriptors.get(clazz);
-    }
+
     /**
      * Returns the set of properties for the given introspected class.
      *

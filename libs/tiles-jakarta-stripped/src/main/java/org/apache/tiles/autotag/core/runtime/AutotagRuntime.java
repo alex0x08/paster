@@ -47,5 +47,5 @@ public interface AutotagRuntime<R> {
      * @param defaultValue The default value if none is specified.
      * @return The value of the parameter.
      */
-    <T> T getParameter(String name, Class<T> type, T defaultValue);
+    //<T> T getParameter(String name, Class<T> type, T defaultValue);
 }

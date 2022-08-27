@@ -19,7 +19,6 @@
  * under the License.
  */
 package org.apache.tiles.renderer;
-import java.io.IOException;
 
 import org.apache.tiles.TilesContainer;
 import org.apache.tiles.request.Request;

@@ -27,33 +27,11 @@ package org.apache.tiles.definition;
 public class NoSuchDefinitionException extends DefinitionsFactoryException {
     /**
      * Constructor.
-     */
-    public NoSuchDefinitionException() {
-        super();
-    }
-    /**
-     * Constructor.
      *
      * @param msg Message.
      */
     public NoSuchDefinitionException(String msg) {
         super(msg);
     }
-    /**
-     * Constructor.
-     *
-     * @param message Message.
-     * @param e       Cause.
-     */
-    public NoSuchDefinitionException(String message, Throwable e) {
-        super(message, e);
-    }
-    /**
-     * Constructor.
-     *
-     * @param e Cause.
-     */
-    public NoSuchDefinitionException(Throwable e) {
-        super(e);
-    }
+
 }

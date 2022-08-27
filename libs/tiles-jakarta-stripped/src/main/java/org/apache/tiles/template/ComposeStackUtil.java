@@ -69,7 +69,7 @@ public final class ComposeStackUtil {
         Deque<Object> composeStack = (Deque<Object>) requestScope
                 .get(COMPOSE_STACK_ATTRIBUTE_NAME);
         if (composeStack == null) {
-            composeStack = new LinkedList<Object>();
+            composeStack = new LinkedList<>();
             requestScope.put(ComposeStackUtil.COMPOSE_STACK_ATTRIBUTE_NAME, composeStack);
         }
         return composeStack;

@@ -94,7 +94,7 @@ public class ImportAttributeModel {
     private Map<String, Object> getImportedAttributes(String name,
             String toName, boolean ignore, Request request) {
         TilesContainer container = TilesAccess.getCurrentContainer(request);
-        Map<String, Object> retValue = new HashMap<String, Object>();
+        Map<String, Object> retValue = new HashMap<>();
         AttributeContext attributeContext = container
                 .getAttributeContext(request);
         // Some tags allow for unspecified attributes. This

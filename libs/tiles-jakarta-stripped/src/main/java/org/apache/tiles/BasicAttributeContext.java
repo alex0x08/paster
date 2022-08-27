@@ -459,7 +459,7 @@ public class BasicAttributeContext implements AttributeContext, Serializable {
      */
     private Map<String, Attribute> deepCopyAttributeMap(
             Map<String, Attribute> attributes) {
-        Map<String, Attribute> retValue = new HashMap<String, Attribute>(attributes.size());
+        Map<String, Attribute> retValue = new HashMap<>(attributes.size());
         for (Map.Entry<String, Attribute> entry : attributes.entrySet()) {
             Attribute toCopy = entry.getValue();
             if (toCopy != null) {

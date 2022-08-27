@@ -82,14 +82,13 @@ public class PublisherRenderer implements Renderer {
     }
 
     private void handleIOException(IOException exception, Request request) throws IOException{
-        IOException ex = exception;
         boolean throwIt = listeners.isEmpty();
         for(RendererListener listener : listenersReversed){
-            listener.handleIOException(ex, request);
+            listener.handleIOException(exception, request);
             throwIt = false;
         }
         if(throwIt){
-            throw ex;
+            throw exception;
         }
     }
 }

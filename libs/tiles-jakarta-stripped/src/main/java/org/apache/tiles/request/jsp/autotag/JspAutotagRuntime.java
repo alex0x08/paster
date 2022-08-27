@@ -54,8 +54,8 @@ public class JspAutotagRuntime extends SimpleTagSupport implements AutotagRuntim
     }
 
     /** {@inheritDoc} */
-    @Override
-    public <T> T getParameter(String name, Class<T> type, T defaultValue) {
+    //@Override
+    /*public <T> T getParameter(String name, Class<T> type, T defaultValue) {
         throw new UnsupportedOperationException("the parameters are injected into the tag itself, no need to fetch them");
-    }
+    }*/
 }

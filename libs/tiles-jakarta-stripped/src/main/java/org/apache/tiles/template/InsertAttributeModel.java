@@ -186,13 +186,7 @@ public class InsertAttributeModel {
                 return;
             }
             container.render(attribute, request);
-        } catch (IOException e) {
-            if (!ignore) {
-                throw e;
-            } else if (log.isDebugEnabled()) {
-                log.debug("Ignoring exception", e);
-            }
-        } catch (RuntimeException e) {
+        } catch (IOException | RuntimeException e) {
             if (!ignore) {
                 throw e;
             } else if (log.isDebugEnabled()) {

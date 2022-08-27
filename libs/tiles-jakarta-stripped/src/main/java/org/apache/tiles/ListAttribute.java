@@ -73,7 +73,7 @@ public class ListAttribute extends Attribute {
         super(toCopy);
         List<Attribute> attributesToCopy = toCopy.getValue();
         if (attributesToCopy != null) {
-            List<Attribute> attributes = new ArrayList<Attribute>(attributesToCopy.size());
+            List<Attribute> attributes = new ArrayList<>(attributesToCopy.size());
             for (Attribute attribute : attributesToCopy) {
                 if (attribute != null) {
                     attributes.add(attribute.clone());
@@ -152,7 +152,7 @@ public class ListAttribute extends Attribute {
      */
     @SuppressWarnings("unchecked")
     public void inherit(ListAttribute parent) {
-        List<Attribute> tempList = new ArrayList<Attribute>();
+        List<Attribute> tempList = new ArrayList<>();
         tempList.addAll((List<Attribute>) parent.value);
         tempList.addAll((List<Attribute>) value);
         setValue(tempList);

@@ -23,7 +23,6 @@ package org.apache.tiles.template;
 
 import org.apache.tiles.Attribute;
 import org.apache.tiles.AttributeContext;
-import org.apache.tiles.Expression;
 import org.apache.tiles.TilesContainer;
 import org.apache.tiles.request.Request;
 
