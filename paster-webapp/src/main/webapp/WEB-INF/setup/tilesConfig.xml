@@ -6,6 +6,7 @@
     <!-- Default Main Template -->
     <definition name=".setupTemplate" template="/WEB-INF/pages/template/main-setup.jsp">
         <put-attribute name="head" value=""/>
+        <put-attribute name="pageTitle" expression="${pageTitle}"/>
         <put-attribute name="content" value=""/>
         <put-attribute name="footer" value=""/>
     </definition>

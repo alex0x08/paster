@@ -161,15 +161,18 @@ class SetupCtrl extends Logged {
    * @return
    * step page
    */
-  @RequestMapping(value = Array("/setup/checkConnection"), method = Array(RequestMethod.POST))
+  @RequestMapping(value = Array("/setup/checkConnection"),
+    method = Array(RequestMethod.POST))
   def checkConnection(@ModelAttribute("updatedStep")
                       updatedStep: StepModel,
                       result: BindingResult,
                       model: Model): String = {
     val step: SetupDbStep = updatedStep.getStep.asInstanceOf[SetupDbStep]
     if (StringUtils.isBlank(step.dbType)) {
-      val dbType = getAvailableDrivers.find(p => step.origName.equalsIgnoreCase(p.getName))
-        .orElse(alternative = throw new RuntimeException(s"Cannot find type ${step.origName}")).get
+      val dbType = getAvailableDrivers.find(p =>
+        step.origName.equalsIgnoreCase(p.getName))
+        .orElse(alternative =
+          throw new RuntimeException(s"Cannot find type ${step.origName}")).get
       step.dbType = dbType.getDriver
       if (dbType.getName.contains("H2")) {
         step.dbUrl = dbType.getUrl
@@ -238,6 +241,7 @@ class SetupCtrl extends Logged {
             model: Model,
             @PathVariable("errorCode") errorCode: Int): String = {
     model.asMap().clear()
+    model.addAttribute("pageTitle","Error")
     model.addAttribute("appId", appId)
     model.addAttribute("systemInfo", systemInfo)
     errorCode match {
@@ -268,7 +272,10 @@ class SetupCtrl extends Logged {
       else
         new StepModel(cs))
     step match {
+      case "welcome" =>
+        model.addAttribute("pageTitle", "Welcome to Paster Setup")
       case "users" =>
+        model.addAttribute("pageTitle","Setup Users")
         val users: SetupUsersStep = cs.asInstanceOf[SetupUsersStep]
         if (users.users.isEmpty) {
           val availableUsers: util.ArrayList[UserDTO] = new java.util.ArrayList()
@@ -292,6 +299,7 @@ class SetupCtrl extends Logged {
         }
         model.addAttribute("availableSecurityModes", getAvailableSecurityModes)
       case "db" =>
+        model.addAttribute("pageTitle", "Setup Database")
         val dbs: SetupDbStep = cs.asInstanceOf[SetupDbStep]
         dbs.connectionLog = null
         val availableDrivers = getAvailableDrivers
@@ -384,8 +392,12 @@ class SetupCtrl extends Logged {
   }
   @RequestMapping(value = Array("/setup/finalizeInstall"),
     method = Array(RequestMethod.GET, RequestMethod.POST))
-  def finalizeInstall: String = "/setup/finalizeInstall"
-  @RequestMapping(value = Array("/setup/doFinalizeInstall"), method = Array(RequestMethod.POST))
+  def finalizeInstall(model:Model): String = {
+    model.addAttribute("pageTitle","Complete Install")
+    "/setup/finalizeInstall"
+  }
+  @RequestMapping(value = Array("/setup/doFinalizeInstall"),
+    method = Array(RequestMethod.POST))
   def doFinalizeInstall(model: Model): String = {
     if (!setupService.isSetupCompleted) {
       logger.warn("Setup is not completed!")
@@ -403,7 +415,10 @@ class SetupCtrl extends Logged {
     "redirect:/main/restarting"
   }
   @RequestMapping(Array("/restarting"))
-  def restarting: String = "/restarting"
+  def restarting(model: Model): String = {
+    model.addAttribute("pageTitle","Restarting..")
+    "/restarting"
+  }
   def dumpErrors(result: BindingResult): Unit = {
     if (logger.isDebugEnabled) {
       logger.debug("form has {} errors", result.getErrorCount)
