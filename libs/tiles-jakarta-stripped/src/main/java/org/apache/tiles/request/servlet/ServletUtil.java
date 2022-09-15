@@ -90,18 +90,4 @@ public final class ServletUtil {
             currentRequest = ((RequestWrapper) currentRequest).getWrappedRequest();
         }
     }
-    /**
-     * Gets a servlet context from a TilesApplicationContext.
-     *
-     * @param applicationContext The application context to analyze.
-     * @return The servlet context.
-     * @throws NotAServletEnvironmentException If the application context is not
-     *                                         servlet-based.
-     */
-    public static ServletContext getServletContext(ApplicationContext applicationContext) {
-        if (applicationContext instanceof ServletApplicationContext) {
-            return (ServletContext) applicationContext.getContext();
-        }
-        throw new NotAServletEnvironmentException("Not a Servlet-based environment");
-    }
 }

@@ -221,29 +221,6 @@ public abstract class PostfixedApplicationResource implements ApplicationResourc
         }
         return result;
     }
-    /*
-    private static Locale java7_localeFrom(String localeString) {
-        Locale.Builder builder = new Locale.Builder();
-        try {
-            int countryIndex = localeString.indexOf('_');
-            if (countryIndex < 0) {
-                builder.setLanguage(localeString);
-            } else {
-                int variantIndex = localeString.indexOf('_', countryIndex + 1);
-                builder.setLanguage(localeString.substring(0, countryIndex));
-                if (variantIndex < 0) {
-                    builder.setRegion(localeString.substring(countryIndex + 1));
-                } else {
-                    builder.setRegion(localeString.substring(countryIndex + 1, variantIndex));
-                    builder.setVariant(localeString.substring(variantIndex + 1));
-                }
-            }
-        } catch (IllformedLocaleException ex) {
-            LOG.debug(localeString + " is an ill-formed locale", ex);
-        }
-        return builder.build();
-    }
-    */
     private static final Set<Locale> availableLocales = new HashSet<>(Arrays.asList(Locale.getAvailableLocales()));
     private static Locale validateLocale(Locale locale) {
         Locale withoutVariant = locale.getVariant().isEmpty()

@@ -85,10 +85,6 @@ public final class ClassUtil {
      *                                          instantiation.
      */
     public static Object instantiate(String className, boolean returnNull) {
-        /*ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        if (classLoader == null) {
-            classLoader = ClassUtil.class.getClassLoader();
-        }*/
         try {
             Class<?> namedClass = getClass(className, Object.class);
             return namedClass.getDeclaredConstructor().newInstance();

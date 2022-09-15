@@ -39,8 +39,6 @@ public abstract class AbstractTilesInitializer implements TilesInitializer {
      *
      * @since 2.1.2
      */
-    //public static final String CONTAINER_KEY_INIT_PARAMETER =
-    //        "org.apache.tiles.startup.AbstractTilesInitializer.CONTAINER_KEY";
     /**
      * The initialized application context.
      */

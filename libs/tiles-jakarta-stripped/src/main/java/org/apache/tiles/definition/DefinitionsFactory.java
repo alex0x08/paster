@@ -37,14 +37,10 @@ public interface DefinitionsFactory {
     /*
      * Property name that specifies the implementation of the DefinitionsReader.
      */
-    //String READER_IMPL_PROPERTY =
-     //       "org.apache.tiles.definition.DefinitionsReader";
     /*
      * Property name that specifies the implementation of
      * {@link org.apache.tiles.locale.LocaleResolver}.
      */
-    //String LOCALE_RESOLVER_IMPL_PROPERTY =
-     //       "org.apache.tiles.locale.LocaleResolver";
     /*
      * Constant representing the configuration parameter
      * used to define the tiles definition resources.
@@ -56,8 +52,7 @@ public interface DefinitionsFactory {
      * Constant representing the configuration parameter used to define the
      * definition DAO to use.
      */
-    //String DEFINITION_DAO_INIT_PARAM =
-     //       "org.apache.tiles.definition.DefinitionsFactory.DefinitionDAO";
+
     /**
      * Returns a Definition object that matches the given name and
      * Tiles context.

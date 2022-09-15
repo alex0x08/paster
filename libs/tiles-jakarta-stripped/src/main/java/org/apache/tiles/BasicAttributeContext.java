@@ -360,7 +360,9 @@ public class BasicAttributeContext implements AttributeContext, Serializable {
     /** {@inheritDoc} */
     @Override
     public boolean equals(Object obj) {
-        BasicAttributeContext bac = (BasicAttributeContext) obj;
+        if (!(obj instanceof BasicAttributeContext bac)) {
+            return false;
+        }
         return nullSafeEquals(templateAttribute, bac.templateAttribute)
                 && nullSafeEquals(preparer, bac.preparer)
                 && nullSafeEquals(attributes, bac.attributes)

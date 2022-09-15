@@ -161,7 +161,9 @@ public class ListAttribute extends Attribute {
     /** {@inheritDoc} */
     @Override
     public boolean equals(Object obj) {
-        ListAttribute attribute = (ListAttribute) obj;
+        if (!(obj instanceof ListAttribute attribute)) {
+            return false;
+        }
         return super.equals(attribute) && this.inherit == attribute.inherit;
     }
 

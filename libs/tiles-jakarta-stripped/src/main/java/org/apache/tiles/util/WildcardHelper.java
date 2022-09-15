@@ -203,29 +203,14 @@ public class WildcardHelper {
                 }
             }
             // Check for MATCH_BEGIN
-            /*if (matchBegin) {
-                if (offset != 0) {
-                    return null;
-                }
-
-                matchBegin = false;
-            }*/
             // Advance buffpos
             buffpos += (charpos - exprpos);
             // Check for END's
             if (exprchr == MATCH_END) {
-                /*if (rsltpos > 0) {
-                    varsValues = addAndCreateList(varsValues, new String(rslt,
-                            0, rsltpos));
-                }*/
                 // Don't care about rest of input buffer
                 varsValues = addElementOnTop(varsValues, data);
                 return varsValues;
             } else if (exprchr == MATCH_THEEND) {
-                /*if (rsltpos > 0) {
-                    varsValues = addAndCreateList(varsValues, new String(rslt,
-                            0, rsltpos));
-                }*/
                 // Check that we reach buffer's end
                 if (buffpos == buff.length) {
                     addElementOnTop(varsValues, data);

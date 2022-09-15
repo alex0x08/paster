@@ -21,7 +21,7 @@
 /**
  * Classes to allow rendering of a template (described by its path) 
  * in a uniform way.
- * 
+ * <p>
  * Besides the top level interface {@link org.apache.tiles.request.render.Renderer},
  * the package contains:
  * <ul>

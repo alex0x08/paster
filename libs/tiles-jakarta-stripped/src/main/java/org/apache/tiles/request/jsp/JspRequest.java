@@ -178,9 +178,6 @@ public class JspRequest extends AbstractViewRequest {
      *
      * @return The page context.
      */
-    /*public PageContext getPageContext() {
-        return pageContext;
-    }*/
     @Override
     public Map<String, Object> getContext(String scope) {
         if ("page".equals(scope)) {

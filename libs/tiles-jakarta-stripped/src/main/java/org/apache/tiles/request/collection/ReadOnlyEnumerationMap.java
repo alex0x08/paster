@@ -135,6 +135,9 @@ public class ReadOnlyEnumerationMap<V> implements Map<String, V> {
     @SuppressWarnings("unchecked")
     @Override
     public boolean equals(Object o) {
+        if (!(o instanceof  ReadOnlyEnumerationMap)) {
+            return false;
+        }
         HasKeys<V> otherRequest = ((ReadOnlyEnumerationMap<V>) o).request;
         boolean retValue = true;
         Set<String> otherKeys = new HashSet<>();

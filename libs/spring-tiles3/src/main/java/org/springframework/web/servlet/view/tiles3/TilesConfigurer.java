@@ -25,8 +25,6 @@ import jakarta.el.MapELResolver;
 import jakarta.el.ResourceBundleELResolver;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.jsp.JspFactory;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.tiles.TilesContainer;
 import org.apache.tiles.TilesException;
 import org.apache.tiles.definition.DefinitionsFactory;
@@ -95,7 +93,7 @@ import org.springframework.web.context.ServletContextAware;
  *
  * <p>Note that in Tiles 3 an underscore in the name of a file containing Tiles
  * definitions is used to indicate locale information, for example:
- *
+ * <p>
  * <pre class="code">
  * &lt;bean id="tilesConfigurer" class="org.springframework.web.servlet.view.tiles3.TilesConfigurer"&gt;
  *   &lt;property name="definitions"&gt;
@@ -255,24 +253,7 @@ public class TilesConfigurer implements ServletContextAware, InitializingBean, D
         }
     }
 
-        /*
-	private static class SpringCompleteAutoloadTilesInitializer extends CompleteAutoloadTilesInitializer {
-
-		@Override
-		protected AbstractTilesContainerFactory createContainerFactory(ApplicationContext context) {
-			return new SpringCompleteAutoloadTilesContainerFactory();
-		}
-	}
-
-
-	private static class SpringCompleteAutoloadTilesContainerFactory extends CompleteAutoloadTilesContainerFactory {
-
-		@Override
-		protected LocaleResolver createLocaleResolver(ApplicationContext applicationContext) {
-			return new SpringLocaleResolver();
-		}
-	}*/
-    private class TilesElActivator {
+        private class TilesElActivator {
         public AttributeEvaluator createEvaluator() {
             ELAttributeEvaluator evaluator = new ELAttributeEvaluator();
             evaluator.setExpressionFactory(

@@ -119,7 +119,9 @@ public class Definition extends BasicAttributeContext {
     /** {@inheritDoc} */
     @Override
     public boolean equals(Object obj) {
-        Definition def = (Definition) obj;
+        if (!(obj instanceof Definition def)) {
+            return false;
+        }
         return nullSafeEquals(name, def.name)
                 && nullSafeEquals(inherit, def.inherit) && super.equals(def);
     }

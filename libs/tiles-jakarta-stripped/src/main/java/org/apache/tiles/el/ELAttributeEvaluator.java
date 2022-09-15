@@ -41,8 +41,6 @@ public class ELAttributeEvaluator extends AbstractAttributeEvaluator {
      *
      * @since 2.2.1
      */
-    //public static final String EXPRESSION_FACTORY_FACTORY_INIT_PARAM =
-    //        "org.apache.tiles.evaluator.el.ExpressionFactoryFactory";
     /**
      * The EL expression factory.
      *

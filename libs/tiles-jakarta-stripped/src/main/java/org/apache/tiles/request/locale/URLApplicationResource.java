@@ -198,12 +198,4 @@ public class URLApplicationResource extends PostfixedApplicationResource {
     public String toString() {
         return "Resource " + getLocalePath() + " at " + url.toString();
     }
-    /*
-    protected URL getURL(){
-        return url;
-    }
-
-    protected File getFile(){
-        return file;
-    }*/
 }

@@ -32,7 +32,7 @@ import org.apache.tiles.web.util.ServletContextAdapter;
  * {@link #createTilesInitializer()} to initialize Tiles.
  *
  * @deprecated use {@link AbstractTilesListener} instead.
- * @see org.apache.tiles.web.startup.TilesListener
+ * see org.apache.tiles.web.startup.TilesListener
  * @version $Rev: 1310865 $ $Date: 2012-04-08 07:01:22 +1000 (Sun, 08 Apr 2012) $
  * @since 2.2.0
  */

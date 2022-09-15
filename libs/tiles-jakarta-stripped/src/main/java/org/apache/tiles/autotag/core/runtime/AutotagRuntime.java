@@ -40,12 +40,6 @@ public interface AutotagRuntime<R> {
      * @return The ModelBody.
      */
     ModelBody createModelBody();
-    
-    /**
-     * Extracts a parameter from the tag. 
-     * @param name The name of the parameter.
-     * @param defaultValue The default value if none is specified.
-     * @return The value of the parameter.
-     */
+
     //<T> T getParameter(String name, Class<T> type, T defaultValue);
 }

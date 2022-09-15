@@ -300,7 +300,9 @@ public class Attribute implements Serializable, Cloneable {
      */
     @Override
     public boolean equals(Object obj) {
-        Attribute attribute = (Attribute) obj;
+        if (!(obj instanceof Attribute attribute)) {
+            return false;
+        }
         return nullSafeEquals(value, attribute.value)
                 && nullSafeEquals(renderer, attribute.renderer)
                 && nullSafeEquals(roles, attribute.roles)

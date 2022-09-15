@@ -51,8 +51,6 @@ public class CachingLocaleUrlDefinitionDAO extends BaseLocaleUrlDefinitionDAO
      *
      * @since 2.1.0
      */
-    //public static final String CHECK_REFRESH_INIT_PARAMETER =
-    //        "org.apache.tiles.definition.dao.LocaleUrlDefinitionDAO.CHECK_REFRESH";
     /**
      * The locale-specific set of definitions objects.
      *
@@ -65,7 +63,7 @@ public class CachingLocaleUrlDefinitionDAO extends BaseLocaleUrlDefinitionDAO
      *
      * @since 2.1.0
      */
-    protected boolean checkRefresh = false;
+    protected final boolean checkRefresh = false;
     /**
      * Resolves definitions using patterns.
      *
@@ -132,9 +130,7 @@ public class CachingLocaleUrlDefinitionDAO extends BaseLocaleUrlDefinitionDAO
      *                     of sources changing.
      * @since 2.1.0
      */
-    /*public void setCheckRefresh(boolean checkRefresh) {
-        this.checkRefresh = checkRefresh;
-    }*/
+
     /**
      * Returns a definition from the definition resolver.
      *

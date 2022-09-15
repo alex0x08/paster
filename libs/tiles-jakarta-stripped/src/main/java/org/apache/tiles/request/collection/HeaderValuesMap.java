@@ -81,6 +81,9 @@ public class HeaderValuesMap implements Map<String, String[]> {
      */
     @Override
     public boolean equals(Object o) {
+        if (!(o instanceof  HeaderValuesMap)) {
+            return false;
+        }
         EnumeratedValuesExtractor otherRequest = ((HeaderValuesMap) o).request;
         boolean retValue = true;
         for (Enumeration<String> attribs = request.getKeys(); attribs
