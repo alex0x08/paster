@@ -21,7 +21,7 @@ import org.springframework.context.MessageSource
 import org.springframework.stereotype.{Controller, Service}
 import org.springframework.ui.Model
 import org.springframework.util.Assert
-import org.springframework.validation.{BindingResult, ObjectError, ValidationUtils}
+import org.springframework.validation.BindingResult
 import org.springframework.web.bind.WebDataBinder
 import org.springframework.web.bind.annotation._
 

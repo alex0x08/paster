@@ -158,7 +158,9 @@ public class ListAttribute extends Attribute {
         setValue(tempList);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean equals(Object obj) {
         if (!(obj instanceof ListAttribute attribute)) {
@@ -167,13 +169,17 @@ public class ListAttribute extends Attribute {
         return super.equals(attribute) && this.inherit == attribute.inherit;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int hashCode() {
         return super.hashCode() + Boolean.valueOf(inherit).hashCode();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public ListAttribute clone() {
         //ListAttribute clone = (ListAttribute) super.clone();

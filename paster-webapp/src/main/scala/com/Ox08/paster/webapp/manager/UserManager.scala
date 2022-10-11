@@ -82,7 +82,8 @@ object UserManager extends Logged {
       var usersCount:Int = 0
       for (record <- records.asScala) {
         if (usersCount> 500) {
-          throw new RuntimeException(s"Too many users defined: ${records.getRecords.size()} Processed only first 500")
+          throw new RuntimeException(s"Too many users defined: " +
+            s"${records.getRecords.size()} Processed only first 500")
           //return
         }
         callback(record)

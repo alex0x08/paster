@@ -102,19 +102,12 @@ class Boot private() extends Logged {
       mf_version.getGitState.getProperty("git.branch", null)))
     // load customized config ( 'config.properties' file)
     createLoadAppConfig(system, app_home)
-
-    val systemLang:String = system.getSetting("paster.i18n.defaultLang","en").toLowerCase
-
-    val systemLocale:Locale = system.getAvailableLocaleFrom(systemLang)
-
-
-    logger.info("system lang: {} locale: {}",systemLang,systemLocale)
-
+    val systemLang: String = system.getSetting("paster.i18n.defaultLang", "en").toLowerCase
+    val systemLocale: Locale = system.getAvailableLocaleFrom(systemLang)
+    logger.info("system lang: {} locale: {}", systemLang, systemLocale)
     system.setSystemLocale(systemLocale)
-
     SystemError.instance.setLocale(systemLocale)
     SystemMessage.instance.setLocale(systemLocale)
-
     if (system.getExternalUrlPrefix != null) {
       System.setProperty("app.externalUrlPrefix", system.getExternalUrlPrefix)
       logger.info(SystemMessage.of("paster.system.message.appExternalUrl", system.getExternalUrlPrefix))
@@ -304,36 +297,29 @@ class Boot private() extends Logged {
     // своем внешнем имени
     private var appCode: String = _ // кодовое обозначение системы
     private var systemLocale: Locale = _
-
-    private val availableLocales =Array(
+    private val availableLocales = Array(
       Locale.US,
       Locale.forLanguageTag("ru-RU")
     )
-
     def getAvailableLocales: Array[Locale] = availableLocales
-
-    def getAvailableLocaleFrom(lang:String): Locale = {
+    def getAvailableLocaleFrom(lang: String): Locale = {
       if (StringUtils.isBlank(lang))
         return Locale.ENGLISH
-      for (l<-availableLocales) {
+      for (l <- availableLocales) {
         if (l.toLanguageTag.equalsIgnoreCase(lang) || l.getLanguage.equalsIgnoreCase(lang))
           return l
       }
       Locale.ENGLISH
     }
-
     def getSystemLocale: Locale = systemLocale
-
-    def setSystemLocale(lang:String):Unit = {
-
-      val locale:Option[Locale] = getAvailableLocales.find(p = p => {
+    def setSystemLocale(lang: String): Unit = {
+      val locale: Option[Locale] = getAvailableLocales.find(p = p => {
         p.getLanguage.equals(lang)
       })
       if (locale.isDefined) this.systemLocale = locale.get
     }
-
-    private[base] def setSystemLocale(locale:Locale):Unit = {
-      Assert.notNull(locale,"should be non null")
+    private[base] def setSystemLocale(locale: Locale): Unit = {
+      Assert.notNull(locale, "should be non null")
       //checkLock()
       this.systemLocale = locale
     }
@@ -408,7 +394,7 @@ class Boot private() extends Logged {
     }
     private def checkLock(): Unit = {
       if (locked) {
-          throw SystemError.withCode(0x6002)
+        throw SystemError.withCode(0x6002)
       }
     }
   }

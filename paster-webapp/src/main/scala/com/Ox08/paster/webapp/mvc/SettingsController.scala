@@ -22,7 +22,7 @@ import java.util.Locale
 @RequestMapping(Array("/admin/settings"))
 class SettingsController extends AbstractCtrl {
   def editPage = "/admin/settings/edit"
-  def manager() = null
+  def manager(): Null = null
   @RequestMapping(value = Array("/dbconsole"), method = Array(RequestMethod.GET))
   def dbconsole(model: Model, locale: Locale): String = {
     "/admin/settings/dbconsole"

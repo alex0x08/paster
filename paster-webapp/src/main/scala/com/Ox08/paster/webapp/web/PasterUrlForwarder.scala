@@ -5,7 +5,9 @@ import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
  * Just forwards to main/paste/view/xx from /xx
  */
 class PasterUrlForwarder extends Filter {
-  override def doFilter(servletRequest: ServletRequest, servletResponse: ServletResponse, filterChain: FilterChain): Unit = {
+  override def doFilter(servletRequest: ServletRequest,
+                        servletResponse: ServletResponse,
+                        filterChain: FilterChain): Unit = {
     val request = servletRequest.asInstanceOf[HttpServletRequest]
     //request.setAttribute("org.eclipse.jetty.server.Request.queryEncoding", "UTF-8")
     val response = servletResponse.asInstanceOf[HttpServletResponse]

@@ -23,7 +23,8 @@ class StartupListener extends ServletContextListener with Logged {
   override def contextInitialized(event: ServletContextEvent): Unit = {
     if (Boot.BOOT.getSystemInfo.isInstalled) {
       val bootContext = new BootContext()
-      SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(bootContext, event.getServletContext)
+      SpringBeanAutowiringSupport
+        .processInjectionBasedOnServletContext(bootContext, event.getServletContext)
       try {
         // setup default locale
         bootContext.localeResolver.setDefaultLocale(Boot.BOOT.getSystemInfo.getSystemLocale)

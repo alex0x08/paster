@@ -31,6 +31,7 @@ import org.springframework.context.ApplicationListener
 import org.springframework.context.event.ContextRefreshedEvent
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+
 import java.util
 import scala.jdk.CollectionConverters._
 object SearchableDaoImpl {
@@ -62,6 +63,9 @@ abstract class SearchableDaoImpl[T <: Struct](model: Class[T])
     val searchSession: SearchSession = getFullTextEntityManager
     val queryParser = new MultiFieldQueryParser(getDefaultStartFields,
       new StandardAnalyzer())
+  //  val sort: org.apache.lucene.search.Sort = new org.apache.lucene.search.Sort(
+  //    new org.apache.lucene.search.SortField("id",
+   //     org.apache.lucene.search.SortField.Type.LONG))
     val luceneQuery: org.apache.lucene.search.Query = queryParser.parse(query)
     val scorer: QueryScorer = new QueryScorer(luceneQuery)
     val highlighter: Highlighter = new Highlighter(SearchableDaoImpl.FORMATTER, scorer)

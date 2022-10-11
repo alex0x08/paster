@@ -33,7 +33,7 @@
                             <li class="nav-item dropdown">
                                 <a href="#" id="dropdown01" class="nav-link dropdown-toggle" role="button"
                                     data-bs-toggle="dropdown" aria-expanded="false">
-                                    Admin
+                                    <fmt:message key="site.menu.admin" />
                                     <span class="caret"></span>
                                 </a>    
                                 <ul class="dropdown-menu" aria-labelledby="dropdown01">    

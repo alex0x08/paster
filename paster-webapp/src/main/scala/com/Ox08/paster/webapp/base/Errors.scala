@@ -114,7 +114,9 @@ class SystemError extends AbstractI18nMessageStore("bundles/errorMessages") {
    * @param params  дополнительные параметры ( для подстановки в шаблон )
    * @return
    */
-  private def getErrorMessage(code: Int, message: String, parent: Exception, prefix: Boolean, params: Array[AnyRef]) = {
+  private def getErrorMessage(code: Int, message: String,
+                              parent: Exception,
+                              prefix: Boolean, params: Array[AnyRef]) = {
     // пытаемся найти текст ошибки по коду
     var errorMsg = getMessage("paster.system.error." + String.format("0x%x", code))
     var currentCode = code

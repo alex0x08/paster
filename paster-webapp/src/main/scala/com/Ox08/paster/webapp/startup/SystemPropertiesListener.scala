@@ -2,15 +2,13 @@ package com.Ox08.paster.webapp.startup
 import com.Ox08.paster.webapp.base.{Boot, Logged, SystemError, SystemMessage}
 import jakarta.servlet.{ServletContextEvent, ServletContextListener}
 import org.slf4j.bridge.SLF4JBridgeHandler
-import org.springframework.context.i18n.LocaleContextHolder
-
 import java.io.{File, IOException}
 import java.util.Locale
-object SystemConstants {
-  val APP_BASE: String = ".apps"
-  val APP_NAME = "paster"
-}
 class SystemPropertiesListener extends ServletContextListener with Logged {
+  object SystemConstants {
+    val APP_BASE: String = ".apps"
+    val APP_NAME = "paster"
+  }
   override def contextInitialized(event: ServletContextEvent): Unit = {
     try {
       doBoot()
@@ -22,7 +20,8 @@ class SystemPropertiesListener extends ServletContextListener with Logged {
         springProfiles += "main"
       else
         springProfiles += "setup"
-      if ("public".equals(Boot.BOOT.getSystemInfo.getSetting("paster.security.access.mode", "private")))
+      if ("public".equals(Boot.BOOT.getSystemInfo
+        .getSetting("paster.security.access.mode", "private")))
         springProfiles += ",paster-security-public"
       else
         springProfiles += ",paster-security-private"

@@ -19,7 +19,7 @@
     NONE
 </span>
 
-<div id="pageLoadSpinner" >
+<div id="pageLoadSpinner" style='display:none;' >
     <i class="fa fa-spinner"></i>
     <fmt:message key="action.loading"/>
 </div>
