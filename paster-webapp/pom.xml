@@ -14,6 +14,7 @@
     <packaging>war</packaging>
     <name>Paster Application</name>
 
+
     <properties>
         <spring.security.version>6.0.0-M4</spring.security.version>
         <hibernate.search.version>5.11.10.Final</hibernate.search.version>
