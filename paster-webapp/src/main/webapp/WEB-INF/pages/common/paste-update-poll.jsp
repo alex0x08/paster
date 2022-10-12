@@ -7,7 +7,8 @@
                 <fmt:param value="<span id='newPastasCount'></span>"/>
             </fmt:message>
                 <span class="right">
-                    <a href="<c:url value='/main/paste/list/${sourceType}'/>" title="<fmt:message key='button.refresh'/>">
+                    <a href="<c:url value='/main/paste/list/${sourceType}'/>" 
+                        title="<fmt:message key='button.refresh'/>">
                    <span class="i" style="font-size: 1.3em;">P</span> </a>        
                 </span>              
         </p>    
@@ -15,31 +16,31 @@
 </div>
         
 <script type="text/javascript">
-    
-     var updatePastasCountRequest = new Request({
-    method: 'GET',
-    url: '${ctx}/main/paste/count/form/'+new Date().getTime()+'.json',
-    initialDelay: 1000,
-    delay: 15000,
-    limit: 60000,
-    onSuccess: function(responseText){
-        var obj = JSON.decode(responseText, true);
-        var pcount = obj['count'];
-        
-        if (pcount>0) {            
-            $('newPastasCountBlock').setStyle('display','');
-            $('newPastasCount').set('text', pcount);
-          	Tinycon.setBubble(pcount);
-            }
-    },
-    onFailure: function(){
-        $('newPastasCount').set('text', 'Sorry, your request failed :(');
-    }
-});
 
-    
-    window.addEvent('load', function() {
-        
-          updatePastasCountRequest.startTimer();
+    function checkNewPastas() {
+        const xmlhttp = new XMLHttpRequest();
+        const cb = document.getElementById('newPastasCountBlock');
+        xmlhttp.onreadystatechange = function() {
+            if (xmlhttp.readyState == XMLHttpRequest.DONE) {
+               if (xmlhttp.status == 200) {
+                  const obj = JSON.parse(xmlhttp.responseText, true);
+                        const pcount = obj['count'];
+                        if (pcount>0) {
+                            cb = document.getElementById('newPastasCountBlock');
+                            cb.style.display='';
+                            cb.text = pcount;
+                          	Tinycon.setBubble(pcount);
+                        }
+               } else {
+                    cb.text= 'Sorry, your request failed :(';
+               }
+            }
+        };
+        xmlhttp.open("GET", '${ctx}/main/paste/count/form/'+new Date().getTime()+'.json', true);
+        xmlhttp.send();
+    }
+
+    window.addEventListener('load', function() {
+            setInterval(checkNewPastas,10000);
     }); 
 </script>

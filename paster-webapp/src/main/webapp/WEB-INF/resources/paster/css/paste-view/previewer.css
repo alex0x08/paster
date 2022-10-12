@@ -1,0 +1,161 @@
+
+
+
+
+div.previewer  h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 1.0em 0 0.5em;
+  font-weight: inherit;
+}
+
+div.previewer h1 {
+  font-size: 1.357em;
+  color: #000;
+}
+
+div.previewer h2 {
+  font-size: 1.143em;
+}
+
+div.previewer p {
+  margin: 0 0 1.2em;
+}
+
+div.previewer del {
+  text-decoration: line-through;
+}
+
+div.previewer tr:nth-child(odd) {
+  background-color: #dddddd;
+}
+
+div.previewer img {
+  outline: 0;
+}
+
+div.previewer code {
+  background-color: #f2f2f2;
+  background-color: rgba(40, 40, 0, 0.06);
+}
+
+div.previewer pre {
+  background-color: #f2f2f2;
+  background-color: rgba(40, 40, 0, 0.06);
+  margin: 10px 0;
+  overflow: hidden;
+  padding: 15px;
+  white-space: pre-wrap;
+}
+
+div.previewer pre code {
+  font-size: 100%;
+  background-color: transparent;
+}
+
+div.previewer blockquote {
+  background: #f7f7f7;
+  border-left: 1px solid #bbb;
+  font-style: italic;
+  margin: 1.5em 10px;
+  padding: 0.5em 10px;
+}
+
+div.previewer blockquote:before {
+  color: #bbb;
+  content: "\201C";
+  font-size: 3em;
+  line-height: 0.1em;
+  margin-right: 0.2em;
+  vertical-align: -.4em;
+}
+
+div.previewer blockquote:after {
+  color: #bbb;
+  content: "\201D";
+  font-size: 3em;
+  line-height: 0.1em;
+  vertical-align: -.45em;
+}
+
+div.previewer blockquote > p:first-child {
+  display: inline;
+}
+
+div.previewer table {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  border: 0;
+  border-spacing: 0;
+  font-size: 0.857em;
+  margin: 10px 0;
+  width: 100%;
+}
+
+div.previewer table table {
+  font-size: 1em;
+}
+
+div.previewer table tr th {
+  background: #757575;
+  background: rgba(0, 0, 0, 0.51);
+  border-bottom-style: none;
+}
+
+div.previewer  table tr th,
+table tr th a,
+table tr th a:hover {
+  color: #FFF;
+  font-weight: bold;
+}
+
+div.previewer table tbody tr th {
+  vertical-align: top;
+}
+
+div.previewer tr td,
+tr th {
+  padding: 4px 9px;
+  border: 1px solid #fff;
+  text-align: left; /* LTR */
+}
+
+div.previewer  tr:nth-child(odd) {
+  background: #e4e4e4;
+  background: rgba(0, 0, 0, 0.105);
+}
+
+div.previewer  tr,
+tr:nth-child(even) {
+  background: #efefef;
+  background: rgba(0, 0, 0, 0.063);
+}
+
+div.previewer a {
+  color: #0071B3;
+}
+
+div.previewer a:hover,
+a:focus {
+  color: #018fe2;
+}
+
+div.previewer a:active {
+  color: #23aeff;
+}
+
+div.previewer a:link,
+a:visited {
+  text-decoration: none;
+}
+
+div.previewer a:hover,
+a:active,
+a:focus {
+  text-decoration: underline;
+}
+
+
+

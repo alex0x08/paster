@@ -1,68 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Main Paster configuration
+-->
 <beans profile="main" xmlns="http://www.springframework.org/schema/beans"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:task="http://www.springframework.org/schema/task"
     xmlns:context="http://www.springframework.org/schema/context"
     xsi:schemaLocation="http://www.springframework.org/schema/beans 
                            http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/task
+                           http://www.springframework.org/task/spring-task.xsd
                            http://www.springframework.org/schema/context 
                            http://www.springframework.org/schema/context/spring-context.xsd">
 
-
-    <context:component-scan base-package="uber.paste" />
-
+    <context:component-scan base-package="com.Ox08.paster.common,com.Ox08.paster.webapp" />
+    <task:executor id="pasterTaskExecutor" pool-size="5" queue-capacity="10"   />
+    <task:annotation-driven executor="pasterTaskExecutor"  />
     <!-- Activates annotation-based bean configuration -->
     <context:annotation-config />
-
-
     <bean id="propertyConfigurer-app"
-          class="uber.paste.base.MergedPropertyConfigurer">
-     <property name="ignoreUnresolvablePlaceholders" value="true"/>
-    
-     <property name="ignoreResourceNotFound" value="false"/>     
-        <property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE"/>
+          class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">
          <property name="locations">
             <list>
-                 <value>classpath:release.properties</value>
-                 <value>classpath:jdbc.properties</value>
-                 <value>classpath:default.properties</value>
-                 <value>file:${paste.app.home}/app.properties</value>
+                <value>file:${paster.app.home}/config.properties</value>
+                <value>classpath:default.properties</value>
             </list>
         </property>
-      
+        <property name="fileEncoding" value="UTF-8" />
     </bean>
-    
-      <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource"
+    <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource"
           p:basenames="i18n.messages" />
-
-    <bean id="mimeTypeSource" class="org.springframework.context.support.ResourceBundleMessageSource"
-          p:basenames="mimeType" />
-
-    <bean id="mimeExtSource" class="org.springframework.context.support.ResourceBundleMessageSource"
-          p:basenames="mimeExt" />
-
-    <bean id="ui-definitions" class="uber.paste.base.plugins.PluginsLoader" >
-        <property name="uiDefs" value="classpath:/paster-ui-definitions.xml"/>
-        <property name="pluginsUiDefs" value="classpath*:META-INF/resources/paster-ui-definition.xml"/>      
-   </bean>
-
-   <!--bean id="pasteRuntimeContext" class="uber.paste.base.PasterSpringRuntimeContext"/-->
-       
-
-  <!--bean id="servletContextAttributeExporter" class="org.springframework.web.context.support.ServletContextAttributeExporter">
-        <property name="attributes">
-            <map>
-                <entry key="pasteRuntime" value-ref="pasteRuntimeContext" />
-            </map>
-        </property>
-    </bean-->
-
-
     <!-- Imports the configurations of the different infrastructure systems of the application -->
     <import resource="dao.xml" />
     <import resource="mvc.xml" />
-    <import resource="security.xml" />
- <import resource="security-social.xml" />
-
-
+    <import resource="security-public.xml" />
+    <import resource="security-private.xml" />
 </beans>

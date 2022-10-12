@@ -14,26 +14,38 @@
  * limitations under the License.
  */
 
+class PasterEdit {
 
+    MAX_TITLE_LENGTH = 100;
+    MAX_FILE_SIZE = 1024 * 1024 * 5;
+        
+    editor = undefined;
+    counter = undefined;
 
-var PasterEdit = new Class({
-    
-    initialize: function () {
-
-        this.max_length = 100;
-
-        this.editor = undefined;
-
-        this.counter = undefined;
-
-    },
-    init: function (codeType) {
-
-        var mainThis = this;
-
-        this.counter = new WordCount('wordCount', {
-            countWordsTo: $('wordsCount'),
-            countSymbolsTo: $('symbolsCount'),
+    getEditorType(codeType) {
+        switch (codeType) {
+            case 'bash':
+                return 'sh';
+            case 'cpp':
+                return 'c_cpp';
+            case 'js':
+                return 'javascript';
+            case 'plain':
+                return 'text';
+            case 'py':
+                return 'python';
+            case 'vb':
+                return 'vbscript';
+            default:
+                return codeType;
+        }
+    }
+    init(codeType) {
+        const self = this;
+        this.counter = new WordCount();
+        this.counter.initialize('wordsCount', {
+            countWordsTo: document.getElementById('wordsCount'),
+            countSymbolsTo: document.getElementById('symbolsCount'),
             inputName: null, //The input name from which text should be retrieved, defaults null
             countWords: true, //Whether or not to count words
             countChars: true, //Whether or not to count characters
@@ -42,35 +54,30 @@ var PasterEdit = new Class({
             separator: ', ', //The text that separates the number of words and the number of characters
             liveCount: false, //Whether or not to use the event trigger, set false if you'd like to call the getCount function separately
             eventTrigger: 'keyup'			//The event that triggers the count update
-        });
-        
-        var counter = this.counter;
+        })
 
+        var counter = this.counter;
         this.editor = ace.edit("editor");
-        
-        var editor = this.editor;
-        
+        const editor = this.editor;
+
         editor.setTheme("ace/theme/chrome");
         editor.setOptions({
             autoScrollEditorIntoView: true
         });
-        
-        editor.getSession().setMode("ace/mode/"+codeType);
 
-        var textarea = document.getElementById("ptext");
+        editor.getSession().setMode("ace/mode/" + self.getEditorType(codeType));
 
-        editor.getSession().setValue(textarea.get('value'));
-        
-         counter.getCount(textarea.get('value'));
+        const textarea = document.getElementById("ptext");
 
+        editor.getSession().setValue(textarea.value);
 
-        $('select-file-btn').removeEvents("change");
+        counter.getCount(textarea.value);
 
-        $('select-file-btn').addEvent('change', function (e) {
-            mainThis.readLocalFile(e);
+        const elSelectFileBtn = document.getElementById('select-file-btn');
+
+        elSelectFileBtn.addEventListener('change', function (e) {
+            self.readLocalFile(e);
         });
-
-
 
         //To focus the ace editor
         // editor.focus();
@@ -79,111 +86,95 @@ var PasterEdit = new Class({
         //Go to end of the last line
         editor.gotoLine(count, editor.getSession().getLine(count - 1).length);
 
+        editor.setOption("showPrintMargin", false);
+
         editor.getSession().on('change', function () {
-            var text = editor.getSession().getValue();
-            textarea.set('value', text);
+            const text = editor.getSession().getValue();
+            textarea.value = text;
             counter.getCount(text);
         });
-
-        $('ptheme').addEvent('change', function (event) {
-            editor.setTheme(this.getElement(':selected').value);
-        });
-
-        $('normalized').addEvent('click', function () {
-            if (this.get('checked')) {
+        document.getElementById('normalized').addEventListener('click', function (event) {
+            Logger.debug('click normalized',event)
+            if (event.target.checked) {
+                editor.setOption("showPrintMargin", true)
                 var col = 80;
                 editor.getSession().setUseWrapMode(true);
                 editor.getSession().setWrapLimitRange(col, col);
                 editor.renderer.setPrintMarginColumn(col);
             } else {
                 editor.getSession().setUseWrapMode(false);
-                editor.renderer.setPrintMarginColumn(80);
+                editor.setOption("showPrintMargin", false)
+              //  editor.renderer.setPrintMarginColumn(80);
             }
         });
-
-
-        $('fontsize').addEvent('change', function (event) {
-            editor.setFontSize(this.getElement(':selected').get("value"));
+        //onclick="cleanTitle();"
+        document.getElementById('cleanTitleBtn').addEventListener('click', function (event) {
+            self.clearTitle();    
         });
-
-        $('ptype').addEvent('change', function (event) {
+        document.getElementById('fontsize').addEventListener('change', function (event) {
+            editor.setFontSize(this.querySelector('option:checked').getAttribute("value"));
+        });
+        document.getElementById('ptype').addEventListener('change', function (event) {
             editor.getSession()
-                    .setMode("ace/mode/" + this.getElement(':selected').get("editCode"));
+                .setMode("ace/mode/" + self.getEditorType(this.querySelector('option:checked').getAttribute("value")));
         });
-
-        $('pprior').addEvent('change', function (event) {
-            var prPreview = $('priorPreview');
-            prPreview.erase('class');
-            prPreview.addClass('i');
-            prPreview.addClass(this.getElement(':selected').get("x-css-class-name"));
+        document.getElementById('pprior').addEventListener('change', function (event) {
+            Logger.debug('selected: ', this.querySelector('option:checked'));
+            var prPreview = document.getElementById('priorPreview');
+            prPreview.className = 'i ' + this.querySelector('option:checked').getAttribute("x-css-class-name");
         });
-
-
-        $$('.submitBtn').each(function (el, i) {
-
-            el.addEvent('click', function (event) {
-                this.getElementById('btnCaption').set('text', PasterI18n.text.notify.transmitMessage).disabled = true;
-                this.getElementById('btnIcon').toggle();
-
-                event.stop();
-                mainThis.onSave();
+        Array.from(document.getElementsByClassName('submitBtn')).forEach(
+            function (el, i, array) {
+                el.addEventListener('click', function (event) {
+                    event.preventDefault();
+                    const el2 = this.querySelector('#btnCaption');
+                    el2.text = PasterI18n.text.notify.transmitMessage;
+                    el2.disabled = true;
+                    this.querySelector('#btnIcon').style.display = '';
+                    self.onSave();
+                });
             });
-        });
-
-    },
-    clearTitle: function () {
-
-        $('pname').set('value', '');
-   },
-    readLocalFile: function (e) {
-        
-        var file = e.target.files[0];
-
+    }
+    clearTitle() {
+        document.getElementById('pname').value = '';
+    }
+    readLocalFile(e) {
+        const file = e.target.files[0];
         if (!file) {
             return;
         }
-        
-        mainThis = this;
-        
-        var reader = new FileReader();
-        reader.onload = function (e) {
-            var contents = e.target.result;
-            mainThis.editor.getSession().setValue(contents);
+        Logger.debug('file sz:',file.size,this.MAX_FILE_SIZE);
+        if(file.size > this.MAX_FILE_SIZE){
+            pasterApp.showNotify('File is too large');
+            return;
+         };
+        const self = this;
+        const freader = new FileReader();
+        freader.onload = function (e) {
+            self.editor.getSession().setValue(e.target.result);
         };
-        reader.readAsText(file);
-
-   },
-    onPaste: function (e) {
-
-        if (e.event.clipboardData) {
-
-            /*console.log(e.event.clipboardData);*/
-
-            var text = e.event.clipboardData.getData('text/plain');
-
-            var block = (text.length < this.max_length - 2) 
-                        ? text.substring(0, text.length) : 
-                                text.substring(0, this.max_length - 2) + '..';
-
-            var ptitle = $("pname");
-
-            if (ptitle.get('value') == '') {
-                ptitle.set('value', block);
-            }
-
-            //e.stop();
-        }
-    },
-    onSave: function () {
-
-        var thumbImg = document.getElementById('thumbImg');
-
-          pasterApp.takeScreenshot($('editor'), function (img) {
-            thumbImg.set('value', img.src);
-
-            $('editForm').submit();
-        });
-
-
+        freader.readAsText(file);
     }
-});
+    onPaste(event) {
+        const text = (event.clipboardData || window.clipboardData).getData('text/plain');
+        Logger.debug('paste event: ', text);
+        if (text) {
+            const block = (text.length < this.MAX_TITLE_LENGTH - 2)
+                ? text.substring(0, text.length) :
+                text.substring(0, this.MAX_TITLE_LENGTH - 2) + '..';
+            const ptitleEl = document.getElementById('pname');
+            if (ptitleEl.getAttribute('value') == '') {
+                ptitleEl.setAttribute('value', block);
+            }
+        }
+    }
+    onSave() {
+        const thumbImg = document.getElementById('thumbImg');
+        const editorEl = document.getElementById('editor');
+        pasterApp.takeScreenshot(editorEl, function (img) {
+            thumbImg.setAttribute('value', img.src);
+            document.getElementById('editForm').submit();
+        });
+    }
+}
+

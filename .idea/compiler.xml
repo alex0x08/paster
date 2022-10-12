@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="paster-tiles-jakarta" />
+        <module name="paster-webapp" />
+        <module name="paster-run" />
+        <module name="paster-spring-tiles3-jakarta" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="paster-oak" target="1.5" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="paster-project" options="-Xlint:all,-processing -Xlint:-serial" />
+      <module name="paster-run" options="-Xlint:all,-processing -Xlint:-serial" />
+      <module name="paster-spring-tiles3-jakarta" options="-Xlint:all,-processing -Xlint:-serial" />
+      <module name="paster-tiles-jakarta" options="-Xlint:all,-processing -Xlint:-serial" />
+      <module name="paster-webapp" options="-Xlint:all,-processing -Xlint:-serial" />
+    </option>
+  </component>
+</project>

@@ -1,16 +1,16 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" 
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>uber.paster</groupId>
+    <groupId>com.Ox08.paster.webapp</groupId>
     <artifactId>paster-project</artifactId>
-    <version>1.2-SNAPSHOT</version>
+    <version>${revision}</version>
     <packaging>pom</packaging>
     <name>Paster Project</name>
     <url>https://github.com/alex0x08/paster</url>
-    <inceptionYear>2011</inceptionYear>	
-        
+    <inceptionYear>2011</inceptionYear>
+
     <scm>
         <connection>scm:git:https://github.com/alex0x08/paster.git</connection>
         <url>scm:git:https://github.com/alex0x08/paster.git</url>
@@ -24,16 +24,16 @@
             <url>file:///c:/work/releases/repository/maven-repository/</url>
         </repository>
     </distributionManagement>
-        
+
     <developers>
         <developer>
             <name>Alex Chernyshev</name>
             <timezone>GMT+4</timezone>
         </developer>
     </developers>
-        
+
     <organization>
-        <name>Ubersoft, LLC</name>
+        <name>0x08 Software</name>
         <url>http://0x08.tk</url>
     </organization>
     <licenses>
@@ -45,81 +45,148 @@
         </license>
     </licenses>
 
-        
-        
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding> 
+        <java.version>18</java.version>
+        <scalaVersion>2.13.8</scalaVersion>
+        <spring.version>6.0.0-M4</spring.version>
+        <jakartaEEVersion>9.1.0</jakartaEEVersion>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <netbeans.hint.license>apache20</netbeans.hint.license>
+        <revision>2.1.04-RELEASE</revision>
+        <main.basedir>${basedir}</main.basedir>
     </properties>
 
-    
-    
-    
     <modules>
+        <module>libs</module>        
+        <module>paster-webapp</module>
         <module>paster-run</module>
-        <module>paster-oak</module>
-        <module>paster-webapp</module>	     
-    </modules>
-   
-       
+        <module>paster-dist</module>
+      </modules>
+
+
     <pluginRepositories>
         <pluginRepository>
-            <id>alfresco-public-releases</id>
-            <url>http://maven.alfresco.com/nexus/content/groups/public</url>
+            <id>spring-milestones</id>
+            <name>Spring Milestones</name>
+            <url>https://repo.spring.io/milestone</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </pluginRepository>
+        <pluginRepository>
+            <id>spring-snapshots</id>
+            <name>Spring Snapshots</name>
+            <url>https://repo.spring.io/snapshot</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
         </pluginRepository>
     </pluginRepositories>
 
     <repositories>
-
         <repository>
-            <id>alfresco-public-releases</id>
-            <url>http://maven.alfresco.com/nexus/content/groups/public</url>
-        </repository>
-        
-        
-        <repository>
-            <id>jboss-thirdparty</id>
-            <name>jboss-thirdparty</name>
-            <url>http://repository.jboss.org/nexus/content/repositories/thirdparty-releases</url>
-        </repository>
-          
-          
-        <repository>
-            <id>jboss-snapshots</id>
-            <name>jboss snapshots</name>
-            <url>http://snapshots.jboss.org/maven2</url>
-            <releases>
+            <id>spring-milestones</id>
+            <name>Spring Milestones</name>
+            <url>https://repo.spring.io/milestone</url>
+            <snapshots>
                 <enabled>true</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>spring-snapshots</id>
+            <name>Spring Snapshots</name>
+            <url>https://repo.spring.io/snapshot</url>
+            <releases>
+                <enabled>false</enabled>
             </releases>
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>
         </repository>
-          
-        <repository>
-            <id>atlassian-public</id>
-            <name>atlassian-public</name>
-            <url>https://maven.atlassian.com/content/groups/public</url>
-        </repository> 
-        
-       
-
-        <repository>
-            <id>scala</id>
-            <name>Scala tools</name>
-            <url>http://scala-tools.org/repo</url>
-        </repository>
-            
         <repository>
             <id>spring</id>
             <name>Spring Release</name>
-            <url>http://maven.springframework.org/release</url>
+            <url>https://maven.springframework.org/release</url>
         </repository>
-            
-
-    
     </repositories>
 
-  
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>flatten-maven-plugin</artifactId>
+                <version>1.2.7</version>
+                <executions>
+                    <execution>
+                        <!-- Tidy up all POMs before they are published -->
+                        <id>flatten</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>flatten</goal>
+                        </goals>
+                        <configuration>
+                            <updatePomFile>true</updatePomFile>
+                            <flattenMode>oss</flattenMode>
+                            <pomElements>
+                                <parent>expand</parent>
+                                <distributionManagement>remove</distributionManagement>
+                                <repositories>remove</repositories>
+                            </pomElements>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>pl.project13.maven</groupId>
+                <artifactId>git-commit-id-plugin</artifactId>
+                <version>4.9.10</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <!--debug>true</debug>
+                    <debuglevel>none</debuglevel-->
+                    <showWarnings>true</showWarnings>
+                    <showDeprecation>true</showDeprecation>
+                    <compilerArgs>
+                        <!--arg>-Werror</arg-->
+                        <arg>-Xlint:all,-processing</arg>
+                        <arg>-Xlint:-serial</arg>
+                    </compilerArgs>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>net.alchim31.maven</groupId>
+                <artifactId>scala-maven-plugin</artifactId>
+                <version>4.6.3</version>
+                <configuration>
+                    <args>
+                        <arg>-deprecation</arg>
+                        <arg>-feature</arg>
+                    </args>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.2.0</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>3.3.2</version>
+            </plugin>
 
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>buildnumber-maven-plugin</artifactId>
+                <version>3.0.0</version>
+            </plugin>
+
+        </plugins>
+    </build>
 </project>

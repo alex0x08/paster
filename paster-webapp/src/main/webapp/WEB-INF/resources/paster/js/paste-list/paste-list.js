@@ -15,18 +15,12 @@
  */
 
 
+class PasterList {
 
-var PasterList = new Class({
-    initialize: function () {
-
-        this.lazy = undefined;
-
-    },
-    init: function (pageUrl, userPageUrl, maxRequests, currentPage) {
-
-        var mainThis = this;
-
-        this.lazy = new LazyPagination(document, {
+    init(pageUrl, userPageUrl, maxRequests, currentPage) {
+        const self = this;
+        this.lazy = new LazyPagination();
+        this.lazy.initialize({
             url: pageUrl,
             method: 'get',
             maxRequests: maxRequests,
@@ -36,38 +30,36 @@ var PasterList = new Class({
                 page: currentPage
             },
             inject: {
-                element: 'morePages',
-                where: 'before'
-            }, beforeLoad: function () {
-                $('pageLoadSpinner').toggle();
-            }, afterAppend: function (block, page) {
-                // alert(page);
+                element: 'morePages'
+            }, 
+            beforeLoad: function () {
+                document.getElementById('pageLoadSpinner').style.display = '';
+            },
+            afterAppend: function (block, page) {
                 try {
-                    history.pushState({page: page}, "Page " + page, userPageUrl + "/" + page);
+                    history.pushState({ page: page }, "Page " + page, userPageUrl + "/" + page);
                 } catch (e) {
                 }
-                $('paste_list_' + page).grab($('pageLoadSpinner'), "after");
+                const elSpinner = document.getElementById('pageLoadSpinner');
+                const newPage = document.getElementById('paste_list_' + page);
 
-                $('pageLoadSpinner').toggle();
-                mainThis.parseSearchResults(block);
+                elSpinner.insertAdjacentHTML('afterEnd', newPage);
+                elSpinner.style.display = 'none';
+
+                self.parseSearchResults(block);
                 pasterApp.bindDeleteDlg(block);
             }
         });
-
-
-        this.parseSearchResults($('pastas'));
-
-    },
-    parseSearchResults: function (parent) {
-
-        parent.getElements('.pasteTitle').each(function (el, i)
-        {
-            el.set(
-                    'html', el.get('html').replace(/\[result[^\]]*\]([\s\S]*?)\[\/result\]/gi,
-                    "<span style='background-color: #e3e658; '>$1</span>")
-                    );
-        });
-
+        self.parseSearchResults(document.getElementById('pastas'));
     }
-
-});
+    parseSearchResults(parent) {
+        Array.from(parent.getElementsByClassName('pasteTitle')).forEach(
+            function (el, i, array) {
+                el.innerHTML = el.innerHTML
+                    .replace(/\[result[^\]]*\]([\s\S]*?)\[\/result\]/gi,
+                        "<span style='background-color: #e3e658; '>$1</span>")
+                    ;
+            }
+        );
+    }
+};

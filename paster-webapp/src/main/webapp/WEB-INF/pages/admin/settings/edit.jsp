@@ -1,10 +1,8 @@
 <%@ include file="/WEB-INF/pages/common/taglibs.jsp"%>
 <h1>
-
              <fmt:message key="settings.edit.title">
                 <fmt:param value="${model.name}"/>
             </fmt:message>
-
 </h1>
 
 
@@ -13,7 +11,7 @@
 
 <div class="row">
     <div class="column grid-12">
-    
+   
       
         
 <form:form action="${url}" 
@@ -84,8 +82,8 @@
         <div class="form-buttons">
             <div class="button">
                 <input name="submit" type="submit" value="<fmt:message key='button.save'/>" />
-                <input name="cancel" type="submit" value="<fmt:message key="button.cancel"/>" />
-                <input name="reset" type="submit" value="<fmt:message key="button.reset"/>" />
+                <input name="cancel" type="submit" value="<fmt:message key='button.cancel'/>" />
+                <input name="reset" type="submit" value="<fmt:message key='button.reset'/>" />
 
             </div>
         </div>

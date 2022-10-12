@@ -41,17 +41,17 @@
          <c:forEach var="user" items="${items}" varStatus="status">
              <tr>
                  <td>
-                         <a href="<c:url value="/main/user/edit/${user.id}"/>"><c:out value="${user.id}"/></a>
+                         <a href="<c:url value='/main/user/edit/${user.id}'/>"><c:out value="${user.id}"/></a>
                  </td>
                  <td>
-                     <a href="<c:url value="/main/user/edit/${user.id}"/>"><c:out value="${user.username}"/></a>
+                     <a href="<c:url value='/main/user/edit/${user.id}'/>"><c:out value="${user.username}"/></a>
                  </td>
                  <td>
-                     <a href="<c:url value="/main/user/edit/${user.id}"/>"><c:out value="${user.name}"/></a>
+                     <a href="<c:url value='/main/user/edit/${user.id}'/>"><c:out value="${user.name}"/></a>
                      
                  </td>
                  <td>
-                     <c:out value="${user.lastModified}"/>
+                     <c:out value="${user.lastModifiedDt}"/>
                  </td>
              </tr>
          

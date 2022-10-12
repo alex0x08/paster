@@ -2,32 +2,58 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-  
+
+
   <parent>
-    <groupId>uber.paster</groupId>
+    <groupId>com.Ox08.paster.webapp</groupId>
     <artifactId>paster-project</artifactId>
-    <version>1.2-SNAPSHOT</version>
+    <version>${revision}</version>
+    <relativePath>../pom.xml</relativePath>
   </parent>
-  
+
+
   <artifactId>paster-dist</artifactId>
-
   <packaging>pom</packaging>
-
   <name>Paster Distribution</name>
-  
-  <!-- NOTE: These dependency declarations are only required to sort this project to the 
-       end of the line in the multimodule build. 
-       
-       Since we only include the child1 module in our assembly, we only need to ensure this
-       distribution project builds AFTER that one...
-  -->
-  <dependencies>
-   
-  
-</dependencies>
+
+  <pluginRepositories>
+    <!--
+           for LicenseScan Maven Plugin
+           https://github.com/carlomorelli/licensescan-maven-plugin
+       -->
+    <pluginRepository>
+      <id>jitpack.io</id>
+      <url>https://jitpack.io</url>
+    </pluginRepository>
+
+  </pluginRepositories>
 
   <build>
     <plugins>
+
+      <plugin>
+        <groupId>com.github.carlomorelli</groupId>
+        <artifactId>licensescan-maven-plugin</artifactId>
+        <version>2.1</version>
+        <configuration>
+          <printLicenses>true</printLicenses>
+          <blacklistedLicenses>
+            <license>GNU General Public License, v2.0</license>
+            <license>GNU General Public License, v3.0</license>
+            <license>.*Affero.*</license>
+          </blacklistedLicenses>
+          <failBuildOnBlacklisted>true</failBuildOnBlacklisted>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>compile</phase> <!-- use your preferred goal, for me it makes sense to do the check at compile time -->
+            <goals>
+              <goal>audit</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
         <executions>
