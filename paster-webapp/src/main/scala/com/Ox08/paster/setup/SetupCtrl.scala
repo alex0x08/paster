@@ -70,6 +70,8 @@ class SetupCtrl extends Logged {
   def getAvailableLocales: Array[Locale] = Boot.BOOT.getSystemInfo.getAvailableLocales
   def getAvailableSecurityModes: Array[SecurityMode] = SetupConstants.getAvailableSecurityModes
   def getAvailableDrivers: Array[DbType] = SetupConstants.getAvailableDrivers
+  protected def getResource(key: String): String =
+    messageSource.getMessage(key, new Array[java.lang.Object](0), Boot.BOOT.getSystemInfo.getSystemLocale)
   protected def getResource(key: String, locale: Locale): String =
     messageSource.getMessage(key, new Array[java.lang.Object](0), locale)
   protected def getResource(key: String, args: Array[Any], locale: Locale): String =
@@ -273,9 +275,9 @@ class SetupCtrl extends Logged {
         new StepModel(cs))
     step match {
       case "welcome" =>
-        model.addAttribute("pageTitle", "Welcome to Paster Setup")
+        model.addAttribute("pageTitle", getResource("paster.setup.step.welcome.title"))
       case "users" =>
-        model.addAttribute("pageTitle","Setup Users")
+        model.addAttribute("pageTitle",getResource("paster.setup.step.users.title"))
         val users: SetupUsersStep = cs.asInstanceOf[SetupUsersStep]
         if (users.users.isEmpty) {
           val availableUsers: util.ArrayList[UserDTO] = new java.util.ArrayList()
@@ -299,7 +301,7 @@ class SetupCtrl extends Logged {
         }
         model.addAttribute("availableSecurityModes", getAvailableSecurityModes)
       case "db" =>
-        model.addAttribute("pageTitle", "Setup Database")
+        model.addAttribute("pageTitle", getResource("paster.setup.step.db.title"))
         val dbs: SetupDbStep = cs.asInstanceOf[SetupDbStep]
         dbs.connectionLog = null
         val availableDrivers = getAvailableDrivers
@@ -524,7 +526,7 @@ class PasterSetupService extends Logged {
     FileUtils.writeStringToFile(BOOT.getSystemInfo.getConfigFile, filledTemplate, "UTF-8")
   }
 }
-class SetupUsersStep extends SetupStep("users", "Setup users") {
+class SetupUsersStep extends SetupStep("users", "paster.setup.step.users.title") {
   val users: java.util.List[UserDTO] = new util.ArrayList[UserDTO]()
   @NotNull(message = "{validator.not-null}")
   var securityMode: String = _
@@ -575,7 +577,7 @@ class SetupUsersStep extends SetupStep("users", "Setup users") {
 /**
  * Database configuration step
  */
-class SetupDbStep extends SetupStep("db", "Setup database") {
+class SetupDbStep extends SetupStep("db", "paster.setup.step.db.title") {
   @NotEmpty
   //(message = "{validator.not-null}")
   @Size(min = 3, message = "{struct.name.validator}")
@@ -634,7 +636,7 @@ class SetupDbStep extends SetupStep("db", "Setup database") {
 /**
  * Welcome step
  */
-class WelcomeStep extends SetupStep("welcome", "Setup language") {
+class WelcomeStep extends SetupStep("welcome", "paster.setup.step.welcome.title") {
   @NotNull(message = "{validator.not-null}")
   var defaultLang: String = "en"
   var switchToUserLocale: Boolean = true

@@ -23,7 +23,7 @@
             <div class="container-fluid">
                 <a class="navbar-brand" href="<c:url value='/'/>">
                     <span class="i">/</span>
-                    Paster
+                    <fmt:message key='site.title'/>
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
                     aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
@@ -33,7 +33,7 @@
                  <ul class="nav navbar-nav me-auto">
                  </ul>
                       <p class="navbar-text hidden-sm hidden-xs" >
-                        Installation
+                        <fmt:message key='paster.setup.title' />
                       </p>
                 </div>
             </div>
@@ -61,7 +61,7 @@
                         <c:choose>
                              <c:when test="${s.stepKey eq step.stepKey}">
                                    <li class="breadcrumb-item active" aria-current="page">
-                                     <c:out value="${loopStatus.index+1}"/>. <c:out value="${s.stepName}"/>
+                                     <c:out value="${loopStatus.index+1}"/>. <fmt:message key="${s.stepName}" />
                                      <c:if test="${s.completed}">
                                         <i class="fa fa-check" aria-hidden="true"></i>
                                      </c:if>
@@ -72,7 +72,7 @@
                                 <li class="breadcrumb-item">
                                                <c:out value="${loopStatus.index+1}"/>.
                                                <a href="${stepUrl}">
-                                                   <c:out value="${s.stepName}"/>
+                                                   <fmt:message key="${s.stepName}" />
                                                </a>
                                                <c:if test="${s.completed}">
                                                      <i class="fa fa-check" aria-hidden="true"></i>
@@ -82,7 +82,9 @@
                          </c:choose>
                       </c:forEach>
 
-                    <li class="breadcrumb-item active" aria-current="page">Complete</li>
+                    <li class="breadcrumb-item active" aria-current="page">
+                        <fmt:message key="button.complete" />
+                    </li>
                   </ol>
                 </nav>
                 <tiles:insertAttribute name="content" />

@@ -182,6 +182,7 @@ abstract class BaseDao[T <: java.io.Serializable, PK <: java.io.Serializable](mo
     val out = new util.ArrayList[PK]
     val cr = new CriteriaSet
     cr.ct.multiselect(cr.r.get("id"))
+    // do not replace this with pattern matching
     if (from.isInstanceOf[Long] && from.asInstanceOf[Long] > 0)
       cr.ct.where(Array(cr.cb.lt(cr.r.get("id"), from.asInstanceOf[Long])): _*)
     val tupleResult: java.util.List[Tuple] = em.createQuery(cr.ct)

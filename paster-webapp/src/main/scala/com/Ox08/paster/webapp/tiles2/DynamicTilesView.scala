@@ -90,7 +90,8 @@ class DynamicTilesView extends AbstractUrlBasedView {
       .getApplicationContext(servletContext))
     if (container == null) {
       throw new ServletException(
-        "Tiles container is not initialized. Have you added a TilesConfigurer to your web application context?")
+        "Tiles container is not initialized. " +
+          "Have you added a TilesConfigurer to your web application context?")
     }
     exposeModelAsRequestAttributes(model, request)
     dynamicTilesViewProcessor.renderMergedOutputModel(getBeanName,

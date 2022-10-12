@@ -15,7 +15,9 @@
          <form:errors path="" />
 
       <fieldset class="row mb-3">
-         <legend class="col-form-label">Supported databases</legend>
+         <legend class="col-form-label">
+            <fmt:message key='paster.setup.step.db.supportedDatabases'/>
+         </legend>
          <div class="col-sm-10">
                 <c:forEach var="l" items="${availableDrivers}" varStatus="loopStatus">
                  <div class="form-check">
@@ -38,7 +40,9 @@
 
    <div class="row mb-3">
         <div class="col-md-12">
-            <label >Url</label>
+            <label>
+                <fmt:message key='paster.setup.step.db.url' />
+            </label>
              <form:input cssClass="form-control" path="step.dbUrl" name="dbUrl" id="dbUrl"
                                                 placeholder="Enter database url"/>
              <form:errors element="div" path="step.dbUrl" cssClass="alert alert-danger" />
@@ -47,7 +51,9 @@
    <div class="row mb-3">
 
         <div class="col-md-8">
-            <label >Driver class</label>
+            <label>
+                <fmt:message key='paster.setup.step.db.driver'/>
+            </label>
              <form:input cssClass="form-control"
                         path="step.dbType"
                         name="dbType"
@@ -59,7 +65,9 @@
 
    <div class="row mb-3">
         <div class="col-auto">
-            <label >Username</label>
+            <label>
+                <fmt:message key='paster.setup.step.db.username'/>
+            </label>
             <form:input cssClass="form-control"
                                     path="step.dbUser"
                                     name="dbUser"
@@ -68,7 +76,9 @@
             <form:errors element="div" path="step.dbUser" cssClass="alert alert-danger" />
         </div>
         <div class="col-auto">
-            <label >Password</label>
+            <label>
+                   <fmt:message key='paster.setup.step.db.password'/>
+            </label>
                 <div class="input-group">
                     <div class="input-group-text">
                         <a href="#" id="showHidePasswdLnk" >
@@ -91,7 +101,8 @@
             <c:url var="checkUrl" value='/main/setup/checkConnection' />
 
     <button type="submit" formaction="${checkUrl}" class="btn btn-danger btn-sm">
-       <i class="fa fa-database" aria-hidden="true"></i> Try connect
+       <i class="fa fa-database" aria-hidden="true"></i>
+       <fmt:message key='paster.setup.step.db.tryConnect'/>
     </button>
            </div>
     </div>
