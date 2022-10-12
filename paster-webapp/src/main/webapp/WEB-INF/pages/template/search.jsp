@@ -1,7 +1,8 @@
 <%@ include file="/WEB-INF/pages/common/taglibs.jsp"%>
 
 <c:url var="url" value='/main/paste/list/search' />
-    <form:form cssClass="d-flex" role="search" action="${url}" id="searchForm" modelAttribute="query" method="POST">
+    <form:form cssClass="d-flex" role="search"
+            action="${url}" id="searchForm" modelAttribute="query" method="POST">
         <fmt:message key='paste.search.placeholder' var="searchPlaceHolder" />
         <form:input path="query" name="query" id="pquery" cssClass="form-control form-control-sm me-2"
             placeholder="${searchPlaceHolder}" autocomplete="true" />

@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation._
 
 import java.io.File
 import java.nio.charset.StandardCharsets
+import java.time.LocalDateTime
 import java.util
 import java.util.Locale
 import scala.collection.mutable
@@ -140,12 +141,13 @@ class SetupCtrl extends Logged {
               result: BindingResult,
               model: Model): String = {
     val uModel: SetupUsersStep = updatedStep.getStep[SetupUsersStep]
-    for (u <- uModel.users.asScala) {
+    /*for (u <- uModel.users.asScala) {
       logger.debug("user: {} - {} ", u.getName, u.getUsername)
-    }
+    }*/
     val users = setupService.getStep[SetupUsersStep]("users").users
-    val u = new PasterUser(s"user${users.size()}",
+    val u = new PasterUser(
       s"Unnamed user${users.size()}",
+      s"user${users.size()}",
       "user",
       java.util.Set.of(Role.ROLE_USER))
     users.add(new UserDTO().fromUser(u))
@@ -523,6 +525,7 @@ class PasterSetupService extends Logged {
         values.put(s"${e._1}.${p._1.toString}", p._2.asInstanceOf[Object])
       }
     }
+    values.put("installDate",LocalDateTime.now().toString)
     val tpl: String = new String(IOUtils.toByteArray(configTemplate.getInputStream), StandardCharsets.UTF_8)
     val sub = new StringSubstitutor(values)
     sub.setEnableSubstitutionInVariables(false)

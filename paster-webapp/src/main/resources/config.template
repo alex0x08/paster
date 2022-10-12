@@ -1,4 +1,6 @@
-
+#
+# This file was generated during install at ${installDate}
+#
 # Paster default language. en and ru are currently supported
 paster.i18n.defaultLang=${welcome.defaultLang}
 
@@ -33,12 +35,12 @@ paster.reindexOnBoot=true
 # Paster supports 2 access modes:
 # 'public' - authentication is optional, anonymous users can view/list pages
 # 'private' - authentication is required, no content can be observed without authorization
-paster.security.access.mode=public
+paster.security.access.mode=${users.securityMode}
 
 # Allow commenting for anonymous users
-paster.security.comments.allow-anonymous.create=false
+paster.security.comments.allow-anonymous.create=${users.allowAnonymousCommentsCreate}
 # Allow adding pastas for anonymous users
-paster.security.pastas.allow-anonymous.create=false
+paster.security.pastas.allow-anonymous.create=${users.allowAnonymousPastasCreate}
 
 # Put horizontal divider in pastas list after each 'x' days
 # Works as milestone.

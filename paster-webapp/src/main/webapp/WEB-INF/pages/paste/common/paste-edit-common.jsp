@@ -31,20 +31,20 @@
                     <li class="nav-item dropdown" role="presentation">
                         <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
                             aria-expanded="false">
-                            Load from..
+                            <fmt:message key='paste.menu.loadFrom' />
                             <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
                             <li>
                                 <a class="dropdown-item" id="remote-file-tab-header" href="#" data-bs-toggle="tab"
                                     data-bs-target="#openRemoteFileTab" aria-controls="profile">
-                                    Remote url
+                                    <fmt:message key='paste.menu.loadFrom.remoteUrl' />
                                 </a>
                             </li>
                             <li>
                                 <a class="dropdown-item" id="local-file-tab-header" href="#" data-bs-toggle="tab"
                                     data-bs-target="#openLocalFileTab" aria-controls="profile">
-                                    Local file
+                                    <fmt:message key='paste.menu.loadFrom.localFile'/>
                                 </a>
                             </li>
                         </ul>
@@ -109,7 +109,7 @@
                                 </p>
                             </div>
                             <div class="col-md-2">
-                                <div class="pull-right">
+                                <div class="pull-right" style='padding-top:1.5em;'>
                                     <c:choose>
                                         <c:when test="${empty currentUser and !allowAnonymousCommentsCreate}">
                                         <p>
@@ -159,7 +159,7 @@
                         <div class="row">
                             <div class="col-md-1">
                                 <form:label path="codeType" cssClass="control-label" title="Select syntax">
-                                    Syntax
+                                    <fmt:message key='paste.syntax.title' />
                                 </form:label>
                                 <form:select path="codeType" multiple="false" id="ptype" cssClass="form-select">
                                     <c:forEach items="${availableCodeTypes}" var="codeType">

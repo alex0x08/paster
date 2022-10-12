@@ -127,10 +127,10 @@ class PasterEdit {
             function (el, i, array) {
                 el.addEventListener('click', function (event) {
                     event.preventDefault();
-                    const el2 = document.getElementById('btnCaption');
+                    const el2 = this.querySelector('#btnCaption');
                     el2.text = PasterI18n.text.notify.transmitMessage;
                     el2.disabled = true;
-                    document.getElementById('btnIcon').style.display = '';
+                    this.querySelector('#btnIcon').style.display = '';
                     self.onSave();
                 });
             });

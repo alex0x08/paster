@@ -86,7 +86,7 @@
                                 </a>        
                                 <ul class="dropdown-menu" role="menu">
                                     <c:forEach items="${availableLocales}" var="locale">        
-                                        <li role="presentation">        
+                                        <li >
                                             <c:url var="switchLangUrl" value="${request.requestURL}">
                                                 <c:param name="locale" value="${locale.language}_${locale.country}" />
                                                 <c:forEach items="${param}" var="currentParam">
@@ -95,7 +95,7 @@
                                                     </c:if>
                                                 </c:forEach>        
                                             </c:url>        
-                                            <a role="menuitem" href="${switchLangUrl}">
+                                            <a role="menuitem" href="${switchLangUrl}" class="dropdown-item">
                                                 <span title="<c:out value='${locale.displayLanguage}'/>">
                                                     <c:out value="${locale.displayLanguage}" />
                                                 </span>
