@@ -18,44 +18,31 @@
     <properties>
         <spring.security.version>6.0.0-M4</spring.security.version>
         <hibernate.search.version>5.11.10.Final</hibernate.search.version>
-        <hibernate.version>6.1.0.Final</hibernate.version>
-        <luceneVersion>8.11.1</luceneVersion>
-
+        <hibernate.version>6.1.3.Final</hibernate.version>
+        <luceneVersion>8.11.2</luceneVersion>
         <paster.app.name>${project.name}</paster.app.name>
         <paster.app.version>${project.version}</paster.app.version>
         <paster.app.description>${project.description}</paster.app.description>
         <paster.app.build.timestamp>${maven.build.timestamp}</paster.app.build.timestamp>
-
         <maven.build.timestamp.format>yyyy-MM-dd HH:mm</maven.build.timestamp.format>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
     </properties>
-    <dependencyManagement>
-
-
-    </dependencyManagement>
-
     <dependencies>
-
         <dependency>
             <groupId>com.Ox08.paster.webapp</groupId>
             <artifactId>paster-tiles-jakarta</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
-
         <dependency>
             <groupId>com.Ox08.paster.webapp</groupId>
             <artifactId>paster-spring-tiles3-jakarta</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
-
-
         <dependency>
             <groupId>org.scala-lang</groupId>
             <artifactId>scala-library</artifactId>
             <version>${scalaVersion}</version>
         </dependency>
-
         <dependency>
             <groupId>jakarta.platform</groupId>
             <artifactId>jakarta.jakartaee-web-api</artifactId>
@@ -71,7 +58,7 @@
         <dependency>
             <groupId>org.codehaus.janino</groupId>
             <artifactId>janino</artifactId>
-            <version>3.1.7</version>
+            <version>3.1.8</version>
         </dependency>
         <dependency>
             <groupId>commons-codec</groupId>
@@ -97,35 +84,35 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-text</artifactId>
-            <version>1.9</version>
+            <version>1.10.0</version>
         </dependency>
         <!-- Logging -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.7.36</version>
+            <version>2.0.3</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>log4j-over-slf4j</artifactId>
-            <version>1.7.36</version>
+            <version>2.0.3</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>jul-to-slf4j</artifactId>
-            <version>1.7.36</version>
+            <version>2.0.3</version>
         </dependency>
 
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>jcl-over-slf4j</artifactId>
-            <version>1.7.36</version>
+            <version>2.0.3</version>
         </dependency>
 
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>1.2.11</version>
+            <version>1.4.3</version>
         </dependency>
 
         <!-- spring -->
@@ -204,13 +191,13 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
-            <version>2.13.3</version>
+            <version>2.14.0-rc2</version>
         </dependency>
 
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.13.3</version>
+            <version>2.14.0-rc2</version>
         </dependency>
 
 
@@ -226,7 +213,7 @@
         <dependency>
             <groupId>org.hibernate.search</groupId>
             <artifactId>hibernate-search-mapper-orm-orm6</artifactId>
-            <version>6.1.5.Final</version>
+            <version>6.1.7.Final</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.hibernate</groupId>
@@ -239,7 +226,12 @@
         <dependency>
             <groupId>org.hibernate.search</groupId>
             <artifactId>hibernate-search-backend-lucene</artifactId>
-            <version>6.1.5.Final</version>
+            <version>6.1.7.Final</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.lucene</groupId>
+                    <artifactId>lucene-join</artifactId>
+                </exclusion></exclusions>
         </dependency>
 
         <dependency>
@@ -251,7 +243,7 @@
         <dependency>
             <groupId>org.hibernate.common</groupId>
             <artifactId>hibernate-commons-annotations</artifactId>
-            <version>6.0.2.Final</version>
+            <version>6.0.4.Final</version>
         </dependency>
 
         <dependency>
@@ -268,6 +260,11 @@
         </dependency>
         <dependency>
             <groupId>org.apache.lucene</groupId>
+            <artifactId>lucene-join</artifactId>
+            <version>${luceneVersion}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.lucene</groupId>
             <artifactId>lucene-backward-codecs</artifactId>
             <version>${luceneVersion}</version>
         </dependency>
@@ -279,8 +276,9 @@
         <dependency>
             <groupId>org.apache.lucene</groupId>
             <artifactId>lucene-analyzers-common</artifactId>
-            <version>8.11.1</version>
+            <version>${luceneVersion}</version>
         </dependency>
+
         <dependency>
             <groupId>org.apache.lucene</groupId>
             <artifactId>lucene-queryparser</artifactId>
@@ -313,7 +311,7 @@
         <dependency>
             <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator</artifactId>
-            <version>7.0.4.Final</version>
+            <version>8.0.0.Final</version>
         </dependency>
 
         <!-- jdbc pooling -->
@@ -326,7 +324,7 @@
         <dependency>
             <groupId>org.ocpsoft.prettytime</groupId>
             <artifactId>prettytime</artifactId>
-            <version>5.0.3.Final</version>
+            <version>5.0.4.Final</version>
         </dependency>
 
         <!-- RSS -->
@@ -339,7 +337,7 @@
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jsr310</artifactId>
-            <version>2.13.3</version>
+            <version>2.14.0-rc2</version>
         </dependency>
 
         <dependency>
@@ -348,28 +346,6 @@
             <version>1.9.0</version>
         </dependency>
 
-        <!--dependency>
-            <groupId>org.webjars</groupId>
-            <artifactId>ace</artifactId>
-            <version>1.3.3</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.webjars</groupId>
-            <artifactId>bootstrap</artifactId>
-            <version>5.1.3</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.webjars</groupId>
-            <artifactId>jquery</artifactId>
-            <version>3.6.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.webjars</groupId>
-            <artifactId>font-awesome</artifactId>
-            <version>4.7.0</version>
-        </dependency-->
         <dependency>
             <groupId>javax.xml.bind</groupId>
             <artifactId>jaxb-api</artifactId>
@@ -572,12 +548,9 @@
                     <include>**/*.xml</include>
                 </includes>
             </resource>
-
         </resources>
     </build>
-
     <profiles>
-
         <profile>
             <id>dev</id>
             <activation>
@@ -586,7 +559,6 @@
             <properties>
                 <paster.app.build.profile>DEVELOPMENT</paster.app.build.profile>
             </properties>
-
             <build>
                 <plugins>
                     <plugin>
@@ -611,16 +583,12 @@
                     </plugin>
                 </plugins>
             </build>
-
         </profile>
-
         <profile>
             <id>prod</id>
-
             <properties>
                 <paster.app.build.profile>PRODUCTION</paster.app.build.profile>
             </properties>
-
             <build>
                 <plugins>
                     <plugin>
@@ -635,11 +603,7 @@
                                 </goals>
                             </execution>
                         </executions>
-                        <configuration>
-
-                        </configuration>
                     </plugin>
-
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-war-plugin</artifactId>
@@ -661,14 +625,8 @@
                             </archive>
                         </configuration>
                     </plugin>
-
                 </plugins>
             </build>
         </profile>
     </profiles>
-
-
-    <repositories>
-
-    </repositories>
 </project>
