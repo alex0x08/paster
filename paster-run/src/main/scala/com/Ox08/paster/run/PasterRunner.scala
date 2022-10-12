@@ -220,13 +220,11 @@ class PasterRunner() {
       val warFile = new File(ctx.getURI)
       System.setProperty("org.eclipse.jetty.livewar.LOCATION", warFile.getAbsolutePath)
       webapp.setExtractWAR(false)
-      //              webapp.setInitParameter("org.eclipse.jetty.jsp.precompiled", "true")
       webapp.setInitParameter("org.eclipse.jetty.servlet.Default.useFileMappedBuffer", "false")
       webapp.setConfigurationClasses(PasterRunner.JETTY_CONFIGURATION_CLASSES)
       var fname = getClass.getProtectionDomain.getCodeSource.getLocation.getFile
       fname = fname.substring(fname.lastIndexOf('/'))
       val incPattern = ".*" + fname.replace(".", "\\\\.") + "$"
-      //System.out.println("pattern="+incPattern)
       webapp.setAttribute(MetaInfConfiguration.CONTAINER_JAR_PATTERN, incPattern)
     } finally
       if (ctx != null)

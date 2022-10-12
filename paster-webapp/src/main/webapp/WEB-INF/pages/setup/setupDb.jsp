@@ -129,25 +129,6 @@
 
 <script type="text/javascript">
 
-    function showHidePassword(el) {
-          const type = el.getAttribute('type');
-          if (type == 'text') {
-              el.setAttribute('type','password');
-          } else {
-              el.setAttribute('type','text');
-          }
-    }
-
-    function toggleDisabled(els,value) {
-        els.forEach(
-                function (el, i, array) {
-                    if (value) {
-                        el.setAttribute('readonly','true');
-                    } else {
-                        el.removeAttribute('readonly');
-                    }
-        });
-    }
 
     function processChecked(el) {
         if (el.checked) {
@@ -177,12 +158,11 @@
 
     window.addEventListener('load', function () {
 
-    document.getElementById('showHidePasswdLnk')
+        document.getElementById('showHidePasswdLnk')
             .addEventListener("click", function (event) {
                             event.preventDefault();
                             showHidePassword(document.getElementById('dbPassword'));
                           });
-
 
         var once=true;
         Array.from(document.getElementsByClassName("driverInput")).forEach(

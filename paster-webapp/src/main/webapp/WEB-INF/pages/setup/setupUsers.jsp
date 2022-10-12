@@ -14,58 +14,53 @@
 
         <form:errors path="" />
 
-        <p>
-                Here you can setup users
-        </p>
-
          <fieldset class="row mb-3">
-                 <legend class="col-form-label">Security mode:</legend>
+                 <legend class="col-form-label">
+                    <fmt:message key='paster.setup.step.users.securityMode' />
+                 </legend>
                  <div class="col-md-10 offset-md-2">
                        <c:forEach var="l" items="${availableSecurityModes}" varStatus="loopStatus">
                          <div class="form-check">
                              <form:radiobutton
-                             cssClass="form-check-input"
+                             cssClass="form-check-input securityModeInput"
                              path="step.securityMode"
                              name="securityMode"
                              value="${l.key}" />
-
-
                              <label class="form-check-label" >
-                                 <c:out value="${l.name}"/>
-                            </label>
+                                 <fmt:message key='${l.name}'/>
+                             </label>
                          </div>
                        </c:forEach>
                        <form:errors path="step.securityMode" />
-
                  </div>
                  </fieldset>
-
-
 
          <div class="row mb-3">
              <div class="col-sm-10">
                 <p>
-                        Additional options
+                      <fmt:message key='paster.setup.step.users.additionalOptions'/>
                 </p>
                <div class="form-check">
                        <form:checkbox
                        cssClass="form-check-input"
+                       id="allowAnonymousCommentsCreate"
                        path="step.allowAnonymousCommentsCreate"
                        name="allowAnonymousCommentsCreate"
                        value="${allowAnonymousCommentsCreate}" />
                  <label class="form-check-label">
-                   Allow anonymous to add comments
+                   <fmt:message key='paster.setup.step.users.allowAnonAddComments' />
                  </label>
                </div>
 
                <div class="form-check">
                       <form:checkbox
                       cssClass="form-check-input"
+                      id="allowAnonymousPastasCreate"
                       path="step.allowAnonymousPastasCreate"
                       name="allowAnonymousPastasCreate"
                       value="${allowAnonymousPastasCreate}" />
                                 <label class="form-check-label">
-                                  Allow anonymous to create new records
+                                  <fmt:message key='paster.setup.step.users.allowAnonAddRecords' />
                                 </label>
                </div>
 
@@ -75,7 +70,8 @@
         <c:url var="addUserUrl" value='/main/setup/addUser' />
         <p>
                 <button type="submit" formaction="${addUserUrl}" class="btn btn-primary btn-sm">
-                   <i class="fa fa-user-plus" aria-hidden="true"></i> Add user
+                   <i class="fa fa-user-plus" aria-hidden="true"></i>
+                   <fmt:message key='button.addUser' />
                 </button>
         </p>
 
@@ -84,19 +80,18 @@
       <thead>
         <tr>
           <th>
-                Name
+            <fmt:message key='user.name' />
           </th>
           <th>
-                Login
+            <fmt:message key='user.login' />
           </th>
           <th>
-                Password
+           <fmt:message key='user.password' />
           </th>
           <th>
-                Admin
-          </th>
+           <fmt:message key='role.admin.name' />
+           </th>
           <th>
-                Actions
           </th>
         </tr>
       </thead>
@@ -123,15 +118,25 @@
                            cssClass="alert alert-danger" />
                      </td>
                      <td>
-                            <form:input
-                            cssClass="form-control"
-                            name="password"
-                            path="step.users[${vstatus.index}].password"
-                            placeholder="Enter password"
-                            type="password"/>
-                            <form:errors element="div"
-                            path="step.users[${vstatus.index}].password"
-                            cssClass="alert alert-danger" />
+
+                     <div class="input-group passwordGroup">
+                                         <div class="input-group-text">
+                                             <a href="#" id="showHidePasswdLnk" >
+                                                 <i class="fa fa-eye" aria-hidden="true"></i>
+                                             </a>
+                                          </div>
+
+                                           <form:input id='passwordInput'
+                                                                      cssClass="form-control"
+                                                                      name="password"
+                                                                      path="step.users[${vstatus.index}].password"
+                                                                      placeholder="Enter password"
+                                                                      type="password"/>
+                                                                      <form:errors element="div"
+                                                                      path="step.users[${vstatus.index}].password"
+                                                                      cssClass="alert alert-danger" />
+
+                                     </div>
                      </td>
                      <td>
                            <form:checkbox
@@ -147,7 +152,7 @@
 
                               <button type="submit"
                               formaction="${removeUserUrl}"
-                              class="btn btn-primary" title="Remove user">
+                              class="btn btn-primary" title="<fmt:message key='button.delete'/>">
                                  <i class="fa fa-trash" aria-hidden="true"></i>
                               </button>
                       </td>
@@ -168,3 +173,38 @@
 </div>
 
 
+<script type="text/javascript">
+
+    function processChecked(el) {
+        const secMode = el.getAttribute('value');
+        console.log('sec mode:',secMode)
+        toggleDisabled([document.getElementById('allowAnonymousCommentsCreate'),
+                             document.getElementById('allowAnonymousPastasCreate')],secMode != 'public');
+  }
+
+  window.addEventListener('load', function () {
+
+         var once=true;
+         Array.from(document.getElementsByClassName("securityModeInput")).forEach(
+                    function (el, i, array) {
+                        if (once) {
+                            processChecked(el);
+                            once = false;
+                        }
+                        el.addEventListener("change", function (event) {
+                            event.preventDefault();
+                            processChecked(el);
+                        });
+                    });
+
+         Array.from(document.getElementsByClassName("passwordGroup")).forEach(
+                    function (el, i, array) {
+                        el.querySelector('#showHidePasswdLnk')
+                            .addEventListener("click", function (event) {
+                                                       event.preventDefault();
+                                                       showHidePassword(el.querySelector('#passwordInput'));
+                                                     });
+                    });
+
+    });
+</script>

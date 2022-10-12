@@ -18,12 +18,13 @@ object LiveWarClassLoader {
 }
 /**
  * Custom classloader to load WAR without unpacking
+ *
  * @param debug
- *        show/hide debug messages
+ * show/hide debug messages
  * @param warFileUrl
- *        url to WAR file
+ * url to WAR file
  * @param parent
- *        parent classloader
+ * parent classloader
  */
 class LiveWarClassLoader(debug: Boolean, warFileUrl: URL, parent: ClassLoader)
   extends ClassLoader(parent) with Closeable {
@@ -37,7 +38,9 @@ class LiveWarClassLoader(debug: Boolean, warFileUrl: URL, parent: ClassLoader)
         import java.util.jar.JarInputStream
         val zip = new JarInputStream(warFile.getInputStream(e))
         var ze: JarEntry = null
-        while ({ze = zip.getNextJarEntry; ze != null }) {
+        while ( {
+          ze = zip.getNextJarEntry; ze != null
+        }) {
           // we must to load directories too, their names should be present
           // in resources map
           if (ze.isDirectory) {
@@ -52,7 +55,7 @@ class LiveWarClassLoader(debug: Boolean, warFileUrl: URL, parent: ClassLoader)
               else
                 List()
               datas = datas.appended(data)
-              debug(s"dups ${ze.getName} = ${datas.length}")
+              debug(s"duplicates ${ze.getName} = ${datas.length}")
               LiveWarClassLoader.MAP_DUPLICATES.put(ze.getName, datas)
             } else LiveWarClassLoader.MAP.put(ze.getName, data)
           }
@@ -110,15 +113,16 @@ class LiveWarClassLoader(debug: Boolean, warFileUrl: URL, parent: ClassLoader)
     if (entry != null) {
       try {
         debug(s"findResource: $name")
-        return URI.create("jar:" + this.warFileUri.toASCIIString + "!/" + entry.getName).toURL
+        return URI.create(s"jar:${this.warFileUri.toASCIIString}!/${entry.getName}").toURL
       } catch {
         case e: MalformedURLException =>
-          e.printStackTrace(System.err)
+          if (debug)
+            e.printStackTrace(System.err)
           return null
       }
     } else if (LiveWarClassLoader.MAP.contains(name)) {
       debug(s"findResource in map: $name")
-      return URI.create("war-virtual:" + name).toURL
+      return URI.create(s"war-virtual:$name").toURL
     }
     val url = super.findResource(name)
     if (url == null)
@@ -136,11 +140,11 @@ class LiveWarClassLoader(debug: Boolean, warFileUrl: URL, parent: ClassLoader)
       val dups = LiveWarClassLoader.MAP_DUPLICATES(name)
       var count = 0
       for (_ <- dups) {
-        val u = URI.create("war-virtual:dup:" + count + ":" + name).toURL
+        val u = URI.create(s"war-virtual:dup:$count:$name").toURL
         urls.add(u)
         count += 1
       }
-      debug(s"returned $count dups for $name")
+      debug(s"returned $count duplicates for $name")
     }
     if (getParent != null) {
       val parent = getParent.getResources(name)
@@ -150,7 +154,7 @@ class LiveWarClassLoader(debug: Boolean, warFileUrl: URL, parent: ClassLoader)
     Collections.enumeration(urls)
   }
   @throws[IOException]
-  private def loadClass(name: String, entry: ZipEntry): Class[_] =  {
+  private def loadClass(name: String, entry: ZipEntry): Class[_] = {
     val in = warFile.getInputStream(entry)
     try {
       val classBytes = readBytes(in, 4096)
@@ -163,12 +167,13 @@ class LiveWarClassLoader(debug: Boolean, warFileUrl: URL, parent: ClassLoader)
     val buf = Array.ofDim[Byte](bufferSize)
     val out = new ByteArrayOutputStream(bufferSize)
     var nRead = 0
-    while ({ nRead = is.read(buf, 0, buf.length); nRead != -1 })
+    while ( {
+      nRead = is.read(buf, 0, buf.length); nRead != -1
+    })
       out.write(buf, 0, nRead)
     out.toByteArray
   }
 }
-
 class VirtualWARURLStreamHandlerFactory(val debug: Boolean) extends URLStreamHandlerFactory {
   override def createURLStreamHandler(protocol: String): URLStreamHandler = {
     if ("war-virtual" == protocol)
@@ -181,7 +186,7 @@ class VirtualWARUrlStreamHandler(val debug: Boolean) extends URLStreamHandler {
   protected def openConnection(u: URL): URLConnection = {
     var fileName = u.getFile
     if (debug)
-        debug(s"opening file $fileName")
+      debug(s"opening file $fileName")
     if (fileName.startsWith("war-virtual:"))
       fileName = fileName.substring(0, "war-virtual:".length)
     if (fileName.startsWith("dup:")) {
@@ -191,7 +196,7 @@ class VirtualWARUrlStreamHandler(val debug: Boolean) extends URLStreamHandler {
         .toInt
       fileName = fileName.substring(fileName.indexOf(":") + 1)
       if (!LiveWarClassLoader.MAP_DUPLICATES.contains(fileName)) {
-        debug("not found: " + fileName)
+        debug(s"not found: $fileName")
         throw new FileNotFoundException(fileName)
       }
       val data = LiveWarClassLoader.MAP_DUPLICATES.get(fileName)
@@ -206,8 +211,6 @@ class VirtualWARUrlStreamHandler(val debug: Boolean) extends URLStreamHandler {
       }
     } else {
       if (!LiveWarClassLoader.MAP.contains(fileName)) {
-        if (debug)
-          System.out.printf("not found: %s%n", fileName)
         throw new FileNotFoundException(fileName)
       }
       val data = LiveWarClassLoader.MAP.get(fileName)

@@ -4,13 +4,15 @@
 <div class='row justify-content-md-center'>
     <div class='col-auto'>
         <p>
-        Done. You just completed Paster setup!
+            <fmt:message key='paster.setup.step.completed.title'/>
         </p>
                 <c:url var="finalizeInstallUrl" value='/main/setup/doFinalizeInstall' />
 
-                 <form:form cssClass="form-inline" style="padding-left:1em;" role="form" action="${finalizeInstallUrl}" method="POST">
+                 <form:form cssClass="form-inline"
+                        style="padding-left:1em;"
+                        role="form"
+                        action="${finalizeInstallUrl}" method="POST">
                      <button type="submit" class="btn btn-success">
-                         <i class="fa fa-sign-in"></i>
                          <fmt:message key="button.restart" />
                          </a>
                      </button>

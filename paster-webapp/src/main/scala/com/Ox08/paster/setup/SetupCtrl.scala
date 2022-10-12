@@ -8,7 +8,7 @@ import com.Ox08.paster.webapp.mvc.MvcConstants
 import com.Ox08.paster.webapp.web.PasterLocaleResolver
 import jakarta.annotation.PostConstruct
 import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
-import jakarta.validation.constraints.{NotEmpty, NotNull, Size}
+import jakarta.validation.constraints.{NotEmpty, NotNull}
 import jakarta.validation.{Valid, Validator}
 import org.apache.commons.beanutils.PropertyUtilsBean
 import org.apache.commons.csv.CSVRecord
@@ -36,8 +36,8 @@ import scala.jdk.CollectionConverters._
  */
 private object SetupConstants {
   def getAvailableSecurityModes: Array[SecurityMode] = Array(
-    new SecurityMode("Public", "public"),
-    new SecurityMode("Private", "private"))
+    new SecurityMode("paster.setup.step.users.securityMode.public", "public"),
+    new SecurityMode("paster.setup.step.users.securityMode.private", "private"))
   def getAvailableDrivers: Array[DbType] = Array(
     new DbType("H2 Embedded Database (Default)",
       "jdbc:h2:file:${paster.app.home}/db/pastedb;DB_CLOSE_ON_EXIT=TRUE;LOCK_TIMEOUT=10000",
@@ -107,6 +107,7 @@ class SetupCtrl extends Logged {
     }
     if (logger.isDebugEnabled)
       logger.debug("step: '{}'", step)
+
     if (!setupService.containsStep(step))
       throw SystemError.withCode(0x6001, s"Incorrect step type: $step")
     target.setStep(setupService.getStep(step))
@@ -170,7 +171,7 @@ class SetupCtrl extends Logged {
                       result: BindingResult,
                       model: Model): String = {
     val step: SetupDbStep = updatedStep.getStep.asInstanceOf[SetupDbStep]
-    if (StringUtils.isBlank(step.dbType)) {
+    if (StringUtils.isBlank(step.dbType) ||step.origName.contains("H2")) {
       val dbType = getAvailableDrivers.find(p =>
         step.origName.equalsIgnoreCase(p.getName))
         .orElse(alternative =
@@ -208,7 +209,7 @@ class SetupCtrl extends Logged {
       ds2.setPassword(step.dbPassword)
       val con = ds2.getConnection
       con.close()
-      log = "Connection established"
+      log = getResource("paster.setup.step.db.connectionEstablished")
     } catch {
       case e@(_: Exception) =>
         logger.debug(e.getMessage, e)
@@ -369,7 +370,6 @@ class SetupCtrl extends Logged {
     setupService.updateStep(updatedStep.getStep, result)
     if (result.hasErrors) {
       dumpErrors(result)
-
       result.reject("*", "Update rejected 2")
       fillModel(step, updatedStep, model)
       return s"/setup/$step"
@@ -409,11 +409,15 @@ class SetupCtrl extends Logged {
       logger.warn("Installation already in progress!")
       return MvcConstants.page500
     }
+    // disallow future changes
     setupService.installInProgress = true
     model.asMap().clear()
+    // write actual config
     setupService.writeConfig()
+    // put installation mark
     Boot.BOOT.markInstalled()
-    //sysService.restartApplication()
+    // restart application
+    sysService.restartApplication()
     "redirect:/main/restarting"
   }
   @RequestMapping(Array("/restarting"))
@@ -578,9 +582,9 @@ class SetupUsersStep extends SetupStep("users", "paster.setup.step.users.title")
  * Database configuration step
  */
 class SetupDbStep extends SetupStep("db", "paster.setup.step.db.title") {
-  @NotEmpty
+  //@NotEmpty
   //(message = "{validator.not-null}")
-  @Size(min = 3, message = "{struct.name.validator}")
+  //@Size(min = 3, message = "{struct.name.validator}")
   var dbUrl: String = _
   var dbUser: String = "paster"
   var dbPassword: String = "paster"
@@ -590,7 +594,7 @@ class SetupDbStep extends SetupStep("db", "paster.setup.step.db.title") {
   var origName: String = _
   // driver
   //@NotNull(message = "{validator.not-null}")
-  @NotEmpty
+  //@NotEmpty
   var dbType: String = _
   var connectionLog: String = _
   def getConnectionLog: String = connectionLog
@@ -617,10 +621,10 @@ class SetupDbStep extends SetupStep("db", "paster.setup.step.db.title") {
   override def update(dto: SetupStep, result: BindingResult): Unit = {
     val update: SetupDbStep = dto.asInstanceOf[SetupDbStep]
     // support for default selection
-    if (StringUtils.isBlank(update.dbType)) {
+    if (update.origName.contains("H2")) {
       val dbType = SetupConstants.getAvailableDrivers.find(p => update.origName
         .equalsIgnoreCase(p.getName))
-        .orElse(throw new RuntimeException("Cannot find type " + update.origName)).get
+        .orElse(throw new RuntimeException(s"Cannot find type ${update.origName}")).get
       this.dbType = dbType.getDriver
       this.dbUrl = dbType.getUrl
     } else {
@@ -630,13 +634,25 @@ class SetupDbStep extends SetupStep("db", "paster.setup.step.db.title") {
       this.dbPassword = update.dbPassword
       this.origName = update.origName
     }
-    markCompleted()
+
+    if (StringUtils.isBlank(this.dbUrl)) {
+      result.rejectValue("step.dbUrl","paster.setup.step.db.url.reject")
+    }
+    if (StringUtils.isBlank(this.dbType)) {
+      result.rejectValue("step.dbType", "paster.setup.step.db.driver.reject")
+    }
+    if (result.hasErrors) {
+      markUnCompleted()
+    } else {
+      markCompleted()
+    }
   }
 }
 /**
  * Welcome step
  */
-class WelcomeStep extends SetupStep("welcome", "paster.setup.step.welcome.title") {
+class WelcomeStep extends SetupStep("welcome",
+    "paster.setup.step.welcome.title") {
   @NotNull(message = "{validator.not-null}")
   var defaultLang: String = "en"
   var switchToUserLocale: Boolean = true
@@ -653,7 +669,7 @@ class WelcomeStep extends SetupStep("welcome", "paster.setup.step.welcome.title"
       logger.debug(s"called update dto: ${dto.getClass.getName}")
     val update: WelcomeStep = dto.asInstanceOf[WelcomeStep]
     if (StringUtils.isBlank(update.getDefaultLang)) {
-      result.reject("system language is not set")
+      result.reject("*","system language is not set")
       return
     }
     this.defaultLang = update.getDefaultLang
@@ -664,26 +680,49 @@ class WelcomeStep extends SetupStep("welcome", "paster.setup.step.welcome.title"
     markCompleted()
   }
 }
+/**
+ * Parent step model
+ * @param _step
+ */
 class StepModel(_step: SetupStep) {
   def this() = this(null)
   @Valid
   private var step: SetupStep = _step
+  /**
+   * get step with specified type
+   * @tparam T
+   *      type
+   * @return
+   */
   def getStep[T <: SetupStep]: T = step.asInstanceOf[T]
-  def setStep(s: SetupStep): Unit = {
-    step = s
-  }
+  def setStep(s: SetupStep): Unit = { step = s }
 }
+/**
+ *
+ * Abstract configuration step
+ * @param stepKey
+ *          step unique key
+ * @param stepName
+ *          step name (key in message bundle)
+ */
 abstract class SetupStep(stepKey: String, stepName: String) extends Logged {
-  // def this() = this(null)
   var completed: Boolean = false
   def isCompleted: Boolean = completed
-  def markCompleted(): Unit = {
-    completed = true
-  }
+  def markCompleted(): Unit = { completed = true }
+  def markUnCompleted(): Unit = { completed = false }
   def getStepKey: String = stepKey
   def getStepName: String = stepName
   def update(dto: SetupStep, result: BindingResult): Unit
 }
+/**
+ * A database type
+ *
+ * @param name
+ * @param url
+ * @param driver
+ * @param current
+ * @param editable
+ */
 class DbType(name: String,
              url: String,
              driver: String,
@@ -695,9 +734,7 @@ class DbType(name: String,
   def getDriver: String = driver
   def isCurrent: Boolean = _current
   def isEditable: Boolean = editable
-  def setCurrent(v: Boolean): Unit = {
-    _current = v
-  }
+  def setCurrent(v: Boolean): Unit = { _current = v }
 }
 class SecurityMode(name: String, key: String) {
   def getName: String = name
