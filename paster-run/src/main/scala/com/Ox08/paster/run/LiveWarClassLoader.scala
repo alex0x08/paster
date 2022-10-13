@@ -63,7 +63,7 @@ class LiveWarClassLoader(debug: Boolean, warFileUrl: URL, parent: ClassLoader)
       }
     }
     import java.net.URL
-    URL.setURLStreamHandlerFactory(new VirtualWARURLStreamHandlerFactory(debug = true))
+    URL.setURLStreamHandlerFactory(new VirtualWARURLStreamHandlerFactory(debug))
   }
   @throws[IOException]
   override def close(): Unit = {
