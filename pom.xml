@@ -10,13 +10,11 @@
     <name>Paster Project</name>
     <url>https://github.com/alex0x08/paster</url>
     <inceptionYear>2011</inceptionYear>
-
     <scm>
         <connection>scm:git:https://github.com/alex0x08/paster.git</connection>
         <url>scm:git:https://github.com/alex0x08/paster.git</url>
         <tag>HEAD</tag>
     </scm>
-
     <distributionManagement>
         <repository>
             <id>deployment</id>
@@ -24,14 +22,12 @@
             <url>file:///c:/work/releases/repository/maven-repository/</url>
         </repository>
     </distributionManagement>
-
     <developers>
         <developer>
             <name>Alex Chernyshev</name>
             <timezone>GMT+4</timezone>
         </developer>
     </developers>
-
     <organization>
         <name>0x08 Software</name>
         <url>http://0x08.tk</url>
@@ -44,7 +40,6 @@
             <comments>Lift Example is licensed under Apache License, Version 2.0</comments>
         </license>
     </licenses>
-
     <properties>
         <java.version>18</java.version>
         <scalaVersion>2.13.8</scalaVersion>
@@ -52,18 +47,15 @@
         <jakartaEEVersion>9.1.0</jakartaEEVersion>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <netbeans.hint.license>apache20</netbeans.hint.license>
-        <revision>2.1.04-RELEASE</revision>
+        <revision>2.1.05-RELEASE</revision>
         <main.basedir>${basedir}</main.basedir>
     </properties>
-
     <modules>
         <module>libs</module>        
         <module>paster-webapp</module>
         <module>paster-run</module>
         <module>paster-dist</module>
       </modules>
-
-
     <pluginRepositories>
         <pluginRepository>
             <id>spring-milestones</id>
@@ -82,7 +74,6 @@
             </releases>
         </pluginRepository>
     </pluginRepositories>
-
     <repositories>
         <repository>
             <id>spring-milestones</id>
@@ -109,7 +100,6 @@
             <url>https://maven.springframework.org/release</url>
         </repository>
     </repositories>
-
     <build>
         <plugins>
             <plugin>
@@ -180,13 +170,11 @@
                 <artifactId>maven-war-plugin</artifactId>
                 <version>3.3.2</version>
             </plugin>
-
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>buildnumber-maven-plugin</artifactId>
                 <version>3.0.0</version>
             </plugin>
-
         </plugins>
     </build>
 </project>

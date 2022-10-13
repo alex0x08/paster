@@ -4,6 +4,7 @@ import org.eclipse.jetty.server.{Handler, Server, ServerConnector}
 import org.eclipse.jetty.util.resource.Resource
 import org.eclipse.jetty.webapp._
 import org.slf4j.LoggerFactory
+
 import java.io.IOException
 import java.net.{URL, URLClassLoader}
 import java.util
@@ -43,6 +44,7 @@ object PasterRunner {
   }
 }
 class PasterRunner() {
+  private var isDebug = false
   private var contextPath = PasterRunner.DEFAULT_CONTEXT_PATH
   private var port = PasterRunner.DEFAULT_PORT
   private var host: String = _
@@ -103,13 +105,18 @@ class PasterRunner() {
    * Generate version message and exit
    */
   def version(): Unit = {
-    System.err.println("org.eclipse.jetty.runner.Runner: " + Server.getVersion)
+    System.out.printf("org.eclipse.jetty.runner.Runner: %s" , Server.getVersion)
     System.exit(1)
   }
   @throws(classOf[IOException])
   def loadConf(): Unit = {
     val p = new Properties()
     p.load(getClass.getResourceAsStream("/config.properties"))
+    if (p.containsKey("appDebug"))
+      isDebug = "true".equals(p.getProperty("appDebug", "false"))
+    else
+      isDebug = "true".equals(System.getProperty("appDebug", "false"))
+
     if (p.containsKey("paster.runner.port"))
       this.port = p.getProperty("paster.runner.port").toInt
     if (p.containsKey("paster.runner.host"))
@@ -142,7 +149,7 @@ class PasterRunner() {
       }
     }
     initClassLoader()
-    PasterRunner.LOG.info("Runner")
+    PasterRunner.LOG.info("Paster Runner, debug: {}",isDebug)
     PasterRunner.LOG.debug("Runner classpath {}", _classpath)
     i = 0
     if (args.length > 0) {
@@ -168,7 +175,7 @@ class PasterRunner() {
       usage("No Contexts defined")
   }
   private def setupContexts(appFile: String): Unit = {
-    System.out.println("war=" + appFile)
+    PasterRunner.LOG.info("Loading WAR: {}",appFile)
     //TomcatURLStreamHandlerFactory.disable()
     // process contexts
     if (!runnerServerInitialized) {
@@ -214,7 +221,7 @@ class PasterRunner() {
       // Configure the context
       // assume it is a WAR file
       val webapp = new WebAppContext(_contexts, ctx.toString, contextPath)
-      webapp.setClassLoader(new LiveWarClassLoader(true, ctx.getURI.toURL,
+      webapp.setClassLoader(new LiveWarClassLoader(isDebug, ctx.getURI.toURL,
         Thread.currentThread.getContextClassLoader))
       import java.io.File
       val warFile = new File(ctx.getURI)
@@ -229,7 +236,6 @@ class PasterRunner() {
     } finally
       if (ctx != null)
         ctx.close()
-
     //reset
     contextPathSet = false
     contextPath = PasterRunner.DEFAULT_CONTEXT_PATH

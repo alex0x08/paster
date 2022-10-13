@@ -38,9 +38,9 @@ class SystemPropertiesListener extends ServletContextListener with Logged {
   override def contextDestroyed(servletContextEvent: ServletContextEvent): Unit = {}
   def doBoot(): Unit = {
     // re-initialize parent logger
-    SLF4JBridgeHandler.removeHandlersForRootLogger()
+    //SLF4JBridgeHandler.removeHandlersForRootLogger()
     // re-install parent logger
-    SLF4JBridgeHandler.install()
+    //SLF4JBridgeHandler.install()
     // use English locale as default
     val en: Locale = Locale.ENGLISH
     //System.out.println("locale=" + en)
@@ -55,6 +55,6 @@ class SystemPropertiesListener extends ServletContextListener with Logged {
     // add additional i18n bundles
     //SystemError.instance.addBundle("bundles/errorMessagesWeb")
     //SystemMessage.instance.addBundle("bundles/systemMessagesWeb")
-    //System.setProperty("org.jboss.logging.provider", "slf4j")
+    System.setProperty("org.jboss.logging.provider", "slf4j")
   }
 }
