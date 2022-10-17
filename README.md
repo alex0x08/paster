@@ -8,6 +8,8 @@ Submitting a patch or pull request?
 
 Make sure you have an Eclipse Contributor Agreement (ECA) on file.
 
+![alt text](https://github.com/alex0x08/paster/blob/develop/docs/images/paster2-screenshot1.jpg?raw=true)
+
 - [eclipse.org/legal/ecafaq](https://www.eclipse.org/legal/ecafaq.php)
 
 Project description
