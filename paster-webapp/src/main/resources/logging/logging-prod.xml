@@ -2,32 +2,19 @@
 <included>
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <withJansi>false</withJansi>
-    
         <!-- encoders are assigned the type 
         ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
         <encoder>
             <pattern>%d{HH:mm:ss} %-5level %class{0}.%method:%line %msg%n</pattern>
-        </encoder>  
-
+        </encoder>
     </appender>
 
     <logger name="com.Ox08" level="INFO"/>
-
-    <logger name="javax.activation" level="WARN"/>
-    <logger name="javax.mail" level="WARN"/>
-    <logger name="javax.xml.bind" level="WARN"/>
-    <logger name="com.zaxxer" level="WARN"/>
     <logger name="org.apache" level="WARN"/>
     <logger name="org.hibernate.validator" level="WARN"/>
     <logger name="org.springframework" level="WARN"/>
-
     <logger name="org.springframework.security" level="WARN"/>
-
-
-
-
     <root level="WARN">
         <appender-ref ref="CONSOLE"/>
     </root>
-    
 </included>

@@ -1,35 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <included>
-
     <turboFilter class="ch.qos.logback.classic.turbo.DuplicateMessageFilter" allowedRepetitions="2"/>
-
-
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
-
-
         <withJansi>false</withJansi>
-    
-        <!-- encoders are assigned the type 
+        <!-- encoders are assigned the type
         ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
         <encoder>
                 <pattern>%d{HH:mm:ss} %-5level %class{0}.%method:%line %msg%n</pattern>
         </encoder>  
-          
     </appender>
-    
-
     <logger name="com.Ox08" level="DEBUG" additivity="false">
         <appender-ref ref="CONSOLE"/>
-
     </logger>
-    
      <logger name="org.h2" level="ALL" />
-
-    
-    <logger name="javax.activation" level="WARN"/>
-    <logger name="javax.mail" level="WARN"/>
-    <logger name="javax.xml.bind" level="WARN"/>
-    <logger name="com.zaxxer" level="WARN"/>
     <logger name="org.apache" level="WARN"/>
 
     <logger name="org.hibernate.validator" level="WARN"/>
@@ -38,8 +21,6 @@
     <logger name="org.springframework.security" level="ALL"/>
     <logger name="org.springframework.cache" level="WARN"/>
     <logger name="org.thymeleaf" level="WARN"/>
-
-
     <logger name="org.hibernate.SQL" level="DEBUG" />
     <logger name="org.hibernate.type" level="TRACE" />
 
