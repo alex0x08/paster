@@ -1,53 +1,33 @@
 Paster
 ==================================
 
-Quick & Dirty code review tool
-
-
-Submitting a patch or pull request?
-
-Make sure you have an Eclipse Contributor Agreement (ECA) on file.
+Small text&code review tool.
 
 ![alt text](https://github.com/alex0x08/paster/blob/develop/docs/images/paster2-screenshot1.jpg?raw=true)
-
-- [eclipse.org/legal/ecafaq](https://www.eclipse.org/legal/ecafaq.php)
 
 Project description
 -------------------
 
-Jetty is a lightweight highly scalable java based web server and servlet engine.
-Our goal is to support web protocols like HTTP, HTTP/2 and WebSocket in a high volume low latency way that provides maximum performance while retaining the ease of use and compatibility with years of servlet development.
-Jetty is a modern fully async web server that has a long history as a component oriented technology easily embedded into applications while still offering a solid traditional distribution for webapp deployment.
+Paster is small standalone web-based review tool.
 
-- [https://projects.eclipse.org/projects/rt.jetty](https://projects.eclipse.org/projects/rt.jetty)
-
-Webapp Example
---------------
-```shell
-$ mkdir base && cd base
-$ java -jar $JETTY_HOME/start.jar --add-modules=http,deploy
-$ cp ~/src/myproj/target/mywebapp.war webapps
-$ java -jar $JETTY_HOME/start.jar 
-```
-
+Project was initially created for internal usage, to make quick reviews on 'raw' data like
+XML and json samples, logs, various code samples.
 
 Documentation
 -------------
-
-Project documentation is available on the Jetty Eclipse website.
-
-- [https://www.eclipse.org/jetty/documentation](https://www.eclipse.org/jetty/documentation)
+TODO
 
 Building
 ========
-
-To build, use:
+You will need Java 18 or later to build and run Paster.
+To build, run from parent folder:
 
 ``` shell
-  mvn clean install
+  mvn -P Prod clean install
 ```
+Paster distribution archive will be located in
 
-Eclipse Jetty will be built in `jetty-home/target/jetty-home`.
+    `paster-dist/target/paster-dist-${version}-bin.zip`.
 
 The first build may take a longer than expected as Maven downloads all the dependencies.
 
@@ -59,3 +39,42 @@ Professional Services
 ---------------------
 
 Expert advice and production support are available through [Webtide.com](https://webtide.com).
+
+
+Пастер
+==================================
+Мелкая софтвина для ревью кода, логов и всяких левых json/xml.
+
+Выглядит как-то так:
+![alt text](https://github.com/alex0x08/paster/blob/develop/docs/images/paster2-screenshot1.jpg?raw=true)
+
+Описание
+-------------------
+Это веб-приложение, поэтому нужен браузер, желательно новый.
+Поскольку мы используем ES6 сразу в браузере, на старом Пастер просто не заработает.
+
+Создавалось оно еще в 2011м, для проведения внутреннего ревью 'здесь и сейчас'
+и развернутых ответов по кускам логов, каким-то json-конфигам и xml запросам, взятым непонятно откуда.
+
+Основной кейс использования: подчеркнуть красным нужное место в логе с ошибкой и вставить ниже комментарий с решением.
+
+
+Документация
+-------------
+КОГДА-НИБУДЬ БУДЕТ
+
+Сборка
+========
+Для сборки и работы нужна Java версии 18 и старше.
+Еще нужен Apache Maven, если вдруг будете собирать не из среды разработки.
+
+Запуск продуктовой сборки:
+
+``` shell
+  mvn -P Prod clean install
+```
+ZIP-архив с дистрибьютивом будет в
+
+    `paster-dist/target/paster-dist-${version}-bin.zip`.
+
+Первая сборка будет дольше ожидаемого, тк будут скачиваться зависимые библиотеки.
