@@ -1,24 +1,12 @@
-/* 
- * Copyright 2016 Ubersoft, LLC.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+
 class PasterView {
     setupDraw(modelId, allowEdit) {
         Logger.debug('setup draw ', modelId, 'allow edit', allowEdit);
         var self = this;
-        const colors_array = ['#D20202', '#ff1101', '#ff0', '#0f0', '#0ff', '#00f', '#6d47e7', '#000', '#fff'];
-        var toolsEl = document.getElementById(modelId + '_tools');
+        const colors_array = ['#D20202', '#ff1101', '#ff0',
+        '#0f0', '#0ff', '#00f', '#6d47e7', '#000', '#fff'];
+
+        var toolsEl = document.getElementById(`${modelId}_tools`);
         fastdom.mutate(() => {
             colors_array.forEach(c => {
                 const htmlBlock = "<a href='#" + modelId
@@ -27,7 +15,7 @@ class PasterView {
                     + ";'>&nbsp;&nbsp;</a> ";
                 toolsEl.insertAdjacentHTML('beforeend', htmlBlock);
             });
-            Array.from(document.getElementsByClassName(modelId + '_sketch_color')).forEach(
+            Array.from(document.getElementsByClassName(`${modelId}_sketch_color`)).forEach(
                 function (el, i, array) {
                     el.addEventListener("click", function (e) {
                         e.preventDefault();
@@ -40,19 +28,21 @@ class PasterView {
         const sz_array = [1, 3, 5, 10, 15];
         fastdom.mutate(() => {
             sz_array.forEach(c => {
-                const htmlBlock = "<a href='#" + modelId + "_sketch' class=" + modelId + "_sketch_sz data-size='" + c
+                const htmlBlock = "<a href='#" + modelId + "_sketch' class="
+                    + modelId + "_sketch_sz data-size='" + c
                     + "' style='background: #ccc'>" + c + "</a> ";
                 toolsEl.insertAdjacentHTML('beforeend', htmlBlock);
             });
-            Array.from(document.getElementsByClassName(modelId + '_sketch_sz')).forEach(
-                function (el, i, array) {
-                    el.addEventListener("click", function (e) {
-                        e.preventDefault();
-                        const sz = el.getAttribute('data-size');
-                        currentSz = sz;
-                        radius = 0;
-                        Logger.debug('current sz:', currentSz);
-                    });
+            Array.from(document.getElementsByClassName(`${modelId}_sketch_sz`))
+                .forEach(
+                    function (el, i, array) {
+                        el.addEventListener("click", function (e) {
+                            e.preventDefault();
+                            const sz = el.getAttribute('data-size');
+                            currentSz = sz;
+                            radius = 0;
+                            Logger.debug('current sz:', currentSz);
+                        });
                 });
         });
         var currentSz = 5;
@@ -60,7 +50,7 @@ class PasterView {
         var radius = 0;
         var inAction = false;
         self.sketchObj = Sketch.create({
-            container: document.getElementById(modelId + '_drawArea'),
+            container: document.getElementById(`${modelId}_drawArea`),
             autostart: false,
             autoclear: false,
             fullscreen: false,
@@ -103,7 +93,7 @@ class PasterView {
             }
         });
         if (allowEdit) {
-            document.getElementById(modelId + '_saveReviewBtn')
+            document.getElementById(`${modelId}_saveReviewBtn`)
                 .addEventListener("click", function (event) {
                     Logger.debug('on click saveReview');
                     event.preventDefault();
@@ -117,14 +107,14 @@ class PasterView {
     }
     showCommentFormError(modelId, errorMessage) {
         fastdom.mutate(() => {
-            const errMsg = document.getElementById(modelId + '_errorMessage');
+            const errMsg = document.getElementById(`${modelId}_errorMessage`);
             errMsg.innerText = errorMessage;
             errMsg.style.display = '';
         });
     }
     resetCommentFormErrors(modelId) {
         fastdom.mutate(() => {
-            const errMsg = document.getElementById(modelId + '_errorMessage');
+            const errMsg = document.getElementById(`${modelId}_errorMessage`);
             errMsg.style.display = 'none';
             errMsg.innerText = '';
         });
@@ -132,35 +122,38 @@ class PasterView {
     toggleOnSubmit(modelId, display) {
         fastdom.mutate(() => {
             Array.from(document
-                .getElementById(modelId + '_addCommentForm')
-                .getElementsByClassName('disableOnSubmit')).forEach(
-                    function (el) {
-                        el.style.display = display;
-                    });
-        });
+                .getElementById(`${modelId}_addCommentForm`)
+                .getElementsByClassName('disableOnSubmit'))
+                    .forEach(
+                        function (el) {
+                            el.style.display = display;
+                        });
+            });
     }
     setupCommentsAdd(modelId) {
         Logger.debug('setup comments add ', modelId);
         var self = this;
-        document.getElementById(modelId + '_closeCommentBtn').addEventListener('click', function (event) {
-            event.preventDefault();
-            SyntaxHighlighter.hideEditForm(modelId);
-            self.resetCommentFormErrors(modelId);
-        });
-        document.getElementById(modelId + '_addCommentBtn').addEventListener('click', function (event) {
-            event.preventDefault();
-            var self2 = this;
-            self2.querySelector('#btnCaption').text = PasterI18n.text.notify.transmitMessage;
-            self2.disabled = true;
-            self.resetCommentFormErrors(modelId);
-            self.toggleOnSubmit(modelId, 'none');
-            self2.querySelector('#btnIcon').style.display = '';
-            self.onSaveComment(modelId, function (errorMessage) {
-                self.showCommentFormError(modelId, errorMessage);
-                self2.disabled = false;
-                self2.querySelector('#btnIcon').style.display = 'none';
-                self.toggleOnSubmit(modelId, '');
+        document.getElementById(`${modelId}_closeCommentBtn`)
+            .addEventListener('click', function (event) {
+                event.preventDefault();
+                SyntaxHighlighter.hideEditForm(modelId);
+                self.resetCommentFormErrors(modelId);
             });
+        document.getElementById(`${modelId}_addCommentBtn`)
+            .addEventListener('click', function (event) {
+                event.preventDefault();
+                var self2 = this;
+                self2.querySelector('#btnCaption').text = PasterI18n.text.notify.transmitMessage;
+                self2.disabled = true;
+                self.resetCommentFormErrors(modelId);
+                self.toggleOnSubmit(modelId, 'none');
+                self2.querySelector('#btnIcon').style.display = '';
+                self.onSaveComment(modelId, function (errorMessage) {
+                    self.showCommentFormError(modelId, errorMessage);
+                    self2.disabled = false;
+                    self2.querySelector('#btnIcon').style.display = 'none';
+                    self.toggleOnSubmit(modelId, '');
+                });
         });
     }
     setupLazy(pageUrl, userPageUrl, maxRequests, modelId, idSet) {
@@ -189,9 +182,9 @@ class PasterView {
             beforeLoad: function (page) {
                 document.getElementById('pageLoadSpinner').style.display = '';
             }, afterAppend: function (block, page) {
-                const ptext = document.getElementById(page + '_pasteText');
+                const ptext = document.getElementById(`${page}_pasteText`);
                 SyntaxHighlighter.highlight(page, {}, ptext, false, false);
-                document.getElementById(page + '_addCommentBtn')
+                document.getElementById(`${page}_addCommentBtn`)
                     .addEventListener('click', function () {
                         this.getElementById('btnCaption').set('text',
                             PasterI18n.text.notify.transmitMessage).disabled = true;
@@ -199,14 +192,16 @@ class PasterView {
                         self.onSaveComment(page);
                     });
                 try {
-                    history.pushState({ id: page }, "Page " + page, userPageUrl + "/" + page);
+                    history.pushState({ id: page },
+                            `Page ${page}`,
+                            `${userPageUrl}/${page}`);
                 } catch (e) { }
                 pasterApp.bindDeleteDlg(block);
                 self.setupDraw(page);
                 self.showAll(page);
                 const elSpin = document.getElementById('pageLoadSpinner');
                 elSpin.style.display = 'none';
-                const elPt = document.getElementById(page + '_pasteText');
+                const elPt = document.getElementById(`${page}_pasteText`);
                 elPt.parentNode.insertBefore(elSpin, elPt);
             }
         });
@@ -219,9 +214,9 @@ class PasterView {
     showAll(modelId) {
         Logger.debug('called showAll, modelId', modelId);
         fastdom.mutate(() => {
-            document.getElementById(modelId + "_drawBlock").style.display = "none";
-            const sizes = this.getTextSizes(document.getElementById(modelId + "_pasteText"));
-            const sketch = document.getElementById(modelId + "_sketch_ro");
+            document.getElementById(`${modelId}_drawBlock`).style.display = "none";
+            const sizes = this.getTextSizes(document.getElementById(`${modelId}_pasteText`));
+            const sketch = document.getElementById(`${modelId}_sketch_ro`);
             sketch.width = sizes[1];
             sketch.height = sizes[0];
             document.getElementById(modelId + "_all").style.display = '';
@@ -238,14 +233,15 @@ class PasterView {
                 console.log('to clipboard:', text)
                 self.copyToClipboard(text)
             });
-        SyntaxHighlighter.highlight(modelId, {}, document.getElementById(modelId + '_pasteText'), true, allowEdit);
-        document.getElementById(modelId + '_btnShowAll')
+        SyntaxHighlighter.highlight(modelId, {},
+        document.getElementById(`${modelId}_pasteText`), true, allowEdit);
+        document.getElementById(`${modelId}_btnShowAll`)
             .addEventListener("click", function (event) {
                 event.preventDefault();
                 self.toggleControls(this.getAttribute('id'));
                 self.showAll(modelId);
             });
-        document.getElementById(modelId + '_btnShowComments')
+        document.getElementById(`${modelId}_btnShowComments`)
             .addEventListener("click", function (event) {
                 event.preventDefault();
                 self.toggleControls(this.getAttribute('id'));
@@ -274,13 +270,14 @@ class PasterView {
     }
     showComments(modelId) {
         Logger.debug('show only comments');
-        document.getElementById(modelId + "_drawBlock").style.display = 'none';
-        document.getElementById(modelId + "_all").style.display = 'none';
+        document.getElementById(`${modelId}_drawBlock`).style.display = 'none';
+        document.getElementById(`${modelId}_all`).style.display = 'none';
     }
     showDrawArea(modelId, drawReviewData) {
-        const sizes = this.getTextSizes(document.getElementById(modelId + "_pasteBodyContent"));
+        const sizes = this.getTextSizes(document
+                .getElementById(`${modelId}_pasteBodyContent`));
         Logger.debug('show draw area, sizes: ', sizes);
-        const area = document.getElementById(modelId + "_drawArea"),
+        const area = document.getElementById(`${modelId}_drawArea`),
             sketch = document.getElementsByClassName("sketch")[0];
         area.style.height = sizes[0];
         area.style.width = sizes[1];
@@ -292,12 +289,17 @@ class PasterView {
             const img = new Image();
             img.src = drawReviewData;
             img.onload = function () {
-                ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, sizes[1], sizes[0]);
+                ctx.drawImage(img, 0, 0,
+                        img.width,
+                        img.height,
+                        0, 0,
+                        sizes[1],
+                        sizes[0]);
             };
         }
-        document.getElementById(modelId + "_drawBlock").style.display = '';
-        document.getElementById(modelId + "_all").style.display = 'none';
-        this.sketchObj.start()
+        document.getElementById(`${modelId}_drawBlock`).style.display = '';
+        document.getElementById(`${modelId}_all`).style.display = 'none';
+        this.sketchObj.start();
     }
     /**
      * Handles additional fields on comment save
@@ -322,31 +324,32 @@ class PasterView {
             .replace(/\t/g, '    ')
             .replace(/\u2424/g, '\n');
         Logger.debug('formatted text: ', ptext);
-        const commentArea = document.getElementById('commentText-' + modelId);
+        const commentArea = document.getElementById(`commentText-${modelId}`);
         commentArea.innerHTML = ptext;
-        const thumbImg = document.getElementById(modelId + '_thumbImgComment');
-        pasterApp.takeScreenshot(document.getElementById(modelId + '_pasteBodyContent'), function (img) {
+        const thumbImg = document.getElementById(`${modelId}_thumbImgComment`);
+        pasterApp.takeScreenshot(
+            document.getElementById(`${modelId}_pasteBodyContent`), function (img) {
             thumbImg.value = img.src;
-            document.getElementById(modelId + "_addCommentForm").submit();
+            document.getElementById(`${modelId}_addCommentForm`).submit();
         });
     }
     onSaveReviewDraw(modelId) {
         setTimeout(function () {
         Logger.debug('saving review..');
-        const reviewImg = document.getElementById(modelId + '_reviewDrawImg');
+        const reviewImg = document.getElementById(`${modelId}_reviewDrawImg`);
         const sketch = document.getElementsByClassName("sketch")[0];
-        const imgData = sketch.toDataURL("image/png");;
+        const imgData = sketch.toDataURL("image/png");
         reviewImg.value = imgData;
-        const thumbImg = document.getElementById(modelId + '_thumbImg');
-        document.getElementById(modelId + "_all").style.display = '';
-        document.getElementById(modelId + "_drawBlock").style.display = 'none';
-        const sketchRo = document.getElementById(modelId + "_sketch_ro");
-        sketchRo.style['background-image'] = 'url(' + imgData + ')';
+        const thumbImg = document.getElementById(`${modelId}_thumbImg`);
+        document.getElementById(`${modelId}_all`).style.display = '';
+        document.getElementById(`${modelId}_drawBlock`).style.display = 'none';
+        const sketchRo = document.getElementById(`${modelId}_sketch_ro`);
+        sketchRo.style['background-image'] = `url(${imgData})`;
         pasterApp.takeScreenshot(
-            document.getElementById(modelId + '_centerPanel'), function (img) {
+            document.getElementById(`${modelId}_centerPanel`), function (img) {
                 thumbImg.value = img.src;
                 Logger.debug('screenshot taken ', thumbImg.value)
-                document.getElementById(modelId + "_saveReviewDraw").submit();
+                document.getElementById(`${modelId}_saveReviewDraw`).submit();
             });
         }, 1);
     }
@@ -360,7 +363,7 @@ class PasterView {
             if (!document.execCommand('copy')) {
                 throw 'Not allowed.';
             } else {
-                pasterApp.showNotify(text.length + ' symbols copied to clipboard.');
+                pasterApp.showNotify(`${text.length} symbols copied to clipboard.`);
             }
         } catch (e) {
             copyElement.remove();
@@ -371,5 +374,4 @@ class PasterView {
             }
         }
     }
-
 }

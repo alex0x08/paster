@@ -1,10 +1,8 @@
 <%@ include file="/WEB-INF/pages/common/taglibs.jsp"%>
 
 <%--
-
         Template for error pages
-        
---%>    
+--%>
 <!DOCTYPE html>
     <html lang="en">
         <head>

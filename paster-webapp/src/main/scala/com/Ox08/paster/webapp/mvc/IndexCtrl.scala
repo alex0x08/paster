@@ -45,13 +45,17 @@ class IndexCtrl extends AbstractCtrl {
    * @return
    */
   @RequestMapping(Array("/error/{errorCode:[0-9_]+}"))
-  def error(response: HttpServletResponse,
-            @PathVariable("errorCode") errorCode: Int): String = errorCode match {
-    case 403 | 404 | 500 =>
-      response.setStatus(errorCode)
-      s"/error/$errorCode"
-    case _ =>
-      "/error/500"
+  def error(model:Model,response: HttpServletResponse,
+            @PathVariable("errorCode") errorCode: Int): String = {
+    model.addAttribute("appId", appId)
+    model.addAttribute("systemInfo",systemInfo)
+    errorCode match {
+      case 403 | 404 | 500 =>
+        response.setStatus(errorCode)
+        s"/error/$errorCode"
+      case _ =>
+        "/error/500"
+      }
   }
   /**
    * Login page

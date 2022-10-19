@@ -16,7 +16,6 @@
 <%--
 <div class="row">
     <div class="column grid-10">
-
             <span style="font-size: 12px;display:block;padding-bottom: 10px;" >
             <fmt:message key="search.query.samples"/>:
          "<a href="<c:url value='/main/paste/list/search?query=id:1'/>">id:1</a>",

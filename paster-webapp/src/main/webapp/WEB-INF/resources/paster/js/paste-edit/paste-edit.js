@@ -1,19 +1,6 @@
-/* 
- * Copyright 2016 Ubersoft, LLC.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
+/*
+      Javascript class for paste edit page
+*/
 class PasterEdit {
 
     MAX_TITLE_LENGTH = 100;
@@ -54,7 +41,7 @@ class PasterEdit {
             separator: ', ', //The text that separates the number of words and the number of characters
             liveCount: false, //Whether or not to use the event trigger, set false if you'd like to call the getCount function separately
             eventTrigger: 'keyup'			//The event that triggers the count update
-        })
+        });
 
         var counter = this.counter;
         this.editor = ace.edit("editor");
@@ -68,11 +55,8 @@ class PasterEdit {
         editor.getSession().setMode("ace/mode/" + self.getEditorType(codeType));
 
         const textarea = document.getElementById("ptext");
-
         editor.getSession().setValue(textarea.value);
-
         counter.getCount(textarea.value);
-
         const elSelectFileBtn = document.getElementById('select-file-btn');
 
         elSelectFileBtn.addEventListener('change', function (e) {
@@ -111,9 +95,10 @@ class PasterEdit {
         document.getElementById('cleanTitleBtn').addEventListener('click', function (event) {
             self.clearTitle();    
         });
-        document.getElementById('fontsize').addEventListener('change', function (event) {
+
+        /*document.getElementById('fontsize').addEventListener('change', function (event) {
             editor.setFontSize(this.querySelector('option:checked').getAttribute("value"));
-        });
+        });*/
         document.getElementById('ptype').addEventListener('change', function (event) {
             editor.getSession()
                 .setMode("ace/mode/" + self.getEditorType(this.querySelector('option:checked').getAttribute("value")));
@@ -138,6 +123,7 @@ class PasterEdit {
     clearTitle() {
         document.getElementById('pname').value = '';
     }
+
     readLocalFile(e) {
         const file = e.target.files[0];
         if (!file) {
@@ -152,6 +138,7 @@ class PasterEdit {
         const freader = new FileReader();
         freader.onload = function (e) {
             self.editor.getSession().setValue(e.target.result);
+            document.getElementById('pname').value = file.name;
         };
         freader.readAsText(file);
     }

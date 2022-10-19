@@ -2,14 +2,11 @@
 {
 	// CommonJS
 	typeof(require) != 'undefined' ? SyntaxHighlighter = require('shCore').SyntaxHighlighter : null;
-
 	/**
 	 * This is stripped & merged collection of syntax highlighing scripts.
 	 * 
 	 * 
 	 */
-
-
         function BrushBash()
 	{
 		var keywords =	'if fi then elif else for do done until while break continue case function return in eq ne ge le';
@@ -28,7 +25,6 @@
 						'uname unexpand uniq units unset unshar useradd usermod users uuencode uudecode v vdir ' +
 						'vi watch wc whereis which who whoami Wget xargs yes'
 						;
-
 		this.regexList = [
 			{ regex: /^#!.*$/gm,											css: 'preprocessor bold' },
 			{ regex: /\/[\w-\/]+/gm,										css: 'plain' },
@@ -39,12 +35,9 @@
 			{ regex: new RegExp(this.getKeywords(commands), 'gm'),			css: 'functions' }		// commands
 			];
 	}
-
 	BrushBash.prototype	= new SyntaxHighlighter.Highlighter();
 	BrushBash.aliases	= ['bash', 'shell'];
-
 	SyntaxHighlighter.brushes.Bash = BrushBash;
-
         function BrushSharp()
 	{
 		var keywords =	'abstract as base bool break byte case catch char checked class const ' +
@@ -54,17 +47,14 @@
 						'override params private protected public readonly ref return sbyte sealed set ' +
 						'short sizeof stackalloc static string struct switch this throw true try ' +
 						'typeof uint ulong unchecked unsafe ushort using virtual void while';
-
 		function fixComments(match, regexInfo)
 		{
 			var css = (match[0].indexOf("///") == 0)
 				? 'color1'
 				: 'comments'
 				;
-			
 			return [new SyntaxHighlighter.Match(match[0], match.index, css)];
 		}
-
 		this.regexList = [
 			{ regex: SyntaxHighlighter.regexLib.singleLineCComments,	func : fixComments },		// one line comments
 			{ regex: SyntaxHighlighter.regexLib.multiLineCComments,		css: 'comments' },			// multiline comments
@@ -367,12 +357,10 @@
 			'sqrt srand stat study substr symlink syscall sysopen sysread sysseek ' + 
 			'system syswrite tell telldir time times tr truncate uc ucfirst umask ' + 
 			'undef unlink unpack unshift utime values vec wait waitpid warn write';
-    
 		var keywords =  
 			'bless caller continue dbmclose dbmopen die do dump else elsif eval exit ' +
 			'for foreach goto if import last local my next no our package redo ref ' + 
 			'require return sub tie tied unless untie until use wantarray while';
-    
 		this.regexList = [
 			{ regex: new RegExp('#[^!].*$', 'gm'),					css: 'comments' },
 			{ regex: new RegExp('^\\s*#!.*$', 'gm'),				css: 'preprocessor' }, // shebang
@@ -382,16 +370,11 @@
 			{ regex: new RegExp(this.getKeywords(funcs), 'gmi'),	css: 'functions' },
 			{ regex: new RegExp(this.getKeywords(keywords), 'gm'),	css: 'keyword' }
 		    ];
-
 		this.forHtmlScript(SyntaxHighlighter.regexLib.phpScriptTags);
 	}
-
 	BrushPerl.prototype	= new SyntaxHighlighter.Highlighter();
 	BrushPerl.aliases		= ['perl', 'Perl', 'pl'];
-
 	SyntaxHighlighter.brushes.Perl = BrushPerl;
-
-        
 	function BrushPhp()
 	{
 		var funcs	=	'abs acos acosh addcslashes addslashes ' +
@@ -428,15 +411,12 @@
 						'stripos stripslashes stristr strlen strnatcasecmp strnatcmp strncasecmp strncmp strpbrk '+
 						'strpos strptime strrchr strrev strripos strrpos strspn strstr strtok strtolower strtotime '+
 						'strtoupper strtr strval substr substr_compare';
-
 		var keywords =	'abstract and array as break case catch cfunction class clone const continue declare default die do ' +
 						'else elseif enddeclare endfor endforeach endif endswitch endwhile extends final for foreach ' +
 						'function include include_once global goto if implements interface instanceof namespace new ' +
 						'old_function or private protected public return require require_once static switch ' +
 						'throw try use var while xor ';
-		
 		var constants	= '__FILE__ __LINE__ __METHOD__ __FUNCTION__ __CLASS__';
-
 		this.regexList = [
 			{ regex: SyntaxHighlighter.regexLib.singleLineCComments,	css: 'comments' },			// one line comments
 			{ regex: SyntaxHighlighter.regexLib.multiLineCComments,		css: 'comments' },			// multiline comments
@@ -447,30 +427,21 @@
 			{ regex: new RegExp(this.getKeywords(constants), 'gmi'),	css: 'constants' },			// constants
 			{ regex: new RegExp(this.getKeywords(keywords), 'gm'),		css: 'keyword' }			// keyword
 			];
-
 		this.forHtmlScript(SyntaxHighlighter.regexLib.phpScriptTags);
 	};
-
 	BrushPhp.prototype	= new SyntaxHighlighter.Highlighter();
 	BrushPhp.aliases	= ['php'];
-
 	SyntaxHighlighter.brushes.Php = BrushPhp;
-
         function BrushPlain()
 	{
    	};
-
 	BrushPlain.prototype	= new SyntaxHighlighter.Highlighter();
 	BrushPlain.aliases	= ['text', 'plain'];
-
 	SyntaxHighlighter.brushes.Plain = BrushPlain;
-
-
         	function BrushPowerShell()
 	{
 		// Contributes by B.v.Zanten, Getronics
 		// http://confluence.atlassian.com/display/CONFEXT/New+Code+Macro
-
 		var keywords = 'Add-Content Add-History Add-Member Add-PSSnapin Clear(-Content)? Clear-Item ' +
 					'Clear-ItemProperty Clear-Variable Compare-Object ConvertFrom-SecureString Convert-Path ' +
 					'ConvertTo-Html ConvertTo-SecureString Copy(-Item)? Copy-ItemProperty Export-Alias ' +
@@ -499,7 +470,6 @@
 					'spps spsv sv tee cat cd cp h history kill lp ls ' +
 					'mount mv popd ps pushd pwd r rm rmdir echo cls chdir del dir ' +
 					'erase rd ren type % \\?';
-
 		this.regexList = [
 			{ regex: /#.*$/gm,										css: 'comments' },  // one line comments
 			{ regex: /\$[a-zA-Z0-9]+\b/g,							css: 'value'   },   // variables $Computer1
@@ -510,22 +480,15 @@
 			{ regex: new RegExp(this.getKeywords(alias), 'gmi'),	css: 'keyword' }
 		];
 	};
-
 	BrushPowerShell.prototype	= new SyntaxHighlighter.Highlighter();
 	BrushPowerShell.aliases	= ['powershell', 'ps'];
-
 	SyntaxHighlighter.brushes.PowerShell = BrushPowerShell;
-
-
-        
 	function BrushPython()
 	{
 		// Contributed by Gheorghe Milas and Ahmad Sherif
-	
 		var keywords =  'and assert break class continue def del elif else ' +
 						'except exec finally for from global if import in is ' +
 						'lambda not or pass print raise return try yield while';
-
 		var funcs = '__import__ abs all any apply basestring bin bool buffer callable ' +
 					'chr classmethod cmp coerce compile complex delattr dict dir ' +
 					'divmod enumerate eval execfile file filter float format frozenset ' +
@@ -534,9 +497,7 @@
 					'object oct open ord pow print property range raw_input reduce ' +
 					'reload repr reversed round set setattr slice sorted staticmethod ' +
 					'str sum super tuple type type unichr unicode vars xrange zip';
-
 		var special =  'None True False self cls class_';
-
 		this.regexList = [
 				{ regex: SyntaxHighlighter.regexLib.singleLinePerlComments, css: 'comments' },
 				{ regex: /^\s*@\w+/gm, 										css: 'decorator' },
@@ -549,26 +510,19 @@
 				{ regex: new RegExp(this.getKeywords(keywords), 'gm'), 		css: 'keyword' },
 				{ regex: new RegExp(this.getKeywords(special), 'gm'), 		css: 'color1' }
 				];
-			
 		this.forHtmlScript(SyntaxHighlighter.regexLib.aspScriptTags);
 	};
-
 	BrushPython.prototype	= new SyntaxHighlighter.Highlighter();
 	BrushPython.aliases	= ['py', 'python'];
-
-
         function BrushRuby()
 	{
 		// Contributed by Erik Peterson.
-	
 		var keywords =	'alias and BEGIN begin break case class def define_method defined do each else elsif ' +
 						'END end ensure false for if in module new next nil not or raise redo rescue retry return ' +
 						'self super then throw true undef unless until when while yield';
-
 		var builtins =	'Array Bignum Binding Class Continuation Dir Exception FalseClass File::Stat File Fixnum Fload ' +
 						'Hash Integer IO MatchData Method Module NilClass Numeric Object Proc Range Regexp String Struct::TMS Symbol ' +
 						'ThreadGroup Thread Time TrueClass';
-
 		this.regexList = [
 			{ regex: SyntaxHighlighter.regexLib.singleLinePerlComments,	css: 'comments' },		// one line comments
 			{ regex: SyntaxHighlighter.regexLib.doubleQuotedString,		css: 'string' },		// double quoted strings
@@ -579,28 +533,21 @@
 			{ regex: new RegExp(this.getKeywords(keywords), 'gm'),		css: 'keyword' },		// keywords
 			{ regex: new RegExp(this.getKeywords(builtins), 'gm'),		css: 'color1' }			// builtins
 			];
-
 		this.forHtmlScript(SyntaxHighlighter.regexLib.aspScriptTags);
 	};
-
 	BrushRuby.prototype	= new SyntaxHighlighter.Highlighter();
 	BrushRuby.aliases	= ['ruby', 'rails', 'ror', 'rb'];
-
 	SyntaxHighlighter.brushes.Ruby = BrushRuby;
-
-
         function BrushSass()
 	{
 		function getKeywordsCSS(str)
 		{
 			return '\\b([a-z_]|)' + str.replace(/ /g, '(?=:)\\b|\\b([a-z_\\*]|\\*|)') + '(?=:)\\b';
 		};
-	
 		function getValuesCSS(str)
 		{
 			return '\\b' + str.replace(/ /g, '(?!-)(?!:)\\b|\\b()') + '\:\\b';
 		};
-
 		var keywords =	'ascent azimuth background-attachment background-color background-image background-position ' +
 						'background-repeat background baseline bbox border-collapse border-color border-spacing border-style border-top ' +
 						'border-right border-bottom border-left border-top-color border-right-color border-bottom-color border-left-color ' +
@@ -630,14 +577,10 @@
 						'table-caption table-cell table-column table-column-group table-footer-group table-header-group table-row table-row-group teal '+
 						'text-bottom text-top thick thin top transparent tty tv ultra-condensed ultra-expanded underline upper-alpha uppercase upper-latin '+
 						'upper-roman url visible wait white wider w-resize x-fast x-high x-large x-loud x-low x-slow x-small x-soft xx-large xx-small yellow';
-		
 		var fonts =		'[mM]onospace [tT]ahoma [vV]erdana [aA]rial [hH]elvetica [sS]ans-serif [sS]erif [cC]ourier mono sans serif';
-		
 		var statements		= '!important !default';
 		var preprocessor	= '@import @extend @debug @warn @if @for @while @mixin @include';
-		
 		var r = SyntaxHighlighter.regexLib;
-		
 		this.regexList = [
 			{ regex: r.multiLineCComments,								css: 'comments' },		// multiline comments
 			{ regex: r.singleLineCComments,								css: 'comments' },		// singleline comments
@@ -653,23 +596,16 @@
 			{ regex: new RegExp(this.getKeywords(fonts), 'g'),			css: 'color1' }			// fonts
 			];
 	};
-
 	BrushSass.prototype	= new SyntaxHighlighter.Highlighter();
 	BrushSass.aliases	= ['sass', 'scss'];
-
 	SyntaxHighlighter.brushes.Sass = BrushSass;
-
-
         function BrushScala()
 	{
 		// Contributed by Yegor Jbanov and David Bernard.
-	
 		var keywords =	'val sealed case def true trait implicit forSome import match object null finally super ' +
 						'override try lazy for var catch throw type extends class while with new final yield abstract ' +
 						'else do if return protected private this package false';
-
 		var keyops =	'[_:=><%#@]+';
-
 		this.regexList = [
 			{ regex: SyntaxHighlighter.regexLib.singleLineCComments,			css: 'comments' },	// one line comments
 			{ regex: SyntaxHighlighter.regexLib.multiLineCComments,				css: 'comments' },	// multiline comments
@@ -681,19 +617,14 @@
 			{ regex: new RegExp(keyops, 'gm'),									css: 'keyword' }	// scala keyword
 			];
 	}
-
 	BrushScala.prototype	= new SyntaxHighlighter.Highlighter();
 	BrushScala.aliases	= ['scala'];
-
 	SyntaxHighlighter.brushes.Scala = BrushScala;
-
-
         function BrushSQL()
 	{
 		var funcs	=	'abs avg case cast coalesce convert count current_timestamp ' +
 						'current_user day isnull left lower month nullif replace right ' +
 						'session_user space substring sum system_user upper user year';
-
 		var keywords =	'absolute action add after alter as asc at authorization begin bigint ' +
 						'binary bit by cascade char character check checkpoint close collate ' +
 						'column commit committed connect connection constraint contains continue ' +
@@ -711,9 +642,7 @@
 						'statistics table temp temporary then time timestamp to top transaction ' +
 						'translation trigger true truncate uncommitted union unique update values ' +
 						'varchar varying view when where with work';
-
 		var operators =	'all and any between cross in join like not null or outer some';
-
 		this.regexList = [
 			{ regex: /--(.*)$/gm,												css: 'comments' },			// one line and multiline comments
 			{ regex: SyntaxHighlighter.regexLib.multiLineDoubleQuotedString,	css: 'string' },			// double quoted strings
@@ -723,13 +652,9 @@
 			{ regex: new RegExp(this.getKeywords(keywords), 'gmi'),				css: 'keyword' }			// keyword
 			];
 	};
-
 	BrushSQL.prototype	= new SyntaxHighlighter.Highlighter();
 	BrushSQL.aliases	= ['sql'];
-
 	SyntaxHighlighter.brushes.Sql = BrushSQL;
-
-
         	function BrushVb()
 	{
 		var keywords =	'AddHandler AddressOf AndAlso Alias And Ansi As Assembly Auto ' +
@@ -746,23 +671,17 @@
 						'Return Select Set Shadows Shared Short Single Static Step Stop String ' +
 						'Structure Sub SyncLock Then Throw To True Try TypeOf Unicode Until ' +
 						'Variant When While With WithEvents WriteOnly Xor';
-
 		this.regexList = [
 			{ regex: /'.*$/gm,										css: 'comments' },			// one line comments
 			{ regex: SyntaxHighlighter.regexLib.doubleQuotedString,	css: 'string' },			// strings
 			{ regex: /^\s*#.*$/gm,									css: 'preprocessor' },		// preprocessor tags like #region and #endregion
 			{ regex: new RegExp(this.getKeywords(keywords), 'gm'),	css: 'keyword' }			// vb keyword
 			];
-
 		this.forHtmlScript(SyntaxHighlighter.regexLib.aspScriptTags);
 	};
-
 	BrushVb.prototype	= new SyntaxHighlighter.Highlighter();
 	BrushVb.aliases	= ['vb', 'vbnet'];
-
 	SyntaxHighlighter.brushes.Vb = BrushVb;
-
-
         function BrushXml()
 	{
 		function process(match, regexInfo)
@@ -770,9 +689,7 @@
 			var constructor = SyntaxHighlighter.Match,
 				code = match[0],
 				tag = new XRegExp('(&lt;|<)[\\s\\/\\?]*(?<name>[:\\w-\\.]+)', 'xg').exec(code),
-				result = []
-				;
-		
+				result = [];
 			if (match.attributes != null) 
 			{
 				var attributes,
@@ -780,33 +697,25 @@
 										'\\s*=\\s*' +
 										'(?<value> ".*?"|\'.*?\'|\\w+)',
 										'xg');
-
 				while ((attributes = regex.exec(code)) != null) 
 				{
 					result.push(new constructor(attributes.name, match.index + attributes.index, 'color1'));
 					result.push(new constructor(attributes.value, match.index + attributes.index + attributes[0].indexOf(attributes.value), 'string'));
 				}
 			}
-
 			if (tag != null)
 				result.push(
 					new constructor(tag.name, match.index + tag[0].indexOf(tag.name), 'keyword')
 				);
-
 			return result;
 		}
-	
 		this.regexList = [
 			{ regex: new XRegExp('(\\&lt;|<)\\!\\[[\\w\\s]*?\\[(.|\\s)*?\\]\\](\\&gt;|>)', 'gm'),			css: 'color2' },	// <![ ... [ ... ]]>
 			{ regex: SyntaxHighlighter.regexLib.xmlComments,												css: 'comments' },	// <!-- ... -->
 			{ regex: new XRegExp('(&lt;|<)[\\s\\/\\?]*(\\w+)(?<attributes>.*?)[\\s\\/\\?]*(&gt;|>)', 'sg'), func: process }
 		];
 	};
-
 	BrushXml.prototype	= new SyntaxHighlighter.Highlighter();
 	BrushXml.aliases	= ['xml', 'xhtml', 'xslt', 'html'];
-
 	SyntaxHighlighter.brushes.Xml = BrushXml;
-
-
 })();
