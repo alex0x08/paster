@@ -1,7 +1,6 @@
 <%@ include file="/WEB-INF/pages/common/taglibs.jsp"%>
 <%-- 
     This block will be injected at the bottom of paste edit page
-
 --%>
 <script src="<c:url value='/main/resources/${appId}/local_components/ace/src-min-noconflict/ace.js'/>" type="text/javascript"
     charset="utf-8"></script>

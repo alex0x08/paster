@@ -95,9 +95,10 @@ class PasterEdit {
         document.getElementById('cleanTitleBtn').addEventListener('click', function (event) {
             self.clearTitle();    
         });
-        document.getElementById('fontsize').addEventListener('change', function (event) {
+
+        /*document.getElementById('fontsize').addEventListener('change', function (event) {
             editor.setFontSize(this.querySelector('option:checked').getAttribute("value"));
-        });
+        });*/
         document.getElementById('ptype').addEventListener('change', function (event) {
             editor.getSession()
                 .setMode("ace/mode/" + self.getEditorType(this.querySelector('option:checked').getAttribute("value")));
@@ -122,6 +123,7 @@ class PasterEdit {
     clearTitle() {
         document.getElementById('pname').value = '';
     }
+
     readLocalFile(e) {
         const file = e.target.files[0];
         if (!file) {

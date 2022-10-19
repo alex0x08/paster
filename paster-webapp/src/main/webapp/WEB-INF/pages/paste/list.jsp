@@ -6,7 +6,8 @@
  --%>
 <div class="row justify-content-between">
     <div class="col-md-8">
-        <a  href="<c:url value='/main/paste/list/${sourceType}'/>" title="<fmt:message key='button.refresh'/>">
+        <a  href="<c:url value='/main/paste/list/${sourceType}'/>"
+                title="<fmt:message key='button.refresh'/>">
             <span class="i" style="font-size: 1.5em;">P</span>
         </a>
         <c:forEach var="source" items="${availableSourceTypes}" varStatus="loopStatus">
@@ -29,14 +30,18 @@
             </c:forEach>
     </div>
     <div class="col-md-2 hidden-sm hidden-xs">        
-        <a class="img-map img-xml" href="<c:url value='/main/paste/list/body.xml'/>" title="xml" alt="xml" target="_blank">
+        <a class="img-map img-xml" href="<c:url value='/main/paste/list/body.xml'/>"
+                title="xml" alt="xml" target="_blank">
         </a> |
-        <a class="img-map img-json" href="<c:url value='/main/paste/list/body.json'/>" title="json" alt="json" target="_blank">
+        <a class="img-map img-json" href="<c:url value='/main/paste/list/body.json'/>"
+                title="json" alt="json" target="_blank">
         </a> |
-        <a class="img-map img-rss" href="<c:url value='/main/paste/list.rss'/>" title="rss" alt="rss" target="_blank">
+        <a class="img-map img-rss" href="<c:url value='/main/paste/list.rss'/>"
+            title="rss" alt="rss" target="_blank">
         </a>
         |
-        <a class="img-map img-atom" href="<c:url value='/main/paste/list.atom'/>" title="atom" alt="atom" target="_blank">
+        <a class="img-map img-atom" href="<c:url value='/main/paste/list.atom'/>"
+            title="atom" alt="atom" target="_blank">
         </a> 
     </div>
     <div class="col-auto">
@@ -135,7 +140,8 @@
                                             <fmt:message key="paste.edit.word.counter.charText"/>
                                         </c:if>
                                         )
-                                        ,<kc:prettyTime date="${paste.lastModifiedDt}" locale="${pageContext.response.locale}"/>
+                                        ,<kc:prettyTime date="${paste.lastModifiedDt}"
+                                        locale="${pageContext.response.locale}"/>
                                     </small>                             
                                 </div>
                             </div>

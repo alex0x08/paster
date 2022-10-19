@@ -1,8 +1,6 @@
 <%@ include file="/WEB-INF/pages/common/taglibs.jsp"%>
 <%--
-
         Main template
-        
 --%>
 <!DOCTYPE html>
 <html lang="en">
@@ -23,7 +21,10 @@
                     <span class="i">/</span>
                     <fmt:message key="site.title" />
                 </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
+                <button class="navbar-toggler"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#navbarCollapse"
                     aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -31,14 +32,17 @@
                     <sec:authorize access="hasRole('ROLE_ADMIN')">    
                         <ul class="nav navbar-nav">
                             <li class="nav-item dropdown">
-                                <a href="#" id="dropdown01" class="nav-link dropdown-toggle" role="button"
+                                <a href="#" id="dropdown01"
+                                    class="nav-link dropdown-toggle"
+                                    role="button"
                                     data-bs-toggle="dropdown" aria-expanded="false">
                                     <fmt:message key="site.menu.admin" />
                                     <span class="caret"></span>
                                 </a>    
                                 <ul class="dropdown-menu" aria-labelledby="dropdown01">    
                                     <li>
-                                        <a class="dropdown-item" href="<c:url value='/main/admin/settings/dbconsole'/>">
+                                        <c:url var='dbConsoleUrl' value='/main/admin/settings/dbconsole'/>
+                                        <a class="dropdown-item" href="${dbConsoleUrl}">
                                             <span class="i">B</span>
                                             <fmt:message key="settings.dbconsole.title" />
                                         </a>    
@@ -49,15 +53,19 @@
                     </sec:authorize>
                     <ul class="nav navbar-nav me-auto">
                         <li class="nav-item dropdown">
-                            <a href="#" id="main-menu-dropdown" role="button" class="nav-link dropdown-toggle"
+                            <a href="#"
+                                id="main-menu-dropdown"
+                                role="button"
+                                class="nav-link dropdown-toggle"
                                 data-bs-toggle="dropdown" aria-expanded="false">
                                 <fmt:message key="button.create" />
                                 <span class="caret"></span>
                             </a>  
                             <ul class="dropdown-menu" role="menu" id="pasteNewMenu">
                                 <li>
+                                    <c:url var='createNewPasteUrl' value='/main/paste/new'/>
                                     <a role="menuitem" id="createNewBtn" class="dropdown-item mainLinkLine"
-                                        href="<c:url value='/main/paste/new'></c:url>"
+                                        href="${createNewPasteUrl}"
                                         title="<fmt:message key='paste.create.new' />">
                                         <fmt:message key='paste.create.new' />
                                     </a>
@@ -68,19 +76,20 @@
                     <tiles:insertAttribute name="search-top" />    
                     <p class="navbar-text hidden-sm hidden-xs" style="margin-top:5px;">
                         <c:forEach var="stat" items="${stats.list}">
-                            <a class="i ${stat.priority}" style="font-size:2em;" title="<fmt:message key="
-                                ${stat.priority}" />. Click to search with same priority."
-                            href="
-                            <c:url value='/main/paste/list/search?query=priority:${stat.priority}' />">/</a>
+                            <c:url var='searchByPriorityUrl' value='/main/paste/list/search?query=priority:${stat.priority}' />
+                            <a class="i ${stat.priority}"
+                                style="font-size:2em;"
+                                title="<fmt:message key="${stat.priority}" />. Click to search with same priority."
+                                href="${searchByPriorityUrl}">/</a>
                             <span style="font-size: small;">x
                                 <c:out value="${stat.counter}" />&nbsp;</span>
-    
                         </c:forEach>
                     </p>    
                     <sec:authorize access="!isAuthenticated()">   
                         <ul class="nav navbar-nav">    
                             <li class="nav-item dropdown">
-                                <a href="#" role="button" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                                <a href="#" role="button"
+                                    class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                                     <c:out value="${pageContext.response.locale.language}" />
                                     <span class="caret"></span>
                                 </a>        
@@ -91,7 +100,9 @@
                                                 <c:param name="locale" value="${locale.language}_${locale.country}" />
                                                 <c:forEach items="${param}" var="currentParam">
                                                     <c:if test="${currentParam.key ne 'locale'}">
-                                                        <c:param name="${currentParam.key}" value="${currentParam.value}" />
+                                                        <c:param
+                                                            name="${currentParam.key}"
+                                                            value="${currentParam.value}" />
                                                     </c:if>
                                                 </c:forEach>        
                                             </c:url>        

@@ -16,14 +16,10 @@
         SyntaxHighlighter.config.tagName = "pre";
      
         <%--
-
                 EpicEditor(for markdown) global options
-
         --%>
 
-
         <c:url var="epicEditorUrl" value="/main/resources/${appId}/local_components/epiceditor" />
-
 
     var globalEpicEditorOpts = {
         container: 'SET-IN-EDITOR',
@@ -60,14 +56,11 @@
         }
     };
 
-
-
         <%--
 
         Marked(markdown render) global options
 
         --%>
-
 
         marked.setOptions({
             renderer: new marked.Renderer(),

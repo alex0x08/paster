@@ -11,5 +11,4 @@
                 ${pageItems.pageCount-(pageItems.page+1)},
                 ${pageItems.page} + 2);
     });
-
 </script>

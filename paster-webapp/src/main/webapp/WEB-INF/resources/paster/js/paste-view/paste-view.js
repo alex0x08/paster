@@ -10,7 +10,7 @@ class PasterView {
         fastdom.mutate(() => {
             colors_array.forEach(c => {
                 const htmlBlock = "<a href='#" + modelId
-                    + "_sketch' class='$" + modelId + "_sketch_color btn btn-xs' data-color='" + c
+                    + "_sketch' class='" + modelId + "_sketch_color btn btn-xs' data-color='" + c
                     + "' style='border:1px solid black; background: " + c
                     + ";'>&nbsp;&nbsp;</a> ";
                 toolsEl.insertAdjacentHTML('beforeend', htmlBlock);

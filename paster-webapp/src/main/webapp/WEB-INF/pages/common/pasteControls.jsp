@@ -2,7 +2,6 @@
 <%--
 
     Renders paste's control buttons
-        
 --%>
 <tiles:importAttribute name="model" />
 <tiles:importAttribute name="mode" />
@@ -34,7 +33,8 @@
                 </tiles:insertDefinition>
                 <span style="font-size: 9px;">
                     <fmt:message key="${'code.type.'.concat(model.codeType)}"/>
-                    ,<kc:prettyTime date="${model.lastModifiedDt}" locale="${pageContext.response.locale}"/>
+                    ,<kc:prettyTime date="${model.lastModifiedDt}"
+                            locale="${pageContext.response.locale}"/>
                 </span>
                  <c:if test="${not empty model.integrationCode}">
                 (integrated with <c:out value="${model.integrationCode}"/>)
@@ -43,11 +43,16 @@
     </div>
     
     <div class="col-md-2">
-        <a class="img-map img-xml" href="<c:url value='/main/paste/${model.id}.xml'/>" target="${target}" title="View as XML">
+        <a class="img-map img-xml"
+                href="<c:url value='/main/paste/${model.id}.xml'/>"
+                target="${target}" title="View as XML">
         </a> |
-        <a class="img-map img-json" href="<c:url value='/main/paste/${model.id}.json'/>" target="${target}" title="View as JSON">
+        <a class="img-map img-json"
+                href="<c:url value='/main/paste/${model.id}.json'/>"
+                target="${target}" title="View as JSON">
         </a> |
-        <a href="<c:url value='/main/paste/${model.id}.txt'/>" target="${target}" title="View as plain text">
+        <a href="<c:url value='/main/paste/${model.id}.txt'/>"
+                target="${target}" title="View as plain text">
             <span style="font-size: larger;" class="i">k</span>
         </a>
     </div>
@@ -55,11 +60,13 @@
 <div  class="row">
     <div class="col-md-2">  
         <c:if test="${mode ne 'raw' and not empty prev}">
-            <a href="<c:url value='/${prev.id}'/>" target="${target}" title="<fmt:message key="button.prev"/>">&#8592;</a>
+            <a href="<c:url value='/${prev.id}'/>"
+                target="${target}" title="<fmt:message key="button.prev"/>">&#8592;</a>
         </c:if>       
         <span class="f-h4">${model.id}</span>
         <c:if test="${mode ne 'raw' and not empty next}">
-            <a href="<c:url value='/${next.id}'/>" target="${target}" title="<fmt:message key="button.next"/>">&#8594;</a>
+            <a href="<c:url value='/${next.id}'/>"
+                target="${target}" title="<fmt:message key="button.next"/>">&#8594;</a>
         </c:if>
     </div>
 </div>

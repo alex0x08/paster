@@ -212,45 +212,21 @@
                             </p>
                         </div>
                     </div>
-                    <div class="tab-pane fade" id="openRemoteFileTab" role="tabpanel"
-                        aria-labelledby="remote-file-tab-header">
-                        <div class="col-xs-4 col-sm-3 col-md-3 col-lg-2">
-                            <form:label path="codeType" cssClass="control-label" 
-                            title="Select syntax">
-                                Enter url
-                            </form:label>
-                            <p class="help-block">
-                                <a class="btn btn-xs" href="#">
-                                    <i class="fa fa-check-square-o"></i>Set as default</a>
-                            </p>
-                        </div>
-                    </div>
 
-                    <div class="tab-pane fade" id="colorTab" 
-                    role="tabpanel" aria-labelledby="color-tab-header">                        
-                        <div class="col-xs-4 col-sm-3 col-md-3 col-lg-2">
-                            <label for="fontsize">Font Size</label>
-                            <select id="fontsize" size="1">
-                                <option value="10px">10px</option>
-                                <option value="11px">11px</option>
-                                <option value="12px" selected="selected">12px</option>
-                                <option value="13px">13px</option>
-                                <option value="14px">14px</option>
-                                <option value="16px">16px</option>
-                                <option value="18px">18px</option>
-                                <option value="20px">20px</option>
-                                <option value="24px">24px</option>
-                            </select>
-                        </div>
-                    </div>
+
                 </div>
             </div>
             <div class="form-group">
                 <form:label path="text">
                     <fmt:message key="paste.text" />
                 </form:label>
-                <form:textarea path="text" cssErrorClass="error" cssClass="notice" cssStyle="display:none;" name="text"
-                    id="ptext" placeHolder="paste text" cols="120" rows="10" />
+                <form:textarea path="text"
+                            cssErrorClass="error"
+                            cssClass="notice"
+                            cssStyle="display:none;"
+                            name="text"
+                            id="ptext"
+                            placeHolder="paste text" cols="120" rows="10" />
                 <div id="editor" style="height: 50em;">
                 </div>
                 <form:errors path="text" cssClass="alert alert-danger" element="div" />

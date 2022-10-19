@@ -2,18 +2,14 @@
 
 <div class='row justify-content-md-center' >
     <div class='col-auto'>
-
-
-   <c:url var="stepUrl" value='/main/setup/db' />
-
+        <c:url var="stepUrl" value='/main/setup/db' />
    <form:form
         action="${stepUrl}"
         role="form"
         modelAttribute="updatedStep"
         method="POST">
-        <form:input id="origName" path="step.origName" cssStyle="display:none;" />
-         <form:errors path="" />
-
+            <form:input id="origName" path="step.origName" cssStyle="display:none;" />
+            <form:errors path="" />
       <fieldset class="row mb-3">
          <legend class="col-form-label">
             <fmt:message key='paster.setup.step.db.supportedDatabases'/>
@@ -43,13 +39,16 @@
             <label>
                 <fmt:message key='paster.setup.step.db.url' />
             </label>
-             <form:input cssClass="form-control" path="step.dbUrl" name="dbUrl" id="dbUrl"
-                                                placeholder="Enter database url"/>
+             <form:input
+                    cssClass="form-control"
+                    path="step.dbUrl"
+                    name="dbUrl"
+                    id="dbUrl"
+                    placeholder="Enter database url"/>
              <form:errors element="div" path="step.dbUrl" cssClass="alert alert-danger" />
         </div>
    </div>
    <div class="row mb-3">
-
         <div class="col-md-8">
             <label>
                 <fmt:message key='paster.setup.step.db.driver'/>
@@ -62,7 +61,6 @@
              <form:errors element="div" path="step.dbType" cssClass="alert alert-danger" />
         </div>
    </div>
-
    <div class="row mb-3">
         <div class="col-auto">
             <label>
@@ -94,33 +92,29 @@
                 </div>
         </div>
    </div>
-
     <div class="row mb-3">
            <div class="col-auto">
 
             <c:url var="checkUrl" value='/main/setup/checkConnection' />
 
-    <button type="submit" formaction="${checkUrl}" class="btn btn-danger btn-sm">
-       <i class="fa fa-database" aria-hidden="true"></i>
-       <fmt:message key='paster.setup.step.db.tryConnect'/>
-    </button>
+                <button type="submit" formaction="${checkUrl}" class="btn btn-danger btn-sm">
+                    <i class="fa fa-database" aria-hidden="true"></i>
+                    <fmt:message key='paster.setup.step.db.tryConnect'/>
+                </button>
            </div>
     </div>
 
     <c:if test="${updatedStep.step.connectionLog!=null}">
-
-     <div class="row mb-3">
+        <div class="row mb-3">
                <div class="col-auto">
                 <textarea class="form-control" rows="6" cols="80">
                     <c:out value="${updatedStep.step.connectionLog}"/>
                 </textarea>
            </div>
-    </div>
-
+        </div>
     </c:if>
 
    <jsp:include page="/WEB-INF/pages/setup/setup-buttons.jsp"/>
-
 
   </form:form>
     </div>
@@ -129,11 +123,9 @@
 
 <script type="text/javascript">
 
-
     function processChecked(el) {
         if (el.checked) {
                         const editable = el.getAttribute('x-editable');
-
                         const dbUrl = el.getAttribute('value'),
                               driver = el.getAttribute('x-driver-class'),
                               origName = el.getAttribute('x-name');
