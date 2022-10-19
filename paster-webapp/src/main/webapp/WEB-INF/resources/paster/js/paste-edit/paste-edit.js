@@ -138,6 +138,7 @@ class PasterEdit {
         const freader = new FileReader();
         freader.onload = function (e) {
             self.editor.getSession().setValue(e.target.result);
+            document.getElementById('pname').value = file.name;
         };
         freader.readAsText(file);
     }

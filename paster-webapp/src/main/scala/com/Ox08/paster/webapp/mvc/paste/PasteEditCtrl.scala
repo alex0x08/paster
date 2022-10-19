@@ -117,7 +117,7 @@ class PasteEditCtrl extends GenericEditCtrl[Paste] {
                     @RequestParam(required = true) lineNumber: Long,
                     model: Model): String = {
     if (logger.isDebugEnabled)
-      logger.debug("_removeComment commentId={} , lineNumber ={} {}", commentId, lineNumber, "")
+      logger.debug("removing comment commentId={} , lineNumber ={} ", commentId, lineNumber)
     if (!commentDao.exists(commentId)) {
       logger.warn("comment with id {} not found", commentId)
       model.asMap().clear()
@@ -208,9 +208,10 @@ class PasteEditCtrl extends GenericEditCtrl[Paste] {
      * copy fields not filled in form
      */
     if (!b.isBlank) {
-      val current = manager().getFull(b.id)
-      b.comments.addAll(current.comments)
-      b.integrationCode = current.integrationCode
+      //val current = manager().getFull(b.id)
+      commentDao.deleteCommentsFor(b.id)
+      //b.comments.addAll(current.comments)
+     // b.integrationCode = current.integrationCode
       // b.setThumbImg(current.getThumbImg())
     }
     if (b.channel == null || !channelDao.exist(b.channel))
@@ -271,7 +272,7 @@ class PasteEditCtrl extends GenericEditCtrl[Paste] {
           summary
       } else b.text
     if (logger.isDebugEnabled)
-      logger.debug("__found thumbnail sz: {} comments {}", b.thumbImage.length, b.commentsCount)
+      logger.debug("found thumbnail sz: {} comments {}", b.thumbImage.length, b.commentsCount)
     if (b.thumbImage != null) {
       b.thumbImage = resourceDao.saveResource('t', b.uuid, b.thumbImage)
     }

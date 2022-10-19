@@ -113,7 +113,9 @@ abstract class GenericEditCtrl[T <: Struct] extends AbstractCtrl {
     // set id from create
     if (b.isBlank)
       b.id = r.id
-    redirectAttributes.addFlashAttribute("statusMessageKey", "action.success")
+
+    // too noisy message
+    //redirectAttributes.addFlashAttribute("statusMessageKey", "action.success")
     listPage
   }
   @RequestMapping(value = Array("/delete"),

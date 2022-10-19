@@ -14,6 +14,17 @@ import scala.jdk.CollectionConverters._
 @Transactional(readOnly = true, rollbackFor = Array(classOf[Exception]))
 class CommentDao extends SearchableDaoImpl[Comment](classOf[Comment]) {
   /**
+   * Deletes all existing comments for selected paste id
+   * @param pasteId
+   */
+  def deleteCommentsFor(pasteId: Integer): Unit = {
+    val cr = new CriteriaSet
+    val cd =cr.cb.createCriteriaDelete(classOf[Comment])
+    val r = cd.from(classOf[Comment])
+    cd.where(Array(cr.cb.equal(r.get("pasteId"), pasteId)): _*)
+    em.createQuery(cd).executeUpdate()
+  }
+  /**
    * Fetch list of ids of sub comments (replies) to specified comment
    *
    * @param commentId

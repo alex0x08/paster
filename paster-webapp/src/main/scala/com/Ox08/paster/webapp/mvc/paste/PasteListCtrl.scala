@@ -161,7 +161,7 @@ class PasteListCtrl extends SearchCtrl[Paste, AuthorQuery] {
                sortAsc: java.lang.Boolean = false,
                channelCode: String, integrationCode: String): java.util.List[Paste] = {
     if (logger.isDebugEnabled)
-      logger.debug("_paste listImpl, channel: {} pageSize {}", channelCode,pageSize)
+      logger.debug("paste listImpl, channel: {} pageSize {}", channelCode,pageSize)
     fillListModel(model)
     val ps = if (channelCode != null && channelDao.exist(channelCode)) {
       model.addAttribute("sourceType", channelCode.toLowerCase)
@@ -190,9 +190,9 @@ class PasteListCtrl extends SearchCtrl[Paste, AuthorQuery] {
         if (integrationCode != null)
           manager().getListIntegrated(integrationCode)
         else if (channel == null)
-          manager().getByChannel(channelDao.getDefault, sortAsc)
+          manager().getByChannel(channelDao.getDefault, !sortAsc)
         else
-          manager().getByChannel(channel, sortAsc))
+          manager().getByChannel(channel, !sortAsc))
       val sort = ph.getSort.asInstanceOf[MutableSortDefinition]
       /**
        * default sort
