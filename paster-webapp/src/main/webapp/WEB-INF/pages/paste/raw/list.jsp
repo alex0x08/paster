@@ -43,7 +43,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <c:url id='viewPasteUrl' value='/${paste.id}'></c:url>
+                    <c:url var='viewPasteUrl' value='/${paste.id}'></c:url>
                     <a class="pastePreviewLink"
                             href="${viewPasteUrl}"
                             pasteId="${paste.id}" title="Click to view paste vol. ${paste.id}">
