@@ -7,7 +7,6 @@
  -->
 <beans profile="setup" xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:p="http://www.springframework.org/schema/p"
        xmlns:task="http://www.springframework.org/schema/task"
        xmlns:sec="http://www.springframework.org/schema/security"
        xmlns:mvc="http://www.springframework.org/schema/mvc"
@@ -15,7 +14,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
                            http://www.springframework.org/schema/beans/spring-beans.xsd
                            http://www.springframework.org/schema/task
-                           http://www.springframework.org/task/spring-task.xsd
+                           http://www.springframework.org/schema/task/spring-task.xsd
                            http://www.springframework.org/schema/mvc
                            http://www.springframework.org/schema/mvc/spring-mvc.xsd
                            http://www.springframework.org/schema/security
@@ -35,13 +34,12 @@
             </list>
         </property>
     </bean>
-    <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource"
-          p:basenames="i18n.messages" />
+    <bean id="messageSource"
+          class="org.springframework.context.support.ResourceBundleMessageSource">
+        <property name="basenames" value="i18n.messages"/>
+    </bean>
     <sec:http realm="Paster Realm Empty"
-              auto-config="false"
-              use-expressions="true"
-              security="none"
-              disable-url-rewriting="true">
+              auto-config="false">
     </sec:http>
 
     <bean id="localBeansValidator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
@@ -72,9 +70,11 @@
         <property name="viewResolvers">
             <list>
                 <bean class="org.springframework.web.servlet.view.BeanNameViewResolver"/>
-                <bean class="org.springframework.web.servlet.view.UrlBasedViewResolver"
-                      p:viewClass="com.Ox08.paster.webapp.tiles2.DynamicTilesView" p:prefix="/WEB-INF/pages"
-                      p:suffix=".jsp"/>
+                <bean class="org.springframework.web.servlet.view.UrlBasedViewResolver">
+                    <property name="viewClass" value="com.Ox08.paster.webapp.tiles2.DynamicTilesView"/>
+                    <property name="prefix" value="/WEB-INF/pages" />
+                    <property name="suffix" value=".jsp" />
+                </bean>
             </list>
         </property>
     </bean>

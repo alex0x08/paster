@@ -2,14 +2,15 @@
 <!--
     Security configuration, used for 'public' mode: when pastas can be observed anonymously
 -->
-<beans:beans profile="paster-security-public" xmlns="http://www.springframework.org/schema/security"
+<beans:beans profile="paster-security-public"
              xmlns:beans="http://www.springframework.org/schema/beans"
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-             xmlns:p="http://www.springframework.org/schema/p"
-             xsi:schemaLocation="http://www.springframework.org/schema/beans
-                        http://www.springframework.org/schema/beans/spring-beans.xsd
-                        http://www.springframework.org/schema/security 
-                        http://www.springframework.org/schema/security/spring-security.xsd">
+             xmlns="http://www.springframework.org/schema/security"
+             xsi:schemaLocation="http://www.springframework.org/schema/security
+                        http://www.springframework.org/schema/security/spring-security-6.0.xsd
+                        http://www.springframework.org/schema/beans
+                        http://www.springframework.org/schema/beans/spring-beans.xsd">
+
     <global-method-security secured-annotations="enabled" jsr250-annotations="enabled"/>
     <http pattern="/images/**" security="none"/>
     <http pattern="/css/**" security="none"/>
@@ -73,6 +74,7 @@
         </authentication-provider>
         <authentication-provider ref="rememberMeAuthenticationProvider"/>
     </authentication-manager>
+
     <beans:bean id="customRememberMeServices"
                 class="com.Ox08.paster.webapp.web.security.PasterPersistentRememberMeServices">
         <!-- This ensures that remember-me is added as an authentication provider -->

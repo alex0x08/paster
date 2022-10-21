@@ -3,7 +3,7 @@
         Spring MVC configuration
 -->
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:mvc="http://www.springframework.org/schema/mvc"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
                           http://www.springframework.org/schema/beans/spring-beans.xsd
@@ -19,8 +19,9 @@
     </bean>
     <!-- i18n -->
     <mvc:interceptors>
-        <bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor"
-              p:paramName="locale"/>
+        <bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+            <property name="paramName" value="locale" />
+        </bean>
     </mvc:interceptors>
     <mvc:resources mapping="/assets/${paste.app.id}/**"
                    location="classpath:/META-INF/resources/webjars/"/>
@@ -55,14 +56,17 @@
     <!--bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
         <property name="maxUploadSize" value="30000000"/>
     </bean-->
-    <bean id="xstreamMarshaller" class="org.springframework.oxm.xstream.XStreamMarshaller"
-          p:autodetectAnnotations="true"/>
+    <bean id="xstreamMarshaller"
+          class="org.springframework.oxm.xstream.XStreamMarshaller">
+        <property name="autodetectAnnotations" value="true" />
+    </bean>
     <bean id="marshallingConverter" class="org.springframework.http.converter.xml.MarshallingHttpMessageConverter">
         <constructor-arg ref="xstreamMarshaller"/>
         <property name="supportedMediaTypes" value="application/xml"/>
     </bean>
-    <bean name="handlerMapping" class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping">
-        <property name="useSuffixPatternMatch" value="false"></property>
+    <bean name="handlerMapping"
+          class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping">
+        <property name="useSuffixPatternMatch" value="false"/>
     </bean>
     <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
         <property name="messageConverters">
@@ -109,8 +113,10 @@
                 </bean>
                 <bean class="com.Ox08.paster.webapp.mvc.view.ConfigurableXmlView">
                     <constructor-arg>
-                        <bean class="org.springframework.oxm.xstream.XStreamMarshaller"
-                              p:autodetectAnnotations="true" p:encoding="UTF-8"/>
+                        <bean class="org.springframework.oxm.xstream.XStreamMarshaller">
+                            <property name="autodetectAnnotations" value="true" />
+                            <property name="encoding" value="UTF-8" />
+                        </bean>
                     </constructor-arg>
                     <constructor-arg value="model,items"/>
                     <property name="contentType" value="application/xml"/>
@@ -127,9 +133,11 @@
         <property name="viewResolvers">
             <list>
                 <bean class="org.springframework.web.servlet.view.BeanNameViewResolver"/>
-                <bean class="org.springframework.web.servlet.view.UrlBasedViewResolver"
-                      p:viewClass="com.Ox08.paster.webapp.tiles2.DynamicTilesView" p:prefix="/WEB-INF/pages"
-                      p:suffix=".jsp"/>
+                <bean class="org.springframework.web.servlet.view.UrlBasedViewResolver">
+                    <property name="viewClass" value="com.Ox08.paster.webapp.tiles2.DynamicTilesView" />
+                    <property name="prefix" value="/WEB-INF/pages" />
+                    <property name="suffix" value=".jsp"/>
+                </bean>
             </list>
         </property>
     </bean>

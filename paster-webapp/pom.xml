@@ -16,9 +16,9 @@
 
 
     <properties>
-        <spring.security.version>6.0.0-M4</spring.security.version>
+        <spring.security.version>6.0.0-M7</spring.security.version>
         <hibernate.search.version>5.11.10.Final</hibernate.search.version>
-        <hibernate.version>6.1.3.Final</hibernate.version>
+        <hibernate.version>6.1.4.Final</hibernate.version>
         <luceneVersion>8.11.2</luceneVersion>
         <paster.app.name>${project.name}</paster.app.name>
         <paster.app.version>${project.version}</paster.app.version>
@@ -112,7 +112,7 @@
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>1.4.3</version>
+            <version>1.4.4</version>
         </dependency>
 
         <!-- spring -->
