@@ -12,7 +12,7 @@
                         style="padding-left:1em;"
                         role="form"
                         action="${finalizeInstallUrl}" method="POST">
-                     <button type="submit" class="btn btn-success">
+                     <button type="submit" class="btn btn-danger">
                          <fmt:message key="button.restart" />
                          </a>
                      </button>
