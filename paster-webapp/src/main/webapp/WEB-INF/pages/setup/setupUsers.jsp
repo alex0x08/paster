@@ -16,7 +16,7 @@
 
          <fieldset class="row mb-3">
                  <legend class="col-form-label">
-                    <fmt:message key='paster.setup.step.users.securityMode' />
+                    <i class="fa fa-exclamation-triangle text-danger" aria-hidden="true"></i> <fmt:message key='paster.setup.step.users.securityMode' />
                  </legend>
                  <div class="col-md-10 offset-md-2">
                        <c:forEach var="l" items="${availableSecurityModes}" varStatus="loopStatus">
@@ -31,7 +31,10 @@
                              </label>
                          </div>
                        </c:forEach>
-                       <form:errors path="step.securityMode" />
+                       <div class="text-danger">
+                            <form:errors path="step.securityMode" />
+                       </div>
+
                  </div>
                  </fieldset>
 

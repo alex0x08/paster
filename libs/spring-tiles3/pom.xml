@@ -66,7 +66,6 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.test.skip>true</maven.test.skip>
-        <spring.version>6.0.0-M4</spring.version>
     </properties>
 
 </project>

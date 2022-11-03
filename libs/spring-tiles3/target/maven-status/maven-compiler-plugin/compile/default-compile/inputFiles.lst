@@ -2,8 +2,8 @@
 /opt/work/paster/libs/spring-tiles3/src/main/java/org/springframework/web/servlet/view/tiles3/SpringWildcardServletTilesApplicationContext.java
 /opt/work/paster/libs/spring-tiles3/src/main/java/org/springframework/web/servlet/view/tiles3/package-info.java
 /opt/work/paster/libs/spring-tiles3/src/main/java/org/springframework/web/servlet/view/tiles3/TilesView.java
-/opt/work/paster/libs/spring-tiles3/src/main/java/org/springframework/web/servlet/view/tiles3/SpringLocaleResolver.java
 /opt/work/paster/libs/spring-tiles3/src/main/java/org/springframework/web/servlet/view/tiles3/SpringBeanPreparerFactory.java
+/opt/work/paster/libs/spring-tiles3/src/main/java/org/springframework/web/servlet/view/tiles3/SpringLocaleResolver.java
 /opt/work/paster/libs/spring-tiles3/src/main/java/org/springframework/web/servlet/view/tiles3/SimpleSpringPreparerFactory.java
 /opt/work/paster/libs/spring-tiles3/src/main/java/org/springframework/web/servlet/view/tiles3/AbstractSpringPreparerFactory.java
 /opt/work/paster/libs/spring-tiles3/src/main/java/org/springframework/web/servlet/view/tiles3/TilesViewResolver.java
