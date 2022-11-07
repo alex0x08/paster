@@ -160,23 +160,27 @@ abstract class GenericListCtrl[T <: Struct] extends AbstractCtrl {
   @ModelAttribute(MvcConstants.NODE_LIST_MODEL)
   def listWithSort(@PathVariable("sortColumn") sortColumn: String,
                    request: HttpServletRequest,
-                   model: Model): util.List[T] = list(request, model, null, null, null, sortColumn, sortAsc = false)
+                   model: Model): util.List[T] = list(request, model,
+    null, null, null, sortColumn, sortAsc = false)
   @RequestMapping(value = Array("/list/sort/{sortColumn:[a-z0-9A-Z]+}/down"),
     method = Array(RequestMethod.GET))
   @ModelAttribute(MvcConstants.NODE_LIST_MODEL)
   def listWithSortDown(@PathVariable("sortColumn") sortColumn: String,
                        request: HttpServletRequest,
-                       model: Model): util.List[T] = list(request, model, null, null, null, sortColumn, sortAsc = true)
+                       model: Model): util.List[T] = list(request, model,
+    null, null, null, sortColumn, sortAsc = true)
   @RequestMapping(value = Array("/list/{page:[0-9]+}"), method = Array(RequestMethod.GET))
   @ModelAttribute(MvcConstants.NODE_LIST_MODEL)
   def listByPath(@PathVariable("page") page: java.lang.Integer,
                  request: HttpServletRequest,
-                 model: Model): util.List[T] = list(request, model, page, null, null, null, sortAsc = false)
+                 model: Model): util.List[T] = list(request, model, page,
+    null, null, null, sortAsc = false)
   @RequestMapping(value = Array("/list/limit/{pageSize:[0-9]+}"), method = Array(RequestMethod.GET))
   @ModelAttribute(MvcConstants.NODE_LIST_MODEL)
   def listByPathSize(@PathVariable("pageSize") pageSize: java.lang.Integer,
                      request: HttpServletRequest,
-                     model: Model): util.List[T] = list(request, model, null, null, pageSize, null, sortAsc = false)
+                     model: Model): util.List[T] = list(request, model,
+    null, null, pageSize, null, sortAsc = false)
   @RequestMapping(value = Array("/list/next"), method = Array(RequestMethod.GET))
   @ModelAttribute(MvcConstants.NODE_LIST_MODEL)
   def listByPathNext(
@@ -217,7 +221,7 @@ abstract class GenericListCtrl[T <: Struct] extends AbstractCtrl {
       result)
   }
   /**
-   * this trait is used for lazy pageholder creation
+   * this trait is used for lazy page holder creation
    */
   protected trait SourceCallback[TC] {
     def invokeCreate(): PagedListHolder[TC]

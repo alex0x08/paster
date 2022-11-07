@@ -42,12 +42,13 @@
     </licenses>
     <properties>
         <java.version>18</java.version>
-        <scalaVersion>2.13.8</scalaVersion>
+        <scalaVersion>2.13.10</scalaVersion>
         <spring.version>6.0.0-RC2</spring.version>
+        <slf4j.version>2.0.3</slf4j.version>
         <jakartaEEVersion>9.1.0</jakartaEEVersion>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <netbeans.hint.license>apache20</netbeans.hint.license>
-        <revision>2.1.05-RELEASE</revision>
+        <revision>2.1.06-RELEASE</revision>
         <main.basedir>${basedir}</main.basedir>
     </properties>
     <modules>
@@ -130,6 +131,16 @@
                 <groupId>pl.project13.maven</groupId>
                 <artifactId>git-commit-id-plugin</artifactId>
                 <version>4.9.10</version>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>properties-maven-plugin</artifactId>
+                <version>1.1.0</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.3.0</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

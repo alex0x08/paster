@@ -5,11 +5,11 @@
   <parent>
     <groupId>com.Ox08.paster.webapp</groupId>
     <artifactId>paster-project</artifactId>
-    <version>2.1.05-RELEASE</version>
+    <version>2.1.06-RELEASE</version>
   </parent>
   <groupId>com.Ox08.paster.webapp</groupId>
   <artifactId>paster-webapp</artifactId>
-  <version>2.1.05-RELEASE</version>
+  <version>2.1.06-RELEASE</version>
   <packaging>war</packaging>
   <name>Paster Application</name>
   <url>https://github.com/alex0x08/paster/paster-webapp</url>
@@ -40,19 +40,19 @@
     <dependency>
       <groupId>com.Ox08.paster.webapp</groupId>
       <artifactId>paster-tiles-jakarta</artifactId>
-      <version>2.1.05-RELEASE</version>
+      <version>2.1.06-RELEASE</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>com.Ox08.paster.webapp</groupId>
       <artifactId>paster-spring-tiles3-jakarta</artifactId>
-      <version>2.1.05-RELEASE</version>
+      <version>2.1.06-RELEASE</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>org.scala-lang</groupId>
       <artifactId>scala-library</artifactId>
-      <version>2.13.8</version>
+      <version>2.13.10</version>
       <scope>compile</scope>
     </dependency>
     <dependency>

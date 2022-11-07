@@ -5,11 +5,11 @@
   <parent>
     <groupId>com.Ox08.paster.webapp</groupId>
     <artifactId>paster-project</artifactId>
-    <version>2.1.05-RELEASE</version>
+    <version>2.1.06-RELEASE</version>
   </parent>
   <groupId>com.Ox08.paster.webapp</groupId>
   <artifactId>paster-libs</artifactId>
-  <version>2.1.05-RELEASE</version>
+  <version>2.1.06-RELEASE</version>
   <packaging>pom</packaging>
   <name>Paster Libraries</name>
   <url>https://github.com/alex0x08/paster</url>

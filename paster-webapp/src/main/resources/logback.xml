@@ -1,17 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<configuration scan="false" debug="false" > <!-- debug="true"-->
-  
+<configuration scan="false" debug="false" >
     <contextListener class="com.Ox08.paster.webapp.base.LoggerStartupListener"/>
-
     <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator">
         <!-- reset all previous level configurations of all j.u.l. loggers -->
         <resetJUL>true</resetJUL>
     </contextListener>
-      
     <logger name="org.codehaus.janino" level="WARN"/>
-   
-      
+
     <!-- check for debug argument
           Same logging used for development could be enabled on production by 
           providing argument: -DappDebug=true
@@ -25,7 +20,6 @@
         
         <else>
             <include resource="logging/logging-prod.xml" />
-            
         </else>
     </if>
        

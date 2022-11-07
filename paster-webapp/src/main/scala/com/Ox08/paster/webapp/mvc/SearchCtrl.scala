@@ -127,7 +127,7 @@ abstract class SearchCtrl[T <: Struct, QV <: Query] extends GenericListCtrl[T] {
     fillSearchModel(model)
     model.addAttribute("result", result.toLowerCase())
     if (logger.isDebugEnabled)
-      logger.debug("_listImpl(search) pageSize {} , result {}",
+      logger.debug("listImpl(search) pageSize {} , result {}",
         Array(pageSize, model.asMap().get("result")))
     super.listImpl(request, model, page, NPpage, pageSize, sortColumn, sortAsc, s"${result}_ITEMS")
   }

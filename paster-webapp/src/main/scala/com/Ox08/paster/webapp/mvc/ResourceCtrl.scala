@@ -45,7 +45,7 @@ class ResourceCtrl extends AbstractCtrl {
       case 't' | 'r' | 'a' | 'b' =>
       //allow
       case _ =>
-        writeError(response, "uknown type", 404)
+        writeError(response, "unknown type", 404)
         return null
     }
     val fimg = resourcePathHelper.getResource(ptype, path)
