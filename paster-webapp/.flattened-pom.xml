@@ -14,10 +14,6 @@
   <name>Paster Application</name>
   <url>https://github.com/alex0x08/paster/paster-webapp</url>
   <inceptionYear>2011</inceptionYear>
-  <organization>
-    <name>0x08 Software</name>
-    <url>http://0x08.tk</url>
-  </organization>
   <licenses>
     <license>
       <name>Apache License, Version 2.0</name>

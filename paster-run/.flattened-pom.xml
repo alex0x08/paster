@@ -11,12 +11,8 @@
   <artifactId>paster-run</artifactId>
   <version>2.1.06-RELEASE</version>
   <name>Paster Bootstrap</name>
-  <url>http://maven.apache.org</url>
+  <url>https://github.com/alex0x08/paster/paster-run</url>
   <inceptionYear>2011</inceptionYear>
-  <organization>
-    <name>0x08 Software</name>
-    <url>http://0x08.tk</url>
-  </organization>
   <licenses>
     <license>
       <name>Apache License, Version 2.0</name>

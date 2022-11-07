@@ -1,8 +1,22 @@
+/**
+ * Copyright © 2011 Alex Chernyshev (alex3.145@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 a {
 	text-decoration: none;
 }
-
 
 .priority_blocker {
     color: #ff0000;
@@ -13,39 +27,6 @@ a {
 .priority_trivial {
     color: #5ba1cf;
 }
-
-
-/* For the container */
-.GrowlContainer {
-	width: 298px;
-	position: fixed;
-        text-align: center;
-        top: 0;
-	right: 0;
-}
-
-/* for the Modern Growler, implements CSS3 properties */
-.GrowlerModern {
-	background: rgba(0, 0, 0, 0.7);
-	
-	height: 73px;
-	width: 298px;
-	padding: 20px;
-	
-	margin: 10px;
-	position: relative;
-	top: 10px;
-	right: 10px;
-	
-	border-radius: 1em;
-	-moz-border-radius: 1em;
-	
-	-webkit-box-shadow: 2px 2px 12px #777777;
-	-moz-box-shadow: 2px 2px 12px #777777;
-	
-	color: #fafafa;
-}
-
 .img-map { 
     display: inline-block; 
     background: #fff url('../../../static/icons_map.png') no-repeat scroll top left; 
@@ -61,14 +42,3 @@ a {
 .img-clip { background-position: -34px 0; }
 .img-json { background-position: -50px 0; }
 .img-logo { background-position: -50px -18px; }
-
-.img-openid-google { background-position: -67px -18px; }
-.img-openid-yandex { background-position: -67px 0px; }
-.img-openid-yahoo { background-position: -84px -1px; }
-.img-openid-vk { background-position: -84px -18px; }
-
-  @media screen and (min-width: 768px) {
-
-        #newPasteDialog .modal-dialog  {width:1140px;}
-
-    }
