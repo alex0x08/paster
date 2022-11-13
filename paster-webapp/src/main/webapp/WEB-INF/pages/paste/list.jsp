@@ -80,10 +80,14 @@
                 <c:forEach var="resultType" items="${availableResults}" varStatus="loopStatus">
                     <c:choose>
                         <c:when test="${result eq resultType}">
-                            <span style="font-size: larger; "><fmt:message key="${resultType}"/> </span>
+                            <span style="font-size: larger; ">
+                                <fmt:message key="${resultType}"/>
+                            </span>
                         </c:when>
                         <c:otherwise>
-                            <a href="<c:url value='/main/paste/list/search/${resultType}/1'/>"><fmt:message key="${resultType}"/></a>
+                            <a href="<c:url value='/main/paste/search/${resultType}/1'/>">
+                                <fmt:message key="${resultType}"/>
+                            </a>
                         </c:otherwise>
                     </c:choose>
                     <c:if test="${!loopStatus.last}"> | </c:if>

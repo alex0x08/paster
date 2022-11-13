@@ -11,14 +11,8 @@
     <artifactId>paster-run</artifactId>
     <packaging>jar</packaging>
     <name>Paster Bootstrap</name>
-    <url>http://maven.apache.org</url>
-    <repositories>
-
-
-    </repositories>
 
     <dependencies>
-
         <!-- scala -->
         <dependency>
             <groupId>org.scala-lang</groupId>
@@ -26,7 +20,6 @@
             <version>${scalaVersion}</version>
             <scope>compile</scope>
         </dependency>
-
         <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
@@ -203,9 +196,6 @@
         <servlet.version>5.0.0</servlet.version>
         <jetty.version>11.0.12</jetty.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.test.skip>true</maven.test.skip>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
     </properties>
 </project>
 

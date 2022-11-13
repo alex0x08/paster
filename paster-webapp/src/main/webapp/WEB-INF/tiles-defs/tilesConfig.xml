@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 <!--
 
-    Copyright Â© 2011 Alex Chernyshev (alex3.145@gmail.com)
+    Copyright © 2011 Alex Chernyshev (alex3.145@gmail.com)
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -58,6 +58,11 @@
     </definition>
 
     <definition name="/paste/list" extends=".mainTemplatePaste">
+        <put-attribute name="content" value="/WEB-INF/pages/paste/list.jsp"/>
+        <put-attribute name="footer" value="/WEB-INF/pages/paste/paste-list-footer.jsp"/>
+    </definition>
+
+    <definition name="/paste/search" extends=".mainTemplatePaste">
         <put-attribute name="content" value="/WEB-INF/pages/paste/list.jsp"/>
         <put-attribute name="footer" value="/WEB-INF/pages/paste/paste-list-footer.jsp"/>
     </definition>

@@ -62,14 +62,15 @@
     <div class="col-md-2">
         <a class="img-map img-xml"
                 href="<c:url value='/main/paste/${model.id}.xml'/>"
-                target="${target}" title="View as XML">
+                target="_blank" title="View as XML">
         </a> |
         <a class="img-map img-json"
                 href="<c:url value='/main/paste/${model.id}.json'/>"
-                target="${target}" title="View as JSON">
+                target="_blank" title="View as JSON">
         </a> |
         <a href="<c:url value='/main/paste/${model.id}.txt'/>"
-                target="${target}" title="View as plain text">
+                target="_blank"
+                title="View as plain text">
             <span style="font-size: larger;" class="i">k</span>
         </a>
     </div>

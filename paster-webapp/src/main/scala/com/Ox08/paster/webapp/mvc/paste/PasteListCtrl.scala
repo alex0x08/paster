@@ -43,10 +43,10 @@ class PasteListCtrl extends SearchCtrl[Paste, AuthorQuery] {
   override def editPage = "/paste/edit"
   override def viewPage = "/paste/view"
   def manager(): PasteDao = pasteDao
-  def getAvailableResults: Array[String] = Array[String]("PASTE", "COMMENT")
+  def getAvailableResults: Array[String] = Array[String]("paste", "comment")
   def getManagerBySearchResult(result: String): SearchableDaoImpl[_] = result match {
-    case "PASTE" => manager()
-    case "COMMENT" => commentDao
+    case "paste" => manager()
+    case "comment" => commentDao
   }
   @ModelAttribute("query")
   def newQuery(): AuthorQuery = new AuthorQuery

@@ -71,22 +71,22 @@ class PasterEdit {
 
         const textarea = document.getElementById("ptext");
         editor.getSession().setValue(textarea.value);
+        var once=false;
+        editor.renderer.on('afterRender', function() {
+            if (once) {
+                return;
+            }
+            once = true;
+            //To focus the ace editor
+             editor.focus();
+        });
         counter.getCount(textarea.value);
         const elSelectFileBtn = document.getElementById('select-file-btn');
 
         elSelectFileBtn.addEventListener('change', function (e) {
             self.readLocalFile(e);
         });
-
-        //To focus the ace editor
-        // editor.focus();
-        //Get the number of lines
-        var count = editor.getSession().getLength();
-        //Go to end of the last line
-        editor.gotoLine(count, editor.getSession().getLine(count - 1).length);
-
         editor.setOption("showPrintMargin", false);
-
         editor.getSession().on('change', function () {
             const text = editor.getSession().getValue();
             textarea.value = text;
