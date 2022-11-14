@@ -1,11 +1,11 @@
 /*
- * Copyright 2011 Ubersoft, LLC.
+ * Copyright © 2011 Alex Chernyshev (alex3.145@gmail.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -127,7 +127,7 @@ abstract class SearchCtrl[T <: Struct, QV <: Query] extends GenericListCtrl[T] {
     fillSearchModel(model)
     model.addAttribute("result", result.toLowerCase())
     if (logger.isDebugEnabled)
-      logger.debug("_listImpl(search) pageSize {} , result {}",
+      logger.debug("listImpl(search) pageSize {} , result {}",
         Array(pageSize, model.asMap().get("result")))
     super.listImpl(request, model, page, NPpage, pageSize, sortColumn, sortAsc, s"${result}_ITEMS")
   }

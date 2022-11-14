@@ -1,11 +1,11 @@
 /*
- * Copyright 2011 Ubersoft, LLC.
+ * Copyright © 2011 Alex Chernyshev (alex3.145@gmail.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -43,10 +43,10 @@ class PasteListCtrl extends SearchCtrl[Paste, AuthorQuery] {
   override def editPage = "/paste/edit"
   override def viewPage = "/paste/view"
   def manager(): PasteDao = pasteDao
-  def getAvailableResults: Array[String] = Array[String]("PASTE", "COMMENT")
+  def getAvailableResults: Array[String] = Array[String]("paste", "comment")
   def getManagerBySearchResult(result: String): SearchableDaoImpl[_] = result match {
-    case "PASTE" => manager()
-    case "COMMENT" => commentDao
+    case "paste" => manager()
+    case "comment" => commentDao
   }
   @ModelAttribute("query")
   def newQuery(): AuthorQuery = new AuthorQuery

@@ -28,10 +28,6 @@
             <timezone>GMT+4</timezone>
         </developer>
     </developers>
-    <organization>
-        <name>0x08 Software</name>
-        <url>http://0x08.tk</url>
-    </organization>
     <licenses>
         <license>
             <name>Apache License, Version 2.0</name>
@@ -41,14 +37,17 @@
         </license>
     </licenses>
     <properties>
-        <java.version>18</java.version>
-        <scalaVersion>2.13.8</scalaVersion>
-        <spring.version>6.0.0-RC2</spring.version>
-        <jakartaEEVersion>9.1.0</jakartaEEVersion>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <netbeans.hint.license>apache20</netbeans.hint.license>
-        <revision>2.1.05-RELEASE</revision>
+        <maven.test.skip>true</maven.test.skip>
+        <maven.compiler.source>18</maven.compiler.source>
+        <maven.compiler.target>18</maven.compiler.target>
+        <scalaVersion>2.13.10</scalaVersion>
+        <spring.version>6.0.0-RC2</spring.version>
+        <slf4j.version>2.0.3</slf4j.version>
+        <jakartaEEVersion>9.1.0</jakartaEEVersion>
+        <revision>2.1.06-RELEASE</revision>
         <main.basedir>${basedir}</main.basedir>
+        <netbeans.hint.license>apache20</netbeans.hint.license>
     </properties>
     <modules>
         <module>libs</module>        
@@ -132,12 +131,20 @@
                 <version>4.9.10</version>
             </plugin>
             <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>properties-maven-plugin</artifactId>
+                <version>1.1.0</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.3.0</version>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
                 <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
                     <!--debug>true</debug>
                     <debuglevel>none</debuglevel-->
                     <showWarnings>true</showWarnings>
@@ -175,6 +182,6 @@
                 <artifactId>buildnumber-maven-plugin</artifactId>
                 <version>3.0.0</version>
             </plugin>
-        </plugins>
+           </plugins>
     </build>
 </project>

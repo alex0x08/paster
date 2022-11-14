@@ -3,7 +3,7 @@ Paster
 
 Small text&code review tool.
 
-![alt text](https://github.com/alex0x08/paster/blob/develop/docs/images/paster2-screenshot1.jpg?raw=true)
+![alt text](https://github.com/alex0x08/paster/blob/develop/docs/images/paster-demo-video.gif?raw=true)
 
 Project description
 -------------------

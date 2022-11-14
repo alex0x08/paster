@@ -1,4 +1,19 @@
 /*
+ * Copyright © 2011 Alex Chernyshev (alex3.145@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/*
       Javascript class for paste edit page
 */
 class PasterEdit {
@@ -56,22 +71,22 @@ class PasterEdit {
 
         const textarea = document.getElementById("ptext");
         editor.getSession().setValue(textarea.value);
+        var once=false;
+        editor.renderer.on('afterRender', function() {
+            if (once) {
+                return;
+            }
+            once = true;
+            //To focus the ace editor
+             editor.focus();
+        });
         counter.getCount(textarea.value);
         const elSelectFileBtn = document.getElementById('select-file-btn');
 
         elSelectFileBtn.addEventListener('change', function (e) {
             self.readLocalFile(e);
         });
-
-        //To focus the ace editor
-        // editor.focus();
-        //Get the number of lines
-        var count = editor.getSession().getLength();
-        //Go to end of the last line
-        editor.gotoLine(count, editor.getSession().getLine(count - 1).length);
-
         editor.setOption("showPrintMargin", false);
-
         editor.getSession().on('change', function () {
             const text = editor.getSession().getValue();
             textarea.value = text;

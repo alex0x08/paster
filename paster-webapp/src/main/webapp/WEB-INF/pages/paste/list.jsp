@@ -1,3 +1,20 @@
+<%--
+
+    Copyright © 2011 Alex Chernyshev (alex3.145@gmail.com)
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+--%>
 <%@ include file="/WEB-INF/pages/common/taglibs.jsp"%>
 <%--
 
@@ -63,10 +80,14 @@
                 <c:forEach var="resultType" items="${availableResults}" varStatus="loopStatus">
                     <c:choose>
                         <c:when test="${result eq resultType}">
-                            <span style="font-size: larger; "><fmt:message key="${resultType}"/> </span>
+                            <span style="font-size: larger; ">
+                                <fmt:message key="${resultType}"/>
+                            </span>
                         </c:when>
                         <c:otherwise>
-                            <a href="<c:url value='/main/paste/list/search/${resultType}/1'/>"><fmt:message key="${resultType}"/></a>
+                            <a href="<c:url value='/main/paste/search/${resultType}/1'/>">
+                                <fmt:message key="${resultType}"/>
+                            </a>
                         </c:otherwise>
                     </c:choose>
                     <c:if test="${!loopStatus.last}"> | </c:if>

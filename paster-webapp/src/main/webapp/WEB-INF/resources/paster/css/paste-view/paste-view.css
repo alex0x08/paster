@@ -1,20 +1,18 @@
 /**
- * SyntaxHighlighter
- * http://alexgorbatchev.com/SyntaxHighlighter
+ * Copyright © 2011 Alex Chernyshev (alex3.145@gmail.com)
  *
- * SyntaxHighlighter is donationware. If you are using it, please donate.
- * http://alexgorbatchev.com/SyntaxHighlighter/donate.html
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * @version
- * 3.0.83 (July 02 2010)
- * 
- * @copyright
- * Copyright (C) 2004-2010 Alex Gorbatchev.
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- * @license
- * Dual licensed under the MIT and GPL licenses.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
-
  
 
 .syntaxhighlighter a,
@@ -327,13 +325,9 @@
 .syntaxhighlighter .color3, .syntaxhighlighter .color3 a {
   color: red !important;
 }
-
 .syntaxhighlighter .keyword {
   font-weight: bold !important;
 }
-
-
-
 .mainLinkLine  {
     text-decoration: none;
     color: #777777;
@@ -342,25 +336,18 @@
     text-decoration: none;
     font-size: larger;
 }
-
-
 .listLinkLine  {
     text-decoration: none;
     color: #777777;
 }
-
 .listLinkLine:hover  {
     text-decoration: underline;
     text-decoration-style: double;
     color: #777777;
 }
-
-
 .linkLine:hover {
    text-decoration: underline;
 }
-
-
 .commentBlock {
     overflow: visible !important;
     white-space: normal;
@@ -371,18 +358,14 @@
     height: auto;
     padding:0;
     margin:0;
-    
 }
 .commentInner {
     background-color: #e0e0e0;
 }
-
 .commentCurrent {
     background-color: #ffff67;
     border: 1px solid black;
 }
-
-
 .editForm {
     white-space: normal;
    /* position: absolute;*/

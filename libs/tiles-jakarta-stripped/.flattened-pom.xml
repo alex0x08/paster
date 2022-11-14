@@ -5,11 +5,11 @@
   <parent>
     <groupId>com.Ox08.paster.webapp</groupId>
     <artifactId>paster-libs</artifactId>
-    <version>2.1.05-RELEASE</version>
+    <version>2.1.06-RELEASE</version>
   </parent>
   <groupId>com.Ox08.paster.webapp</groupId>
   <artifactId>paster-tiles-jakarta</artifactId>
-  <version>2.1.05-RELEASE</version>
+  <version>2.1.06-RELEASE</version>
   <name>Paster : Apache Tiles with Jakarta, Stripped</name>
   <url>http://maven.apache.org</url>
   <inceptionYear>2011</inceptionYear>

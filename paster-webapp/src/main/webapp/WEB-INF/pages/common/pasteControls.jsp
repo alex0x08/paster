@@ -1,3 +1,20 @@
+<%--
+
+    Copyright © 2011 Alex Chernyshev (alex3.145@gmail.com)
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+--%>
 <%@ include file="/WEB-INF/pages/common/taglibs.jsp"%>
 <%--
 
@@ -45,14 +62,15 @@
     <div class="col-md-2">
         <a class="img-map img-xml"
                 href="<c:url value='/main/paste/${model.id}.xml'/>"
-                target="${target}" title="View as XML">
+                target="_blank" title="View as XML">
         </a> |
         <a class="img-map img-json"
                 href="<c:url value='/main/paste/${model.id}.json'/>"
-                target="${target}" title="View as JSON">
+                target="_blank" title="View as JSON">
         </a> |
         <a href="<c:url value='/main/paste/${model.id}.txt'/>"
-                target="${target}" title="View as plain text">
+                target="_blank"
+                title="View as plain text">
             <span style="font-size: larger;" class="i">k</span>
         </a>
     </div>

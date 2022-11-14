@@ -4,15 +4,11 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.Ox08.paster.webapp</groupId>
   <artifactId>paster-project</artifactId>
-  <version>2.1.05-RELEASE</version>
+  <version>2.1.06-RELEASE</version>
   <packaging>pom</packaging>
   <name>Paster Project</name>
   <url>https://github.com/alex0x08/paster</url>
   <inceptionYear>2011</inceptionYear>
-  <organization>
-    <name>0x08 Software</name>
-    <url>http://0x08.tk</url>
-  </organization>
   <licenses>
     <license>
       <name>Apache License, Version 2.0</name>

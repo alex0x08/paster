@@ -14,7 +14,6 @@
     </logger>
      <logger name="org.h2" level="ALL" />
     <logger name="org.apache" level="WARN"/>
-
     <logger name="org.hibernate.validator" level="WARN"/>
     <logger name="org.springframework" level="INFO"/>
     <logger name="org.springframework.web" level="INFO"/>
@@ -23,9 +22,7 @@
     <logger name="org.thymeleaf" level="WARN"/>
     <logger name="org.hibernate.SQL" level="DEBUG" />
     <logger name="org.hibernate.type" level="TRACE" />
-
     <root level="INFO">
         <appender-ref ref="CONSOLE"/>
     </root>
-
 </included>
