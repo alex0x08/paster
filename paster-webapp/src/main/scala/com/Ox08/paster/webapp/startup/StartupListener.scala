@@ -26,17 +26,21 @@ import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.context.support.SpringBeanAutowiringSupport
 import org.springframework.web.servlet.i18n.SessionLocaleResolver
 import java.security.SecureRandom
-class BootContext {
-  @Autowired
-  val users: UserManager = null
-  @Autowired
-  val pasteDao: PasteDao = null
-  @Autowired
-  val localeResolver: SessionLocaleResolver = null
-}
+/**
+ *  This is Paster's startup listener, used for initialization and internal checks.
+ */
 class StartupListener extends ServletContextListener with Logged {
+  /**
+   * Second step initialization.
+   * Triggers on ServletContext's initialization success, but AFTER Spring  & Hibernate.
+   * So when this listener starts - almost everything is already wired-up.
+   * @param event
+   */
   override def contextInitialized(event: ServletContextEvent): Unit = {
+    // Check for installation mark
+    // Only if Paster was installed correctly - try to continue boot.
     if (Boot.BOOT.getSystemInfo.isInstalled) {
+      // create boot context
       val bootContext = new BootContext()
       SpringBeanAutowiringSupport
         .processInjectionBasedOnServletContext(bootContext, event.getServletContext)
@@ -45,7 +49,7 @@ class StartupListener extends ServletContextListener with Logged {
         bootContext.localeResolver.setDefaultLocale(Boot.BOOT.getSystemInfo.getSystemLocale)
         setupSecurityContext() // setup security context
         bootContext.users.loadUsers()
-        logger.info("db generation completed successfully.")
+        logger.info("boot completed successfully.")
       } catch {
         case e@(_: java.io.IOException) =>
           logger.error(e.getLocalizedMessage, e)
@@ -58,6 +62,7 @@ class StartupListener extends ServletContextListener with Logged {
   }
   def setupSecurityContext(): Unit = {
     val start_user = new PasterUser("System", "system",
+      //fake password
       Md5Crypt.md5Crypt(SecureRandom.getSeed(20)),
       java.util.Set.of(Role.ROLE_ADMIN))
     // log user in automatically
@@ -66,4 +71,16 @@ class StartupListener extends ServletContextListener with Logged {
     auth.setDetails(start_user)
     SecurityContextHolder.getContext.setAuthentication(auth)
   }
+}
+/**
+ * A DTO class, with dependencies wired up by Spring at runtime.
+ * Used during initialization process.
+ */
+class BootContext {
+  @Autowired
+  val users: UserManager = null
+  @Autowired
+  val pasteDao: PasteDao = null
+  @Autowired
+  val localeResolver: SessionLocaleResolver = null
 }

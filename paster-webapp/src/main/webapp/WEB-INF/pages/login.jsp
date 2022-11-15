@@ -16,19 +16,22 @@
 
 --%>
 <%@ include file="/WEB-INF/pages/common/taglibs.jsp"%>
-
-
+<%--
+    Login page
+--%>
+<!-- Backend action to send credentials to -->
 <c:url var="url" value='/act/doAuth' />
-
 <div class='row justify-content-md-center'>
     <div class='col-md-4'>
         <form:form  role="form" action="${url}"  method="POST" >
             <legend><fmt:message key="login.title"/></legend>
+            <!-- if there was an error -->
             <c:if test="${param.authfailed ne null}">
                 <div class="alert alert-block alert-danger" style="width:20em;">
                     <a class="close" data-dismiss="alert" href="#">×</a>
                     <h4 class="alert-heading"><fmt:message key="login.msg.failure"/></h4>
-                    <fmt:message key="login.failure.reason"/>: <c:out value='${sessionScope.SPRING_SECURITY_LAST_EXCEPTION.message}'/>
+                    <fmt:message key="login.failure.reason"/>:
+                    <c:out value='${sessionScope.SPRING_SECURITY_LAST_EXCEPTION.message}'/>
                 </div>
             </c:if>
             <div class='row'>
@@ -53,7 +56,8 @@
                 <div class='col-lg-8 col-md-8'>        
                     <div class="checkbox">
                         <label>
-                            <input type="checkbox" name="remember-me" id="remember_me" checked="true" /> <fmt:message key="login.rememberMe"/>
+                            <input type="checkbox" name="remember-me" id="remember_me" checked="true" />
+                            <fmt:message key="login.rememberMe"/>
                         </label>
                     </div>
                 </div>
@@ -62,5 +66,3 @@
         </form:form>
     </div>
 </div>
-
-

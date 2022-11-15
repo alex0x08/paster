@@ -22,6 +22,10 @@ import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.{PathVariable, RequestMapping, RequestMethod, ResponseBody}
 import java.io.{FileInputStream, IOException}
 import scala.collection.mutable
+/**
+ * Responds binaries generated at runtime.
+ * Currently, its only used for Paste's previews
+ */
 @Controller
 @RequestMapping(Array("/paste-resources"))
 class ResourceCtrl extends AbstractCtrl {

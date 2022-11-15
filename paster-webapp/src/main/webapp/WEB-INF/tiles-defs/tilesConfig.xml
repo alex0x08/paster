@@ -62,11 +62,6 @@
         <put-attribute name="footer" value="/WEB-INF/pages/paste/paste-list-footer.jsp"/>
     </definition>
 
-    <definition name="/paste/search" extends=".mainTemplatePaste">
-        <put-attribute name="content" value="/WEB-INF/pages/paste/list.jsp"/>
-        <put-attribute name="footer" value="/WEB-INF/pages/paste/paste-list-footer.jsp"/>
-    </definition>
-
     <definition name="/paste/edit" extends=".mainTemplatePaste">
         <put-attribute name="head" value="/WEB-INF/pages/paste/paste-edit-head.jsp"/>
         <put-attribute name="content" value="/WEB-INF/pages/paste/edit.jsp"/>

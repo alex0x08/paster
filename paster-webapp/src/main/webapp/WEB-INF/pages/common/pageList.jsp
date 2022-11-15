@@ -45,8 +45,8 @@
             </c:forEach>
         </c:when>
         <c:when test="${listMode eq 'list' }">
-              <span >
-            <c:choose>
+            <span>
+               <c:choose>
                 <c:when test="${pageItems.sort.ascending == false}">
                     <span style="font-size: larger; "> &#x2191; </span>
                     <a href="<c:url value='/main/paste/list/${sourceType}/older'/>"> &#8595;</a>
@@ -55,8 +55,8 @@
                     <span style="font-size: larger; "> &#8595; </span>
                     <a href="<c:url value='/main/paste/list/${sourceType}/earlier'/>">&#x2191; </a>
                 </c:otherwise>
-            </c:choose>
-        </span>
+                </c:choose>
+            </span>
             
             <c:forEach var="page" items="${pageSet}" varStatus="loopStatus">
                 <c:choose>

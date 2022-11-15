@@ -38,6 +38,7 @@
 
         <c:url var="epicEditorUrl" value="/main/resources/${appId}/local_components/epiceditor" />
 
+    // edic markdown editor, used in 'add comment' form
     var globalEpicEditorOpts = {
         container: 'SET-IN-EDITOR',
         textarea: null,
@@ -70,8 +71,8 @@
             togglePreview: 'Toggle Preview Mode',
             toggleEdit: 'Toggle Edit Mode',
             toggleFullscreen: 'Enter Fullscreen'
-        }
-    };
+            }
+        };
 
         <%--
 
@@ -97,23 +98,26 @@
 <script type="text/javascript">
 
     const MODEL_ID = '${model.id}';
+    // check if we need to render 'edit' buttons
     const ALLOW_EDIT =  "true" === '${not empty currentUser or allowAnonymousCommentsCreate}';
-
+    // instantiate 'view class'
     var pasterView = new PasterView();
-
+    // on page load
     window.addEventListener('load', function () {
-
+        // init view class
         pasterView.init(MODEL_ID,ALLOW_EDIT);
-        pasterView.setupCommentsAdd(MODEL_ID); 
-        
+        // attach & show comments
+        pasterView.setupCommentsAdd(MODEL_ID);
+    // render this block if we have more pastas
+    // scroll down will fetch next record
     <c:if test="${availablePrevList.count > 0}">
-        pasterView.setupLazy("<c:url value='/main/paste/raw/view'/>",  "<c:url value='/main/paste'/>",
-        ${availablePrevList.count},  ${model.id}, [${availablePrevList.itemsAsString}]);
+        pasterView.setupLazy("<c:url value='/main/paste/raw/view'/>",
+        "<c:url value='/main/paste'/>",
+        ${availablePrevList.count},
+        ${model.id},
+        [${availablePrevList.itemsAsString}]);
     </c:if>
-
     });
-
 </script>
-
-
+<!-- add polling script -->
 <jsp:include page="/WEB-INF/pages/common/paste-update-poll.jsp"/>

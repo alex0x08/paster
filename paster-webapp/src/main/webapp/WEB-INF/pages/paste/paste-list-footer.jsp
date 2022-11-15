@@ -22,8 +22,11 @@
 <jsp:include page="/WEB-INF/pages/common/paste-update-poll.jsp"/>
 
 <script type="text/javascript">
+    // create 'all-in-one' paste list class
     const pasterList = new PasterList();
+    // on page load
     window.addEventListener('load', function () {
+        // initialize our class
         pasterList.init('${rawPageUrl}', '${userPageUrl}',
                 ${pageItems.pageCount-(pageItems.page+1)},
                 ${pageItems.page} + 2);

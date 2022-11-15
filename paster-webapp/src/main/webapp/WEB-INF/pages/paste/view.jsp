@@ -16,9 +16,12 @@
 
 --%>
 <%@ include file="/WEB-INF/pages/common/taglibs.jsp"%>
-
-
+<%--
+    Renders Paste view page.
+--%>
+<!-- insert header controls -->
 <jsp:include page="/WEB-INF/pages/paste/common/paste-view-top.jsp"/>
+<!-- insert commons -->
 <jsp:include page="/WEB-INF/pages/paste/common/paste-view-common.jsp"/>
 
 <div id="numSpace" class="line" >

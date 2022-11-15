@@ -111,9 +111,7 @@
    </div>
     <div class="row mb-3">
            <div class="col-auto">
-
             <c:url var="checkUrl" value='/main/setup/checkConnection' />
-
                 <button type="submit" formaction="${checkUrl}" class="btn btn-danger btn-sm">
                     <i class="fa fa-database" aria-hidden="true"></i>
                     <fmt:message key='paster.setup.step.db.tryConnect'/>
@@ -166,13 +164,11 @@
     }
 
     window.addEventListener('load', function () {
-
         document.getElementById('showHidePasswdLnk')
             .addEventListener("click", function (event) {
                             event.preventDefault();
                             showHidePassword(document.getElementById('dbPassword'));
                           });
-
         var once=true;
         Array.from(document.getElementsByClassName("driverInput")).forEach(
             function (el, i, array) {

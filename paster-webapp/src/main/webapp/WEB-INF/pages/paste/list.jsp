@@ -46,6 +46,7 @@
                 <c:if test="${!loopStatus.last}"> | </c:if>
             </c:forEach>
     </div>
+    <!-- Export current list to various formats -->
     <div class="col-md-2 hidden-sm hidden-xs">        
         <a class="img-map img-xml" href="<c:url value='/main/paste/list/body.xml'/>"
                 title="xml" alt="xml" target="_blank">
@@ -61,6 +62,7 @@
             title="atom" alt="atom" target="_blank">
         </a> 
     </div>
+    <!-- list controls (next/prev/last) -->
     <div class="col-auto">
         <tiles:insertDefinition name="/common/pageList" >
             <tiles:putAttribute name="listMode" value="${listMode}"/>
@@ -96,6 +98,7 @@
         </div>
     </div>
 </c:if>
+<!-- main page content -->
 <div class="row">
     <div id="pastas" class="col-md-12" >
         <c:forEach var="paste" items="${pageItems.pageList}" varStatus="status">
@@ -184,11 +187,13 @@
                     </small>
                 </c:when>
             </c:choose>
+            <!-- add divider -->
             <c:if test="${splitHelper.split}">
                 <c:out value="${splitHelper.splitTitle}"/>
                 <hr/>
             </c:if>
         </c:forEach>
+        <!-- render 'not found' block if paste list is empty -->
         <c:if test="${pageItems.nrOfElements == 0}">
             <center>
                 <fmt:message key='common.list.empty'/>

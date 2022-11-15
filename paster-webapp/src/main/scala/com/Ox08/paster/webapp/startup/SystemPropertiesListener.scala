@@ -19,27 +19,45 @@ import jakarta.servlet.{ServletContextEvent, ServletContextListener}
 import org.slf4j.bridge.SLF4JBridgeHandler
 import java.io.{File, IOException}
 import java.util.Locale
+/**
+ * First step initialization listener
+ */
 class SystemPropertiesListener extends ServletContextListener with Logged {
-  object SystemConstants {
-    val APP_BASE: String = ".apps"
-    val APP_NAME = "paster"
-  }
+  /**
+   * Triggers on ServletContext initialization, but before Spring/Hibernate.
+   * @param event
+   */
   override def contextInitialized(event: ServletContextEvent): Unit = {
     try {
+      // do initial checks & home folder preparations
       doBoot()
+      // set temp folders
       val scratchDir = new File(Boot.BOOT.getSystemInfo.getTempDir,"servletTmp")
       event.getServletContext.setAttribute("javax.servlet.context.tempdir", scratchDir)
       event.getServletContext.setAttribute("jakarta.servlet.context.tempdir",scratchDir)
       var springProfiles = ""
-      if (Boot.BOOT.getSystemInfo.isInstalled)
+
+      /**
+       * We have 2 different groups of settings, depend on installation mark.
+       * If Paster has been installed correctly - load 'main' profile, with database and continue to boot.
+       * Otherwise - load 'setup' profile and Paster will show 'installation' page.
+       */
+      if (Boot.BOOT.getSystemInfo.isInstalled) {
         springProfiles += "main"
-      else
+
+        /**
+         * Access mode.
+         * 'public' - load additional profile with 'public profile' settings
+         * 'private' - .. 'private profile' settings
+         *
+         */
+        if ("public".equals(Boot.BOOT.getSystemInfo
+          .getSetting("paster.security.access.mode", "private")))
+          springProfiles += ",paster-security-public"
+        else
+          springProfiles += ",paster-security-private"
+      } else
         springProfiles += "setup"
-      if ("public".equals(Boot.BOOT.getSystemInfo
-        .getSetting("paster.security.access.mode", "private")))
-        springProfiles += ",paster-security-public"
-      else
-        springProfiles += ",paster-security-private"
       logger.info("profiles: {}", springProfiles)
       System.setProperty("spring.profiles.active", springProfiles)
       System.setProperty("paste.app.id", System.currentTimeMillis().toString)
@@ -71,5 +89,12 @@ class SystemPropertiesListener extends ServletContextListener with Logged {
     //SystemError.instance.addBundle("bundles/errorMessagesWeb")
     //SystemMessage.instance.addBundle("bundles/systemMessagesWeb")
     System.setProperty("org.jboss.logging.provider", "slf4j")
+  }
+  /**
+   * Holds global constants
+   */
+  object SystemConstants {
+    val APP_BASE: String = ".apps"
+    val APP_NAME = "paster"
   }
 }

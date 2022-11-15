@@ -20,20 +20,17 @@
 
 <div class='row justify-content-md-center'>
     <div class='col-auto'>
-
    <c:url var="stepUrl" value='/main/setup/users' />
-
    <form:form
         action="${stepUrl}"
         role="form"
         modelAttribute="updatedStep"
         method="POST">
-
         <form:errors path="" />
-
          <fieldset class="row mb-3">
                  <legend class="col-form-label">
-                    <i class="fa fa-exclamation-triangle text-danger" aria-hidden="true"></i> <fmt:message key='paster.setup.step.users.securityMode' />
+                    <i class="fa fa-exclamation-triangle text-danger" aria-hidden="true"></i>
+                    <fmt:message key='paster.setup.step.users.securityMode' />
                  </legend>
                  <div class="col-md-10 offset-md-2">
                        <c:forEach var="l" items="${availableSecurityModes}" varStatus="loopStatus">
@@ -51,10 +48,8 @@
                        <div class="text-danger">
                             <form:errors path="step.securityMode" />
                        </div>
-
                  </div>
                  </fieldset>
-
          <div class="row mb-3">
              <div class="col-sm-10">
                 <p>
@@ -71,7 +66,6 @@
                    <fmt:message key='paster.setup.step.users.allowAnonAddComments' />
                  </label>
                </div>
-
                <div class="form-check">
                       <form:checkbox
                       cssClass="form-check-input"
@@ -83,10 +77,8 @@
                                   <fmt:message key='paster.setup.step.users.allowAnonAddRecords' />
                                 </label>
                </div>
-
              </div>
            </div>
-
         <c:url var="addUserUrl" value='/main/setup/addUser' />
         <p>
                 <button type="submit" formaction="${addUserUrl}" class="btn btn-primary btn-sm">
@@ -94,8 +86,6 @@
                    <fmt:message key='button.addUser' />
                 </button>
         </p>
-
-
     <table class="table table-bordered table-striped table-condensed">
       <thead>
         <tr>
@@ -138,14 +128,12 @@
                            cssClass="alert alert-danger" />
                      </td>
                      <td>
-
                      <div class="input-group passwordGroup">
                                          <div class="input-group-text">
                                              <a href="#" id="showHidePasswdLnk" >
                                                  <i class="fa fa-eye" aria-hidden="true"></i>
                                              </a>
                                           </div>
-
                                            <form:input id='passwordInput'
                                                                       cssClass="form-control"
                                                                       name="password"
@@ -169,32 +157,21 @@
                        <c:url var="removeUserUrl" value='/main/setup/removeUser' >
                             <c:param name="index" value="${vstatus.index}" />
                        </c:url>
-
                               <button type="submit"
-                              formaction="${removeUserUrl}"
-                              class="btn btn-primary" title="<fmt:message key='button.delete'/>">
+                                formaction="${removeUserUrl}"
+                                class="btn btn-primary" title="<fmt:message key='button.delete'/>">
                                  <i class="fa fa-trash" aria-hidden="true"></i>
                               </button>
                       </td>
                  </tr>
-
        </c:forEach>
-
       </tbody>
     </table>
-
-
       <jsp:include page="/WEB-INF/pages/setup/setup-buttons.jsp"/>
-
   </form:form>
-
-
     </div>
 </div>
-
-
 <script type="text/javascript">
-
     function processChecked(el) {
         const secMode = el.getAttribute('value');
         console.log('sec mode:',secMode)
@@ -203,7 +180,6 @@
   }
 
   window.addEventListener('load', function () {
-
          var once=true;
          Array.from(document.getElementsByClassName("securityModeInput")).forEach(
                     function (el, i, array) {

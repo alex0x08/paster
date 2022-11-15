@@ -73,7 +73,7 @@
 
 
 <script type="text/javascript">
-
+    // checks if ES6 is supported in browser
     function checkES6() {
         "use strict";
         if (typeof Symbol == "undefined") return false;

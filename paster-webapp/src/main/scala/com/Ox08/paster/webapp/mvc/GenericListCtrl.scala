@@ -141,7 +141,7 @@ abstract class GenericListCtrl[T <: Struct] extends AbstractCtrl {
      */
     if (pageSize != null)
       pagedListHolder.setPageSize(pageSize)
-    request.getSession().setAttribute(getClass.getName + "_" + pageHolderName, pagedListHolder)
+    request.getSession().setAttribute(s"${getClass.getName}_$pageHolderName", pagedListHolder)
     model.addAttribute(pageHolderName, pagedListHolder)
     if (createDefaultItemModel && !pageHolderName.equals(MvcConstants.NODE_LIST_MODEL_PAGE)) {
       model.addAttribute(MvcConstants.NODE_LIST_MODEL_PAGE, pagedListHolder)
