@@ -15,9 +15,6 @@
 # limitations under the License.
 #
 
-
-
-
 if pgrep -f appName=pasterApp  > /dev/null
 then
     echo "running Paster process found, killing"

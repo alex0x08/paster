@@ -101,9 +101,9 @@ class UserManager extends UserDetailsService with Logged {
   private val users = mutable.Map[String, PasterUser]()
   @Autowired
   @Qualifier("sessionRegistry")
-  val sessionRegistry: SessionRegistry = null
+  private val sessionRegistry: SessionRegistry = null
   @Autowired
-  val passwordEncoder: PasswordEncoder = null
+  private val passwordEncoder: PasswordEncoder = null
   def loadUsers(): Unit = {
     val csv = new File(Boot.BOOT.getSystemInfo.getAppHome, "users.csv")
     UserManager.loadUsersFromCSV(csv, (record: CSVRecord) => {

@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 package com.Ox08.paster.webapp.model
-import jakarta.persistence.{Column, Entity, Id, Table, Temporal, TemporalType}
+import jakarta.persistence._
 import jakarta.validation.constraints.{NotNull, Size}
-import java.text.SimpleDateFormat
+
 import java.util.Date
 object SessionToken {
   val MAX_USER_AGENT_LEN = 255

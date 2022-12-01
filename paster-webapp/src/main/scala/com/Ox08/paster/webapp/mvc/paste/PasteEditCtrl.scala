@@ -346,3 +346,4 @@ class IdList(list: java.util.List[Integer]) {
   def getItems: util.List[Integer] = list
   def getItemsAsString: String = StringUtils.join(list, ",")
 }
+

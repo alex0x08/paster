@@ -33,6 +33,19 @@ class ResourceCtrl extends AbstractCtrl {
   private val MAX_AGE = 0
   @Autowired
   private val resourcePathHelper: ResourceManager = null
+  /**
+   * Respond static resource
+   * @param lastModified
+   *        file's 'last modified' timestamp, used to bypass caching
+   * @param path
+   *        relative path
+   * @param pType
+   *        resource type
+   * @param response
+   *        http servlet response object
+   * @return
+   *      streamed resource
+   */
   @RequestMapping(
     value = Array("/{version:[a-zA-Z0-9]+}/{type:[a-z]}/{lastModified:[0-9]+}/paste_content/{path}"),
     method = Array(RequestMethod.GET))
@@ -40,32 +53,41 @@ class ResourceCtrl extends AbstractCtrl {
   def getResource(
                    @PathVariable("lastModified") lastModified: Long,
                    @PathVariable("path") path: String,
-                   @PathVariable("type") ptype: Char,
+                   @PathVariable("type") pType: Char,
                    response: HttpServletResponse
                  ): InputStreamResource = {
     if (logger.isDebugEnabled)
-      logger.debug("get {} type: {} lm: {}", path, ptype, lastModified)
-    ptype match {
+      logger.debug("get {} type: {} lm: {}", path, pType, lastModified)
+    pType match {
       case 't' | 'r' | 'a' | 'b' =>
       //allow
       case _ =>
         writeError(response, "unknown type", 404)
         return null
     }
-    val fimg = resourcePathHelper.getResource(ptype, path)
-    if (fimg == null) {
+    val fImg = resourcePathHelper.getResource(pType, path)
+    if (fImg == null) {
       writeError(response, "file not found", 404)
       return null
     }
+    response.setHeader("Content-Length", fImg.length().toString)
+    // we use this method only for images, so its ok to inline MIME and content-disposition
     response.setContentType("image/png")
-    response.setHeader("Content-Length", fimg.length().toString)
-    response.setHeader("Content-Disposition", s"inline;filename='${fimg.getName}'")
-    response.setDateHeader("Last-Modified", fimg.lastModified())
+    response.setHeader("Content-Disposition", s"inline;filename='${fImg.getName}'")
+    response.setDateHeader("Last-Modified", fImg.lastModified())
     response.setDateHeader("Expires", System.currentTimeMillis + MAX_AGE)
     response.setHeader("Cache-Control", s"max-age=$MAX_AGE, public")
     response.setHeader("Pragma", "cache")
-    new InputStreamResource(new FileInputStream(fimg))
+    new InputStreamResource(new FileInputStream(fImg))
   }
+  /**
+   * Generates minimal HTML page with error response.
+   * Suppose to be 'last chance' on error reporting.
+   * @param response
+   * @param msg
+   * @param status
+   * @throws java.io.IOException
+   */
   @throws(classOf[IOException])
   def writeError(response: HttpServletResponse, msg: String, status: Int): Unit = {
     response.setContentType("text/html;charset=UTF-8")

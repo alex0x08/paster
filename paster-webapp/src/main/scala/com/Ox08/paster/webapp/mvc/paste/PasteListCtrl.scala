@@ -56,7 +56,8 @@ class PasteListCtrl extends SearchCtrl[Paste, AuthorQuery] {
     model.addAttribute("availableSourceTypes", channelDao.getAvailableElements.asJava)
     model.addAttribute("splitHelper", new DateSplitHelper(splitDays, Locale.getDefault))
     model.addAttribute("sortDesc", false)
-    val stats: java.util.Map[String,Long] = pasteDao.countStats(channelDao.getAvailableElements.toArray).asJava
+    val stats: java.util.Map[String,Long] = pasteDao
+      .countStats(channelDao.getAvailableElements.toArray).asJava
     model.addAttribute("pasteStats", stats)
   }
   @RequestMapping(value = Array("/search/{result}/{page:[0-9]+}",
@@ -67,7 +68,8 @@ class PasteListCtrl extends SearchCtrl[Paste, AuthorQuery] {
                             @PathVariable("result") result: String,
                             request: HttpServletRequest,
                             model: Model): util.List[Paste] = listImpl(request,
-    model, page, null, null, null, false, null, null,result)
+    model, page, null, null, null,
+    false, null, null,result)
   @RequestMapping(value = Array(
     "/raw/search/{result:[a-z]+}"), method = Array(RequestMethod.GET))
   @ModelAttribute(MvcConstants.NODE_LIST_MODEL)
@@ -75,7 +77,8 @@ class PasteListCtrl extends SearchCtrl[Paste, AuthorQuery] {
                         @PathVariable("result") result: String,
                         request: HttpServletRequest,
                         model: Model): util.List[Paste] = listImpl(request,
-    model, page, null, null, null, false, null, null,result)
+    model, page, null, null, null,
+    false, null, null,result)
   @RequestMapping(value = Array("/list/{source}/{page:[0-9]+}",
     "/raw/list/{source}/{page:[0-9]+}"),
     method = Array(RequestMethod.GET))
@@ -92,7 +95,8 @@ class PasteListCtrl extends SearchCtrl[Paste, AuthorQuery] {
                            @PathVariable("source") source: String,
                            request: HttpServletRequest,
                            model: Model): util.List[Paste] = listImpl(request, model, null,
-    null, pageSize, "lastModified", false, source, null,null)
+    null, pageSize, "lastModified",
+    false, source, null,null)
   @RequestMapping(value = Array("/list/{source}/next"), method = Array(RequestMethod.GET))
   @ModelAttribute(MvcConstants.NODE_LIST_MODEL)
   def listByPathNextSource(
@@ -109,7 +113,8 @@ class PasteListCtrl extends SearchCtrl[Paste, AuthorQuery] {
                             request: HttpServletRequest,
                             @PathVariable("source") source: String,
                             model: Model): util.List[Paste] = listImpl(request, model, null,
-    "prev", null, "lastModified", false, source, null,null)
+    "prev", null, "lastModified",
+    false, source, null,null)
   @RequestMapping(value = Array("/list/{source}",
     "/raw/list/{source}",
     "/list/{source}/earlier"), method = Array(RequestMethod.GET))
@@ -120,7 +125,8 @@ class PasteListCtrl extends SearchCtrl[Paste, AuthorQuery] {
                  @RequestParam(required = false) page: java.lang.Integer,
                  @RequestParam(required = false) NPpage: String,
                  @RequestParam(required = false) pageSize: java.lang.Integer): java.util.List[Paste] = {
-    listImpl(request, model, page, NPpage, pageSize, null, false, source, null,null)
+    listImpl(request, model, page, NPpage, pageSize,
+      null, false, source, null,null)
   }
   @RequestMapping(value = Array("/list/{source}/older"), method = Array(RequestMethod.GET))
   @ModelAttribute(MvcConstants.NODE_LIST_MODEL)
@@ -182,7 +188,8 @@ class PasteListCtrl extends SearchCtrl[Paste, AuthorQuery] {
   @ModelAttribute("items")
   @ResponseBody
   def listOwnBody(): java.util.List[Paste] = manager().getByAuthor(getCurrentUser)
-  protected val pasterListCallback: PasteListCallback = new PasteListCallback(null, true, null)
+  protected val pasterListCallback: PasteListCallback = new PasteListCallback(null,
+    true, null)
   class PasteListCallback(channel: String, sortAsc: Boolean, integrationCode: String)
     extends SourceCallback[Paste] {
     override def invokeCreate(): PagedListHolder[Paste] = {

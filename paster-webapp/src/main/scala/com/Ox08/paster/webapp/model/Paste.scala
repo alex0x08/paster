@@ -124,7 +124,9 @@ class Paste(ptitle: String) extends Struct with java.io.Serializable {
   @NotNull
   @Column(name = "p_channel")
   var channel: String = _
-  // @Field(name = "tags", index = Index.YES, store = Store.YES, termVector = TermVector.YES) //,boost=@Boost(2f)
+  // @Field(name = "tags", index = Index.YES,
+  // store = Store.YES,
+  // termVector = TermVector.YES) //,boost=@Boost(2f)
   @FullTextField(name = "tags")
   @Column(name = "p_tags")
   var tagsAsString: String = _

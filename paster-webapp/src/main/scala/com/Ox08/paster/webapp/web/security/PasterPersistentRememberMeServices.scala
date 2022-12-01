@@ -44,10 +44,12 @@ class PasterPersistentRememberMeServices(key: String, uds: UserDetailsService, t
                                         request: HttpServletRequest,
                                         response: HttpServletResponse): UserDetails = {
     val token = getPersistentToken(cookieTokens)
-    val login = token.username
     // Token also matches, so login is valid. Update the token value, keeping the *same* series number.
-    log.debug("Refreshing persistent login token for user '{}', series '{}'",
-      Array(login, token.series))
+    val login = token.username
+    if (log.isDebugEnabled()) {
+      log.debug("Refreshing persistent login token for user '{}', series '{}'",
+        Array(login, token.series))
+    }
     token.tokenDate = new Date()
     token.tokenValue = generateTokenData()
     token.ipAddress = request.getRemoteAddr
@@ -58,13 +60,14 @@ class PasterPersistentRememberMeServices(key: String, uds: UserDetailsService, t
     } catch {
       case e@(_: DataAccessException
         ) =>
-        log.error(e.getLocalizedMessage, e)
-        throw new RememberMeAuthenticationException(s"Autologin failed due to data access problem: ${e.getMessage}")
+        throw new RememberMeAuthenticationException(
+          s"Autologin failed due to data access problem: ${e.getMessage}")
     }
     getUserDetailsService.loadUserByUsername(login)
   }
   protected def onLoginSuccess(
-                                request: HttpServletRequest, response: HttpServletResponse,
+                                request: HttpServletRequest,
+                                response: HttpServletResponse,
                                 successfulAuthentication: Authentication): Unit = {
     val login = successfulAuthentication.getName
     if (log.isDebugEnabled)
@@ -111,7 +114,7 @@ class PasterPersistentRememberMeServices(key: String, uds: UserDetailsService, t
   /**
    * Validate the token and return it.
    */
-  def getPersistentToken(cookieTokens: Array[String]): SessionToken = {
+  private def getPersistentToken(cookieTokens: Array[String]): SessionToken = {
     if (cookieTokens.length != 2) {
       throw new InvalidCookieException(
         s"Cookie token did not contain 2 tokens, but contained '${util.Arrays.asList(cookieTokens)}'")
@@ -151,7 +154,9 @@ class PasterPersistentRememberMeServices(key: String, uds: UserDetailsService, t
     Base64.getEncoder.encodeToString(newToken)
   }
   private def addCookie(
-                         token: SessionToken, request: HttpServletRequest, response: HttpServletResponse): Unit = {
+                         token: SessionToken,
+                         request: HttpServletRequest,
+                         response: HttpServletResponse): Unit = {
     setCookie(
       Array[String](token.series, token.tokenValue),
       CPRConstants.TOKEN_VALIDITY_SECONDS, request, response)

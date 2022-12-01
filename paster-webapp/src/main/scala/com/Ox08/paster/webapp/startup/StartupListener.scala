@@ -60,7 +60,7 @@ class StartupListener extends ServletContextListener with Logged {
   override def contextDestroyed(servletContextEvent: ServletContextEvent): Unit = {
     // not used
   }
-  def setupSecurityContext(): Unit = {
+  private def setupSecurityContext(): Unit = {
     val start_user = new PasterUser("System", "system",
       //fake password
       Md5Crypt.md5Crypt(SecureRandom.getSeed(20)),

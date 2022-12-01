@@ -73,7 +73,7 @@ abstract class GenericListCtrl[T <: Struct] extends AbstractCtrl {
   protected def editPage: String
   protected def viewPage: String
   /**
-   * binded DAO service
+   * bound DAO service
    */
   protected def manager(): StructDaoImpl[T]
   /**

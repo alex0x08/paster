@@ -47,7 +47,14 @@
                 <include>*config*.properties</include>
             </includes>
         </fileSet>
-              
+
+        <fileSet>
+            <directory>${project.basedir}/src/main/bin</directory>
+            <outputDirectory/>
+            <includes>
+                <include>*.sh</include>
+            </includes>
+        </fileSet>
 
         <fileSet>
             <directory>${project.basedir}/../paster-run/target</directory>

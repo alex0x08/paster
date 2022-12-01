@@ -79,7 +79,7 @@ class DynamicTilesViewProcessor extends Logged {
                               container: TilesContainer): Unit = {
     val tilesRequest = createTilesRequest(ServletUtil.getApplicationContext(servletContext),
       request, response)
-    // stip slashes
+    // remove multiple slashes
     var beanName: String = bName replaceAll("//", "/")
     // append / to start if needed
     if (!(beanName startsWith "/")) beanName = s"/$beanName"
@@ -152,7 +152,8 @@ class DynamicTilesViewProcessor extends Logged {
       throw new TilesException(s"No definition found for '$beanName'")
   }
   protected def createTilesRequest(applicationContext: ApplicationContext,
-                                   request: HttpServletRequest, response: HttpServletResponse): Request =
+                                   request: HttpServletRequest,
+                                   response: HttpServletResponse): Request =
     new ServletRequest(applicationContext,
       request, response) {
       override def getRequestLocale: Locale = RequestContextUtils.getLocale(request)
