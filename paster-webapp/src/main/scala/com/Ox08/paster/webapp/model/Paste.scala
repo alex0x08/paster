@@ -35,6 +35,12 @@ object Paste extends Struct {
    */
   val TITLE_LENGTH = 256
 }
+/**
+ * A tag entity
+ *
+ * @param tagString
+ *      tag as string
+ */
 @Entity
 @Indexed(index = "indexes/tags")
 @XStreamAlias("Tag")
@@ -54,14 +60,12 @@ class Tag(tagString: String) extends DBObject {
  *
  * This is entity object implements "pasta" : piece of code with id,title and text
  *
- * @author Alex
  */
 @Entity
 @Indexed(index = "indexes/pastas")
 @XStreamAlias("Paste")
 @Table(name = "P_PASTAS")
-class Paste(ptitle: String) extends Struct with java.io.Serializable {
-  def this() = this(null)
+class Paste extends Struct with java.io.Serializable {
   /**
    * unique paste id
    */

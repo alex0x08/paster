@@ -24,7 +24,7 @@ import java.text.SimpleDateFormat
 import java.util.{Base64, Calendar}
 import scala.collection.mutable
 object ResourceManager {
-  val PATH_FORMAT = new SimpleDateFormat("YYYY/MM/dd/")
+  private val PATH_FORMAT = new SimpleDateFormat("YYYY/MM/dd/")
 }
 /**
  * Resource Manager to persist/retrieve binaries attached to entities

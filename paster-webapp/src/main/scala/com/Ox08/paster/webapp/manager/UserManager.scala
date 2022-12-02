@@ -104,18 +104,26 @@ class UserManager extends UserDetailsService with Logged {
   private val sessionRegistry: SessionRegistry = null
   @Autowired
   private val passwordEncoder: PasswordEncoder = null
+  /**
+   * loads users from CSV file into in-memory map
+   */
   def loadUsers(): Unit = {
+    users.clear()
+    // the CSV file with users
     val csv = new File(Boot.BOOT.getSystemInfo.getAppHome, "users.csv")
     UserManager.loadUsersFromCSV(csv, (record: CSVRecord) => {
       if (logger.isDebugEnabled)
         logger.debug("processing record : {}", record)
+      // construct new paster user object
       val u = new PasterUser(record.get("NAME"),
         record.get("USERNAME"),
         record.get("PASSWORD"), util.Set.of(
+          // set role based on a switch
           if (record.get("ISADMIN").toBoolean)
             Role.ROLE_ADMIN
           else
             Role.ROLE_USER))
+      // save
       save(changePassword(u, u.getPassword()))
     })
   }
@@ -130,8 +138,7 @@ class UserManager extends UserDetailsService with Logged {
     if (logger.isDebugEnabled)
         logger.debug("saved {}", u.getUsername())
   }
-  @Override
-  def getUser(username: String): PasterUser = {
+  private def getUser(username: String): PasterUser = {
     if (users contains username)
       users(username)
     else null
@@ -159,7 +166,7 @@ class UserManager extends UserDetailsService with Logged {
       throw new UsernameNotFoundException(s"User $username not found")
     out
   }
-  def changePassword(user: PasterUser, newPassword: String): PasterUser = {
+  private def changePassword(user: PasterUser, newPassword: String): PasterUser = {
     val encodedPass = passwordEncoder.encode(newPassword)
     if (logger.isDebugEnabled)
       logger.debug("changing password for user {}", user.getUsername)

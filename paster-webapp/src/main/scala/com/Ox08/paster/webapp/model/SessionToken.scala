@@ -19,7 +19,7 @@ import jakarta.validation.constraints.{NotNull, Size}
 
 import java.util.Date
 object SessionToken {
-  val MAX_USER_AGENT_LEN = 255
+  private val MAX_USER_AGENT_LEN = 255
 }
 @Entity
 @Table(name = "P_USER_SESSIONS")
@@ -42,7 +42,7 @@ class SessionToken extends java.io.Serializable {
   var username: String = _
   def getUserAgent: String = userAgent
   def setUserAgent(userAgent: String): Unit = {
-    if (userAgent.length() >= SessionToken.MAX_USER_AGENT_LEN) {
+    if (userAgent!=null && userAgent.length() >= SessionToken.MAX_USER_AGENT_LEN) {
       this.userAgent = userAgent.substring(0, SessionToken.MAX_USER_AGENT_LEN - 1)
     } else {
       this.userAgent = userAgent

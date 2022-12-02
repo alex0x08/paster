@@ -39,14 +39,11 @@ abstract class Struct extends DBObject with SearchObject with java.io.Serializab
   @Column(name = "last_modified")
   @Temporal(TemporalType.TIMESTAMP)
   @GenericField
-  // @DateBridge(resolution = Resolution.DAY)
   @XStreamAsAttribute
   var lastModified: LocalDateTime = _
   @Column(name = "created")
   @Temporal(TemporalType.TIMESTAMP)
   @GenericField
-  //(index = Index.YES)
-  //@DateBridge(resolution = Resolution.DAY)
   @XStreamAsAttribute
   val created: LocalDateTime = LocalDateTime.now()
   @PrePersist

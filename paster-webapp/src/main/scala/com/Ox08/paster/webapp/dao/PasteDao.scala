@@ -25,6 +25,9 @@ import java.io.IOException
 import java.time.LocalDateTime
 import scala.collection.mutable
 import scala.jdk.CollectionConverters._
+/**
+ * Database logic for 'paste' entity
+ */
 @Repository("pasteDao")
 @Transactional(readOnly = true, rollbackFor = Array(classOf[Exception]))
 class PasteDao extends SearchableDaoImpl[Paste](classOf[Paste]) {

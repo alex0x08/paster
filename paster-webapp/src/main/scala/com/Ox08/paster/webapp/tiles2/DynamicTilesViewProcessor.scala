@@ -33,7 +33,7 @@ import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
  *
  * Initially had been taken from famous 'Pet Store' Spring demo project, rewritten to Scala.
  */
-class DynamicTilesViewProcessor extends Logged {
+private class DynamicTilesViewProcessor extends Logged {
   /**
    * Keeps Tiles definition to use once derived.
    */
@@ -102,10 +102,10 @@ class DynamicTilesViewProcessor extends Logged {
    * Starts processing the dynamic Tiles definition by creating a temporary definition for rendering.
    */
   @throws(classOf[TilesException])
-  protected def startDynamicDefinition(beanName: String,
-                                       url: String,
-                                       tilesRequest: Request,
-                                       container: TilesContainer): String = {
+  private def startDynamicDefinition(beanName: String,
+                                     url: String,
+                                     tilesRequest: Request,
+                                     container: TilesContainer): String = {
     val definitionName: String = processTilesDefinitionName(beanName, container,
       tilesRequest)
     // create a temporary context and render using the incoming url as the
@@ -121,10 +121,10 @@ class DynamicTilesViewProcessor extends Logged {
   /**
    * Closes the temporary Tiles definition.
    */
-  protected def endDynamicDefinition(definitionName: String,
-                                     beanName: String,
-                                     tilesRequest: Request,
-                                     container: TilesContainer): Unit = {
+  private def endDynamicDefinition(definitionName: String,
+                                   beanName: String,
+                                   tilesRequest: Request,
+                                   container: TilesContainer): Unit = {
     if (!definitionName.equals(beanName))
       container.endContext(tilesRequest)
   }
@@ -151,9 +151,9 @@ class DynamicTilesViewProcessor extends Logged {
     } else
       throw new TilesException(s"No definition found for '$beanName'")
   }
-  protected def createTilesRequest(applicationContext: ApplicationContext,
-                                   request: HttpServletRequest,
-                                   response: HttpServletResponse): Request =
+  private def createTilesRequest(applicationContext: ApplicationContext,
+                                 request: HttpServletRequest,
+                                 response: HttpServletResponse): Request =
     new ServletRequest(applicationContext,
       request, response) {
       override def getRequestLocale: Locale = RequestContextUtils.getLocale(request)
