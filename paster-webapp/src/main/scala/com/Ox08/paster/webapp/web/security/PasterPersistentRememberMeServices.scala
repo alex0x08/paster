@@ -36,9 +36,7 @@ object CPRConstants {
 }
 class PasterPersistentRememberMeServices(key: String, uds: UserDetailsService, tokenDao: SessionTokensDao)
   extends
-    AbstractRememberMeServices(key, uds) {
-  private val log = Logged.getLogger(getClass)
-  private val random = new SecureRandom()
+    AbstractRememberMeServices(key, uds) with Logged {
   protected def processAutoLoginCookie(
                                         cookieTokens: Array[String],
                                         request: HttpServletRequest,
@@ -46,9 +44,9 @@ class PasterPersistentRememberMeServices(key: String, uds: UserDetailsService, t
     val token = getPersistentToken(cookieTokens)
     // Token also matches, so login is valid. Update the token value, keeping the *same* series number.
     val login = token.username
-    if (log.isDebugEnabled()) {
-      log.debug("Refreshing persistent login token for user '{}', series '{}'",
-        Array(login, token.series))
+    if (logger.isDebugEnabled) {
+      logger.debug("Refreshing persistent login token for user '{}', series '{}'",
+        login, token.series)
     }
     token.tokenDate = new Date()
     token.tokenValue = generateTokenData()
@@ -70,8 +68,8 @@ class PasterPersistentRememberMeServices(key: String, uds: UserDetailsService, t
                                 response: HttpServletResponse,
                                 successfulAuthentication: Authentication): Unit = {
     val login = successfulAuthentication.getName
-    if (log.isDebugEnabled)
-      log.debug("Creating new persistent login for user {}", login)
+    if (logger.isDebugEnabled)
+      logger.debug(s"Creating new persistent login for user $login")
     val user = getUserDetailsService.loadUserByUsername(login).asInstanceOf[PasterUser]
     val token = new SessionToken()
     token.series = generateSeriesData()
@@ -86,7 +84,7 @@ class PasterPersistentRememberMeServices(key: String, uds: UserDetailsService, t
     } catch {
       case e@(_: DataAccessException
         ) =>
-        log.error(e.getMessage, e)
+        logger.error(e.getMessage, e)
     }
   }
   /**
@@ -107,7 +105,7 @@ class PasterPersistentRememberMeServices(key: String, uds: UserDetailsService, t
       case e@(_: InvalidCookieException
               | _: RememberMeAuthenticationException
         ) =>
-        log.error(e.getMessage, e)
+        logger.error(e.getMessage, e)
     }
     super.logout(request, response, authentication)
   }
@@ -128,14 +126,15 @@ class PasterPersistentRememberMeServices(key: String, uds: UserDetailsService, t
         s"No persistent token found for series id: $presentedSeries")
     }
     // We have a match for this user/series combination
-    log.info("presentedToken={} / tokenValue={}",
-      Array(presentedToken, token.tokenValue))
+    logger.debug("presentedToken={} / tokenValue={}",
+      presentedToken, token.tokenValue)
     if (!presentedToken.equals(token.tokenValue)) {
       // Token doesn't match series value. Delete this session and throw an exception.
       tokenDao.remove(token.series)
       throw new RememberMeAuthenticationException(
         "Invalid remember-me token (Series/token) mismatch. Implies previous cookie theft attack.")
     }
+    // check for expiration
     if (LocalDate.ofInstant(token.tokenDate.toInstant, ZoneId.systemDefault())
       .plusDays(CPRConstants.TOKEN_VALIDITY_DAYS).isBefore(LocalDate.now())) {
       tokenDao.remove(token.series)
@@ -145,12 +144,12 @@ class PasterPersistentRememberMeServices(key: String, uds: UserDetailsService, t
   }
   private def generateSeriesData(): String = {
     val newSeries = new Array[Byte](CPRConstants.DEFAULT_SERIES_LENGTH)
-    random.nextBytes(newSeries)
+    new SecureRandom().nextBytes(newSeries)
     Base64.getEncoder.encodeToString(newSeries)
   }
   private def generateTokenData(): String = {
     val newToken = new Array[Byte](CPRConstants.DEFAULT_TOKEN_LENGTH)
-    random.nextBytes(newToken)
+    new SecureRandom().nextBytes(newToken)
     Base64.getEncoder.encodeToString(newToken)
   }
   private def addCookie(

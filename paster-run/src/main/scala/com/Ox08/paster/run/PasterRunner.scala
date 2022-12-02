@@ -20,60 +20,86 @@ import org.eclipse.jetty.util.resource.Resource
 import org.eclipse.jetty.webapp._
 import org.slf4j.LoggerFactory
 
-import java.io.IOException
+import java.io.{File, IOException}
 import java.net.{URL, URLClassLoader}
 import java.util
 import java.util.{Locale, Properties}
 /**
- * Runner
+ * Paster Runner.
+ * Based on 'Jetty Runner' project, but on Scala.
  * <p>
- * Combine jetty classes into a single executable jar and run webapps based on the args to it.
+ * 'Combine jetty classes into a single executable jar and run webapps based on the args to it'
  *
+ * This is the static instance, used to store constants
  */
 object PasterRunner {
   private val LOG = LoggerFactory.getLogger(classOf[PasterRunner])
-  val JETTY_CONFIGURATION_CLASSES: Array[String] = Array(
+  // array with jetty configuration classes
+  //  all required to support servlets + jsp + taglibs
+  private val JETTY_CONFIGURATION_CLASSES: Array[String] = Array(
     classOf[WebInfConfiguration].getCanonicalName,
     classOf[WebXmlConfiguration].getCanonicalName,
     classOf[org.eclipse.jetty.annotations.AnnotationConfiguration].getCanonicalName,
     classOf[WebAppConfiguration].getCanonicalName,
     classOf[JspConfiguration].getCanonicalName)
-  val DEFAULT_CONTEXT_PATH = "/"
-  val DEFAULT_PORT = 8080
+  private val DEFAULT_CONTEXT_PATH = "/"
+  private val DEFAULT_PORT = 8080
+  /**
+   * The start point
+   * @param args
+   *    array with command line arguments
+   */
   def main(args: Array[String]): Unit = {
+    // create instance
     val runner = new PasterRunner
-    try if (args.length > 0 && args(0).equalsIgnoreCase("--help"))
+    // show usage
+    try if (args.length > 0 && args(0)
+          .equalsIgnoreCase("--help"))
       runner.usage(null)
-    else if (args.length > 0 && args(0).equalsIgnoreCase("--version"))
+    // show version
+    else if (args.length > 0 && args(0)
+          .equalsIgnoreCase("--version"))
       runner.version()
+    // start application
     else {
+      // load configuration
       runner.loadConf()
+      // apply settings
       runner.configure(args)
+      // run server
       runner.run()
     }
     catch {
       case e: Exception =>
-        e.printStackTrace()
+        LOG.error(e.getMessage,e)
         runner.usage(null)
     }
   }
 }
+/**
+ * The runner class itself
+ */
 class PasterRunner() {
+  // if started in 'debug mode'
+  // if most cases this will trigger more verbose logging
   private var isDebug = false
+  // configured context path
   private var contextPath = PasterRunner.DEFAULT_CONTEXT_PATH
+  // and port
   private var port = PasterRunner.DEFAULT_PORT
   private var host: String = _
   private var warFile: String = _
   private var contextPathSet = false
   private var runnerServerInitialized = false
-  protected var _server: Server = _
-  protected var _classLoader: URLClassLoader = _
-  protected var _classpath = new Classpath
-  protected var _contexts: ContextHandlerCollection = _
+   private var _server: Server = _
+   private var _classLoader: URLClassLoader = _
+  private val _classpath = new Classpath
+   private var _contexts: ContextHandlerCollection = _
   /**
-   * Classpath
+   * Virtual 'Classpath'
+   * Holds list of classpath urls
    */
-  class Classpath {
+  private class Classpath {
     private val _classpath = new util.ArrayList[URL]
     @throws[IOException]
     def addJars(lib: Resource): Unit = {
@@ -104,7 +130,7 @@ class PasterRunner() {
    *
    * @param error the error header
    */
-  def usage(error: String): Unit = {
+  private def usage(error: String): Unit = {
     if (error != null) System.err.println("ERROR: " + error)
     System.err.println("Usage: java [-Djetty.home=dir] -jar jetty-runner.jar [--help|--version] [ server opts] [[ context opts] context ...] ")
     System.err.println("Server opts:")
@@ -119,19 +145,18 @@ class PasterRunner() {
   /**
    * Generate version message and exit
    */
-  def version(): Unit = {
-    System.out.printf("org.eclipse.jetty.runner.Runner: %s" , Server.getVersion)
+  private def version(): Unit = {
+    System.out.printf("org.eclipse.jetty.runner.Runner: %s", Server.getVersion)
     System.exit(1)
   }
   @throws(classOf[IOException])
-  def loadConf(): Unit = {
+  private def loadConf(): Unit = {
     val p = new Properties()
     p.load(getClass.getResourceAsStream("/config.properties"))
     if (p.containsKey("appDebug"))
       isDebug = "true".equals(p.getProperty("appDebug", "false"))
     else
       isDebug = "true".equals(System.getProperty("appDebug", "false"))
-
     if (p.containsKey("paster.runner.port"))
       this.port = p.getProperty("paster.runner.port").toInt
     if (p.containsKey("paster.runner.host"))
@@ -148,14 +173,16 @@ class PasterRunner() {
    * @throws Exception if unable to configure
    */
   @throws[Exception]
-  def configure(args: Array[String]): Unit = {
+  private def configure(args: Array[String]): Unit = {
     // handle classpath bits first so we can initialize the log mechanism.
     var i: Int = 0
     if (args.length > 0) {
       while (i < args.length) {
         val arg = args(i)
         if ("--lib" eq arg) {
-          val lib = Resource.newResource(args({ i += 1; i }))
+          val lib = Resource.newResource(args({
+            i += 1; i
+          }))
           if (!lib.exists || !lib.isDirectory) usage(s"No such lib directory $lib")
           _classpath.addJars(lib)
         } else if (arg.startsWith("--"))
@@ -164,18 +191,24 @@ class PasterRunner() {
       }
     }
     initClassLoader()
-    PasterRunner.LOG.info("Paster Runner, debug: {}",isDebug)
+    PasterRunner.LOG.info("Paster Runner, debug: {}", isDebug)
     PasterRunner.LOG.debug("Runner classpath {}", _classpath)
     i = 0
     if (args.length > 0) {
       while (i < args.length) {
         args(i) match {
           case "--port" =>
-            port = args({i += 1; i}).toInt
+            port = args({
+              i += 1; i
+            }).toInt
           case "--host" =>
-            host = args({i += 1; i})
+            host = args({
+              i += 1; i
+            })
           case "--path" =>
-            contextPath = args({i += 1; i})
+            contextPath = args({
+              i += 1; i
+            })
             contextPathSet = true
           case "--lib" =>
             i += 1 //skip
@@ -190,7 +223,7 @@ class PasterRunner() {
       usage("No Contexts defined")
   }
   private def setupContexts(appFile: String): Unit = {
-    PasterRunner.LOG.info("Loading WAR: {}",appFile)
+    PasterRunner.LOG.info("Loading WAR: {}", appFile)
     //TomcatURLStreamHandlerFactory.disable()
     // process contexts
     if (!runnerServerInitialized) {
@@ -238,15 +271,14 @@ class PasterRunner() {
       val webapp = new WebAppContext(_contexts, ctx.toString, contextPath)
       webapp.setClassLoader(new LiveWarClassLoader(isDebug, ctx.getURI.toURL,
         Thread.currentThread.getContextClassLoader))
-      import java.io.File
       val warFile = new File(ctx.getURI)
       System.setProperty("org.eclipse.jetty.livewar.LOCATION", warFile.getAbsolutePath)
       webapp.setExtractWAR(false)
       webapp.setInitParameter("org.eclipse.jetty.servlet.Default.useFileMappedBuffer", "false")
       webapp.setConfigurationClasses(PasterRunner.JETTY_CONFIGURATION_CLASSES)
-      var fname = getClass.getProtectionDomain.getCodeSource.getLocation.getFile
-      fname = fname.substring(fname.lastIndexOf('/'))
-      val incPattern = ".*" + fname.replace(".", "\\\\.") + "$"
+      var fName = getClass.getProtectionDomain.getCodeSource.getLocation.getFile
+      fName = fName.substring(fName.lastIndexOf('/'))
+      val incPattern = ".*" + fName.replace(".", "\\\\.") + "$"
       webapp.setAttribute(MetaInfConfiguration.CONTAINER_JAR_PATTERN, incPattern)
     } finally
       if (ctx != null)
@@ -255,7 +287,7 @@ class PasterRunner() {
     contextPathSet = false
     contextPath = PasterRunner.DEFAULT_CONTEXT_PATH
   }
-  protected def prependHandler(handler: Handler, handlers: HandlerCollection): Unit = {
+   private def prependHandler(handler: Handler, handlers: HandlerCollection): Unit = {
     if (handler == null || handlers == null)
       return
     val existing = handlers.getChildHandlers
@@ -272,7 +304,7 @@ class PasterRunner() {
   /**
    * Establish a classloader with custom paths (if any)
    */
-  protected def initClassLoader(): Unit = {
+   private def initClassLoader(): Unit = {
     val paths = _classpath.asArray
     if (_classLoader == null && paths.length > 0) {
       val context = Thread.currentThread.getContextClassLoader
