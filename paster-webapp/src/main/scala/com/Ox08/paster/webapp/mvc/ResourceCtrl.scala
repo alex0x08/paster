@@ -89,7 +89,7 @@ class ResourceCtrl extends AbstractCtrl {
    * @throws java.io.IOException
    */
   @throws(classOf[IOException])
-  def writeError(response: HttpServletResponse, msg: String, status: Int): Unit = {
+  private def writeError(response: HttpServletResponse, msg: String, status: Int): Unit = {
     response.setContentType("text/html;charset=UTF-8")
     response.setStatus(status)
     val out = response.getWriter

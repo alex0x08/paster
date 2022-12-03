@@ -48,7 +48,7 @@ abstract class SearchCtrl[T <: Struct, QV <: Query] extends GenericListCtrl[T] {
     super.fillListModel(model)
     model.addAttribute("availableResults", getAvailableResults)
   }
-  protected def fillSearchModel(model: Model): Unit = {
+   private def fillSearchModel(model: Model): Unit = {
     model.addAttribute("listMode", "search")
   }
   /**
