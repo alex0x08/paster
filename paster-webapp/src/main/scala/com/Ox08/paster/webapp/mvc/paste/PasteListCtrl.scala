@@ -159,13 +159,13 @@ class PasteListCtrl extends SearchCtrl[Paste, AuthorQuery] {
                     @PathVariable("since") dateFrom: java.lang.Long): java.lang.Long = {
     pasteDao.countAllSince(channelCode, dateFrom)
   }
-  def listImpl(request: HttpServletRequest, model: Model,
-               page: java.lang.Integer,
-               NPpage: String,
-               pageSize: java.lang.Integer,
-               sortColumn: String,
-               sortAsc: java.lang.Boolean = false,
-               channelCode: String, integrationCode: String,result: String): java.util.List[Paste] = {
+  private def listImpl(request: HttpServletRequest, model: Model,
+                       page: java.lang.Integer,
+                       NPpage: String,
+                       pageSize: java.lang.Integer,
+                       sortColumn: String,
+                       sortAsc: java.lang.Boolean = false,
+                       channelCode: String, integrationCode: String, result: String): java.util.List[Paste] = {
     if (logger.isDebugEnabled)
       logger.debug("paste listImpl, channel: {} pageSize {}", channelCode,pageSize)
     fillListModel(model)
@@ -188,9 +188,9 @@ class PasteListCtrl extends SearchCtrl[Paste, AuthorQuery] {
   @ModelAttribute("items")
   @ResponseBody
   def listOwnBody(): java.util.List[Paste] = manager().getByAuthor(getCurrentUser)
-  protected val pasterListCallback: PasteListCallback = new PasteListCallback(null,
+   private val pasterListCallback: PasteListCallback = new PasteListCallback(null,
     true, null)
-  class PasteListCallback(channel: String, sortAsc: Boolean, integrationCode: String)
+  private class PasteListCallback(channel: String, sortAsc: Boolean, integrationCode: String)
     extends SourceCallback[Paste] {
     override def invokeCreate(): PagedListHolder[Paste] = {
       val ph = new ExtendedPageListHolder[Paste](
@@ -211,8 +211,8 @@ class PasteListCtrl extends SearchCtrl[Paste, AuthorQuery] {
     }
   }
   class DateSplitHelper(splitDays: Int, locale: Locale) {
-    var prevDate: Date = _
-    var curDate: Date = _
+    private var prevDate: Date = _
+    private var curDate: Date = _
     var total: Int = 0
     var title: String = _
     def setCurDate(date: Date): Unit = {

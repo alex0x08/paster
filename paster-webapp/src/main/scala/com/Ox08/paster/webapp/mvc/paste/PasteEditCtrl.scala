@@ -40,19 +40,19 @@ import scala.jdk.CollectionConverters._
 @RequestMapping(Array("/paste"))
 class PasteEditCtrl extends GenericEditCtrl[Paste] {
   @Autowired
-  val codeTypeDao: CodeTypeDao = null
+  private val codeTypeDao: CodeTypeDao = null
   @Autowired
   val channelDao: ChannelDao = null
   @Autowired
-  val priorities: PriorityDao = null
+  private val priorities: PriorityDao = null
   @Autowired
-  val tagDao: TagDao = null
+  private val tagDao: TagDao = null
   @Autowired
   val pasteDao: PasteDao = null
   @Autowired
   val commentDao: CommentDao = null
   @Autowired
-  val resourceDao: ResourceManager = null
+  private val resourceDao: ResourceManager = null
   def listPage = "redirect:/main/paste/list"
   def editPage = "paste/edit"
   def viewPage = "paste/view"
@@ -103,7 +103,7 @@ class PasteEditCtrl extends GenericEditCtrl[Paste] {
     p.priority = priorities.getDefault
     p
   }
-  def getNewCommentInstance(pp: Paste): Comment = {
+  private def getNewCommentInstance(pp: Paste): Comment = {
     val p = new Comment()
     if (getCurrentUser != null)
       p.author = getCurrentUser.getUsername()

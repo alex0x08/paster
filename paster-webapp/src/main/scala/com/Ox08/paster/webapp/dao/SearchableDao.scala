@@ -63,9 +63,6 @@ abstract class SearchableDaoImpl[T <: Struct](model: Class[T])
     private val searchSession: SearchSession = getFullTextEntityManager
     val queryParser = new MultiFieldQueryParser(getDefaultStartFields,
       new StandardAnalyzer())
-  //  val sort: org.apache.lucene.search.Sort = new org.apache.lucene.search.Sort(
-  //    new org.apache.lucene.search.SortField("id",
-   //     org.apache.lucene.search.SortField.Type.LONG))
     private val luceneQuery: org.apache.lucene.search.Query = queryParser.parse(query)
     private val scorer: QueryScorer = new QueryScorer(luceneQuery)
     val highlighter: Highlighter = new Highlighter(SearchableDaoImpl.FORMATTER, scorer)

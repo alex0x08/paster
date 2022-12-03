@@ -76,7 +76,7 @@ abstract class AbstractI18nMessageStore protected( // default bundle name
 class PasterRuntimeException(code: Int, // error code ( ex. 0x06001 )
                              message: String, parent: Exception) extends RuntimeException(message, parent) {
   updateTrace(parent)
-  final def updateTrace(parent: Exception): Unit = {
+  private final def updateTrace(parent: Exception): Unit = {
     if (parent != null)
       setStackTrace(parent.getStackTrace)
   }

@@ -62,12 +62,12 @@ class ResourceCtrl extends AbstractCtrl {
       case 't' | 'r' | 'a' | 'b' =>
       //allow
       case _ =>
-        writeError(response, "unknown type", 404)
+        writeError(response, "unknown type")
         return null
     }
     val fImg = resourcePathHelper.getResource(pType, path)
     if (fImg == null) {
-      writeError(response, "file not found", 404)
+      writeError(response, "file not found")
       return null
     }
     response.setHeader("Content-Length", fImg.length().toString)
@@ -89,9 +89,9 @@ class ResourceCtrl extends AbstractCtrl {
    * @throws java.io.IOException
    */
   @throws(classOf[IOException])
-  private def writeError(response: HttpServletResponse, msg: String, status: Int): Unit = {
+  private def writeError(response: HttpServletResponse, msg: String): Unit = {
     response.setContentType("text/html;charset=UTF-8")
-    response.setStatus(status)
+    response.setStatus(404)
     val out = response.getWriter
     out.println(new mutable.StringBuilder()
       .append("<html><head><title>ERROR: ")

@@ -86,7 +86,7 @@ class ResourceManager extends Logged {
    * single char resource type
    * @return
    */
-  def getExtFor(resourceType: Char): String = resourceType match {
+  private def getExtFor(resourceType: Char): String = resourceType match {
     case 'r' =>
       "png"
     case _ =>

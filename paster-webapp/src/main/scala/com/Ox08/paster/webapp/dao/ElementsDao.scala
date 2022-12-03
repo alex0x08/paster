@@ -38,13 +38,13 @@ object ElementsDao {
 @Service
 class CodeTypeDao(@Value("${paster.codeTypes:null}")
                   codeTypesString: String,
-                  @Value("${paster.codeTypes.default:'plain'}")
+                          @Value("${paster.codeTypes.default:'plain'}")
                   codeTypeDefault: String
                  ) extends AbstractStringBasedDao(codeTypesString, codeTypeDefault) {}
 @Service
 class PriorityDao(@Value("${paster.priorities:null}")
                   prioritiesString: String,
-                  @Value("${paster.priorities.default:'Normal'}")
+                          @Value("${paster.priorities.default:'Normal'}")
                   priorityDefault: String) extends AbstractStringBasedDao(prioritiesString, priorityDefault) {}
 @Service
 class ChannelDao(@Value("${paster.channels:null}")
@@ -61,7 +61,7 @@ class ChannelDao(@Value("${paster.channels:null}")
  */
 abstract class AbstractStringBasedDao(elementsAsString: String,
                                       defaultElement: String) extends Logged {
-  var elements: mutable.Set[String] = mutable.Set[String]()
+  private val elements: mutable.Set[String] = mutable.Set[String]()
   if (StringUtils.isBlank(elementsAsString))
       elements += defaultElement
   else {

@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 package com.Ox08.paster.webapp.web.security
-import com.Ox08.paster.webapp.base.Logged
 import com.Ox08.paster.webapp.dao.SessionTokensDao
 import com.Ox08.paster.webapp.manager.UserManager
 import com.Ox08.paster.webapp.model.{PasterUser, SessionToken}
@@ -23,6 +22,7 @@ import org.springframework.dao.DataAccessException
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.userdetails.{UserDetails, UserDetailsService}
 import org.springframework.security.web.authentication.rememberme.{AbstractRememberMeServices, InvalidCookieException, RememberMeAuthenticationException}
+
 import java.security.SecureRandom
 import java.time.{LocalDate, ZoneId}
 import java.util
@@ -36,7 +36,7 @@ object CPRConstants {
 }
 class PasterPersistentRememberMeServices(key: String, uds: UserDetailsService, tokenDao: SessionTokensDao)
   extends
-    AbstractRememberMeServices(key, uds) with Logged {
+    AbstractRememberMeServices(key, uds) {
   protected def processAutoLoginCookie(
                                         cookieTokens: Array[String],
                                         request: HttpServletRequest,
