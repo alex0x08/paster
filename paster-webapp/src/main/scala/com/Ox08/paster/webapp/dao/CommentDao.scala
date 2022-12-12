@@ -31,6 +31,7 @@ class CommentDao extends SearchableDaoImpl[Comment](classOf[Comment]) {
   /**
    * Deletes all existing comments for selected paste id
    * @param pasteId
+   *        paste's PK
    */
   def deleteCommentsFor(pasteId: Integer): Unit = {
     val cr = new CriteriaSet
@@ -71,10 +72,15 @@ class CommentDao extends SearchableDaoImpl[Comment](classOf[Comment]) {
     getListByKeyValue("pasteId", pasteId,
       Option("lastModified"),
       Option(true))
+  /**
+   * highlight search results
+   * @param highlighter
+   * @param queryParser
+   * @param model
+   */
   override def fillHighlighted(highlighter: Highlighter,
                                queryParser: QueryParser,
-                               model: Comment): Unit = {
-    try {
+                               model: Comment): Unit = try {
       val hl = highlighter
         .getBestFragments(queryParser.getAnalyzer
           .tokenStream("text", model.text),
@@ -85,5 +91,4 @@ class CommentDao extends SearchableDaoImpl[Comment](classOf[Comment]) {
       case e@(_: IOException | _: InvalidTokenOffsetsException) =>
         logger.error(e.getLocalizedMessage, e)
     }
-  }
 }

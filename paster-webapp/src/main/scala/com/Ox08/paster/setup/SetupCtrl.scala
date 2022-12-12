@@ -453,16 +453,28 @@ class SetupCtrl extends Logged {
   }
 }
 import org.springframework.core.io.ClassPathResource
+/**
+ * Paster's configuration service.
+ * Holds all user-defined configuration and configuration steps.
+ */
 @Service
 class PasterSetupService extends Logged {
+  // configuration template, taken from resources
   @Value("${classpath*:config.template}")
   private val configTemplate: ClassPathResource = null
+  // map with configuration steps
   private val setupMap: mutable.Map[String, SetupStep] = mutable.LinkedHashMap()
+  // link to locale resolver - to update locale configuration at runtime.
   @Autowired
   val localeResolver: PasterLocaleResolver = null
+  // JSR 303 bean validator
   @Autowired
   val validator: Validator = null
+  // mark that setup is in progress
   private[setup] var installInProgress: Boolean = false
+  /**
+   *
+   */
   @PostConstruct
   def onInit(): Unit = {
     val steps: Array[SetupStep] = Array(new WelcomeStep, new SetupDbStep, new SetupUsersStep)
@@ -548,11 +560,18 @@ class PasterSetupService extends Logged {
     FileUtils.writeStringToFile(BOOT.getSystemInfo.getConfigFile, filledTemplate, "UTF-8")
   }
 }
+/**
+ * A step to setup initial users
+ */
 class SetupUsersStep extends SetupStep("users", "paster.setup.step.users.title") {
+  // list of pre-configured users
   val users: java.util.List[UserDTO] = new util.ArrayList[UserDTO]()
+  // Paster's security mode
   @NotNull(message = "{validator.not-null}")
   var securityMode: String = _
+  // option to allow anonymous comments
   var allowAnonymousCommentsCreate: Boolean = _
+  // option to allow anonymous pastas creation
   var allowAnonymousPastasCreate: Boolean = _
   def getUsers: java.util.List[UserDTO] = users
   def isAllowAnonymousCommentsCreate: Boolean = allowAnonymousCommentsCreate
@@ -567,20 +586,29 @@ class SetupUsersStep extends SetupStep("users", "paster.setup.step.users.title")
   def setSecurityMode(mode: String): Unit = {
     this.securityMode = mode
   }
+  /**
+   *
+   * @param dto
+   * @param result
+   */
   override def update(dto: SetupStep, result: BindingResult): Unit = {
     val update: SetupUsersStep = dto.asInstanceOf[SetupUsersStep]
+    // disallow empty security mode
     if (StringUtils.isBlank(update.securityMode)) {
       result.reject("paster.setup.step.users.reject.security-mode-not-set")
       return
     }
+    // check if there were no users provided
     if (update.users.isEmpty) {
       result.reject("paster.setup.step.users.reject.at-least-one-user-required")
       return
     }
+    // count users with 'ADMIN' role
     var totalAdmins: Int = 0
     for (u <- update.users.asScala) {
       if (u.isAdmin)
         totalAdmins += 1
+      // check if all fields in users table are not empty
       if (StringUtils.isBlank(u.getName) ||
         StringUtils.isBlank(u.getUsername) ||
         StringUtils.isBlank(u.getPassword)) {
@@ -588,16 +616,20 @@ class SetupUsersStep extends SetupStep("users", "paster.setup.step.users.title")
         return
       }
     }
+    // if there were no admins specified - reject
     if (totalAdmins < 1) {
       result.reject("paster.setup.step.users.reject.at-least-one-admin-required")
       return
     }
+    // update security mode
     this.securityMode = update.securityMode
+    // mark step as completed
     markCompleted()
   }
 }
 /**
- * Database configuration step
+ * Database configuration step.
+ * User would select there a database type, connection string, jdbc driver class and so on.
  */
 class SetupDbStep extends SetupStep("db", "paster.setup.step.db.title") {
   //@NotEmpty
@@ -642,6 +674,7 @@ class SetupDbStep extends SetupStep("db", "paster.setup.step.db.title") {
     if (update.origName.contains("H2")) {
       val dbType = SetupConstants.getAvailableDrivers.find(p => update.origName
         .equalsIgnoreCase(p.getName))
+        // should not happen
         .orElse(throw new RuntimeException(s"Cannot find type ${update.origName}")).get
       this.dbType = dbType.getDriver
       this.dbUrl = dbType.getUrl
@@ -652,13 +685,15 @@ class SetupDbStep extends SetupStep("db", "paster.setup.step.db.title") {
       this.dbPassword = update.dbPassword
       this.origName = update.origName
     }
-
-    if (StringUtils.isBlank(this.dbUrl)) {
-      result.rejectValue("step.dbUrl","paster.setup.step.db.url.reject")
-    }
+    // check for empty database type
     if (StringUtils.isBlank(this.dbType)) {
       result.rejectValue("step.dbType", "paster.setup.step.db.driver.reject")
     }
+    // check for empty jdbc connection string
+    if (StringUtils.isBlank(this.dbUrl)) {
+      result.rejectValue("step.dbUrl","paster.setup.step.db.url.reject")
+    }
+    // check for JSR303 validation errors
     if (result.hasErrors) {
       markUnCompleted()
     } else {
@@ -667,13 +702,14 @@ class SetupDbStep extends SetupStep("db", "paster.setup.step.db.title") {
   }
 }
 /**
- * Welcome step
+ * Welcome step.
+ * Here we select system locale and some language options.
  */
 class WelcomeStep extends SetupStep("welcome",
     "paster.setup.step.welcome.title") {
   @NotNull(message = "{validator.not-null}")
-  var defaultLang: String = "en"
-  var switchToUserLocale: Boolean = true
+  var defaultLang: String = "en" // Paster application language
+  var switchToUserLocale: Boolean = true // if we going to autodetect user's locale from his browser
   def getDefaultLang: String = defaultLang
   def isSwitchToUserLocale: Boolean = switchToUserLocale
   def setDefaultLang(lang: String): Unit = {
@@ -682,25 +718,40 @@ class WelcomeStep extends SetupStep("welcome",
   def setSwitchToUserLocale(switch: Boolean): Unit = {
     this.switchToUserLocale = switch
   }
+  /**
+   * Updates values from input form
+   * @param dto
+   *      a DTO with updated values
+   * @param result
+   *      form binding result - to respond validation errors
+   */
   override def update(dto: SetupStep, result: BindingResult): Unit = {
     if (logger.isDebugEnabled)
       logger.debug(s"called update dto: ${dto.getClass.getName}")
+
     val update: WelcomeStep = dto.asInstanceOf[WelcomeStep]
+    // check if system language selected
     if (StringUtils.isBlank(update.getDefaultLang)) {
       result.reject("*","system language is not set")
       return
     }
+    // update system language selection
     this.defaultLang = update.getDefaultLang
+    // update 'switch to user locale' option
     this.switchToUserLocale = update.isSwitchToUserLocale
     if (logger.isDebugEnabled)
       logger.debug(s"defaultLang: ${this.defaultLang} " +
         s"switchToUserLocale: ${this.switchToUserLocale}")
+    // mark that step is completed
     markCompleted()
   }
 }
 /**
- * Parent step model
+ * Parent step model, wraps actual step object.
+ * This is required to solve issues with current step class, that may vary.
+ *
  * @param _step
+ *        current step object
  */
 class StepModel(_step: SetupStep) {
   def this() = this(null)
@@ -736,10 +787,15 @@ abstract class SetupStep(stepKey: String, stepName: String) extends Logged {
  * A database type
  *
  * @param name
+ *    type name
  * @param url
+ *      jdbc connection url
  * @param driver
+ *      jdbc driver class
  * @param current
+ *    if true - this type is selected
  * @param editable
+ *    if true - this type is editable
  */
 class DbType(name: String,
              url: String,
@@ -754,10 +810,18 @@ class DbType(name: String,
   def isEditable: Boolean = editable
   def setCurrent(v: Boolean): Unit = { _current = v }
 }
+/**
+ * DTO for security mode
+ * @param name
+ * @param key
+ */
 class SecurityMode(name: String, key: String) {
   def getName: String = name
   def getKey: String = key
 }
+/**
+ * a DTO with single user details
+ */
 class UserDTO {
   private var _username: String = _
   private var _name: String = _
