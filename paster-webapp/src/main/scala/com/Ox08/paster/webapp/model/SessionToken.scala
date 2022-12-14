@@ -18,6 +18,11 @@ import jakarta.persistence._
 import jakarta.validation.constraints.{NotNull, Size}
 
 import java.util.Date
+/**
+ * User session's authentication token.
+ * This is used to persist session and automatically log-in user if session exists in database and not expired.
+ *
+ */
 object SessionToken {
   private val MAX_USER_AGENT_LEN = 255
 }

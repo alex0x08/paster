@@ -17,6 +17,10 @@ package com.Ox08.paster.webapp.web
 import jakarta.servlet.ServletException
 import org.springframework.web.servlet.mvc.WebContentInterceptor
 import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
+/**
+ * This class intercepts requests to static resources and
+ * adds 'cache control' header, also drops cookie header.
+ */
 class StaticResourcesContentInterceptor extends WebContentInterceptor {
   @throws(classOf[ServletException])
   override def preHandle(request: HttpServletRequest,

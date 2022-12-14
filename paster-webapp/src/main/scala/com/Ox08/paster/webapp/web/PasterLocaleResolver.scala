@@ -32,7 +32,7 @@ class PasterLocaleResolver extends SessionLocaleResolver with Logged{
   })
 
   /**
-   * Resolves default locale. If not ajusted via '?locale=' parameter
+   * Resolves default locale. If not adjusted via '?locale=' parameter
    *    - this locale will be used till session lives
    *
    * @param request

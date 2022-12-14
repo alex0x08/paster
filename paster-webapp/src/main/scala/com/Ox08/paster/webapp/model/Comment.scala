@@ -21,7 +21,7 @@ import jakarta.validation.constraints.{NotNull, Size}
 import jakarta.xml.bind.annotation.XmlRootElement
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.{FullTextField, Indexed}
 /**
- * A comment for single line of paste
+ * A comment for single line in text
  */
 @Entity
 @Indexed(index = "indexes/comments")
@@ -72,5 +72,9 @@ class Comment extends Struct with java.io.Serializable {
   @JsonIgnore
   def getThumbImage: String = thumbImage
   def isHasAuthor: Boolean = author != null
+  /**
+   * Specifies set of fields used to search in
+   * @return
+   */
   override def terms(): List[String] = super.terms() ::: List[String]("text")
 }

@@ -27,6 +27,9 @@ import java.security.SecureRandom
 import java.time.{LocalDate, ZoneId}
 import java.util
 import java.util.{Base64, Date}
+/**
+ * Constants used during session checking.
+ */
 object CPRConstants {
   // Token is valid for one month
   val TOKEN_VALIDITY_DAYS = 31
@@ -34,13 +37,29 @@ object CPRConstants {
   val DEFAULT_SERIES_LENGTH = 16
   val DEFAULT_TOKEN_LENGTH = 16
 }
+/**
+ * Custom implementation for Spring Security 'remember me' service.
+ *
+ * @param key
+ * @param uds
+ * @param tokenDao
+ */
 class PasterPersistentRememberMeServices(key: String, uds: UserDetailsService, tokenDao: SessionTokensDao)
   extends
     AbstractRememberMeServices(key, uds) {
-  protected def processAutoLoginCookie(
+  /**
+   * Handles 'remember me' cookie
+   * @param cookieTokens
+   * @param request
+   * @param response
+   * @return
+   */
+  protected override def processAutoLoginCookie(
                                         cookieTokens: Array[String],
                                         request: HttpServletRequest,
                                         response: HttpServletResponse): UserDetails = {
+    // extract token and check
+    // there will be exception thrown if cookie is invalid or expired
     val token = getPersistentToken(cookieTokens)
     // Token also matches, so login is valid. Update the token value, keeping the *same* series number.
     val login = token.username
@@ -48,6 +67,7 @@ class PasterPersistentRememberMeServices(key: String, uds: UserDetailsService, t
       logger.debug("Refreshing persistent login token for user '{}', series '{}'",
         login, token.series)
     }
+    // next, we update and persist token value, but not series
     token.tokenDate = new Date()
     token.tokenValue = generateTokenData()
     token.ipAddress = request.getRemoteAddr
@@ -63,7 +83,7 @@ class PasterPersistentRememberMeServices(key: String, uds: UserDetailsService, t
     }
     getUserDetailsService.loadUserByUsername(login)
   }
-  protected def onLoginSuccess(
+  protected override  def onLoginSuccess(
                                 request: HttpServletRequest,
                                 response: HttpServletResponse,
                                 successfulAuthentication: Authentication): Unit = {
@@ -79,6 +99,7 @@ class PasterPersistentRememberMeServices(key: String, uds: UserDetailsService, t
     token.ipAddress = request.getRemoteAddr
     token.setUserAgent(request.getHeader("User-Agent"))
     try {
+      // this is still same token!
       tokenDao.save(token)
       addCookie(token, request, response)
     } catch {

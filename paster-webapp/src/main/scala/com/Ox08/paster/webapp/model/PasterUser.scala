@@ -19,11 +19,25 @@ import org.apache.commons.lang3.StringUtils
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 import java.util
+/**
+ * Paster's user
+ * Initially it was the JPA entity, now - just a class.
+ *
+ * All properties are filled from CSV
+ * @param name
+ *      user full name
+ * @param username
+ *      login
+ * @param pwd
+ *      password hash
+ * @param roles
+ *    set of roles
+ */
 class PasterUser(name: String,
                  username: String,
                  var pwd: String,
                  roles: util.Set[Role]) extends UserDetails with java.io.Serializable {
-  override def isEnabled = true
+  override def isEnabled = true // if true - user is enabled
   /**
    * @see org.springframework.security.userdetails.UserDetails#isAccountNonExpired()
    */
@@ -38,6 +52,10 @@ class PasterUser(name: String,
   override def isCredentialsNonExpired = true
   def getName: String = name
   override def getPassword: String = pwd
+  /**
+   * Updates password hash
+   * @param newPass
+   */
   def setPassword(newPass: String): Unit = {
     pwd = newPass
   }
@@ -50,8 +68,13 @@ class PasterUser(name: String,
   override def toString: String =
     Logged.toStringSkip(this, Array("pwd"))
 }
+/**
+ * Same as java enum with roles constants
+ */
 object Role {
+  // administrator role
   val ROLE_ADMIN = new Role("ROLE_ADMIN", "role.admin.name")
+  // ordinary user
   val ROLE_USER = new Role("ROLE_USER", "role.user.name")
 }
 class Role(code: String, desc: String) extends GrantedAuthority {

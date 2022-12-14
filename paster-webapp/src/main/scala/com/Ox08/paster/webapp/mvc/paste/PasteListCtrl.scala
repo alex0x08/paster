@@ -28,11 +28,17 @@ import java.util.concurrent.TimeUnit
 import java.util.{Date, Locale}
 import scala.jdk.CollectionConverters._
 import scala.math.abs
+/**
+ * A controller for 'Pastas list' page.
+ *
+ */
 @Controller
 @RequestMapping(value = Array("/paste"))
 class PasteListCtrl extends SearchCtrl[Paste, AuthorQuery] {
+
   @Value("${paster.paste.list.splitter.days:7}")
-  val splitDays: Int = 0
+  val splitDays: Int = 0 // number of days used in splitter
+
   @Autowired
   val channelDao: ChannelDao = null
   @Autowired
@@ -188,8 +194,10 @@ class PasteListCtrl extends SearchCtrl[Paste, AuthorQuery] {
   @ModelAttribute("items")
   @ResponseBody
   def listOwnBody(): java.util.List[Paste] = manager().getByAuthor(getCurrentUser)
-   private val pasterListCallback: PasteListCallback = new PasteListCallback(null,
+
+  private val pasterListCallback: PasteListCallback = new PasteListCallback(null,
     true, null)
+
   private class PasteListCallback(channel: String, sortAsc: Boolean, integrationCode: String)
     extends SourceCallback[Paste] {
     override def invokeCreate(): PagedListHolder[Paste] = {
@@ -210,6 +218,13 @@ class PasteListCtrl extends SearchCtrl[Paste, AuthorQuery] {
       ph
     }
   }
+  /**
+   * Renders split message between blocks if dates differ more than splitDays
+   * @param splitDays
+   *        number of days
+   * @param locale
+   *        message locale
+   */
   class DateSplitHelper(splitDays: Int, locale: Locale) {
     private var prevDate: Date = _
     private var curDate: Date = _
@@ -227,7 +242,7 @@ class PasteListCtrl extends SearchCtrl[Paste, AuthorQuery] {
         return false
       val diff = curDate.getTime - prevDate.getTime
       val d = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS)
-      if (abs(d) > 14) {
+      if (abs(d) > splitDays) {
         title = PasteListCtrl.this.getResource("paste.list.slider.title",
           Array(curDate, prevDate, total), locale)
         prevDate = curDate

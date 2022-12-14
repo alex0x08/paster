@@ -136,10 +136,10 @@ private class DynamicTilesViewProcessor extends Logged {
    *
    * @throws TilesException If no valid Tiles definition is found.
    */
-  @throws(classOf[TilesException])
-  protected def processTilesDefinitionName(beanName: String,
-                                           container: TilesContainer,
-                                           tilesRequest: Request): String = {
+   @throws(classOf[TilesException])
+   private def processTilesDefinitionName(beanName: String,
+                                          container: TilesContainer,
+                                          tilesRequest: Request): String = {
     // if definition already derived use it, otherwise
     // check if url (bean name) is a template definition, then
     // check for main template

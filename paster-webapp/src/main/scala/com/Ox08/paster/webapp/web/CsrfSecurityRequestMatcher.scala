@@ -18,11 +18,24 @@ import java.util.regex.Pattern
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher
 import org.springframework.security.web.util.matcher.RequestMatcher
 import jakarta.servlet.http.HttpServletRequest
+/**
+ * This class checks where possible to disable CSRF protection.
+ */
 class CsrfSecurityRequestMatcher extends RequestMatcher {
+  // list of allowed HTTP methods
   private val allowedMethods: Pattern = Pattern.compile("^(GET|POST|HEAD|TRACE|OPTIONS)$")
+  // list of patterns allowed to bypass CSRF
   private val unprotectedMatcher = new AntPathRequestMatcher("/act/admin/dbconsole/**")
+  /**
+   * Run checks
+   * @param request
+   *        servlet request
+   * @return
+   */
   override def matches(request: HttpServletRequest): Boolean = {
+    // check if method is allowed
     if (allowedMethods.matcher(request.getMethod).matches()) return false
+    // check if url could ignore CSRF
     !unprotectedMatcher.matches(request)
   }
 }
