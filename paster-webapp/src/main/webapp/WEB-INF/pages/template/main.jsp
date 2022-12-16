@@ -26,9 +26,9 @@
                   user-scalable=yes" />
     <!-- insert shared head block -->
     <jsp:include page="/WEB-INF/pages/template/template-common-head.jsp" />
+    <!-- insert page title -->
     <title>
-        <!-- insert page title -->
-        <tiles:insertAttribute name="pageTitle" ignore="true" />
+        <c:out value="${pageTitle}" />
     </title>
     <!-- insert page head block -->
     <tiles:insertAttribute name="head" />
