@@ -127,7 +127,7 @@ class Boot private() extends Logged {
       System.setProperty("app.externalUrlPrefix", system.getExternalUrlPrefix)
       logger.info(SystemMessage.of("paster.system.message.appExternalUrl", system.getExternalUrlPrefix))
     }
-    checkInstalled(system, app_home)
+    checkInstalled(system)
   }
   def markInstalled(): Unit = {
     val system: SystemInfo = getSystemInfo
@@ -140,8 +140,15 @@ class Boot private() extends Logged {
     FileUtils.writeStringToFile(iFile, out.toString, "UTF-8")
     system.setInstalled(installed = true, dateInstalled)
   }
-  private def checkInstalled(system: SystemInfo, appHome: File): Unit = {
-    val iFile = new File(appHome, ".installed")
+  /**
+   * Checks that Paster is already installed.
+   * @param system
+   *        an instance of SystemInfo object
+   *
+   */
+  private def checkInstalled(system: SystemInfo): Unit = {
+    // a file with installation mark
+    val iFile = new File(system.getAppHome, ".installed")
     if (iFile.exists() && iFile.isFile) {
       if (iFile.length() == 0 || iFile.length() > 2048)
         throw SystemError.withError(0x6001, "Incorrect or broken '.installed' file!")
@@ -155,20 +162,21 @@ class Boot private() extends Logged {
       if (logger.isDebugEnabled)
         logger.debug("found install date: {}", dateInstalled)
       system.setInstalled(installed = true, dateInstalled)
-    } else {
-      /*val dateInstalled = new Date()
-      val p: Properties = new Properties()
-      p.setProperty("dateInstalled", INSTALLED_TS_FORMAT.format(dateInstalled))
-      val out = new StringWriter()
-      p.store(out, "Install information")
-      FileUtils.writeStringToFile(iFile, out.toString, "UTF-8")
-      system.setInstalled(installed = true, dateInstalled)*/
     }
   }
+  /**
+   * Writes PID (Process Identifier) to special file in $appHome folder
+   * @param appHome
+   *      Paster's current appHome
+   */
   private def writePid(appHome: File): Unit = {
+    // a file with pid
     val pidFile = new File(appHome, "app.pid")
+    // get current PID of running JVM
     val pid = ProcessHandle.current.pid()
+    // write PID to file
     FileUtils.writeStringToFile(pidFile, pid.toString, "UTF-8")
+    // add JVM hook that deletes the PID file after normal shutdown
     Runtime.getRuntime.addShutdownHook(new Thread() {
       override def run(): Unit = {
         try

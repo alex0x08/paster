@@ -42,7 +42,8 @@ class PasteRssView extends AbstractRssFeedView {
     super.buildFeedMetadata(model, feed, request)
   }
   override protected def buildFeedItems(model: java.util.Map[String, Object],
-                                        request: HttpServletRequest, response: HttpServletResponse): java.util.List[Item] = {
+                                        request: HttpServletRequest,
+                                        response: HttpServletResponse): java.util.List[Item] = {
     if (!model.containsKey(MvcConstants.NODE_LIST_MODEL))
       return Collections.emptyList[Item]()
     val contentList = model.get(MvcConstants.NODE_LIST_MODEL).asInstanceOf[java.util.List[Paste]]

@@ -109,6 +109,13 @@ class PasteDao extends SearchableDaoImpl[Paste](classOf[Paste]) {
       .setMaxResults(if (maxResults > BaseDao.MAX_RESULTS) BaseDao.MAX_RESULTS else maxResults)
     query.getResultList
   }
+  /**
+   * Get list of pastas by channel code
+   * @param channel
+   *        channel code
+   * @param sortAsc
+   * @return
+   */
   def getByChannel(channel: String, sortAsc: Boolean): java.util.List[Paste] = {
     val cr = new CriteriaSet()
     val query: Query = em.createQuery(

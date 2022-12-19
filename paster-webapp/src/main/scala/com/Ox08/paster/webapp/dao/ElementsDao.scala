@@ -41,6 +41,13 @@ class CodeTypeDao(@Value("${paster.codeTypes:null}")
                           @Value("${paster.codeTypes.default:'plain'}")
                   codeTypeDefault: String
                  ) extends AbstractStringBasedDao(codeTypesString, codeTypeDefault) {}
+/**
+ *
+ * @param prioritiesString
+ *        list of supported priorities, separated by comma
+ * @param priorityDefault
+ *        a default priority
+ */
 @Service
 class PriorityDao(@Value("${paster.priorities:null}")
                   prioritiesString: String,

@@ -71,8 +71,15 @@ abstract class Struct extends DBObject with SearchObject with java.io.Serializab
   def terms(): List[String] = Struct.terms
   def loadFull(): Unit = {}
 }
+/**
+ * Most parent entity class
+ */
 @MappedSuperclass
 abstract class DBObject extends java.io.Serializable {
+  /**
+   * Primary key.
+   *
+   */
   @Id
   @GeneratedValue(generator = "AllSequenceStyleGenerator")
   @GenericGenerator(name = "AllSequenceStyleGenerator",
@@ -80,6 +87,9 @@ abstract class DBObject extends java.io.Serializable {
   )
   @XStreamAsAttribute
   var id: Integer = _
+  /**
+   * sign that record is disabled
+   */
   @XStreamAsAttribute
   var disabled: Boolean = _
   @JsonIgnore

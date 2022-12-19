@@ -58,11 +58,12 @@ class SystemPropertiesListener extends ServletContextListener with Logged {
           springProfiles += ",paster-security-private"
       } else
         springProfiles += "setup"
-      logger.info("profiles: {}", springProfiles)
       System.setProperty("spring.profiles.active", springProfiles)
+      // unique seed, used to randomize urls
       System.setProperty("paste.app.id", System.currentTimeMillis().toString)
-      logger.info("current locale: {}", Locale.getDefault)
-      logger.info("application home: {}", System.getProperty("paster.app.home"))
+      logger.info("application home: {} ,profiles: {} , current locale: {}",
+        System.getProperty("paster.app.home"),
+        springProfiles,Locale.getDefault)
     } catch {
       case e: IOException =>
         throw new RuntimeException(e)
