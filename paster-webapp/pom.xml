@@ -1,5 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
@@ -18,7 +19,7 @@
     <properties>
         <spring.security.version>6.0.0-M7</spring.security.version>
         <hibernate.search.version>5.11.10.Final</hibernate.search.version>
-        <hibernate.version>6.1.4.Final</hibernate.version>
+        <hibernate.version>6.1.6.Final</hibernate.version>
         <luceneVersion>8.11.2</luceneVersion>
         <paster.app.name>${project.name}</paster.app.name>
         <paster.app.version>${project.version}</paster.app.version>
@@ -58,7 +59,7 @@
         <dependency>
             <groupId>org.codehaus.janino</groupId>
             <artifactId>janino</artifactId>
-            <version>3.1.8</version>
+            <version>3.1.9</version>
         </dependency>
         <dependency>
             <groupId>commons-codec</groupId>
@@ -90,29 +91,29 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>2.0.3</version>
+            <version>2.0.5</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>log4j-over-slf4j</artifactId>
-            <version>2.0.3</version>
+            <version>2.0.5</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>jul-to-slf4j</artifactId>
-            <version>2.0.3</version>
+            <version>2.0.5</version>
         </dependency>
 
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>jcl-over-slf4j</artifactId>
-            <version>2.0.3</version>
+            <version>2.0.5</version>
         </dependency>
 
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>1.4.4</version>
+            <version>1.4.5</version>
         </dependency>
 
         <!-- spring -->
@@ -191,13 +192,13 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
-            <version>2.14.0-rc2</version>
+            <version>2.14.0</version>
         </dependency>
 
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.14.0-rc2</version>
+            <version>2.14.0</version>
         </dependency>
 
 
@@ -230,7 +231,8 @@
                 <exclusion>
                     <groupId>org.apache.lucene</groupId>
                     <artifactId>lucene-join</artifactId>
-                </exclusion></exclusions>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -242,7 +244,7 @@
         <dependency>
             <groupId>org.hibernate.common</groupId>
             <artifactId>hibernate-commons-annotations</artifactId>
-            <version>6.0.4.Final</version>
+            <version>6.0.5.Final</version>
         </dependency>
 
         <dependency>
@@ -323,7 +325,7 @@
         <dependency>
             <groupId>org.ocpsoft.prettytime</groupId>
             <artifactId>prettytime</artifactId>
-            <version>5.0.4.Final</version>
+            <version>5.0.6.Final</version>
         </dependency>
 
         <!-- RSS -->
@@ -336,7 +338,7 @@
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jsr310</artifactId>
-            <version>2.14.0-rc2</version>
+            <version>2.14.0</version>
         </dependency>
 
         <dependency>
