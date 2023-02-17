@@ -41,6 +41,6 @@
          </span>
     </c:when>
     <c:otherwise>
-        <span style="font-size: 2em;" class="i" title="<fmt:message key='user.anonymous'/>">x</span>
+        <span style="font-size: 1em;" class="i" title="<fmt:message key='user.anonymous'/>">x</span>
     </c:otherwise>
 </c:choose>

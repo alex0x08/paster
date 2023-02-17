@@ -130,16 +130,17 @@
                             <tiles:insertDefinition name="/common/owner">
                                 <tiles:putAttribute name="model" value="${comment}" />
                                 <tiles:putAttribute name="modelName" value="comment" />
-                            </tiles:insertDefinition>,
-                                <kc:prettyTime
+                            </tiles:insertDefinition>
+                            | <kc:prettyTime
                                     date="${comment.lastModifiedDt}"
+                                    format="${dateTimePattern}"
                                     locale="${pageContext.response.locale}" />
                         </small>
                     </div>
                     <div class="col-auto" style="padding-right: 1em;" >
                         <c:if test="${(not empty currentUser or allowAnonymousCommentsCreate) && comment.parentId==null}">                        
                             <a href="#" class="linkLine pInsertCommentTrigger"
-                                title="<fmt:message key=" comments.sub" />"
+                                title="<fmt:message key='comments.sub' />"
                                 plineNumber="${comment.lineNumber}" 
                                 pCommentId="${comment.id}" >
                                 <span class="i">C</span>

@@ -107,7 +107,8 @@
                                         <tiles:putAttribute name="model" value="${paste}"/>
                                         <tiles:putAttribute name="modelName" value="paste"/>
                                     </tiles:insertDefinition>
-                                    ,<kc:prettyTime date="${paste.lastModifiedDt}"
+                                    | <kc:prettyTime date="${paste.lastModifiedDt}"
+                                     format="${dateTimePattern}"
                                         locale="${pageContext.response.locale}"/>
                                 </small>
                                 <sec:authorize access="hasRole('ROLE_ADMIN')">

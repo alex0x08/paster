@@ -74,6 +74,7 @@
         </tiles:insertDefinition>
     </div>     
 </div>
+<%--
 <c:if test="${listMode eq 'search' }">
     <div class="row">
         <div class="col-md-12" >
@@ -98,6 +99,7 @@
         </div>
     </div>
 </c:if>
+--%>
 <!-- main page content -->
 <div class="row">
     <div id="pastas" class="col-md-12" >
@@ -138,10 +140,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-12">
-                                    <tiles:insertDefinition name="/common/tags" >
-                                        <tiles:putAttribute name="model" value="${paste}"/>
-                                        <tiles:putAttribute name="modelName" value="paste"/>
-                                    </tiles:insertDefinition>
+
                                     <tiles:insertDefinition name="/common/commentCount" >
                                         <tiles:putAttribute name="model" value="${paste}"/>
                                         <tiles:putAttribute name="modelName" value="paste"/>
@@ -150,10 +149,15 @@
                                         <tiles:insertDefinition name="/common/owner" >
                                             <tiles:putAttribute name="model" value="${paste}"/>
                                             <tiles:putAttribute name="modelName" value="paste"/>
-                                        </tiles:insertDefinition>,
+                                        </tiles:insertDefinition>
+                                        |
+                                        <tiles:insertDefinition name="/common/tags" >
+                                                                                <tiles:putAttribute name="model" value="${paste}"/>
+                                                                                <tiles:putAttribute name="modelName" value="paste"/>
+                                                                            </tiles:insertDefinition>
+
                                         <a href="<c:url value='/main/paste/list/search?query=codeType:${paste.codeType}'/>">
                                             <fmt:message key='${"code.type.".concat(paste.codeType)}'/></a>
-                                        (
                                         <c:if test="${not empty paste.wordsCount}">
                                             <c:out value="${paste.wordsCount} "/> 
                                             <fmt:message key="paste.edit.word.counter.wordText"/>
@@ -163,8 +167,8 @@
                                             <c:out value="${paste.symbolsCount} "/> 
                                             <fmt:message key="paste.edit.word.counter.charText"/>
                                         </c:if>
-                                        )
-                                        ,<kc:prettyTime date="${paste.lastModifiedDt}"
+                                        | <kc:prettyTime date="${paste.lastModifiedDt}"
+                                         format="${dateTimePattern}"
                                         locale="${pageContext.response.locale}"/>
                                     </small>                             
                                 </div>
@@ -183,7 +187,9 @@
                             <tiles:putAttribute name="model" value="${paste}"/>
                             <tiles:putAttribute name="modelName" value="paste"/>
                         </tiles:insertDefinition>
-                        ,<kc:prettyTime date="${paste.lastModifiedDt}" locale="${pageContext.response.locale}"/>
+                        ,<kc:prettyTime date="${paste.lastModifiedDt}"
+                          format="${dateTimePattern}"
+                         locale="${pageContext.response.locale}"/>
                     </small>
                 </c:when>
             </c:choose>

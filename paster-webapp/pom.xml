@@ -504,6 +504,7 @@
 
                     <systemProperties>
                         <appDebug>true</appDebug>
+                        <org.eclipse.jetty.server.Request.maxFormContentSize>1000000</org.eclipse.jetty.server.Request.maxFormContentSize>
                     </systemProperties>
 
                     <!--scanIntervalSeconds>0</scanIntervalSeconds-->

@@ -33,7 +33,9 @@
             </div>
             <div class="modal-footer">
                 <a id="dialogAction" href="" class="btn btn-primary"></a>
-                <button type="button" class="btn btn-default" data-bs-dismiss="modal">Cancel</button>               
+                <button type="button" class="btn btn-default" data-bs-dismiss="modal">
+                    <fmt:message key='button.cancel' />
+                 </button>
             </div>
         </div>
     </div>
