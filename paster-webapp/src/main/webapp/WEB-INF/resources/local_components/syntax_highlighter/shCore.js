@@ -416,6 +416,8 @@ var SyntaxHighlighter = function () {
         hideEditForm: function (modelId) {
             document.getElementById(modelId + '_commentForm').style.display = 'none';
             document.getElementById("numSpace").style.display = 'none';
+            document.getElementById("pasteLineCopyBtn").style.display = "none";
+
             if (sh.vars.currentEditLine != null) {
                 document.getElementById(modelId + '_cl_lineHtml_' + sh.vars.currentEditLine).style.display = '';
                 document.getElementById(modelId + '_cl_linePlain_' + sh.vars.currentEditLine).style.display = 'none';

@@ -39,7 +39,7 @@
         <nav class="navbar navbar-expand-md paster-navbar">
             <div class="container-fluid">
                 <a class="navbar-brand" href="<c:url value='/'/>" title="<fmt:message key='site.title' />">
-                    <span class="i" >/</span>
+                    <img src="${ctx}/main/resources/${appId}/static/favicon/favicon-32x32.png" style="width:24px;height:24px;" />
                 </a>
                 <button class="navbar-toggler"
                     type="button"

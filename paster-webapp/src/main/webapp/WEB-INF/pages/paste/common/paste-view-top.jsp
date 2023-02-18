@@ -50,19 +50,19 @@
         --%>
         <c:out value="${model.title}" escapeXml="true" />
     </div>
-    <div class='col-md-1 align-self-center'>
-        <a class="img-map img-xml"
-                        href="<c:url value='/main/paste/${model.id}.xml'/>"
+    <div class='col-md-2 align-self-center'>
+                <a href="<c:url value='/main/paste/${model.id}.xml'/>"
                         target="_blank" title="View as XML">
+                        xml
                 </a> |
-                <a class="img-map img-json"
-                        href="<c:url value='/main/paste/${model.id}.json'/>"
+                <a href="<c:url value='/main/paste/${model.id}.json'/>"
                         target="_blank" title="View as JSON">
+                        json
                 </a> |
                 <a href="<c:url value='/main/paste/${model.id}.txt'/>"
                         target="_blank"
                         title="View as plain text">
-                    <span style="font-size: larger;" class="i">k</span>
+                        plain
                 </a>
     </div>
     <div class='col-auto'>

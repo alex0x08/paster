@@ -233,7 +233,7 @@
                                     </button>
                                     <a id="${model.id}_closeCommentBtn" 
                                         class="disableOnSubmit" 
-                                        title="<fmt:message key=" button.cancel" />"  href="#" >
+                                        title="<fmt:message key="button.cancel" />"  href="#" >
                                     <span>
                                         <fmt:message key="button.cancel" /></span>
                                     </a>

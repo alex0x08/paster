@@ -366,6 +366,11 @@
     background-color: #ffff67;
     border: 1px solid black;
 }
+
+.bg-info {
+    border: 1px solid #e0e0e0;
+}
+
 .editForm {
     white-space: normal;
    /* position: absolute;*/
@@ -391,7 +396,6 @@
   /*  max-height: 4em; */
     width: 30em;
     height: 4em; 
- 
 
 }
 
