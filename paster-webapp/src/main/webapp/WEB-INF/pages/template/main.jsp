@@ -187,12 +187,12 @@
     <!-- footer -->
     <footer class="footer mt-auto">
         <div class="container-fluid">
-            <div title="<c:out value='${systemInfo.runtimeVersion.full}' />">
+            <span style="font-size: 11px;" title="<c:out value='${systemInfo.runtimeVersion.full}' />">
                     <c:out value="${systemInfo.runtimeVersion.full}" />
-            </div>
-            <small>
+            </span>,
+            <span style="font-size: 9px;">
                 <fmt:message key="site.footer" />
-            </small>
+            </span>
             </div>
     </footer>
     <!-- include all javascript below all content to speed-up rendering -->

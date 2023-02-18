@@ -114,16 +114,17 @@
                         <div class="col-md-2" style="padding-bottom: 0.5em;">
                             <c:url value='/main/paste-resources/${appId}/t/${paste.lastModifiedDt.time}/paste_content/${paste.thumbImage}' var="thumbUrl">
                             </c:url>
-                            <a class="pastePreviewLink" href="<c:url value='/${paste.id}'></c:url>" pasteId="${paste.id}" 
+                            <a class="pastePreviewLink" href="<c:url value='/${paste.id}'></c:url>"
+                                pasteId="${paste.id}"
                                title="Click to view paste vol. ${paste.id}">
-                                <img src="${thumbUrl}"  
+                                <img src="${thumbUrl}"
                                      class="img-thumbnail img-responsive p-comment"  />
                             </a>
                         </div>
                         <div class="col-md-10" >
                             <div class="row">
-                                <div class="pasteTitle col-lg-10 col-md-12 col-xs-12">
-                                    <div class="pasteTitle" style="padding: 1em;">
+                                <div class="pasteTitle col-auto">
+                                    <div class="pasteTitle" >
                                         <c:if test="${paste.stick}">
                                             <span class="i" title="Paste sticked">]</span>
                                         </c:if>            
