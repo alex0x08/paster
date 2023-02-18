@@ -125,8 +125,7 @@
                                     </form:select>
                                 </p>
                             </div>
-                            <div class="col-md-2">
-                                <div class="pull-right" style='padding-top:1.5em;'>
+                            <div class="col-md-2 align-self-center">
                                     <c:choose>
                                         <c:when test="${empty currentUser and !allowAnonymousCommentsCreate}">
                                         <p>
@@ -149,6 +148,7 @@
                                             <fmt:message key='button.cancel' />
                                     </a>
 
+                                    <%--
                                     <c:if test="${!model.blank}">
                                          <sec:authorize
                                             access="${currentUser !=null and (currentUser.admin or ( model.hasAuthor  and model.author eq currentUser)) }">
@@ -170,8 +170,8 @@
                                                     </fmt:message>
                                                 </div>
                                     </c:if>
-                                </div>
-                            </div>
+                                    --%>
+                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-1">
@@ -222,7 +222,8 @@
                         <div class="col-md-4">
                         <div class="mb-3">
                           <label for="formFile" class="form-label">Select local file</label>
-                            <input class="form-control" type="file" accept="text/*,application/json" id="select-file-btn" />
+                            <input class="form-control" type="file"
+                            accept="text/*,application/json" id="select-file-btn" />
                         </div>
                             <p class="help-block">
                                 Supported text and source files.

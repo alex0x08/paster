@@ -277,9 +277,9 @@ class PasterView {
         Array.from(controls.getElementsByTagName('button')).forEach(
             function (el, i, array) {
                 if (selectedId == el.getAttribute('id')) {
-                    el.className = 'btn btn-primary active'
+                    el.className = 'btn btn-sm btn-primary active'
                 } else {
-                    el.className = 'btn btn-primary'
+                    el.className = 'btn btn-sm btn-primary'
                 }
             });
     }

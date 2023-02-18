@@ -23,11 +23,13 @@
         <fmt:message key='paste.search.placeholder' var="searchPlaceHolder" />
         <form:input path="query" name="query" id="pquery" cssClass="form-control form-control-sm me-2"
             placeholder="${searchPlaceHolder}" autocomplete="true" />
+        <%--
         <button class="btn btn-primary btn-sm" id="doSearchBtn" type="submit">
             <span id="btnCaption">
                 <fmt:message key="button.search" /></span>
             <i id="btnIcon" class="fa fa-spinner" style="display:none;"></i>
         </button>
+        --%>
         <form:errors path="query" cssClass="error" element="div" />
     </form:form>
 <%--
@@ -45,7 +47,6 @@
  </span>
     </div>
 </div>
---%>
 <script type="text/javascript">
     window.addEventListener('load', function () {
         const el = document.getElementById('doSearchBtn');
@@ -58,3 +59,4 @@
         });
     });
 </script>
+--%>

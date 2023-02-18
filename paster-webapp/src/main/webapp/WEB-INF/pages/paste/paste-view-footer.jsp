@@ -38,7 +38,7 @@
 
         <c:url var="epicEditorUrl" value="/main/resources/${appId}/local_components/epiceditor" />
 
-    // edic markdown editor, used in 'add comment' form
+    // epic markdown editor, used in 'add comment' form
     var globalEpicEditorOpts = {
         container: 'SET-IN-EDITOR',
         textarea: null,

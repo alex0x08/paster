@@ -439,7 +439,7 @@ class Boot private() extends Logged {
     } catch {
       case _: ParseException => null
     }
-    val implVersionFull: String = implVer + "." + implBuildNum
+    val implVersionFull: String = "%s.%s".format(implVer, implBuildNum)
     def getFull: String = implVersionFull // for EL
     def getGitState: Properties = git
   }

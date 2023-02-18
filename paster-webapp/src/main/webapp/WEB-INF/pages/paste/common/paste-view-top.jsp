@@ -22,17 +22,18 @@
 <c:set var="priorTitle">
     <fmt:message key="${model.priority}" />
 </c:set>
-<div class="row">
-    <div class="col-md-10">
+<div class="row justify-content-between">
+    <div class="col-md-9">
         <%--
             back to list button
-        --%>
+
         <c:url var='backToListUrl' value='/main/paste/list'/>
         <a href="${backToListUrl}"
                 target="${target}"
                 title="<fmt:message key=" paste.list.title" />">
                     <span style="font-size: larger;" class="i">(</span>
         </a>
+          --%>
 
         <%--
             Priority
@@ -49,25 +50,39 @@
         --%>
         <c:out value="${model.title}" escapeXml="true" />
     </div>
-    <div class='col-md-2'>
+    <div class='col-md-1 align-self-center'>
+        <a class="img-map img-xml"
+                        href="<c:url value='/main/paste/${model.id}.xml'/>"
+                        target="_blank" title="View as XML">
+                </a> |
+                <a class="img-map img-json"
+                        href="<c:url value='/main/paste/${model.id}.json'/>"
+                        target="_blank" title="View as JSON">
+                </a> |
+                <a href="<c:url value='/main/paste/${model.id}.txt'/>"
+                        target="_blank"
+                        title="View as plain text">
+                    <span style="font-size: larger;" class="i">k</span>
+                </a>
+    </div>
+    <div class='col-auto'>
         <div class="btn-group" style="padding-top: 0.8em;">
             <c:if test="${not empty currentUser or allowAnonymousCommentsCreate}">
                 <c:url var='pasteEditUrl' value='/main/paste/edit/${model.id}'/>
 
                 <a class="btn btn-primary" href="${pasteEditUrl}"
                     title="<fmt:message key='button.edit' />">
-                    <fmt:message key='button.edit' />
+                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                 </a>
                 <sec:authorize
                     access="${currentUser !=null and (currentUser.admin or ( model.hasAuthor  and model.author eq currentUser)) }">
                     <c:url var='pasteDeleteUrl' value='/main/paste/delete'>
                             <c:param name='id' value='${model.id}' />
                     </c:url>
-                    <a class="btn btn-danger btn-sm deleteBtn" id="deleteBtn_${model.id}"
+                    <a class="btn btn-danger deleteBtn" id="deleteBtn_${model.id}"
                         href="${pasteDeleteUrl}"
                     title="<fmt:message key='button.delete' />">
-                    <span class="i">d</span>
-                    <fmt:message key='button.delete' />
+                    <i class="fa fa-trash-o" aria-hidden="true"></i>
                     </a>
                 </sec:authorize>
             </c:if>
@@ -84,6 +99,7 @@
         </div>
     </div>
 </div>
+
 <tiles:insertDefinition name="/common/pasteControls">
     <tiles:putAttribute name="model" value="${model}" />
     <c:if test="${not empty availableNext}">

@@ -29,15 +29,21 @@
 <%--
         All |Comments|Draw top toggle
 --%>
-<div id='pasteViewControls' class="btn-group" role="group" aria-label="Controls">
-    <button id="${model.id}_btnShowAll" type="button" class="btn btn-primary active">
-        <fmt:message key="button.paste.all" />
+<div id='pasteViewControls' class="btn-group float-end paste-view-controls" role="group" aria-label="Controls">
+    <button id="${model.id}_btnShowAll" type="button"
+            title="<fmt:message key='button.paste.all' />"
+            class="btn btn-primary btn-sm active">
+        <i class="fa fa-eye" aria-hidden="true"></i>
     </button>
-    <button id="${model.id}_btnShowComments" type="button" class="btn btn-primary">
-        <fmt:message key="button.paste.comments" />
+    <button id="${model.id}_btnShowComments" type="button"
+        title=" <fmt:message key='button.paste.comments' />"
+        class="btn btn-sm btn-primary">
+        <i class="fa fa-comments" aria-hidden="true"></i>
     </button>
-    <button id="${model.id}_btnShowDraw" type="button" class="btn btn-primary">
-        <fmt:message key="button.paste.draw" />
+    <button id="${model.id}_btnShowDraw" type="button"
+        title=" <fmt:message key='button.paste.draw' />"
+        class="btn btn-sm btn-primary">
+        <i class="fa fa-paint-brush" aria-hidden="true"></i>
     </button>
 </div>
 <%--

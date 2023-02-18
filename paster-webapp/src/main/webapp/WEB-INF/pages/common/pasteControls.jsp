@@ -33,8 +33,8 @@
      </c:otherwise>
  </c:choose>
 <div class="row">     
-    <div class="col-md-10">        
-         <span style="font-weight: normal; font-size: 12px;">
+    <div class="col-md-11" style="border-bottom: 1px solid black;">
+         <span style="font-size: 12px;">
                 <tiles:insertDefinition name="/common/tags" >
                     <tiles:putAttribute name="model" value="${model}"/>
                     <tiles:putAttribute name="modelName" value="paste"/>
@@ -60,23 +60,9 @@
             </c:if>                
             </span>  
     </div>
-    
-    <div class="col-md-2">
-        <a class="img-map img-xml"
-                href="<c:url value='/main/paste/${model.id}.xml'/>"
-                target="_blank" title="View as XML">
-        </a> |
-        <a class="img-map img-json"
-                href="<c:url value='/main/paste/${model.id}.json'/>"
-                target="_blank" title="View as JSON">
-        </a> |
-        <a href="<c:url value='/main/paste/${model.id}.txt'/>"
-                target="_blank"
-                title="View as plain text">
-            <span style="font-size: larger;" class="i">k</span>
-        </a>
-    </div>
+
 </div>
+<%--
 <div  class="row">
     <div class="col-md-2">  
         <c:if test="${mode ne 'raw' and not empty prev}">
@@ -90,3 +76,4 @@
         </c:if>
     </div>
 </div>
+--%>

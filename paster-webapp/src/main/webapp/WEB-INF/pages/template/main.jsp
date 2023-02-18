@@ -36,11 +36,10 @@
 <body class="d-flex flex-column h-100 min-vh-100">
     <!-- navigation bar -->
     <header>
-        <nav class="navbar navbar-expand-md">
+        <nav class="navbar navbar-expand-md paster-navbar">
             <div class="container-fluid">
-                <a class="navbar-brand" href="<c:url value='/'/>">
-                    <span class="i">/</span>
-                    <fmt:message key="site.title" />
+                <a class="navbar-brand" href="<c:url value='/'/>" title="<fmt:message key='site.title' />">
+                    <span class="i" >/</span>
                 </a>
                 <button class="navbar-toggler"
                     type="button"
