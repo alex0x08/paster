@@ -495,16 +495,34 @@
                 </configuration>
             </plugin>
 
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>properties-maven-plugin</artifactId>
+                <version>1.1.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>set-system-properties</goal>
+                        </goals>
+                        <configuration>
+                            <properties>
+                                <property>
+                                    <name>org.eclipse.jetty.server.Request.maxFormContentSize</name>
+                                    <value>10485760</value>
+                                </property>
+                            </properties>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
 
             <plugin>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
                 <version>11.0.11</version>
                 <configuration>
-
                     <systemProperties>
                         <appDebug>true</appDebug>
-                        <org.eclipse.jetty.server.Request.maxFormContentSize>1000000</org.eclipse.jetty.server.Request.maxFormContentSize>
                     </systemProperties>
 
                     <!--scanIntervalSeconds>0</scanIntervalSeconds-->
