@@ -104,8 +104,7 @@ abstract class GenericEditCtrl[T <: Struct] extends AbstractCtrl {
       return listPage
     }
     if (result.hasErrors) {
-      if (logger.isDebugEnabled)
-        logger.debug("form has errors {}", result.getErrorCount)
+      if (logger.isDebugEnabled) logger.debug("form has errors {}", result.getErrorCount)
       fillEditModel(b, model, locale)
       return editPage
     }
@@ -136,8 +135,7 @@ abstract class GenericEditCtrl[T <: Struct] extends AbstractCtrl {
   @RequestMapping(value = Array("/{id:[0-9]+}"), method = Array(RequestMethod.GET))
   def getByPath(@PathVariable("id") id: Integer, model: Model, locale: Locale): String = {
     val m = loadModel(id)
-    if (m == null)
-      return MvcConstants.page404
+    if (m == null) return MvcConstants.page404
     model.addAttribute(MvcConstants.MODEL_KEY, m)
     fillEditModel(m, model, locale)
     viewPage

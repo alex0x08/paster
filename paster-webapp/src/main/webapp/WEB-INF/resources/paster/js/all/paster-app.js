@@ -55,13 +55,19 @@ class PasterApp {
                 el.addEventListener("click", function (e) {
                     e.preventDefault();
                     var source = e.target || e.srcElement;
-                    Logger.debug('dialog ', source.parentElement);
+
+                    var dialog = source.parentElement.parentElement.querySelector('#dialogMsg');
+                    if (!dialog) {
+                        dialog = source.parentElement.parentElement.parentElement.querySelector('#dialogMsg');
+                    }
+
+                    Logger.debug('dialog ', dialog);
                     self.showModal(
                         document.getElementById('deletePopup'),
                         source.href,
                         PasterI18n.text.dialog.removal.title,
                         PasterI18n.text.dialog.removal.message,
-                        source.parentElement.parentElement.querySelector('#dialogMsg').innerHTML);
+                        dialog.innerHTML);
                 });
             });
     }

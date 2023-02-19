@@ -63,13 +63,11 @@ class PasteEditCtrl extends GenericEditCtrl[Paste] {
   }
   override def fillEditModel(obj: Paste, model: Model, locale: Locale): Unit = {
     super.fillEditModel(obj, model, locale)
-    if (obj.isBlank)
-      model.addAttribute("title", getResource("paste.new", locale))
+    if (obj.isBlank) model.addAttribute("title", getResource("paste.new", locale))
     else {
       model.addAttribute("title", StringEscapeUtils.escapeHtml4(
         getResource("paste.edit.title", Array(obj.id, obj.title), locale)))
-      obj.comments.addAll(
-        commentDao.getCommentsForPaste(obj.id))
+      obj.comments.addAll(commentDao.getCommentsForPaste(obj.id))
       if (!model.containsAttribute("comment"))
         model.addAttribute("comment", getNewCommentInstance(obj))
     }
@@ -78,9 +76,7 @@ class PasteEditCtrl extends GenericEditCtrl[Paste] {
     model.addAttribute("availableChannels", channelDao.getAvailableElements.asJava)
     if (!obj.comments.isEmpty) {
       val commentLines = new util.ArrayList[Long]()
-      for (c <- obj.comments.asScala) {
-        commentLines.add(c.lineNumber)
-      }
+      for (c <- obj.comments.asScala) { commentLines.add(c.lineNumber) }
       model.addAttribute("commentedLinesList", StringUtils.join(commentLines, ","))
     }
     if (!obj.isBlank) {
@@ -96,8 +92,7 @@ class PasteEditCtrl extends GenericEditCtrl[Paste] {
   }
   override def getNewModelInstance: Paste = {
     val p = new Paste()
-    if (isCurrentUserLoggedIn)
-      p.author = getCurrentUser.getUsername()
+    if (isCurrentUserLoggedIn) p.author = getCurrentUser.getUsername()
     p.channel = channelDao.getDefault
     p.codeType = codeTypeDao.getDefault
     p.priority = priorities.getDefault
@@ -105,8 +100,7 @@ class PasteEditCtrl extends GenericEditCtrl[Paste] {
   }
   private def getNewCommentInstance(pp: Paste): Comment = {
     val p = new Comment()
-    if (getCurrentUser != null)
-      p.author = getCurrentUser.getUsername()
+    if (getCurrentUser != null) p.author = getCurrentUser.getUsername()
     p.pasteId = pp.id
     p
   }
@@ -118,19 +112,12 @@ class PasteEditCtrl extends GenericEditCtrl[Paste] {
                     model: Model): String = {
     if (logger.isDebugEnabled)
       logger.debug("removing comment commentId={} , lineNumber ={} ", commentId, lineNumber)
-    if (!commentDao.exists(commentId)) {
-      logger.warn("comment with id {} not found", commentId)
-      model.asMap().clear()
-      return s"redirect:/main/paste/$pasteId#line_$lineNumber"
+    if (!commentDao.exists(commentId)) { logger.warn("comment with id {} not found", commentId)
+      model.asMap().clear(); return s"redirect:/main/paste/$pasteId#line_$lineNumber"
     }
     val subCommentsIds: List[Integer] = commentDao.getSubCommentsIdsFor(commentId)
-    if (subCommentsIds.nonEmpty) {
-      for (p <- subCommentsIds) {
-        commentDao.remove(p)
-      }
-    }
-    commentDao.remove(commentId)
-    model.asMap().clear()
+    if (subCommentsIds.nonEmpty) { for (p <- subCommentsIds) { commentDao.remove(p) } }
+    commentDao.remove(commentId); model.asMap().clear()
     s"redirect:/main/paste/$pasteId#line_$lineNumber"
   }
   @RequestMapping(value = Array("/saveReviewDraw"), method = Array(RequestMethod.POST))
@@ -139,13 +126,10 @@ class PasteEditCtrl extends GenericEditCtrl[Paste] {
                       @RequestParam(required = true) reviewImgData: String,
                       @RequestParam(required = true) thumbImgData: String,
                       model: Model): String = {
-    if (!isCurrentUserLoggedIn && !allowAnonymousCommentsCreate)
-      return MvcConstants.page403
+    if (!isCurrentUserLoggedIn && !allowAnonymousCommentsCreate) return MvcConstants.page403
     var p = pasteDao.get(pasteId)
-    if (p == null)
-      return MvcConstants.page404
-    if (reviewImgData == null || thumbImgData == null)
-      return MvcConstants.page500
+    if (p == null) return MvcConstants.page404
+    if (reviewImgData == null || thumbImgData == null) return MvcConstants.page500
 
     if (logger.isDebugEnabled)
       logger.debug("adding reviewImg to {}, data sz {}", Array(pasteId, reviewImgData.length))
@@ -167,11 +151,9 @@ class PasteEditCtrl extends GenericEditCtrl[Paste] {
                   result: BindingResult, model: Model, locale: Locale): String = {
     if (logger.isDebugEnabled)
       logger.debug("adding comment, text sz: {}", if (b.text !=null) b.text.length else -1)
-    if (!isCurrentUserLoggedIn && !allowAnonymousCommentsCreate)
-      return MvcConstants.page403
+    if (!isCurrentUserLoggedIn && !allowAnonymousCommentsCreate) return MvcConstants.page403
     val p = manager().get(b.pasteId)
-    if (p == null)
-      return MvcConstants.page404
+    if (p == null) return MvcConstants.page404
     if (result.hasErrors) {
       if (logger.isDebugEnabled) {
         logger.debug("form has {} errors", result.getErrorCount)
@@ -183,10 +165,7 @@ class PasteEditCtrl extends GenericEditCtrl[Paste] {
       fillEditModel(p, model, locale)
       return viewPage
     }
-    if (isCurrentUserLoggedIn) {
-      b.author = getCurrentUser.getUsername()
-      // b.getOwner().increaseTotalComments()
-    }
+    if (isCurrentUserLoggedIn) { b.author = getCurrentUser.getUsername()   }
     commentDao.save(b)
     if (b.getThumbImage != null)
       p.thumbImage = resourceDao.saveResource('t', p.uuid, b.getThumbImage)
@@ -200,22 +179,25 @@ class PasteEditCtrl extends GenericEditCtrl[Paste] {
                     @Valid @ModelAttribute(MvcConstants.MODEL_KEY) b: Paste,
                     result: BindingResult, model: Model, locale: Locale,
                     redirectAttributes: RedirectAttributes): String = {
-    if (!isCurrentUserLoggedIn && !allowAnonymousPasteCreate)
-      return MvcConstants.page403
+    if (!isCurrentUserLoggedIn && !allowAnonymousPasteCreate) return MvcConstants.page403
     logger.debug("saving paste..")
 
     /**
      * copy fields not filled in form
      */
     if (!b.isBlank) {
-      //val current = manager().getFull(b.id)
-      commentDao.deleteCommentsFor(b.id)
-      //b.comments.addAll(current.comments)
-     // b.integrationCode = current.integrationCode
-      // b.setThumbImg(current.getThumbImg())
+      val oldPaste = pasteDao.get(b.id)
+      if (!oldPaste.text.equals(b.text) ) {
+        commentDao.deleteCommentsFor(b.id)
+        // remove old review
+        if (b.reviewImgData != null) resourceDao.deleteResource('r', b.reviewImgData)
+        b.reviewImgData = null
+        // remove old thumbnail
+        if (b.thumbImage != null) resourceDao.deleteResource('t', b.thumbImage)
+        b.thumbImage = null
+      }
     }
-    if (b.channel == null || !channelDao.exist(b.channel))
-      b.channel = channelDao.getDefault
+    if (b.channel == null || !channelDao.exist(b.channel)) b.channel = channelDao.getDefault
 
     /**
      * concatenate all model tags objects to one string
@@ -224,8 +206,7 @@ class PasteEditCtrl extends GenericEditCtrl[Paste] {
     val allTags = tagDao.getTagsMap
     for (s <- b.tagsAsString.split(" ")) {
       if (!StringUtils.isBlank(s) && s.length >= 3   )
-        if (allTags contains s)
-        b.getTagsMap.put(s, allTags(s))
+        if (allTags contains s) b.getTagsMap.put(s, allTags(s))
       else
         b.getTagsMap.put(s, new Tag(s))
     }
@@ -261,18 +242,22 @@ class PasteEditCtrl extends GenericEditCtrl[Paste] {
         b.author = getCurrentUser.getUsername()
         // b.getOwner().increaseTotalPastas()
       }
-    b.title =
-      if (b.text.length > Paste.TITLE_LENGTH) {
-        val summary: String = b.text
-        if (summary == null || summary.length < 3)
-          b.text.substring(0, Paste.TITLE_LENGTH - 3) + "..."
-        else if (summary.length > Paste.TITLE_LENGTH)
-          summary.substring(0, Paste.TITLE_LENGTH - 3) + "..."
-        else
-          summary
-      } else b.text
+    if (StringUtils.isBlank(b.title)) {
+      b.title =
+        if (b.text.length > Paste.TITLE_LENGTH) {
+          val summary: String = b.text
+          if (summary == null || summary.length < 3)
+            b.text.substring(0, Paste.TITLE_LENGTH - 3) + "..."
+          else if (summary.length > Paste.TITLE_LENGTH)
+            summary.substring(0, Paste.TITLE_LENGTH - 3) + "..."
+          else
+            summary
+        } else b.text
+    }
     if (logger.isDebugEnabled)
-      logger.debug("found thumbnail sz: {} comments {}", b.thumbImage.length, b.commentsCount)
+      logger.debug("found thumbnail sz: {} comments {}",
+        if (b.thumbImage!=null) b.thumbImage.length else 0 , b.commentsCount)
+
     if (b.thumbImage != null) {
       b.thumbImage = resourceDao.saveResource('t', b.uuid, b.thumbImage)
     }
@@ -319,9 +304,7 @@ class PasteEditCtrl extends GenericEditCtrl[Paste] {
   @JsonIgnore
   def getAvailableTagsNames: java.util.List[String] = {
     val out = new util.ArrayList[String]
-    for (s <- tagDao.getAll.asScala) {
-      out.add(s.name)
-    }
+    for (s <- tagDao.getAll.asScala) { out.add(s.name) }
     out
   }
   /**

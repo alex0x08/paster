@@ -51,8 +51,7 @@ class StartupListener extends ServletContextListener with Logged {
         bootContext.users.loadUsers()
         logger.info("boot completed successfully.")
       } catch {
-        case e@(_: java.io.IOException) =>
-          logger.error(e.getLocalizedMessage, e)
+        case e@(_: java.io.IOException) => logger.error(e.getLocalizedMessage, e)
           throw e; // to stop application
       }
     }
@@ -63,11 +62,10 @@ class StartupListener extends ServletContextListener with Logged {
   private def setupSecurityContext(): Unit = {
     val start_user = new PasterUser("System", "system",
       //fake password
-      Md5Crypt.md5Crypt(SecureRandom.getSeed(20)),
-      java.util.Set.of(Role.ROLE_ADMIN))
+      Md5Crypt.md5Crypt(SecureRandom.getSeed(20)),java.util.Set.of(Role.ROLE_ADMIN))
     // log user in automatically
-    val auth = new UsernamePasswordAuthenticationToken(
-      "start", "start", start_user.getAuthorities())
+    val auth = new UsernamePasswordAuthenticationToken("start", "start",
+      start_user.getAuthorities())
     auth.setDetails(start_user)
     SecurityContextHolder.getContext.setAuthentication(auth)
   }

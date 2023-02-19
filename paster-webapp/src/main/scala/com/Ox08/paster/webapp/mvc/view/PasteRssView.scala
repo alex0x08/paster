@@ -31,9 +31,7 @@ import scala.jdk.CollectionConverters._
 class PasteRssView extends AbstractRssFeedView {
   private var externalUrl: Option[String] = None
   def getExternalUrl: String = externalUrl.get
-  def setExternalUrl(url: String): Unit = {
-    externalUrl = Some(url)
-  }
+  def setExternalUrl(url: String): Unit = { externalUrl = Some(url) }
   override protected def buildFeedMetadata(model: java.util.Map[String, Object], feed: Channel,
                                            request: HttpServletRequest): Unit = {
     feed.setTitle("Paster RSS")

@@ -44,8 +44,7 @@ class PasterView {
         fastdom.mutate(() => {
             sz_array.forEach(c => {
                 const htmlBlock = "<a href='#" + modelId + "_sketch' class="
-                    + modelId + "_sketch_sz data-size='" + c
-                    + "' style='background: #ccc'>" + c + "</a> ";
+                    + modelId + "_sketch_sz data-size='" + c + "' title='"+c+"' ><div class='paint-toolbar-dot-"+c+"' ></div></a> ";
                 toolsEl.insertAdjacentHTML('beforeend', htmlBlock);
             });
             Array.from(document.getElementsByClassName(`${modelId}_sketch_sz`))

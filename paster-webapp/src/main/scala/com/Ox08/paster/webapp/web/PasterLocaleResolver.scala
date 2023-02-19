@@ -53,11 +53,9 @@ class PasterLocaleResolver extends SessionLocaleResolver with Logged{
        if (requestLocale!=null && requestLocale.getLanguage!=null &&
          // try to check if we support this locale
          Boot.BOOT.getSystemInfo.getAvailableLocales.exists(p => {
-           p.equals(requestLocale) || p.getLanguage.equals(requestLocale.getLanguage)
-         })) {
+           p.equals(requestLocale) || p.getLanguage.equals(requestLocale.getLanguage) })) {
          // if locale is supported - use it
-         if (logger.isDebugEnabled())
-              logger.debug("switching to browser's locale: {}",requestLocale)
+         if (logger.isDebugEnabled()) logger.debug("switching to browser's locale: {}",requestLocale)
          return requestLocale
        }
      }

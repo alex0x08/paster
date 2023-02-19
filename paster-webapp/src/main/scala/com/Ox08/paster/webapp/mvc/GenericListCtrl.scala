@@ -80,8 +80,7 @@ abstract class GenericListCtrl[T <: Struct] extends AbstractCtrl {
    * default callback object: will simply use getList from attached manager
    */
   protected val defaultListCallback: SourceCallback[T] = new SourceCallback[T]() {
-    override def invokeCreate(): PagedListHolder[T] =
-      new PagedListHolder[T](manager().getList)
+    override def invokeCreate(): PagedListHolder[T] = new PagedListHolder[T](manager().getList)
   }
   protected def fillListModel(model: Model): Unit = {
     /**

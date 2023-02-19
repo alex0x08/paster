@@ -79,6 +79,13 @@ class ResourceManager extends Logged {
     FileUtils.writeByteArrayToFile(fileImg, Base64.getDecoder.decode(imgData2.getBytes))
     fileName.replaceAll("/", ",")
   }
+  def deleteResource(resourceType: Char, fid: String): Unit = {
+    val f = getResource(resourceType,fid)
+    if (f != null && f.exists() && f.isFile)
+      synchronized { f.delete() }
+
+  }
+
   /**
    * Get extension for resource type
    *

@@ -45,8 +45,7 @@ object CPRConstants {
  * @param tokenDao
  */
 class PasterPersistentRememberMeServices(key: String, uds: UserDetailsService, tokenDao: SessionTokensDao)
-  extends
-    AbstractRememberMeServices(key, uds) {
+  extends AbstractRememberMeServices(key, uds) {
   /**
    * Handles 'remember me' cookie
    * @param cookieTokens
@@ -64,8 +63,7 @@ class PasterPersistentRememberMeServices(key: String, uds: UserDetailsService, t
     // Token also matches, so login is valid. Update the token value, keeping the *same* series number.
     val login = token.username
     if (logger.isDebugEnabled) {
-      logger.debug("Refreshing persistent login token for user '{}', series '{}'",
-        login, token.series)
+      logger.debug("Refreshing persistent login token for user '{}', series '{}'",login, token.series)
     }
     // next, we update and persist token value, but not series
     token.tokenDate = new Date()
@@ -73,13 +71,10 @@ class PasterPersistentRememberMeServices(key: String, uds: UserDetailsService, t
     token.ipAddress = request.getRemoteAddr
     token.setUserAgent(request.getHeader("User-Agent"))
     try {
-      tokenDao.save(token)
-      addCookie(token, request, response)
+      tokenDao.save(token); addCookie(token, request, response)
     } catch {
-      case e@(_: DataAccessException
-        ) =>
-        throw new RememberMeAuthenticationException(
-          s"Autologin failed due to data access problem: ${e.getMessage}")
+      case e@(_: DataAccessException) =>
+        throw new RememberMeAuthenticationException(s"Autologin failed due to data access problem: ${e.getMessage}")
     }
     getUserDetailsService.loadUserByUsername(login)
   }
@@ -119,13 +114,11 @@ class PasterPersistentRememberMeServices(key: String, uds: UserDetailsService, t
                       authentication: Authentication): Unit = {
     val rememberMeCookie = extractRememberMeCookie(request)
     if (rememberMeCookie != null && rememberMeCookie.nonEmpty) try {
-      val cookieTokens = decodeCookie(rememberMeCookie)
-      val token = getPersistentToken(cookieTokens)
+      val cookieTokens = decodeCookie(rememberMeCookie); val token = getPersistentToken(cookieTokens)
       tokenDao.remove(token.series)
     } catch {
       case e@(_: InvalidCookieException
-              | _: RememberMeAuthenticationException
-        ) =>
+              | _: RememberMeAuthenticationException) =>
         logger.error(e.getMessage, e)
     }
     super.logout(request, response, authentication)
@@ -138,13 +131,11 @@ class PasterPersistentRememberMeServices(key: String, uds: UserDetailsService, t
       throw new InvalidCookieException(
         s"Cookie token did not contain 2 tokens, but contained '${util.Arrays.asList(cookieTokens)}'")
     }
-    val presentedSeries = cookieTokens(0)
-    val presentedToken = cookieTokens(1)
+    val presentedSeries = cookieTokens(0); val presentedToken = cookieTokens(1)
     val token = tokenDao.get(presentedSeries)
     if (token == null) {
       // No series match, so we can't authenticate using this cookie
-      throw new RememberMeAuthenticationException(
-        s"No persistent token found for series id: $presentedSeries")
+      throw new RememberMeAuthenticationException(s"No persistent token found for series id: $presentedSeries")
     }
     // We have a match for this user/series combination
     logger.debug("presentedToken={} / tokenValue={}",

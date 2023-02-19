@@ -439,7 +439,7 @@ var SyntaxHighlighter = function () {
             if (parentId > 0) {
                 cForm.querySelector('#parentId').value = parentId;
             }
-            fastdom.mutate(() => { 
+            fastdom.mutate(() => {
                     cForm.style.position = "relative";
                     cForm.style['max-width'] = window.innerWidth - 100;
                     cForm.style.display = "";
@@ -452,14 +452,13 @@ var SyntaxHighlighter = function () {
                         document.getElementById(sh.vars.currentEditModel + '_cl_linePlain_' + sh.vars.currentEditLine).style.display = "none";
                         sh.vars.currentEditLine = null;
                     });
-                } else {
-                    fastdom.mutate(() => {  
+                }
+                fastdom.mutate(() => {
                         document.getElementById(modelId + '_cl_lineHtml_' + lineNumber).style.display = "none";
                         document.getElementById(modelId + '_cl_linePlain_' + lineNumber).style.display = "";
                         sh.vars.currentEditLine = lineNumber;
                         sh.vars.currentEditModel = modelId;        
-                    });
-                }
+                });
                 fastdom.mutate(() => {
                 document.getElementById("pasteLineCopyBtn").style.display = "inline-block";
                 document.getElementById('pasteLineToCopy').innerHTML = document

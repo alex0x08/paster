@@ -64,10 +64,7 @@ class SystemPropertiesListener extends ServletContextListener with Logged {
       logger.info("application home: {} ,profiles: {} , current locale: {}",
         System.getProperty("paster.app.home"),
         springProfiles,Locale.getDefault)
-    } catch {
-      case e: IOException =>
-        throw new RuntimeException(e)
-    }
+    } catch { case e: IOException => throw new RuntimeException(e) }
   }
   override def contextDestroyed(servletContextEvent: ServletContextEvent): Unit = {}
   private def doBoot(): Unit = {

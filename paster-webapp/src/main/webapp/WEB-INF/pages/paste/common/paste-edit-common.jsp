@@ -235,8 +235,13 @@
                 </div>
             </div>
             <div class="form-group">
-                <form:label path="text">
+                <form:label path="text" >
                     <fmt:message key="paste.text" />
+                    <c:if test="${!model.blank}">
+                        <span style="color:red;font-size:11px;">
+                            <fmt:message key="paste.nonBlank.warn.onsave" />
+                        </span>
+                    </c:if>
                 </form:label>
                 <form:textarea path="text"
                             cssErrorClass="error"

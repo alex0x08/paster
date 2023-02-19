@@ -34,8 +34,7 @@ class IndexCtrl extends AbstractCtrl {
   @RequestMapping(value = Array("/"))
   def index(model: Model): String = {
     model.asMap().clear()
-    if (!Boot.BOOT.getSystemInfo.isInstalled)
-      return "redirect:/main/setup/welcome"
+    if (!Boot.BOOT.getSystemInfo.isInstalled) return "redirect:/main/setup/welcome"
     "redirect:/main/paste/list"
   }
   /**
@@ -50,12 +49,9 @@ class IndexCtrl extends AbstractCtrl {
     model.addAttribute("appId", appId)
     model.addAttribute("systemInfo",systemInfo)
     errorCode match {
-      case 403 | 404 | 500 =>
-        response.setStatus(errorCode)
-        s"/error/$errorCode"
-      case _ =>
-        "/error/500"
-      }
+      case 403 | 404 | 500 => response.setStatus(errorCode); s"/error/$errorCode"
+      case _ =>  "/error/500"
+    }
   }
   /**
    * Login page
@@ -64,7 +60,6 @@ class IndexCtrl extends AbstractCtrl {
    */
   @RequestMapping(Array("/login"))
   def login(model: Model): String = if (isCurrentUserLoggedIn) index(model) else {
-    model.addAttribute("query", new GenericQuery())
-    "/login"
+    model.addAttribute("query", new GenericQuery()); "/login"
   }
 }

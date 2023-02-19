@@ -60,9 +60,9 @@
 <%--
     Draw mode, paint options
 --%>
-<div id="${model.id}_drawBlock" style="display:none;padding-top: 1em;">
+<div id="${model.id}_drawBlock" style="display:none;padding-top: 0.5em;">
             <div class="row justify-content-between">
-                <div class="col-md-8">
+                <div class="col-md-8" style="padding-bottom:0.5em;">
                     <div id="${model.id}_tools" class="tools">
                     </div>
                 </div>
@@ -77,7 +77,7 @@
                             <input id="${model.id}_reviewDrawImg" name="reviewImgData" type="hidden" value="" />
                             <input id="${model.id}_thumbImg" name="thumbImgData" type="hidden" value="" />
                             <button id="${model.id}_saveReviewBtn"
-                                    class='btn btn-danger p-btn-save' type="button">
+                                    class='btn btn-sm btn-danger p-btn-save' type="button">
                                 <span class="i" style="font-size:larger;">S</span>
                                 <span id="btnCaption">
                                     <fmt:message key="button.save" /></span>
@@ -163,8 +163,8 @@
                             <a class="deleteBtn"
                                 id="deleteCommentBtn_${model.id}_${comment.id}"
                                 href="${removeCommentUrl}"
-                            title="<fmt:message key='button.delete' />">
-                                <span style="font-size: larger;" class="i">d</span>                          
+                                    title="<fmt:message key='button.delete' />">
+                                        <span style="font-size: larger;" class="i">d</span>
                             </a>
                             <div style="display:none;" id="dialogMsg">
                                 <fmt:message key="dialog.confirm.paste.remove.comment">

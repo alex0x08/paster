@@ -88,10 +88,9 @@ class DynamicTilesView extends AbstractUrlBasedView {
     val servletContext: ServletContext = getServletContext
     val container: TilesContainer = TilesAccess.getContainer(ServletUtil
       .getApplicationContext(servletContext))
-    if (container == null) {
-      throw new ServletException(
+    if (container == null) { throw new ServletException(
         "Tiles container is not initialized. " +
-          "Have you added a TilesConfigurer to your web application context?")
+        "Have you added a TilesConfigurer to your web application context?")
     }
     exposeModelAsRequestAttributes(model, request)
     dynamicTilesViewProcessor.renderMergedOutputModel(getBeanName,

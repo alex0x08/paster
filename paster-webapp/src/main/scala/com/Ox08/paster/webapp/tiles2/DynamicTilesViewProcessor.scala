@@ -86,15 +86,13 @@ private class DynamicTilesViewProcessor extends Logged {
     // seek for tiles definition based on bean name
     while (!container.isValidDefinition(beanName, tilesRequest)) {
       val pos = beanName.lastIndexOf('/')
-      if (pos < 1)
-        throw new TilesException(s"No definition found for '$beanName'")
+      if (pos < 1) throw new TilesException(s"No definition found for '$beanName'")
       beanName = beanName.substring(0, pos)
     }
     JstlUtils.exposeLocalizationContext(new RequestContext(request, servletContext))
     val definitionName: String = startDynamicDefinition(beanName, url, tilesRequest, container)
     try container.render(definitionName, tilesRequest) catch {
-      case e: Exception =>
-        logger.error(e.getMessage, e)
+      case e: Exception => logger.error(e.getMessage, e)
     }
     endDynamicDefinition(definitionName, beanName, tilesRequest, container)
   }

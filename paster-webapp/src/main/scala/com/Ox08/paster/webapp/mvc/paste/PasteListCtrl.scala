@@ -53,7 +53,6 @@ class PasteListCtrl extends SearchCtrl[Paste, AuthorQuery] {
 
   @Value("${paster.paste.list.splitter.days:7}")
   val splitDays: Int = 0 // number of days used in splitter
-
   @Autowired
   val channelDao: ChannelDao = null
   @Autowired
@@ -187,8 +186,7 @@ class PasteListCtrl extends SearchCtrl[Paste, AuthorQuery] {
                        sortColumn: String,
                        sortAsc: java.lang.Boolean = false,
                        channelCode: String, integrationCode: String, result: String): java.util.List[Paste] = {
-    if (logger.isDebugEnabled)
-      logger.debug("paste listImpl, channel: {} pageSize {}", channelCode,pageSize)
+    if (logger.isDebugEnabled) logger.debug("paste listImpl, channel: {} pageSize {}", channelCode,pageSize)
     fillListModel(model)
     val ps = if (channelCode != null && channelDao.exist(channelCode)) {
       model.addAttribute("sourceType", channelCode.toLowerCase)
@@ -199,8 +197,7 @@ class PasteListCtrl extends SearchCtrl[Paste, AuthorQuery] {
       if (ps == null) {
         model.addAttribute("sourceType", channelDao.getDefault.toLowerCase)
         pasterListCallback
-      } else
-        new PasteListCallback(ps, sortAsc, integrationCode), MvcConstants.NODE_LIST_MODEL_PAGE)
+      } else new PasteListCallback(ps, sortAsc, integrationCode), MvcConstants.NODE_LIST_MODEL_PAGE)
   }
   @RequestMapping(value = Array("/own/list"))
   @ModelAttribute("items")
@@ -247,14 +244,12 @@ class PasteListCtrl extends SearchCtrl[Paste, AuthorQuery] {
     var title: String = _
     def setCurDate(date: Date): Unit = {
       curDate = date
-      if (prevDate == null)
-        prevDate = date
+      if (prevDate == null) prevDate = date
       total.+=(1)
     }
     def getSplitTitle: String = title
     def isSplit: Boolean = {
-      if (curDate == null || prevDate == null)
-        return false
+      if (curDate == null || prevDate == null) return false
       val diff = curDate.getTime - prevDate.getTime
       val d = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS)
       if (abs(d) > splitDays) {

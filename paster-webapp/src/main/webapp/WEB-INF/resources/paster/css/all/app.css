@@ -26,6 +26,11 @@
 a {
 	text-decoration: none;
 }
+.form-control {
+   padding: 3px 5px;
+   height: 30px;
+   line-height:30px;
+}
 
 .priority_blocker {
     color: #ff0000;

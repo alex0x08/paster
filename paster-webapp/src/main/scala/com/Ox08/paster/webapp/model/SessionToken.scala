@@ -49,8 +49,6 @@ class SessionToken extends java.io.Serializable {
   def setUserAgent(userAgent: String): Unit = {
     if (userAgent!=null && userAgent.length() >= SessionToken.MAX_USER_AGENT_LEN) {
       this.userAgent = userAgent.substring(0, SessionToken.MAX_USER_AGENT_LEN - 1)
-    } else {
-      this.userAgent = userAgent
-    }
+    } else { this.userAgent = userAgent }
   }
 }

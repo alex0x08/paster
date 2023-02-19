@@ -56,20 +56,16 @@ class ResourceCtrl extends AbstractCtrl {
                    @PathVariable("type") pType: Char,
                    response: HttpServletResponse
                  ): InputStreamResource = {
-    if (logger.isDebugEnabled)
-      logger.debug("get {} type: {} lm: {}", path, pType, lastModified)
+    if (logger.isDebugEnabled) logger.debug("get {} type: {} lm: {}", path, pType, lastModified)
+    // check the resource type
     pType match {
-      case 't' | 'r' | 'a' | 'b' =>
-      //allow
-      case _ =>
-        writeError(response, "unknown type")
-        return null
+      case 't' | 'r' | 'a' | 'b' => //allow
+      case _ => writeError(response, "unknown type"); return null
     }
     val fImg = resourcePathHelper.getResource(pType, path)
-    if (fImg == null) {
-      writeError(response, "file not found")
-      return null
-    }
+    // respond error if resource not found
+    if (fImg == null) {  writeError(response, "file not found"); return null }
+
     response.setHeader("Content-Length", fImg.length().toString)
     // we use this method only for images, so its ok to inline MIME and content-disposition
     response.setContentType("image/png")
