@@ -32,11 +32,11 @@ abstract class AbstractI18nMessageStore protected( // default bundle name
                                                    val defaultBundleName: String) extends Logged {
   //reloadMessages()
   // bundle locale
-  protected var messageLocale: Locale = Locale.getDefault()
+  private var messageLocale: Locale = Locale.getDefault()
   // additional bundles, loaded from plugins
   final private val additionalBundles = new util.ArrayList[ResourceBundle]
   // default bundle
-  protected var defaultBundle: ResourceBundle = _
+  private var defaultBundle: ResourceBundle = _
   // reload default bundle
   final def reloadMessages(): Unit = {
     this.defaultBundle = ResourceBundle.getBundle(this.defaultBundleName, messageLocale)

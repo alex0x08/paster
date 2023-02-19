@@ -188,7 +188,7 @@ class SetupCtrl extends Logged {
                       result: BindingResult,
                       model: Model): String = {
     val step: SetupDbStep = updatedStep.getStep.asInstanceOf[SetupDbStep]
-    Assert.notNull(step,"Step object should non be null");
+    Assert.notNull(step,"Step object should non be null")
     if (StringUtils.isBlank(step.dbType) ||step.origName.contains("H2")) {
       val dbType = getAvailableDrivers.find(p =>
         step.origName.equalsIgnoreCase(p.getName))
@@ -594,7 +594,7 @@ class SetupUsersStep extends SetupStep("users", "paster.setup.step.users.title")
    */
   override def update(dto: SetupStep, result: BindingResult): Unit = {
     val update: SetupUsersStep = dto.asInstanceOf[SetupUsersStep]
-    Assert.notNull(update, "Step object should non be null");
+    Assert.notNull(update, "Step object should non be null")
     // disallow empty security mode
     if (StringUtils.isBlank(update.securityMode)) {
       result.reject("paster.setup.step.users.reject.security-mode-not-set")
@@ -672,7 +672,7 @@ class SetupDbStep extends SetupStep("db", "paster.setup.step.db.title") {
   }
   override def update(dto: SetupStep, result: BindingResult): Unit = {
     val update: SetupDbStep = dto.asInstanceOf[SetupDbStep]
-    Assert.notNull(update, "Step object should non be null");
+    Assert.notNull(update, "Step object should non be null")
     // support for default selection
     if (update.origName.contains("H2")) {
       val dbType = SetupConstants.getAvailableDrivers.find(p => update.origName
@@ -733,7 +733,7 @@ class WelcomeStep extends SetupStep("welcome",
       logger.debug(s"called update dto: ${dto.getClass.getName}")
 
     val update: WelcomeStep = dto.asInstanceOf[WelcomeStep]
-    Assert.notNull(update, "Step object should non be null");
+    Assert.notNull(update, "Step object should non be null")
     // check if system language selected
     if (StringUtils.isBlank(update.getDefaultLang)) {
       result.reject("*","system language is not set")

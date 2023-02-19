@@ -2,71 +2,51 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
     <parent>
         <groupId>com.Ox08.paster.webapp</groupId>
         <artifactId>paster-libs</artifactId>
         <version>${revision}</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
-
     <artifactId>paster-spring-tiles3-jakarta</artifactId>
     <packaging>jar</packaging>
     <name>Paster : Spring Tiles3 View with Jakarta, Stripped </name>
     <url>http://maven.apache.org</url>
-
-    <repositories>
-
-
-    </repositories>
-
     <dependencies>
-
         <dependency>  
             <groupId>com.Ox08.paster.webapp</groupId>
             <artifactId>paster-tiles-jakarta</artifactId>
             <version>${project.parent.version}</version>
             <scope>provided</scope>
         </dependency>
-
         <dependency>
             <groupId>jakarta.platform</groupId>
             <artifactId>jakarta.jakartaee-web-api</artifactId>
             <version>9.1.0</version>
             <scope>provided</scope>
         </dependency>
-
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
             <version>${spring.version}</version>
         </dependency>
-
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
             <version>${spring.version}</version>
         </dependency>
-
     </dependencies>
     <build>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
+                <version>${maven-resources-plugin.version}</version>
             </plugin>
-
         </plugins>
-
-        <resources>
-        </resources>
-
     </build>
-
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.test.skip>true</maven.test.skip>
     </properties>
-
 </project>
-

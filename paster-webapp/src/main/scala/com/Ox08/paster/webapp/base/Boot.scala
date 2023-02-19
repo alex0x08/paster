@@ -431,7 +431,7 @@ class Boot private() extends Logged {
   class AppVersion(p: Properties, git: Properties) extends Serializable {
     private val UNDEFINED = "UNDEFINED"
     private val MAVEN_TS_FORMAT: SimpleDateFormat = new SimpleDateFormat("yyy-MM-dd_HHmm")
-    val implVer: String = p.getProperty("build.version", UNDEFINED)
+    private val implVer: String = p.getProperty("build.version", UNDEFINED)
     val implBuildNum: String = p.getProperty("build.number", UNDEFINED)
     val implBuildTime: String = p.getProperty("build.time", UNDEFINED)
     val buildDate: Date = try {

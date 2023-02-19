@@ -19,35 +19,23 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
-
   <parent>
     <groupId>com.Ox08.paster.webapp</groupId>
     <artifactId>paster-project</artifactId>
     <version>${revision}</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
-
-
   <artifactId>paster-dist</artifactId>
   <packaging>pom</packaging>
   <name>Paster Distribution</name>
-
   <pluginRepositories>
-    <!--
-           for LicenseScan Maven Plugin
-           https://github.com/carlomorelli/licensescan-maven-plugin
-       -->
-    <pluginRepository>
+       <pluginRepository>
       <id>jitpack.io</id>
       <url>https://jitpack.io</url>
     </pluginRepository>
-
   </pluginRepositories>
-
   <build>
     <plugins>
-
       <plugin>
         <groupId>com.github.carlomorelli</groupId>
         <artifactId>licensescan-maven-plugin</artifactId>
