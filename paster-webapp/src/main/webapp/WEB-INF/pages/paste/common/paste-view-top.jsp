@@ -70,7 +70,7 @@
             <c:if test="${not empty currentUser or allowAnonymousCommentsCreate}">
                 <c:url var='pasteEditUrl' value='/main/paste/edit/${model.id}'/>
 
-                <a class="btn btn-primary" href="${pasteEditUrl}"
+                <a class="btn btn-secondary" href="${pasteEditUrl}"
                     title="<fmt:message key='button.edit' />">
                     <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                 </a>

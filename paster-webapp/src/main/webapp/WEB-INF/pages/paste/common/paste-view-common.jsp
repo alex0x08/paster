@@ -32,17 +32,17 @@
 <div id='pasteViewControls' class="btn-group float-end paste-view-controls" role="group" aria-label="Controls">
     <button id="${model.id}_btnShowAll" type="button"
             title="<fmt:message key='button.paste.all' />"
-            class="btn btn-primary btn-sm active">
+            class="btn btn-secondary btn-sm active">
         <i class="fa fa-eye" aria-hidden="true"></i>
     </button>
     <button id="${model.id}_btnShowComments" type="button"
         title=" <fmt:message key='button.paste.comments' />"
-        class="btn btn-sm btn-primary">
+        class="btn btn-sm btn-secondary">
         <i class="fa fa-comments" aria-hidden="true"></i>
     </button>
     <button id="${model.id}_btnShowDraw" type="button"
         title=" <fmt:message key='button.paste.draw' />"
-        class="btn btn-sm btn-primary">
+        class="btn btn-sm btn-secondary">
         <i class="fa fa-paint-brush" aria-hidden="true"></i>
     </button>
 </div>

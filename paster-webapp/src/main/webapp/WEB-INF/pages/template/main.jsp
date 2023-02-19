@@ -74,26 +74,12 @@
                     </sec:authorize>
                     <!--  render 'Create' menu -->
                     <ul class="nav navbar-nav me-auto">
-                        <li class="nav-item dropdown">
-                            <a href="#"
-                                id="main-menu-dropdown"
-                                role="button"
-                                class="nav-link dropdown-toggle"
-                                data-bs-toggle="dropdown" aria-expanded="false">
-                                <fmt:message key="button.create" />
-                                <span class="caret"></span>
-                            </a>  
-                            <ul class="dropdown-menu" role="menu" id="pasteNewMenu">
-                                <li>
                                     <c:url var='createNewPasteUrl' value='/main/paste/new'/>
-                                    <a role="menuitem" id="createNewBtn" class="dropdown-item mainLinkLine"
-                                        href="${createNewPasteUrl}"
-                                        title="<fmt:message key='paste.create.new' />">
-                                        <fmt:message key='paste.create.new' />
+                                    <a  id="createNewBtn" class="btn btn-sm btn-primary"
+                                                                href="${createNewPasteUrl}"
+                                                                title="<fmt:message key='paste.create.new' />">
+                                                         <i class="fa fa-plus" aria-hidden="true"></i>
                                     </a>
-                                </li>
-                            </ul>
-                        </li>
                     </ul>
                     <!-- render 'Search' block -->
                     <tiles:insertAttribute name="search-top" />    
