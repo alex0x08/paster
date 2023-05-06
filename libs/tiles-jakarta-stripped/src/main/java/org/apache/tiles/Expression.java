@@ -18,11 +18,8 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.tiles;
-
 import static org.apache.tiles.CompareUtil.*;
-
 /**
  * It is an expression, along with the expression language (e.g. EL, MVEL, OGNL)
  * it is expressed with.
@@ -31,29 +28,25 @@ import static org.apache.tiles.CompareUtil.*;
  * @since 2.2.0
  */
 public class Expression {
-
     /**
      * The expression itself.
      */
     private final String expression;
-
     /**
      * The language of the expression.
      */
     private final String language;
-
     /**
      * Constructor.
      *
      * @param expression The expression itself.
-     * @param language The language of the expression.
+     * @param language   The language of the expression.
      * @since 2.2.0
      */
     public Expression(String expression, String language) {
         this.expression = expression;
         this.language = language;
     }
-
     /**
      * Constructor, using the default (i.e. <code>null</code>) language.
      *
@@ -63,7 +56,6 @@ public class Expression {
     public Expression(String expression) {
         this(expression, null);
     }
-
     /**
      * Copy constructor.
      *
@@ -74,14 +66,13 @@ public class Expression {
         this.expression = toCopy.expression;
         this.language = toCopy.language;
     }
-
     /**
      * Creates an Expression object from a string in the form
      * <code>LANGUAGE:EXPRESSION</code>.
      *
      * @param describedExpression The expression in the form
-     * <code>LANGUAGE:EXPRESSION</code>. The LANGUAGE part should be expressed
-     * only with letters and numbers.
+     *                            <code>LANGUAGE:EXPRESSION</code>. The LANGUAGE part should be expressed
+     *                            only with letters and numbers.
      * @return The created object, or <code>null</code> if the expression is null.
      * @since 2.2.0
      */
@@ -95,15 +86,13 @@ public class Expression {
             }
             return new Expression(expression, language);
         }
-
         return null;
     }
-
     /**
      * Creates an Expression object from the expression and its language.
      *
      * @param expression The expression itself.
-     * @param language The language of the expression.
+     * @param language   The language of the expression.
      * @return The created object, or <code>null</code> if the expression is null.
      * @since 2.2.0
      */
@@ -111,10 +100,8 @@ public class Expression {
         if (expression != null) {
             return new Expression(expression, language);
         }
-
         return null;
     }
-
     /**
      * Returns the expression string.
      *
@@ -124,7 +111,6 @@ public class Expression {
     public String getExpression() {
         return expression;
     }
-
     /**
      * Returns the language in which the expression is expressed.
      *
@@ -134,8 +120,9 @@ public class Expression {
     public String getLanguage() {
         return language;
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean equals(Object obj) {
         if (!(obj instanceof Expression exp)) {
@@ -144,14 +131,16 @@ public class Expression {
         return nullSafeEquals(expression, exp.expression)
                 && nullSafeEquals(language, exp.language);
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int hashCode() {
         return nullSafeHashCode(expression) + nullSafeHashCode(language);
     }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
         return (language == null ? "DEFAULT" : language) + ":" + expression;

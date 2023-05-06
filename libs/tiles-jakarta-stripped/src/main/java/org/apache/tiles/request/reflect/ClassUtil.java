@@ -96,13 +96,13 @@ public final class ClassUtil {
                     "Unable to resolve factory class: '" + className + "'", e);
         } catch (IllegalAccessException e) {
             throw new CannotInstantiateObjectException(
-                    "Unable to access factory class: '" + className + "'", e);
-        } catch (InstantiationException | NoSuchMethodException | SecurityException | IllegalArgumentException |
-                 InvocationTargetException e) {
+                    "Unable to access factory class: '%s'".formatted(className), e);
+        } catch (InstantiationException | NoSuchMethodException
+                 | SecurityException | IllegalArgumentException
+                 | InvocationTargetException e) {
             throw new CannotInstantiateObjectException(
-                    "Unable to instantiate factory class: '"
-                            + className
-                            + "'. Make sure that this class has a default constructor",
+                    ("Unable to instantiate factory class: '%s'. " +
+                            "Make sure that this class has a default constructor").formatted(className),
                     e);
         }
     }

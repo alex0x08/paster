@@ -103,8 +103,8 @@ public abstract class BaseLocaleUrlDefinitionDAO implements
         Set<String> paths = lastModifiedDates.keySet();
         try {
             for (String path : paths) {
-                Long lastModifiedDate = lastModifiedDates.get(path);
-                ApplicationResource resource = applicationContext.getResource(path);
+                final Long lastModifiedDate = lastModifiedDates.get(path);
+                final ApplicationResource resource = applicationContext.getResource(path);
                 long newModDate = resource.getLastModified();
                 if (newModDate != lastModifiedDate) {
                     status = true;
@@ -124,17 +124,16 @@ public abstract class BaseLocaleUrlDefinitionDAO implements
      * @return The definition map that has been read.
      */
     protected Map<String, Definition> loadDefinitionsFromResource(ApplicationResource resource) {
-        try (InputStream stream  = resource.getInputStream()) {
+        try (InputStream stream = resource.getInputStream()) {
             lastModifiedDates.put(resource.getLocalePath(), resource
                     .getLastModified());
             // Definition must be collected, starting from the base
             // source up to the last localized file.
-
             return reader.read(stream);
         } catch (FileNotFoundException e) {
             // File not found. continue.
             if (log.isDebugEnabled()) {
-                log.debug("File " + resource + " not found, continue");
+                log.debug("File %s not found, continue".formatted(resource));
             }
         } catch (IOException e) {
             throw new DefinitionsFactoryException(

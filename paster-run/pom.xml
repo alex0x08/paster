@@ -45,6 +45,17 @@
             <artifactId>glassfish-jstl</artifactId>
             <version>${jetty.version}</version>
             <!--type>pom</type-->
+            <exclusions>
+                <exclusion>
+                    <groupId>org.glassfish.web</groupId>
+                    <artifactId>jakarta.servlet.jsp.jstl</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.web</groupId>
+            <artifactId>jakarta.servlet.jsp.jstl</artifactId>
+            <version>3.0.1</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
@@ -200,7 +211,7 @@
     </build>
     <properties>
         <servlet.version>5.0.0</servlet.version>
-        <jetty.version>11.0.12</jetty.version>
+        <jetty.version>11.0.15</jetty.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 </project>

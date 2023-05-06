@@ -56,13 +56,13 @@ public final class LocaleUtil {
      */
     public static Locale getParentLocale(Locale locale) {
         Locale retValue = null;
-        String language = locale.getLanguage();
-        String country = locale.getCountry();
-        String variant = locale.getVariant();
+        final String language = locale.getLanguage(),
+                country = locale.getCountry(),
+                variant = locale.getVariant();
         if (!"".equals(variant)) {
-            retValue = new Locale(language, country);
+            retValue = Locale.of(language, country);
         } else if (!"".equals(country)) {
-            retValue = new Locale(language);
+            retValue = Locale.of(language);
         } else if (!"".equals(language)) {
             retValue = Locale.ROOT;
         }

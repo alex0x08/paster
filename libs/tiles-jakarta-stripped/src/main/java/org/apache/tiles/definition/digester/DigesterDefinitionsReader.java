@@ -24,8 +24,9 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import org.apache.commons.digester.Digester;
-import org.apache.commons.digester.Rule;
+
+import org.apache.commons.digester3.Digester;
+import org.apache.commons.digester3.Rule;
 import org.apache.tiles.Attribute;
 import org.apache.tiles.Definition;
 import org.apache.tiles.Expression;
@@ -131,18 +132,18 @@ public class DigesterDefinitionsReader implements DefinitionsReader {
          */
         @Override
         public void begin(String namespace, String name, Attributes attributes) {
-            Definition definition = (Definition) digester.peek();
+            final Definition definition = getDigester().peek();
             definition.setName(attributes.getValue("name"));
             definition.setPreparer(attributes.getValue("preparer"));
-            String extendsAttribute = attributes.getValue("extends");
+            final String extendsAttribute = attributes.getValue("extends");
             definition.setExtends(extendsAttribute);
-            String template = attributes.getValue("template");
-            Attribute attribute = Attribute.createTemplateAttribute(template);
+            final String template = attributes.getValue("template");
+            final Attribute attribute = Attribute.createTemplateAttribute(template);
             attribute.setExpressionObject(Expression
                     .createExpressionFromDescribedExpression(attributes
                             .getValue("templateExpression")));
             attribute.setRole(attributes.getValue("role"));
-            String templateType = attributes.getValue("templateType");
+            final String templateType = attributes.getValue("templateType");
             if (templateType != null) {
                 attribute.setRenderer(templateType);
                 //&& templateType == null
@@ -163,9 +164,9 @@ public class DigesterDefinitionsReader implements DefinitionsReader {
          */
         @Override
         public void begin(String namespace, String name, Attributes attributes) {
-            Attribute attribute = (Attribute) digester.peek();
+            final Attribute attribute = getDigester().peek();
             attribute.setValue(attributes.getValue("value"));
-            String expression = attributes.getValue("expression");
+            final String expression = attributes.getValue("expression");
             attribute.setExpressionObject(Expression
                     .createExpressionFromDescribedExpression(expression));
             attribute.setRole(attributes.getValue("role"));
@@ -184,8 +185,8 @@ public class DigesterDefinitionsReader implements DefinitionsReader {
          */
         @Override
         public void begin(String namespace, String name, Attributes attributes) {
-            Attribute attribute = (Attribute) digester.peek(0);
-            Definition definition = (Definition) digester.peek(1);
+            final Attribute attribute = getDigester().peek(0);
+            final Definition definition = getDigester().peek(1);
             definition.putAttribute(attributes.getValue("name"), attribute,
                     "true".equals(attributes.getValue("cascade")));
         }
@@ -202,11 +203,11 @@ public class DigesterDefinitionsReader implements DefinitionsReader {
          */
         @Override
         public void begin(String namespace, String name, Attributes attributes) {
-            Definition definition = (Definition) digester.peek(0);
+            final Definition definition = digester.peek(0);
             if (definition.getName() == null) {
                 definition.setName(getNextUniqueDefinitionName(definitions));
             }
-            Attribute attribute = (Attribute) digester.peek(1);
+            final Attribute attribute = digester.peek(1);
             attribute.setValue(definition.getName());
             attribute.setRenderer("definition");
         }
@@ -240,9 +241,9 @@ public class DigesterDefinitionsReader implements DefinitionsReader {
         digester.setUseContextClassLoader(true);
         digester.setErrorHandler(new ThrowingErrorHandler());
         // Register our local copy of the DTDs that we can find
-        String[] registrations = getRegistrations();
+        final String[] registrations = getRegistrations();
         for (int i = 0; i < registrations.length; i += 2) {
-            URL url = this.getClass().getResource(
+            final URL url = this.getClass().getResource(
                     registrations[i + 1]);
             if (url != null) {
                 digester.register(registrations[i], url.toString());
@@ -281,19 +282,16 @@ public class DigesterDefinitionsReader implements DefinitionsReader {
             // Perhaps we should throw an exception here.
             return null;
         }
-        InputStream input;
-        try {
-            input = (InputStream) source;
-        } catch (ClassCastException e) {
+        if (!(source instanceof InputStream)) {
             throw new DefinitionsFactoryException(
-                    "Invalid source type.  Requires java.io.InputStream.", e);
+                    "Invalid source type. Requires java.io.InputStream.");
         }
         try {
             // set first object in stack
             //digester.clear();
             digester.push(this);
             // parse
-            digester.parse(input);
+            digester.parse((InputStream) source);
         } catch (SAXException e) {
             throw new DefinitionsFactoryException(
                     "XML error reading definitions.", e);
@@ -359,8 +357,9 @@ public class DigesterDefinitionsReader implements DefinitionsReader {
         digester.addSetNext(NESTED_LIST, "add", PUT_ATTRIBUTE_HANDLER_CLASS);
     }
     /**
-     *
+     * !!!!!!!!!!!!!!!!!!!!!!
      * THIS METHOD IS IN USE!
+     * !!!!!!!!!!!!!!!!!!!!!!
      * Adds a new <code>Definition</code> to the internal Map or replaces
      * an existing one.
      *

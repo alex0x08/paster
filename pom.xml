@@ -38,10 +38,10 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.test.skip>true</maven.test.skip>
-        <maven.compiler.source>18</maven.compiler.source>
-        <maven.compiler.release>18</maven.compiler.release>
+        <maven.compiler.source>19</maven.compiler.source>
+        <maven.compiler.release>19</maven.compiler.release>
         <scalaVersion>2.13.10</scalaVersion>
-        <spring.version>6.0.3</spring.version>
+        <spring.version>6.0.7</spring.version>
         <slf4j.version>2.0.3</slf4j.version>
         <jakartaEEVersion>9.1.0</jakartaEEVersion>
         <revision>2.1.06-RELEASE</revision>

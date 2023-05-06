@@ -55,6 +55,7 @@ class PasterUser(name: String,
   /**
    * Updates password hash
    * @param newPass
+   *        new password
    */
   def setPassword(newPass: String): Unit = {
     pwd = newPass

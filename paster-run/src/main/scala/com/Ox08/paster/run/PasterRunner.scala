@@ -91,10 +91,10 @@ class PasterRunner() {
   private var warFile: String = _
   private var contextPathSet = false
   private var runnerServerInitialized = false
-   private var _server: Server = _
-   private var _classLoader: URLClassLoader = _
+  private var _server: Server = _
+  private var _classLoader: URLClassLoader = _
   private val _classpath = new Classpath
-   private var _contexts: ContextHandlerCollection = _
+  private var _contexts: ContextHandlerCollection = _
   /**
    * Virtual 'Classpath'
    * Holds list of classpath urls

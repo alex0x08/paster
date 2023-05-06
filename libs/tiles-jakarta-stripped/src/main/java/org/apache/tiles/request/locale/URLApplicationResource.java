@@ -183,7 +183,7 @@ public class URLApplicationResource extends PostfixedApplicationResource {
         if (file != null) {
             return file.lastModified();
         } else {
-            URLConnection connection = openConnection();
+            final URLConnection connection = openConnection();
             if (connection instanceof JarURLConnection) {
                 return ((JarURLConnection) connection).getJarEntry().getTime();
             } else {
@@ -196,6 +196,6 @@ public class URLApplicationResource extends PostfixedApplicationResource {
      */
     @Override
     public String toString() {
-        return "Resource " + getLocalePath() + " at " + url.toString();
+        return "Resource %s at %s".formatted(getLocalePath(), url.toString());
     }
 }

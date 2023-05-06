@@ -20,8 +20,7 @@ import com.thoughtworks.xstream.annotations.XStreamAsAttribute
 import jakarta.persistence._
 import org.hibernate.annotations.GenericGenerator
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField
-
-import java.time.{LocalDateTime, ZoneId, ZoneOffset}
+import java.time.{LocalDateTime, ZoneId}
 import java.util.{Date, Objects}
 object Struct extends Logged {
   protected val terms: List[String] = List[String]("id", "name")

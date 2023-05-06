@@ -81,7 +81,7 @@ public class ELContextImpl extends ELContext {
     /**
      * The function mapper to use.
      */
-    private FunctionMapper functionMapper = NULL_FUNCTION_MAPPER;
+    private final FunctionMapper functionMapper = NULL_FUNCTION_MAPPER;
     /**
      * The variable mapper to use.
      */
@@ -118,22 +118,23 @@ public class ELContextImpl extends ELContext {
         }
         return this.variableMapper;
     }
-    /**
+    /*
      * Sets the function mapper to use.
      *
      * @param functionMapper The function mapper.
      * @since 2.2.1
-     */
+     *
     public void setFunctionMapper(FunctionMapper functionMapper) {
         this.functionMapper = functionMapper;
     }
-    /**
+    *
      * Sets the variable mapper to use.
      *
      * @param variableMapper The variable mapper.
      * @since 2.2.1
-     */
+     *
     public void setVariableMapper(VariableMapper variableMapper) {
         this.variableMapper = variableMapper;
     }
+    */
 }

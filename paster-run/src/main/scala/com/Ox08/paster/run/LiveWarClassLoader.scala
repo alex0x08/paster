@@ -58,16 +58,15 @@ private class LiveWarClassLoader(debug: Boolean, warFileUrl: URL, parent: ClassL
   private def loadData(): Unit = {
     // read WAR file contents
     for (e <- warFile.entries().asScala) {
+      val lname = e.getName.toLowerCase
       // if resource is a library
-      if (e.getName.startsWith("WEB-INF/lib") && e.getName.endsWith(".jar")) {
+      if (lname.startsWith("web-inf/lib") && lname.endsWith(".jar")) {
         debug(s"found lib: ${e.getName}")
         // open stream for jar file
         val zip = new JarInputStream(warFile.getInputStream(e))
         var ze: JarEntry = null
         // iterate over internal resources in current jar file
-        while ( {
-          ze = zip.getNextJarEntry; ze != null
-        }) {
+        while ({ ze = zip.getNextJarEntry; ze != null }) {
           // we must load the directories too, their names should be present
           // in resources map
           if (ze.isDirectory) {
@@ -100,15 +99,13 @@ private class LiveWarClassLoader(debug: Boolean, warFileUrl: URL, parent: ClassL
     URL.setURLStreamHandlerFactory(new VirtualWARURLStreamHandlerFactory(debug))
   }
   @throws[IOException]
-  override def close(): Unit = {
-    warFile.close()
-  }
+  override def close(): Unit = warFile.close()
   /**
    * Seek for class and read it, if found
    * @param name
    *      full class name
-   * @throws
-   *    ClassNotFoundException if class was not found
+   * @throws ClassNotFoundException
+   *    if class was not found
    * @return
    */
   @throws[ClassNotFoundException]
@@ -169,7 +166,9 @@ private class LiveWarClassLoader(debug: Boolean, warFileUrl: URL, parent: ClassL
   /**
    * Get list of all urls for resource with same name
    * @param name
-   * @throws
+   *        a resource's name
+   * @throws IOException
+   *          if I/O error occurs
    * @return
    */
   @throws[IOException]
@@ -188,16 +187,14 @@ private class LiveWarClassLoader(debug: Boolean, warFileUrl: URL, parent: ClassL
       // uses number instead of full path
       for (_ <- dups) {
         val u = URI.create(s"war-virtual:dup:$count:$name").toURL
-        urls.add(u)
-        count += 1
+        urls.add(u); count += 1
       }
       debug(s"returned $count duplicates for $name")
     }
     // try to find also in parent classloader
     if (getParent != null) {
       val parent = getParent.getResources(name)
-      while (parent.hasMoreElements)
-        urls.add(parent.nextElement)
+      while (parent.hasMoreElements) urls.add(parent.nextElement)
     }
     Collections.enumeration(urls)
   }
@@ -207,7 +204,8 @@ private class LiveWarClassLoader(debug: Boolean, warFileUrl: URL, parent: ClassL
    *      resource name
    * @param entry
    *      link to zip entry
-   * @throws
+   * @throws IOException
+   *          on I/O error
    * @return
    */
   @throws[IOException]
@@ -218,8 +216,7 @@ private class LiveWarClassLoader(debug: Boolean, warFileUrl: URL, parent: ClassL
       val classBytes = readBytes(in)
       defineClass(name, classBytes, 0, classBytes.length)
     } finally
-      if (in != null)
-        in.close()
+      if (in != null) in.close()
   }
   /**
    * Seeks for zip entry in WAR file
@@ -254,13 +251,11 @@ private class LiveWarClassLoader(debug: Boolean, warFileUrl: URL, parent: ClassL
     var nRead = 0
     while ( {
       nRead = is.read(buf, 0, buf.length); nRead != -1
-    })
-      out.write(buf, 0, nRead)
+    }) out.write(buf, 0, nRead)
     out.toByteArray
   }
   private def debug(format: String): Unit = {
-    if (debug)
-      System.out.println(format)
+    if (debug) System.out.println(format)
   }
 }
 /**

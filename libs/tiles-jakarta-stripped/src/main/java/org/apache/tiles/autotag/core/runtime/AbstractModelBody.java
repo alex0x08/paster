@@ -58,7 +58,7 @@ public abstract class AbstractModelBody implements ModelBody {
 
     @Override
     public String evaluateAsString() throws IOException {
-        StringWriter writer = new StringWriter();
+        final StringWriter writer = new StringWriter();
         try (writer) {
             evaluate(writer);
         }

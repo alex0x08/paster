@@ -82,11 +82,11 @@ public class ELAttributeEvaluator extends AbstractAttributeEvaluator {
      * {@inheritDoc}
      */
     public Object evaluate(String expression, Request request) {
-        ELContextImpl context = new ELContextImpl(resolver);
+        final ELContextImpl context = new ELContextImpl(resolver);
         context.putContext(Request.class, request);
         context.putContext(ApplicationContext.class,
                 request.getApplicationContext());
-        ValueExpression valueExpression = expressionFactory
+        final ValueExpression valueExpression = expressionFactory
                 .createValueExpression(context, expression, Object.class);
         return valueExpression.getValue(context);
     }
