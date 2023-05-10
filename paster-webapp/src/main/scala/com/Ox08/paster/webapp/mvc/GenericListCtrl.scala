@@ -76,12 +76,6 @@ abstract class GenericListCtrl[T <: Struct] extends AbstractCtrl {
    * bound DAO service
    */
   protected def manager(): StructDaoImpl[T]
-  /**
-   * default callback object: will simply use getList from attached manager
-   */
-  protected val defaultListCallback: SourceCallback[T] = new SourceCallback[T]() {
-    override def invokeCreate(): PagedListHolder[T] = new PagedListHolder[T](manager().getList)
-  }
   protected def fillListModel(model: Model): Unit = {
     /**
      * set default list mode
@@ -216,7 +210,9 @@ abstract class GenericListCtrl[T <: Struct] extends AbstractCtrl {
       pageSize,
       sortColumn,
       sortAsc,
-      defaultListCallback,
+      new SourceCallback[T]() {
+        override def invokeCreate(): PagedListHolder[T] = new PagedListHolder[T](manager().getList)
+      },
       result)
   }
   /**

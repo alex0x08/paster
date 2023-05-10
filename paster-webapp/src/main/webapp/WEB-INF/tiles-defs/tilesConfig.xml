@@ -89,7 +89,7 @@
 
 
     <definition name="/admin/settings" extends=".mainTemplate">
-        <put-attribute name="content" value="/WEB-INF/pages/admin/settings/edit.jsp"/>
+        <put-attribute name="content" value="/WEB-INF/pages/admin/settings/settings.jsp"/>
     </definition>
 
     <definition name="/admin/settings/dbconsole" extends=".mainTemplate">

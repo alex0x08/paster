@@ -144,7 +144,7 @@ class H2ConsoleExtendedServlet extends JakartaWebServlet with Logged {
       return session
     }
   }
-  class ExtendedHttpServletRequestWrapper(req: HttpServletRequest, params: java.util.Map[String, String])
+  private class ExtendedHttpServletRequestWrapper(req: HttpServletRequest, params: java.util.Map[String, String])
     extends HttpServletRequestWrapper(req) {
     override def getParameter(name: String): String = {
       // if we added one, return that one

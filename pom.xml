@@ -40,7 +40,7 @@
         <maven.test.skip>true</maven.test.skip>
         <maven.compiler.source>19</maven.compiler.source>
         <maven.compiler.release>19</maven.compiler.release>
-        <scalaVersion>2.13.10</scalaVersion>
+        <scalaVersion>2.13.11-M1</scalaVersion>
         <spring.version>6.0.7</spring.version>
         <slf4j.version>2.0.3</slf4j.version>
         <jakartaEEVersion>9.1.0</jakartaEEVersion>
@@ -48,15 +48,15 @@
         <main.basedir>${basedir}</main.basedir>
         <netbeans.hint.license>apache20</netbeans.hint.license>
         <!-- plugins -->
-        <maven-resources-plugin.version>3.2.0</maven-resources-plugin.version>
+        <maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
         <buildnumber-maven-plugin.version>3.0.0</buildnumber-maven-plugin.version>
         <maven-war-plugin.version>3.3.2</maven-war-plugin.version>
-        <scala-maven-plugin.version>4.6.3</scala-maven-plugin.version>
-        <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
+        <scala-maven-plugin.version>4.8.1</scala-maven-plugin.version>
+        <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
         <maven-jar-plugin.version>3.3.0</maven-jar-plugin.version>
         <properties-maven-plugin.version>1.1.0</properties-maven-plugin.version>
         <git-commit-id-plugin.version>4.9.10</git-commit-id-plugin.version>
-        <flatten-maven-plugin.version>1.2.7</flatten-maven-plugin.version>
+        <flatten-maven-plugin.version>1.4.1</flatten-maven-plugin.version>
         <maven-dependency-plugin.version>3.5.0</maven-dependency-plugin.version>
         <build-helper-maven-plugin.version>3.3.0</build-helper-maven-plugin.version>
         <license-maven-plugin.version>4.1</license-maven-plugin.version>

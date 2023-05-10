@@ -25,7 +25,6 @@ import java.util.Locale
 class PasterLocaleResolver extends SessionLocaleResolver with Logged{
   @Value("${paster.i18n.switchToUserLocale}")
   var switchToUserLocale: Boolean = false // do we have 'switch to browser's locale' feature enabled?
-
   // via Spring 6 API
   setDefaultLocaleFunction(new java.util.function.Function[HttpServletRequest,Locale]() {
     override def apply(request: HttpServletRequest): Locale = determineDefaultLocaleImpl(request)
