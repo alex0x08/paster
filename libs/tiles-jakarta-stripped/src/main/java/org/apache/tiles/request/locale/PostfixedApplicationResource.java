@@ -138,10 +138,10 @@ public abstract class PostfixedApplicationResource implements ApplicationResourc
         if (locale == null) {
             return "";
         }
-        StringBuilder builder = new StringBuilder();
-        String language = locale.getLanguage();
-        String country = locale.getCountry();
-        String variant = locale.getVariant();
+        final StringBuilder builder = new StringBuilder();
+        final String language = locale.getLanguage(),
+                country = locale.getCountry(),
+                variant = locale.getVariant();
         if (!"".equals(language)) {
             builder.append("_");
             builder.append(language);
@@ -205,15 +205,15 @@ public abstract class PostfixedApplicationResource implements ApplicationResourc
         Locale result;
         int countryIndex = localeString.indexOf('_');
         if (countryIndex < 0) {
-            result = new Locale(localeString);
+            result = Locale.of(localeString);
         } else {
             int variantIndex = localeString.indexOf('_', countryIndex + 1);
             if (variantIndex < 0) {
-                result = new Locale(
+                result = Locale.of(
                         localeString.substring(0, countryIndex),
                         localeString.substring(countryIndex + 1));
             } else {
-                result = new Locale(
+                result = Locale.of(
                         localeString.substring(0, countryIndex),
                         localeString.substring(countryIndex + 1, variantIndex),
                         localeString.substring(variantIndex + 1));
@@ -225,11 +225,11 @@ public abstract class PostfixedApplicationResource implements ApplicationResourc
     private static Locale validateLocale(Locale locale) {
         Locale withoutVariant = locale.getVariant().isEmpty()
                 ? locale
-                : new Locale(locale.getLanguage(), locale.getCountry());
+                : Locale.of(locale.getLanguage(), locale.getCountry());
         Locale result = locale;
         if (!availableLocales.contains(withoutVariant)) {
             if (!result.getCountry().isEmpty()) {
-                result = new Locale(result.getLanguage());
+                result = Locale.of(result.getLanguage());
             }
             if (!availableLocales.contains(result)) {
                 result = Locale.ROOT;
