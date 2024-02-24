@@ -195,7 +195,8 @@ abstract class GenericListCtrl[T <: Struct] extends AbstractCtrl {
            @RequestParam(required = false) pageSize: java.lang.Integer,
            @RequestParam(required = false) sortColumn: String,
            @RequestParam(required = false) sortAsc: Boolean): java.util.List[T] =
-    listImpl(request, model, page, NPpage, pageSize, sortColumn, sortAsc, MvcConstants.NODE_LIST_MODEL_PAGE)
+    listImpl(request, model, page, NPpage, pageSize,
+      sortColumn, sortAsc, MvcConstants.NODE_LIST_MODEL_PAGE)
   def listImpl(request: HttpServletRequest,
                model: Model,
                page: java.lang.Integer,

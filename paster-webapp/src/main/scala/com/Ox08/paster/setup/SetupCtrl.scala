@@ -87,6 +87,8 @@ class SetupCtrl extends Logged {
   def getAppId: String = appId
   @ModelAttribute("systemInfo")
   def getSystemInfo: BOOT.SystemInfo = systemInfo
+  @ModelAttribute("updatedStep")
+  def getInitialStep: StepModel = new StepModel(null)
   @ModelAttribute("availableSteps")
   def getAvailableSteps: java.util.Collection[SetupStep] = setupService.getSteps
   @ModelAttribute("availableLocales")
@@ -117,7 +119,7 @@ class SetupCtrl extends Logged {
     if (!"POST".equalsIgnoreCase(servletRequest.getMethod)
       && !servletRequest.getRequestURI.contains("/main/setup/"))  return
     // get target
-    val nonCastedTarget = webDataBinder.getTarget
+    var nonCastedTarget = webDataBinder.getTarget
     if (nonCastedTarget == null || !nonCastedTarget.isInstanceOf[StepModel]) return
     if (logger.isDebugEnabled) logger.debug(s"init binder: '${servletRequest.getRequestURI}' , method:  " +
         s"${servletRequest.getMethod} , target: $nonCastedTarget ")
@@ -651,10 +653,11 @@ class WelcomeStep extends SetupStep("welcome",
  * @param _step
  *        current step object
  */
-class StepModel(_step: SetupStep) {
+
+class StepModel(@Valid _step: SetupStep) {
   def this() = this(null)
-  @Valid
-  private var step: SetupStep = _step
+
+  private var step: Object = _step
   /**
    * get step with specified type
    * @tparam T

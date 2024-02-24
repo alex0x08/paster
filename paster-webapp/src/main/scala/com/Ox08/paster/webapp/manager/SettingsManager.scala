@@ -2,14 +2,12 @@ package com.Ox08.paster.webapp.manager
 import com.Ox08.paster.webapp.base.Boot.BOOT
 import com.Ox08.paster.webapp.base.{Logged, SystemError, SystemMessage}
 import com.Ox08.paster.webapp.manager.SettingsManager.KEY_SECTION
-import com.Ox08.paster.webapp.model.Struct.logger
 import jakarta.validation.constraints.NotNull
 import org.apache.commons.configuration2.ex.ConfigurationException
 import org.apache.commons.configuration2.{PropertiesConfiguration, PropertiesConfigurationLayout}
 import org.apache.commons.lang3.StringUtils
 import org.apache.commons.text.StringEscapeUtils
 import org.springframework.stereotype.Service
-
 import java.io._
 import java.nio.file.{Files, StandardCopyOption}
 import java.util
@@ -63,7 +61,7 @@ class SettingsManager extends Logged {
       "config.properties" + "_" + System.currentTimeMillis)
     // основной файл
     val fconf = BOOT.getSystemInfo.getConfigFile
-    var w: Writer = null;
+    var w: Writer = null
     try {
         w = new FileWriter(fnew)
         // шаг 1. запись во временный файл

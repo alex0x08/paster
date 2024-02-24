@@ -33,7 +33,6 @@ import java.util
 abstract class SearchCtrl[T <: Struct, QV <: Query] extends GenericListCtrl[T] {
   /**
    * linked search manager
-   *
    * @return
    */
   protected override def manager(): SearchableDaoImpl[T]

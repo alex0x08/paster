@@ -7,11 +7,17 @@
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
              xmlns="http://www.springframework.org/schema/security"
              xsi:schemaLocation="http://www.springframework.org/schema/security
-                        http://www.springframework.org/schema/security/spring-security-6.0.xsd
+                        http://www.springframework.org/schema/security/spring-security.xsd
                         http://www.springframework.org/schema/beans
                         http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <global-method-security secured-annotations="enabled" jsr250-annotations="enabled"/>
+    <global-method-security secured-annotations="enabled" jsr250-annotations="enabled" >
+        <expression-handler ref="jspExpressionHandler"/>
+    </global-method-security>
+
+    <beans:bean id="jspExpressionHandler"
+                class="org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler"/>
+
     <http pattern="/images/**" security="none"/>
     <http pattern="/css/**" security="none"/>
     <http pattern="/js/**" security="none"/>
@@ -20,7 +26,9 @@
     <http pattern="/main/assets/${paste.app.id}/**" security="none"/>
     <http pattern="/main/static/${paste.app.id}/**" security="none"/>
     <http pattern="/main/resources/${paste.app.id}/**" security="none"/>
-    <http realm="Paster Realm Public" auto-config="false" use-expressions="true"
+    <http realm="Paster Realm Public" auto-config="false"
+          request-matcher="ant"
+          use-expressions="true"
           authentication-manager-ref="normal-auth-manager"
           disable-url-rewriting="true">
         <!--anonymous/-->

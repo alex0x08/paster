@@ -14,25 +14,30 @@
              xsi:schemaLocation="http://www.springframework.org/schema/beans
                         http://www.springframework.org/schema/beans/spring-beans.xsd
                         http://www.springframework.org/schema/security
-                        http://www.springframework.org/schema/security/spring-security-6.0.xsd">
-    <global-method-security secured-annotations="enabled" jsr250-annotations="enabled" />
+                        http://www.springframework.org/schema/security/spring-security.xsd">
+    <global-method-security secured-annotations="enabled" jsr250-annotations="enabled" >
+        <expression-handler ref="jspExpressionHandler"/>
+    </global-method-security>
+
+    <beans:bean id="jspExpressionHandler"
+                class="org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler"/>
+
     <http pattern="/images/**"  security="none"/>
     <http pattern="/css/**" security="none"/>
     <http pattern="/js/**" security="none"/>
     <http pattern="/errors/*" security="none"/>
     <http pattern="/libs/**" security="none"/>
-    <http pattern="/main/resources/${paste.app.id}/**" security="none"/>
-    <http pattern="/main/assets/${paste.app.id}/**" security="none"/>
-    <http pattern="/main/static/${paste.app.id}/**" security="none"/>
 
-    <http realm="Paster Realm Private" auto-config="false"
-          >
-        <intercept-url pattern="/main/login" access="permitAll()"/>
-        <intercept-url pattern="/main/**"  access="isAuthenticated()"/>
+    <http realm="Paster Realm Private" auto-config="false" request-matcher="ant" use-expressions="true">
+        <intercept-url pattern="/main/resources/**"  access="permitAll()"/>
+        <intercept-url pattern="/main/assets/**"  access="permitAll()"/>
+        <intercept-url pattern="/main/static/**"  access="permitAll()"/>
         <intercept-url pattern="/main/admin/**" access="hasRole('ROLE_ADMIN')"/>
         <intercept-url pattern="/act/admin/**" access="hasRole('ROLE_ADMIN')"/>
         <intercept-url pattern="/act/doAuth" access="permitAll()"/>
-        <form-login login-page="/main/login"
+        <intercept-url pattern="/main/login" access="permitAll()"/>
+        <intercept-url pattern="/**"  access="isAuthenticated()"/>
+              <form-login login-page="/main/login"
                     default-target-url='/main/paste/list'
                     authentication-failure-url="/main/login?authfailed=true"
                     always-use-default-target='true'

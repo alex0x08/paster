@@ -57,10 +57,12 @@
             <artifactId>jakarta.servlet.jsp.jstl</artifactId>
             <version>3.0.1</version>
         </dependency>
+
+
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-slf4j-impl</artifactId>
-            <version>${jetty.version}</version>
+            <version>12.0.3</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -77,6 +79,11 @@
         <defaultGoal>package</defaultGoal>
         <finalName>${project.artifactId}</finalName>
         <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>flatten-maven-plugin</artifactId>
+                <version>${flatten-maven-plugin.version}</version>
+            </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>properties-maven-plugin</artifactId>
@@ -210,9 +217,14 @@
         </resources>
     </build>
     <properties>
-        <servlet.version>5.0.0</servlet.version>
-        <jetty.version>11.0.15</jetty.version>
+        <servlet.version>6.0.0</servlet.version>
+        <jetty.version>11.0.20</jetty.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+    <repositories>
+
+
+
+    </repositories>
 </project>
 

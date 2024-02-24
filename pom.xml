@@ -40,10 +40,10 @@
         <maven.test.skip>true</maven.test.skip>
         <maven.compiler.source>19</maven.compiler.source>
         <maven.compiler.release>19</maven.compiler.release>
-        <scalaVersion>2.13.11-M1</scalaVersion>
-        <spring.version>6.0.7</spring.version>
-        <slf4j.version>2.0.3</slf4j.version>
-        <jakartaEEVersion>9.1.0</jakartaEEVersion>
+        <scalaVersion>2.13.13</scalaVersion>
+        <spring.version>6.1.4</spring.version>
+        <slf4j.version>2.0.9</slf4j.version>
+        <jakartaEEVersion>10.0.0</jakartaEEVersion>
         <revision>2.1.06-RELEASE</revision>
         <main.basedir>${basedir}</main.basedir>
         <netbeans.hint.license>apache20</netbeans.hint.license>
@@ -62,7 +62,8 @@
         <license-maven-plugin.version>4.1</license-maven-plugin.version>
     </properties>
     <modules>
-        <module>libs</module>        
+        <module>libs/spring-tiles3</module>
+        <module>libs/tiles-jakarta-stripped</module>
         <module>paster-webapp</module>
         <module>paster-run</module>
         <module>paster-dist</module>

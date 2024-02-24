@@ -76,17 +76,14 @@ public abstract class PostfixedApplicationResource implements ApplicationResourc
             locale = Locale.ROOT;
         } else {
             pathPrefix = localePath.substring(0, prefixIndex);
-            String localeString = localePath.substring(prefixIndex + 1, suffixIndex);
-            Locale found = localeFrom(localeString);
+            final String localeString = localePath.substring(prefixIndex + 1, suffixIndex);
+            final Locale found = localeFrom(localeString);
             locale = validateLocale(found);
             if (Locale.ROOT.equals(locale)) {
                 pathPrefix = localePath.substring(0, suffixIndex);
-                LOG.warn("No supported matching language for locale \"" + localeString + "\". Using "
-                        + getPath() + " as a non-localized resource path. see TILES-571");
+                LOG.warn("No supported matching language for locale \"%s\". Using %s as a non-localized resource path. see TILES-571".formatted(localeString, getPath()));
             } else if (!localeString.equalsIgnoreCase(getPostfix(locale).substring(1))) {
-                LOG.warn("For resource " + localePath
-                        + " the closest supported matching locale to \"" + localeString + "\" is \"" + locale
-                        + "\". Using " + getPath() + " as resource path. see TILES-571");
+                LOG.warn("For resource %s the closest supported matching locale to \"%s\" is \"%s\". Using %s as resource path. see TILES-571".formatted(localePath, localeString, locale, getPath()));
             }
         }
     }
@@ -186,7 +183,7 @@ public abstract class PostfixedApplicationResource implements ApplicationResourc
             return false;
         if (getClass() != obj.getClass())
             return false;
-        PostfixedApplicationResource other = (PostfixedApplicationResource) obj;
+        final PostfixedApplicationResource other = (PostfixedApplicationResource) obj;
         if (locale == null) {
             if (other.locale != null)
                 return false;

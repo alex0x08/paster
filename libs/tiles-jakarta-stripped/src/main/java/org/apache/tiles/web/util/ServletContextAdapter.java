@@ -19,26 +19,13 @@
  * under the License.
  */
 package org.apache.tiles.web.util;
-import jakarta.servlet.Filter;
-import jakarta.servlet.FilterRegistration;
+import jakarta.servlet.*;
+import jakarta.servlet.descriptor.JspConfigDescriptor;
+
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Enumeration;
-import java.util.Set;
-import jakarta.servlet.RequestDispatcher;
-import jakarta.servlet.Servlet;
-import jakarta.servlet.ServletConfig;
-import jakarta.servlet.ServletContext;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.ServletRegistration;
-import jakarta.servlet.SessionCookieConfig;
-import jakarta.servlet.descriptor.JspConfigDescriptor;
-import java.util.EventListener;
-import jakarta.servlet.SessionTrackingMode;
-import java.util.Collections;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 /**
  * Adapts a servlet config and a servlet context to become a unique servlet
  * context.
@@ -46,7 +33,6 @@ import java.util.TreeMap;
  * @version $Rev: 1058093 $ $Date: 2011-01-12 22:49:02 +1100 (Wed, 12 Jan 2011)
  * $
  */
-@SuppressWarnings("deprecation")
 public class ServletContextAdapter implements ServletContext {
     /**
      * The root context to use.
@@ -141,40 +127,13 @@ public class ServletContextAdapter implements ServletContext {
     public RequestDispatcher getNamedDispatcher(String string) {
         return rootContext.getNamedDispatcher(string);
     }
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Servlet getServlet(String string) throws ServletException {
-        return rootContext.getServlet(string);
-    }
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Enumeration<Servlet> getServlets() {
-        return rootContext.getServlets();  //To change body of implemented methods use File | Settings | File Templates.
-    }
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Enumeration<String> getServletNames() {
-        return rootContext.getServletNames();
-    }
+
     /**
      * {@inheritDoc}
      */
     @Override
     public void log(String string) {
         rootContext.log(string);
-    }
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void log(Exception exception, String string) {
-        rootContext.log(exception, string);
     }
     /**
      * {@inheritDoc}

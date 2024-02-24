@@ -65,7 +65,6 @@ class ResourceCtrl extends AbstractCtrl {
     val fImg = resourcePathHelper.getResource(pType, path)
     // respond error if resource not found
     if (fImg == null) {  writeError(response, "file not found"); return null }
-
     response.setHeader("Content-Length", fImg.length().toString)
     // we use this method only for images, so its ok to inline MIME and content-disposition
     response.setContentType("image/png")

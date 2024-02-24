@@ -36,7 +36,6 @@ class SystemPropertiesListener extends ServletContextListener with Logged {
       event.getServletContext.setAttribute("javax.servlet.context.tempdir", scratchDir)
       event.getServletContext.setAttribute("jakarta.servlet.context.tempdir",scratchDir)
       var springProfiles = ""
-
       /**
        * We have 2 different groups of settings, depend on installation mark.
        * If Paster has been installed correctly - load 'main' profile, with database and continue to boot.
@@ -44,7 +43,6 @@ class SystemPropertiesListener extends ServletContextListener with Logged {
        */
       if (Boot.BOOT.getSystemInfo.isInstalled) {
         springProfiles += "main"
-
         /**
          * Access mode.
          * 'public' - load additional profile with 'public profile' settings

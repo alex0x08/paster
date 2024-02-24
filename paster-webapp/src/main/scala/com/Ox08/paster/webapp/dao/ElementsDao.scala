@@ -89,7 +89,6 @@ abstract class AbstractStringBasedDao(elementsAsString: String,
     }
     out
   }
-
   def getAvailableElements: Set[String] = elements.toSet
   def getDefault: String = defaultElement
   def exist(name: String): Boolean = elements.exists(p => p.equals(name) || p.toLowerCase.equals(name) )
