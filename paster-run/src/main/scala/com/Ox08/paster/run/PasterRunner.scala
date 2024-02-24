@@ -79,7 +79,7 @@ object PasterRunner {
 /**
  * The runner class itself
  */
-class PasterRunner() {
+class PasterRunner {
   // if started in 'debug mode'
   // if most cases this will trigger more verbose logging
   private var isDebug = false

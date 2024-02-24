@@ -19,16 +19,11 @@
  * under the License.
  */
 package org.apache.tiles.el;
-import java.beans.FeatureDescriptor;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 import jakarta.el.ELContext;
 import jakarta.el.ELResolver;
 import org.apache.tiles.request.Request;
+
+import java.util.Map;
 /**
  * Resolves beans in request, session and application scope.
  *
@@ -51,9 +46,9 @@ public class ScopeELResolver extends ELResolver {
         }
         return Map.class;
     }
-    /**
+    /*
      * {@inheritDoc}
-     */
+     *
     @Override
     public Iterator<FeatureDescriptor> getFeatureDescriptors(ELContext context,
                                                              Object base) {
@@ -76,7 +71,7 @@ public class ScopeELResolver extends ELResolver {
             list.add(descriptor);
         }
         return list.iterator();
-    }
+    }*/
     /**
      * {@inheritDoc}
      */

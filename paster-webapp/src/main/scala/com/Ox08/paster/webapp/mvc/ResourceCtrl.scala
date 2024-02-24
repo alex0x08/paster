@@ -80,7 +80,6 @@ class ResourceCtrl extends AbstractCtrl {
    * Suppose to be 'last chance' on error reporting.
    * @param response
    * @param msg
-   * @param status
    * @throws java.io.IOException
    */
   @throws(classOf[IOException])

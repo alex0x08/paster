@@ -19,9 +19,6 @@
  * under the License.
  */
 package org.apache.tiles.el;
-import java.beans.FeatureDescriptor;
-import java.util.Iterator;
-
 import jakarta.el.ELContext;
 import jakarta.el.ELResolver;
 import org.apache.tiles.request.ApplicationContext;
@@ -65,7 +62,7 @@ public class TilesContextELResolver extends ELResolver {
     }
     /**
      * {@inheritDoc}
-     */
+     *
     @Override
     public Iterator<FeatureDescriptor> getFeatureDescriptors(ELContext context,
                                                              Object base) {
@@ -74,7 +71,7 @@ public class TilesContextELResolver extends ELResolver {
             return null;
         }
         return requestBeanInfo.getDescriptors().iterator();
-    }
+    }*/
     /**
      * {@inheritDoc}
      */

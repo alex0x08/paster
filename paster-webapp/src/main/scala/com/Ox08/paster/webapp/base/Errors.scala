@@ -255,7 +255,7 @@ object SystemMessage { // синглтон
   def of(template: String, params: AnyRef*): String = INSTANCE.createMessage(template, params.toArray)
   def instance: SystemMessage = INSTANCE
 }
-class SystemMessage private() // приватный конструктор
+class SystemMessage private // приватный конструктор
   extends AbstractI18nMessageStore("bundles/systemMessages") {
   /**
    * сформировать сообщение для ключа из бандла с подстановкой параметров

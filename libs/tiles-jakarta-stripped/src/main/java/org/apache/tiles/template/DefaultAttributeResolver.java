@@ -51,7 +51,7 @@ public class DefaultAttributeResolver implements AttributeResolver {
                 }
             }
         }
-        if (attribute != null && role != null && !"".equals(role.trim())) {
+        if (attribute != null && role != null && !role.trim().isEmpty()) {
             attribute = new Attribute(attribute);
             attribute.setRole(role);
         }

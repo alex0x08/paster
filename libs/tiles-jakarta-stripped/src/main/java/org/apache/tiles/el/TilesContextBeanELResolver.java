@@ -46,9 +46,9 @@ public class TilesContextBeanELResolver extends ELResolver {
         }
         return String.class;
     }
-    /**
+    /*
      * {@inheritDoc}
-     */
+     *
     @Override
     public Iterator<FeatureDescriptor> getFeatureDescriptors(ELContext context,
                                                              Object base) {
@@ -59,7 +59,7 @@ public class TilesContextBeanELResolver extends ELResolver {
             collectBeanInfo(request.getContext(scope), list);
         }
         return list.iterator();
-    }
+    }*/
     /**
      * {@inheritDoc}
      */

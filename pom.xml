@@ -57,6 +57,7 @@
         <properties-maven-plugin.version>1.1.0</properties-maven-plugin.version>
         <git-commit-id-plugin.version>4.9.10</git-commit-id-plugin.version>
         <flatten-maven-plugin.version>1.4.1</flatten-maven-plugin.version>
+        <maven-assembly-plugin.version>3.6.0</maven-assembly-plugin.version>
         <maven-dependency-plugin.version>3.5.0</maven-dependency-plugin.version>
         <build-helper-maven-plugin.version>3.3.0</build-helper-maven-plugin.version>
         <license-maven-plugin.version>4.1</license-maven-plugin.version>

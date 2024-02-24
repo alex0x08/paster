@@ -26,7 +26,7 @@ object Boot {
   private val INSTALLED_TS_FORMAT: SimpleDateFormat = new SimpleDateFormat("MM.dd.yyyy HH:mm")
   val BOOT = new Boot
 }
-class Boot private() extends Logged {
+class Boot private extends Logged {
   private val wasBoot = false // a mark that system has been booted already
   private var initialConfig = false
   def getSystemInfo: SystemInfo = SystemInfo.SYSTEM_INFO
@@ -299,7 +299,7 @@ class Boot private() extends Logged {
    * @since 1.0
    * @author Alex Chernyshev <alex3.145@gmail.com>
    */
-  final class SystemInfo private() {
+  final class SystemInfo private {
     // версия сборки
     private var runtimeVersion: AppVersion = _
     // дата и время запуска системы

@@ -119,7 +119,7 @@ class SetupCtrl extends Logged {
     if (!"POST".equalsIgnoreCase(servletRequest.getMethod)
       && !servletRequest.getRequestURI.contains("/main/setup/"))  return
     // get target
-    var nonCastedTarget = webDataBinder.getTarget
+    val nonCastedTarget = webDataBinder.getTarget
     if (nonCastedTarget == null || !nonCastedTarget.isInstanceOf[StepModel]) return
     if (logger.isDebugEnabled) logger.debug(s"init binder: '${servletRequest.getRequestURI}' , method:  " +
         s"${servletRequest.getMethod} , target: $nonCastedTarget ")

@@ -178,10 +178,6 @@ public class TilesConfigurer implements ServletContextAware, InitializingBean, D
     }
     private class SpringTilesContainerFactory extends BasicTilesContainerFactory {
         @Override
-        protected TilesContainer createDecoratedContainer(TilesContainer originalContainer, ApplicationContext context) {
-            return originalContainer;
-        }
-        @Override
         protected List<ApplicationResource> getSources(ApplicationContext applicationContext) {
             if (definitions != null) {
                 List<ApplicationResource> result = new ArrayList<>();

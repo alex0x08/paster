@@ -190,7 +190,7 @@ public class Attribute implements Serializable, Cloneable {
      * @param role Associated role.
      */
     public void setRole(String role) {
-        if (role != null && role.trim().length() > 0) {
+        if (role != null && !role.trim().isEmpty()) {
             String[] rolesStrings = role.split("\\s*,\\s*");
             roles = new HashSet<>();
             roles.addAll(Arrays.asList(rolesStrings));

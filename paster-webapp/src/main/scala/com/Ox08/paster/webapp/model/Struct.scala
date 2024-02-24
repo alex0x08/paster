@@ -82,7 +82,7 @@ abstract class DBObject extends java.io.Serializable {
   @Id
   @GeneratedValue(generator = "AllSequenceStyleGenerator")
   @GenericGenerator(name = "AllSequenceStyleGenerator",
-    strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator"
+    `type` = classOf[org.hibernate.id.enhanced.SequenceStyleGenerator]
   )
   @XStreamAsAttribute
   var id: Integer = _
