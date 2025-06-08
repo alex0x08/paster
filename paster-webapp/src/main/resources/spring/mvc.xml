@@ -36,9 +36,6 @@
             <mvc:mapping path="/webjars/**"/>
             <bean id="webContentInterceptor" class="com.Ox08.paster.webapp.web.StaticResourcesContentInterceptor">
                 <property name="cacheSeconds" value="31557600"/>
-                <property name="useExpiresHeader" value="true"/>
-                <property name="useCacheControlHeader" value="true"/>
-                <property name="useCacheControlNoStore" value="false"/>
             </bean>
         </mvc:interceptor>
     </mvc:interceptors>

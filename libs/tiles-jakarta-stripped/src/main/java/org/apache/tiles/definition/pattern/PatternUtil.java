@@ -44,7 +44,7 @@ public final class PatternUtil {
      * The root locale. Notice that this is a replacement for Locale.ROOT for
      * Java 1.6.
      */
-    private static final Locale ROOT_LOCALE = new Locale("", "");
+    private static final Locale ROOT_LOCALE = Locale.ROOT;//("", "");
     /**
      * Pattern to find {.*} occurrences that do not match {[0-9]+} so to prevent MessageFormat from crashing.
      */

@@ -66,6 +66,7 @@ private object SetupConstants {
       "com.mysql.cj.jdbc.Driver", current = false, editable = true))
 }
 @Controller
+@SessionAttributes(Array("updatedStep"))
 class SetupCtrl extends Logged {
   @Autowired
   private val setupService: PasterSetupService = null
@@ -98,10 +99,15 @@ class SetupCtrl extends Logged {
     MvcConstants.page500
   }
   @InitBinder
+  //(Array("updatedStep"))
   def initBinder(webDataBinder: WebDataBinder, servletRequest: HttpServletRequest): Unit = {
+    //webDataBinder.setDisallowedFields("step")
+    //webDataBinder.setDeclarativeBinding(true)
+
     if (!"POST".equalsIgnoreCase(servletRequest.getMethod)
       && !servletRequest.getRequestURI.contains("/main/setup/"))
       return
+
     val nonCastedTarget = webDataBinder.getTarget
     if (nonCastedTarget == null || !nonCastedTarget.isInstanceOf[StepModel])
       return
@@ -110,9 +116,11 @@ class SetupCtrl extends Logged {
         s"${servletRequest.getMethod} , target: $nonCastedTarget ")
     val target = nonCastedTarget.asInstanceOf[StepModel]
     if (target.getStep != null) {
-      logger.debug("step already set - continue")
+      logger.debug("step already set - continue: {}",target.getStep.getClass.getName)
       return
     }
+
+
     val url = servletRequest.getRequestURI.substring(
       servletRequest.getContextPath.length).toLowerCase
     var step = url.substring("/main/setup/".length)
@@ -183,7 +191,8 @@ class SetupCtrl extends Logged {
    */
   @RequestMapping(value = Array("/setup/checkConnection"),
     method = Array(RequestMethod.POST))
-  def checkConnection(@ModelAttribute("updatedStep")
+  def checkConnection(@Valid
+                      @ModelAttribute("updatedStep")
                       updatedStep: StepModel,
                       result: BindingResult,
                       model: Model): String = {
@@ -199,6 +208,7 @@ class SetupCtrl extends Logged {
           .replace("${paster.app.home}",
             Boot.BOOT.getSystemInfo.getAppHome.getAbsolutePath)
       }
+      
     }
     if (result.hasErrors) {
       // dump errors
@@ -371,7 +381,6 @@ class SetupCtrl extends Logged {
    */
   @RequestMapping(value = Array("/setup/{stepName}"), method = Array(RequestMethod.POST))
   def updateStep(@PathVariable("stepName") step: String,
-                 @Valid
                  @ModelAttribute("updatedStep")
                  updatedStep: StepModel,
                  result: BindingResult,
@@ -444,9 +453,9 @@ class SetupCtrl extends Logged {
   }
   def dumpErrors(result: BindingResult): Unit = {
     if (logger.isDebugEnabled) {
-      logger.debug("form has {} errors", result.getErrorCount)
+      logger.debug("form has '{}' errors", result.getErrorCount)
       for (e <- result.getAllErrors.asScala) {
-        logger.debug("error: {} code: {} msg: {}",
+        logger.debug("error: '{}' code: '{}' msg: '{}'",
           e.getObjectName, e.getCode, e.getDefaultMessage)
       }
     }
@@ -703,8 +712,9 @@ class WelcomeStep extends SetupStep("welcome",
  * @param _step
  */
 class StepModel(_step: SetupStep) {
-  def this() = this(null)
+  //def this() = this(null)
   @Valid
+  @NotNull
   private var step: SetupStep = _step
   /**
    * get step with specified type

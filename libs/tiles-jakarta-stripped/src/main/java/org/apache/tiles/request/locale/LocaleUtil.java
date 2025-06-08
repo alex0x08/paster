@@ -59,11 +59,11 @@ public final class LocaleUtil {
         String language = locale.getLanguage();
         String country = locale.getCountry();
         String variant = locale.getVariant();
-        if (!"".equals(variant)) {
-            retValue = new Locale(language, country);
-        } else if (!"".equals(country)) {
-            retValue = new Locale(language);
-        } else if (!"".equals(language)) {
+        if (!variant.isEmpty()) {
+            retValue = Locale.forLanguageTag(language+"_"+country);
+        } else if (!country.isEmpty()) {
+            retValue = Locale.forLanguageTag(language);
+        } else if (!language.isEmpty()) {
             retValue = Locale.ROOT;
         }
         return retValue;

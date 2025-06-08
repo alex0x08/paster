@@ -141,7 +141,7 @@ public class BasicAttributeContext implements AttributeContext, Serializable {
     }
 
     /** {@inheritDoc} */
-    public void inheritCascadedAttributes(AttributeContext context) {
+    public final void inheritCascadedAttributes(AttributeContext context) {
         if (context instanceof BasicAttributeContext) {
             copyCascadedAttributes((BasicAttributeContext) context);
         } else {

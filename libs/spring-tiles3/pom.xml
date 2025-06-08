@@ -15,10 +15,6 @@
     <name>Paster : Spring Tiles3 View with Jakarta, Stripped </name>
     <url>http://maven.apache.org</url>
 
-    <repositories>
-
-
-    </repositories>
 
     <dependencies>
 

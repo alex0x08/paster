@@ -142,13 +142,13 @@ public abstract class PostfixedApplicationResource implements ApplicationResourc
         String language = locale.getLanguage();
         String country = locale.getCountry();
         String variant = locale.getVariant();
-        if (!"".equals(language)) {
+        if (!language.isEmpty()) {
             builder.append("_");
             builder.append(language);
-            if (!"".equals(country)) {
+            if (!country.isEmpty()) {
                 builder.append("_");
                 builder.append(country);
-                if (!"".equals(variant)) {
+                if (!variant.isEmpty()) {
                     builder.append("_");
                     builder.append(variant);
                 }
@@ -229,7 +229,7 @@ public abstract class PostfixedApplicationResource implements ApplicationResourc
         Locale result = locale;
         if (!availableLocales.contains(withoutVariant)) {
             if (!result.getCountry().isEmpty()) {
-                result = new Locale(result.getLanguage());
+                result = Locale.forLanguageTag(result.getLanguage());
             }
             if (!availableLocales.contains(result)) {
                 result = Locale.ROOT;

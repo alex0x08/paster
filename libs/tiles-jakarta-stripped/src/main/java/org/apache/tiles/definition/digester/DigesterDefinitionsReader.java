@@ -404,7 +404,7 @@ public class DigesterDefinitionsReader implements DefinitionsReader {
      * DTDs.
      * @since 2.1.0
      */
-    protected String[] getRegistrations() {
+    protected final String[] getRegistrations() {
         if (registrations == null) {
             registrations = new String[]{
                     "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN",

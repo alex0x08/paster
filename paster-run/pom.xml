@@ -194,7 +194,7 @@
     </build>
     <properties>
         <servlet.version>5.0.0</servlet.version>
-        <jetty.version>11.0.12</jetty.version>
+
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 </project>

@@ -92,7 +92,7 @@ public class ListAttribute extends Attribute {
      * @param attributes The attributes.
      * @since 3.0.0
      */
-    public void setValue(List<Attribute> attributes) {
+    public final void setValue(List<Attribute> attributes) {
         super.setValue(attributes);
     }
 
