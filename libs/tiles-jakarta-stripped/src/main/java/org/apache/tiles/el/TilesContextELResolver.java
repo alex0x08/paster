@@ -71,7 +71,7 @@ public class TilesContextELResolver extends ELResolver {
     }
 
     /** {@inheritDoc} */
-    @Override
+   // @Override
     public Iterator<FeatureDescriptor> getFeatureDescriptors(ELContext context,
             Object base) {
         // only resolve at the root of the context

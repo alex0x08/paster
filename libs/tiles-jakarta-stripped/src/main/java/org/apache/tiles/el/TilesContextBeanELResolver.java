@@ -51,7 +51,7 @@ public class TilesContextBeanELResolver extends ELResolver {
     }
 
     /** {@inheritDoc} */
-    @Override
+    //@Override
     public Iterator<FeatureDescriptor> getFeatureDescriptors(ELContext context,
             Object base) {
         List<FeatureDescriptor> list = new ArrayList<>();

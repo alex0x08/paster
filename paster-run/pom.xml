@@ -26,23 +26,23 @@
             <version>${servlet.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-annotations</artifactId>
+            <groupId>org.eclipse.jetty.ee10</groupId>
+            <artifactId>jetty-ee10-annotations</artifactId>
             <version>${jetty.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-webapp</artifactId>
+            <groupId>org.eclipse.jetty.ee10</groupId>
+            <artifactId>jetty-ee10-webapp</artifactId>
             <version>${jetty.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>apache-jsp</artifactId>
+            <groupId>org.eclipse.jetty.ee10</groupId>
+            <artifactId>jetty-ee10-apache-jsp</artifactId>
             <version>${jetty.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>glassfish-jstl</artifactId>
+            <groupId>org.eclipse.jetty.ee10</groupId>
+            <artifactId>jetty-ee10-glassfish-jstl</artifactId>
             <version>${jetty.version}</version>
             <!--type>pom</type-->
         </dependency>
@@ -122,6 +122,7 @@
                                 readme.txt,
                                 MANIFEST.MF,
                                 about.html,
+                                ServletHolder.class,
                                 ecj.1
                             </excludes>
                             <outputDirectory>${project.build.directory}/classes</outputDirectory>
@@ -193,7 +194,7 @@
         </resources>
     </build>
     <properties>
-        <servlet.version>5.0.0</servlet.version>
+        <servlet.version>6.1.0</servlet.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>

@@ -144,24 +144,24 @@ public class ServletContextAdapter implements ServletContext {
     /**
      * {@inheritDoc}
      */
-    @Override
+    /*@Override
     public Servlet getServlet(String string) throws ServletException {
         return rootContext.getServlet(string);
-    }
+    }*/
     /**
      * {@inheritDoc}
      */
-    @Override
+    /*@Override
     public Enumeration<Servlet> getServlets() {
         return rootContext.getServlets();  //To change body of implemented methods use File | Settings | File Templates.
-    }
+    }*/
     /**
      * {@inheritDoc}
      */
-    @Override
+   /* @Override
     public Enumeration<String> getServletNames() {
         return rootContext.getServletNames();
-    }
+    }*/
     /**
      * {@inheritDoc}
      */
@@ -172,10 +172,10 @@ public class ServletContextAdapter implements ServletContext {
     /**
      * {@inheritDoc}
      */
-    @Override
+  /*  @Override
     public void log(Exception exception, String string) {
         rootContext.log(exception, string);
-    }
+    }*/
     /**
      * {@inheritDoc}
      */

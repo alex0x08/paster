@@ -54,7 +54,7 @@ public class ScopeELResolver extends ELResolver {
     /**
      * {@inheritDoc}
      */
-    @Override
+   // @Override
     public Iterator<FeatureDescriptor> getFeatureDescriptors(ELContext context,
                                                              Object base) {
         if (base != null) {

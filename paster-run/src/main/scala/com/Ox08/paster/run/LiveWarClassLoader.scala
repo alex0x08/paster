@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 package com.Ox08.paster.run
+import org.eclipse.jetty.util.resource.{ResourceFactory, URLResourceFactory}
+
 import java.io._
 import java.net._
 import java.util
@@ -29,7 +31,7 @@ object LiveWarClassLoader {
   private val CLASSES_BASE = "WEB-INF/classes/"
   val MAP = new mutable.HashMap[String, Array[Byte]]
   val MAP_DUPLICATES = new mutable.HashMap[String, List[Array[Byte]]]
-  val EMPTY_BA = new Array[Byte](0)
+  private val EMPTY_BA = new Array[Byte](0)
 }
 /**
  * Custom classloader to load WAR without unpacking
@@ -46,7 +48,7 @@ class LiveWarClassLoader(debug: Boolean, warFileUrl: URL, parent: ClassLoader)
   private val warFileUri = warFileUrl.toURI
   private val warFile = new JarFile(new File(warFileUri))
   loadData()
-  def loadData(): Unit = {
+  private def loadData(): Unit = {
     for (e <- warFile.entries().asScala) {
       if (e.getName.startsWith("WEB-INF/lib") && e.getName.endsWith(".jar")) {
         debug(s"found lib: ${e.getName}")
@@ -79,6 +81,7 @@ class LiveWarClassLoader(debug: Boolean, warFileUrl: URL, parent: ClassLoader)
     }
     import java.net.URL
     URL.setURLStreamHandlerFactory(new VirtualWARURLStreamHandlerFactory(debug))
+    ResourceFactory.registerResourceFactory("war-virtual",new URLResourceFactory())
   }
   @throws[IOException]
   override def close(): Unit = {
@@ -178,7 +181,7 @@ class LiveWarClassLoader(debug: Boolean, warFileUrl: URL, parent: ClassLoader)
       if (in != null)
         in.close()
   }
-  def readBytes(is: InputStream, bufferSize: Int): Array[Byte] = {
+  private def readBytes(is: InputStream, bufferSize: Int): Array[Byte] = {
     val buf = Array.ofDim[Byte](bufferSize)
     val out = new ByteArrayOutputStream(bufferSize)
     var nRead = 0

@@ -49,6 +49,7 @@ Note that we don't use 'Spring Data', just old good JPA and Criteria API.
                 <entry key="hibernate.search.backend.directory.root" value="${paster.app.home}/index"/>
                 <entry key="hibernate.hbm2ddl.auto"
                        value="update"/>
+                <entry key="hibernate.search.mapping.build_missing_discovered_jandex_indexes" value="false"/>
             </map>
         </property>
     </bean>
