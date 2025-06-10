@@ -48,7 +48,7 @@ class H2ConsoleExtendedServlet extends JakartaWebServlet with Logged {
       .getWebApplicationContext(getServletContext)
       dataSource = ctx.getBean("dataSource").asInstanceOf[DataSource]
     try {
-      server.setAllowChunked(false)
+      //server.setAllowChunked(false)
       server.init()
       val f = getClass.getSuperclass.getDeclaredField("server")
       f.setAccessible(true)

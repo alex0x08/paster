@@ -122,7 +122,6 @@
                                 readme.txt,
                                 MANIFEST.MF,
                                 about.html,
-                                ServletHolder.class,
                                 ecj.1
                             </excludes>
                             <outputDirectory>${project.build.directory}/classes</outputDirectory>

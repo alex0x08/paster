@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 package com.Ox08.paster.run
+import org.eclipse.jetty.ee10.plus.webapp.{EnvConfiguration, PlusConfiguration}
 import org.eclipse.jetty.ee10.servlet.{ServletContextHandler, ServletHolder}
 import org.eclipse.jetty.ee10.webapp._
 import org.eclipse.jetty.server.handler.{ContextHandlerCollection, DefaultHandler}
@@ -36,13 +37,23 @@ import scala.jdk.CollectionConverters.IterableHasAsScala
 object PasterRunner {
   private val LOG = LoggerFactory.getLogger(classOf[PasterRunner])
   private val JETTY_CONFIGURATION_CLASSES: Array[String] = Array(
-    classOf[WebInfConfiguration].getCanonicalName,
-    classOf[WebXmlConfiguration].getCanonicalName,
+    classOf[org.eclipse.jetty.ee10.webapp.WebInfConfiguration].getCanonicalName,
+    classOf[org.eclipse.jetty.ee10.webapp.WebXmlConfiguration].getCanonicalName,
+
+/*    classOf[org.eclipse.jetty.ee10.webapp.MetaInfConfiguration].getCanonicalName,
+    classOf[org.eclipse.jetty.ee10.webapp.FragmentConfiguration].getCanonicalName,
+    classOf[EnvConfiguration].getCanonicalName,
+    classOf[PlusConfiguration].getCanonicalName,
+*/
     classOf[org.eclipse.jetty.ee10.annotations.AnnotationConfiguration].getCanonicalName,
-    classOf[WebAppConfiguration].getCanonicalName,
-    classOf[JspConfiguration].getCanonicalName)
+
+//    classOf[org.eclipse.jetty.ee10.webapp.JettyWebXmlConfiguration].getCanonicalName,
+
+    classOf[ org.eclipse.jetty.ee10.webapp.WebAppConfiguration].getCanonicalName,
+    classOf[org.eclipse.jetty.ee10.webapp.JspConfiguration].getCanonicalName)
   private val DEFAULT_CONTEXT_PATH = "/"
   private val DEFAULT_PORT = 8080
+
   def main(args: Array[String]): Unit = {
     val runner = new PasterRunner
     try if (args.length > 0 && args(0).equalsIgnoreCase("--help"))
@@ -121,6 +132,7 @@ class PasterRunner {
   def loadConf(): Unit = {
     val p = new Properties()
     p.load(getClass.getResourceAsStream("/config.properties"))
+
     if (p.containsKey("appDebug"))
       isDebug = "true".equals(p.getProperty("appDebug", "false"))
     else
@@ -134,6 +146,9 @@ class PasterRunner {
       this.contextPath = p.getProperty("paster.runner.contextPath")
     if (p.containsKey("paster.runner.warFile"))
       this.warFile = p.getProperty("paster.runner.warFile")
+
+    //this.warFile="c:/work/paster.war"
+
   }
   /**
    * Configure a jetty instance and deploy the webapps presented as args
@@ -214,8 +229,6 @@ class PasterRunner {
       if (handlers.getDescendant(classOf[DefaultHandler]) == null)
         handlers.addHandler(new DefaultHandler)
 
-
-
       //check a connector is configured to listen on
       val connectors = _server.getConnectors
       if (connectors == null || connectors.isEmpty) {
@@ -231,40 +244,29 @@ class PasterRunner {
     // Create a context
     val ctx = ResourceFactory.of(_server).newResource(appFile)
     try {
+
       if (!ctx.exists)
         usage(s"Context '$ctx' does not exist")
+
       if (contextPathSet && !contextPath.startsWith("/"))
         contextPath = "/" + contextPath
       PasterRunner.LOG.debug(s"war file: ${ctx.getURI.toURL}")
       // Configure the context
       // assume it is a WAR file
       val webapp = new WebAppContext(ctx.toString, contextPath)
-      webapp.setClassLoader(new LiveWarClassLoader(isDebug, ctx.getURI.toURL,
+      webapp.setClassLoader(new LiveWarClassLoader(false, ctx.getURI.toURL,
         Thread.currentThread.getContextClassLoader))
       import java.io.File
       val warFile = new File(ctx.getURI)
       System.setProperty("org.eclipse.jetty.livewar.LOCATION", warFile.getAbsolutePath)
       webapp.setExtractWAR(false)
-
-
-      val tmpDir = new File("tmp")
-      if (!tmpDir.exists())
-        tmpDir.mkdirs()
-
-
-     // val s = handlers.getDescendant(classOf[ServletContextHandler])
-
-      webapp.setAttribute("javax.servlet.context.tempdir",tmpDir)
-      // ServletHolder
-
-//      webapp.setInitParameter("scratchdir",tmpDir.getAbsolutePath)
-      //webapp.setTempDirectory(tmpDir)
       webapp.setInitParameter("org.eclipse.jetty.servlet.Default.useFileMappedBuffer", "false")
       webapp.setConfigurationClasses(PasterRunner.JETTY_CONFIGURATION_CLASSES)
       var fname = getClass.getProtectionDomain.getCodeSource.getLocation.getFile
       fname = fname.substring(fname.lastIndexOf('/'))
       val incPattern = ".*" + fname.replace(".", "\\\\.") + "$"
       webapp.setAttribute(MetaInfConfiguration.CONTAINER_JAR_PATTERN, incPattern)
+
       _contexts.addHandler(webapp)
     } finally
      // if (ctx != null)
