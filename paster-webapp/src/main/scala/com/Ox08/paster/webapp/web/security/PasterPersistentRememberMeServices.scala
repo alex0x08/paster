@@ -48,7 +48,7 @@ class PasterPersistentRememberMeServices(key: String, uds: UserDetailsService, t
     // Token also matches, so login is valid. Update the token value, keeping the *same* series number.
     log.debug("Refreshing persistent login token for user '{}', series '{}'",
       Array(login, token.series))
-    token.tokenDate = new Date()
+    token.tokenDate = LocalDate.now()
     token.tokenValue = generateTokenData()
     token.ipAddress = request.getRemoteAddr
     token.setUserAgent(request.getHeader("User-Agent"))
@@ -74,7 +74,7 @@ class PasterPersistentRememberMeServices(key: String, uds: UserDetailsService, t
     token.series = generateSeriesData()
     token.username = user.getUsername()
     token.tokenValue = generateTokenData()
-    token.tokenDate = new Date()
+    token.tokenDate = LocalDate.now()
     token.ipAddress = request.getRemoteAddr
     token.setUserAgent(request.getHeader("User-Agent"))
     try {
@@ -133,7 +133,7 @@ class PasterPersistentRememberMeServices(key: String, uds: UserDetailsService, t
       throw new RememberMeAuthenticationException(
         "Invalid remember-me token (Series/token) mismatch. Implies previous cookie theft attack.")
     }
-    if (LocalDate.ofInstant(token.tokenDate.toInstant, ZoneId.systemDefault())
+    if (token.tokenDate
       .plusDays(CPRConstants.TOKEN_VALIDITY_DAYS).isBefore(LocalDate.now())) {
       tokenDao.remove(token.series)
       throw new RememberMeAuthenticationException("Remember-me login has expired")

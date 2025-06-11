@@ -17,15 +17,13 @@
     <http pattern="/js/**" security="none"/>
     <http pattern="/errors/*" security="none"/>
     <http pattern="/libs/**" security="none"/>
-    <http pattern="/main/assets/${paste.app.id}/**" security="none"/>
-    <http pattern="/main/static/${paste.app.id}/**" security="none"/>
-    <http pattern="/main/resources/${paste.app.id}/**" security="none"/>
+    <http pattern="/assets/${paste.app.id}/**" security="none"/>
+    <http pattern="/static/${paste.app.id}/**" security="none"/>
+    <http pattern="/resources/${paste.app.id}/**" security="none"/>
     <http realm="Paster Realm Public" auto-config="false" use-expressions="true"
           authentication-manager-ref="normal-auth-manager"
           disable-url-rewriting="true">
         <!--anonymous/-->
-        <intercept-url pattern="/main/user*" access="hasRole('ROLE_ADMIN')"/>
-        <intercept-url pattern="/main/user/**" access="hasRole('ROLE_ADMIN')"/>
         <intercept-url pattern="/main/admin/**" access="hasRole('ROLE_ADMIN')"/>
         <intercept-url pattern="/act/admin/**" access="hasRole('ROLE_ADMIN')"/>
         <intercept-url pattern="/**" access="permitAll()"/>

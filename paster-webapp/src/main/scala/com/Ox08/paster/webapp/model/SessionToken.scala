@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 package com.Ox08.paster.webapp.model
-import jakarta.persistence.{Column, Entity, Id, Table, Temporal, TemporalType}
+import jakarta.persistence.{Column, Entity, Id, Table}
 import jakarta.validation.constraints.{NotNull, Size}
-import java.text.SimpleDateFormat
-import java.util.Date
+
+import java.time.LocalDate
 object SessionToken {
   val MAX_USER_AGENT_LEN = 255
 }
@@ -30,8 +30,7 @@ class SessionToken extends java.io.Serializable {
   @Column(name = "token_val")
   var tokenValue: String = _
   @Column(name = "token_dt")
-  @Temporal(TemporalType.TIMESTAMP)
-  var tokenDate: Date = _
+  var tokenDate: LocalDate = _
   //an IPV6 address max length is 39 characters
   @Size(min = 0, max = 39)
   @Column(name = "ipaddr")

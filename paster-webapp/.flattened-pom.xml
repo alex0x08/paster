@@ -304,12 +304,6 @@
     </dependency>
     <dependency>
       <groupId>org.apache.lucene</groupId>
-      <artifactId>lucene-analyzers-phonetic</artifactId>
-      <version>8.11.4</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.lucene</groupId>
       <artifactId>lucene-facet</artifactId>
       <version>10.2.1</version>
       <scope>compile</scope>

@@ -449,6 +449,7 @@ class SetupCtrl extends Logged {
   @RequestMapping(Array("/restarting"))
   def restarting(model: Model): String = {
     model.addAttribute("pageTitle","Restarting..")
+
     "/restarting"
   }
   def dumpErrors(result: BindingResult): Unit = {

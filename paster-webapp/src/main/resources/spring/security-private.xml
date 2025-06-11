@@ -21,27 +21,36 @@
     <http pattern="/js/**" security="none"/>
     <http pattern="/errors/*" security="none"/>
     <http pattern="/libs/**" security="none"/>
-    <http pattern="/main/resources/${paste.app.id}/**" security="none"/>
-    <http pattern="/main/assets/${paste.app.id}/**" security="none"/>
-    <http pattern="/main/static/${paste.app.id}/**" security="none"/>
+    <http pattern="/resources/${paste.app.id}/**" security="none"/>
+    <http pattern="/assets/${paste.app.id}/**" security="none"/>
+    <http pattern="/static/${paste.app.id}/**" security="none"/>
 
-    <http realm="Paster Realm Private" auto-config="false"
-          >
-        <intercept-url pattern="/main/login" access="permitAll()"/>
-        <intercept-url pattern="/main/**"  access="isAuthenticated()"/>
-        <intercept-url pattern="/main/admin/**" access="hasRole('ROLE_ADMIN')"/>
+    <http realm="Paster Realm Private"
+          auto-config="false"
+          use-expressions="true"
+          authentication-manager-ref="normal-auth-manager"
+          disable-url-rewriting="true">
+    <!--
+        in Spring Security 6.x intercept-url detects filter-mapping prefix somehow,
+        so need to strip it from pattern.
+     -->
+        <intercept-url pattern="/login" access="permitAll()"/>
+        <intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN')"/>
         <intercept-url pattern="/act/admin/**" access="hasRole('ROLE_ADMIN')"/>
-        <intercept-url pattern="/act/doAuth" access="permitAll()"/>
+        <intercept-url pattern="/act/doAuth" access="permitAll()" />
+        <intercept-url pattern="/**"  access="isAuthenticated()" />
+
         <form-login login-page="/main/login"
                     default-target-url='/main/paste/list'
                     authentication-failure-url="/main/login?authfailed=true"
                     always-use-default-target='true'
                     login-processing-url="/act/doAuth"/>
+
         <session-management>
             <concurrency-control error-if-maximum-exceeded="false" max-sessions="10"
                                  session-registry-ref="sessionRegistry"/>
         </session-management>
-        <remember-me services-ref="customRememberMeServices"     />
+        <remember-me services-ref="customRememberMeServices"   />
         <csrf request-matcher-ref="csrfSecurityRequestMatcher"/>
         <headers defaults-disabled="true">
             <cache-control />
@@ -53,6 +62,7 @@
         <logout logout-url="/act/logout"
                 logout-success-url="/main/login?exit"
                 invalidate-session="true"  />
+
     </http>
     <!--
     We need to turn off StrictHttpFirewall due to:
@@ -63,8 +73,8 @@
 
    This is only way to have UTF-8 characters right in url string.
     -->
-    <beans:bean id="defaultHttpFirewall" class="org.springframework.security.web.firewall.DefaultHttpFirewall"/>
-    <http-firewall ref="defaultHttpFirewall"/>
+    <!--beans:bean id="defaultHttpFirewall" class="org.springframework.security.web.firewall.DefaultHttpFirewall"/>
+    <http-firewall ref="defaultHttpFirewall"/-->
 
     <beans:bean id="csrfSecurityRequestMatcher" class="com.Ox08.paster.webapp.web.CsrfSecurityRequestMatcher"/>
     <beans:bean id="userManager"

@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 package com.Ox08.paster.run
-import org.eclipse.jetty.ee10.plus.webapp.{EnvConfiguration, PlusConfiguration}
-import org.eclipse.jetty.ee10.servlet.{ServletContextHandler, ServletHolder}
+import org.eclipse.jetty.ee10.apache.jsp.JettyJasperInitializer
 import org.eclipse.jetty.ee10.webapp._
 import org.eclipse.jetty.server.handler.{ContextHandlerCollection, DefaultHandler}
 import org.eclipse.jetty.server.{Handler, Server, ServerConnector}
@@ -23,7 +22,7 @@ import org.eclipse.jetty.util.FileID
 import org.eclipse.jetty.util.resource.{Resource, ResourceFactory, Resources}
 import org.slf4j.LoggerFactory
 
-import java.io.{File, IOException}
+import java.io.IOException
 import java.net.{URI, URL, URLClassLoader}
 import java.util
 import java.util.Properties
@@ -32,6 +31,8 @@ import scala.jdk.CollectionConverters.IterableHasAsScala
  * Runner
  * <p>
  * Combine jetty classes into a single executable jar and run webapps based on the args to it.
+ * Based on Jetty Runner
+ * https://github.com/jetty/jetty.project/tree/jetty-12.0.x/jetty-ee10/jetty-ee10-runner
  *
  */
 object PasterRunner {
@@ -39,16 +40,7 @@ object PasterRunner {
   private val JETTY_CONFIGURATION_CLASSES: Array[String] = Array(
     classOf[org.eclipse.jetty.ee10.webapp.WebInfConfiguration].getCanonicalName,
     classOf[org.eclipse.jetty.ee10.webapp.WebXmlConfiguration].getCanonicalName,
-
-/*    classOf[org.eclipse.jetty.ee10.webapp.MetaInfConfiguration].getCanonicalName,
-    classOf[org.eclipse.jetty.ee10.webapp.FragmentConfiguration].getCanonicalName,
-    classOf[EnvConfiguration].getCanonicalName,
-    classOf[PlusConfiguration].getCanonicalName,
-*/
     classOf[org.eclipse.jetty.ee10.annotations.AnnotationConfiguration].getCanonicalName,
-
-//    classOf[org.eclipse.jetty.ee10.webapp.JettyWebXmlConfiguration].getCanonicalName,
-
     classOf[ org.eclipse.jetty.ee10.webapp.WebAppConfiguration].getCanonicalName,
     classOf[org.eclipse.jetty.ee10.webapp.JspConfiguration].getCanonicalName)
   private val DEFAULT_CONTEXT_PATH = "/"
@@ -146,9 +138,6 @@ class PasterRunner {
       this.contextPath = p.getProperty("paster.runner.contextPath")
     if (p.containsKey("paster.runner.warFile"))
       this.warFile = p.getProperty("paster.runner.warFile")
-
-    //this.warFile="c:/work/paster.war"
-
   }
   /**
    * Configure a jetty instance and deploy the webapps presented as args
@@ -266,6 +255,9 @@ class PasterRunner {
       fname = fname.substring(fname.lastIndexOf('/'))
       val incPattern = ".*" + fname.replace(".", "\\\\.") + "$"
       webapp.setAttribute(MetaInfConfiguration.CONTAINER_JAR_PATTERN, incPattern)
+
+      // hack for Jetty 12
+      webapp.addServletContainerInitializer(new JettyJasperInitializer)
 
       _contexts.addHandler(webapp)
     } finally

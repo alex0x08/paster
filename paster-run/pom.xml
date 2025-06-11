@@ -56,11 +56,18 @@
             <artifactId>slf4j-api</artifactId>
             <version>${slf4j.version}</version>
         </dependency>
-        <dependency>
+        <!--dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>jul-to-slf4j</artifactId>
             <version>${slf4j.version}</version>
-        </dependency>
+        </dependency-->
+        <!--dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${logback.version}</version>
+        </dependency-->
+
+
     </dependencies>
     <build>
         <defaultGoal>package</defaultGoal>
@@ -187,6 +194,8 @@
                     <include>messages*.properties</include>
                     <include>*.ans</include>
                     <include>*.xml</include>
+                    <include>jetty-logging.properties</include>
+
                 </includes>
                 <filtering>false</filtering>
             </resource>

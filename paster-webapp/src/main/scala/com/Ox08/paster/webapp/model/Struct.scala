@@ -18,7 +18,6 @@ import com.Ox08.paster.webapp.base.Logged
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute
 import jakarta.persistence._
-import org.hibernate.annotations.GenericGenerator
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField
 import java.time.{LocalDateTime, ZoneOffset}
 import java.util.{Date, Objects}
@@ -37,13 +36,11 @@ trait SearchObject {
 @MappedSuperclass
 abstract class Struct extends DBObject with SearchObject with java.io.Serializable {
   @Column(name = "last_modified")
-  @Temporal(TemporalType.TIMESTAMP)
   @GenericField
   // @DateBridge(resolution = Resolution.DAY)
   @XStreamAsAttribute
   var lastModified: LocalDateTime = _
   @Column(name = "created")
-  @Temporal(TemporalType.TIMESTAMP)
   @GenericField
   //(index = Index.YES)
   //@DateBridge(resolution = Resolution.DAY)
@@ -76,10 +73,8 @@ abstract class Struct extends DBObject with SearchObject with java.io.Serializab
 @MappedSuperclass
 abstract class DBObject extends java.io.Serializable {
   @Id
-  @GeneratedValue(generator = "AllSequenceStyleGenerator")
-  @GenericGenerator(name = "AllSequenceStyleGenerator",
-    strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator"
-  )
+  @GeneratedValue(generator = "id_sequence", strategy=GenerationType.SEQUENCE)
+  @SequenceGenerator(name = "id_sequence", allocationSize = 10)
   @XStreamAsAttribute
   var id: Integer = _
   @XStreamAsAttribute
