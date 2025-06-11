@@ -14,10 +14,7 @@
     <packaging>jar</packaging>
     <name>Paster : DBConsole</name>
     <url>http://maven.apache.org</url>
-
-
     <dependencies>
-
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>

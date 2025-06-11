@@ -244,8 +244,11 @@ class Boot private() extends Logged {
    * @return
    */
   private def createAppFolder(app_home: File, name: String): File = {
-    val folder = if (name != null) new File(app_home, name)
-    else app_home
+    val folder = if (name != null)
+      new File(app_home, name)
+    else
+      app_home
+
     if ((!folder.exists || !folder.isDirectory) && !folder.mkdirs)
       throw SystemError.withCode(0x6005, folder.getAbsolutePath)
     folder
@@ -328,9 +331,9 @@ class Boot private() extends Logged {
     }
     def getSystemLocale: Locale = systemLocale
     def setSystemLocale(lang: String): Unit = {
-      val locale: Option[Locale] = getAvailableLocales.find(p = p => {
+      val locale: Option[Locale] = getAvailableLocales.find(p = p =>
         p.getLanguage.equals(lang)
-      })
+      )
       if (locale.isDefined) this.systemLocale = locale.get
     }
     private[base] def setSystemLocale(locale: Locale): Unit = {
@@ -408,9 +411,8 @@ class Boot private() extends Logged {
       this.locked = true
     }
     private def checkLock(): Unit = {
-      if (locked) {
+      if (locked)
         throw SystemError.withCode(0x6002)
-      }
     }
   }
   /**

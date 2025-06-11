@@ -36,10 +36,8 @@ class BootContext {
 }
 class StartupListener extends ServletContextListener with Logged {
   override def contextInitialized(event: ServletContextEvent): Unit = {
-    event.getServletContext.setAttribute("pasterInstalled",
-      Boot.BOOT.getSystemInfo.isInstalled)
-
     if (Boot.BOOT.getSystemInfo.isInstalled) {
+      event.getServletContext.setAttribute("pasterInstalled",true)
       val bootContext = new BootContext()
       SpringBeanAutowiringSupport
         .processInjectionBasedOnServletContext(bootContext, event.getServletContext)

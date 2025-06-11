@@ -9,14 +9,17 @@
         </encoder>
     </appender>
 
-    <logger name="com.Ox08" level="INFO"/>
+    <logger name="com.Ox08" level="INFO" additivity="false">
+        <appender-ref ref="CONSOLE"/>
+    </logger>
+
     <logger name="org.apache" level="WARN"/>
     <logger name="org.hibernate.validator" level="WARN"/>
     <logger name="org.springframework" level="WARN"/>
     <logger name="org.springframework.security" level="WARN"/>
 
 
-    <logger name="org.springframework.security.config.http.HttpSecurityBeanDefinitionParser" level="OFF"/>
+    <logger name="org.springframework.security.config.http" level="OFF"/>
     <root level="WARN">
         <appender-ref ref="CONSOLE"/>
     </root>

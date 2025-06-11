@@ -74,7 +74,8 @@ abstract class AbstractI18nMessageStore protected( // default bundle name
   }
 }
 class PasterRuntimeException(code: Int, // error code ( ex. 0x06001 )
-                             message: String, parent: Exception) extends RuntimeException(message, parent) {
+                             message: String, parent: Exception)
+                              extends RuntimeException(message, parent) {
   updateTrace(parent)
   final def updateTrace(parent: Exception): Unit = {
     if (parent != null)
@@ -143,10 +144,9 @@ class SystemError extends AbstractI18nMessageStore("bundles/errorMessages") {
     // если нет доп. сообщения
     if (message == null) {
       // если нет исключения
-      if (parent == null) {
+      if (parent == null)
         // формируем выходное сообщение, подставляем в шаблон переданные параметры
         errorMsg = formatMessage(errorMsg, params)
-      }
       else {
         // если есть исключение - добавляем в набор параметров
         // сообщение об ошибке первым аргументом
@@ -157,10 +157,10 @@ class SystemError extends AbstractI18nMessageStore("bundles/errorMessages") {
     }
     else {
       // если есть доп. сообщение
-      if (parent == null) {
+      if (parent == null)
         // формируем выходное сообщение, используем доп. сообщение как шаблон
         errorMsg = formatMessage(message, params)
-      } else {
+      else {
         val preparedParams = prepareParams(getMessage(parent), params)
         errorMsg = formatMessage(message, preparedParams)
       }

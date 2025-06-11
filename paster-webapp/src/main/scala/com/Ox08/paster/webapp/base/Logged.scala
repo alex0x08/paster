@@ -58,9 +58,9 @@ object Logged {
           return false
         if (fields == null)
           return true
-        for (field <- fields) {
-          if (f.getName.equals(field)) return false
-        }
+        for (field <- fields)
+          if (f.getName.equals(field))
+            return false
         true
       }
     }.toString

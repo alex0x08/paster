@@ -49,6 +49,8 @@ import scala.collection.mutable
 import scala.jdk.CollectionConverters._
 /**
  * This is 'all-in-one' configuration controller, used for setup stage
+ * @since 3.0
+ * @author 0x08
  */
 private object SetupConstants {
   def getAvailableSecurityModes: Array[SecurityMode] = Array(
@@ -59,8 +61,8 @@ private object SetupConstants {
       "jdbc:h2:file:${paster.app.home}/db/pastedb;DB_CLOSE_ON_EXIT=TRUE;LOCK_TIMEOUT=10000",
       "org.h2.jdbcx.JdbcDataSource", current = true, editable = false),
     new DbType("PostgreSQL",
-      "jdbc:pgsql://127.0.0.1/test-db",
-      "com.impossibl.postgres.jdbc.PGDataSource", current = false, editable = true),
+      "jdbc:postgresql://127.0.0.1/paster",
+      "org.postgresql.ds.PGSimpleDataSource", current = false, editable = true),
     new DbType("MySQL",
       "jdbc:mysql://localhost/testdb",
       "com.mysql.cj.jdbc.Driver", current = false, editable = true))
@@ -119,8 +121,6 @@ class SetupCtrl extends Logged {
       logger.debug("step already set - continue: {}",target.getStep.getClass.getName)
       return
     }
-
-
     val url = servletRequest.getRequestURI.substring(
       servletRequest.getContextPath.length).toLowerCase
     var step = url.substring("/main/setup/".length)
@@ -214,10 +214,9 @@ class SetupCtrl extends Logged {
       // dump errors
       if (logger.isDebugEnabled) {
         logger.debug("form has {} errors", result.getErrorCount)
-        for (e <- result.getAllErrors.asScala) {
+        for (e <- result.getAllErrors.asScala)
           logger.debug("error: {} code: {} msg: {}",
             e.getObjectName, e.getCode, e.getDefaultMessage)
-        }
       }
       model.addAttribute("step", updatedStep.getStep)
       return s"/setup/${step.getStepKey}"
@@ -227,7 +226,8 @@ class SetupCtrl extends Logged {
     try {
       logger.debug("checking driver: {} url: {}", step.dbType, step.dbUrl)
       //val clazz = Class.forName(step.dbType)
-      //val ds:javax.sql.DataSource = clazz.getDeclaredConstructor().newInstance().asInstanceOf[javax.sql.DataSource]
+      //val ds:javax.sql.DataSource = clazz.getDeclaredConstructor()
+      // .newInstance().asInstanceOf[javax.sql.DataSource]
       import org.springframework.jdbc.datasource.DriverManagerDataSource
       val ds2 = new DriverManagerDataSource
       ds2.setDriverClassName(step.getDbType)
@@ -324,9 +324,9 @@ class SetupCtrl extends Logged {
           })
           users.getUsers.addAll(availableUsers)
           model.addAttribute("availableUsers", availableUsers)
-        } else {
+        } else
           model.addAttribute("availableUsers", users.users)
-        }
+
         model.addAttribute("availableSecurityModes", getAvailableSecurityModes)
       case "db" =>
         model.addAttribute("pageTitle", getResource("paster.setup.step.db.title"))
@@ -334,9 +334,8 @@ class SetupCtrl extends Logged {
         dbs.connectionLog = null
         val availableDrivers = getAvailableDrivers
         if (!StringUtils.isBlank(dbs.origName))
-          for (a <- availableDrivers) {
+          for (a <- availableDrivers)
             a.setCurrent(dbs.origName.equals(a.getName))
-          }
         model.addAttribute("availableDrivers", availableDrivers)
       case _ =>
     }
@@ -449,16 +448,14 @@ class SetupCtrl extends Logged {
   @RequestMapping(Array("/restarting"))
   def restarting(model: Model): String = {
     model.addAttribute("pageTitle","Restarting..")
-
     "/restarting"
   }
   def dumpErrors(result: BindingResult): Unit = {
     if (logger.isDebugEnabled) {
       logger.debug("form has '{}' errors", result.getErrorCount)
-      for (e <- result.getAllErrors.asScala) {
+      for (e <- result.getAllErrors.asScala)
         logger.debug("error: '{}' code: '{}' msg: '{}'",
           e.getObjectName, e.getCode, e.getDefaultMessage)
-      }
     }
   }
 }
@@ -476,24 +473,21 @@ class PasterSetupService extends Logged {
   @PostConstruct
   def onInit(): Unit = {
     val steps: Array[SetupStep] = Array(new WelcomeStep, new SetupDbStep, new SetupUsersStep)
-    for (s <- steps) {
+    for (s <- steps)
       setupMap.put(s.getStepKey, s)
-    }
   }
   def containsStep(stepName: String): Boolean = setupMap.contains(stepName)
   def getStep[T <: SetupStep](stepName: String): T = setupMap(stepName).asInstanceOf[T]
   def getFirstUncompleted: SetupStep = {
-    for (s <- setupMap.values) {
+    for (s <- setupMap.values)
       if (!s.isCompleted)
         return s
-    }
     null
   }
   def isSetupCompleted: Boolean = {
-    for (s <- setupMap.values) {
+    for (s <- setupMap.values)
       if (!s.isCompleted)
         return false
-    }
     true
   }
   def getPreviousStep(stepName: String): SetupStep = {
@@ -517,9 +511,8 @@ class PasterSetupService extends Logged {
   }
   def getStepNames: Map[String, String] = {
     val map: mutable.Map[String, String] = mutable.Map()
-    for (s <- setupMap) {
+    for (s <- setupMap)
       map.put(s._1, s._2.getStepName)
-    }
     map.toMap
   }
   def getSteps: java.util.Collection[SetupStep] = setupMap.values.asJavaCollection
@@ -546,12 +539,12 @@ class PasterSetupService extends Logged {
     val pu = new PropertyUtilsBean
     for (e <- setupMap) {
       val props: util.Map[_, _] = pu.describe(e._2)
-      for (p <- props.asScala) {
+      for (p <- props.asScala)
         values.put(s"${e._1}.${p._1.toString}", p._2.asInstanceOf[Object])
-      }
     }
     values.put("installDate",LocalDateTime.now().toString)
-    val tpl: String = new String(IOUtils.toByteArray(configTemplate.getInputStream), StandardCharsets.UTF_8)
+    val tpl: String = new String(IOUtils.toByteArray(configTemplate.getInputStream),
+      StandardCharsets.UTF_8)
     val sub = new StringSubstitutor(values)
     sub.setEnableSubstitutionInVariables(false)
     val filledTemplate: String = sub.replace(tpl)
@@ -663,17 +656,14 @@ class SetupDbStep extends SetupStep("db", "paster.setup.step.db.title") {
       this.origName = update.origName
     }
 
-    if (StringUtils.isBlank(this.dbUrl)) {
+    if (StringUtils.isBlank(this.dbUrl))
       result.rejectValue("step.dbUrl","paster.setup.step.db.url.reject")
-    }
-    if (StringUtils.isBlank(this.dbType)) {
+    if (StringUtils.isBlank(this.dbType))
       result.rejectValue("step.dbType", "paster.setup.step.db.driver.reject")
-    }
-    if (result.hasErrors) {
+    if (result.hasErrors)
       markUnCompleted()
-    } else {
+    else
       markCompleted()
-    }
   }
 }
 /**
