@@ -22,6 +22,8 @@ import jakarta.xml.bind.annotation.XmlRootElement
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.{FullTextField, Indexed}
 /**
  * A comment for single line of paste
+ * @since 1.0
+ *
  */
 @Entity
 @Indexed(index = "indexes/comments")
@@ -53,15 +55,20 @@ class Comment extends Struct with java.io.Serializable {
   @Column(name = "line_num")
   var lineNumber: Int = _
   /**
-   * a id of parent comment, used when this comment is answer to another comment
+   * an id of parent comment,
+   * used when this comment is saved as response to another comment
    */
   @XStreamAsAttribute
   @Column(name = "parent_id")
   var parentId: Integer = _
+  /**
+   * link to preview image
+   */
   @Transient
   var thumbImage: String = _
   /**
-   * Here and below are set of getters, required when model is used from JSP EL expression
+   * Below are some getters,
+   * which required when this model would be accessed from EL-expression
    */
   def getId: Integer = id
   def getText: String = text

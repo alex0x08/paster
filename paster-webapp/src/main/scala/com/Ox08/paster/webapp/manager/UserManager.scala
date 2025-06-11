@@ -78,7 +78,7 @@ object UserManager extends Logged {
     val r = new FileReader(csv)
     try {
       val records = CSVFormat.DEFAULT.builder().setHeader()
-        .setSkipHeaderRecord(true).build().parse(r)
+        .setSkipHeaderRecord(true).get().parse(r)
       var usersCount:Int = 0
       for (record <- records.asScala) {
         if (usersCount> 500) {

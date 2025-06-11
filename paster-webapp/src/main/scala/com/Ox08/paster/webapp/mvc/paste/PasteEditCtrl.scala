@@ -34,25 +34,28 @@ import java.util.Locale
 import scala.jdk.CollectionConverters._
 /**
  * Paste model controller
- * Support for all operations related to one paste model: edit,view,delete,add comments..
+ * Support for all operations related to one paste model:
+ *    edit,view,delete,add comments and so on.
+ * @since 1.0
+ * @author 0x08
  */
 @Controller
 @RequestMapping(Array("/paste"))
 class PasteEditCtrl extends GenericEditCtrl[Paste] {
   @Autowired
-  val codeTypeDao: CodeTypeDao = null
+  private val codeTypeDao: CodeTypeDao = null
   @Autowired
   val channelDao: ChannelDao = null
   @Autowired
-  val priorities: PriorityDao = null
+  private val priorities: PriorityDao = null
   @Autowired
-  val tagDao: TagDao = null
+  private val tagDao: TagDao = null
   @Autowired
   val pasteDao: PasteDao = null
   @Autowired
   val commentDao: CommentDao = null
   @Autowired
-  val resourceDao: ResourceManager = null
+  private val resourceDao: ResourceManager = null
   def listPage = "redirect:/main/paste/list"
   def editPage = "paste/edit"
   def viewPage = "paste/view"
@@ -88,7 +91,8 @@ class PasteEditCtrl extends GenericEditCtrl[Paste] {
       val pprev = manager().getPreviousPaste(obj)
       model.addAttribute("availableNext", pnext)
       model.addAttribute("availablePrev", pprev)
-      model.addAttribute("availablePrevList", new IdList(manager().getPreviousPastasIdList(obj)))
+      model.addAttribute("availablePrevList",
+        new IdList(manager().getPreviousPastasIdList(obj)))
     } else {
       model.addAttribute("availableNext", null)
       model.addAttribute("availablePrev", null)
@@ -103,13 +107,6 @@ class PasteEditCtrl extends GenericEditCtrl[Paste] {
     p.priority = priorities.getDefault
     p
   }
-  def getNewCommentInstance(pp: Paste): Comment = {
-    val p = new Comment()
-    if (getCurrentUser != null)
-      p.author = getCurrentUser.getUsername()
-    p.pasteId = pp.id
-    p
-  }
   @RequestMapping(value = Array("/removeComment"),
     method = Array(RequestMethod.POST, RequestMethod.GET))
   def removeComment(@RequestParam(required = true) commentId: Integer,
@@ -117,7 +114,8 @@ class PasteEditCtrl extends GenericEditCtrl[Paste] {
                     @RequestParam(required = true) lineNumber: Long,
                     model: Model): String = {
     if (logger.isDebugEnabled)
-      logger.debug("removing comment commentId={} , lineNumber ={} ", commentId, lineNumber)
+      logger.debug("removing comment commentId={} , lineNumber ={} ",
+        commentId, lineNumber)
     if (!commentDao.exists(commentId)) {
       logger.warn("comment with id {} not found", commentId)
       model.asMap().clear()
@@ -148,7 +146,8 @@ class PasteEditCtrl extends GenericEditCtrl[Paste] {
       return MvcConstants.page500
 
     if (logger.isDebugEnabled)
-      logger.debug("adding reviewImg to {}, data sz {}", Array(pasteId, reviewImgData.length))
+      logger.debug("adding reviewImg to {}, data sz {}",
+        Array(pasteId, reviewImgData.length))
 
     p.reviewImgData = resourceDao.saveResource('r', p.uuid, reviewImgData)
     p.thumbImage = resourceDao.saveResource('t', p.uuid, thumbImgData)
@@ -173,20 +172,21 @@ class PasteEditCtrl extends GenericEditCtrl[Paste] {
     if (p == null)
       return MvcConstants.page404
     if (result.hasErrors) {
+      // dump errors
       if (logger.isDebugEnabled) {
         logger.debug("form has {} errors", result.getErrorCount)
-        for (e <- result.getAllErrors.asScala) {
-          logger.debug("error: {} code: {} msg: {}", e.getObjectName, e.getCode, e.getDefaultMessage)
-        }
+        for (e <- result.getAllErrors.asScala)
+          logger.debug("error: {} code: {} msg: {}",
+            e.getObjectName, e.getCode, e.getDefaultMessage)
+
       }
       model.addAttribute("comment", b)
       fillEditModel(p, model, locale)
       return viewPage
     }
-    if (isCurrentUserLoggedIn) {
+    if (isCurrentUserLoggedIn)
       b.author = getCurrentUser.getUsername()
-      // b.getOwner().increaseTotalComments()
-    }
+
     commentDao.save(b)
     if (b.getThumbImage != null)
       p.thumbImage = resourceDao.saveResource('t', p.uuid, b.getThumbImage)
@@ -272,7 +272,8 @@ class PasteEditCtrl extends GenericEditCtrl[Paste] {
           summary
       } else b.text
     if (logger.isDebugEnabled)
-      logger.debug("found thumbnail sz: {} comments {}", b.thumbImage.length, b.commentsCount)
+      logger.debug("found thumbnail sz: {} comments {}",
+        b.thumbImage.length, b.commentsCount)
     if (b.thumbImage != null) {
       b.thumbImage = resourceDao.saveResource('t', b.uuid, b.thumbImage)
     }
@@ -284,7 +285,8 @@ class PasteEditCtrl extends GenericEditCtrl[Paste] {
       out
   }
   @RequestMapping(value = Array("/raw/view"), method = Array(RequestMethod.GET))
-  def getByPathRaw(@RequestParam(required = true) id: Integer, model: Model, locale: Locale): String = {
+  def getByPathRaw(@RequestParam(required = true) id: Integer,
+                   model: Model, locale: Locale): String = {
     val r = getByPath(id, model, locale)
     if (!r.equals(viewPage))
       r
@@ -292,7 +294,8 @@ class PasteEditCtrl extends GenericEditCtrl[Paste] {
       "/paste/raw/view"
   }
   @RequestMapping(value = Array("/{id:[0-9]+}"), method = Array(RequestMethod.GET))
-  override def getByPath(@PathVariable("id") id: Integer, model: Model, locale: Locale): String = {
+  override def getByPath(@PathVariable("id") id: Integer,
+                         model: Model, locale: Locale): String = {
     val r = super.getByPath(id, model, locale)
     if (!r.equals(viewPage))
       return r
@@ -306,7 +309,8 @@ class PasteEditCtrl extends GenericEditCtrl[Paste] {
    *
    * @return available code types
    */
-  @RequestMapping(value = Array("/codetypes"), method = Array(RequestMethod.GET))
+  @RequestMapping(value = Array("/codetypes"),
+    method = Array(RequestMethod.GET))
   @ResponseBody
   @JsonIgnore
   def getAvailableCodeTypes: util.Set[String] = codeTypeDao.getAvailableElements.asJava
@@ -319,9 +323,8 @@ class PasteEditCtrl extends GenericEditCtrl[Paste] {
   @JsonIgnore
   def getAvailableTagsNames: java.util.List[String] = {
     val out = new util.ArrayList[String]
-    for (s <- tagDao.getAll.asScala) {
+    for (s <- tagDao.getAll.asScala)
       out.add(s.name)
-    }
     out
   }
   /**
@@ -340,6 +343,15 @@ class PasteEditCtrl extends GenericEditCtrl[Paste] {
    */
   @ModelAttribute("query")
   def newQuery(): AuthorQuery = new AuthorQuery()
+
+  private def getNewCommentInstance(pp: Paste): Comment = {
+    val p = new Comment()
+    if (getCurrentUser != null)
+      p.author = getCurrentUser.getUsername()
+    p.pasteId = pp.id
+    p
+  }
+
 }
 class IdList(list: java.util.List[Integer]) {
   def getCount: Int = list.size()

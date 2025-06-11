@@ -25,36 +25,75 @@ import java.io.IOException
 import java.time.LocalDateTime
 import scala.collection.mutable
 import scala.jdk.CollectionConverters._
+
+/**
+ * Custom DAO level for paste entity
+ * @since 1.0
+ * @author 0x08
+ */
 @Repository("pasteDao")
 @Transactional(readOnly = true, rollbackFor = Array(classOf[Exception]))
 class PasteDao extends SearchableDaoImpl[Paste](classOf[Paste]) {
   override def getDefaultStartFields: Array[String] = Array("title", "text")
-  def getByAuthor(author: PasterUser): java.util.List[Paste] = getListByKeyValue("author", author)
-  def getByRemoteUrl(url: String): java.util.List[Paste] = getListByKeyValue("remoteUrl", url)
+
   /**
-   * Gets single next paste
+   * Query paste entities by author.
+   * Response limited by BaseDao.MAX_RESULTS
+   * @param author
+   *        selected author (an user)
+   * @return
+   */
+  def getByAuthor(author: PasterUser): java.util.List[Paste] =
+                getListByKeyValue("author", author)
+  def getByRemoteUrl(url: String): java.util.List[Paste] =
+                getListByKeyValue("remoteUrl", url)
+  /**
+   * Find paste entity, which is next to selected
    *
    * @param paste
-   * current paste
+   *        selected paste entity
    * @return
-   * next paste
+   *        next paste entity
    */
   def getNextPaste(paste: Paste): Paste = {
     val out: java.util.List[Paste] = getNextOrPreviousPaste(paste, direction = false, 1)
     if (out.isEmpty) null else out.get(0)
   }
+
+  /**
+   * Find paste entity, which is previous to selected one
+   * @param paste
+   *        selected paste entity
+   * @return
+   */
   def getPreviousPaste(paste: Paste): Paste = {
     val out: java.util.List[Paste] = getNextOrPreviousPaste(paste, direction = true, 1)
     if (out.isEmpty) null else out.get(0)
   }
+
+  /**
+   * Find list of paste entities which are previous to selected
+   * @param paste
+   *        selected entity
+   * @return
+   *      list of paste entities
+   */
   def getPreviousPastas(paste: Paste): java.util.List[Paste] =
     getNextOrPreviousPaste(paste, direction = true, BaseDao.MAX_RESULTS)
+
+  /**
+   * Find and return list of IDs of paste entities, which are previous to selected
+   * @param paste
+   *        selected entity
+   * @return
+   *        list of IDs
+   */
   def getPreviousPastasIdList(paste: Paste): java.util.List[Integer] = {
     val out = new java.util.ArrayList[Integer]
     val cb = em.getCriteriaBuilder
     val cr = cb.createTupleQuery()
     val r = cr.from(getModel)
-    cr.multiselect(r.get("id"))
+    cr.select(r.get("id"))
     val select = new java.util.ArrayList[Predicate]
     select.add(cb.notEqual(r.get("id"), paste.id))
     if (paste.integrationCode != null)
@@ -68,9 +107,8 @@ class PasteDao extends SearchableDaoImpl[Paste](classOf[Paste]) {
       )
     val tupleResult: java.util.List[Tuple] = em.createQuery(cr)
       .setMaxResults(BaseDao.MAX_RESULTS).getResultList
-    for (t <- tupleResult.asScala) {
+    for (t <- tupleResult.asScala)
       out.add(t.get(0).asInstanceOf[Integer])
-    }
     out
   }
   /**
@@ -85,7 +123,8 @@ class PasteDao extends SearchableDaoImpl[Paste](classOf[Paste]) {
    * maximum results in list
    * @return
    */
-  private def getNextOrPreviousPaste(paste: Paste, direction: Boolean, maxResults: Int):
+  private def getNextOrPreviousPaste(paste: Paste,
+                                     direction: Boolean, maxResults: Int):
   java.util.List[Paste] = {
     val cr = new CriteriaSet()
     val select = new java.util.ArrayList[Predicate]
@@ -94,16 +133,19 @@ class PasteDao extends SearchableDaoImpl[Paste](classOf[Paste]) {
       select.add(cr.cb.equal(cr.r.get("integrationCode"), paste.integrationCode))
     select.add(cr.cb.equal(cr.cb.lower(cr.r.get("channel")), paste.channel.toLowerCase))
     if (direction)
-      select.add(cr.cb.lessThanOrEqualTo(cr.r.get("created").as(classOf[LocalDateTime]), paste.created))
+      select.add(cr.cb.lessThanOrEqualTo(cr.r.get("created")
+        .as(classOf[LocalDateTime]), paste.created))
     else
-      select.add(cr.cb.greaterThanOrEqualTo(cr.r.get("created").as(classOf[LocalDateTime]), paste.created))
+      select.add(cr.cb.greaterThanOrEqualTo(cr.r.get("created")
+        .as(classOf[LocalDateTime]), paste.created))
     val query = em.createQuery[Paste](
       cr.cr.where(select.toArray(new Array[Predicate](select.size)): _*)
         .orderBy(if (direction)
           cr.cb.desc(cr.r.get("created"))
         else
           cr.cb.asc(cr.r.get("created"))))
-      .setMaxResults(if (maxResults > BaseDao.MAX_RESULTS) BaseDao.MAX_RESULTS else maxResults)
+      .setMaxResults(if (maxResults > BaseDao.MAX_RESULTS)
+        BaseDao.MAX_RESULTS else maxResults)
     query.getResultList
   }
   def getByChannel(channel: String, sortAsc: Boolean): java.util.List[Paste] = {
@@ -158,7 +200,8 @@ class PasteDao extends SearchableDaoImpl[Paste](classOf[Paste]) {
           .otherwise(0).as(classOf[Integer]))
         .alias(c))
     }
-    cq.multiselect(paths)
+    // migrate from deprecated multiselect
+    cq.select(cb.tuple(paths))
     val results = em.createQuery[Tuple](cq).getResultList
     val out = mutable.Map[String, Long]()
     out.put("total", results.get(0).get("total").asInstanceOf[Long])

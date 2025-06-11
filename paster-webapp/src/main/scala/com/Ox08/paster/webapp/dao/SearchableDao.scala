@@ -70,12 +70,14 @@ abstract class SearchableDaoImpl[T <: Struct](model: Class[T])
     val scorer: QueryScorer = new QueryScorer(luceneQuery)
     val highlighter: Highlighter = new Highlighter(SearchableDaoImpl.FORMATTER, scorer)
     highlighter.setTextFragmenter(new SimpleSpanFragmenter(scorer, 100))
-    val predicate2: SearchPredicate = searchSession.scope(model).predicate.extension(LuceneExtension.get)
+    val predicate2: SearchPredicate = searchSession
+      .scope(model).predicate.extension(LuceneExtension.get)
       .fromLuceneQuery(luceneQuery).toPredicate
     val searchQuery: LuceneSearchQuery[T] = searchSession.search(model)
       .extension(LuceneExtension.get())
       .where(predicate2).toQuery
-    def getResults: util.List[T] = fillHighlighted(highlighter, queryParser, searchQuery.fetchAll().hits())
+    def getResults: util.List[T] = fillHighlighted(highlighter,
+      queryParser, searchQuery.fetchAll().hits())
   }
   def getFullTextEntityManager: SearchSession = Search.session(em)
   def getDefaultStartFields: Array[String] = SearchableDaoImpl.DEFAULT_START_FIELDS

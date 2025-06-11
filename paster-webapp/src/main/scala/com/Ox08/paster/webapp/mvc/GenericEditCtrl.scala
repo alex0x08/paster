@@ -74,7 +74,8 @@ abstract class GenericEditCtrl[T <: Struct] extends AbstractCtrl {
   protected def loadModel(id: Integer): T = manager().getFull(id)
   /**
    * 'Create new' feature
-   * Instantiates new model object and returns edit page, assigned to this model in child controller
+   * Instantiates new model object and returns edit page, assigned to this model
+   * in child controller
    * @param model
    *      page model
    * @param locale

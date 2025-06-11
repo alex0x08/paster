@@ -77,15 +77,15 @@ abstract class AbstractStringBasedDao(elementsAsString: String,
   }
   private[dao] def removeForbidden(ch:String): String = {
     var out = ch
-    for (c<-ElementsDao.FORBIDDEN_CHARS) {
+    for (c<-ElementsDao.FORBIDDEN_CHARS)
       out = out.replace(c,null.asInstanceOf[Char])
-    }
     out
   }
 
   def getAvailableElements: Set[String] = elements.toSet
   def getDefault: String = defaultElement
-  def exist(name: String): Boolean = elements.exists(p => p.equals(name) || p.toLowerCase.equals(name) )
+  def exist(name: String): Boolean = elements.exists(p => p.equals(name)
+    || p.toLowerCase.equals(name) )
 }
 /**
  * A repository for tags
@@ -100,9 +100,8 @@ class TagDao extends BaseDao[Tag, java.lang.Long](classOf[Tag]) {
    */
   def getTagsMap: Map[String, Tag] = {
     val out = mutable.Map[String, Tag]()
-    for (t <- getAll.asScala) {
+    for (t <- getAll.asScala)
       out +=(t.name -> t)
-    }
     out.toMap
   }
   /**

@@ -181,8 +181,8 @@ abstract class BaseDao[T <: java.io.Serializable, PK <: java.io.Serializable](mo
   def getIdList(from: PK): java.util.List[PK] = {
     val out = new util.ArrayList[PK]
     val cr = new CriteriaSet
-    cr.ct.multiselect(cr.r.get("id"))
-    // do not replace this with pattern matching
+    cr.ct.select(cr.r.get("id"))
+    // do not replace this with pattern matching (idea is lying!)
     if (from.isInstanceOf[Long] && from.asInstanceOf[Long] > 0)
       cr.ct.where(Array(cr.cb.lt(cr.r.get("id"), from.asInstanceOf[Long])): _*)
     val tupleResult: java.util.List[Tuple] = em.createQuery(cr.ct)
@@ -199,7 +199,9 @@ abstract class StructDaoImpl[T <: Struct](model: Class[T])
   @Transactional
   def getFull(id: Integer): T = {
     val out: T = get(id)
-    if (out == null) null.asInstanceOf[T] else {
+    if (out == null)
+      null.asInstanceOf[T]
+    else {
       out.loadFull()
       out
     }

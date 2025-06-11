@@ -22,5 +22,6 @@ import org.springframework.transaction.annotation.Transactional
  */
 @Repository("tokenDao")
 @Transactional(readOnly = true, rollbackFor = Array(classOf[Exception]))
-class SessionTokensDao extends BaseDao[SessionToken, java.lang.String](classOf[SessionToken]) {
+class SessionTokensDao extends BaseDao[SessionToken,
+                          java.lang.String](classOf[SessionToken]) {
 }

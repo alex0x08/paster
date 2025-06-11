@@ -54,14 +54,16 @@ class Tag(tagString: String) extends DBObject {
  *
  * This is entity object implements "pasta" : piece of code with id,title and text
  *
- * @author Alex
+ * @author 0x08
+ * @since 1.0
+ *
  */
 @Entity
 @Indexed(index = "indexes/pastas")
 @XStreamAlias("Paste")
 @Table(name = "P_PASTAS")
-class Paste(ptitle: String) extends Struct with java.io.Serializable {
-  def this() = this(null)
+class Paste extends Struct with java.io.Serializable {
+
   /**
    * unique paste id
    */
@@ -124,7 +126,6 @@ class Paste(ptitle: String) extends Struct with java.io.Serializable {
   @NotNull
   @Column(name = "p_channel")
   var channel: String = _
-  // @Field(name = "tags", index = Index.YES, store = Store.YES, termVector = TermVector.YES) //,boost=@Boost(2f)
   @FullTextField(name = "tags")
   @Column(name = "p_tags")
   var tagsAsString: String = _
@@ -191,15 +192,14 @@ class Paste(ptitle: String) extends Struct with java.io.Serializable {
   @JsonIgnore
   def getTagsMap: java.util.Map[String, Tag] = tagsMap
   /**
-   * loads this instance fully from database
-   * MUST be called with opened hibernate session
+   * Loads this instance fully from database.
+   * MUST be called inside opened transaction!
    */
   override def loadFull(): Unit = {
     if (Struct.logger.isDebugEnabled)
       Struct.logger.debug("called loadFull for {}", id)
-    for (t <- tagsMap.entrySet().asScala) {
+    for (t <- tagsMap.entrySet().asScala)
       t.getValue.name
-    }
   }
   override def toString: String = Logged.toStringSkip(this,
     Array("reviewImgData",

@@ -23,13 +23,20 @@ import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 /**
  * Default Controller
+ *
+ * Starts from /main/
+ *
+ * @since 1.0
+ * @author 0x08
  */
 @Controller
 class IndexCtrl extends AbstractCtrl {
   /**
    * Handles default url
    * @param model
+   *        page model
    * @return
+   *      redirect url
    */
   @RequestMapping(value = Array("/"))
   def index(model: Model): String = {
@@ -39,7 +46,7 @@ class IndexCtrl extends AbstractCtrl {
     "redirect:/main/paste/list"
   }
   /**
-   * Handles error pages
+   * Handles all error pages
    * @param response
    * @param errorCode
    * @return

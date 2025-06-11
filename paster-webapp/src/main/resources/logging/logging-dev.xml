@@ -16,8 +16,8 @@
     <logger name="org.apache" level="WARN"/>
     <logger name="org.hibernate.validator" level="WARN"/>
     <logger name="org.springframework" level="INFO"/>
-    <logger name="org.springframework.web" level="ALL"/>
-    <logger name="org.springframework.security" level="ALL"/>
+    <logger name="org.springframework.web" level="DEBUG"/>
+    <logger name="org.springframework.security" level="DEBUG"/>
     <logger name="org.springframework.cache" level="WARN"/>
     <logger name="org.thymeleaf" level="WARN"/>
     <logger name="org.hibernate.SQL" level="DEBUG" />

@@ -28,6 +28,13 @@ import java.util.concurrent.TimeUnit
 import java.util.{Date, Locale}
 import scala.jdk.CollectionConverters._
 import scala.math.abs
+
+/**
+ * This one is a main controller for paste entity listings
+ *
+ * @since 1.0
+ * @author 0x08
+ */
 @Controller
 @RequestMapping(value = Array("/paste"))
 class PasteListCtrl extends SearchCtrl[Paste, AuthorQuery] {
@@ -153,13 +160,13 @@ class PasteListCtrl extends SearchCtrl[Paste, AuthorQuery] {
                     @PathVariable("since") dateFrom: java.lang.Long): java.lang.Long = {
     pasteDao.countAllSince(channelCode, dateFrom)
   }
-  def listImpl(request: HttpServletRequest, model: Model,
-               page: java.lang.Integer,
-               NPpage: String,
-               pageSize: java.lang.Integer,
-               sortColumn: String,
-               sortAsc: java.lang.Boolean = false,
-               channelCode: String, integrationCode: String): java.util.List[Paste] = {
+  private def listImpl(request: HttpServletRequest, model: Model,
+                       page: java.lang.Integer,
+                       NPpage: String,
+                       pageSize: java.lang.Integer,
+                       sortColumn: String,
+                       sortAsc: java.lang.Boolean = false,
+                       channelCode: String, integrationCode: String): java.util.List[Paste] = {
     if (logger.isDebugEnabled)
       logger.debug("paste listImpl, channel: {} pageSize {}", channelCode,pageSize)
     fillListModel(model)
@@ -182,7 +189,7 @@ class PasteListCtrl extends SearchCtrl[Paste, AuthorQuery] {
   @ModelAttribute("items")
   @ResponseBody
   def listOwnBody(): java.util.List[Paste] = manager().getByAuthor(getCurrentUser)
-  protected val pasterListCallback: PasteListCallback = new PasteListCallback(null, true, null)
+  private val pasterListCallback: PasteListCallback = new PasteListCallback(null, true, null)
   class PasteListCallback(channel: String, sortAsc: Boolean, integrationCode: String)
     extends SourceCallback[Paste] {
     override def invokeCreate(): PagedListHolder[Paste] = {

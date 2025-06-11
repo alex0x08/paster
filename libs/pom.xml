@@ -49,18 +49,9 @@
         <url>http://0x08.ru</url>
     </organization>
 
-
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <netbeans.hint.license>apache20</netbeans.hint.license>
-    </properties>
-
     <modules>
         <module>tiles-jakarta-stripped</module>
         <module>spring-tiles3</module>
+        <module>dbconsole</module>
     </modules>
-
-
-
-
 </project>

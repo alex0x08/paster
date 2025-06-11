@@ -45,6 +45,12 @@
       <scope>compile</scope>
     </dependency>
     <dependency>
+      <groupId>com.Ox08.paster.webapp</groupId>
+      <artifactId>paster-dbconsole</artifactId>
+      <version>2.1.07-RELEASE</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
       <groupId>org.scala-lang</groupId>
       <artifactId>scala-library</artifactId>
       <version>2.13.16</version>
@@ -55,12 +61,6 @@
       <artifactId>jakarta.jakartaee-web-api</artifactId>
       <version>11.0.0</version>
       <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.h2database</groupId>
-      <artifactId>h2</artifactId>
-      <version>2.3.232</version>
-      <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>org.codehaus.janino</groupId>
@@ -107,12 +107,6 @@
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>log4j-over-slf4j</artifactId>
-      <version>2.0.17</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>jul-to-slf4j</artifactId>
       <version>2.0.17</version>
       <scope>compile</scope>
     </dependency>

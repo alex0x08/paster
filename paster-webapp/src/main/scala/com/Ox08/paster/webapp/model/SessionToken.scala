@@ -16,8 +16,12 @@
 package com.Ox08.paster.webapp.model
 import jakarta.persistence.{Column, Entity, Id, Table}
 import jakarta.validation.constraints.{NotNull, Size}
-
 import java.time.LocalDate
+
+/**
+ * JPA entity, used to store sessions in database
+ */
+
 object SessionToken {
   val MAX_USER_AGENT_LEN = 255
 }
@@ -41,10 +45,9 @@ class SessionToken extends java.io.Serializable {
   var username: String = _
   def getUserAgent: String = userAgent
   def setUserAgent(userAgent: String): Unit = {
-    if (userAgent.length() >= SessionToken.MAX_USER_AGENT_LEN) {
+    if (userAgent.length() >= SessionToken.MAX_USER_AGENT_LEN)
       this.userAgent = userAgent.substring(0, SessionToken.MAX_USER_AGENT_LEN - 1)
-    } else {
+    else
       this.userAgent = userAgent
-    }
   }
 }

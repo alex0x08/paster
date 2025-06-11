@@ -14,6 +14,9 @@
     <logger name="org.hibernate.validator" level="WARN"/>
     <logger name="org.springframework" level="WARN"/>
     <logger name="org.springframework.security" level="WARN"/>
+
+
+    <logger name="org.springframework.security.config.http.HttpSecurityBeanDefinitionParser" level="OFF"/>
     <root level="WARN">
         <appender-ref ref="CONSOLE"/>
     </root>

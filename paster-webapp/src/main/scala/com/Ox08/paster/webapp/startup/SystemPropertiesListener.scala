@@ -16,7 +16,7 @@
 package com.Ox08.paster.webapp.startup
 import com.Ox08.paster.webapp.base.{Boot, Logged, SystemError, SystemMessage}
 import jakarta.servlet.{ServletContextEvent, ServletContextListener}
-import org.slf4j.bridge.SLF4JBridgeHandler
+
 import java.io.{File, IOException}
 import java.util.Locale
 class SystemPropertiesListener extends ServletContextListener with Logged {

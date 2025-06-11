@@ -50,7 +50,7 @@ class CommentDao extends SearchableDaoImpl[Comment](classOf[Comment]) {
   def getSubCommentsIdsFor(commentId: Integer): List[Integer] = {
     val out = List[Integer]()
     val cr = new CriteriaSet
-    cr.ct.multiselect(cr.r.get("id"))
+    cr.ct.select(cr.r.get("id"))
     cr.ct.where(Array(cr.cb.equal(cr.r.get("parentId"), commentId)): _*)
     val tupleResult: java.util.List[Tuple] = em.createQuery(cr.ct)
       .setMaxResults(BaseDao.MAX_RESULTS).getResultList

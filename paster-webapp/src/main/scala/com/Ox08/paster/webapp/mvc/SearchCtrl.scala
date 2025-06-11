@@ -24,8 +24,8 @@ import org.springframework.ui.Model
 import org.springframework.web.bind.annotation._
 import java.util
 /**
- * Abstract Search Controller.
- * All children will have +1 search ability
+ * Abstract Searchable Controller.
+ * All children will have +100 to search
  *
  * @tparam T  model class
  * @tparam QV query class
@@ -90,7 +90,8 @@ abstract class SearchCtrl[T <: Struct, QV <: Query] extends GenericListCtrl[T] {
         )
         if (out == null && !rout.isEmpty) {
           out = rout
-          model.addAttribute(MvcConstants.NODE_LIST_MODEL_PAGE, model.asMap().get(s"${r}_ITEMS"))
+          model.addAttribute(MvcConstants.NODE_LIST_MODEL_PAGE,
+            model.asMap().get(s"${r}_ITEMS"))
           model.addAttribute("result", r)
           if (logger.isDebugEnabled)
             logger.debug("found {} in {}", out.size(), s"${r}_ITEMS")
@@ -112,7 +113,7 @@ abstract class SearchCtrl[T <: Struct, QV <: Query] extends GenericListCtrl[T] {
   }
   def search(query: Query, result: String): java.util.List[_] = {
     if (logger.isDebugEnabled)
-      logger.debug("_search {}", query.getQuery)
+      logger.debug("searching for: '{}'", query.getQuery)
     if (StringUtils.isBlank(query.getQuery))
       getManagerBySearchResult(result).getList
     else
@@ -123,7 +124,8 @@ abstract class SearchCtrl[T <: Struct, QV <: Query] extends GenericListCtrl[T] {
                         page: java.lang.Integer,
                         NPpage: String,
                         pageSize: java.lang.Integer,
-                        sortColumn: String, sortAsc: Boolean, result: String): java.util.List[T] = {
+                        sortColumn: String, sortAsc: Boolean,
+                        result: String): java.util.List[T] = {
     fillSearchModel(model)
     model.addAttribute("result", result.toLowerCase())
     if (logger.isDebugEnabled)

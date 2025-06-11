@@ -15,8 +15,8 @@
  */
 
 package org.h2.server.web
-import com.Ox08.paster.webapp.base.{Boot, Logged}
 import jakarta.servlet.http.{HttpServletRequest, HttpServletRequestWrapper, HttpServletResponse}
+import org.slf4j.{Logger, LoggerFactory}
 import org.springframework.context.ApplicationContext
 import org.springframework.web.context.support.WebApplicationContextUtils
 
@@ -31,7 +31,11 @@ import javax.sql.DataSource
  * to user's session and open console automatically.
  *
  */
-class H2ConsoleExtendedServlet extends JakartaWebServlet with Logged {
+class H2ConsoleExtendedServlet extends JakartaWebServlet  {
+
+  def logger: Logger = LoggerFactory.getLogger(getClass.getName)
+
+  private var isInstalled: Boolean = false
   private var dataSource: DataSource = _
   private var server:WebServer = _
   override def destroy(): Unit = {
@@ -39,16 +43,19 @@ class H2ConsoleExtendedServlet extends JakartaWebServlet with Logged {
         server.stop()
   }
   override def init(): Unit = {
-    if (!Boot.BOOT.getSystemInfo.isInstalled) return
+
+    isInstalled = getServletContext.getAttribute("pasterInstalled") != null
+    if (!isInstalled) return
     server = new WebServer
     if (logger.isDebugEnabled) {
       logger.debug("h2 servlet init..")
     }
     val ctx: ApplicationContext = WebApplicationContextUtils
       .getWebApplicationContext(getServletContext)
+
       dataSource = ctx.getBean("dataSource").asInstanceOf[DataSource]
     try {
-      //server.setAllowChunked(false)
+      server.setAllowChunked(false)
       server.init()
       val f = getClass.getSuperclass.getDeclaredField("server")
       f.setAccessible(true)
@@ -68,7 +75,7 @@ class H2ConsoleExtendedServlet extends JakartaWebServlet with Logged {
   }
   @throws(classOf[java.io.IOException])
   override def doGet(req: HttpServletRequest, res: HttpServletResponse): Unit = {
-    if (!Boot.BOOT.getSystemInfo.isInstalled)
+    if (!isInstalled)
       return
     val h2console_db_session_id = getH2SessionIdFromContext
     var session: WebSession = null
