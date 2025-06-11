@@ -30,13 +30,13 @@
         All |Comments|Draw top toggle
 --%>
 <div id='pasteViewControls' class="btn-group" role="group" aria-label="Controls">
-    <button id="${model.id}_btnShowAll" type="button" class="btn btn-primary active">
+    <button id="${model.id}_btnShowAll" type="button" class="btn btn-sm btn-primary active">
         <fmt:message key="button.paste.all" />
     </button>
-    <button id="${model.id}_btnShowComments" type="button" class="btn btn-primary">
+    <button id="${model.id}_btnShowComments" type="button" class="btn btn-sm btn-primary">
         <fmt:message key="button.paste.comments" />
     </button>
-    <button id="${model.id}_btnShowDraw" type="button" class="btn btn-primary">
+    <button id="${model.id}_btnShowDraw" type="button" class="btn btn-sm btn-primary">
         <fmt:message key="button.paste.draw" />
     </button>
 </div>
@@ -55,7 +55,7 @@
     Draw mode, paint options
 --%>
 <div id="${model.id}_drawBlock" style="display:none;padding-top: 1em;">
-            <div class="row justify-content-between">
+            <div class="row justify-content-between" style="padding-bottom:0.5em;">
                 <div class="col-md-8">
                     <div id="${model.id}_tools" class="tools">
                     </div>
@@ -71,7 +71,7 @@
                             <input id="${model.id}_reviewDrawImg" name="reviewImgData" type="hidden" value="" />
                             <input id="${model.id}_thumbImg" name="thumbImgData" type="hidden" value="" />
                             <button id="${model.id}_saveReviewBtn"
-                                    class='btn btn-danger p-btn-save' type="button">
+                                    class='btn btn-sm btn-danger p-btn-save' type="button">
                                 <span class="i" style="font-size:larger;">S</span>
                                 <span id="btnCaption">
                                     <fmt:message key="button.save" /></span>

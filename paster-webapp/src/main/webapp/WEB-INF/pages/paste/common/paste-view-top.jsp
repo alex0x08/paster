@@ -54,7 +54,7 @@
             <c:if test="${not empty currentUser or allowAnonymousCommentsCreate}">
                 <c:url var='pasteEditUrl' value='/main/paste/edit/${model.id}'/>
 
-                <a class="btn btn-primary" href="${pasteEditUrl}"
+                <a class="btn btn-sm btn-primary" href="${pasteEditUrl}"
                     title="<fmt:message key='button.edit' />">
                     <fmt:message key='button.edit' />
                 </a>
@@ -63,7 +63,7 @@
                     <c:url var='pasteDeleteUrl' value='/main/paste/delete'>
                             <c:param name='id' value='${model.id}' />
                     </c:url>
-                    <a class="btn btn-danger btn-sm deleteBtn" id="deleteBtn_${model.id}"
+                    <a class="btn btn-sm btn-danger btn-sm deleteBtn" id="deleteBtn_${model.id}"
                         href="${pasteDeleteUrl}"
                     title="<fmt:message key='button.delete' />">
                     <span class="i">d</span>

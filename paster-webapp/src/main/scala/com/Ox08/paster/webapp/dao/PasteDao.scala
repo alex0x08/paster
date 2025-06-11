@@ -188,7 +188,7 @@ class PasteDao extends SearchableDaoImpl[Paste](classOf[Paste]) {
    *
    */
   def countStats(channels: Array[String]): Map[String, Long] = {
-    /*val cb = em.getCriteriaBuilder
+    val cb = em.getCriteriaBuilder
     val cq: CriteriaQuery[Tuple] = cb.createTupleQuery()
     val r = cq.from(getModel)
     val paths = new java.util.ArrayList[Selection[_]]()
@@ -203,17 +203,17 @@ class PasteDao extends SearchableDaoImpl[Paste](classOf[Paste]) {
     // migrate from deprecated multiselect
     cq.select(cb.tuple(paths))
     val results = em.createQuery[Tuple](cq).getResultList
-    */
+
     val out = mutable.Map[String, Long]()
 
-    out.put("total", 0) // results.get(0).get("total").asInstanceOf[Long])
-    /*for (c <- channels) {
+    out.put("total", results.get(0).get("total").asInstanceOf[Long])
+    for (c <- channels) {
       out.put(c,
         if (results.get(0).get(c) == null)
           0
             else
         results.get(0).get(c).asInstanceOf[Integer].longValue())
-    }*/
+    }
     out.toMap
   }
   def countAll(p: String): java.lang.Long = {
