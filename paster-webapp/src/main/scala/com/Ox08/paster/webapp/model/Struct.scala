@@ -27,25 +27,28 @@ object Struct extends Logged {
     def get(): T = obj
   }
 }
-/**
- * Struct model, have lastModified  field
- */
 trait SearchObject {
   def terms(): List[String]
 }
+/**
+ * Struct model, contains 'lastModified' and 'created'  fields
+ * @since 1.0
+ * @author 0x08
+ */
 @MappedSuperclass
 abstract class Struct extends DBObject with SearchObject with java.io.Serializable {
   @Column(name = "last_modified")
   @GenericField
-  // @DateBridge(resolution = Resolution.DAY)
   @XStreamAsAttribute
-  var lastModified: LocalDateTime = _
+  var lastModified: LocalDateTime = _ // stores date & time of last modification
   @Column(name = "created")
   @GenericField
-  //(index = Index.YES)
-  //@DateBridge(resolution = Resolution.DAY)
   @XStreamAsAttribute
-  val created: LocalDateTime = LocalDateTime.now()
+  val created: LocalDateTime = LocalDateTime.now() // stores creation date & time
+
+  /**
+   * Triggers before persist or merge, used to update modification dates
+   */
   @PrePersist
   @PreUpdate
   def touch(): Unit = {
@@ -53,6 +56,13 @@ abstract class Struct extends DBObject with SearchObject with java.io.Serializab
     if (Struct.logger.isDebugEnabled)
       Struct.logger.debug("set lastModified to {} objId={}",lastModified,id)
   }
+
+  /**
+   * Provides 'last modified' date as java.util.Date,
+   * which is used on JSP page by fmt.formatDate function
+   * @return
+   *    date&time of last modification as java.util.Date object
+   */
   def getLastModifiedDt: Date =
     if (lastModified == null.asInstanceOf[LocalDateTime])
       null
@@ -70,15 +80,28 @@ abstract class Struct extends DBObject with SearchObject with java.io.Serializab
   def terms(): List[String] = Struct.terms
   def loadFull(): Unit = {}
 }
+
+/**
+ * Abstact database entity
+ * @since 1.0
+ * @author 0x08
+ */
 @MappedSuperclass
 abstract class DBObject extends java.io.Serializable {
   @Id
   @GeneratedValue(generator = "id_sequence", strategy=GenerationType.SEQUENCE)
   @SequenceGenerator(name = "id_sequence", allocationSize = 10)
   @XStreamAsAttribute
-  var id: Integer = _
+  var id: Integer = _ // unique id
   @XStreamAsAttribute
-  var disabled: Boolean = _
+  var disabled: Boolean = _ // if true - record is disabled (ex. user entity)
+
+  /**
+   * Check if record has not been persisted yet by
+   * simply compare id with null
+   * @return
+   *    if true - record is not yet persisted in database
+   */
   @JsonIgnore
   def isBlank: Boolean = id == null
   override def hashCode(): Int = {
@@ -87,7 +110,14 @@ abstract class DBObject extends java.io.Serializable {
       hash += Objects.hashCode(id)
     hash
   }
+
+  /**
+   * Equality is based only on id check, no any other fields will be compared
+   * @param from
+   * @return
+   */
   override def equals(from: Any): Boolean =
-    from.isInstanceOf[DBObject] && !isBlank && from.asInstanceOf[DBObject].id.equals(id)
+    from.isInstanceOf[DBObject] && !isBlank &&
+                          from.asInstanceOf[DBObject].id.equals(id)
 }
 

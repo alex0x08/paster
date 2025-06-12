@@ -264,19 +264,18 @@ class Boot private() extends Logged {
     val config = new File(app_home, "config.properties")
     if (!config.exists || !config.isFile) {
       logger.warn(SystemMessage.of("paster.system.message.appConfigNotFound", config.getAbsolutePath))
-      //  throw new IllegalStateException("app config file not found!");
       return null
     }
     system.setConfigFile(config)
     if (initialConfig) {
-      //  loadPluginsConfiguration(system)
       initialConfig = false
     }
     val input = new FileInputStream(config)
     try {
       system.getConfig.load(input)
       system.setExternalUrlPrefix(system.getConfig.getProperty("externalUrlPrefix", null))
-      logger.info(SystemMessage.of("paster.system.message.loadedLinesFromAppConf", "" + system.getConfig.size))
+      logger.info(SystemMessage.of("paster.system.message.loadedLinesFromAppConf",
+                                    "" + system.getConfig.size))
     } catch {
       case e: IOException =>
         throw SystemError.withError(0x6001, e)
@@ -323,10 +322,9 @@ class Boot private() extends Logged {
     def getAvailableLocaleFrom(lang: String): Locale = {
       if (StringUtils.isBlank(lang))
         return Locale.ENGLISH
-      for (l <- availableLocales) {
+      for (l <- availableLocales)
         if (l.toLanguageTag.equalsIgnoreCase(lang) || l.getLanguage.equalsIgnoreCase(lang))
           return l
-      }
       Locale.ENGLISH
     }
     def getSystemLocale: Locale = systemLocale
@@ -338,7 +336,6 @@ class Boot private() extends Logged {
     }
     private[base] def setSystemLocale(locale: Locale): Unit = {
       Assert.notNull(locale, "should be non null")
-      //checkLock()
       this.systemLocale = locale
     }
     def getAppCode: String = appCode
@@ -367,9 +364,8 @@ class Boot private() extends Logged {
       config.getProperty(setting)
     }
     def getSettingAsBoolean(setting: String, defaultValue: Boolean): Boolean = {
-      if (!config.containsKey(setting)) {
+      if (!config.containsKey(setting))
         return defaultValue
-      }
       java.lang.Boolean.valueOf(config.getProperty(setting))
     }
     def getSettingAsInt(setting: String, defaultValue: Int): Int = {

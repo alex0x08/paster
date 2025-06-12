@@ -37,11 +37,11 @@ object LiveWarClassLoader {
  * Custom classloader to load WAR without unpacking
  *
  * @param debug
- * show/hide debug messages
+ *    show/hide debug messages
  * @param warFileUrl
- * url to WAR file
+ *    url to WAR file
  * @param parent
- * parent classloader
+ *    parent classloader
  */
 class LiveWarClassLoader(debug: Boolean, warFileUrl: URL, parent: ClassLoader)
   extends ClassLoader(parent) with Closeable {
@@ -188,7 +188,7 @@ class LiveWarClassLoader(debug: Boolean, warFileUrl: URL, parent: ClassLoader)
     while ( {
       nRead = is.read(buf, 0, buf.length); nRead != -1
     })
-      out.write(buf, 0, nRead)
+    out.write(buf, 0, nRead)
     out.toByteArray
   }
 }
@@ -228,9 +228,9 @@ class VirtualWARUrlStreamHandler(val debug: Boolean) extends URLStreamHandler {
         override def getInputStream: InputStream = new ByteArrayInputStream(dupsData)
       }
     } else {
-      if (!LiveWarClassLoader.MAP.contains(fileName)) {
+      if (!LiveWarClassLoader.MAP.contains(fileName))
         throw new FileNotFoundException(fileName)
-      }
+
       val data = LiveWarClassLoader.MAP.get(fileName)
       if (data.isEmpty)
         throw new FileNotFoundException(fileName)

@@ -106,8 +106,11 @@ class SystemError extends AbstractI18nMessageStore("bundles/errorMessages") {
    * @param params  параметры
    * @return сформированное исключение
    */
-  private def createExceptionImpl[T <: PasterRuntimeException](clazz: Class[T], code: Int, message: String,
-                                                               parent: Exception, params: Array[AnyRef]) = {
+  private def createExceptionImpl[T <: PasterRuntimeException](clazz: Class[T],
+                                                               code: Int,
+                                                               message: String,
+                                                               parent: Exception,
+                                                               params: Array[AnyRef]) = {
     val errorMsg = getErrorMessage(code, message, parent, prefix = true, params)
     try
       clazz.getConstructor(classOf[Int], classOf[String], classOf[Exception])
@@ -252,7 +255,8 @@ object SystemError { // синглтон
  */
 object SystemMessage { // синглтон
   private val INSTANCE = new SystemMessage
-  def of(template: String, params: AnyRef*): String = INSTANCE.createMessage(template, params.toArray)
+  def of(template: String, params: AnyRef*): String =
+            INSTANCE.createMessage(template, params.toArray)
   def instance: SystemMessage = INSTANCE
 }
 class SystemMessage private() // приватный конструктор

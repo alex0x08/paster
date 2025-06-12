@@ -29,6 +29,8 @@ import java.util
  *
  * @tparam T  model class
  * @tparam QV query class
+ * @since 2.0
+ * @author 0x08
  */
 abstract class SearchCtrl[T <: Struct, QV <: Query] extends GenericListCtrl[T] {
   /**
@@ -48,7 +50,7 @@ abstract class SearchCtrl[T <: Struct, QV <: Query] extends GenericListCtrl[T] {
     super.fillListModel(model)
     model.addAttribute("availableResults", getAvailableResults)
   }
-  protected def fillSearchModel(model: Model): Unit = {
+  private def fillSearchModel(model: Model): Unit = {
     model.addAttribute("listMode", "search")
   }
   /**
@@ -133,7 +135,8 @@ abstract class SearchCtrl[T <: Struct, QV <: Query] extends GenericListCtrl[T] {
         Array(pageSize, model.asMap().get("result")))
     super.listImpl(request, model, page, NPpage, pageSize, sortColumn, sortAsc, s"${result}_ITEMS")
   }
-  @RequestMapping(value = Array("/search/{result:[a-z]+}/{page:[0-9]+}"), method = Array(RequestMethod.GET))
+  @RequestMapping(value = Array("/search/{result:[a-z]+}/{page:[0-9]+}"),
+    method = Array(RequestMethod.GET))
   @ModelAttribute(MvcConstants.NODE_LIST_MODEL)
   def searchByPath(@PathVariable("page") page: java.lang.Integer,
                    @PathVariable("result") result: String,

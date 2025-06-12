@@ -203,9 +203,7 @@ class PasteDao extends SearchableDaoImpl[Paste](classOf[Paste]) {
     // migrate from deprecated multiselect
     cq.select(cb.tuple(paths))
     val results = em.createQuery[Tuple](cq).getResultList
-
     val out = mutable.Map[String, Long]()
-
     out.put("total", results.get(0).get("total").asInstanceOf[Long])
     for (c <- channels) {
       out.put(c,

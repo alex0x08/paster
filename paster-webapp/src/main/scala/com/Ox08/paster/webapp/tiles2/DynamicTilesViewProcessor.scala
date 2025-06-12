@@ -152,7 +152,8 @@ class DynamicTilesViewProcessor extends Logged {
       throw new TilesException(s"No definition found for '$beanName'")
   }
   protected def createTilesRequest(applicationContext: ApplicationContext,
-                                   request: HttpServletRequest, response: HttpServletResponse): Request =
+                                   request: HttpServletRequest,
+                                   response: HttpServletResponse): Request =
     new ServletRequest(applicationContext,
       request, response) {
       override def getRequestLocale: Locale = RequestContextUtils.getLocale(request)

@@ -38,7 +38,7 @@
             Priority
         --%>
 
-        <span class="i ${model.priority}"
+        <span class="i priority_${model.priority}"
                 style="font-size:2em;" title="${priorTitle}">/</span>
         <c:if test="${model.stick}">
             <span class="i">]</span>

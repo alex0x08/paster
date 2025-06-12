@@ -34,9 +34,10 @@ object CPRConstants {
   val DEFAULT_SERIES_LENGTH = 16
   val DEFAULT_TOKEN_LENGTH = 16
 }
-class PasterPersistentRememberMeServices(key: String, uds: UserDetailsService, tokenDao: SessionTokensDao)
-  extends
-    AbstractRememberMeServices(key, uds) {
+class PasterPersistentRememberMeServices(key: String,
+                                         uds: UserDetailsService, tokenDao: SessionTokensDao)
+              extends
+                  AbstractRememberMeServices(key, uds) {
   private val log = Logged.getLogger(getClass)
   private val random = new SecureRandom()
   protected def processAutoLoginCookie(
@@ -151,7 +152,9 @@ class PasterPersistentRememberMeServices(key: String, uds: UserDetailsService, t
     Base64.getEncoder.encodeToString(newToken)
   }
   private def addCookie(
-                         token: SessionToken, request: HttpServletRequest, response: HttpServletResponse): Unit = {
+                         token: SessionToken,
+                         request: HttpServletRequest,
+                         response: HttpServletResponse): Unit = {
     setCookie(
       Array[String](token.series, token.tokenValue),
       CPRConstants.TOKEN_VALIDITY_SECONDS, request, response)

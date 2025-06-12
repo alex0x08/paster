@@ -18,13 +18,15 @@ import jakarta.persistence.{Column, Entity, Id, Table}
 import jakarta.validation.constraints.{NotNull, Size}
 import java.time.LocalDate
 
-/**
- * JPA entity, used to store sessions in database
- */
 
 object SessionToken {
   val MAX_USER_AGENT_LEN = 255
 }
+/**
+ * JPA entity, used to store sessions in database
+ * @since 1.0
+ * @author 0x08
+ */
 @Entity
 @Table(name = "P_USER_SESSIONS")
 class SessionToken extends java.io.Serializable {

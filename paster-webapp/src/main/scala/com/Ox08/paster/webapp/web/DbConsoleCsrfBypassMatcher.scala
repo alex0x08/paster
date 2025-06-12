@@ -17,14 +17,19 @@ package com.Ox08.paster.webapp.web
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher
 import org.springframework.security.web.util.matcher.RequestMatcher
-
 import java.util.regex.Pattern
-class CsrfSecurityRequestMatcher extends RequestMatcher {
+
+/**
+ * This is required to programmatically disable CSRF for H2 DBConsole,
+ * which does not support it
+ */
+class DbConsoleCsrfBypassMatcher extends RequestMatcher {
   val allowedMethods: Pattern = Pattern.compile("^(GET|POST|HEAD|TRACE|OPTIONS)$")
   private val unprotectedMatcher = PathPatternRequestMatcher
               .withDefaults.matcher( "/act/admin/dbconsole/**")
   override def matches(request: HttpServletRequest): Boolean = {
-    if (allowedMethods.matcher(request.getMethod).matches()) return false
+    if (allowedMethods.matcher(request.getMethod).matches())
+      return false
     !unprotectedMatcher.matches(request)
   }
 }

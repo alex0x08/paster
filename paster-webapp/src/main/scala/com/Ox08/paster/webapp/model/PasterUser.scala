@@ -19,20 +19,35 @@ import org.apache.commons.lang3.StringUtils
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 import java.util
+
+/**
+ * Paster user entity
+ * @param name
+ *          full name
+ * @param username
+ *          login
+ * @param pwd
+ *          password
+ * @param roles
+ *          set of roles (see below)
+ */
 class PasterUser(name: String,
                  username: String,
                  var pwd: String,
                  roles: util.Set[Role]) extends UserDetails with java.io.Serializable {
-  override def isEnabled = true
+  override def isEnabled = true // part of Spring Security's UserDetails, mean user is not disabled
   /**
+   * user not expired
    * @see org.springframework.security.userdetails.UserDetails#isAccountNonExpired()
    */
   override def isAccountNonExpired = true
   /**
+   * user account is not locked
    * @see org.springframework.security.userdetails.UserDetails#isAccountNonLocked()
    */
   override def isAccountNonLocked = true
   /**
+   * password is not expired
    * @see org.springframework.security.userdetails.UserDetails#isCredentialsNonExpired()
    */
   override def isCredentialsNonExpired = true
@@ -50,10 +65,25 @@ class PasterUser(name: String,
   override def toString: String =
     Logged.toStringSkip(this, Array("pwd"))
 }
+
+/**
+ * Set of system roles
+ */
 object Role {
+  // administrator with full access
   val ROLE_ADMIN = new Role("ROLE_ADMIN", "role.admin.name")
+  // ordinary user
   val ROLE_USER = new Role("ROLE_USER", "role.user.name")
 }
+
+/**
+ * System role
+ *
+ * @param code
+ *          code name, ex ROLE_ADMIN
+ * @param desc
+ *          role description
+ */
 class Role(code: String, desc: String) extends GrantedAuthority {
   def getAuthority: String = code
   def getName: String = desc

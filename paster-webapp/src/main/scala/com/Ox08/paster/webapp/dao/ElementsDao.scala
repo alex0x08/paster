@@ -61,7 +61,7 @@ class ChannelDao(@Value("${paster.channels:null}")
  */
 abstract class AbstractStringBasedDao(elementsAsString: String,
                                       defaultElement: String) extends Logged {
-  var elements: mutable.Set[String] = mutable.Set[String]()
+  private val elements: mutable.Set[String] = mutable.Set[String]()
   if (StringUtils.isBlank(elementsAsString))
       elements += defaultElement
   else {

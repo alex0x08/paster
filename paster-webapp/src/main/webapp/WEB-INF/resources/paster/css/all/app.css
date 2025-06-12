@@ -18,27 +18,35 @@ a {
 	text-decoration: none;
 }
 
-.priority_blocker {
+.priority_Blocker {
     color: #ff0000;
 }
-.priority_normal {
+.priority_Normal {
     color: #90ee90;
 }
-.priority_trivial {
+.priority_Trivial {
     color: #5ba1cf;
 }
 .img-map { 
     display: inline-block; 
     background: #fff url('../../../static/icons_map.png') no-repeat scroll top left; 
-    height: 16px; 
-    width: 16px; 
+    height: 17px;
+    width: 16px;
+    padding-top: 0.5em;
 }
 
 .img-ws { background-position: 0 -2px; }
 .img-atom { background-position: -16px 0; }
 .img-rss { background-position: 0 -18px; }
 .img-xls { background-position: -16px -19px; }
-.img-xml { background-position: -34px -19px; }
+.img-xml { background-position: -34px -17px; }
 .img-clip { background-position: -34px 0; }
 .img-json { background-position: -50px 0; }
 .img-logo { background-position: -50px -18px; }
+
+.navbar {
+    border-color: #ddd;
+}
+.paging {
+    font-size: small;
+}

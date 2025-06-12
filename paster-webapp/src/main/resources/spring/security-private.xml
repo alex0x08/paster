@@ -76,7 +76,7 @@
     <beans:bean id="defaultHttpFirewall" class="org.springframework.security.web.firewall.DefaultHttpFirewall"/>
     <http-firewall ref="defaultHttpFirewall"/>
 
-    <beans:bean id="csrfSecurityRequestMatcher" class="com.Ox08.paster.webapp.web.CsrfSecurityRequestMatcher"/>
+    <beans:bean id="csrfSecurityRequestMatcher" class="com.Ox08.paster.webapp.web.DbConsoleCsrfBypassMatcher"/>
     <beans:bean id="userManager"
                 class="com.Ox08.paster.webapp.manager.UserManager">
     </beans:bean>

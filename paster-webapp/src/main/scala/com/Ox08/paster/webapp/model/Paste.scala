@@ -35,6 +35,13 @@ object Paste extends Struct {
    */
   val TITLE_LENGTH = 256
 }
+
+/**
+ * Tag entity
+ * @since 1.0
+ * @author 0x08
+ * @param tagString
+ */
 @Entity
 @Indexed(index = "indexes/tags")
 @XStreamAlias("Tag")
@@ -45,9 +52,9 @@ class Tag(tagString: String) extends DBObject {
   @Column(name = "tag_name", length = 256)
   @Size(min = 3, message = "{struct.name.validator}")
   @XStreamAsAttribute
-  var name: String = tagString
+  var name: String = tagString // single tag
   @transient
-  var total: Int = 0
+  var total: Int = 0 // count of occurrences
   def this() = this(null)
 }
 /**
@@ -70,7 +77,6 @@ class Paste extends Struct with java.io.Serializable {
   @NotNull(message = "{validator.not-null}")
   @Column(nullable = false, unique = true, length = 255, updatable = false)
   @KeywordField
-  //(index = Index.NO, store = Store.YES, termVector = TermVector.NO)
   val uuid: String = UUID.randomUUID().toString
   /**
    * paste's body
@@ -82,17 +88,15 @@ class Paste extends Struct with java.io.Serializable {
   @Column(name = "paste_text", length = Integer.MAX_VALUE)
   var text: String = _
   /**
-   * link to preview image
+   * link to preview image (file id)
    */
   @XStreamOmitField
-  //@Field(store = Store.YES, index = Index.NO)
   @Column(name = "p_thumb_img")
   @JsonIgnore
   var thumbImage: String = _
   /**
    * paste title
    */
-  //@NotNull
   @Column(name = "paste_title", length = 256)
   @Size(min = 3, max = 256, message = "{struct.name.validator}")
   @FullTextField

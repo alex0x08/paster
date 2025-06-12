@@ -31,7 +31,9 @@ class CommentDao extends SearchableDaoImpl[Comment](classOf[Comment]) {
   /**
    * Deletes all existing comments for selected paste id
    * @param pasteId
+   *        selected paste id
    */
+  @Transactional
   def deleteCommentsFor(pasteId: Integer): Unit = {
     val cr = new CriteriaSet
     val cd =cr.cb.createCriteriaDelete(classOf[Comment])
@@ -48,29 +50,38 @@ class CommentDao extends SearchableDaoImpl[Comment](classOf[Comment]) {
    * list of IDs
    */
   def getSubCommentsIdsFor(commentId: Integer): List[Integer] = {
-    val out = List[Integer]()
+    var out = List[Integer]()
     val cr = new CriteriaSet
     cr.ct.select(cr.r.get("id"))
     cr.ct.where(Array(cr.cb.equal(cr.r.get("parentId"), commentId)): _*)
     val tupleResult: java.util.List[Tuple] = em.createQuery(cr.ct)
       .setMaxResults(BaseDao.MAX_RESULTS).getResultList
-    for (t <- tupleResult.asScala) {
-      out :+ t.get(0).asInstanceOf[Integer]
-    }
+    for (t <- tupleResult.asScala)
+     out= out.appended (t.get(0).asInstanceOf[Integer])
     out
   }
   /**
-   * Return all comments for selected paste object
+   * Retrieve comments for selected paste
    *
    * @param pasteId
-   * selected paste's id
+   *      selected paste's id
    * @return
-   * list of comments
+   *      list of comments
    */
   def getCommentsForPaste(pasteId: Integer): java.util.List[Comment] =
     getListByKeyValue("pasteId", pasteId,
       Option("lastModified"),
       Option(true))
+
+  /**
+   * Fill highlighted text
+   * @param highlighter
+   *        Lucene highlighter
+   * @param queryParser
+   *      Lucene query parser
+   * @param model
+   *        selected comment DTO
+   */
   override def fillHighlighted(highlighter: Highlighter,
                                queryParser: QueryParser,
                                model: Comment): Unit = {

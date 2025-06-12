@@ -24,20 +24,23 @@ import java.text.SimpleDateFormat
 import java.util.{Base64, Calendar}
 import scala.collection.mutable
 object ResourceManager {
-  val PATH_FORMAT = new SimpleDateFormat("YYYY/MM/dd/")
+  // this is used to build dynamic paths inside file storage
+  private val PATH_FORMAT = new SimpleDateFormat("YYYY/MM/dd/")
 }
 /**
  * Resource Manager to persist/retrieve binaries attached to entities
+ * @since 3.0
+ * @author 0x08
  */
 @Component("resourcePathHelper")
 class ResourceManager extends Logged {
   /**
-   * Get file from object id and resource type
+   * Retrieve java.io.File object from id and resource type
    *
    * @param resourceType
-   * single char resource type
+   *          single char resource type
    * @param fid
-   * object id
+   *          file id
    * @return
    */
   def getResource(resourceType: Char, fid: String): File = {
@@ -63,20 +66,26 @@ class ResourceManager extends Logged {
    * @param imgData
    * binary image data
    * @return
+   *    saved file name
    */
   def saveResource(pt: Char, objId: String, imgData: String): String = {
+    // build file name for new resource
     val fileName = new mutable.StringBuilder()
       .append(ResourceManager.PATH_FORMAT.format(Calendar.getInstance().getTime))
       .append(objId)
       .append('.')
       .append(getExtFor(pt))
       .toString
+    // build full file path
     val fileImg = FileSystems.getDefault
       .getPath(Boot.BOOT.getSystemInfo.getAppHome.getAbsolutePath, "resources",
         pt.toString,
         fileName).toFile
+    // remove 'base64,' prefix
     val imgData2 = imgData.substring(imgData.indexOf(',') + 1)
+    // decode base64 and save to file
     FileUtils.writeByteArrayToFile(fileImg, Base64.getDecoder.decode(imgData2.getBytes))
+    // return file name
     fileName.replaceAll("/", ",")
   }
   /**
@@ -86,7 +95,7 @@ class ResourceManager extends Logged {
    * single char resource type
    * @return
    */
-  def getExtFor(resourceType: Char): String = resourceType match {
+  private def getExtFor(resourceType: Char): String = resourceType match {
     case 'r' =>
       "png"
     case _ =>

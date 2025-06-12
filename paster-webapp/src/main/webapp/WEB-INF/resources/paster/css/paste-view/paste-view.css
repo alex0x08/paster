@@ -103,6 +103,10 @@
 .syntaxhighlighter table td.gutter .line {
   text-align: right !important;
   padding: 0 0.5em 0 1em !important;
+  /*
+    gutter class conflicts with bootstrap
+  */
+  max-width: 4em !important;
 }
 .syntaxhighlighter table td.code .line {
   padding: 0 1em !important;
@@ -385,14 +389,11 @@
     box-shadow: inset 2px 2px 2px 0px #dddddd;
     box-sizing:border-box; -moz-box-sizing:border-box;
     margin-top: 0.5em;
-
     padding-left: 0.5em;
     max-width: 30em;
-  /*  max-height: 4em; */
+    /*  max-height: 4em; */
     width: 30em;
-    height: 4em; 
- 
-
+    height: 4em;
 }
 
 *.html2canvasreset{
@@ -401,7 +402,6 @@
     height: auto !important;
     max-height: auto !important;
 }
-
 
 .button_color_virgins_blood{
 border:1px solid #df0909; 

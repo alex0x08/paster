@@ -187,9 +187,8 @@ abstract class BaseDao[T <: java.io.Serializable, PK <: java.io.Serializable](mo
       cr.ct.where(Array(cr.cb.lt(cr.r.get("id"), from.asInstanceOf[Long])): _*)
     val tupleResult: java.util.List[Tuple] = em.createQuery(cr.ct)
       .setMaxResults(BaseDao.MAX_RESULTS).getResultList
-    for (t <- tupleResult.asScala) {
+    for (t <- tupleResult.asScala)
       out.add(t.get(0).asInstanceOf[PK])
-    }
     out
   }
 }

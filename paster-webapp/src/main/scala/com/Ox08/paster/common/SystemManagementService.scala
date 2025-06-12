@@ -46,7 +46,7 @@ class SystemManagementServiceImpl extends SystemManagementService with Logged {
      * пауза в секунду для отрисовки страницы с прогрессом перезагрузки
      */
     try
-      Thread.sleep(1000)
+      Thread.sleep(3000)
     catch {
       case e: Exception =>
         e.printStackTrace()
@@ -87,9 +87,8 @@ class SystemManagementServiceImpl extends SystemManagementService with Logged {
         command.add(mainCommand(0))
       }
       // finally add program arguments
-      for (i <- 1 until mainCommand.length) {
+      for (i <- 1 until mainCommand.length)
         command.add(mainCommand(i))
-      }
       logger.info("cmd: {}", command.toString)
       val builder = new ProcessBuilder(command)
       val env = System.getenv

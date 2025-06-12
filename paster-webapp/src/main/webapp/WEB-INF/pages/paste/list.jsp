@@ -122,7 +122,7 @@
                                         <c:if test="${paste.stick}">
                                             <span class="i" title="Paste sticked">]</span>
                                         </c:if>            
-                                        <a class="i ${paste.priority}" style="font-size:2em;"
+                                        <a class="i priority_${paste.priority}" style="font-size:2em;"
                                            title="<c:out value="${paste.id}"/>: ${priorTitle}. Click to search with same priority."
                                            href="<c:url value='/main/paste/list/search?query=priority:${paste.priority}'/>">/</a>
 
@@ -169,7 +169,7 @@
                         </div>
                     </div>
                 </c:when>
-                <c:when test="${paste['class'].name eq 'com.Ox08.paster.webapp.Comment'}">
+                <c:when test="${paste['class'].name eq 'com.Ox08.paster.webapp.model.Comment'}">
                     <c:set property="curDate" value="${paste.lastModifiedDt}" target="${splitHelper}"/>
                     <a href="<c:url value='/${paste.id}'></c:url>" title="Click to view paste vol. ${paste.id}">
                         <span  class="pasteTitle"><c:out value="${paste.text}" escapeXml="true"  /></span>

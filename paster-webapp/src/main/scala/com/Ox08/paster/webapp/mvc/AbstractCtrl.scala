@@ -22,7 +22,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import org.springframework.beans.factory.annotation.{Autowired, Value}
 import org.springframework.context.MessageSource
 import org.springframework.orm.ObjectRetrievalFailureException
+import org.springframework.ui.Model
 import org.springframework.web.bind.annotation._
+
 import java.util.Locale
 /**
  * Global constants, used in controllers
@@ -71,9 +73,11 @@ abstract class AbstractCtrl extends Logged {
    *      error page
    */
   @ExceptionHandler(Array(classOf[Throwable]))
-  protected def handleAllExceptions(ex: Throwable): String = {
+  protected def handleAllExceptions(ex: Throwable, model:Model): String = {
     // all such errors are *not* optional, so we log them with 'error' level
     logger.error(ex.getMessage, ex)
+    model.addAttribute("appId", appId)
+    model.addAttribute("systemInfo",systemInfo)
     MvcConstants.page500
   }
   @ModelAttribute("appId")

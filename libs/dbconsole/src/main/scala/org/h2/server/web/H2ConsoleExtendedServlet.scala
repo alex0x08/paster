@@ -29,7 +29,8 @@ import javax.sql.DataSource
  *
  * It was created to automatically bind connection from local datasource
  * to user's session and open console automatically.
- *
+ * @author 0x08
+ * @since 2.0
  */
 class H2ConsoleExtendedServlet extends JakartaWebServlet  {
 
@@ -38,22 +39,22 @@ class H2ConsoleExtendedServlet extends JakartaWebServlet  {
   private var isInstalled: Boolean = false
   private var dataSource: DataSource = _
   private var server:WebServer = _
+
   override def destroy(): Unit = {
     if (server!=null)
         server.stop()
   }
   override def init(): Unit = {
-
+    // need to check first if Paster has been installed
     isInstalled = getServletContext.getAttribute("pasterInstalled") != null
     if (!isInstalled) return
-    server = new WebServer
-    if (logger.isDebugEnabled) {
+    if (logger.isDebugEnabled)
       logger.debug("h2 servlet init..")
-    }
+    server = new WebServer
     val ctx: ApplicationContext = WebApplicationContextUtils
       .getWebApplicationContext(getServletContext)
-
-      dataSource = ctx.getBean("dataSource").asInstanceOf[DataSource]
+    // take existing datasource from Spring context
+    dataSource = ctx.getBean("dataSource").asInstanceOf[DataSource]
     try {
       server.setAllowChunked(false)
       server.init()
@@ -151,11 +152,13 @@ class H2ConsoleExtendedServlet extends JakartaWebServlet  {
       return session
     }
   }
-  class ExtendedHttpServletRequestWrapper(req: HttpServletRequest, params: java.util.Map[String, String])
+  class ExtendedHttpServletRequestWrapper(req: HttpServletRequest,
+                                          params: java.util.Map[String, String])
     extends HttpServletRequestWrapper(req) {
     override def getParameter(name: String): String = {
       // if we added one, return that one
-      val out = if (params.containsKey(name)) params.get(name) else {
+      val out = if (params.containsKey(name)) params.get(name)
+      else {
         // otherwise return what's in the original request
         super.getParameter(name)
       }

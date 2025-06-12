@@ -39,7 +39,7 @@ import scala.math.abs
 @RequestMapping(value = Array("/paste"))
 class PasteListCtrl extends SearchCtrl[Paste, AuthorQuery] {
   @Value("${paster.paste.list.splitter.days:7}")
-  val splitDays: Int = 0
+  private val splitDays: Int = 0
   @Autowired
   val channelDao: ChannelDao = null
   @Autowired
@@ -63,7 +63,8 @@ class PasteListCtrl extends SearchCtrl[Paste, AuthorQuery] {
     model.addAttribute("availableSourceTypes", channelDao.getAvailableElements.asJava)
     model.addAttribute("splitHelper", new DateSplitHelper(splitDays, Locale.getDefault))
     model.addAttribute("sortDesc", false)
-    val stats: java.util.Map[String,Long] = pasteDao.countStats(channelDao.getAvailableElements.toArray).asJava
+    val stats: java.util.Map[String,Long] = pasteDao
+      .countStats(channelDao.getAvailableElements.toArray).asJava
     model.addAttribute("pasteStats", stats)
   }
   @RequestMapping(value = Array("/search/{result}/{page:[0-9]+}",
@@ -190,7 +191,7 @@ class PasteListCtrl extends SearchCtrl[Paste, AuthorQuery] {
   @ResponseBody
   def listOwnBody(): java.util.List[Paste] = manager().getByAuthor(getCurrentUser)
   private val pasterListCallback: PasteListCallback = new PasteListCallback(null, true, null)
-  class PasteListCallback(channel: String, sortAsc: Boolean, integrationCode: String)
+  private class PasteListCallback(channel: String, sortAsc: Boolean, integrationCode: String)
     extends SourceCallback[Paste] {
     override def invokeCreate(): PagedListHolder[Paste] = {
       val ph = new ExtendedPageListHolder[Paste](
@@ -210,9 +211,10 @@ class PasteListCtrl extends SearchCtrl[Paste, AuthorQuery] {
       ph
     }
   }
+  // don't make private! this is used from EL!
   class DateSplitHelper(splitDays: Int, locale: Locale) {
-    var prevDate: Date = _
-    var curDate: Date = _
+    private var prevDate: Date = _
+    private var curDate: Date = _
     var total: Int = 0
     var title: String = _
     def setCurDate(date: Date): Unit = {
@@ -227,7 +229,7 @@ class PasteListCtrl extends SearchCtrl[Paste, AuthorQuery] {
         return false
       val diff = curDate.getTime - prevDate.getTime
       val d = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS)
-      if (abs(d) > 14) {
+      if (abs(d) > splitDays) {
         title = PasteListCtrl.this.getResource("paste.list.slider.title",
           Array(curDate, prevDate, total), locale)
         prevDate = curDate
