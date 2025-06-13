@@ -46,15 +46,26 @@
             <version>${jetty.version}</version>
             <!--type>pom</type-->
         </dependency>
-        <dependency>
+        <!--dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-slf4j-impl</artifactId>
             <version>${jetty.version}</version>
-        </dependency>
+        </dependency-->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>${slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jcl-over-slf4j</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${logback.version}</version>
         </dependency>
 
     </dependencies>

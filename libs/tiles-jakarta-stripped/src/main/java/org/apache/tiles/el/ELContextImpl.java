@@ -57,10 +57,7 @@ public class ELContextImpl extends ELContext {
          */
         @Override
         public ValueExpression resolveVariable(String variable) {
-            if (vars == null) {
-                return null;
-            }
-            return vars.get(variable);
+            return vars == null ? null : vars.get(variable);
         }
         /**
          * {@inheritDoc}
@@ -68,9 +65,10 @@ public class ELContextImpl extends ELContext {
         @Override
         public ValueExpression setVariable(String variable,
                                            ValueExpression expression) {
-            if (vars == null) {
-                vars = new HashMap<>();
+            if (vars != null) {
+                return vars.put(variable, expression);
             }
+            vars = new HashMap<>();
             return vars.put(variable, expression);
         }
     }
@@ -113,9 +111,9 @@ public class ELContextImpl extends ELContext {
      */
     @Override
     public VariableMapper getVariableMapper() {
-        if (this.variableMapper == null) {
+        if (this.variableMapper == null)
             this.variableMapper = new VariableMapperImpl();
-        }
+
         return this.variableMapper;
     }
 }

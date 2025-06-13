@@ -68,9 +68,9 @@ public abstract class PostfixedApplicationResource implements ApplicationResourc
         if (suffixIndex < 0) {
             suffix = "";
             suffixIndex = localePath.length();
-        } else {
+        } else
             suffix = localePath.substring(suffixIndex);
-        }
+
         if (prefixIndex < 0) {
             pathPrefix = localePath.substring(0, suffixIndex);
             locale = Locale.ROOT;
@@ -132,9 +132,9 @@ public abstract class PostfixedApplicationResource implements ApplicationResourc
      * @return the matching postfix.
      */
     private static String getPostfix(Locale locale) {
-        if (locale == null) {
+        if (locale == null)
             return "";
-        }
+
         StringBuilder builder = new StringBuilder();
         String language = locale.getLanguage();
         String country = locale.getCountry();
@@ -225,12 +225,12 @@ public abstract class PostfixedApplicationResource implements ApplicationResourc
                 : new Locale(locale.getLanguage(), locale.getCountry());
         Locale result = locale;
         if (!availableLocales.contains(withoutVariant)) {
-            if (!result.getCountry().isEmpty()) {
+            if (!result.getCountry().isEmpty())
                 result = Locale.forLanguageTag(result.getLanguage());
-            }
-            if (!availableLocales.contains(result)) {
+
+            if (!availableLocales.contains(result))
                 result = Locale.ROOT;
-            }
+
         }
         return result;
     }

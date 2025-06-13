@@ -61,9 +61,9 @@ public class RemovableKeySet extends KeySet {
     public boolean removeAll(Collection<?> c) {
         Collection<String> realCollection = (Collection<String>) c;
         boolean retValue = false;
-        for (String entry : realCollection) {
+        for (String entry : realCollection)
             retValue |= remove(entry);
-        }
+
         return retValue;
     }
     @SuppressWarnings("unchecked")
@@ -79,9 +79,9 @@ public class RemovableKeySet extends KeySet {
                 keysToRemove.add(key);
             }
         }
-        for (String key : keysToRemove) {
+        for (String key : keysToRemove)
             request.removeValue(key);
-        }
+
         return retValue;
     }
 }

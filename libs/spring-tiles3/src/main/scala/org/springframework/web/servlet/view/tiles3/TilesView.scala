@@ -82,10 +82,9 @@ class TilesView extends AbstractUrlBasedView {
     val servletContext = getServletContext
     Assert.state(servletContext != null, "No ServletContext")
     this.applicationContext = ServletUtil.getApplicationContext(servletContext)
-    if (this.renderer == null) {
-      val container = TilesAccess.getContainer(this.applicationContext)
-      this.renderer = new DefinitionRenderer(container)
-    }
+    if (this.renderer == null)
+      this.renderer = new DefinitionRenderer(
+        TilesAccess.getContainer(this.applicationContext))
   }
 
   override def checkResource(locale: Locale): Boolean = {

@@ -48,9 +48,9 @@ public class ScopeMap extends ReadOnlyEnumerationMap<Object> {
      */
     public void clear() {
         Enumeration<String> keys = context.getKeys();
-        while (keys.hasMoreElements()) {
+        while (keys.hasMoreElements())
             context.removeValue(keys.nextElement());
-        }
+
     }
     /**
      * {@inheritDoc}
@@ -136,9 +136,9 @@ public class ScopeMap extends ReadOnlyEnumerationMap<Object> {
             Collection<Map.Entry<String, Object>> realCollection
                     = (Collection<java.util.Map.Entry<String, Object>>) c;
             boolean retValue = false;
-            for (Map.Entry<String, Object> entry : realCollection) {
+            for (Map.Entry<String, Object> entry : realCollection)
                 retValue |= remove(entry);
-            }
+
             return retValue;
         }
         @SuppressWarnings("unchecked")

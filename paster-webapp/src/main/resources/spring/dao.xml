@@ -50,6 +50,7 @@ Note that we don't use 'Spring Data', just old good JPA and Criteria API.
                 <entry key="hibernate.hbm2ddl.auto"
                        value="update"/>
                 <entry key="hibernate.search.mapping.build_missing_discovered_jandex_indexes" value="false"/>
+                <entry key="hibernate.search.backend.lucene_version" value="LATEST"/>
             </map>
         </property>
     </bean>

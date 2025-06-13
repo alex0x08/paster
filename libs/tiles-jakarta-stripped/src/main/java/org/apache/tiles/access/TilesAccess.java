@@ -70,7 +70,8 @@ public final class TilesAccess {
             context.getApplicationScope().remove(key);
         } else {
             if (log.isInfoEnabled())
-                log.info("Publishing TilesContext for context: %s".formatted(context.getClass().getName()));
+                log.info("Publishing TilesContext for context: %s"
+                        .formatted(context.getClass().getName()));
 
             context.getApplicationScope().put(key, container);
         }
@@ -95,9 +96,9 @@ public final class TilesAccess {
      */
     public static TilesContainer getContainer(ApplicationContext context,
                                               String key) {
-        if (key == null) {
+        if (key == null)
             key = CONTAINER_ATTRIBUTE;
-        }
+
         return (TilesContainer) context.getApplicationScope().get(key);
     }
     /**

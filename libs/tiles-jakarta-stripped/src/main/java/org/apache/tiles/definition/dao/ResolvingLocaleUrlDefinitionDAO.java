@@ -54,8 +54,8 @@ public class ResolvingLocaleUrlDefinitionDAO extends
 
     @Override
     protected Map<String, Definition> loadDefinitions(Locale customizationKey) {
-        Map<String, Definition> localeDefsMap = super.loadDefinitions(customizationKey);
-        Map<String, Definition> defsMap = definitionResolver
+        Map<String, Definition> localeDefsMap = super.loadDefinitions(customizationKey),
+                defsMap = definitionResolver
                 .storeDefinitionPatterns(copyDefinitionMap(localeDefsMap),
                         customizationKey);
         resolveInheritances(defsMap, customizationKey);
@@ -69,10 +69,9 @@ public class ResolvingLocaleUrlDefinitionDAO extends
     protected Definition getDefinitionFromResolver(String name,
                                                    Locale customizationKey) {
         Definition retValue = super.getDefinitionFromResolver(name, customizationKey);
-        if (retValue != null && retValue.getExtends() != null) {
-            Definition parent = getDefinition(retValue.getExtends(), customizationKey);
-            retValue.inherit(parent);
-        }
+        if (retValue != null && retValue.getExtends() != null)
+            retValue.inherit(getDefinition(retValue.getExtends(), customizationKey));
+
         return retValue;
     }
     /**
@@ -142,12 +141,11 @@ public class ResolvingLocaleUrlDefinitionDAO extends
     @Override
     protected Map<String, Definition> copyDefinitionMap(
             Map<String, Definition> localeDefsMap) {
-        Map<String, Definition> retValue = new LinkedHashMap<>(
+        final Map<String, Definition> retValue = new LinkedHashMap<>(
                 localeDefsMap.size());
-        for (Map.Entry<String, Definition> entry : localeDefsMap.entrySet()) {
-            Definition definition = new Definition(entry.getValue());
-            retValue.put(entry.getKey(), definition);
-        }
+        for (Map.Entry<String, Definition> entry : localeDefsMap.entrySet())
+            retValue.put(entry.getKey(), new Definition(entry.getValue()));
+
         return retValue;
     }
 }

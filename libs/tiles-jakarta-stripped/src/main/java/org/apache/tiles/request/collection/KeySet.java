@@ -69,11 +69,11 @@ public class KeySet implements Set<String> {
     @Override
     public boolean containsAll(Collection<?> c) {
         Collection<String> realCollection = (Collection<String>) c;
-        for (String key : realCollection) {
-            if (request.getValue(key(key)) == null) {
+        for (String key : realCollection)
+            if (request.getValue(key(key)) == null)
                 return false;
-            }
-        }
+
+
         return true;
     }
     @Override
@@ -117,9 +117,9 @@ public class KeySet implements Set<String> {
     private List<String> toList() {
         List<String> entries = new ArrayList<>();
         Enumeration<String> names = request.getKeys();
-        while (names.hasMoreElements()) {
+        while (names.hasMoreElements())
             entries.add(names.nextElement());
-        }
+
         return entries;
     }
     /**

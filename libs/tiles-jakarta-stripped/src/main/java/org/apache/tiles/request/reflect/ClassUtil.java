@@ -97,7 +97,8 @@ public final class ClassUtil {
         } catch (IllegalAccessException e) {
             throw new CannotInstantiateObjectException(
                     "Unable to access factory class: '%s'".formatted(className), e);
-        } catch (InstantiationException | NoSuchMethodException | SecurityException | IllegalArgumentException |
+        } catch (InstantiationException | NoSuchMethodException
+                 | SecurityException | IllegalArgumentException |
                  InvocationTargetException e) {
             throw new CannotInstantiateObjectException(
                     "Unable to instantiate factory class: '%s'. Make sure that this class has a default constructor"
@@ -119,13 +120,12 @@ public final class ClassUtil {
         try {
             info = Introspector.getBeanInfo(clazz);
         } catch (Exception ex) {
-            if (log.isDebugEnabled()) {
-                log.debug("Cannot inspect class " + clazz, ex);
-            }
+            if (log.isDebugEnabled())
+                log.debug("Cannot inspect class " +clazz, ex);
         }
-        if (info == null) {
+        if (info == null)
             return;
-        }
+
         for (PropertyDescriptor pd : info.getPropertyDescriptors()) {
             pd.setValue("type", pd.getPropertyType());
             pd.setValue("resolvableAtDesignTime", Boolean.TRUE);

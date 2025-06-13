@@ -94,7 +94,8 @@ import java.util
  * @since 3.2
  */
 object TilesConfigurer {
-  private val tilesElPresent = ClassUtils.isPresent("org.apache.tiles.el.ELAttributeEvaluator", classOf[TilesConfigurer].getClassLoader)
+  private val tilesElPresent = ClassUtils.isPresent("org.apache.tiles.el.ELAttributeEvaluator",
+    classOf[TilesConfigurer].getClassLoader)
 
   private class CompositeELResolverImpl extends CompositeELResolver {
     add(new ScopeELResolver)
@@ -158,7 +159,8 @@ class TilesConfigurer(@Nullable private val definitionsFactoryClass: Class[_ <: 
   }
 
   private class SpringTilesContainerFactory extends BasicTilesContainerFactory {
-    override protected def getSources(applicationContext: ApplicationContext): util.List[ApplicationResource] = if (definitions != null) {
+    override protected def getSources(applicationContext: ApplicationContext): util.List[ApplicationResource] =
+          if (definitions != null) {
       val result = new util.ArrayList[ApplicationResource]
       for (definition <- definitions) {
         val resources = applicationContext.getResources(definition)
@@ -169,7 +171,8 @@ class TilesConfigurer(@Nullable private val definitionsFactoryClass: Class[_ <: 
     else super.getSources(applicationContext)
 
     override protected def instantiateLocaleDefinitionDao(applicationContext: ApplicationContext,
-                                                          resolver: LocaleResolver): BaseLocaleUrlDefinitionDAO = super.instantiateLocaleDefinitionDao(applicationContext, resolver)
+                                                          resolver: LocaleResolver): BaseLocaleUrlDefinitionDAO =
+              super.instantiateLocaleDefinitionDao(applicationContext, resolver)
 
     override protected def createDefinitionsReader(context: ApplicationContext): DefinitionsReader = {
       val reader = super.createDefinitionsReader(context).asInstanceOf[DigesterDefinitionsReader]
@@ -178,7 +181,9 @@ class TilesConfigurer(@Nullable private val definitionsFactoryClass: Class[_ <: 
       reader
     }
 
-    override protected def createDefinitionsFactory(applicationContext: ApplicationContext, resolver: LocaleResolver): DefinitionsFactory = if (definitionsFactoryClass != null) {
+    override protected def createDefinitionsFactory(applicationContext: ApplicationContext,
+                                                    resolver: LocaleResolver): DefinitionsFactory =
+      if (definitionsFactoryClass != null) {
       val factory = BeanUtils.instantiateClass(definitionsFactoryClass)
       factory match {
         case aware: ApplicationContextAware => aware.setApplicationContext(applicationContext)
@@ -192,10 +197,13 @@ class TilesConfigurer(@Nullable private val definitionsFactoryClass: Class[_ <: 
           createLocaleDefinitionDao(applicationContext, resolver))
       factory
     }
-    else super.createDefinitionsFactory(applicationContext, resolver)
+    else
+      super.createDefinitionsFactory(applicationContext, resolver)
 
-    override protected def createPreparerFactory(context: ApplicationContext): PreparerFactory = if (preparerFactoryClass != null) BeanUtils.instantiateClass(preparerFactoryClass)
-    else super.createPreparerFactory(context)
+    override protected def createPreparerFactory(context: ApplicationContext): PreparerFactory =
+      if (preparerFactoryClass != null) BeanUtils.instantiateClass(preparerFactoryClass)
+    else
+      super.createPreparerFactory(context)
 
     override protected def createLocaleResolver(context: ApplicationContext) = new SpringLocaleResolver
 
@@ -212,7 +220,8 @@ class TilesConfigurer(@Nullable private val definitionsFactoryClass: Class[_ <: 
   private class TilesElActivator {
     def createEvaluator: AttributeEvaluator = {
       val evaluator = new ELAttributeEvaluator
-      evaluator.setExpressionFactory(JspFactory.getDefaultFactory.getJspApplicationContext(servletContext).getExpressionFactory)
+      evaluator.setExpressionFactory(JspFactory.getDefaultFactory
+        .getJspApplicationContext(servletContext).getExpressionFactory)
       evaluator.setResolver(new TilesConfigurer.CompositeELResolverImpl)
       evaluator
     }

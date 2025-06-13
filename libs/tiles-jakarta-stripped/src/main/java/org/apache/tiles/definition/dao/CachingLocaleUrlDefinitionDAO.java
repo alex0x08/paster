@@ -91,9 +91,9 @@ public class CachingLocaleUrlDefinitionDAO extends BaseLocaleUrlDefinitionDAO
      */
     public Definition getDefinition(String name, Locale customizationKey) {
         Definition retValue = null;
-        if (customizationKey == null) {
+        if (customizationKey == null)
             customizationKey = Locale.ROOT;
-        }
+
         Map<String, Definition> definitions = getDefinitions(customizationKey);
         if (definitions != null) {
             retValue = definitions.get(name);
@@ -154,9 +154,9 @@ public class CachingLocaleUrlDefinitionDAO extends BaseLocaleUrlDefinitionDAO
     protected synchronized Map<String, Definition> checkAndloadDefinitions(Locale customizationKey) {
         Map<String, Definition> existingDefinitions = locale2definitionMap.get(customizationKey);
         boolean definitionsAlreadyLoaded = existingDefinitions != null;
-        if (definitionsAlreadyLoaded) {
+        if (definitionsAlreadyLoaded)
             return existingDefinitions;
-        }
+
         if (checkRefresh && refreshRequired()) {
             locale2definitionMap.clear();
             definitionResolver.clearPatternPaths(customizationKey);

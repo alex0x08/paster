@@ -152,16 +152,15 @@ class H2ConsoleExtendedServlet extends JakartaWebServlet  {
       return session
     }
   }
-  class ExtendedHttpServletRequestWrapper(req: HttpServletRequest,
-                                          params: java.util.Map[String, String])
+  private class ExtendedHttpServletRequestWrapper(req: HttpServletRequest,
+                                                  params: java.util.Map[String, String])
     extends HttpServletRequestWrapper(req) {
     override def getParameter(name: String): String = {
       // if we added one, return that one
       val out = if (params.containsKey(name)) params.get(name)
-      else {
+      else
         // otherwise return what's in the original request
         super.getParameter(name)
-      }
       out
     }
   }

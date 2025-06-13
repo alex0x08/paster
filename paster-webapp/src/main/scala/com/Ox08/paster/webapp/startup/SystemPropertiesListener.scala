@@ -16,6 +16,7 @@
 package com.Ox08.paster.webapp.startup
 import com.Ox08.paster.webapp.base.{Boot, Logged, SystemError, SystemMessage}
 import jakarta.servlet.{ServletContextEvent, ServletContextListener}
+import org.slf4j.{Logger, LoggerFactory}
 
 import java.io.{File, IOException}
 import java.util.Locale
@@ -24,7 +25,7 @@ import java.util.Locale
  * This servlet listener used to read configuration properties and put them into environment,
  * so loaded *before* Spring and other frameworks
  */
-class SystemPropertiesListener extends ServletContextListener with Logged {
+class SystemPropertiesListener extends ServletContextListener {
   object SystemConstants {
     val APP_BASE: String = ".apps"
     val APP_NAME = "paster"
@@ -32,6 +33,8 @@ class SystemPropertiesListener extends ServletContextListener with Logged {
   override def contextInitialized(event: ServletContextEvent): Unit = {
     try {
       doBoot()
+
+      val logger: Logger = LoggerFactory.getLogger(getClass.getName)
       // configure 'scratch dir', used for JSP compiler
       val scratchDir = new File(Boot.BOOT.getSystemInfo.getTempDir,"servletTmp")
       if (!scratchDir.exists() && !scratchDir.mkdirs())
@@ -67,7 +70,7 @@ class SystemPropertiesListener extends ServletContextListener with Logged {
   override def contextDestroyed(servletContextEvent: ServletContextEvent): Unit = {}
   private def doBoot(): Unit = {
     // re-initialize parent logger
-    //SLF4JBridgeHandler.removeHandlersForRootLogger()
+    //org.slf4j.bridge.SLF4JBridgeHandler.removeHandlersForRootLogger()
     // re-install parent logger
     //SLF4JBridgeHandler.install()
     // use English locale as default

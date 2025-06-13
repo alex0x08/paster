@@ -56,11 +56,11 @@
             <scope>provided</scope>
         </dependency>
         <!-- used for conditional logic in logger configuration -->
-        <dependency>
+        <!--dependency>
             <groupId>org.codehaus.janino</groupId>
             <artifactId>janino</artifactId>
             <version>3.1.12</version>
-        </dependency>
+        </dependency-->
         <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
@@ -93,17 +93,6 @@
             <artifactId>slf4j-api</artifactId>
             <version>${slf4j.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>log4j-over-slf4j</artifactId>
-            <version>${slf4j.version}</version>
-        </dependency>
-
-        <!--dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>jul-to-slf4j</artifactId>
-            <version>${slf4j.version}</version>
-        </dependency-->
 
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -511,6 +500,7 @@
 
                     <systemProperties>
                         <appDebug>true</appDebug>
+                        <logback.configurationFile>${project.basedir}/../paster-run/src/main/resources/logging-dev.xml</logback.configurationFile>
                     </systemProperties>
 
                     <!--scanIntervalSeconds>0</scanIntervalSeconds-->
@@ -553,6 +543,7 @@
                     <include>*.template</include>
                     <include>*.csv</include>
                     <include>logging.properties</include>
+                    <include>banner.txt</include>
                     <include>i18n/**</include>
                     <include>default/**</include>
                     <include>logging/**</include>

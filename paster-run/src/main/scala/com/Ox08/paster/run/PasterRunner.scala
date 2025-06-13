@@ -14,15 +14,13 @@
  * limitations under the License.
  */
 package com.Ox08.paster.run
-import com.Ox08.paster.run.PasterRunner.{DEFAULT_CONTEXT_PATH, DEFAULT_PORT}
 import org.eclipse.jetty.ee10.apache.jsp.JettyJasperInitializer
 import org.eclipse.jetty.ee10.webapp._
 import org.eclipse.jetty.server.handler.{ContextHandlerCollection, DefaultHandler}
 import org.eclipse.jetty.server.{Handler, Server, ServerConnector}
 import org.eclipse.jetty.util.FileID
 import org.eclipse.jetty.util.resource.{Resource, ResourceFactory}
-import org.slf4j.LoggerFactory
-
+import org.slf4j.{Logger, LoggerFactory}
 import java.io.{File, FileReader, IOException}
 import java.net.{URL, URLClassLoader}
 import java.util
@@ -41,7 +39,7 @@ import scala.jdk.CollectionConverters.IterableHasAsScala
  *
  */
 object PasterRunner {
-  private val LOG = LoggerFactory.getLogger(classOf[PasterRunner])
+  private var LOG:Logger = _
   // set of configuration classes, used to boot Jetty
   private val JETTY_CONFIGURATION_CLASSES: Array[String] = Array(
     classOf[org.eclipse.jetty.ee10.webapp.WebInfConfiguration].getCanonicalName,
@@ -123,18 +121,27 @@ class PasterRunner {
     // first load from resources
     _properties.load(getClass.getResourceAsStream("/config.properties"))
     // then check if external config exist and load it
+    // properties from external config will override existing
     val configFile = new File("./config.properties")
     if (configFile.exists() && configFile.isFile)
       _properties.load(new FileReader(configFile))
-    // properties from external config will override existing
+    // then override with system properties
+    _properties.putAll(System.getProperties)
+
     // check for debug
     isDebug = java.lang.Boolean.parseBoolean(_properties
                       .getProperty("appDebug",String.valueOf(false)))
+    // if debug enabled - use different logging configuration
+    if (isDebug)
+      System.setProperty("logback.configurationFile","logging-dev.xml")
+    // now initialize logger
+    PasterRunner.LOG=
+      LoggerFactory.getLogger(classOf[PasterRunner])
 
     this.port = _properties.getProperty("paster.runner.port",
-                      String.valueOf(DEFAULT_PORT)).toInt
+                      String.valueOf(PasterRunner.DEFAULT_PORT)).toInt
     this.host = _properties.getProperty("paster.runner.host",null)
-    this.contextPath = _properties.getProperty("paster.runner.contextPath",DEFAULT_CONTEXT_PATH)
+    this.contextPath = _properties.getProperty("paster.runner.contextPath",PasterRunner.DEFAULT_CONTEXT_PATH)
     this.warFile = _properties.getProperty("paster.runner.warFile",null)
   }
   /**
@@ -219,9 +226,11 @@ class PasterRunner {
         ctx.getURI.toURL,
         Thread.currentThread.getContextClassLoader))
 
-    val warFile = new File(ctx.getURI)
+    //val warFile = new File(ctx.getURI)
     //  System.setProperty("org.eclipse.jetty.livewar.LOCATION", warFile.getAbsolutePath)
     webapp.setExtractWAR(false)
+
+    //webapp.setParentLoaderPriority(true)
     webapp.setConfigurationClasses(PasterRunner.JETTY_CONFIGURATION_CLASSES)
       var fname = getClass.getProtectionDomain.getCodeSource.getLocation.getFile
       fname = fname.substring(fname.lastIndexOf('/'))

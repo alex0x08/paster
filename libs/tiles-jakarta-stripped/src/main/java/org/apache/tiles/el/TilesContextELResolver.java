@@ -60,23 +60,18 @@ public class TilesContextELResolver extends ELResolver {
     @Override
     public Class<?> getCommonPropertyType(ELContext context, Object base) {
         // only resolve at the root of the context
-        if (base != null) {
-            return null;
-        }
-
-        return String.class;
+        return base != null ? null : String.class;
     }
     /** {@inheritDoc} */
     @Override
     public Class<?> getType(ELContext context, Object base, Object property) {
         // only resolve at the root of the context
-        if (base != null) {
+        if (base != null)
             return null;
-        }
 
-        if (property==null) {
+        if (property==null)
             return null;
-        }
+
 
         Class<?> retValue = null;
         if (requestBeanInfo.getProperties(Request.class).contains(property.toString())) {
@@ -89,9 +84,8 @@ public class TilesContextELResolver extends ELResolver {
             retValue = beanElResolver.getType(context, applicationContext, property);
         }
 
-        if (retValue != null) {
+        if (retValue != null)
             context.setPropertyResolved(true);
-        }
 
         return retValue;
     }
@@ -100,13 +94,13 @@ public class TilesContextELResolver extends ELResolver {
     @Override
     public Object getValue(ELContext context, Object base, Object property) {
         // only resolve at the root of the context
-        if (base != null) {
+        if (base != null)
             return null;
-        }
 
-        if (property==null) {
+
+        if (property==null)
             return null;
-        }
+
 
         Object retValue = null;
 
@@ -121,9 +115,9 @@ public class TilesContextELResolver extends ELResolver {
             retValue = beanElResolver.getValue(context, applicationContext, property);
         }
 
-        if (retValue != null) {
+        if (retValue != null)
             context.setPropertyResolved(true);
-        }
+
 
         return retValue;
     }
@@ -131,9 +125,9 @@ public class TilesContextELResolver extends ELResolver {
     /** {@inheritDoc} */
     @Override
     public boolean isReadOnly(ELContext context, Object base, Object property) {
-        if (context == null) {
+        if (context == null)
             throw new NullPointerException();
-        }
+
 
         return true;
     }

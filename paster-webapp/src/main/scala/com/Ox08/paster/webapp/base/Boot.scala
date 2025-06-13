@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 package com.Ox08.paster.webapp.base
+import com.Ox08.paster.webapp.base.Boot.BOOT
 import org.apache.commons.io.FileUtils
 import org.apache.commons.lang3.StringUtils
 import org.apache.commons.lang3.math.NumberUtils
 import org.springframework.util.Assert
+
 import java.io.{File, FileInputStream, IOException, StringReader, StringWriter}
 import java.nio.file.Paths
 import java.text.{ParseException, SimpleDateFormat}
@@ -127,8 +129,10 @@ class Boot extends Logged {
       System.setProperty("app.externalUrlPrefix", system.getExternalUrlPrefix)
       logger.info(SystemMessage.of("paster.system.message.appExternalUrl", system.getExternalUrlPrefix))
     }
+    printLogo(system)
     checkInstalled(system, app_home)
   }
+
   def markInstalled(): Unit = {
     val system: SystemInfo = getSystemInfo
     val iFile = new File(system.getAppHome, ".installed")
@@ -139,6 +143,10 @@ class Boot extends Logged {
     p.store(out, "Install information")
     FileUtils.writeStringToFile(iFile, out.toString, "UTF-8")
     system.setInstalled(installed = true, dateInstalled)
+  }
+  private def printLogo(system: SystemInfo): Unit = {
+    val banner = new String(getClass.getResourceAsStream("/banner.txt").readAllBytes())
+    logger.info(banner, system.getRuntimeVersion.implVersionFull)
   }
   private def checkInstalled(system: SystemInfo, appHome: File): Unit = {
     val iFile = new File(appHome, ".installed")

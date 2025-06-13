@@ -44,14 +44,16 @@ class SpringWildcardServletTilesApplicationContext(servletContext: ServletContex
 
   @Nullable override def getResource(localePath: String): ApplicationResource = {
     val urlSet = getResources(localePath)
-    if (!CollectionUtils.isEmpty(urlSet)) return urlSet.iterator.next
+    if (!CollectionUtils.isEmpty(urlSet))
+      return urlSet.iterator.next
     null
   }
 
   @Nullable override def getResource(base: ApplicationResource,
                                      locale: Locale): ApplicationResource = {
     val urlSet = getResources(base.getLocalePath(locale))
-    if (!CollectionUtils.isEmpty(urlSet)) return urlSet.iterator.next
+    if (!CollectionUtils.isEmpty(urlSet))
+      return urlSet.iterator.next
     null
   }
 

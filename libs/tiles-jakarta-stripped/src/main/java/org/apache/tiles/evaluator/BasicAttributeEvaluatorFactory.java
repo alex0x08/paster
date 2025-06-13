@@ -19,9 +19,6 @@
  * under the License.
  */
 package org.apache.tiles.evaluator;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.tiles.Attribute;
 import org.apache.tiles.Expression;
 /**
@@ -38,12 +35,12 @@ public class BasicAttributeEvaluatorFactory implements
      * languages.
      */
     private final AttributeEvaluator defaultEvaluator;
-    /**
+    /*
      * Maps names of expression languages to their attribute evaluator.
      *
      * @since 2.2.0
      */
-    private final Map<String, AttributeEvaluator> language2evaluator;
+   // private final Map<String, AttributeEvaluator> language2evaluator;
     /**
      * Constructor.
      *
@@ -53,17 +50,18 @@ public class BasicAttributeEvaluatorFactory implements
      */
     public BasicAttributeEvaluatorFactory(AttributeEvaluator defaultEvaluator) {
         this.defaultEvaluator = defaultEvaluator;
-        language2evaluator = new HashMap<>();
+       // language2evaluator = new HashMap<>();
     }
     /**
      * {@inheritDoc}
      */
     public AttributeEvaluator getAttributeEvaluator(String language) {
-        AttributeEvaluator retValue = language2evaluator.get(language);
+        return defaultEvaluator;
+        /*AttributeEvaluator retValue = language2evaluator.get(language);
         if (retValue == null) {
             retValue = defaultEvaluator;
         }
-        return retValue;
+        return retValue;*/
     }
     /**
      * {@inheritDoc}

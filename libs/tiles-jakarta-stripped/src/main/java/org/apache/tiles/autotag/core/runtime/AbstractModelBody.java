@@ -65,9 +65,9 @@ public abstract class AbstractModelBody implements ModelBody {
         String body = writer.toString();
         if (body != null) {
             body = PATTERN.matcher(body).replaceAll("");
-            if (body.length() == 0) {
+            if (body.isEmpty())
                 body = null;
-            }
+
         }
         return body;
     }
