@@ -43,14 +43,16 @@ object LiveWarClassLoader {
  * @param parent
  *    parent classloader
  */
-class LiveWarClassLoader(debug: Boolean, warFileUrl: URL, parent: ClassLoader)
+class LiveWarClassLoader(debug: Boolean,
+                         warFileUrl: URL, parent: ClassLoader)
   extends ClassLoader(parent) with Closeable {
   private val warFileUri = warFileUrl.toURI
   private val warFile = new JarFile(new File(warFileUri))
   loadData()
   private def loadData(): Unit = {
     for (e <- warFile.entries().asScala) {
-      if (e.getName.startsWith("WEB-INF/lib") && e.getName.endsWith(".jar")) {
+      if (e.getName.startsWith("WEB-INF/lib")
+        && e.getName.endsWith(".jar")) {
         debug(s"found lib: ${e.getName}")
         import java.util.jar.JarInputStream
         val zip = new JarInputStream(warFile.getInputStream(e))
@@ -191,7 +193,8 @@ class LiveWarClassLoader(debug: Boolean, warFileUrl: URL, parent: ClassLoader)
     out.toByteArray
   }
 }
-class VirtualWARURLStreamHandlerFactory(val debug: Boolean) extends URLStreamHandlerFactory {
+class VirtualWARURLStreamHandlerFactory(val debug: Boolean)
+  extends URLStreamHandlerFactory {
   override def createURLStreamHandler(protocol: String): URLStreamHandler = {
     if ("war-virtual" == protocol)
       return new VirtualWARUrlStreamHandler(debug)

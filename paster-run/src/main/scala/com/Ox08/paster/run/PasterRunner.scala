@@ -32,7 +32,8 @@ import scala.jdk.CollectionConverters.IterableHasAsScala
  * @since 3.0
  * @author 0x08
  *
- * Combines jetty classes into a single executable jar and run webapps based on the args to it.
+ * Combines jetty classes into a single executable jar
+ * and run webapps based on the args to it.
  *
  * Based on Jetty Runner:
  * https://github.com/jetty/jetty.project/tree/jetty-12.0.x/jetty-ee10/jetty-ee10-runner
@@ -75,6 +76,8 @@ object PasterRunner {
 class PasterRunner {
   // if true, there will be verbose messages
   private var isDebug = false
+  // if true, LiveWarClassLoader will produce verbose messages on load
+  private var isClassLoaderDebug = false
   // current context path
   private var contextPath = PasterRunner.DEFAULT_CONTEXT_PATH
   // current port
@@ -131,6 +134,9 @@ class PasterRunner {
     // check for debug
     isDebug = java.lang.Boolean.parseBoolean(_properties
                       .getProperty("appDebug",String.valueOf(false)))
+    isClassLoaderDebug = java.lang.Boolean.parseBoolean(_properties
+      .getProperty("paster.runner.classLoaderDebug",String.valueOf(false)))
+
     // if debug enabled - use different logging configuration
     if (isDebug)
       System.setProperty("logback.configurationFile","logging-dev.xml")
@@ -141,7 +147,8 @@ class PasterRunner {
     this.port = _properties.getProperty("paster.runner.port",
                       String.valueOf(PasterRunner.DEFAULT_PORT)).toInt
     this.host = _properties.getProperty("paster.runner.host",null)
-    this.contextPath = _properties.getProperty("paster.runner.contextPath",PasterRunner.DEFAULT_CONTEXT_PATH)
+    this.contextPath = _properties.getProperty("paster.runner.contextPath",
+      PasterRunner.DEFAULT_CONTEXT_PATH)
     this.warFile = _properties.getProperty("paster.runner.warFile",null)
   }
   /**
@@ -155,7 +162,8 @@ class PasterRunner {
     // checks and loads external libraries
     val libs = new File("libs")
     if (libs.exists() && libs.isDirectory)
-      _classpath.addJars(ResourceFactory.closeable().newResource(libs.toPath))
+      _classpath.addJars(ResourceFactory.closeable()
+        .newResource(libs.toPath))
     // configure system classloader
     initClassLoader()
     if (PasterRunner.LOG.isDebugEnabled)
@@ -222,19 +230,20 @@ class PasterRunner {
     // Configure the context
     // assume it is a WAR file
     val webapp = new WebAppContext(ctx.toString, contextPath)
-    webapp.setClassLoader(new LiveWarClassLoader(false,
+    webapp.setClassLoader(
+      new LiveWarClassLoader(isClassLoaderDebug,
         ctx.getURI.toURL,
         Thread.currentThread.getContextClassLoader))
 
-    //val warFile = new File(ctx.getURI)
-    //  System.setProperty("org.eclipse.jetty.livewar.LOCATION", warFile.getAbsolutePath)
+    // we serve WAR contents from memory, without unpacking
     webapp.setExtractWAR(false)
-
-    //webapp.setParentLoaderPriority(true)
+    // set required configuration classes to load webapp
     webapp.setConfigurationClasses(PasterRunner.JETTY_CONFIGURATION_CLASSES)
-      var fname = getClass.getProtectionDomain.getCodeSource.getLocation.getFile
-      fname = fname.substring(fname.lastIndexOf('/'))
-      val incPattern = ".*" + fname.replace(".", "\\\\.") + "$"
+    // determine self jar name
+    var jarName = getClass.getProtectionDomain.getCodeSource.getLocation.getFile
+    jarName = jarName.substring(jarName.lastIndexOf('/'))
+    // build expression pattern, used by class scanner
+    val incPattern = ".*" + jarName.replace(".", "\\\\.") + "$"
       webapp.setAttribute(MetaInfConfiguration.CONTAINER_JAR_PATTERN, incPattern)
 
       // pass jetty settings to context
@@ -250,7 +259,8 @@ class PasterRunner {
       _contexts.addHandler(webapp)
   }
 
-  private def prependHandler(handler: Handler, handlers:  Handler.Sequence): Unit = {
+  private def prependHandler(handler: Handler,
+                             handlers:  Handler.Sequence): Unit = {
     if (handler == null || handlers == null) return
     val existing = handlers.getHandlers
     val children = new util.ArrayList[Handler](existing.size + 1)

@@ -8,8 +8,8 @@
         <outputRelativeToContentRoot value="true" />
         <module name="paster-tiles-jakarta" />
         <module name="paster-webapp" />
-        <module name="paster-run" />
         <module name="paster-dbconsole" />
+        <module name="paster-run" />
         <module name="paster-spring-tiles3-jakarta" />
       </profile>
     </annotationProcessing>
