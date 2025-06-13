@@ -335,10 +335,10 @@ class PasterView {
             return;
         }
         Logger.debug('got text', ptext);
-        ptext = ptext.replace(/\r\n|\r/g, '\n')
-            .replace(/\t/g, '    ')
+        ptext = ptext.trim().replace(/\r\n|\r/g, '\n')
+           // .replace(/\t/g, '    ')
             .replace(/\u2424/g, '\n');
-        Logger.debug('formatted text: ', ptext);
+        Logger.debug('formatted text:"', ptext,'"');
         const commentArea = document.getElementById(`commentText-${modelId}`);
         commentArea.innerHTML = ptext;
         const thumbImg = document.getElementById(`${modelId}_thumbImgComment`);
