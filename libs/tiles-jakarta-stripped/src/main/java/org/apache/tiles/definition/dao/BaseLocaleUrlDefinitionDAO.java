@@ -85,11 +85,10 @@ public abstract class BaseLocaleUrlDefinitionDAO implements
     public void setSources(List<ApplicationResource> sources) {
         // filter out any sources that are already localized
         ArrayList<ApplicationResource> defaultSources = new ArrayList<>();
-        for (ApplicationResource source : sources) {
-            if (Locale.ROOT.equals(source.getLocale())) {
+        for (ApplicationResource source : sources)
+            if (Locale.ROOT.equals(source.getLocale()))
                 defaultSources.add(source);
-            }
-        }
+
         this.sources = defaultSources;
     }
     public void setReader(DefinitionsReader reader) {
@@ -133,9 +132,9 @@ public abstract class BaseLocaleUrlDefinitionDAO implements
             return reader.read(stream);
         } catch (FileNotFoundException e) {
             // File not found. continue.
-            if (log.isDebugEnabled()) {
-                log.debug("File " + resource + " not found, continue");
-            }
+            if (log.isDebugEnabled())
+                log.debug("File %s not found, continue".formatted(resource));
+
         } catch (IOException e) {
             throw new DefinitionsFactoryException(
                     "I/O error processing configuration.", e);

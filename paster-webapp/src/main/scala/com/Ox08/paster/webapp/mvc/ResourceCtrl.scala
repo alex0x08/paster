@@ -22,6 +22,10 @@ import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.{PathVariable, RequestMapping, RequestMethod, ResponseBody}
 import java.io.{FileInputStream, IOException}
 import scala.collection.mutable
+
+/**
+ * MVC Controller, which serves static resources
+ */
 @Controller
 @RequestMapping(Array("/paste-resources"))
 class ResourceCtrl extends AbstractCtrl {
@@ -29,6 +33,15 @@ class ResourceCtrl extends AbstractCtrl {
   private val MAX_AGE = 0
   @Autowired
   private val resourcePathHelper: ResourceManager = null
+
+  /**
+   * Respond static resources
+   * @param lastModified
+   * @param path
+   * @param ptype
+   * @param response
+   * @return
+   */
   @RequestMapping(
     value = Array("/{version:[a-zA-Z0-9]+}/{type:[a-z]}/{lastModified:[0-9]+}/paste_content/{path}"),
     method = Array(RequestMethod.GET))
@@ -63,7 +76,7 @@ class ResourceCtrl extends AbstractCtrl {
     new InputStreamResource(new FileInputStream(fimg))
   }
   @throws(classOf[IOException])
-  def writeError(response: HttpServletResponse, msg: String, status: Int): Unit = {
+  private def writeError(response: HttpServletResponse, msg: String, status: Int): Unit = {
     response.setContentType("text/html;charset=UTF-8")
     response.setStatus(status)
     val out = response.getWriter

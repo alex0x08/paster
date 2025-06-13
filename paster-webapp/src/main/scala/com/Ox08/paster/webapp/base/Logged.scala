@@ -80,7 +80,7 @@ trait Logged {
   def getNewProtocolBuilder: ToStringBuilder = new ToStringBuilder(this, Logged.style)
 }
 /**
- * An Logback listener, used to pass 'appDebug' variable from environment to logback configs
+ * A Logback listener, used to pass 'appDebug' variable from environment to logback configs
  */
 class LoggerStartupListener extends ContextAwareBase with
   LoggerContextListener with LifeCycle {

@@ -44,13 +44,6 @@ public interface ApplicationContext {
      */
     Map<String, Object> getApplicationScope();
     /**
-     * Return an immutable Map that maps context application initialization
-     * parameters to their values.
-     *
-     * @return initialization parameters
-     */
-    Map<String, String> getInitParams();
-    /**
      * Return the application resource mapped to the specified path.
      *
      * @param localePath path to the desired resource, including the Locale suffix.

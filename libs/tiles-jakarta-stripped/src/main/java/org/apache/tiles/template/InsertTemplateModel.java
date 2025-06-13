@@ -124,9 +124,9 @@ public class InsertTemplateModel {
             attributeContext.setPreparer(preparer);
             attributeContext.setTemplateAttribute(templateAttribute);
             container.renderContext(request);
-            if (flush) {
+            if (flush)
                 request.getWriter().flush();
-            }
+
         } finally {
             container.endContext(request);
         }

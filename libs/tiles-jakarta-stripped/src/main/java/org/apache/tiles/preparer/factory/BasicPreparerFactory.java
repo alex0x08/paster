@@ -60,9 +60,9 @@ public class BasicPreparerFactory implements PreparerFactory {
      * @return ViewPreparer instance
      */
     public ViewPreparer getPreparer(String name, Request context) {
-        if (!preparers.containsKey(name)) {
+        if (!preparers.containsKey(name))
             preparers.put(name, createPreparer(name));
-        }
+
         return preparers.get(name);
     }
     /**

@@ -48,9 +48,9 @@ public class DefinitionRenderer implements Renderer {
      */
     @Override
     public void render(String path, Request request) {
-        if (path == null) {
+        if (path == null)
             throw new CannotRenderException("Cannot dispatch a null path");
-        }
+
         container.render(path, request);
     }
     /**

@@ -49,7 +49,8 @@ public class InsertTemplateTag extends SimpleTagSupport {
     /**
      * The template model.
      */
-    private final org.apache.tiles.template.InsertTemplateModel model = new org.apache.tiles.template.InsertTemplateModel();
+    private final org.apache.tiles.template.InsertTemplateModel model
+            = new org.apache.tiles.template.InsertTemplateModel();
 
     /**
      * The template to render.
@@ -103,47 +104,6 @@ public class InsertTemplateTag extends SimpleTagSupport {
     public void setTemplate(java.lang.String template) {
         this.template = template;
     }
-
-    /**
-     * Getter for templateType property.
-     *
-     * @return
-     * The type of the template attribute.
-     */
-    public java.lang.String getTemplateType() {
-        return templateType;
-    }
-
-    /**
-     * Setter for templateType property.
-     *
-     * @param templateType
-     * The type of the template attribute.
-     */
-    public void setTemplateType(java.lang.String templateType) {
-        this.templateType = templateType;
-    }
-
-    /**
-     * Getter for templateExpression property.
-     *
-     * @return
-     * The expression to evaluate to get the value of the template.
-     */
-    public java.lang.String getTemplateExpression() {
-        return templateExpression;
-    }
-
-    /**
-     * Setter for templateExpression property.
-     *
-     * @param templateExpression
-     * The expression to evaluate to get the value of the template.
-     */
-    public void setTemplateExpression(java.lang.String templateExpression) {
-        this.templateExpression = templateExpression;
-    }
-
     /**
      * Getter for role property.
      *
@@ -213,7 +173,8 @@ public class InsertTemplateTag extends SimpleTagSupport {
     /** {@inheritDoc} */
     @Override
     public void doTag() throws JspException, IOException {
-        AutotagRuntime<org.apache.tiles.request.Request> runtime = new org.apache.tiles.request.jsp.autotag.JspAutotagRuntime();
+        AutotagRuntime<org.apache.tiles.request.Request> runtime
+                = new org.apache.tiles.request.jsp.autotag.JspAutotagRuntime();
         SimpleTagSupport tag = (SimpleTagSupport) runtime;
         tag.setJspContext(getJspContext());
         tag.setJspBody(getJspBody());

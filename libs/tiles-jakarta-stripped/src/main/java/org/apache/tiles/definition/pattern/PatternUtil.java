@@ -108,9 +108,9 @@ public final class PatternUtil {
      */
     public static <K, V> Map<K, V> createExtractedMap(Map<K, V> map, Set<K> keys) {
         Map<K, V> retValue = new LinkedHashMap<>();
-        for (K key : keys) {
+        for (K key : keys)
             retValue.put(key, map.get(key));
-        }
+
         return retValue;
     }
     /**
@@ -124,13 +124,9 @@ public final class PatternUtil {
      */
     private static Attribute replaceVarsInAttribute(Attribute attr,
                                                     Object... vars) {
-        Attribute nuattr;
-        if (attr instanceof ListAttribute) {
-            nuattr = replaceVarsInListAttribute((ListAttribute) attr, vars);
-        } else {
-            nuattr = replaceVarsInSimpleAttribute(attr, vars);
-        }
-        return nuattr;
+        return attr instanceof ListAttribute ?
+                replaceVarsInListAttribute((ListAttribute) attr, vars)
+                : replaceVarsInSimpleAttribute(attr, vars);
     }
     /**
      * Replaces variables into a simple (not list) attribute.
@@ -154,9 +150,9 @@ public final class PatternUtil {
             nuattr.setExpressionObject(newExpressionObject);
         }
         Object value = attr.getValue();
-        if (value instanceof String) {
-            value = replace((String) value, vars);
-        }
+        if (value instanceof String sv)
+            value = replace(sv, vars);
+
         nuattr.setValue(value);
         return nuattr;
     }
@@ -202,17 +198,17 @@ public final class PatternUtil {
             st = new MessageFormat(st.replaceAll("'", "'''"), ROOT_LOCALE)
                     .format(vars, new StringBuffer(), null).toString();
             // return the markers to their original invalid occurrences
-            for (String original : originals) {
+            for (String original : originals)
                 st = st.replaceFirst("INVALID_FORMAT_ELEMENT", original);
-            }
+
         }
         return st;
     }
     private static Object[] replaceNullsWithBlank(Object[] varsOrig) {
         Object[] vars = new Object[varsOrig.length];
-        for (int i = 0; i < varsOrig.length; ++i) {
+        for (int i = 0; i < varsOrig.length; ++i)
             vars[i] = null != varsOrig[i] ? varsOrig[i] : "";
-        }
+
         return vars;
     }
 }

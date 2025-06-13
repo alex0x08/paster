@@ -67,10 +67,10 @@ public class WildcardDefinitionPatternMatcher implements
     public Definition createDefinition(String definitionName) {
         List<String> vars = wildcardHelper.match(definitionName, pattern);
         Definition d = null;
-        if (vars != null) {
+        if (vars != null)
             d = PatternUtil.replacePlaceholders(definition, definitionName,
                     vars.toArray());
-        }
+
         return d;
     }
 }

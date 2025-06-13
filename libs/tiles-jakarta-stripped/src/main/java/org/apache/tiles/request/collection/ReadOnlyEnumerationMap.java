@@ -69,9 +69,9 @@ public class ReadOnlyEnumerationMap<V> implements Map<String, V> {
     public boolean containsValue(Object value) {
         V realValue = (V) value;
         for (Enumeration<String> keysIt = request.getKeys(); keysIt.hasMoreElements(); ) {
-            if (realValue.equals(request.getValue(keysIt.nextElement()))) {
+            if (realValue.equals(request.getValue(keysIt.nextElement())))
                 return true;
-            }
+
         }
         return false;
     }
@@ -135,16 +135,16 @@ public class ReadOnlyEnumerationMap<V> implements Map<String, V> {
     @SuppressWarnings("unchecked")
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof  ReadOnlyEnumerationMap)) {
+        if (!(o instanceof  ReadOnlyEnumerationMap))
             return false;
-        }
+
         HasKeys<V> otherRequest = ((ReadOnlyEnumerationMap<V>) o).request;
         boolean retValue = true;
         Set<String> otherKeys = new HashSet<>();
         for (Enumeration<String> attribs = otherRequest.getKeys(); attribs
-                .hasMoreElements(); ) {
+                .hasMoreElements(); )
             otherKeys.add(attribs.nextElement());
-        }
+
         for (Enumeration<String> attribs = request.getKeys(); attribs
                 .hasMoreElements()
                 && retValue; ) {
@@ -196,11 +196,11 @@ public class ReadOnlyEnumerationMap<V> implements Map<String, V> {
         public boolean containsAll(Collection<?> c) {
             Collection<Map.Entry<String, V>> realCollection =
                     (Collection<Map.Entry<String, V>>) c;
-            for (Map.Entry<String, V> entry : realCollection) {
-                if (!containsEntry(entry)) {
+            for (Map.Entry<String, V> entry : realCollection)
+                if (!containsEntry(entry))
                     return false;
-                }
-            }
+
+
             return true;
         }
         @Override
@@ -253,9 +253,9 @@ public class ReadOnlyEnumerationMap<V> implements Map<String, V> {
         private List<Map.Entry<String, V>> toList() {
             List<Map.Entry<String, V>> entries = new ArrayList<>();
             Enumeration<String> names = request.getKeys();
-            while (names.hasMoreElements()) {
+            while (names.hasMoreElements())
                 entries.add(extractNextEntry(names));
-            }
+
             return entries;
         }
         /**
@@ -319,9 +319,9 @@ public class ReadOnlyEnumerationMap<V> implements Map<String, V> {
             List<String> valueList = new ArrayList<>(realCollection);
             for (Enumeration<String> keysEnum = request.getKeys(); keysEnum.hasMoreElements(); ) {
                 valueList.remove(request.getValue(keysEnum.nextElement()).toString());
-                if (valueList.isEmpty()) {
+                if (valueList.isEmpty())
                     return true;
-                }
+
             }
             return false;
         }
@@ -365,9 +365,9 @@ public class ReadOnlyEnumerationMap<V> implements Map<String, V> {
         private List<V> toList() {
             List<V> entries = new ArrayList<>();
             Enumeration<String> names = request.getKeys();
-            while (names.hasMoreElements()) {
+            while (names.hasMoreElements())
                 entries.add(request.getValue(names.nextElement()));
-            }
+
             return entries;
         }
         /**

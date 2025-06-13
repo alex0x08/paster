@@ -81,11 +81,9 @@ public class Attribute implements Serializable, Cloneable {
     public Attribute(final Attribute attribute) {
         this.roles = attribute.roles;
         this.value = attribute.getValue();
-        if (attribute.expressionObject != null) {
-            this.expressionObject = new Expression(attribute.expressionObject);
-        } else {
-            this.expressionObject = null;
-        }
+        this.expressionObject = attribute.expressionObject != null
+                ? new Expression(attribute.expressionObject) : null;
+
         this.renderer = attribute.renderer;
     }
     /**
@@ -145,9 +143,9 @@ public class Attribute implements Serializable, Cloneable {
                                                     String templateExpression, String templateType, String role) {
         Attribute templateAttribute = createTemplateAttribute(template);
         templateAttribute.setRole(role);
-        if (templateType != null) {
+        if (templateType != null)
             templateAttribute.setRenderer(templateType);
-        }
+
         templateAttribute
                 .setExpressionObject(Expression
                         .createExpressionFromDescribedExpression(templateExpression));
@@ -194,9 +192,9 @@ public class Attribute implements Serializable, Cloneable {
             String[] rolesStrings = role.split("\\s*,\\s*");
             roles = new HashSet<>();
             roles.addAll(Arrays.asList(rolesStrings));
-        } else {
+        } else
             roles = null;
-        }
+
     }
     /**
      * Sets the roles that can render this attribute.
@@ -248,10 +246,7 @@ public class Attribute implements Serializable, Cloneable {
      */
     @Override
     public String toString() {
-        if (value != null) {
-            return value.toString();
-        }
-        return null;
+        return value != null ? value.toString() : null;
     }
     /**
      * Returns the renderer name to use.
@@ -279,30 +274,30 @@ public class Attribute implements Serializable, Cloneable {
      * @since 2.1.2
      */
     public void inherit(Attribute attribute) {
-        if (value == null) {
+        if (value == null)
             value = attribute.getValue();
-        }
+
         Expression targetExpressionObject = attribute.getExpressionObject();
         if (targetExpressionObject != null
                 && (expressionObject == null || expressionObject
-                .getExpression() == null)) {
+                .getExpression() == null))
             expressionObject = new Expression(targetExpressionObject);
-        }
-        if (roles == null || roles.isEmpty()) {
+
+        if (roles == null || roles.isEmpty())
             roles = attribute.getRoles();
-        }
-        if (renderer == null) {
+
+        if (renderer == null)
             renderer = attribute.getRenderer();
-        }
+
     }
     /**
      * {@inheritDoc}
      */
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof Attribute attribute)) {
+        if (!(obj instanceof Attribute attribute))
             return false;
-        }
+
         return nullSafeEquals(value, attribute.value)
                 && nullSafeEquals(renderer, attribute.renderer)
                 && nullSafeEquals(roles, attribute.roles)
@@ -316,9 +311,9 @@ public class Attribute implements Serializable, Cloneable {
      * @since 3.0.0
      */
     public boolean isPermitted(Request request) {
-        if (roles == null || roles.isEmpty()) {
+        if (roles == null || roles.isEmpty())
             return true;
-        }
+
         boolean retValue = false;
         for (Iterator<String> roleIt = roles.iterator(); roleIt.hasNext()
                 && !retValue; ) {

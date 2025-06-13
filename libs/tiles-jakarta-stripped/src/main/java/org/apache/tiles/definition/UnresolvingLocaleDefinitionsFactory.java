@@ -75,9 +75,9 @@ public class UnresolvingLocaleDefinitionsFactory implements DefinitionsFactory {
     public Definition getDefinition(String name,
                                     Request tilesContext) {
         Locale locale = null;
-        if (tilesContext != null) {
+        if (tilesContext != null)
             locale = localeResolver.resolveLocale(tilesContext);
-        }
+
         return definitionDao.getDefinition(name, locale);
     }
 }

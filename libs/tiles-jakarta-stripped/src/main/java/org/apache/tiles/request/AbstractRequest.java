@@ -45,9 +45,6 @@ public abstract class AbstractRequest implements DispatchRequest {
     protected boolean isForceInclude() {
         Boolean forceInclude = (Boolean) getContext(REQUEST_SCOPE).get(
                 FORCE_INCLUDE_ATTRIBUTE_NAME);
-        if (forceInclude != null) {
-            return forceInclude;
-        }
-        return false;
+        return forceInclude != null && forceInclude;
     }
 }

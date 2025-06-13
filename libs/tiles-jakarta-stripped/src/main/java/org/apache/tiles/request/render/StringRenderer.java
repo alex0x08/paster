@@ -33,9 +33,9 @@ public class StringRenderer implements Renderer {
      */
     @Override
     public void render(String value, Request request) throws IOException {
-        if (value == null) {
+        if (value == null)
             throw new CannotRenderException("Cannot render a null string");
-        }
+
         request.getWriter().write(value);
     }
     /**

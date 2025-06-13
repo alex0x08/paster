@@ -119,10 +119,7 @@ public class Definition extends BasicAttributeContext {
     /** {@inheritDoc} */
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof Definition def)) {
-            return false;
-        }
-        return nullSafeEquals(name, def.name)
+        return obj instanceof Definition def && nullSafeEquals(name, def.name)
                 && nullSafeEquals(inherit, def.inherit) && super.equals(def);
     }
 
@@ -149,16 +146,9 @@ public class Definition extends BasicAttributeContext {
      */
     @Override
     public String toString() {
-        return "{name="
-            + name
-            + ", template="
-            + (templateAttribute != null ? templateAttribute.getValue() : "<null>")
-            + ", role="
-            + (templateAttribute != null ? templateAttribute.getRoles() : "<null>")
-            + ", preparerInstance="
-            + preparer
-            + ", attributes="
-            + attributes
-            + "}";
+        return "{name=%s, template=%s, role=%s, preparerInstance=%s, attributes=%s}"
+                .formatted(name, templateAttribute != null ? templateAttribute.getValue()
+                        : "<null>", templateAttribute != null ? templateAttribute.getRoles()
+                        : "<null>", preparer, attributes);
     }
 }

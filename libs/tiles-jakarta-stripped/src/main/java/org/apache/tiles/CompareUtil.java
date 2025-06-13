@@ -20,7 +20,7 @@
  */
 
 package org.apache.tiles;
-
+import java.util.Objects;
 /**
  * Utilities to work with comparation between objects.
  *
@@ -44,10 +44,7 @@ public final class CompareUtil {
      * @since 2.2.0
      */
     public static boolean nullSafeEquals(Object obj1, Object obj2) {
-        if (obj1 != null) {
-            return obj1.equals(obj2);
-        }
-        return obj2 == null;
+        return Objects.equals(obj1, obj2);
     }
 
     /**
@@ -59,9 +56,6 @@ public final class CompareUtil {
      * @since 2.2.0
      */
     public static int nullSafeHashCode(Object obj) {
-        if (obj != null) {
-            return obj.hashCode();
-        }
-        return 0;
+        return obj != null ? obj.hashCode() : 0;
     }
 }

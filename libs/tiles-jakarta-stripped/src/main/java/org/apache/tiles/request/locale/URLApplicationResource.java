@@ -90,11 +90,11 @@ public class URLApplicationResource extends PostfixedApplicationResource {
         remoteProtocols.add("mailto");
         remoteProtocols.add("netdoc");
         String protocolsProp = getProperty(REMOTE_PROTOCOLS_PROPERTY);
-        if (protocolsProp != null) {
-            for (String protocol : protocolsProp.split(";")) {
+        if (protocolsProp != null)
+            for (String protocol : protocolsProp.split(";"))
                 remoteProtocols.add(protocol.trim());
-            }
-        }
+
+
         return unmodifiableSet(remoteProtocols);
     }
     private static boolean isLocal(URL url) {
@@ -121,13 +121,14 @@ public class URLApplicationResource extends PostfixedApplicationResource {
     public URLApplicationResource(String localePath, URL url) {
         super(localePath);
         this.url = url;
-        if ("file".equals(url.getProtocol())) {
+        if ("file".equals(url.getProtocol()))
             file = getFile(url);
-        }
+
         local = isLocal(url);
     }
     /**
-     * Creates a URLApplicationResource for the specified path that can be accessed through the specified URL.
+     * Creates a URLApplicationResource for the specified path that can be accessed
+     * through the specified URL.
      *
      * @param path   the path excluding localization.
      * @param locale the Locale.
@@ -136,9 +137,9 @@ public class URLApplicationResource extends PostfixedApplicationResource {
     public URLApplicationResource(String path, Locale locale, URL url) {
         super(path, locale);
         this.url = url;
-        if ("file".equals(url.getProtocol())) {
+        if ("file".equals(url.getProtocol()))
             file = getFile(url);
-        }
+
         local = isLocal(url);
     }
     private URLConnection openConnection() throws IOException {
@@ -169,26 +170,20 @@ public class URLApplicationResource extends PostfixedApplicationResource {
      */
     @Override
     public InputStream getInputStream() throws IOException {
-        if (file != null) {
-            return new FileInputStream(file);
-        } else {
-            return openConnection().getInputStream();
-        }
+        return file != null ? new FileInputStream(file) : openConnection().getInputStream();
+
     }
     /**
      * {@inheritDoc}
      */
     @Override
     public long getLastModified() throws IOException {
-        if (file != null) {
+        if (file != null)
             return file.lastModified();
-        } else {
-            URLConnection connection = openConnection();
-            if (connection instanceof JarURLConnection) {
-                return ((JarURLConnection) connection).getJarEntry().getTime();
-            } else {
-                return connection.getLastModified();
-            }
+        else {
+            final URLConnection connection = openConnection();
+            return connection instanceof JarURLConnection jc ?
+                    jc.getJarEntry().getTime() : connection.getLastModified();
         }
     }
     /**
@@ -196,6 +191,6 @@ public class URLApplicationResource extends PostfixedApplicationResource {
      */
     @Override
     public String toString() {
-        return "Resource " + getLocalePath() + " at " + url.toString();
+        return "Resource %s at %s".formatted(getLocalePath(), url.toString());
     }
 }

@@ -52,26 +52,26 @@ public class ChainedDelegateRenderer implements Renderer {
     }
     @Override
     public void render(String value, Request request) throws IOException {
-        if (value == null) {
+        if (value == null)
             throw new NullPointerException("The attribute value is null");
-        }
-        for (Renderer renderer : renderers) {
+
+        for (Renderer renderer : renderers)
             if (renderer.isRenderable(value, request)) {
                 renderer.render(value, request);
                 return;
             }
-        }
-        throw new CannotRenderException("Cannot renderer value '" + value + "'");
+
+        throw new CannotRenderException("Cannot renderer value '%s'".formatted(value));
     }
     /**
      * {@inheritDoc}
      */
     public boolean isRenderable(String value, Request request) {
-        for (Renderer renderer : renderers) {
-            if (renderer.isRenderable(value, request)) {
+        for (Renderer renderer : renderers)
+            if (renderer.isRenderable(value, request))
                 return true;
-            }
-        }
+
+
         return false;
     }
 }

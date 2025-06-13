@@ -153,10 +153,9 @@ public class ListAttribute extends Attribute {
      */
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof ListAttribute attribute)) {
-            return false;
-        }
-        return super.equals(attribute) && this.inherit == attribute.inherit;
+        return obj instanceof ListAttribute attribute
+                && super.equals(attribute)
+                && this.inherit == attribute.inherit;
     }
 
     /**

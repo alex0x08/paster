@@ -49,11 +49,11 @@ public final class ComposeStackUtil {
      * @since 3.0.0
      */
     public static Object findAncestorWithClass(Deque<Object> composeStack, Class<?> clazz) {
-        for (Object obj : composeStack) {
-            if (clazz.isAssignableFrom(obj.getClass())) {
+        for (Object obj : composeStack)
+            if (clazz.isAssignableFrom(obj.getClass()))
                 return obj;
-            }
-        }
+
+
         return null;
     }
     /**

@@ -110,15 +110,15 @@ public class GetAsStringModel {
         Attribute attribute = resolveAttribute(container, ignore, preparer,
                 role, defaultValue, defaultValueRole, defaultValueType, name,
                 value, request);
-        if (attribute != null) {
+        if (attribute != null)
             composeStack.push(attribute);
-        }
+
         modelBody.evaluateWithoutWriting();
         container = TilesAccess.getCurrentContainer(request);
         Writer writer = request.getWriter();
-        if (attribute != null) {
+        if (attribute != null)
             attribute = (Attribute) composeStack.pop();
-        }
+
         renderAttribute(attribute, container, writer, ignore, request);
     }
 
@@ -146,9 +146,9 @@ public class GetAsStringModel {
             boolean ignore, String preparer, String role, Object defaultValue,
             String defaultValueRole, String defaultValueType, String name,
             Attribute value, Request request) {
-        if (preparer != null) {
+        if (preparer != null)
             container.prepare(preparer, request);
-        }
+
         Attribute attribute = attributeResolver.computeAttribute(container,
                 value, name, role, ignore, defaultValue, defaultValueRole,
                 defaultValueType, request);
@@ -171,19 +171,19 @@ public class GetAsStringModel {
             Writer writer, boolean ignore, Request request)
             throws IOException {
         try {
-            if (attribute == null && ignore) {
+            if (attribute == null && ignore)
                 return;
-            }
+
             Object value = container.evaluate(attribute, request);
-            if(value != null) {
+            if(value != null)
             	writer.write(value.toString());
-            }
+
         } catch (IOException | RuntimeException e) {
-            if (!ignore) {
+            if (!ignore)
                 throw e;
-            } else if (log.isDebugEnabled()) {
+            else if (log.isDebugEnabled())
                 log.debug("Ignoring exception", e);
-            }
+
         } finally {
             container.endContext(request);
         }

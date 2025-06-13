@@ -47,14 +47,7 @@ public class JspPrintWriterAdapter extends PrintWriter {
         super(writer);
         this.writer = writer;
     }
-    /*
-     * Returns the original JSP writer.
-     *
-     * @return The JSP writer.
-    public JspWriter getJspWriter() {
-    return writer;
-    }
-     */
+
     /**
      * {@inheritDoc}
      */

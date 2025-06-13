@@ -99,11 +99,11 @@ public class CachingLocaleUrlDefinitionDAO extends BaseLocaleUrlDefinitionDAO
             retValue = definitions.get(name);
             if (retValue == null) {
                 retValue = getDefinitionFromResolver(name, customizationKey);
-                if (retValue != null) {
+                if (retValue != null)
                     //synchronized (definitions) {
                     definitions.put(name, retValue);
                     //}
-                }
+
             }
         }
         return retValue;
@@ -112,14 +112,14 @@ public class CachingLocaleUrlDefinitionDAO extends BaseLocaleUrlDefinitionDAO
      * {@inheritDoc}
      */
     public Map<String, Definition> getDefinitions(Locale customizationKey) {
-        if (customizationKey == null) {
+        if (customizationKey == null)
             customizationKey = Locale.ROOT;
-        }
+
         Map<String, Definition> retValue = locale2definitionMap
                 .get(customizationKey);
-        if (retValue == null || (checkRefresh && refreshRequired())) {
+        if (retValue == null || (checkRefresh && refreshRequired()))
             retValue = checkAndloadDefinitions(customizationKey);
-        }
+
         return retValue;
     }
     /*
@@ -174,10 +174,8 @@ public class CachingLocaleUrlDefinitionDAO extends BaseLocaleUrlDefinitionDAO
     protected Map<String, Definition> loadDefinitions(Locale customizationKey) {
         Map<String, Definition> localeDefsMap = locale2definitionMap
                 .get(customizationKey);
-        if (localeDefsMap != null) {
-            return localeDefsMap;
-        }
-        return loadDefinitionsFromResources(customizationKey);
+        return localeDefsMap != null ? localeDefsMap
+                : loadDefinitionsFromResources(customizationKey);
     }
     /**
      * Loads definitions from the sources.
@@ -208,18 +206,18 @@ public class CachingLocaleUrlDefinitionDAO extends BaseLocaleUrlDefinitionDAO
         localeDefsMap = new LinkedHashMap<>();
         if (parentLocale != null) {
             Map<String, Definition> parentDefs = loadRawDefinitionsFromResources(parentLocale);
-            if (parentDefs != null) {
+            if (parentDefs != null)
                 localeDefsMap.putAll(parentDefs);
-            }
+
         }
         // For each source, the resource must be loaded.
         for (ApplicationResource resource : sources) {
             ApplicationResource newResource = applicationContext.getResource(resource, customizationKey);
             if (newResource != null) {
                 Map<String, Definition> defsMap = loadDefinitionsFromResource(newResource);
-                if (defsMap != null) {
+                if (defsMap != null)
                     localeDefsMap.putAll(defsMap);
-                }
+
             }
         }
         return localeDefsMap;

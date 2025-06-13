@@ -28,24 +28,11 @@ import org.apache.tiles.request.RequestException;
 public class RenderException extends RequestException {
     /**
      * Constructor.
-     */
-    public RenderException() {
-    }
-    /**
-     * Constructor.
      *
      * @param message The message of the exception.
      */
     public RenderException(String message) {
         super(message);
-    }
-    /**
-     * Constructor.
-     *
-     * @param cause The cause.
-     */
-    public RenderException(Throwable cause) {
-        super(cause);
     }
     /**
      * Constructor.

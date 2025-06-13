@@ -168,15 +168,6 @@ public class BasicTilesContainer implements TilesContainer,
         this.definitionsFactory = definitionsFactory;
     }
 
-    /*
-     * Returns the preparer factory used by this container.
-     *
-     * @return return the preparerInstance factory used by this container.
-    public PreparerFactory getPreparerFactory() {
-        return preparerFactory;
-    }
-     */
-
     /**
      * Set the preparerInstance factory.  This method first ensures
      * that the container has not yet been initialized.
@@ -214,9 +205,8 @@ public class BasicTilesContainer implements TilesContainer,
 
         Definition definition = getDefinition(definitionName, request);
 
-        if (definition == null) {
-            throw new NoSuchDefinitionException("Unable to find the definition '" + definitionName + "'");
-        }
+        if (definition == null)
+            throw new NoSuchDefinitionException("Unable to find the definition '%s'".formatted(definitionName));
 
         render(definition, request);
     }
@@ -244,18 +234,17 @@ public class BasicTilesContainer implements TilesContainer,
     /** {@inheritDoc} */
     public void render(Attribute attr, Request request)
         throws IOException {
-        if (attr == null) {
+        if (attr == null)
             throw new CannotRenderException("Cannot render a null attribute");
-        }
+
 
         if (attr.isPermitted(request)) {
             Renderer renderer = rendererFactory.getRenderer(attr.getRenderer());
             Object value = evaluate(attr, request);
-            if (!(value instanceof String)) {
+            if (!(value instanceof String))
                 throw new CannotRenderException(
-                        "Cannot render an attribute that is not a string, toString returns: "
-                                + value);
-            }
+                        "Cannot render an attribute that is not a string, toString returns: %s".formatted(value));
+
             renderer.render((String) value, request);
         }
     }
@@ -273,8 +262,7 @@ public class BasicTilesContainer implements TilesContainer,
             Definition definition = getDefinition(definitionName, request);
             return definition != null;
         } catch (NoSuchDefinitionException nsde) {
-            log.debug("Cannot find definition '{}'", definitionName);
-            log.debug("Exception related to the not found definition", nsde);
+            log.debug("Cannot find definition '{}' , Exception related to the not found definition", definitionName, nsde);
             return false;
         }
     }
@@ -339,10 +327,7 @@ public class BasicTilesContainer implements TilesContainer,
      */
     protected AttributeContext getContext(Request tilesContext) {
         Deque<AttributeContext> contextStack = getContextStack(tilesContext);
-        if (!contextStack.isEmpty()) {
-            return contextStack.peek();
-        }
-        return null;
+        return !contextStack.isEmpty() ? contextStack.peek() : null;
     }
 
     /**
@@ -357,20 +342,17 @@ public class BasicTilesContainer implements TilesContainer,
      * exception.
      */
     private void prepare(Request context, String preparerName, boolean ignoreMissing) {
-
         log.debug("Prepare request received for '{}'", preparerName);
-
         ViewPreparer preparer = preparerFactory.getPreparer(preparerName, context);
-        if (preparer == null && ignoreMissing) {
+        if (preparer == null && ignoreMissing)
             return;
-        }
 
-        if (preparer == null) {
-            throw new NoSuchPreparerException("Preparer '" + preparerName + " not found");
-        }
+
+        if (preparer == null)
+            throw new NoSuchPreparerException("Preparer '%s not found".formatted(preparerName));
+
 
         AttributeContext attributeContext = getContext(context);
-
         preparer.execute(context, attributeContext);
     }
 
@@ -387,9 +369,9 @@ public class BasicTilesContainer implements TilesContainer,
             AttributeContext attributeContext) {
 
         try {
-            if (attributeContext.getPreparer() != null) {
+            if (attributeContext.getPreparer() != null)
                 prepare(request, attributeContext.getPreparer(), true);
-            }
+
 
             render(attributeContext.getTemplateAttribute(), request);
         } catch (IOException e) {

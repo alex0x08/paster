@@ -56,16 +56,6 @@ public class BasicAttributeEvaluatorFactory implements
         language2evaluator = new HashMap<>();
     }
     /**
-     * Registers a known expression language with its attribute evaluator.
-     *
-     * @param language  The name of the expression language.
-     * @param evaluator The associated attribute evaluator.
-     * @since 2.2.0
-     */
-    public void registerAttributeEvaluator(String language, AttributeEvaluator evaluator) {
-        language2evaluator.put(language, evaluator);
-    }
-    /**
      * {@inheritDoc}
      */
     public AttributeEvaluator getAttributeEvaluator(String language) {

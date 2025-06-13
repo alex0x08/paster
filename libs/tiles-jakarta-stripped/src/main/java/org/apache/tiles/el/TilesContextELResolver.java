@@ -20,9 +20,6 @@
  */
 package org.apache.tiles.el;
 
-import java.beans.FeatureDescriptor;
-import java.util.Iterator;
-
 import jakarta.el.ELContext;
 import jakarta.el.ELResolver;
 
@@ -69,19 +66,6 @@ public class TilesContextELResolver extends ELResolver {
 
         return String.class;
     }
-
-    /** {@inheritDoc} */
-   // @Override
-    public Iterator<FeatureDescriptor> getFeatureDescriptors(ELContext context,
-            Object base) {
-        // only resolve at the root of the context
-        if (base != null) {
-            return null;
-        }
-
-        return requestBeanInfo.getDescriptors().iterator();
-    }
-
     /** {@inheritDoc} */
     @Override
     public Class<?> getType(ELContext context, Object base, Object property) {

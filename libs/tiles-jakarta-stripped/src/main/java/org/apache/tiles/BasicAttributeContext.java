@@ -241,40 +241,6 @@ public class BasicAttributeContext implements AttributeContext, Serializable {
 
         attributes.putAll(newAttributes);
     }
-
-    /**
-     * Add all missing attributes to this context.
-     * Copies all of the mappings from the specified attributes map to this context.
-     * New attribute mappings will be added only if they don't already exist in
-     * this context.
-     *
-     * @param defaultAttributes Attributes to add.
-     * @since 2.1.0
-     */
-    public void addMissing(Map<String, Attribute> defaultAttributes) {
-        if (defaultAttributes == null) {
-            return;
-        }
-
-        if (attributes == null) {
-            attributes = new HashMap<>();
-            if (cascadedAttributes == null || cascadedAttributes.isEmpty()) {
-                attributes.putAll(defaultAttributes);
-                return;
-            }
-        }
-
-        Set<Map.Entry<String, Attribute>> entries = defaultAttributes.entrySet();
-        for (Map.Entry<String, Attribute> entry : entries) {
-            String key = entry.getKey();
-            if (!attributes.containsKey(key)
-                    && (cascadedAttributes == null || !cascadedAttributes
-                            .containsKey(key))) {
-                attributes.put(entry.getKey(), entry.getValue());
-            }
-        }
-    }
-
     /** {@inheritDoc} */
     public Attribute getAttribute(String name) {
         Attribute retValue = null;

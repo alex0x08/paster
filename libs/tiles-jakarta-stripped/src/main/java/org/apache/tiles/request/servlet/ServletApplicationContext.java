@@ -29,11 +29,9 @@ import java.util.Map;
 import jakarta.servlet.ServletContext;
 import org.apache.tiles.request.ApplicationContext;
 import org.apache.tiles.request.ApplicationResource;
-import org.apache.tiles.request.collection.ReadOnlyEnumerationMap;
 import org.apache.tiles.request.collection.ScopeMap;
 import org.apache.tiles.request.locale.URLApplicationResource;
 import org.apache.tiles.request.servlet.extractor.ApplicationScopeExtractor;
-import org.apache.tiles.request.servlet.extractor.InitParameterExtractor;
 /**
  * Servlet-based implementation of the TilesApplicationContext interface.
  *
@@ -76,15 +74,6 @@ public class ServletApplicationContext implements ApplicationContext {
             applicationScope = new ScopeMap(new ApplicationScopeExtractor(servletContext));
         }
         return (applicationScope);
-    }
-    /**
-     * {@inheritDoc}
-     */
-    public Map<String, String> getInitParams() {
-        if ((initParam == null) && (servletContext != null)) {
-            initParam = new ReadOnlyEnumerationMap<>(new InitParameterExtractor(servletContext));
-        }
-        return (initParam);
     }
     /**
      * {@inheritDoc}

@@ -50,17 +50,6 @@ public final class TilesAccess {
     public static final String CONTAINER_ATTRIBUTE =
             "org.apache.tiles.CONTAINER";
     /**
-     * Configures the default container to be used in the application.
-     *
-     * @param context   The Tiles application context object to use.
-     * @param container The container object to set.
-     * @since 2.1.2
-     */
-    public static void setContainer(ApplicationContext context,
-                                    TilesContainer container) {
-        setContainer(context, container, CONTAINER_ATTRIBUTE);
-    }
-    /**
      * Configures the container to be used in the application.
      *
      * @param context   The Tiles application context object to use.
@@ -71,18 +60,18 @@ public final class TilesAccess {
     public static void setContainer(ApplicationContext context,
                                     TilesContainer container, String key) {
         Logger log = LoggerFactory.getLogger(TilesAccess.class);
-        if (key == null) {
+        if (key == null)
             key = CONTAINER_ATTRIBUTE;
-        }
+
         if (container == null) {
-            if (log.isInfoEnabled()) {
-                log.info("Removing TilesContext for context: " + context.getClass().getName());
-            }
+            if (log.isInfoEnabled())
+                log.info("Removing TilesContext for context: %s".formatted(context.getClass().getName()));
+
             context.getApplicationScope().remove(key);
         } else {
-            if (log.isInfoEnabled()) {
-                log.info("Publishing TilesContext for context: " + context.getClass().getName());
-            }
+            if (log.isInfoEnabled())
+                log.info("Publishing TilesContext for context: %s".formatted(context.getClass().getName()));
+
             context.getApplicationScope().put(key, container);
         }
     }
@@ -122,27 +111,11 @@ public final class TilesAccess {
                                            String key) {
         ApplicationContext applicationContext = request.getApplicationContext();
         TilesContainer container = getContainer(applicationContext, key);
-        if (container != null) {
+        if (container != null)
             request.getContext("request").put(CURRENT_CONTAINER_ATTRIBUTE_NAME, container);
-        } else {
-            throw new NoSuchContainerException("The container with the key '"
-                    + key + "' cannot be found");
-        }
-    }
-    /**
-     * Sets the current container to use in web pages.
-     *
-     * @param request   The request to use.
-     * @param container The container to use as the current container.
-     * @since 2.1.0
-     */
-    public static void setCurrentContainer(Request request,
-                                           TilesContainer container) {
-        if (container != null) {
-            request.getContext("request").put(CURRENT_CONTAINER_ATTRIBUTE_NAME, container);
-        } else {
-            throw new NullPointerException("The container cannot be null");
-        }
+         else
+            throw new NoSuchContainerException("The container with the key '%s' cannot be found".formatted(key));
+
     }
     /**
      * Returns the current container that has been set, or the default one.

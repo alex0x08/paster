@@ -101,9 +101,9 @@ class UserManager extends UserDetailsService with Logged {
   private val users = mutable.Map[String, PasterUser]()
   @Autowired
   @Qualifier("sessionRegistry")
-  val sessionRegistry: SessionRegistry = null
+  private val sessionRegistry: SessionRegistry = null
   @Autowired
-  val passwordEncoder: PasswordEncoder = null
+  private val passwordEncoder: PasswordEncoder = null
   def loadUsers(): Unit = {
     val csv = new File(Boot.BOOT.getSystemInfo.getAppHome, "users.csv")
     UserManager.loadUsersFromCSV(csv, (record: CSVRecord) => {
@@ -131,7 +131,7 @@ class UserManager extends UserDetailsService with Logged {
         logger.debug("saved {}", u.getUsername())
   }
   @Override
-  def getUser(username: String): PasterUser = {
+  private def getUser(username: String): PasterUser = {
     if (users contains username)
       users(username)
     else null
@@ -159,7 +159,7 @@ class UserManager extends UserDetailsService with Logged {
       throw new UsernameNotFoundException(s"User $username not found")
     out
   }
-  def changePassword(user: PasterUser, newPassword: String): PasterUser = {
+  private def changePassword(user: PasterUser, newPassword: String): PasterUser = {
     val encodedPass = passwordEncoder.encode(newPassword)
     if (logger.isDebugEnabled)
       logger.debug("changing password for user {}", user.getUsername)

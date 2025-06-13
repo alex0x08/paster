@@ -28,7 +28,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import jakarta.validation.constraints.NotNull;
 import org.apache.tiles.request.attribute.HasKeys;
+import org.springframework.lang.NonNull;
 /**
  * Exposes keys of a {@link HasKeys} object as a set.
  *
@@ -78,6 +80,7 @@ public class KeySet implements Set<String> {
     public boolean isEmpty() {
         return !request.getKeys().hasMoreElements();
     }
+    @NonNull
     @Override
     public Iterator<String> iterator() {
         return new KeySetIterator();

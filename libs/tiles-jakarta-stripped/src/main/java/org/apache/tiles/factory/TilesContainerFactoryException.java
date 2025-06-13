@@ -28,13 +28,7 @@ import org.apache.tiles.TilesException;
  */
 public class TilesContainerFactoryException extends TilesException {
 
-    /*
-     * Constructor.
-     *
-     * @since 2.1.0
-    public TilesContainerFactoryException() {
-    }
-     */
+
     /**
      * Constructor.
      *
@@ -45,24 +39,4 @@ public class TilesContainerFactoryException extends TilesException {
         super(message);
     }
 
-    /*
-     * Constructor.
-     *
-     * @param e The exception to be wrapped.
-     * @since 2.1.0
-    public TilesContainerFactoryException(Throwable e) {
-        super(e);
-    }
-     */
-
-    /*
-     * Constructor.
-     *
-     * @param message The detail message.
-     * @param e The exception to be wrapped.
-     * @since 2.1.0
-    public TilesContainerFactoryException(String message, Throwable e) {
-        super(message, e);
-    }
-     */
 }

@@ -37,13 +37,4 @@ public class DigesterDefinitionsReaderException extends TilesException {
     public DigesterDefinitionsReaderException(String message) {
         super(message);
     }
-    /**
-     * Constructor.
-     *
-     * @param e The exception to be wrapped.
-     * @since 2.1.0
-     */
-    public DigesterDefinitionsReaderException(Throwable e) {
-        super(e);
-    }
 }

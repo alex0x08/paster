@@ -45,13 +45,12 @@ public class DefaultAttributeResolver implements AttributeResolver {
             if (attribute == null) {
                 attribute = computeDefaultAttribute(defaultValue,
                         defaultValueRole, defaultValueType);
-                if (attribute == null && !ignore) {
-                    throw new NoSuchAttributeException("Attribute '" + name
-                            + "' not found.");
-                }
+                if (attribute == null && !ignore)
+                    throw new NoSuchAttributeException("Attribute '%s' not found.".formatted(name));
+
             }
         }
-        if (attribute != null && role != null && !"".equals(role.trim())) {
+        if (attribute != null && role != null && !role.trim().isEmpty()) {
             attribute = new Attribute(attribute);
             attribute.setRole(role);
         }
@@ -70,12 +69,12 @@ public class DefaultAttributeResolver implements AttributeResolver {
             String defaultValueRole, String defaultValueType) {
         Attribute attribute = null;
         if (defaultValue != null) {
-            if (defaultValue instanceof Attribute) {
-                attribute = (Attribute) defaultValue;
-            } else if (defaultValue instanceof String) {
+            if (defaultValue instanceof Attribute a)
+                attribute = a;
+             else if (defaultValue instanceof String)
                 attribute = new Attribute(defaultValue, null,
                         defaultValueRole, defaultValueType);
-            }
+
         }
         return attribute;
     }

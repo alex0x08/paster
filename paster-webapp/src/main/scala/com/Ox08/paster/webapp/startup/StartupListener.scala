@@ -26,6 +26,10 @@ import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.context.support.SpringBeanAutowiringSupport
 import org.springframework.web.servlet.i18n.SessionLocaleResolver
 import java.security.SecureRandom
+
+/**
+ * Stores Spring services, used during boot process
+ */
 class BootContext {
   @Autowired
   val users: UserManager = null
@@ -34,9 +38,16 @@ class BootContext {
   @Autowired
   val localeResolver: SessionLocaleResolver = null
 }
+
+/**
+ * Servlet Listener, used to configure Paster app on start
+ */
 class StartupListener extends ServletContextListener with Logged {
   override def contextInitialized(event: ServletContextEvent): Unit = {
-    if (Boot.BOOT.getSystemInfo.isInstalled) {
+    // do not process, if Paster is not installed yet
+    if (!Boot.BOOT.getSystemInfo.isInstalled)
+        return
+
       event.getServletContext.setAttribute("pasterInstalled",true)
       val bootContext = new BootContext()
       SpringBeanAutowiringSupport
@@ -52,13 +63,15 @@ class StartupListener extends ServletContextListener with Logged {
           logger.error(e.getLocalizedMessage, e)
           throw e; // to stop application
       }
-    }
+
   }
   override def contextDestroyed(servletContextEvent: ServletContextEvent): Unit = {
     // not used
   }
-  def setupSecurityContext(): Unit = {
+  private def setupSecurityContext(): Unit = {
+    // this is system user, used during initial setup process
     val start_user = new PasterUser("System", "system",
+      // generate fake password
       Md5Crypt.md5Crypt(SecureRandom.getSeed(20)),
       java.util.Set.of(Role.ROLE_ADMIN))
     // log user in automatically

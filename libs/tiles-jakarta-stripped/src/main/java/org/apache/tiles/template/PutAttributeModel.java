@@ -126,28 +126,28 @@ public class PutAttributeModel {
         AttributeContext attributeContext = null;
         if (!composeStack.isEmpty()) {
             Object obj = composeStack.peek();
-            if (obj instanceof AttributeContext) {
-                attributeContext = (AttributeContext) obj;
-            }
+            if (obj instanceof AttributeContext ac)
+                attributeContext = ac;
+
         }
-        if (attributeContext == null) {
+        if (attributeContext == null)
             attributeContext = container.getAttributeContext(request);
-        }
-        if (value != null) {
+
+        if (value != null)
             attribute.setValue(value);
-        } else if (attribute.getValue() == null && body != null) {
+        else if (attribute.getValue() == null && body != null)
             attribute.setValue(body);
-        }
-        if (expression != null) {
+
+        if (expression != null)
             attribute.setExpressionObject(Expression
                     .createExpressionFromDescribedExpression(expression));
-        }
-        if (role != null) {
+
+        if (role != null)
             attribute.setRole(role);
-        }
-        if (type != null) {
+
+        if (type != null)
             attribute.setRenderer(type);
-        }
+
 
         attributeContext.putAttribute(name, attribute, cascade);
     }

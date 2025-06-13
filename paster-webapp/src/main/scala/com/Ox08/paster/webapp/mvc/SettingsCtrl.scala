@@ -20,11 +20,11 @@ import org.springframework.web.bind.annotation.{RequestMapping, RequestMethod}
 import java.util.Locale
 @Controller
 @RequestMapping(Array("/admin/settings"))
-class SettingsController extends AbstractCtrl {
+class SettingsCtrl extends AbstractCtrl {
   def editPage = "/admin/settings/edit"
   def manager(): Null = null
   @RequestMapping(value = Array("/dbconsole"), method = Array(RequestMethod.GET))
-  def dbconsole(model: Model, locale: Locale): String = {
+  def dbconsole(): String = {
     "/admin/settings/dbconsole"
   }
 }

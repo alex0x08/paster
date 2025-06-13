@@ -108,11 +108,7 @@ public class Expression {
      * @since 2.2.0
      */
     public static Expression createExpression(String expression, String language) {
-        if (expression != null) {
-            return new Expression(expression, language);
-        }
-
-        return null;
+        return expression != null ? new Expression(expression, language) : null;
     }
 
     /**
@@ -138,10 +134,7 @@ public class Expression {
     /** {@inheritDoc} */
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof Expression exp)) {
-            return false;
-        }
-        return nullSafeEquals(expression, exp.expression)
+        return obj instanceof Expression exp && nullSafeEquals(expression, exp.expression)
                 && nullSafeEquals(language, exp.language);
     }
 

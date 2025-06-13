@@ -57,17 +57,12 @@ public class SessionScopeExtractor implements AttributeExtractor {
     @Override
     public Enumeration<String> getKeys() {
         HttpSession session = request.getSession(false);
-        if (session != null) {
-            return session.getAttributeNames();
-        }
-        return Collections.enumeration(Collections.emptySet());
+        return session != null ? session.getAttributeNames()
+                : Collections.enumeration(Collections.emptySet());
     }
     @Override
     public Object getValue(String key) {
         HttpSession session = request.getSession(false);
-        if (session != null) {
-            return session.getAttribute(key);
-        }
-        return null;
+        return session != null ? session.getAttribute(key) : null;
     }
 }

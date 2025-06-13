@@ -27,12 +27,9 @@
         <%--
             back to list button
         --%>
-        <c:url var='backToListUrl' value='/main/paste/list'/>
-        <a href="${backToListUrl}"
-                target="${target}"
-                title="<fmt:message key=" paste.list.title" />">
-                    <span style="font-size: larger;" class="i">(</span>
-        </a>
+         <a href="<c:url value='/main/paste/list'/>"
+                        target="${target}"
+                        title="<fmt:message key="paste.list.title"/>">&#8592;</a>
 
         <%--
             Priority

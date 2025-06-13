@@ -26,7 +26,8 @@ public class PutListAttributeTag extends SimpleTagSupport {
     /**
      * The template model.
      */
-    private final org.apache.tiles.template.PutListAttributeModel model = new org.apache.tiles.template.PutListAttributeModel();
+    private final org.apache.tiles.template.PutListAttributeModel model
+            = new org.apache.tiles.template.PutListAttributeModel();
 
     /**
      * The name of the attribute to put.
@@ -137,7 +138,8 @@ public class PutListAttributeTag extends SimpleTagSupport {
     /** {@inheritDoc} */
     @Override
     public void doTag() throws JspException, IOException {
-        AutotagRuntime<org.apache.tiles.request.Request> runtime = new org.apache.tiles.request.jsp.autotag.JspAutotagRuntime();
+        AutotagRuntime<org.apache.tiles.request.Request> runtime
+                = new org.apache.tiles.request.jsp.autotag.JspAutotagRuntime();
         SimpleTagSupport tag = (SimpleTagSupport) runtime;
         tag.setJspContext(getJspContext());
         tag.setJspBody(getJspBody());

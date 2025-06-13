@@ -86,10 +86,10 @@ public class ResolvingLocaleUrlDefinitionDAO extends
     protected void resolveInheritances(Map<String, Definition> map, Locale locale) {
         if (map != null) {
             Set<String> alreadyResolvedDefinitions = new HashSet<>();
-            for (Definition definition : map.values()) {
+            for (Definition definition : map.values())
                 resolveInheritance(definition, map, locale,
                         alreadyResolvedDefinitions);
-            }  // end loop
+             // end loop
         }
     }
     /**
@@ -112,9 +112,9 @@ public class ResolvingLocaleUrlDefinitionDAO extends
                                       Set<String> alreadyResolvedDefinitions) {
         // Already done, or not needed ?
         if (!definition.isExtending()
-                || alreadyResolvedDefinitions.contains(definition.getName())) {
+                || alreadyResolvedDefinitions.contains(definition.getName()))
             return;
-        }
+
         log.debug("Resolve definition for child name='{}' extends='{}.",
                 definition.getName(), definition.getExtends());
         // Set as visited to avoid endless recursivity.
@@ -122,11 +122,7 @@ public class ResolvingLocaleUrlDefinitionDAO extends
         // Resolve parent before itself.
         Definition parent = definitions.get(definition.getExtends());
         if (parent == null) { // error
-            String msg = "Error while resolving definition inheritance: child '"
-                    + definition.getName()
-                    + "' can't find its ancestor '"
-                    + definition.getExtends()
-                    + "'. Please check your description file.";
+            String msg = "Error while resolving definition inheritance: child '%s' can't find its ancestor '%s'. Please check your description file.".formatted(definition.getName(), definition.getExtends());
             // to do : find better exception
             throw new NoSuchDefinitionException(msg);
         }

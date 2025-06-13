@@ -26,7 +26,7 @@ object Boot {
   private val INSTALLED_TS_FORMAT: SimpleDateFormat = new SimpleDateFormat("MM.dd.yyyy HH:mm")
   val BOOT = new Boot
 }
-class Boot private() extends Logged {
+class Boot extends Logged {
   private val wasBoot = false // a mark that system has been booted already
   private var initialConfig = false
   def getSystemInfo: SystemInfo = SystemInfo.SYSTEM_INFO
@@ -263,7 +263,8 @@ class Boot private() extends Logged {
   private def createLoadAppConfig(system: SystemInfo, app_home: File): File = {
     val config = new File(app_home, "config.properties")
     if (!config.exists || !config.isFile) {
-      logger.warn(SystemMessage.of("paster.system.message.appConfigNotFound", config.getAbsolutePath))
+      logger.warn(SystemMessage.of("paster.system.message.appConfigNotFound",
+        config.getAbsolutePath))
       return null
     }
     system.setConfigFile(config)
@@ -284,7 +285,7 @@ class Boot private() extends Logged {
         input.close()
     config
   }
-  object SystemInfo {
+  private object SystemInfo {
     val SYSTEM_INFO = new SystemInfo
   }
   /**
@@ -322,9 +323,10 @@ class Boot private() extends Logged {
     def getAvailableLocaleFrom(lang: String): Locale = {
       if (StringUtils.isBlank(lang))
         return Locale.ENGLISH
-      for (l <- availableLocales)
+      for (l <- availableLocales) {
         if (l.toLanguageTag.equalsIgnoreCase(lang) || l.getLanguage.equalsIgnoreCase(lang))
           return l
+      }
       Locale.ENGLISH
     }
     def getSystemLocale: Locale = systemLocale
@@ -421,7 +423,7 @@ class Boot private() extends Logged {
   class AppVersion(p: Properties, git: Properties) extends Serializable {
     private val UNDEFINED = "UNDEFINED"
     private val MAVEN_TS_FORMAT: SimpleDateFormat = new SimpleDateFormat("yyy-MM-dd_HHmm")
-    val implVer: String = p.getProperty("build.version", UNDEFINED)
+    private val implVer: String = p.getProperty("build.version", UNDEFINED)
     val implBuildNum: String = p.getProperty("build.number", UNDEFINED)
     val implBuildTime: String = p.getProperty("build.time", UNDEFINED)
     val buildDate: Date = try {

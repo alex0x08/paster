@@ -42,14 +42,4 @@ public class PreparerException extends TilesException {
     public PreparerException(String message) {
         super(message);
     }
-
-    /**
-     * Constructor.
-     *
-     * @param message The message to include.
-     * @param e The cause exception.
-     */
-    public PreparerException(String message, Throwable e) {
-        super(message, e);
-    }
 }

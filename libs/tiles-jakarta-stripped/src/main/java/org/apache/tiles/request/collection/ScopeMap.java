@@ -77,9 +77,9 @@ public class ScopeMap extends ReadOnlyEnumerationMap<Object> {
      * {@inheritDoc}
      */
     public void putAll(Map<? extends String, ?> map) {
-        for (String key : map.keySet()) {
+        for (String key : map.keySet())
             context.setValue(key, map.get(key));
-        }
+
     }
     /**
      * {@inheritDoc}
@@ -109,9 +109,9 @@ public class ScopeMap extends ReadOnlyEnumerationMap<Object> {
         public boolean addAll(
                 Collection<? extends java.util.Map.Entry<String, Object>> c) {
             boolean retValue = false;
-            for (Map.Entry<String, Object> entry : c) {
+            for (Map.Entry<String, Object> entry : c)
                 retValue |= add(entry);
-            }
+
             return retValue;
         }
         @Override
@@ -133,7 +133,8 @@ public class ScopeMap extends ReadOnlyEnumerationMap<Object> {
         @SuppressWarnings("unchecked")
         @Override
         public boolean removeAll(Collection<?> c) {
-            Collection<Map.Entry<String, Object>> realCollection = (Collection<java.util.Map.Entry<String, Object>>) c;
+            Collection<Map.Entry<String, Object>> realCollection
+                    = (Collection<java.util.Map.Entry<String, Object>>) c;
             boolean retValue = false;
             for (Map.Entry<String, Object> entry : realCollection) {
                 retValue |= remove(entry);
@@ -143,7 +144,8 @@ public class ScopeMap extends ReadOnlyEnumerationMap<Object> {
         @SuppressWarnings("unchecked")
         @Override
         public boolean retainAll(Collection<?> c) {
-            Collection<Map.Entry<String, Object>> realCollection = (Collection<java.util.Map.Entry<String, Object>>) c;
+            Collection<Map.Entry<String, Object>> realCollection
+                    = (Collection<java.util.Map.Entry<String, Object>>) c;
             boolean retValue = false;
             Set<String> keysToRemove = new LinkedHashSet<>();
             for (Enumeration<String> keys = context.getKeys(); keys.hasMoreElements(); ) {
@@ -155,9 +157,9 @@ public class ScopeMap extends ReadOnlyEnumerationMap<Object> {
                     keysToRemove.add(key);
                 }
             }
-            for (String key : keysToRemove) {
+            for (String key : keysToRemove)
                 context.removeValue(key);
-            }
+
             return retValue;
         }
     }

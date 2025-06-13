@@ -58,15 +58,15 @@ public class HeaderValuesMap implements Map<String, String[]> {
      * {@inheritDoc}
      */
     public boolean containsValue(Object value) {
-        if (!(value instanceof String[] test)) {
-            return (false);
-        }
+        if (!(value instanceof String[] test))
+            return false;
+
         Enumeration<String> names = request.getKeys();
         while (names.hasMoreElements()) {
             String name = names.nextElement();
-            if (compareHeaders(name, array2set(test))) {
+            if (compareHeaders(name, array2set(test)))
                 return true;
-            }
+
         }
         return false;
     }
@@ -81,9 +81,9 @@ public class HeaderValuesMap implements Map<String, String[]> {
      */
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof  HeaderValuesMap)) {
+        if (!(o instanceof  HeaderValuesMap))
             return false;
-        }
+
         EnumeratedValuesExtractor otherRequest = ((HeaderValuesMap) o).request;
         boolean retValue = true;
         for (Enumeration<String> attribs = request.getKeys(); attribs
@@ -112,9 +112,9 @@ public class HeaderValuesMap implements Map<String, String[]> {
             String parameterName = attribs.nextElement();
             Enumeration<String> values = request.getValues(parameterName);
             int valueHash = 0;
-            while (values.hasMoreElements()) {
+            while (values.hasMoreElements())
                 valueHash += values.nextElement().hashCode();
-            }
+
             retValue += parameterName.hashCode() ^ valueHash;
         }
         return retValue;
@@ -243,11 +243,11 @@ public class HeaderValuesMap implements Map<String, String[]> {
         public boolean containsAll(Collection<?> c) {
             Collection<Map.Entry<String, String[]>> realCollection =
                     (Collection<Map.Entry<String, String[]>>) c;
-            for (Map.Entry<String, String[]> entry : realCollection) {
-                if (!containsEntry(entry)) {
+            for (Map.Entry<String, String[]> entry : realCollection)
+                if (!containsEntry(entry))
                     return false;
-                }
-            }
+
+
             return true;
         }
         @Override
@@ -292,11 +292,11 @@ public class HeaderValuesMap implements Map<String, String[]> {
             Enumeration<String> entryValues = request.getValues(key(entry.getKey()));
             String[] valueArray = entry.getValue();
             Set<String> values = array2set(valueArray);
-            while (entryValues.hasMoreElements()) {
-                if (!values.remove(entryValues.nextElement())) {
+            while (entryValues.hasMoreElements())
+                if (!values.remove(entryValues.nextElement()))
                     return false;
-                }
-            }
+
+
             return values.isEmpty();
         }
         /**
@@ -307,9 +307,9 @@ public class HeaderValuesMap implements Map<String, String[]> {
         private List<Map.Entry<String, String[]>> toList() {
             List<Map.Entry<String, String[]>> entries = new ArrayList<>();
             Enumeration<String> names = request.getKeys();
-            while (names.hasMoreElements()) {
+            while (names.hasMoreElements())
                 entries.add(extractNextEntry(names));
-            }
+
             return entries;
         }
         /**
@@ -370,11 +370,11 @@ public class HeaderValuesMap implements Map<String, String[]> {
         @Override
         public boolean containsAll(Collection<?> c) {
             Collection<String[]> realCollection = (Collection<String[]>) c;
-            for (String[] value : realCollection) {
-                if (!containsValue(value)) {
+            for (String[] value : realCollection)
+                if (!containsValue(value))
                     return false;
-                }
-            }
+
+
             return true;
         }
         @Override
@@ -417,9 +417,9 @@ public class HeaderValuesMap implements Map<String, String[]> {
         private List<String[]> toList() {
             List<String[]> entries = new ArrayList<>();
             Enumeration<String> names = request.getKeys();
-            while (names.hasMoreElements()) {
+            while (names.hasMoreElements())
                 entries.add(enumeration2array(request.getValues(names.nextElement())));
-            }
+
             return entries;
         }
         /**
@@ -430,9 +430,9 @@ public class HeaderValuesMap implements Map<String, String[]> {
          */
         private String[] enumeration2array(Enumeration<String> enumeration) {
             List<String> list1 = new ArrayList<>();
-            while (enumeration.hasMoreElements()) {
+            while (enumeration.hasMoreElements())
                 list1.add(enumeration.nextElement());
-            }
+
             return list1.toArray(new String[0]);
         }
         /**

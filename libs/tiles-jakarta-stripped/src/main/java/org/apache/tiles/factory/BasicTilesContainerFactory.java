@@ -112,7 +112,7 @@ public class BasicTilesContainerFactory extends AbstractTilesContainerFactory {
         return originalContainer;
     }
     /**
-     * Creates the definitions factory. By default it creates a
+     * Creates the definitions factory. By default, it creates a
      * {@link UnresolvingLocaleDefinitionsFactory} with default dependencies.
      *
      * @param applicationContext The Tiles application context.
@@ -183,7 +183,7 @@ public class BasicTilesContainerFactory extends AbstractTilesContainerFactory {
         return new DefaultLocaleResolver();
     }
     /**
-     * Creates the definitions reader. By default it creates a
+     * Creates the definition's reader. By default, it creates a
      * {@link DigesterDefinitionsReader}.
      *
      * @param applicationContext The Tiles application context.

@@ -52,20 +52,20 @@ public class PublisherRenderer implements Renderer {
 
     @Override
     public void render(String path, Request request) throws IOException {
-        if (path == null) {
+        if (path == null)
             throw new CannotRenderException("Cannot dispatch a null path");
-        }
+
         try{
-            for(RendererListener listener : listeners){
+            for(RendererListener listener : listeners)
                 listener.start(path, request);
-            }
+
             renderer.render(path, request);
         }catch(IOException ex){
             handleIOException(ex, request);
         }finally{
-            for(RendererListener wrapper : listenersReversed){
+            for(RendererListener wrapper : listenersReversed)
                 wrapper.end(path, request);
-            }
+
         }
     }
 
@@ -87,8 +87,8 @@ public class PublisherRenderer implements Renderer {
             listener.handleIOException(exception, request);
             throwIt = false;
         }
-        if(throwIt){
+        if(throwIt)
             throw exception;
-        }
+
     }
 }

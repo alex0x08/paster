@@ -23,10 +23,11 @@ import org.springframework.dao.DataAccessException
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.userdetails.{UserDetails, UserDetailsService}
 import org.springframework.security.web.authentication.rememberme.{AbstractRememberMeServices, InvalidCookieException, RememberMeAuthenticationException}
+
 import java.security.SecureRandom
-import java.time.{LocalDate, ZoneId}
+import java.time.LocalDate
 import java.util
-import java.util.{Base64, Date}
+import java.util.Base64
 object CPRConstants {
   // Token is valid for one month
   val TOKEN_VALIDITY_DAYS = 31
@@ -112,7 +113,7 @@ class PasterPersistentRememberMeServices(key: String,
   /**
    * Validate the token and return it.
    */
-  def getPersistentToken(cookieTokens: Array[String]): SessionToken = {
+  private def getPersistentToken(cookieTokens: Array[String]): SessionToken = {
     if (cookieTokens.length != 2) {
       throw new InvalidCookieException(
         s"Cookie token did not contain 2 tokens, but contained '${util.Arrays.asList(cookieTokens)}'")
