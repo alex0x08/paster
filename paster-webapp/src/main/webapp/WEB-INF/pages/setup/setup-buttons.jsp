@@ -26,16 +26,13 @@
 </c:if>
 
 <c:if test="${nextStep!=null}">
- <button type="submit" class="btn btn-primary">
+    <button type="submit" class="btn btn-primary">
          <fmt:message key="button.next" />
-</button>
+    </button>
 </c:if>
 
 <c:if test="${nextStep==null}">
-
- <button type="submit" class="btn btn-primary">
+    <button type="submit" class="btn btn-primary">
          <fmt:message key="button.complete" />
-</button>
-
-
+    </button>
 </c:if>

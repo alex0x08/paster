@@ -22,8 +22,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, 
-                  user-scalable=yes" />
+    <meta name="viewport"
+          content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0,
+          user-scalable=yes" />
     <jsp:include page="/WEB-INF/pages/template/template-common-head.jsp" />
     <title>
         <tiles:insertAttribute name="pageTitle" ignore="true" />
@@ -42,10 +43,12 @@
                     type="button"
                     data-bs-toggle="collapse"
                     data-bs-target="#navbarCollapse"
-                    aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    aria-controls="navbarCollapse"
+                    aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
+                <div class="collapse navbar-collapse justify-content-between"
+                        id="navbarCollapse">
                     <sec:authorize access="hasRole('ROLE_ADMIN')">    
                         <ul class="nav navbar-nav">
                             <li class="nav-item dropdown">
@@ -133,7 +136,8 @@
                                 </ul>
                             </li>
                         </ul>    
-                        <p class="navbar-text hidden-sm hidden-xs" style="padding:0; margin:0;" >
+                        <p class="navbar-text hidden-sm hidden-xs"
+                           style="padding:0; margin:0;">
                             <a href="<c:url value='/main/login'/>">
                                 <span class="i" title="Login here">x</span>
                                 <fmt:message key="button.login" />

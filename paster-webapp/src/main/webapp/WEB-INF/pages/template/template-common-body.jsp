@@ -26,14 +26,18 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-bs-dismiss="modal" aria-hidden="true">X</button>
+                <button type="button"
+                        class="close"
+                        data-bs-dismiss="modal" aria-hidden="true">X</button>
                 <h4 class="modal-title" id="dialogTitle"></h4>
             </div>
             <div id="dialogMessage" class="modal-body">                
             </div>
             <div class="modal-footer">
                 <a id="dialogAction" href="" class="btn btn-primary"></a>
-                <button type="button" class="btn btn-default" data-bs-dismiss="modal">Cancel</button>               
+                <button type="button"
+                        class="btn btn-default"
+                        data-bs-dismiss="modal">Cancel</button>
             </div>
         </div>
     </div>
@@ -47,18 +51,19 @@
     </div>
 </div>
 <div class="position-fixed bottom-0 end-0 p-3" style="z-index:11">
-<div id="pasterToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+<div id="pasterToast" class="toast"
+                      role="alert" aria-live="assertive" aria-atomic="true">
   <div class="toast-header">
     <strong class="me-auto">Paster</strong>
-    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+    <button type="button" class="btn-close"
+            data-bs-dismiss="toast" aria-label="Close"></button>
   </div>
   <div class="toast-body"></div>
 </div>
 </div>
-
+<%-- common js libraries, used across paster --%>
 <script type="text/javascript"
     src="<c:url value='/main/resources/${appId}/local_components/logger.js'/>"></script>
-
 <script type="text/javascript"
     src="<c:url value='/main/resources/${appId}/local_components/fastdom.js'/>"></script>
 <script type="text/javascript"
@@ -69,8 +74,6 @@
 <script src="<c:url value='/main/resources/${appId}/local_components/pixastic/html2canvas.js'/>"></script>
 <script src="<c:url value='/main/resources/${appId}/local_components/pixastic/canvas2image.js'/>"></script>
 <script src="<c:url value='/main/resources/${appId}/local_components/pixastic/pica.min.js'/>"></script>
-
-
 
 <script type="text/javascript">
 

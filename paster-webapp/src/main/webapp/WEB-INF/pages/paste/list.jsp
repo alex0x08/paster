@@ -65,7 +65,8 @@
         <tiles:insertDefinition name="/common/pageList" >
             <tiles:putAttribute name="listMode" value="${listMode}"/>
             <tiles:putAttribute name="pageItems" value="${pageItems}"/>
-            <tiles:putAttribute name="sourceType" value="${sourceType == null ? 'main' : sourceType }"/>
+            <tiles:putAttribute name="sourceType"
+                value="${sourceType == null ? 'main' : sourceType }"/>
             <c:if test="${listMode eq 'search'}">
                 <tiles:putAttribute name="result" value="${result}"/>
             </c:if>
@@ -77,7 +78,8 @@
         <div class="col-md-12" >
             <div class="paging" style="margin: auto; text-align: center;float: left;" >
                 Found
-                <c:forEach var="resultType" items="${availableResults}" varStatus="loopStatus">
+                <c:forEach var="resultType"
+                           items="${availableResults}" varStatus="loopStatus">
                     <c:choose>
                         <c:when test="${result eq resultType}">
                             <span style="font-size: larger; ">

@@ -34,18 +34,27 @@
             <div class='row'>
                 <div class='col-lg-8 col-md-8'>
                     <div class="input-group">
-                        <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
-                        <input class="form-control"  name="username" autofocus="true"
-                               type="text" placeholder="<fmt:message key="login.username"/>">
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-user"></span>
+                        </span>
+                        <input class="form-control"
+                               name="username"
+                               autofocus="true"
+                               type="text"
+                               placeholder="<fmt:message key='login.username'/>">
                     </div>
                 </div>
             </div>
             <div class='row' style="padding-top: 0.5em; padding-bottom: 0.5em;">
                 <div class='col-lg-8 col-md-8'>
                     <div class="input-group">
-                        <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
-                        <input class="form-control"  name="password" 
-                               type="password" placeholder="<fmt:message key="login.password"/>">
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-lock"></span>
+                        </span>
+                        <input class="form-control"
+                               name="password"
+                               type="password"
+                               placeholder="<fmt:message key='login.password'/>">
                     </div>
                 </div>
             </div>
@@ -53,12 +62,17 @@
                 <div class='col-lg-8 col-md-8'>        
                     <div class="checkbox">
                         <label>
-                            <input type="checkbox" name="remember-me" id="remember_me" checked="true" /> <fmt:message key="login.rememberMe"/>
+                            <input type="checkbox"
+                                   name="remember-me"
+                                   id="remember_me" checked="true" />
+                            <fmt:message key="login.rememberMe"/>
                         </label>
                     </div>
                 </div>
             </div>
-            <button type="submit" class="btn btn-primary" ><fmt:message key="button.login"/></button>
+            <button type="submit" class="btn btn-primary">
+                <fmt:message key="button.login"/>
+            </button>
         </form:form>
     </div>
 </div>

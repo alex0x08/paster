@@ -114,7 +114,9 @@
 
             <c:url var="checkUrl" value='/main/setup/checkConnection' />
 
-                <button type="submit" formaction="${checkUrl}" class="btn btn-danger btn-sm">
+                <button type="submit"
+                        formaction="${checkUrl}"
+                        class="btn btn-danger btn-sm">
                     <i class="fa fa-database" aria-hidden="true"></i>
                     <fmt:message key='paster.setup.step.db.tryConnect'/>
                 </button>
@@ -160,7 +162,8 @@
                         toggleDisabled([elUrl,
                                         elDriver,
                                         document.getElementById('dbUser'),
-                                        document.getElementById('dbPassword')],editable == 'false');
+                                        document.getElementById('dbPassword')],
+                                        editable == 'false');
 
                  }
     }

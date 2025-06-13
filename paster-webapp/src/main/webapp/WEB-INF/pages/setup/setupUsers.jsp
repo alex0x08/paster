@@ -170,11 +170,12 @@
                             <c:param name="index" value="${vstatus.index}" />
                        </c:url>
 
-                              <button type="submit"
+                        <button type="submit"
                               formaction="${removeUserUrl}"
-                              class="btn btn-primary" title="<fmt:message key='button.delete'/>">
+                              class="btn btn-primary"
+                              title="<fmt:message key='button.delete'/>">
                                  <i class="fa fa-trash" aria-hidden="true"></i>
-                              </button>
+                        </button>
                       </td>
                  </tr>
 
@@ -199,8 +200,9 @@
         const secMode = el.getAttribute('value');
         console.log('sec mode:',secMode)
         toggleDisabled([document.getElementById('allowAnonymousCommentsCreate'),
-                             document.getElementById('allowAnonymousPastasCreate')],secMode != 'public');
-  }
+                             document.getElementById('allowAnonymousPastasCreate')],
+                             secMode != 'public');
+    }
 
   window.addEventListener('load', function () {
 
