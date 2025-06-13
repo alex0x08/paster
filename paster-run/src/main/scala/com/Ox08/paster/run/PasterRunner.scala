@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 package com.Ox08.paster.run
+import com.Ox08.paster.run.PasterRunner.{DEFAULT_CONTEXT_PATH, DEFAULT_PORT}
 import org.eclipse.jetty.ee10.apache.jsp.JettyJasperInitializer
 import org.eclipse.jetty.ee10.webapp._
 import org.eclipse.jetty.server.handler.{ContextHandlerCollection, DefaultHandler}
@@ -56,6 +57,7 @@ object PasterRunner {
   /**
    * Main function, here execution starts
    * @param args
+   *        args are not used
    */
   def main(args: Array[String]): Unit = {
     // create Runner instance
@@ -91,6 +93,8 @@ class PasterRunner {
   private val _classpath = new Classpath
   // current Jetty contexts
   private var _contexts: ContextHandlerCollection = _
+
+  private val _properties: Properties = new Properties()
   /**
    * Stores runner classpath jars.
    * Has been taken from original Jetty Runner
@@ -98,14 +102,13 @@ class PasterRunner {
   private class Classpath {
     private val _classpath: util.List[URL] = new util.ArrayList[URL]()
     def addJars(lib: Resource): Unit = {
-      for (item <- lib.list.asScala) {
+      for (item <- lib.list.asScala)
         if (item.isDirectory)
           addJars(item)
         else if (FileID.isLibArchive(item.getFileName)) {
           _classpath.add(item.getURI.toURL)
           PasterRunner.LOG.info("added lib: {}",item.getFileName)
         }
-      }
     }
     def asArray: Array[URL] = _classpath.toArray(new Array[URL](0))
   }
@@ -117,25 +120,22 @@ class PasterRunner {
    */
   @throws(classOf[IOException])
   def loadConf(): Unit = {
-    val p = new Properties()
     // first load from resources
-    p.load(getClass.getResourceAsStream("/config.properties"))
+    _properties.load(getClass.getResourceAsStream("/config.properties"))
     // then check if external config exist and load it
     val configFile = new File("./config.properties")
     if (configFile.exists() && configFile.isFile)
-      p.load(new FileReader(configFile))
+      _properties.load(new FileReader(configFile))
     // properties from external config will override existing
     // check for debug
-    isDebug = p.containsKey("appDebug") && "true".equals(p.getProperty("appDebug"))
+    isDebug = java.lang.Boolean.parseBoolean(_properties
+                      .getProperty("appDebug",String.valueOf(false)))
 
-    if (p.containsKey("paster.runner.port"))
-      this.port = p.getProperty("paster.runner.port").toInt
-    if (p.containsKey("paster.runner.host"))
-      this.host = p.getProperty("paster.runner.host")
-    if (p.containsKey("paster.runner.contextPath"))
-      this.contextPath = p.getProperty("paster.runner.contextPath")
-    if (p.containsKey("paster.runner.warFile"))
-      this.warFile = p.getProperty("paster.runner.warFile")
+    this.port = _properties.getProperty("paster.runner.port",
+                      String.valueOf(DEFAULT_PORT)).toInt
+    this.host = _properties.getProperty("paster.runner.host",null)
+    this.contextPath = _properties.getProperty("paster.runner.contextPath",DEFAULT_CONTEXT_PATH)
+    this.warFile = _properties.getProperty("paster.runner.warFile",null)
   }
   /**
    * Configure a jetty instance and deploy the webapps presented as args
@@ -160,7 +160,6 @@ class PasterRunner {
 
   /**
    * Starts Jetty server, then blocks current thread
-   * @throws
    */
   @throws[Exception]
   def run(): Unit = {
@@ -208,33 +207,38 @@ class PasterRunner {
 
     // Create a context
     val ctx = ResourceFactory.of(_server).newResource(appFile)
-    try {
-      if (!contextPath.startsWith("/"))
+
+    if (!contextPath.startsWith("/"))
               contextPath = "/" + contextPath
-      PasterRunner.LOG.debug(s"war file: ${ctx.getURI.toURL}")
-      // Configure the context
-      // assume it is a WAR file
-      val webapp = new WebAppContext(ctx.toString, contextPath)
-      webapp.setClassLoader(new LiveWarClassLoader(false,
+
+    PasterRunner.LOG.debug(s"war file: ${ctx.getURI.toURL}")
+    // Configure the context
+    // assume it is a WAR file
+    val webapp = new WebAppContext(ctx.toString, contextPath)
+    webapp.setClassLoader(new LiveWarClassLoader(false,
         ctx.getURI.toURL,
         Thread.currentThread.getContextClassLoader))
-      import java.io.File
-      val warFile = new File(ctx.getURI)
-      System.setProperty("org.eclipse.jetty.livewar.LOCATION", warFile.getAbsolutePath)
-      webapp.setExtractWAR(false)
-     // required on Windows
-      webapp.setInitParameter("org.eclipse.jetty.servlet.Default.useFileMappedBuffer", "false")
-      webapp.setConfigurationClasses(PasterRunner.JETTY_CONFIGURATION_CLASSES)
+
+    val warFile = new File(ctx.getURI)
+    //  System.setProperty("org.eclipse.jetty.livewar.LOCATION", warFile.getAbsolutePath)
+    webapp.setExtractWAR(false)
+    webapp.setConfigurationClasses(PasterRunner.JETTY_CONFIGURATION_CLASSES)
       var fname = getClass.getProtectionDomain.getCodeSource.getLocation.getFile
       fname = fname.substring(fname.lastIndexOf('/'))
       val incPattern = ".*" + fname.replace(".", "\\\\.") + "$"
       webapp.setAttribute(MetaInfConfiguration.CONTAINER_JAR_PATTERN, incPattern)
 
+      // pass jetty settings to context
+      for (e <- _properties.keySet().asScala) {
+        val ee = e.asInstanceOf[String]
+        if (ee.startsWith("org.eclipse.jetty"))
+          webapp.setAttribute(ee,_properties.getProperty(ee))
+      }
+
       // hack for Jetty 12
       webapp.addServletContainerInitializer(new JettyJasperInitializer)
 
       _contexts.addHandler(webapp)
-    }
   }
 
   private def prependHandler(handler: Handler, handlers:  Handler.Sequence): Unit = {

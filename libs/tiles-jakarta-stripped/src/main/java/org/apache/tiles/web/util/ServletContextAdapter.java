@@ -30,7 +30,6 @@ import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.Servlet;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletContext;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRegistration;
 import jakarta.servlet.SessionCookieConfig;
 import jakarta.servlet.descriptor.JspConfigDescriptor;
@@ -46,7 +45,6 @@ import java.util.TreeMap;
  * @version $Rev: 1058093 $ $Date: 2011-01-12 22:49:02 +1100 (Wed, 12 Jan 2011)
  * $
  */
-@SuppressWarnings("deprecation")
 public class ServletContextAdapter implements ServletContext {
     /**
      * The root context to use.
@@ -144,38 +142,10 @@ public class ServletContextAdapter implements ServletContext {
     /**
      * {@inheritDoc}
      */
-    /*@Override
-    public Servlet getServlet(String string) throws ServletException {
-        return rootContext.getServlet(string);
-    }*/
-    /**
-     * {@inheritDoc}
-     */
-    /*@Override
-    public Enumeration<Servlet> getServlets() {
-        return rootContext.getServlets();  //To change body of implemented methods use File | Settings | File Templates.
-    }*/
-    /**
-     * {@inheritDoc}
-     */
-   /* @Override
-    public Enumeration<String> getServletNames() {
-        return rootContext.getServletNames();
-    }*/
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void log(String string) {
         rootContext.log(string);
     }
-    /**
-     * {@inheritDoc}
-     */
-  /*  @Override
-    public void log(Exception exception, String string) {
-        rootContext.log(exception, string);
-    }*/
     /**
      * {@inheritDoc}
      */

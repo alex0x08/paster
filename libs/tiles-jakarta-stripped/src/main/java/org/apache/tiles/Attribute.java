@@ -78,7 +78,7 @@ public class Attribute implements Serializable, Cloneable {
      *
      * @param attribute The attribute to copy from.
      */
-    public Attribute(Attribute attribute) {
+    public Attribute(final Attribute attribute) {
         this.roles = attribute.roles;
         this.value = attribute.getValue();
         if (attribute.expressionObject != null) {

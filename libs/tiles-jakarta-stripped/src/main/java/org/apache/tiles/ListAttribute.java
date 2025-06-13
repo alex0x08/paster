@@ -50,17 +50,7 @@ public class ListAttribute extends Attribute {
      * @since 2.1.0
      */
     public ListAttribute() {
-        setValue(new ArrayList<Object>());
-    }
-
-    /**
-     * Constructor.
-     *
-     * @param value List.
-     * @since 2.1.0
-     */
-    public ListAttribute(List<Attribute> value) {
-        setValue(value);
+        this.value = new ArrayList<>();
     }
 
     /**

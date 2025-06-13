@@ -58,7 +58,7 @@ class LiveWarClassLoader(debug: Boolean, warFileUrl: URL, parent: ClassLoader)
         while ( {
           ze = zip.getNextJarEntry; ze != null
         }) {
-          // we must to load directories too, their names should be present
+          // we must load directories too, their names should be present
           // in resources map
           if (ze.isDirectory) {
             val key = ze.getName //.substring(0, ze.getName.length - 1)
@@ -128,7 +128,7 @@ class LiveWarClassLoader(debug: Boolean, warFileUrl: URL, parent: ClassLoader)
   }
   override protected def findResource(name: String): URL = {
     val entry = findEntry(name)
-    if (entry != null) {
+    if (entry != null)
       try {
         debug(s"findResource: $name")
         return URI.create(s"jar:${this.warFileUri.toASCIIString}!/${entry.getName}").toURL
@@ -138,7 +138,7 @@ class LiveWarClassLoader(debug: Boolean, warFileUrl: URL, parent: ClassLoader)
             e.printStackTrace(System.err)
           return null
       }
-    } else if (LiveWarClassLoader.MAP.contains(name)) {
+    else if (LiveWarClassLoader.MAP.contains(name)) {
       debug(s"findResource in map: $name")
       return URI.create(s"war-virtual:$name").toURL
     }
@@ -174,10 +174,9 @@ class LiveWarClassLoader(debug: Boolean, warFileUrl: URL, parent: ClassLoader)
   @throws[IOException]
   private def loadClass(name: String, entry: ZipEntry): Class[_] = {
     val in = warFile.getInputStream(entry)
-    try {
-      val classBytes = readBytes(in, 4096)
-      defineClass(name, classBytes, 0, classBytes.length)
-    } finally
+    try
+      defineClass(name, readBytes(in, 4096), 0, 4096)
+    finally
       if (in != null)
         in.close()
   }

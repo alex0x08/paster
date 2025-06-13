@@ -36,6 +36,12 @@
   </scm>
   <dependencies>
     <dependency>
+      <groupId>org.scala-lang</groupId>
+      <artifactId>scala-library</artifactId>
+      <version>2.13.16</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
       <groupId>com.Ox08.paster.webapp</groupId>
       <artifactId>paster-tiles-jakarta</artifactId>
       <version>2.1.07-RELEASE</version>
@@ -44,7 +50,7 @@
     <dependency>
       <groupId>jakarta.platform</groupId>
       <artifactId>jakarta.jakartaee-web-api</artifactId>
-      <version>9.1.0</version>
+      <version>11.0.0</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
