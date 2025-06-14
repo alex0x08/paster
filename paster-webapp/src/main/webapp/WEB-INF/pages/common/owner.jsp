@@ -25,12 +25,13 @@
 
 <tiles:importAttribute name="model" />
 <tiles:importAttribute name="modelName" />
-
+<div style="padding:0.2em;display: inline;">
 <c:choose>
     <c:when test="${not empty model.author and model.author ne currentUser}">
-        <span style="display: inline;  ">
+        <span style="  ">
             <a title="Contact ${model.author}"
-            href="mailto:${model.author}?subject=<c:out value='${model.text}' escapeXml="true"/>">
+            href="mailto:${model.author}?subject=<c:out value='${model.text}'
+                    escapeXml="true"/>">
                     <c:out value="${model.author}" />
             </a>
         </span>
@@ -41,6 +42,7 @@
          </span>
     </c:when>
     <c:otherwise>
-        <span style="font-size: 2em;" class="i" title="<fmt:message key='user.anonymous'/>">x</span>
+        <span style="font-size: 1.5em;" class="i" title="<fmt:message key='user.anonymous'/>">x</span>
     </c:otherwise>
 </c:choose>
+</div>

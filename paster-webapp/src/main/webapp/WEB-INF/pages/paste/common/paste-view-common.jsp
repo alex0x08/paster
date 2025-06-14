@@ -119,22 +119,28 @@
                 <div class="row">
                     <div class="col-md-12">
                         <%--  should be exact inside div! otherwise marked will fail to parse --%>
-                        <div id="commentMarkedText" class="previewer">
+                        <div id="commentMarkedText" class="previewer" style="padding-left:0.5em;">
                             <c:out value="${comment.text}" escapeXml="false" />
                         </div>
                     </div>
                 </div>
                 <div class="row justify-content-between">
                     <div class="col-md-8">
-                        <small>
+
                             <tiles:insertDefinition name="/common/owner">
                                 <tiles:putAttribute name="model" value="${comment}" />
                                 <tiles:putAttribute name="modelName" value="comment" />
-                            </tiles:insertDefinition>,
+                            </tiles:insertDefinition>
+
+                        <fmt:formatDate pattern="${dateTimePattern}"
+                                        var="commentCreated"
+                                        value="${comment.lastModifiedDt}" />
+
+                        <span style="font-size:small" title="${commentCreated}">
                                 <kc:prettyTime
                                     date="${comment.lastModifiedDt}"
                                     locale="${pageContext.response.locale}" />
-                        </small>
+                        </span>
                     </div>
                     <div class="col-auto" style="padding-right: 1em;" >
                         <c:if test="${(not empty currentUser or allowAnonymousCommentsCreate) && comment.parentId==null}">                        

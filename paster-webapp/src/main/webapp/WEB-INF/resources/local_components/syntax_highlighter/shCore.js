@@ -373,7 +373,12 @@ var SyntaxHighlighter = function () {
             const lineNumber = parseInt(cl.getAttribute('lineNumber')),
                 id = cl.getAttribute('commentId');
             const textEl = cl.querySelector('#commentMarkedText');
-            let mtext = marked.parse('\n' + textEl.textContent);
+            let textC = textEl.textContent;
+            let mtext = '';
+            if (textC!=null && !textC.blank) {
+                textC = textC.trim();
+                mtext =  marked.parse('\n' + textC);
+            }
             textEl.innerHTML = mtext;
             var el
             if (mode == 1) {
@@ -868,7 +873,8 @@ var SyntaxHighlighter = function () {
                 if (line.length == 0) {
                     return spaces;
                 }
-                return spaces + '<code class="' + css + '">' + line + '</code>';
+                return spaces +
+                 '<code class="' + css + '">' + line + '</code>';
             });
         }
         return str;
@@ -1366,11 +1372,14 @@ var SyntaxHighlighter = function () {
                 if (line.length == 0) {
                     line = sh.config.space;
                 }
+                /*
+                (spaces != null ?
+                                    `<code class="${brushName} spaces">${spaces}</code>` : ''
+                */
                 html += this.getLineHtml(
                     i,
                     lineNumber,
-                    (spaces != null ?
-                    `<code class="${brushName} spaces">${spaces}</code>` : '') + line
+                    '' + line
                     , 0
                 );
             }

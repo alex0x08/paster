@@ -92,6 +92,9 @@ object UserManager extends Logged {
     } finally r.close()
   }
 }
+
+
+
 /**
  * A service class to work with users
  * We store users in .csv file for simplicity, load them during boot and put in hashmap.

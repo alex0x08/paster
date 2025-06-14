@@ -19,7 +19,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute
 import jakarta.persistence._
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField
-import java.time.{LocalDateTime, ZoneOffset}
+
+import java.time.{LocalDateTime, ZoneId, ZoneOffset}
 import java.util.{Date, Objects}
 object Struct extends Logged {
   protected val terms: List[String] = List[String]("id", "name")
@@ -36,7 +37,8 @@ trait SearchObject {
  * @author 0x08
  */
 @MappedSuperclass
-abstract class Struct extends DBObject with SearchObject with java.io.Serializable {
+abstract class Struct extends DBObject
+            with SearchObject with java.io.Serializable {
   @Column(name = "last_modified")
   @GenericField
   @XStreamAsAttribute
@@ -54,7 +56,7 @@ abstract class Struct extends DBObject with SearchObject with java.io.Serializab
   def touch(): Unit = {
     lastModified = LocalDateTime.now()
     if (Struct.logger.isDebugEnabled)
-      Struct.logger.debug("set lastModified to {} objId={}",lastModified,id)
+      Struct.logger.debug("set lastModified to {} objId={}",lastModified,getId)
   }
 
   /**
@@ -67,12 +69,12 @@ abstract class Struct extends DBObject with SearchObject with java.io.Serializab
     if (lastModified == null.asInstanceOf[LocalDateTime])
       null
   else
-      Date.from(lastModified.toInstant(ZoneOffset.UTC))
+      Date.from(lastModified.atZone(ZoneId.systemDefault()).toInstant)
   def getCreatedDt: Date =
     if (created == null.asInstanceOf[LocalDateTime])
       null
     else
-      Date.from(created.toInstant(ZoneOffset.UTC))
+      Date.from(created.atZone(ZoneId.systemDefault()).toInstant)
   @JsonIgnore
   def getLastModified: LocalDateTime = lastModified
   @JsonIgnore
@@ -88,14 +90,11 @@ abstract class Struct extends DBObject with SearchObject with java.io.Serializab
  */
 @MappedSuperclass
 abstract class DBObject extends java.io.Serializable {
-  @Id
-  @GeneratedValue(generator = "id_sequence", strategy=GenerationType.SEQUENCE)
-  @SequenceGenerator(name = "id_sequence", allocationSize = 10)
-  @XStreamAsAttribute
-  var id: Integer = _ // unique id
   @XStreamAsAttribute
   var disabled: Boolean = _ // if true - record is disabled (ex. user entity)
 
+  def getId: Integer
+  def setId(id:Integer)
   /**
    * Check if record has not been persisted yet by
    * simply compare id with null
@@ -103,11 +102,11 @@ abstract class DBObject extends java.io.Serializable {
    *    if true - record is not yet persisted in database
    */
   @JsonIgnore
-  def isBlank: Boolean = id == null
+  def isBlank: Boolean = getId == null
   override def hashCode(): Int = {
     var hash: Int = 53 * 7
-    if (id != null)
-      hash += Objects.hashCode(id)
+    if (getId != null)
+      hash += Objects.hashCode(getId)
     hash
   }
 
@@ -118,6 +117,6 @@ abstract class DBObject extends java.io.Serializable {
    */
   override def equals(from: Any): Boolean =
     from.isInstanceOf[DBObject] && !isBlank &&
-                          from.asInstanceOf[DBObject].id.equals(id)
+                          from.asInstanceOf[DBObject].getId.equals(getId)
 }
 

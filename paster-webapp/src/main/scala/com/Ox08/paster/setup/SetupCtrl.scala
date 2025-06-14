@@ -26,7 +26,7 @@ import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
 import jakarta.validation.constraints.{NotEmpty, NotNull}
 import jakarta.validation.{Valid, Validator}
 import org.apache.commons.beanutils.PropertyUtilsBean
-import org.apache.commons.csv.CSVRecord
+import org.apache.commons.csv.{CSVFormat, CSVPrinter, CSVRecord}
 import org.apache.commons.io.{FileUtils, IOUtils}
 import org.apache.commons.lang3.StringUtils
 import org.apache.commons.lang3.exception.ExceptionUtils
@@ -40,7 +40,7 @@ import org.springframework.validation.BindingResult
 import org.springframework.web.bind.WebDataBinder
 import org.springframework.web.bind.annotation._
 
-import java.io.File
+import java.io.{File, FileWriter}
 import java.nio.charset.StandardCharsets
 import java.time.LocalDateTime
 import java.util
@@ -542,21 +542,39 @@ class PasterSetupService extends Logged {
       for (p <- props.asScala)
         values.put(s"${e._1}.${p._1.toString}", p._2.asInstanceOf[Object])
     }
+
+    val csvFormat = CSVFormat.DEFAULT.builder.setHeader("NAME",
+      "ISADMIN",
+      "USERNAME","PASSWORD").get()
+
+    val printer = new CSVPrinter(new FileWriter(
+        new File(BOOT.getSystemInfo.getAppHome,"users.csv")),
+        csvFormat)
+      try getStep[SetupUsersStep]("users").users.forEach(u => {
+            printer.printRecord(u.getName,
+                                u.isAdmin,
+                                u.getUsername,
+                                u.getPassword)
+      }) finally
+            if (printer != null)
+              printer.close()
+
     values.put("installDate",LocalDateTime.now().toString)
     val tpl: String = new String(IOUtils.toByteArray(configTemplate.getInputStream),
       StandardCharsets.UTF_8)
     val sub = new StringSubstitutor(values)
     sub.setEnableSubstitutionInVariables(false)
     val filledTemplate: String = sub.replace(tpl)
-    FileUtils.writeStringToFile(BOOT.getSystemInfo.getConfigFile, filledTemplate, "UTF-8")
+    FileUtils.writeStringToFile(BOOT.getSystemInfo.getConfigFile,
+      filledTemplate, "UTF-8")
   }
 }
 class SetupUsersStep extends SetupStep("users", "paster.setup.step.users.title") {
   val users: java.util.List[UserDTO] = new util.ArrayList[UserDTO]()
   @NotNull(message = "{validator.not-null}")
-  var securityMode: String = _
+  private var securityMode: String = _
   var allowAnonymousCommentsCreate: Boolean = _
-  var allowAnonymousPastasCreate: Boolean = _
+  private var allowAnonymousPastasCreate: Boolean = _
   def getUsers: java.util.List[UserDTO] = users
   def isAllowAnonymousCommentsCreate: Boolean = allowAnonymousCommentsCreate
   def isAllowAnonymousPastasCreate: Boolean = allowAnonymousPastasCreate

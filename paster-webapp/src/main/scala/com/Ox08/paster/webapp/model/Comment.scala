@@ -16,7 +16,7 @@
 package com.Ox08.paster.webapp.model
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute
-import jakarta.persistence.{Column, Entity, Lob, Transient}
+import jakarta.persistence.{Column, Entity, GeneratedValue, GenerationType, Id, Lob, SequenceGenerator, Transient}
 import jakarta.validation.constraints.{NotNull, Size}
 import jakarta.xml.bind.annotation.XmlRootElement
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.{FullTextField, Indexed}
@@ -29,6 +29,12 @@ import org.hibernate.search.mapper.pojo.mapping.definition.annotation.{FullTextF
 @Indexed(index = "indexes/comments")
 @XmlRootElement(name = "comment")
 class Comment extends Struct with java.io.Serializable {
+  @Id
+  @GeneratedValue(generator = "comment_id_seq", strategy=GenerationType.SEQUENCE)
+  @SequenceGenerator(name = "comment_id_seq", allocationSize = 50)
+  @XStreamAsAttribute
+  var id: Integer = _
+
   /**
    * id of paste entity that owns this comment
    */
@@ -70,7 +76,10 @@ class Comment extends Struct with java.io.Serializable {
    * Below are some getters,
    * which required when this model would be accessed from EL-expression
    */
-  def getId: Integer = id
+  override def getId: Integer = id
+  override def setId(id:Integer): Unit = {
+    this.id = id;
+  }
   def getText: String = text
   def getAuthor: String = author
   def getLineNumber: Int = lineNumber

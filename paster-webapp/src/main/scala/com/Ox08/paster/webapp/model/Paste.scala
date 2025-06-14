@@ -19,9 +19,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute
 import com.thoughtworks.xstream.annotations.XStreamOmitField
 import com.thoughtworks.xstream.annotations.XStreamAlias
-import jakarta.persistence.{CascadeType, Column, Entity, FetchType, Lob, ManyToMany, MapKey, PrePersist, PreUpdate, Table}
+import jakarta.persistence.{CascadeType, Column, Entity, FetchType, GeneratedValue, GenerationType, Id, Lob, ManyToMany, MapKey, PrePersist, PreUpdate, SequenceGenerator, Table}
 import jakarta.validation.constraints.{NotNull, Size}
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.{FullTextField, Indexed, KeywordField}
+
 import java.util
 import java.util.UUID
 import scala.annotation.unused
@@ -34,6 +35,10 @@ object Paste extends Struct {
    * max title length, if greater - will be cut
    */
   val TITLE_LENGTH = 256
+
+  // not used
+  override def getId: Integer = 1
+  override def setId(id:Integer): Unit = {}
 }
 
 /**
@@ -47,6 +52,13 @@ object Paste extends Struct {
 @XStreamAlias("Tag")
 @Table(name = "P_TAGS")
 class Tag(tagString: String) extends DBObject {
+
+  @Id
+  @GeneratedValue(generator = "tags_id_seq", strategy=GenerationType.SEQUENCE)
+  @SequenceGenerator(name = "tags_id_seq", allocationSize = 50)
+  @XStreamAsAttribute
+  var id: Integer = _
+
   @NotNull
   @FullTextField
   @Column(name = "tag_name", length = 256)
@@ -56,6 +68,10 @@ class Tag(tagString: String) extends DBObject {
   @transient
   var total: Int = 0 // count of occurrences
   def this() = this(null)
+  override def getId: Integer = id
+  override def setId(id:Integer): Unit = {
+    this.id = id;
+  }
 }
 /**
  *
@@ -70,6 +86,12 @@ class Tag(tagString: String) extends DBObject {
 @XStreamAlias("Paste")
 @Table(name = "P_PASTAS")
 class Paste extends Struct with java.io.Serializable {
+
+  @Id
+  @GeneratedValue(generator = "paste_id_seq", strategy=GenerationType.SEQUENCE)
+  @SequenceGenerator(name = "paste_id_seq", allocationSize = 50)
+  @XStreamAsAttribute
+  var id: Integer = _
 
   /**
    * unique paste id
@@ -169,11 +191,15 @@ class Paste extends Struct with java.io.Serializable {
   private def onUpdate(): Unit = {
     commentsCount = comments.size()
   }
+
+  override def getId:Integer = id
+  override def setId(id:Integer): Unit = {
+    this.id = id;
+  }
   def getPriority: String = priority // for EL
   def getCodeType: String = codeType
   def isStick: Boolean = stick
   def getTitle: String = title
-  def getId: Integer = id
   def getThumbImage: String = thumbImage
   def getAuthor: String = author
   def getText: String = text
