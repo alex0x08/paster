@@ -74,6 +74,7 @@
         </tiles:insertDefinition>
     </div>     
 </div>
+<%--
 <c:if test="${listMode eq 'search' }">
     <div class="row">
         <div class="col-md-12" >
@@ -99,6 +100,7 @@
         </div>
     </div>
 </c:if>
+--%>
 <div class="row">
     <div id="pastas" class="col-md-12" >
         <c:forEach var="paste" items="${pageItems.pageList}" varStatus="status">
