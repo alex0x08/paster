@@ -79,7 +79,7 @@ abstract class GenericListCtrl[T <: Struct] extends AbstractCtrl {
   /**
    * default callback object: will simply use getList from attached manager
    */
-  protected val defaultListCallback: SourceCallback[T] = new SourceCallback[T]() {
+  private val defaultListCallback: SourceCallback[T] = new SourceCallback[T]() {
     override def invokeCreate(): PagedListHolder[T] =
       new PagedListHolder[T](manager().getList)
   }
@@ -173,12 +173,13 @@ abstract class GenericListCtrl[T <: Struct] extends AbstractCtrl {
                        request: HttpServletRequest,
                        model: Model): util.List[T] = list(request, model,
     null, null, null, sortColumn, sortAsc = true)
-  @RequestMapping(value = Array("/list/{page:[0-9]+}"), method = Array(RequestMethod.GET))
+
+  /*@RequestMapping(value = Array("/list/{page:[0-9]+}"), method = Array(RequestMethod.GET))
   @ModelAttribute(MvcConstants.NODE_LIST_MODEL)
   def listByPath(@PathVariable("page") page: java.lang.Integer,
                  request: HttpServletRequest,
                  model: Model): util.List[T] = list(request, model, page,
-    null, null, null, sortAsc = false)
+    null, null, null, sortAsc = false)*/
   @RequestMapping(value = Array("/list/limit/{pageSize:[0-9]+}"), method = Array(RequestMethod.GET))
   @ModelAttribute(MvcConstants.NODE_LIST_MODEL)
   def listByPathSize(@PathVariable("pageSize") pageSize: java.lang.Integer,

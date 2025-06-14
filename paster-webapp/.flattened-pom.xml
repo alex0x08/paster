@@ -24,6 +24,7 @@
   <developers>
     <developer>
       <name>Alex Chernyshev</name>
+      <email>alex3.145@gmail.com</email>
       <timezone>GMT+4</timezone>
     </developer>
   </developers>
@@ -32,6 +33,18 @@
     <url>scm:git:https://github.com/alex0x08/paster.git/paster-webapp</url>
   </scm>
   <dependencies>
+    <dependency>
+      <groupId>org.scala-lang</groupId>
+      <artifactId>scala-library</artifactId>
+      <version>2.13.16</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>jakarta.platform</groupId>
+      <artifactId>jakarta.jakartaee-web-api</artifactId>
+      <version>11.0.0</version>
+      <scope>provided</scope>
+    </dependency>
     <dependency>
       <groupId>com.Ox08.paster.webapp</groupId>
       <artifactId>paster-tiles-jakarta</artifactId>
@@ -51,21 +64,15 @@
       <scope>compile</scope>
     </dependency>
     <dependency>
-      <groupId>org.scala-lang</groupId>
-      <artifactId>scala-library</artifactId>
-      <version>2.13.16</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>jakarta.platform</groupId>
-      <artifactId>jakarta.jakartaee-web-api</artifactId>
-      <version>11.0.0</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
       <groupId>commons-codec</groupId>
       <artifactId>commons-codec</artifactId>
       <version>1.18.0</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-csv</artifactId>
+      <version>1.14.0</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
@@ -201,9 +208,21 @@
       <scope>compile</scope>
     </dependency>
     <dependency>
+      <groupId>com.fasterxml.jackson.datatype</groupId>
+      <artifactId>jackson-datatype-jsr310</artifactId>
+      <version>2.19.0</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
       <groupId>com.thoughtworks.xstream</groupId>
       <artifactId>xstream</artifactId>
       <version>1.4.21</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>jakarta.xml.bind</groupId>
+      <artifactId>jakarta.xml.bind-api</artifactId>
+      <version>4.0.2</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
@@ -318,24 +337,6 @@
       <groupId>com.rometools</groupId>
       <artifactId>rome</artifactId>
       <version>2.1.0</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.fasterxml.jackson.datatype</groupId>
-      <artifactId>jackson-datatype-jsr310</artifactId>
-      <version>2.19.0</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-csv</artifactId>
-      <version>1.14.0</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>jakarta.xml.bind</groupId>
-      <artifactId>jakarta.xml.bind-api</artifactId>
-      <version>4.0.2</version>
       <scope>compile</scope>
     </dependency>
   </dependencies>

@@ -105,6 +105,7 @@
                         <set>
                             <value>model</value>
                             <value>items</value>
+                            <value>count</value>
                         </set>
                     </property>
                 </bean>

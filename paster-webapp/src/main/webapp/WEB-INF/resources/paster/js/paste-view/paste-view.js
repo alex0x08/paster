@@ -180,6 +180,8 @@ class PasterView {
             method: 'get',
             maxRequests: maxRequests,
             buffer: 100,
+            idKey: 'id',
+
             pageDataIndex: 'page',
             idMode: true,
             data: {

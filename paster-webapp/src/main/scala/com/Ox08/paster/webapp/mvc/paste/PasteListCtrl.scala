@@ -154,13 +154,17 @@ class PasteListCtrl extends SearchCtrl[Paste, AuthorQuery] {
     listImpl(request, model, page, NPpage, pageSize,
       sortColumn, sortAsc, null, null)
   }
+
+
+
   @RequestMapping(value = Array("/count/{source}/{since:[0-9]+}"),
     method = Array(RequestMethod.GET), produces = Array("application/json"))
   @ModelAttribute("count")
   def countAllSince(@PathVariable("source") channelCode: String,
-                    @PathVariable("since") dateFrom: java.lang.Long): java.lang.Long = {
+                    @PathVariable("since") dateFrom: java.lang.Long): java.lang.Long =
     pasteDao.countAllSince(channelCode, dateFrom)
-  }
+
+
   private def listImpl(request: HttpServletRequest, model: Model,
                        page: java.lang.Integer,
                        NPpage: String,

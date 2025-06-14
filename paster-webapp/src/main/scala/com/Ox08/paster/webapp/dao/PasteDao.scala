@@ -21,8 +21,9 @@ import org.apache.lucene.queryparser.classic.QueryParser
 import org.apache.lucene.search.highlight.{Highlighter, InvalidTokenOffsetsException}
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
+
 import java.io.IOException
-import java.time.LocalDateTime
+import java.time.{Instant, LocalDateTime, ZoneId}
 import scala.collection.mutable
 import scala.jdk.CollectionConverters._
 
@@ -235,10 +236,11 @@ class PasteDao extends SearchableDaoImpl[Paste](classOf[Paste]) {
     val cq: CriteriaQuery[java.lang.Long] = cb.createQuery(classOf[java.lang.Long])
     val r = cq.from(getModel)
     cq.select(cb.count(r))
-    cq.where(Array(
-      cb.greaterThan(r.get("lastModified")
-        .as(classOf[java.util.Date]), new java.util.Date(dateFrom)),
-      cb.equal(cb.lower(r.get("channel")), channel.toLowerCase)): _*)
+
+    val ldt = LocalDateTime.ofInstant(Instant
+      .ofEpochMilli(dateFrom),ZoneId.systemDefault())
+    cq.where(Array(cb.greaterThan(r.get("lastModified"), ldt)): _*)
+
     em.createQuery[java.lang.Long](cq).getSingleResult
   }
   override def fillHighlighted(highlighter: Highlighter,
