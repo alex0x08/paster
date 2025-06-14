@@ -13,13 +13,14 @@
     <name>Paster Bootstrap</name>
 
     <dependencies>
-        <!-- scala -->
+        <!-- Scala runtime, used only during compilation -->
         <dependency>
             <groupId>org.scala-lang</groupId>
             <artifactId>scala-library</artifactId>
             <version>${scalaVersion}</version>
             <scope>compile</scope>
         </dependency>
+        <!-- should match Jakarta EE Specs! -->
         <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
@@ -46,7 +47,10 @@
             <version>${jetty.version}</version>
             <!--type>pom</type-->
         </dependency>
-        <!--dependency>
+        <!--
+            Don't use Jetty's internal SL4J adapter implementation!
+            Due to conflicts with logback.
+        dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-slf4j-impl</artifactId>
             <version>${jetty.version}</version>
@@ -61,13 +65,11 @@
             <artifactId>jcl-over-slf4j</artifactId>
             <version>${slf4j.version}</version>
         </dependency>
-
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <version>${logback.version}</version>
         </dependency>
-
     </dependencies>
     <build>
         <defaultGoal>package</defaultGoal>
@@ -195,7 +197,6 @@
                     <include>*.ans</include>
                     <include>*.xml</include>
                     <include>jetty-logging.properties</include>
-
                 </includes>
                 <filtering>false</filtering>
             </resource>
