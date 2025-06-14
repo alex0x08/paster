@@ -126,7 +126,10 @@ abstract class GenericListCtrl[T <: Struct] extends AbstractCtrl {
        * check if exist and use it
        */
       if (NPpage != null) {
-        if (NPpage.equals("next")) pagedListHolder.nextPage() else pagedListHolder.previousPage()
+        if (NPpage.equals("next"))
+          pagedListHolder.nextPage()
+        else
+          pagedListHolder.previousPage()
         /**
          * if page number was specified
          */
@@ -141,11 +144,12 @@ abstract class GenericListCtrl[T <: Struct] extends AbstractCtrl {
      */
     if (pageSize != null)
       pagedListHolder.setPageSize(pageSize)
-    request.getSession().setAttribute(getClass.getName + "_" + pageHolderName, pagedListHolder)
+    request.getSession()
+      .setAttribute("%s_%s".format(getClass.getName, pageHolderName), pagedListHolder)
     model.addAttribute(pageHolderName, pagedListHolder)
-    if (createDefaultItemModel && !pageHolderName.equals(MvcConstants.NODE_LIST_MODEL_PAGE)) {
+    // assign paged list with page model
+    if (createDefaultItemModel && !pageHolderName.equals(MvcConstants.NODE_LIST_MODEL_PAGE))
       model.addAttribute(MvcConstants.NODE_LIST_MODEL_PAGE, pagedListHolder)
-    }
     model.addAttribute("pageSet", Array(5, 10, 50, 100, 500))
     pagedListHolder.getPageList
   }
@@ -202,7 +206,8 @@ abstract class GenericListCtrl[T <: Struct] extends AbstractCtrl {
            @RequestParam(required = false) pageSize: java.lang.Integer,
            @RequestParam(required = false) sortColumn: String,
            @RequestParam(required = false) sortAsc: Boolean): java.util.List[T] =
-    listImpl(request, model, page, NPpage, pageSize, sortColumn, sortAsc, MvcConstants.NODE_LIST_MODEL_PAGE)
+    listImpl(request, model, page, NPpage, pageSize,
+      sortColumn, sortAsc, MvcConstants.NODE_LIST_MODEL_PAGE)
   def listImpl(request: HttpServletRequest,
                model: Model,
                page: java.lang.Integer,

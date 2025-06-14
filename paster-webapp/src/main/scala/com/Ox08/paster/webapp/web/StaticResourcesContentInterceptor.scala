@@ -19,6 +19,8 @@ import org.springframework.web.servlet.mvc.WebContentInterceptor
 import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
 
 /**
+ * This is used to tune HTTP headers for static resources,
+ * see https://www.rfc-editor.org/rfc/rfc9111#name-private
  *
  */
 class StaticResourcesContentInterceptor extends WebContentInterceptor {
@@ -29,6 +31,7 @@ class StaticResourcesContentInterceptor extends WebContentInterceptor {
     val h = response.getHeader("Cache-Control")
     if (h != null)
         response.setHeader("Cache-Control", s"$h private")
+    // remove Cookie header, if present
     if (response.containsHeader("Cookie"))
         response.setHeader("Cookie", null)
     true

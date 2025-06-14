@@ -29,7 +29,10 @@
         </a>
         <c:forEach var="source" items="${availableSourceTypes}" varStatus="loopStatus">
                <c:set var="sourceKey" value="${source.toLowerCase()}"/>
-                <c:choose>
+               <span style="font-size: 0.6em;">
+                                    <c:out value="${pasteStats.get(source)}"/>
+               </span>
+               <c:choose>
                     <c:when test="${sourceKey eq sourceType}">
                         <span style="font-size: 14px; font-weight: bold; ">
                             <c:out value="${source}"/>
@@ -39,11 +42,9 @@
                             <c:out value="${source}"/>
                         </a>
                     </c:otherwise>
-                </c:choose>
-                 <span style="font-size: 0.6em;">
-                     <c:out value="${pasteStats.get(source)}"/>
-                 </span>
-                <c:if test="${!loopStatus.last}"> | </c:if>
+               </c:choose>
+
+               <c:if test="${!loopStatus.last}"> | </c:if>
             </c:forEach>
     </div>
     <div class="col-md-2 hidden-sm hidden-xs">        

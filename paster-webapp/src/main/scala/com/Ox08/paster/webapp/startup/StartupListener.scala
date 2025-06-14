@@ -41,6 +41,8 @@ class BootContext {
 
 /**
  * Servlet Listener, used to configure Paster app on start
+ * @since 1.0
+ * @author 0x08
  */
 class StartupListener extends ServletContextListener with Logged {
   override def contextInitialized(event: ServletContextEvent): Unit = {
@@ -63,7 +65,6 @@ class StartupListener extends ServletContextListener with Logged {
           logger.error(e.getLocalizedMessage, e)
           throw e; // to stop application
       }
-
   }
   override def contextDestroyed(servletContextEvent: ServletContextEvent): Unit = {
     // not used

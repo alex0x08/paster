@@ -158,7 +158,7 @@ class PasterView {
             .addEventListener('click', function (event) {
                 event.preventDefault();
                 var self2 = this;
-                self2.querySelector('#btnCaption').text = PasterI18n.text.notify.transmitMessage;
+                self2.querySelector('#btnCaption').innerText = PasterI18n.text.notify.transmitMessage;
                 self2.disabled = true;
                 self.resetCommentFormErrors(modelId);
                 self.toggleOnSubmit(modelId, 'none');
@@ -201,8 +201,9 @@ class PasterView {
                 SyntaxHighlighter.highlight(page, {}, ptext, false, false);
                 document.getElementById(`${page}_addCommentBtn`)
                     .addEventListener('click', function () {
-                        this.getElementById('btnCaption').set('text',
-                            PasterI18n.text.notify.transmitMessage).disabled = true;
+                        const cap = this.getElementById('btnCaption');
+                        cap.innerText=PasterI18n.text.notify.transmitMessage;
+                        cap.disabled = true;
                         this.getElementById('btnIcon').setStyle('display', '');
                         self.onSaveComment(page);
                     });
@@ -245,7 +246,7 @@ class PasterView {
                 event.preventDefault();
                 const dct = this.getAttribute('data-clipboard-target')
                 const text = document.getElementById(dct).innerText
-                console.log('to clipboard:', text)
+                // console.log('to clipboard:', text)
                 self.copyToClipboard(text)
             });
         SyntaxHighlighter.highlight(modelId, {},

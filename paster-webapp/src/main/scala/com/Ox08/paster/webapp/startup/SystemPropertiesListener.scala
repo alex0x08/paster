@@ -24,6 +24,8 @@ import java.util.Locale
 /**
  * This servlet listener used to read configuration properties and put them into environment,
  * so loaded *before* Spring and other frameworks
+ * @since 1.0
+ * @author 0x08
  */
 class SystemPropertiesListener extends ServletContextListener {
   object SystemConstants {
@@ -32,8 +34,9 @@ class SystemPropertiesListener extends ServletContextListener {
   }
   override def contextInitialized(event: ServletContextEvent): Unit = {
     try {
+      // execute boot sequence
       doBoot()
-
+      // then setup logger
       val logger: Logger = LoggerFactory.getLogger(getClass.getName)
       // configure 'scratch dir', used for JSP compiler
       val scratchDir = new File(Boot.BOOT.getSystemInfo.getTempDir,"servletTmp")

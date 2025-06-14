@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ScalaCompilerConfiguration">
-    <profile name="Maven 2" modules="paster-dbconsole,paster-run,paster-webapp">
+    <profile name="Maven 2" modules="paster-dbconsole,paster-run,paster-spring-tiles3-jakarta,paster-webapp">
       <option name="deprecationWarnings" value="true" />
       <option name="featureWarnings" value="true" />
     </profile>

@@ -254,7 +254,7 @@ var SyntaxHighlighter = function () {
          * 							are highlighted.
          */
         highlight: function (modelId, globalParams, element, scrollToLine, showEditForm) {
-            Logger.debug('highlight , show edit form: ', showEditForm)
+            Logger.debug('highlight , show edit form: ', showEditForm,'scroll to line:',scrollToLine);
             if (showEditForm) {
                 sh.vars.editorOpts = JSON.parse(JSON.stringify(globalEpicEditorOpts));
                 sh.vars.editorOpts.container = 'epiceditor-' + modelId;
@@ -328,25 +328,22 @@ var SyntaxHighlighter = function () {
                         fastdom.mutate(() => {
                             sh.vars.loaded[modelId] = true;
                         });
-                const ln = document.getElementById('lineNumber').value;
-                if (!ln || 0 === ln.length) {
-                    if (scrollToLine) {
-                        const loc = window.location.hash.replace("#", "");
-                        if (loc != "") {
-                            const element = document.getElementById(sh.vars.modelId + '_' + loc);
-                            if (element) {
-                                window.scrollTo({ top: element.offsetTop, behavior: 'smooth' });
-                            } else {
-                                Logger.debug('cannot scroll to ', sh.vars.modelId + '_' + loc);
-                            }
-                        }
-                    }
-                } else {
-                    if (showEditForm) {
-                     //   sh.insertEditForm(sh.vars.modelId, ln);
-                    }
-                }
+
             }
+
+              if (scrollToLine) {
+                      const loc = window.location.hash.replace("#", "");
+                      if (loc != "") {
+                        setTimeout(() => {
+                         const element = document.getElementById(loc);
+                         if (element) {
+                              window.scrollTo({ top: element.offsetTop, behavior: 'smooth' });
+                         } else {
+                              Logger.debug('cannot scroll to ', loc);
+                         }
+                        }, "500");
+                      }
+              }
         },
         toggleComments: function (modelId, ctrl) {
             sh.vars.showComments[modelId] = !sh.vars.showComments[modelId];

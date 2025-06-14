@@ -37,7 +37,8 @@
                <c:forEach var="l" items="${availableLocales}" varStatus="loopStatus">
                  <div class="form-check">
                               <form:radiobutton cssClass="form-check-input"
-                                    path="defaultLang" name="defaultLang"
+                                    path="defaultLang"
+                                    name="defaultLang"
                                value="${l.language}" />
                               <form:errors element="div" path="defaultLang"
                                             cssClass="alert alert-danger" />

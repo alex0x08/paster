@@ -31,7 +31,6 @@
                         action="${finalizeInstallUrl}" method="POST">
                      <button type="submit" class="btn btn-danger">
                          <fmt:message key="button.restart" />
-                         </a>
                      </button>
                  </form:form>
     </div>

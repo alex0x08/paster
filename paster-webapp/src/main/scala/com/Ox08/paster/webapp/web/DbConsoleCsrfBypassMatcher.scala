@@ -24,7 +24,7 @@ import java.util.regex.Pattern
  * which does not support it
  */
 class DbConsoleCsrfBypassMatcher extends RequestMatcher {
-  val allowedMethods: Pattern = Pattern.compile("^(GET|POST|HEAD|TRACE|OPTIONS)$")
+  private val allowedMethods: Pattern = Pattern.compile("^(GET|POST|HEAD|TRACE|OPTIONS)$")
   private val unprotectedMatcher = PathPatternRequestMatcher
               .withDefaults.matcher( "/act/admin/dbconsole/**")
   override def matches(request: HttpServletRequest): Boolean = {

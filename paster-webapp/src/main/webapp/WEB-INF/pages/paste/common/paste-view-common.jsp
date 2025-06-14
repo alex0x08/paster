@@ -166,8 +166,8 @@
                                 <span style="font-size: larger;" class="i">d</span>                          
                             </a>
                             <div style="display:none;" id="dialogMsg">
-                                <fmt:message key="dialog.confirm.paste.remove.comment">
-                                    <fmt:param value="${model.id}" />
+                                <fmt:message key="dialog.confirm.comment.remove.message">
+                                    <fmt:param value="${comment.id}" />
                                 </fmt:message>
                             </div>
                         </sec:authorize>
@@ -232,7 +232,7 @@
                                     </button>
                                     <a id="${model.id}_closeCommentBtn" 
                                         class="disableOnSubmit" 
-                                        title="<fmt:message key=" button.cancel" />"  href="#" >
+                                        title="<fmt:message key="button.cancel" />"  href="#" >
                                     <span>
                                         <fmt:message key="button.cancel" /></span>
                                     </a>

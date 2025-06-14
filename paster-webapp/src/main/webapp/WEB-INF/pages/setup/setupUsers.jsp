@@ -198,7 +198,7 @@
 
     function processChecked(el) {
         const secMode = el.getAttribute('value');
-        console.log('sec mode:',secMode)
+        // console.log('sec mode:',secMode)
         toggleDisabled([document.getElementById('allowAnonymousCommentsCreate'),
                              document.getElementById('allowAnonymousPastasCreate')],
                              secMode != 'public');

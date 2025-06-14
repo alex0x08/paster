@@ -154,8 +154,8 @@ class PasteEditCtrl extends GenericEditCtrl[Paste] {
                     @RequestParam(required = true) lineNumber: Long,
                     model: Model): String = {
     if (logger.isDebugEnabled)
-      logger.debug("removing comment commentId={} , lineNumber ={} ",
-        commentId, lineNumber)
+      logger.debug("removing comment commentId={} ,pasteId={},  lineNumber ={} ",
+        commentId, pasteId, lineNumber)
     // check that comment with provided id exists
     if (!commentDao.exists(commentId)) {
       logger.warn("comment with id {} not found", commentId)
@@ -163,14 +163,12 @@ class PasteEditCtrl extends GenericEditCtrl[Paste] {
       return s"redirect:/main/paste/$pasteId#line_$lineNumber"
     }
     // remove all responses to that comment first
-    val subCommentsIds: List[Integer] = commentDao.getSubCommentsIdsFor(commentId)
-    if (subCommentsIds.nonEmpty)
-      for (p <- subCommentsIds)
-        commentDao.remove(p)
-    // remove comment
+    commentDao.deleteCommentsFor(pasteId,commentId)
+    // then remove comment
     commentDao.remove(commentId)
+
     model.asMap().clear()
-    s"redirect:/main/paste/$pasteId#line_$lineNumber"
+    s"redirect:/main/paste/$pasteId#${pasteId}_line_$lineNumber"
   }
 
   /**
@@ -247,7 +245,8 @@ class PasteEditCtrl extends GenericEditCtrl[Paste] {
     if (p.thumbImage!=null) {
       val fid = resourceDao.getResource('t',p.thumbImage)
       if (fid.exists() && fid.isFile && !fid.delete()) {
-        logger.debug("cannot delete previous file: {}", fid)
+        if (logger.isDebugEnabled)
+          logger.debug("cannot delete previous file: {}", fid)
         return MvcConstants.page500
       }
     }
@@ -313,12 +312,13 @@ class PasteEditCtrl extends GenericEditCtrl[Paste] {
       if (p.thumbImage!=null) {
         val fid = resourceDao.getResource('t',p.thumbImage)
         if (fid.exists() && fid.isFile && !fid.delete()) {
-          logger.debug("cannot delete previous preview file: {}", fid)
+          if (logger.isDebugEnabled)
+            logger.debug("cannot delete previous preview file: {}", fid)
           return MvcConstants.page500
         }
       }
       // this is required when
-      commentDao.deleteCommentsFor(b.id)
+      commentDao.deleteCommentsFor(b.id,null)
     }
     // check for selected channel
     if (b.channel == null || !channelDao.exist(b.channel))

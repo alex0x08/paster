@@ -46,6 +46,9 @@ a {
 
 .navbar {
     border-color: #ddd;
+    padding-top: 0;
+    padding-bottom: 0;
+    background-color: #f0f0f0;
 }
 .paging {
     font-size: small;

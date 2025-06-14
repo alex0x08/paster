@@ -34,32 +34,19 @@ class CommentDao extends SearchableDaoImpl[Comment](classOf[Comment]) {
    *        selected paste id
    */
   @Transactional
-  def deleteCommentsFor(pasteId: Integer): Unit = {
+  def deleteCommentsFor(pasteId: Integer,parentId: Integer): Unit = {
     val cr = new CriteriaSet
     val cd =cr.cb.createCriteriaDelete(classOf[Comment])
     val r = cd.from(classOf[Comment])
-    cd.where(Array(cr.cb.equal(r.get("pasteId"), pasteId)): _*)
+    if (parentId!=null)
+      cd.where(Array(cr.cb.equal(r.get("pasteId"), pasteId),
+        cr.cb.equal(r.get("parentId"), parentId)): _*)
+    else
+      cd.where(Array(cr.cb.equal(r.get("pasteId"), pasteId)): _*)
+
     em.createQuery(cd).executeUpdate()
   }
-  /**
-   * Fetch list of ids of sub comments (replies) to specified comment
-   *
-   * @param commentId
-   * selected comment's id
-   * @return
-   * list of IDs
-   */
-  def getSubCommentsIdsFor(commentId: Integer): List[Integer] = {
-    var out = List[Integer]()
-    val cr = new CriteriaSet
-    cr.ct.select(cr.r.get("id"))
-    cr.ct.where(Array(cr.cb.equal(cr.r.get("parentId"), commentId)): _*)
-    val tupleResult: java.util.List[Tuple] = em.createQuery(cr.ct)
-      .setMaxResults(BaseDao.MAX_RESULTS).getResultList
-    for (t <- tupleResult.asScala)
-     out= out.appended (t.get(0).asInstanceOf[Integer])
-    out
-  }
+
   /**
    * Retrieve comments for selected paste
    *

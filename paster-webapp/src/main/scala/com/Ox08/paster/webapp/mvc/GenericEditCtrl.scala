@@ -135,8 +135,10 @@ abstract class GenericEditCtrl[T <: Struct] extends AbstractCtrl {
    *      request context locale
    * @return
    */
-  @RequestMapping(value = Array("/{id:[0-9]+}"), method = Array(RequestMethod.GET))
-  def getByPath(@PathVariable("id") id: Integer, model: Model, locale: Locale): String = {
+  @RequestMapping(value = Array("/{id:[0-9]+}"),
+    method = Array(RequestMethod.GET))
+  def getByPath(@PathVariable("id") id: Integer,
+                model: Model, locale: Locale): String = {
     val m = loadModel(id)
     if (m == null)
       return MvcConstants.page404

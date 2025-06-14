@@ -96,7 +96,8 @@
                     <tiles:insertAttribute name="search-top" />    
                     <p class="navbar-text hidden-sm hidden-xs" style="margin-top:5px;">
                         <c:forEach var="stat" items="${stats.list}">
-                            <c:url var='searchByPriorityUrl' value='/main/paste/list/search?query=priority:${stat.priority}' />
+                            <c:url var='searchByPriorityUrl'
+                                   value='/main/paste/list/search?query=priority:${stat.priority}' />
                             <a class="i ${stat.priority}"
                                 style="font-size:2em;"
                                 title="<fmt:message key="${stat.priority}" />. Click to search with same priority."

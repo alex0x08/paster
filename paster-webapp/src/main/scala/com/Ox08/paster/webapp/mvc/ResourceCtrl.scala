@@ -25,6 +25,8 @@ import scala.collection.mutable
 
 /**
  * MVC Controller, which serves static resources
+ * @since 1.0
+ * @author 0x08
  */
 @Controller
 @RequestMapping(Array("/paste-resources"))

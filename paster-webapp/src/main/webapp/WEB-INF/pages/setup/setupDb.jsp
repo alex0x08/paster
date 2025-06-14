@@ -149,7 +149,7 @@
                               driver = el.getAttribute('x-driver-class'),
                               origName = el.getAttribute('x-name');
 
-                        console.log('editable:',editable, 'url: ',dbUrl,'driver: ',driver)
+                        // console.log('editable:',editable, 'url: ',dbUrl,'driver: ',driver)
 
                         const elUrl = document.getElementById('dbUrl'),
                               elDriver = document.getElementById('dbDriver'),

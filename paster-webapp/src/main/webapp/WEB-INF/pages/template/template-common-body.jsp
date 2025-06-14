@@ -28,7 +28,7 @@
             <div class="modal-header">
                 <button type="button"
                         class="close"
-                        data-bs-dismiss="modal" aria-hidden="true">X</button>
+                        data-bs-dismiss="modal">X</button>
                 <h4 class="modal-title" id="dialogTitle"></h4>
             </div>
             <div id="dialogMessage" class="modal-body">                
@@ -37,7 +37,9 @@
                 <a id="dialogAction" href="" class="btn btn-primary"></a>
                 <button type="button"
                         class="btn btn-default"
-                        data-bs-dismiss="modal">Cancel</button>
+                        data-bs-dismiss="modal">
+                            <fmt:message key='button.cancel' />
+                        </button>
             </div>
         </div>
     </div>
