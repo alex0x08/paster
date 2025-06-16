@@ -18,6 +18,8 @@ import jakarta.servlet.{Filter, FilterChain, ServletRequest, ServletResponse}
 import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
 /**
  * Just forwards to main/paste/view/xx from /xx
+ * @since 2.0
+ * @author 0x08
  */
 class PasterUrlForwarder extends Filter {
   override def doFilter(servletRequest: ServletRequest,

@@ -33,6 +33,8 @@ import scala.collection.mutable
 import scala.jdk.CollectionConverters._
 /**
  * Static object to deal with security context and sessions
+ * @author 0x08
+ * @since 1.0
  */
 object UserManager extends Logged {
   /**
@@ -92,8 +94,6 @@ object UserManager extends Logged {
     } finally r.close()
   }
 }
-
-
 
 /**
  * A service class to work with users

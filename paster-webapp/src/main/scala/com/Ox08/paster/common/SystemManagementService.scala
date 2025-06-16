@@ -21,11 +21,14 @@ import java.io.{File, IOException}
 import java.lang.management.ManagementFactory
 import java.util
 import scala.jdk.CollectionConverters._
-trait SystemManagementService {
-  def restartApplication(): Unit
-}
+
+/**
+ * This class is used to restart application
+ * @since 2.0
+ * @author 0x08
+ */
 @Service
-class SystemManagementServiceImpl extends SystemManagementService with Logged {
+class SystemManagementService extends Logged {
   private var inRestart = false
   /**
    * Перезапустить JVM

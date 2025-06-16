@@ -24,6 +24,7 @@ import scala.collection.mutable
 import scala.jdk.CollectionConverters._
 
 object ElementsDao {
+  // characters, not allowed in channel, priority or level names
   val FORBIDDEN_CHARS: Array[Char] = "@\"'[]{}$#!^&*()`:;?=,./\\".toCharArray
 }
 

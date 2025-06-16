@@ -171,9 +171,9 @@ class Paste extends Struct with java.io.Serializable {
   @Column(name = "comments_count")
   var commentsCount: Int = _
   @Column(name = "symbols_count")
-  var symbolsCount: Int = _
+  private var symbolsCount: Int = _
   @Column(name = "words_count")
-  var wordsCount: Int = _
+  private var wordsCount: Int = _
   @Column(name = "review_img")
   @XStreamOmitField
   @JsonIgnore

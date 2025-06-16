@@ -21,6 +21,8 @@ import org.springframework.web.servlet.i18n.SessionLocaleResolver
 import java.util.Locale
 /**
  * Customized locale resolver, supports both 'Accept-Language' and session-based locales
+ * @since 2.0
+ * @author 0x08
  */
 class PasterLocaleResolver extends SessionLocaleResolver with Logged{
   setDefaultLocaleFunction(defaultLocaleFunction)

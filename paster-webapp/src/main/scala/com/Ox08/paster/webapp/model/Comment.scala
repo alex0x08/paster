@@ -23,6 +23,7 @@ import org.hibernate.search.mapper.pojo.mapping.definition.annotation.{FullTextF
 /**
  * A comment for single line of paste
  * @since 1.0
+ * @author 0x08
  *
  */
 @Entity

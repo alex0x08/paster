@@ -20,7 +20,7 @@ import java.time.LocalDate
 
 
 object SessionToken {
-  val MAX_USER_AGENT_LEN = 255
+  private val MAX_USER_AGENT_LEN = 255
 }
 /**
  * JPA entity, used to store sessions in database

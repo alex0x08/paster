@@ -15,13 +15,12 @@
  */
 package com.Ox08.paster.webapp.dao
 import com.Ox08.paster.webapp.model.Comment
-import jakarta.persistence.Tuple
 import org.apache.lucene.queryparser.classic.QueryParser
 import org.apache.lucene.search.highlight.{Highlighter, InvalidTokenOffsetsException}
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
+
 import java.io.IOException
-import scala.jdk.CollectionConverters._
 /**
  * A repository for comments
  */

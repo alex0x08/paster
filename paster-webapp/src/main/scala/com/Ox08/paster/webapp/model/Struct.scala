@@ -19,11 +19,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute
 import jakarta.persistence._
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField
-
-import java.time.{LocalDateTime, ZoneId, ZoneOffset}
+import java.time.{LocalDateTime, ZoneId}
 import java.util.{Date, Objects}
+
 object Struct extends Logged {
+  // here we store set of terms, used for full-text searching
   protected val terms: List[String] = List[String]("id", "name")
+  // abstract builder, used to construct this object
   abstract class Builder[T <: java.io.Serializable](obj: T) extends Logged {
     def get(): T = obj
   }
@@ -84,7 +86,7 @@ abstract class Struct extends DBObject
 }
 
 /**
- * Abstact database entity
+ * Abstract database entity
  * @since 1.0
  * @author 0x08
  */
@@ -94,7 +96,7 @@ abstract class DBObject extends java.io.Serializable {
   var disabled: Boolean = _ // if true - record is disabled (ex. user entity)
 
   def getId: Integer
-  def setId(id:Integer)
+  def setId(id:Integer): Unit
   /**
    * Check if record has not been persisted yet by
    * simply compare id with null

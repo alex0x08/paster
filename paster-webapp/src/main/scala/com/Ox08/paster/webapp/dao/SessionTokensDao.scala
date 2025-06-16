@@ -19,6 +19,8 @@ import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
 /**
  * Sessions tokens storage
+ * @since 2.0
+ * @author 0x08
  */
 @Repository("tokenDao")
 @Transactional(readOnly = true, rollbackFor = Array(classOf[Exception]))

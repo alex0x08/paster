@@ -31,19 +31,29 @@ import org.springframework.context.ApplicationListener
 import org.springframework.context.event.ContextRefreshedEvent
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-
 import java.util
 import scala.jdk.CollectionConverters._
+
 object SearchableDaoImpl {
   val FORMATTER = new SimpleHTMLFormatter("[result]", "[/result]")
   private val DEFAULT_START_FIELDS: Array[String] = Array[String]("name")
 }
+
+/**
+ * This service used to configure full-text indexes
+ */
 @Service
 class SetupIndexes extends Logged with ApplicationListener[ContextRefreshedEvent] {
   @Value("${paster.reindexOnBoot:false}")
-  private val reindexOnBoot: Boolean = false
+  private val reindexOnBoot: Boolean = false // if we allow re-indexing on boot
+
+  /**
+   * Triggers on Paster start and does re-indexing
+   * @param event
+   */
   @Transactional
   def onApplicationEvent(event: ContextRefreshedEvent): Unit = {
+    // if we allow re-index on boot
     if (reindexOnBoot) {
       val allSearchableDao = event.getApplicationContext
                       .getBeansOfType(classOf[SearchableDaoImpl[_]])
@@ -51,36 +61,73 @@ class SetupIndexes extends Logged with ApplicationListener[ContextRefreshedEvent
         d.getValue.indexAll()
       logger.info("reindex completed.")
     } else
-      logger.info("reindex was disabled. skipping it.")
+      logger.debug("reindex disabled. skipping..")
   }
 }
+
+/**
+ * Abstract Searchable service, dedicated for single entity
+ * @param model
+ *      target entity class
+ * @tparam T
+ *        target entity
+ */
 @Transactional(readOnly = true, rollbackFor = Array(classOf[Exception]))
 abstract class SearchableDaoImpl[T <: Struct](model: Class[T])
   extends StructDaoImpl[T](model) {
+
+  /**
+   * This class is responsible for full-text searching, new session will be opened on each
+   * request
+   * @param query
+   *        text query
+   */
   private class FSearch(query: String) extends Logged {
     if (logger.isDebugEnabled)
       logger.debug("searching for {}", query)
+
+    // get search session from EntityManager
     private val searchSession: SearchSession = getFullTextEntityManager
+    // build query parser
     private val queryParser = new MultiFieldQueryParser(getDefaultStartFields,
       new StandardAnalyzer())
   //  val sort: org.apache.lucene.search.Sort = new org.apache.lucene.search.Sort(
   //    new org.apache.lucene.search.SortField("id",
    //     org.apache.lucene.search.SortField.Type.LONG))
+    // parse query
     private val luceneQuery: org.apache.lucene.search.Query = queryParser.parse(query)
+
     private val scorer: QueryScorer = new QueryScorer(luceneQuery)
     private val highlighter: Highlighter = new Highlighter(SearchableDaoImpl.FORMATTER, scorer)
     highlighter.setTextFragmenter(new SimpleSpanFragmenter(scorer, 100))
-    private val predicate2: SearchPredicate = searchSession
+    // build predicate
+    private val predicate: SearchPredicate = searchSession
       .scope(model).predicate.extension(LuceneExtension.get)
       .fromLuceneQuery(luceneQuery).toPredicate
+    // do search
     private val searchQuery: LuceneSearchQuery[T] = searchSession.search(model)
       .extension(LuceneExtension.get())
-      .where(predicate2).toQuery
-    def getResults: util.List[T] = fillHighlighted(highlighter,
-      queryParser, searchQuery.fetchAll().hits())
+      .where(predicate).toQuery
+
+    /**
+     * Return found results
+     * @return
+     */
+    def getResults: util.List[T] = fillHighlighted(
+      highlighter,
+      queryParser,
+      searchQuery.fetchAll().hits())
   }
   private def getFullTextEntityManager: SearchSession = Search.session(em)
   def getDefaultStartFields: Array[String] = SearchableDaoImpl.DEFAULT_START_FIELDS
+
+  /**
+   * Highlight found results
+   * @param highlighter
+   * @param queryParser
+   * @param results
+   * @return
+   */
   private def fillHighlighted(highlighter: Highlighter,
                               queryParser: QueryParser,
                               results: java.util.List[_]): java.util.List[T] = {
@@ -90,6 +137,10 @@ abstract class SearchableDaoImpl[T <: Struct](model: Class[T])
       fillHighlighted(highlighter, queryParser, obj.asInstanceOf[T])
     results.asInstanceOf[java.util.List[T]]
   }
+
+  /**
+   * re-index current model
+   */
   def indexAll(): Unit = {
     val searchSession = getFullTextEntityManager
     try {
