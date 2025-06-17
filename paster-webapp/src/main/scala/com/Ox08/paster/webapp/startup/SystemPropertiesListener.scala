@@ -44,6 +44,12 @@ class SystemPropertiesListener extends ServletContextListener {
         throw new RuntimeException(s"Cannot create scratchDir: ${scratchDir.getAbsolutePath}")
       // set scratch dir as context attribute
       event.getServletContext.setAttribute("jakarta.servlet.context.tempdir",scratchDir)
+
+      val apiKey=  Boot.BOOT.getSystemInfo.getSetting("paster.api.key",null)
+      if (apiKey!=null) {
+        event.getServletContext.setAttribute("pasterApiKey",apiKey)
+      }
+
       // setup Spring profiles
       var springProfiles = ""
       // if Paster is installed - use 'main' profile

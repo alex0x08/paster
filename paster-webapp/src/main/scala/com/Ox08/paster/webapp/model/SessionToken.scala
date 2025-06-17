@@ -20,6 +20,8 @@ import java.time.LocalDate
 
 
 object SessionToken {
+  // max 'user agent' header length
+  // we use it as part of user details to generate session key
   private val MAX_USER_AGENT_LEN = 255
 }
 /**

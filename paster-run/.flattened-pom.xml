@@ -5,11 +5,11 @@
   <parent>
     <groupId>com.Ox08.paster.webapp</groupId>
     <artifactId>paster-project</artifactId>
-    <version>2.1.07-RELEASE</version>
+    <version>3.0.00-RELEASE</version>
   </parent>
   <groupId>com.Ox08.paster.webapp</groupId>
   <artifactId>paster-run</artifactId>
-  <version>2.1.07-RELEASE</version>
+  <version>3.0.00-RELEASE</version>
   <name>Paster Bootstrap</name>
   <url>https://github.com/alex0x08/paster/paster-run</url>
   <inceptionYear>2011</inceptionYear>

@@ -50,21 +50,23 @@ class StartupListener extends ServletContextListener with Logged {
     if (!Boot.BOOT.getSystemInfo.isInstalled)
         return
 
-      event.getServletContext.setAttribute("pasterInstalled",true)
-      val bootContext = new BootContext()
-      SpringBeanAutowiringSupport
+    // mark that Paster has been installed
+    event.getServletContext.setAttribute("pasterInstalled",true)
+    // build startup context
+    val bootContext = new BootContext()
+    SpringBeanAutowiringSupport
         .processInjectionBasedOnServletContext(bootContext, event.getServletContext)
-      try {
+    try {
         // setup default locale
         bootContext.localeResolver.setDefaultLocale(Boot.BOOT.getSystemInfo.getSystemLocale)
         setupSecurityContext() // setup security context
         bootContext.users.loadUsers()
         logger.info("db generation completed successfully.")
-      } catch {
+    } catch {
         case e@(_: java.io.IOException) =>
           logger.error(e.getLocalizedMessage, e)
           throw e; // to stop application
-      }
+    }
   }
   override def contextDestroyed(servletContextEvent: ServletContextEvent): Unit = {
     // not used

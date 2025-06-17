@@ -58,7 +58,7 @@
      There is no way to disable this as it is considered extremely risky to disable this constraint.''
      https://docs.spring.io/spring-security/site/docs/current/api/org/springframework/security/web/firewall/StrictHttpFirewall.html
 
-    This is only way to have UTF-8 characters right in url string.
+    This is the way to have UTF-8 characters right in url string.
      -->
     <beans:bean id="defaultHttpFirewall" class="org.springframework.security.web.firewall.DefaultHttpFirewall"/>
     <http-firewall ref="defaultHttpFirewall"/>

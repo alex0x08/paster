@@ -38,7 +38,7 @@
         </license>
     </licenses>
     <properties>
-        <revision>2.1.07-RELEASE</revision>
+        <revision>3.0.00-RELEASE</revision>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.test.skip>true</maven.test.skip>

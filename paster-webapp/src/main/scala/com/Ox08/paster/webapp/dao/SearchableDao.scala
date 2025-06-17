@@ -35,6 +35,7 @@ import java.util
 import scala.jdk.CollectionConverters._
 
 object SearchableDaoImpl {
+  // tags, used for highlighting blocks
   val FORMATTER = new SimpleHTMLFormatter("[result]", "[/result]")
   private val DEFAULT_START_FIELDS: Array[String] = Array[String]("name")
 }
