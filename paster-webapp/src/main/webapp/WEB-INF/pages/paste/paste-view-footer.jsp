@@ -107,8 +107,11 @@
         pasterView.setupCommentsAdd(MODEL_ID); 
         
     <c:if test="${availablePrevList.count > 0}">
-        pasterView.setupLazy("<c:url value='/main/paste/raw/view'/>",  "<c:url value='/main/paste'/>",
-        ${availablePrevList.count},  ${model.id}, [${availablePrevList.itemsAsString}]);
+        pasterView.setupLazy("<c:url value='/main/paste/raw/view'/>",
+         "<c:url value='/main/paste'/>",
+         ${availablePrevList.count},
+         ${model.id},
+         [${availablePrevList.itemsAsString}]);
     </c:if>
 
     });

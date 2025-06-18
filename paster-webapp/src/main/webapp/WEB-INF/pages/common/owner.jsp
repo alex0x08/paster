@@ -20,7 +20,7 @@
 
 <%--
 
-        Renders paste's owner        
+        Renders author details
 --%>    
 
 <tiles:importAttribute name="model" />

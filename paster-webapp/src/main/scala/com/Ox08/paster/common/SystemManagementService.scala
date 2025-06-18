@@ -24,11 +24,17 @@ import scala.jdk.CollectionConverters._
 
 /**
  * This class is used to restart application
+ *
+ * Dedicated trait is required because this class is used on 'setup' stage, without fully configured Spring
  * @since 2.0
  * @author 0x08
  */
+trait SystemManagementService {
+  def restartApplication(): Unit
+}
+
 @Service
-class SystemManagementService extends Logged {
+class SystemManagementServiceImpl extends SystemManagementService with Logged {
   private var inRestart = false
   /**
    * Перезапустить JVM

@@ -17,8 +17,7 @@
 --%>
 <%@ include file="/WEB-INF/pages/common/taglibs.jsp"%>
 
-
-<c:set var="pageTitle" value="403: Access denied"/>
+<fmt:message var="pageTitle" key="error.403.title" />
 
 <div class="jumbotron">
     <img src="<c:url value='/main/resources/${appId}/static/big/paranoia.png'/>"

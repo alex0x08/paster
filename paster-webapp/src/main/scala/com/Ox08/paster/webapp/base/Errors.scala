@@ -202,9 +202,11 @@ class SystemError extends AbstractI18nMessageStore("bundles/errorMessages") {
    */
   private def getMessage(e: Exception): String = {
     var s = e.getLocalizedMessage
-    if (s != null) return s
+    if (s != null)
+      return s
     s = e.getMessage
-    if (s != null) return s
+    if (s != null)
+      return s
     e.toString
   }
 }

@@ -17,7 +17,7 @@
 --%>
 <%@ include file="/WEB-INF/pages/common/taglibs.jsp"%>
 <%--
-       Admin's menu
+       Administrator menu
 --%>    
 <sec:authorize access="hasRole('ROLE_ADMIN')">
     <div class="row">

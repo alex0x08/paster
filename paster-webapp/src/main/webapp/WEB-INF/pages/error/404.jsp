@@ -17,8 +17,8 @@
 --%>
 <%@ include file="/WEB-INF/pages/common/taglibs.jsp"%>
 
+<fmt:message var="pageTitle" key="error.404.title" />
 
-<c:set var="pageTitle" value="404: Not found"/>
 
 <div class="jumbotron">
     <img src="<c:url value='/main/resources/${appId}/static/big/prayer.png'/>"

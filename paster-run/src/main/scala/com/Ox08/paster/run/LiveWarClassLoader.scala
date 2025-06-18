@@ -20,7 +20,7 @@ import java.io._
 import java.net._
 import java.util
 import java.util.Collections
-import java.util.jar.{JarEntry, JarFile}
+import java.util.jar.{JarEntry, JarFile,JarInputStream}
 import java.util.zip.ZipEntry
 import scala.collection.mutable
 import scala.jdk.CollectionConverters._
@@ -54,7 +54,6 @@ class LiveWarClassLoader(debug: Boolean,
       if (e.getName.startsWith("WEB-INF/lib")
         && e.getName.endsWith(".jar")) {
         debug(s"found lib: ${e.getName}")
-        import java.util.jar.JarInputStream
         val zip = new JarInputStream(warFile.getInputStream(e))
         var ze: JarEntry = null
         while ( {
@@ -81,7 +80,7 @@ class LiveWarClassLoader(debug: Boolean,
         }
       }
     }
-    import java.net.URL
+    // register custom stream handler (required!)
     URL.setURLStreamHandlerFactory(new VirtualWARURLStreamHandlerFactory(debug))
     ResourceFactory.registerResourceFactory("war-virtual",new URLResourceFactory())
   }

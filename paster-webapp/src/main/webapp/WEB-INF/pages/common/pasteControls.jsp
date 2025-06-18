@@ -18,7 +18,7 @@
 <%@ include file="/WEB-INF/pages/common/taglibs.jsp"%>
 <%--
 
-    Renders paste's control buttons
+    Renders control buttons for a paste
 --%>
 <tiles:importAttribute name="model" />
 <tiles:importAttribute name="mode" />

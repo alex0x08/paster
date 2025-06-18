@@ -129,8 +129,21 @@ class PasterRunner {
     if (configFile.exists() && configFile.isFile)
       _properties.load(new FileReader(configFile))
     // then override with system properties
-    _properties.putAll(System.getProperties)
+    //_properties.putAll(System.getProperties)
+    val props = System.getProperties
+    for (e<-props.keySet().asScala) {
+      val ee = e.asInstanceOf[String]
+      // use only own properties, not everything
+      if ("appDebug".equals(ee) || ee.startsWith("paster."))
+        _properties.put(ee,props.getProperty(ee))
+    }
 
+    for (e<-_properties.keySet().asScala) {
+      val ee = e.asInstanceOf[String]
+      // set Jetty parameters from config to env
+      if (ee.startsWith("org.eclipse.jetty"))
+        System.setProperty(ee, _properties.getProperty(ee))
+    }
     // check for debug
     isDebug = java.lang.Boolean.parseBoolean(_properties
                       .getProperty("appDebug",String.valueOf(false)))
@@ -246,12 +259,16 @@ class PasterRunner {
     val incPattern = ".*" + jarName.replace(".", "\\\\.") + "$"
       webapp.setAttribute(MetaInfConfiguration.CONTAINER_JAR_PATTERN, incPattern)
 
-      // pass jetty settings to context
-      for (e <- _properties.keySet().asScala) {
+
+
+    // pass jetty settings to context
+      /*for (e <- _properties.keySet().asScala) {
         val ee = e.asInstanceOf[String]
-        if (ee.startsWith("org.eclipse.jetty"))
-          webapp.setAttribute(ee,_properties.getProperty(ee))
-      }
+        if (ee.startsWith("org.eclipse.jetty")) {
+          _server.setAttribute(ee,_properties.getProperty(ee))
+          PasterRunner.LOG.debug(s"set attribute: ${ee}")
+        }
+      }*/
 
       // hack for Jetty 12
       webapp.addServletContainerInitializer(new JettyJasperInitializer)

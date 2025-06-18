@@ -15,6 +15,12 @@
     limitations under the License.
 
 --%>
+
+<%--
+
+    Renders counter of new pastas since page been loaded
+--%>
+
 <%@ include file="/WEB-INF/pages/common/taglibs.jsp"%>
 
 <div id="newPastasCountBlock" class="row" style="display: none;">
@@ -50,7 +56,7 @@
                           	Tinycon.setBubble(pcount);
                         }
                } else {
-                    cb.text= 'Sorry, your request failed :(';
+                    cb.text= 'Request failed :(';
                }
             }
         };

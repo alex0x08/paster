@@ -766,8 +766,10 @@ var SyntaxHighlighter = function () {
         }
         result = sh.brushes[brushes[alias]];
         if (result == null && showAlert != false) {
-            alert(sh.config.strings.noBrush + alias);
+            console.log('error:',sh.config.strings.noBrush + alias);
+            result = sh.brushes[brushes['plain']];
         }
+
         return result;
     };
     /**
