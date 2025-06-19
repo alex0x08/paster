@@ -21,6 +21,7 @@ import org.eclipse.jetty.server.{Handler, Server, ServerConnector}
 import org.eclipse.jetty.util.FileID
 import org.eclipse.jetty.util.resource.{Resource, ResourceFactory}
 import org.slf4j.{Logger, LoggerFactory}
+
 import java.io.{File, FileReader, IOException}
 import java.net.{URL, URLClassLoader}
 import java.util
@@ -258,8 +259,6 @@ class PasterRunner {
     // build expression pattern, used by class scanner
     val incPattern = ".*" + jarName.replace(".", "\\\\.") + "$"
       webapp.setAttribute(MetaInfConfiguration.CONTAINER_JAR_PATTERN, incPattern)
-
-
 
     // pass jetty settings to context
       /*for (e <- _properties.keySet().asScala) {
