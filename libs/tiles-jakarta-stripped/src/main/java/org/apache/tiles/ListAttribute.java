@@ -50,17 +50,7 @@ public class ListAttribute extends Attribute {
      * @since 2.1.0
      */
     public ListAttribute() {
-        setValue(new ArrayList<Object>());
-    }
-
-    /**
-     * Constructor.
-     *
-     * @param value List.
-     * @since 2.1.0
-     */
-    public ListAttribute(List<Attribute> value) {
-        setValue(value);
+        this.value = new ArrayList<>();
     }
 
     /**
@@ -92,7 +82,7 @@ public class ListAttribute extends Attribute {
      * @param attributes The attributes.
      * @since 3.0.0
      */
-    public void setValue(List<Attribute> attributes) {
+    public final void setValue(List<Attribute> attributes) {
         super.setValue(attributes);
     }
 
@@ -163,10 +153,9 @@ public class ListAttribute extends Attribute {
      */
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof ListAttribute attribute)) {
-            return false;
-        }
-        return super.equals(attribute) && this.inherit == attribute.inherit;
+        return obj instanceof ListAttribute attribute
+                && super.equals(attribute)
+                && this.inherit == attribute.inherit;
     }
 
     /**

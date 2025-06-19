@@ -57,6 +57,10 @@ class GenericQuery extends Query {
     this.query = query
   }
 }
+
+/**
+ * Search query with specific author
+ */
 class AuthorQuery extends GenericQuery with Query {
   var authorId: Long = _
 }

@@ -74,7 +74,8 @@ abstract class AbstractI18nMessageStore protected( // default bundle name
   }
 }
 class PasterRuntimeException(code: Int, // error code ( ex. 0x06001 )
-                             message: String, parent: Exception) extends RuntimeException(message, parent) {
+                             message: String, parent: Exception)
+                              extends RuntimeException(message, parent) {
   updateTrace(parent)
   private final def updateTrace(parent: Exception): Unit = {
     if (parent != null)
@@ -105,8 +106,11 @@ class SystemError extends AbstractI18nMessageStore("bundles/errorMessages") {
    * @param params  параметры
    * @return сформированное исключение
    */
-  private def createExceptionImpl[T <: PasterRuntimeException](clazz: Class[T], code: Int, message: String,
-                                                               parent: Exception, params: Array[AnyRef]) = {
+  private def createExceptionImpl[T <: PasterRuntimeException](clazz: Class[T],
+                                                               code: Int,
+                                                               message: String,
+                                                               parent: Exception,
+                                                               params: Array[AnyRef]) = {
     val errorMsg = getErrorMessage(code, message, parent, prefix = true, params)
     try
       clazz.getConstructor(classOf[Int], classOf[String], classOf[Exception])
@@ -143,10 +147,9 @@ class SystemError extends AbstractI18nMessageStore("bundles/errorMessages") {
     // если нет доп. сообщения
     if (message == null) {
       // если нет исключения
-      if (parent == null) {
+      if (parent == null)
         // формируем выходное сообщение, подставляем в шаблон переданные параметры
         errorMsg = formatMessage(errorMsg, params)
-      }
       else {
         // если есть исключение - добавляем в набор параметров
         // сообщение об ошибке первым аргументом
@@ -157,10 +160,10 @@ class SystemError extends AbstractI18nMessageStore("bundles/errorMessages") {
     }
     else {
       // если есть доп. сообщение
-      if (parent == null) {
+      if (parent == null)
         // формируем выходное сообщение, используем доп. сообщение как шаблон
         errorMsg = formatMessage(message, params)
-      } else {
+      else {
         val preparedParams = prepareParams(getMessage(parent), params)
         errorMsg = formatMessage(message, preparedParams)
       }
@@ -199,9 +202,11 @@ class SystemError extends AbstractI18nMessageStore("bundles/errorMessages") {
    */
   private def getMessage(e: Exception): String = {
     var s = e.getLocalizedMessage
-    if (s != null) return s
+    if (s != null)
+      return s
     s = e.getMessage
-    if (s != null) return s
+    if (s != null)
+      return s
     e.toString
   }
 }
@@ -252,7 +257,8 @@ object SystemError { // синглтон
  */
 object SystemMessage { // синглтон
   private val INSTANCE = new SystemMessage
-  def of(template: String, params: AnyRef*): String = INSTANCE.createMessage(template, params.toArray)
+  def of(template: String, params: AnyRef*): String =
+            INSTANCE.createMessage(template, params.toArray)
   def instance: SystemMessage = INSTANCE
 }
 class SystemMessage private // приватный конструктор

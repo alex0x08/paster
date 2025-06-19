@@ -41,7 +41,8 @@ public class InsertAttributeTag extends SimpleTagSupport {
     /**
      * The template model.
      */
-    private final org.apache.tiles.template.InsertAttributeModel model = new org.apache.tiles.template.InsertAttributeModel();
+    private final org.apache.tiles.template.InsertAttributeModel model
+            = new org.apache.tiles.template.InsertAttributeModel();
 
     /**
      * If <code>true</code>, if an exception happens during
@@ -66,17 +67,6 @@ public class InsertAttributeTag extends SimpleTagSupport {
      */
     private java.lang.Object defaultValue;
 
-    /**
-     * The default comma-separated list of roles. To use
-     * only if the attribute was not computed.
-     */
-    private java.lang.String defaultValueRole;
-
-    /**
-     * The default type of the attribute. To use only if
-     * the attribute was not computed.
-     */
-    private java.lang.String defaultValueType;
 
     /**
      * The name of the attribute.
@@ -179,49 +169,7 @@ public class InsertAttributeTag extends SimpleTagSupport {
         this.defaultValue = defaultValue;
     }
 
-    /**
-     * Getter for defaultValueRole property.
-     *
-     * @return
-     * The default comma-separated list of roles. To use
-     * only if the attribute was not computed.
-     */
-    public java.lang.String getDefaultValueRole() {
-        return defaultValueRole;
-    }
 
-    /**
-     * Setter for defaultValueRole property.
-     *
-     * @param defaultValueRole
-     * The default comma-separated list of roles. To use
-     * only if the attribute was not computed.
-     */
-    public void setDefaultValueRole(java.lang.String defaultValueRole) {
-        this.defaultValueRole = defaultValueRole;
-    }
-
-    /**
-     * Getter for defaultValueType property.
-     *
-     * @return
-     * The default type of the attribute. To use only if
-     * the attribute was not computed.
-     */
-    public java.lang.String getDefaultValueType() {
-        return defaultValueType;
-    }
-
-    /**
-     * Setter for defaultValueType property.
-     *
-     * @param defaultValueType
-     * The default type of the attribute. To use only if
-     * the attribute was not computed.
-     */
-    public void setDefaultValueType(java.lang.String defaultValueType) {
-        this.defaultValueType = defaultValueType;
-    }
 
     /**
      * Getter for name property.
@@ -286,7 +234,8 @@ public class InsertAttributeTag extends SimpleTagSupport {
     /** {@inheritDoc} */
     @Override
     public void doTag() throws JspException, IOException {
-        AutotagRuntime<org.apache.tiles.request.Request> runtime = new org.apache.tiles.request.jsp.autotag.JspAutotagRuntime();
+        AutotagRuntime<org.apache.tiles.request.Request> runtime
+                = new org.apache.tiles.request.jsp.autotag.JspAutotagRuntime();
         SimpleTagSupport tag = (SimpleTagSupport) runtime;
         tag.setJspContext(getJspContext());
         tag.setJspBody(getJspBody());
@@ -299,8 +248,8 @@ public class InsertAttributeTag extends SimpleTagSupport {
             preparer,
             role,
             defaultValue,
-            defaultValueRole,
-            defaultValueType,
+            null,
+            null,
             name,
             value,
             flush,

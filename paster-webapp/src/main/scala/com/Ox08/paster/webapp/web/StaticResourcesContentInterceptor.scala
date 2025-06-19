@@ -17,9 +17,11 @@ package com.Ox08.paster.webapp.web
 import jakarta.servlet.ServletException
 import org.springframework.web.servlet.mvc.WebContentInterceptor
 import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
+
 /**
- * This class intercepts requests to static resources and
- * adds 'cache control' header, also drops cookie header.
+ * This is used to tune HTTP headers for static resources,
+ * see https://www.rfc-editor.org/rfc/rfc9111#name-private
+ *
  */
 class StaticResourcesContentInterceptor extends WebContentInterceptor {
   @throws(classOf[ServletException])
@@ -27,8 +29,11 @@ class StaticResourcesContentInterceptor extends WebContentInterceptor {
                          response:  HttpServletResponse, handler: Object): Boolean = {
     super.preHandle(request, response, handler)
     val h = response.getHeader("Cache-Control")
-    if (h != null) response.setHeader("Cache-Control", s"$h private")
-    if (response.containsHeader("Cookie")) response.setHeader("Cookie", null)
+    if (h != null)
+        response.setHeader("Cache-Control", s"$h private")
+    // remove Cookie header, if present
+    if (response.containsHeader("Cookie"))
+        response.setHeader("Cookie", null)
     true
   }
 }

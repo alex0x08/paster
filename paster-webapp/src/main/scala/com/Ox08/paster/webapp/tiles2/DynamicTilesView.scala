@@ -47,7 +47,8 @@ import org.apache.tiles.access.TilesAccess
 import org.apache.tiles.request.servlet.ServletUtil
 import org.springframework.web.servlet.view.AbstractUrlBasedView
 /**
- *
+ * This class does integration between Apache Tiles and Spring
+ * @since 1.0
  */
 class DynamicTilesView extends AbstractUrlBasedView {
   private final val dynamicTilesViewProcessor = new DynamicTilesViewProcessor

@@ -38,35 +38,6 @@ public class InvalidTemplateException extends TilesException {
     public InvalidTemplateException() {
     }
 
-    /*
-     * Constructor.
-     *
-     * @param message The detail message.
-     * @since 2.1.0
-    public InvalidTemplateException(String message) {
-        super(message);
-    }
-     */
 
-    /*
-     * Constructor.
-     *
-     * @param e The exception to be wrapped.
-     * @since 2.1.0
-    public InvalidTemplateException(Throwable e) {
-        super(e);
-    }
-     */
-
-    /*
-     * Constructor.
-     *
-     * @param message The detail message.
-     * @param e The exception to be wrapped.
-     * @since 2.1.0
-    public InvalidTemplateException(String message, Throwable e) {
-        super(message, e);
-    }
-     */
 
 }

@@ -13,21 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/*
- * Copyright © 2011 Alex Chernyshev (alex3.145@gmail.com)
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package com.Ox08.paster.webapp.mvc.paste
 import com.Ox08.paster.webapp.dao.{ChannelDao, CommentDao, PasteDao, SearchableDaoImpl}
 import com.Ox08.paster.webapp.model.{AuthorQuery, Paste}
@@ -43,16 +28,18 @@ import java.util.concurrent.TimeUnit
 import java.util.{Date, Locale}
 import scala.jdk.CollectionConverters._
 import scala.math.abs
+
 /**
- * A controller for 'Pastas list' page.
+ * This one is a main controller for paste entity listings
  *
+ * @since 1.0
+ * @author 0x08
  */
 @Controller
 @RequestMapping(value = Array("/paste"))
 class PasteListCtrl extends SearchCtrl[Paste, AuthorQuery] {
-
   @Value("${paster.paste.list.splitter.days:7}")
-  val splitDays: Int = 0 // number of days used in splitter
+  private val splitDays: Int = 0
   @Autowired
   val channelDao: ChannelDao = null
   @Autowired
@@ -88,8 +75,7 @@ class PasteListCtrl extends SearchCtrl[Paste, AuthorQuery] {
                             @PathVariable("result") result: String,
                             request: HttpServletRequest,
                             model: Model): util.List[Paste] = listImpl(request,
-    model, page, null, null, null,
-    false, null, null,result)
+    model, page, null, null, null, false, null, result)
   @RequestMapping(value = Array(
     "/raw/search/{result:[a-z]+}"), method = Array(RequestMethod.GET))
   @ModelAttribute(MvcConstants.NODE_LIST_MODEL)
@@ -97,8 +83,7 @@ class PasteListCtrl extends SearchCtrl[Paste, AuthorQuery] {
                         @PathVariable("result") result: String,
                         request: HttpServletRequest,
                         model: Model): util.List[Paste] = listImpl(request,
-    model, page, null, null, null,
-    false, null, null,result)
+    model, page, null, null, null, false, null, result)
   @RequestMapping(value = Array("/list/{source}/{page:[0-9]+}",
     "/raw/list/{source}/{page:[0-9]+}"),
     method = Array(RequestMethod.GET))
@@ -107,7 +92,7 @@ class PasteListCtrl extends SearchCtrl[Paste, AuthorQuery] {
                        @PathVariable("source") source: String,
                        request: HttpServletRequest,
                        model: Model): util.List[Paste] = listImpl(request, model, page, null,
-    null, "lastModified", false, source, null,null)
+    null, "lastModified", false, source, null)
   @RequestMapping(value = Array("/list/{source}/limit/{pageSize:[0-9]+}"),
     method = Array(RequestMethod.GET))
   @ModelAttribute(MvcConstants.NODE_LIST_MODEL)
@@ -115,8 +100,7 @@ class PasteListCtrl extends SearchCtrl[Paste, AuthorQuery] {
                            @PathVariable("source") source: String,
                            request: HttpServletRequest,
                            model: Model): util.List[Paste] = listImpl(request, model, null,
-    null, pageSize, "lastModified",
-    false, source, null,null)
+    null, pageSize, "lastModified", false, source, null)
   @RequestMapping(value = Array("/list/{source}/next"), method = Array(RequestMethod.GET))
   @ModelAttribute(MvcConstants.NODE_LIST_MODEL)
   def listByPathNextSource(
@@ -126,15 +110,14 @@ class PasteListCtrl extends SearchCtrl[Paste, AuthorQuery] {
     "next",
     null,
     "lastModified",
-    false, source, null,null)
+    false, source, null)
   @RequestMapping(value = Array("/list/{source}/prev"), method = Array(RequestMethod.GET))
   @ModelAttribute(MvcConstants.NODE_LIST_MODEL)
   def listByPathPrevSource(
                             request: HttpServletRequest,
                             @PathVariable("source") source: String,
                             model: Model): util.List[Paste] = listImpl(request, model, null,
-    "prev", null, "lastModified",
-    false, source, null,null)
+    "prev", null, "lastModified", false, source, null)
   @RequestMapping(value = Array("/list/{source}",
     "/raw/list/{source}",
     "/list/{source}/earlier"), method = Array(RequestMethod.GET))
@@ -145,8 +128,7 @@ class PasteListCtrl extends SearchCtrl[Paste, AuthorQuery] {
                  @RequestParam(required = false) page: java.lang.Integer,
                  @RequestParam(required = false) NPpage: String,
                  @RequestParam(required = false) pageSize: java.lang.Integer): java.util.List[Paste] = {
-    listImpl(request, model, page, NPpage, pageSize,
-      null, false, source, null,null)
+    listImpl(request, model, page, NPpage, pageSize, null, false, source, null)
   }
   @RequestMapping(value = Array("/list/{source}/older"), method = Array(RequestMethod.GET))
   @ModelAttribute(MvcConstants.NODE_LIST_MODEL)
@@ -158,7 +140,7 @@ class PasteListCtrl extends SearchCtrl[Paste, AuthorQuery] {
                       @RequestParam(required = false) pageSize: java.lang.Integer):
   java.util.List[Paste] = listImpl(request, model, page,
     NPpage, pageSize, "lastModified", true,
-    source, null,null)
+    source, null)
   @RequestMapping(value = Array("/list",
     "/raw/list"),
     method = Array(RequestMethod.GET))
@@ -170,23 +152,28 @@ class PasteListCtrl extends SearchCtrl[Paste, AuthorQuery] {
                     @RequestParam(required = false) sortColumn: String,
                     @RequestParam(required = false) sortAsc: Boolean = false): java.util.List[Paste] = {
     listImpl(request, model, page, NPpage, pageSize,
-      sortColumn, sortAsc, null, null,null)
+      sortColumn, sortAsc, null, null)
   }
+
+
+
   @RequestMapping(value = Array("/count/{source}/{since:[0-9]+}"),
     method = Array(RequestMethod.GET), produces = Array("application/json"))
   @ModelAttribute("count")
   def countAllSince(@PathVariable("source") channelCode: String,
-                    @PathVariable("since") dateFrom: java.lang.Long): java.lang.Long = {
+                    @PathVariable("since") dateFrom: java.lang.Long): java.lang.Long =
     pasteDao.countAllSince(channelCode, dateFrom)
-  }
+
+
   private def listImpl(request: HttpServletRequest, model: Model,
                        page: java.lang.Integer,
                        NPpage: String,
                        pageSize: java.lang.Integer,
                        sortColumn: String,
                        sortAsc: java.lang.Boolean = false,
-                       channelCode: String, integrationCode: String, result: String): java.util.List[Paste] = {
-    if (logger.isDebugEnabled) logger.debug("paste listImpl, channel: {} pageSize {}", channelCode,pageSize)
+                       channelCode: String, integrationCode: String): java.util.List[Paste] = {
+    if (logger.isDebugEnabled)
+      logger.debug("paste listImpl, channel: {} pageSize {}", channelCode,pageSize)
     fillListModel(model)
     val ps = if (channelCode != null && channelDao.exist(channelCode)) {
       model.addAttribute("sourceType", channelCode.toLowerCase)
@@ -197,7 +184,8 @@ class PasteListCtrl extends SearchCtrl[Paste, AuthorQuery] {
       if (ps == null) {
         model.addAttribute("sourceType", channelDao.getDefault.toLowerCase)
         pasterListCallback
-      } else new PasteListCallback(ps, sortAsc, integrationCode), MvcConstants.NODE_LIST_MODEL_PAGE)
+      } else
+        new PasteListCallback(ps, sortAsc, integrationCode), MvcConstants.NODE_LIST_MODEL_PAGE)
   }
   @RequestMapping(value = Array("/own/list"))
   @ModelAttribute("items")
@@ -206,10 +194,7 @@ class PasteListCtrl extends SearchCtrl[Paste, AuthorQuery] {
   @ModelAttribute("items")
   @ResponseBody
   def listOwnBody(): java.util.List[Paste] = manager().getByAuthor(getCurrentUser)
-
-  private val pasterListCallback: PasteListCallback = new PasteListCallback(null,
-    true, null)
-
+  private val pasterListCallback: PasteListCallback = new PasteListCallback(null, true, null)
   private class PasteListCallback(channel: String, sortAsc: Boolean, integrationCode: String)
     extends SourceCallback[Paste] {
     override def invokeCreate(): PagedListHolder[Paste] = {
@@ -230,13 +215,7 @@ class PasteListCtrl extends SearchCtrl[Paste, AuthorQuery] {
       ph
     }
   }
-  /**
-   * Renders split message between blocks if dates differ more than splitDays
-   * @param splitDays
-   *        number of days
-   * @param locale
-   *        message locale
-   */
+  // don't make private! this is used from EL!
   class DateSplitHelper(splitDays: Int, locale: Locale) {
     private var prevDate: Date = _
     private var curDate: Date = _
@@ -244,12 +223,14 @@ class PasteListCtrl extends SearchCtrl[Paste, AuthorQuery] {
     var title: String = _
     def setCurDate(date: Date): Unit = {
       curDate = date
-      if (prevDate == null) prevDate = date
+      if (prevDate == null)
+        prevDate = date
       total.+=(1)
     }
     def getSplitTitle: String = title
     def isSplit: Boolean = {
-      if (curDate == null || prevDate == null) return false
+      if (curDate == null || prevDate == null)
+        return false
       val diff = curDate.getTime - prevDate.getTime
       val d = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS)
       if (abs(d) > splitDays) {

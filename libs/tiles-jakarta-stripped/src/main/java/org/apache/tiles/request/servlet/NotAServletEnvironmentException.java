@@ -27,11 +27,6 @@ package org.apache.tiles.request.servlet;
  */
 public class NotAServletEnvironmentException extends RuntimeException {
 
-    /*
-     * Constructor.
-    public NotAServletEnvironmentException() {
-    }
-     */
     /**
      * Constructor.
      *
@@ -41,22 +36,5 @@ public class NotAServletEnvironmentException extends RuntimeException {
         super(message);
     }
 
-    /*
-     * Constructor.
-     *
-     * @param e The exception to be wrapped.
-    public NotAServletEnvironmentException(Throwable e) {
-        super(e);
-    }
-     */
 
-    /*
-     * Constructor.
-     *
-     * @param message The detail message.
-     * @param e The exception to be wrapped.
-    public NotAServletEnvironmentException(String message, Throwable e) {
-        super(message, e);
-    }
-     */
 }

@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 package com.Ox08.paster.webapp.web.security
+import com.Ox08.paster.webapp.base.Logged
 import com.Ox08.paster.webapp.dao.SessionTokensDao
 import com.Ox08.paster.webapp.manager.UserManager
 import com.Ox08.paster.webapp.model.{PasterUser, SessionToken}
@@ -24,12 +25,9 @@ import org.springframework.security.core.userdetails.{UserDetails, UserDetailsSe
 import org.springframework.security.web.authentication.rememberme.{AbstractRememberMeServices, InvalidCookieException, RememberMeAuthenticationException}
 
 import java.security.SecureRandom
-import java.time.{LocalDate, ZoneId}
+import java.time.LocalDate
 import java.util
-import java.util.{Base64, Date}
-/**
- * Constants used during session checking.
- */
+import java.util.Base64
 object CPRConstants {
   // Token is valid for one month
   val TOKEN_VALIDITY_DAYS = 31
@@ -37,70 +35,57 @@ object CPRConstants {
   val DEFAULT_SERIES_LENGTH = 16
   val DEFAULT_TOKEN_LENGTH = 16
 }
-/**
- * Custom implementation for Spring Security 'remember me' service.
- *
- * @param key
- * @param uds
- * @param tokenDao
- */
-class PasterPersistentRememberMeServices(key: String, uds: UserDetailsService, tokenDao: SessionTokensDao)
-  extends AbstractRememberMeServices(key, uds) {
-  /**
-   * Handles 'remember me' cookie
-   * @param cookieTokens
-   * @param request
-   * @param response
-   * @return
-   */
-  protected override def processAutoLoginCookie(
+class PasterPersistentRememberMeServices(key: String,
+                                         uds: UserDetailsService, tokenDao: SessionTokensDao)
+              extends
+                  AbstractRememberMeServices(key, uds) {
+  private val log = Logged.getLogger(getClass)
+  private val random = new SecureRandom()
+  protected def processAutoLoginCookie(
                                         cookieTokens: Array[String],
                                         request: HttpServletRequest,
                                         response: HttpServletResponse): UserDetails = {
-    // extract token and check
-    // there will be exception thrown if cookie is invalid or expired
     val token = getPersistentToken(cookieTokens)
-    // Token also matches, so login is valid. Update the token value, keeping the *same* series number.
     val login = token.username
-    if (logger.isDebugEnabled) {
-      logger.debug("Refreshing persistent login token for user '{}', series '{}'",login, token.series)
-    }
-    // next, we update and persist token value, but not series
-    token.tokenDate = new Date()
+    // Token also matches, so login is valid. Update the token value, keeping the *same* series number.
+    log.debug("Refreshing persistent login token for user '{}', series '{}'",
+      Array(login, token.series))
+    token.tokenDate = LocalDate.now()
     token.tokenValue = generateTokenData()
     token.ipAddress = request.getRemoteAddr
     token.setUserAgent(request.getHeader("User-Agent"))
     try {
-      tokenDao.save(token); addCookie(token, request, response)
-    } catch {
-      case e@(_: DataAccessException) =>
-        throw new RememberMeAuthenticationException(s"Autologin failed due to data access problem: ${e.getMessage}")
-    }
-    getUserDetailsService.loadUserByUsername(login)
-  }
-  protected override  def onLoginSuccess(
-                                request: HttpServletRequest,
-                                response: HttpServletResponse,
-                                successfulAuthentication: Authentication): Unit = {
-    val login = successfulAuthentication.getName
-    if (logger.isDebugEnabled)
-      logger.debug(s"Creating new persistent login for user $login")
-    val user = getUserDetailsService.loadUserByUsername(login).asInstanceOf[PasterUser]
-    val token = new SessionToken()
-    token.series = generateSeriesData()
-    token.username = user.getUsername()
-    token.tokenValue = generateTokenData()
-    token.tokenDate = new Date()
-    token.ipAddress = request.getRemoteAddr
-    token.setUserAgent(request.getHeader("User-Agent"))
-    try {
-      // this is still same token!
       tokenDao.save(token)
       addCookie(token, request, response)
     } catch {
       case e@(_: DataAccessException
         ) =>
-        logger.error(e.getMessage, e)
+        log.error(e.getLocalizedMessage, e)
+        throw new RememberMeAuthenticationException(s"Autologin failed due to data access problem: ${e.getMessage}")
+    }
+    getUserDetailsService.loadUserByUsername(login)
+  }
+  protected def onLoginSuccess(
+                                request: HttpServletRequest, response: HttpServletResponse,
+                                successfulAuthentication: Authentication): Unit = {
+    val login = successfulAuthentication.getName
+    if (log.isDebugEnabled)
+      log.debug("Creating new persistent login for user {}", login)
+    val user = getUserDetailsService.loadUserByUsername(login).asInstanceOf[PasterUser]
+    val token = new SessionToken()
+    token.series = generateSeriesData()
+    token.username = user.getUsername()
+    token.tokenValue = generateTokenData()
+    token.tokenDate = LocalDate.now()
+    token.ipAddress = request.getRemoteAddr
+    token.setUserAgent(request.getHeader("User-Agent"))
+    try {
+      tokenDao.save(token)
+      addCookie(token, request, response)
+    } catch {
+      case e@(_: DataAccessException
+        ) =>
+        log.error(e.getMessage, e)
     }
   }
   /**
@@ -114,12 +99,14 @@ class PasterPersistentRememberMeServices(key: String, uds: UserDetailsService, t
                       authentication: Authentication): Unit = {
     val rememberMeCookie = extractRememberMeCookie(request)
     if (rememberMeCookie != null && rememberMeCookie.nonEmpty) try {
-      val cookieTokens = decodeCookie(rememberMeCookie); val token = getPersistentToken(cookieTokens)
+      val cookieTokens = decodeCookie(rememberMeCookie)
+      val token = getPersistentToken(cookieTokens)
       tokenDao.remove(token.series)
     } catch {
       case e@(_: InvalidCookieException
-              | _: RememberMeAuthenticationException) =>
-        logger.error(e.getMessage, e)
+              | _: RememberMeAuthenticationException
+        ) =>
+        log.error(e.getMessage, e)
     }
     super.logout(request, response, authentication)
   }
@@ -131,23 +118,24 @@ class PasterPersistentRememberMeServices(key: String, uds: UserDetailsService, t
       throw new InvalidCookieException(
         s"Cookie token did not contain 2 tokens, but contained '${util.Arrays.asList(cookieTokens)}'")
     }
-    val presentedSeries = cookieTokens(0); val presentedToken = cookieTokens(1)
+    val presentedSeries = cookieTokens(0)
+    val presentedToken = cookieTokens(1)
     val token = tokenDao.get(presentedSeries)
     if (token == null) {
       // No series match, so we can't authenticate using this cookie
-      throw new RememberMeAuthenticationException(s"No persistent token found for series id: $presentedSeries")
+      throw new RememberMeAuthenticationException(
+        s"No persistent token found for series id: $presentedSeries")
     }
     // We have a match for this user/series combination
-    logger.debug("presentedToken={} / tokenValue={}",
-      presentedToken, token.tokenValue)
+    log.info("presentedToken={} / tokenValue={}",
+      Array(presentedToken, token.tokenValue))
     if (!presentedToken.equals(token.tokenValue)) {
       // Token doesn't match series value. Delete this session and throw an exception.
       tokenDao.remove(token.series)
       throw new RememberMeAuthenticationException(
         "Invalid remember-me token (Series/token) mismatch. Implies previous cookie theft attack.")
     }
-    // check for expiration
-    if (LocalDate.ofInstant(token.tokenDate.toInstant, ZoneId.systemDefault())
+    if (token.tokenDate
       .plusDays(CPRConstants.TOKEN_VALIDITY_DAYS).isBefore(LocalDate.now())) {
       tokenDao.remove(token.series)
       throw new RememberMeAuthenticationException("Remember-me login has expired")
@@ -156,12 +144,12 @@ class PasterPersistentRememberMeServices(key: String, uds: UserDetailsService, t
   }
   private def generateSeriesData(): String = {
     val newSeries = new Array[Byte](CPRConstants.DEFAULT_SERIES_LENGTH)
-    new SecureRandom().nextBytes(newSeries)
+    random.nextBytes(newSeries)
     Base64.getEncoder.encodeToString(newSeries)
   }
   private def generateTokenData(): String = {
     val newToken = new Array[Byte](CPRConstants.DEFAULT_TOKEN_LENGTH)
-    new SecureRandom().nextBytes(newToken)
+    random.nextBytes(newToken)
     Base64.getEncoder.encodeToString(newToken)
   }
   private def addCookie(

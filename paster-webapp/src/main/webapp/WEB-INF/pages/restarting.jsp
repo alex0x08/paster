@@ -27,9 +27,8 @@
 <div class='row justify-content-md-center'>
     <div class='col-md-2'>
         <p style='padding-top: 2em;'>
-
-<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
-<span class="sr-only">Loading...</span>
-         </p>
+            <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
+            <span class="sr-only">Loading...</span>
+        </p>
     </div>
 </div>

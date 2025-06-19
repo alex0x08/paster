@@ -68,16 +68,16 @@ public abstract class PostfixedApplicationResource implements ApplicationResourc
         if (suffixIndex < 0) {
             suffix = "";
             suffixIndex = localePath.length();
-        } else {
+        } else
             suffix = localePath.substring(suffixIndex);
-        }
+
         if (prefixIndex < 0) {
             pathPrefix = localePath.substring(0, suffixIndex);
             locale = Locale.ROOT;
         } else {
             pathPrefix = localePath.substring(0, prefixIndex);
-            final String localeString = localePath.substring(prefixIndex + 1, suffixIndex);
-            final Locale found = localeFrom(localeString);
+            String localeString = localePath.substring(prefixIndex + 1, suffixIndex);
+            Locale found = localeFrom(localeString);
             locale = validateLocale(found);
             if (Locale.ROOT.equals(locale)) {
                 pathPrefix = localePath.substring(0, suffixIndex);
@@ -132,20 +132,20 @@ public abstract class PostfixedApplicationResource implements ApplicationResourc
      * @return the matching postfix.
      */
     private static String getPostfix(Locale locale) {
-        if (locale == null) {
+        if (locale == null)
             return "";
-        }
-        final StringBuilder builder = new StringBuilder();
-        final String language = locale.getLanguage(),
-                country = locale.getCountry(),
-                variant = locale.getVariant();
-        if (!"".equals(language)) {
+
+        StringBuilder builder = new StringBuilder();
+        String language = locale.getLanguage();
+        String country = locale.getCountry();
+        String variant = locale.getVariant();
+        if (!language.isEmpty()) {
             builder.append("_");
             builder.append(language);
-            if (!"".equals(country)) {
+            if (!country.isEmpty()) {
                 builder.append("_");
                 builder.append(country);
-                if (!"".equals(variant)) {
+                if (!variant.isEmpty()) {
                     builder.append("_");
                     builder.append(variant);
                 }
@@ -183,7 +183,7 @@ public abstract class PostfixedApplicationResource implements ApplicationResourc
             return false;
         if (getClass() != obj.getClass())
             return false;
-        final PostfixedApplicationResource other = (PostfixedApplicationResource) obj;
+        PostfixedApplicationResource other = (PostfixedApplicationResource) obj;
         if (locale == null) {
             if (other.locale != null)
                 return false;
@@ -202,15 +202,15 @@ public abstract class PostfixedApplicationResource implements ApplicationResourc
         Locale result;
         int countryIndex = localeString.indexOf('_');
         if (countryIndex < 0) {
-            result = Locale.of(localeString);
+            result = new Locale(localeString);
         } else {
             int variantIndex = localeString.indexOf('_', countryIndex + 1);
             if (variantIndex < 0) {
-                result = Locale.of(
+                result = new Locale(
                         localeString.substring(0, countryIndex),
                         localeString.substring(countryIndex + 1));
             } else {
-                result = Locale.of(
+                result = new Locale(
                         localeString.substring(0, countryIndex),
                         localeString.substring(countryIndex + 1, variantIndex),
                         localeString.substring(variantIndex + 1));
@@ -222,15 +222,15 @@ public abstract class PostfixedApplicationResource implements ApplicationResourc
     private static Locale validateLocale(Locale locale) {
         Locale withoutVariant = locale.getVariant().isEmpty()
                 ? locale
-                : Locale.of(locale.getLanguage(), locale.getCountry());
+                : new Locale(locale.getLanguage(), locale.getCountry());
         Locale result = locale;
         if (!availableLocales.contains(withoutVariant)) {
-            if (!result.getCountry().isEmpty()) {
-                result = Locale.of(result.getLanguage());
-            }
-            if (!availableLocales.contains(result)) {
+            if (!result.getCountry().isEmpty())
+                result = Locale.forLanguageTag(result.getLanguage());
+
+            if (!availableLocales.contains(result))
                 result = Locale.ROOT;
-            }
+
         }
         return result;
     }

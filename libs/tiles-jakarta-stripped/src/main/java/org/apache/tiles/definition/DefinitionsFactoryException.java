@@ -29,29 +29,11 @@ import org.apache.tiles.TilesException;
 public class DefinitionsFactoryException extends TilesException {
     /**
      * Constructor.
-     */
-    public DefinitionsFactoryException() {
-        super();
-    }
-    /**
-     * Constructor.
      *
      * @param message The error or warning message.
      */
     public DefinitionsFactoryException(String message) {
         super(message);
-    }
-    /**
-     * Create a new <code>DefinitionsFactoryException</code> wrapping an existing exception.
-     * <p/>
-     * <p>The existing exception will be embedded in the new
-     * one and its message will become the default message for
-     * the DefinitionsFactoryException.</p>
-     *
-     * @param e The exception to be wrapped.
-     */
-    public DefinitionsFactoryException(Throwable e) {
-        super(e);
     }
     /**
      * Create a new <code>DefinitionsFactoryException</code> from an existing exception.

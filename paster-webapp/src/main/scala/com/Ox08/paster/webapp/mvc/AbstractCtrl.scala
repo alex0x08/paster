@@ -15,7 +15,7 @@
  */
 package com.Ox08.paster.webapp.mvc
 import com.Ox08.paster.webapp.base.Boot.BOOT
-import com.Ox08.paster.webapp.base.{Boot, Logged, SystemMessage}
+import com.Ox08.paster.webapp.base.{Boot, Logged}
 import com.Ox08.paster.webapp.manager.UserManager
 import com.Ox08.paster.webapp.model.PasterUser
 import com.fasterxml.jackson.annotation.JsonIgnore
@@ -23,12 +23,9 @@ import org.springframework.beans.factory.annotation.{Autowired, Value}
 import org.springframework.context.MessageSource
 import org.springframework.orm.ObjectRetrievalFailureException
 import org.springframework.ui.Model
-import org.springframework.validation.{BindingResult, FieldError}
 import org.springframework.web.bind.annotation._
 
 import java.util.Locale
-import scala.jdk.CollectionConverters._
-
 /**
  * Global constants, used in controllers
  */
@@ -76,11 +73,11 @@ abstract class AbstractCtrl extends Logged {
    *      error page
    */
   @ExceptionHandler(Array(classOf[Throwable]))
-  protected def handleAllExceptions(model:Model,ex: Throwable): String = {
-    model.addAttribute("appId", appId)
-    model.addAttribute("systemInfo", systemInfo)
+  protected def handleAllExceptions(ex: Throwable, model:Model): String = {
     // all such errors are *not* optional, so we log them with 'error' level
     logger.error(ex.getMessage, ex)
+    model.addAttribute("appId", appId)
+    model.addAttribute("systemInfo",systemInfo)
     MvcConstants.page500
   }
   @ModelAttribute("appId")
@@ -100,21 +97,8 @@ abstract class AbstractCtrl extends Logged {
    *      true if currently authenticated user has administrator role
    */
   @JsonIgnore
-  def isCurrentUserAdmin: Boolean = { val u: PasterUser = UserManager.getCurrentUser; u != null && u.isAdmin }
-  /**
-   * вывести список ошибок валидации
-   */
-  protected def dumpErrors(bindingResult: BindingResult): Unit = {
-    for (e <- bindingResult.getAllErrors.asScala) {
-      e match {
-        case fieldError: FieldError =>
-          logger.debug(
-            SystemMessage.of("sgate.system.settings.formFieldValidationError",
-              fieldError.getField, fieldError.getCode))
-        case _ => if (e != null) logger.debug(
-          SystemMessage.of("sgate.system.settings.formObjectValidationError",
-            e.getObjectName, e.getCode))
-      }
-    }
+  def isCurrentUserAdmin: Boolean = {
+    val u: PasterUser = UserManager.getCurrentUser
+    u != null && u.isAdmin
   }
 }

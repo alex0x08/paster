@@ -222,14 +222,12 @@ public class ServletRequest extends AbstractClientRequest {
     private void forward(String path) throws IOException {
         RequestDispatcher rd = request.getRequestDispatcher(path);
         if (rd == null) {
-            throw new IOException("No request dispatcher returned for path '"
-                    + path + "'");
+            throw new IOException("No request dispatcher returned for path '%s'".formatted(path));
         }
         try {
             rd.forward(request, response);
         } catch (ServletException ex) {
-            throw ServletUtil.wrapServletException(ex, "ServletException including path '"
-                    + path + "'.");
+            throw ServletUtil.wrapServletException(ex, "ServletException including path '%s'.".formatted(path));
         }
     }
     /**

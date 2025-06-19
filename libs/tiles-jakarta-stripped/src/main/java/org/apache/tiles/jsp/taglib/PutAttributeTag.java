@@ -49,7 +49,8 @@ public class PutAttributeTag extends SimpleTagSupport {
     /**
      * The template model.
      */
-    private final org.apache.tiles.template.PutAttributeModel model = new org.apache.tiles.template.PutAttributeModel();
+    private final org.apache.tiles.template.PutAttributeModel model
+            = new org.apache.tiles.template.PutAttributeModel();
 
     /**
      * The name of the attribute to put.
@@ -213,7 +214,8 @@ public class PutAttributeTag extends SimpleTagSupport {
     /** {@inheritDoc} */
     @Override
     public void doTag() throws JspException, IOException {
-        AutotagRuntime<org.apache.tiles.request.Request> runtime = new org.apache.tiles.request.jsp.autotag.JspAutotagRuntime();
+        AutotagRuntime<org.apache.tiles.request.Request> runtime
+                = new org.apache.tiles.request.jsp.autotag.JspAutotagRuntime();
         SimpleTagSupport tag = (SimpleTagSupport) runtime;
         tag.setJspContext(getJspContext());
         tag.setJspBody(getJspBody());

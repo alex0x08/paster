@@ -157,7 +157,7 @@ class PasterView {
             .addEventListener('click', function (event) {
                 event.preventDefault();
                 var self2 = this;
-                self2.querySelector('#btnCaption').text = PasterI18n.text.notify.transmitMessage;
+                self2.querySelector('#btnCaption').innerText = PasterI18n.text.notify.transmitMessage;
                 self2.disabled = true;
                 self.resetCommentFormErrors(modelId);
                 self.toggleOnSubmit(modelId, 'none');
@@ -179,6 +179,8 @@ class PasterView {
             method: 'get',
             maxRequests: maxRequests,
             buffer: 100,
+            idKey: 'id',
+
             pageDataIndex: 'page',
             idMode: true,
             data: {
@@ -200,8 +202,9 @@ class PasterView {
                 SyntaxHighlighter.highlight(page, {}, ptext, false, false);
                 document.getElementById(`${page}_addCommentBtn`)
                     .addEventListener('click', function () {
-                        this.getElementById('btnCaption').set('text',
-                            PasterI18n.text.notify.transmitMessage).disabled = true;
+                        const cap = this.getElementById('btnCaption');
+                        cap.innerText=PasterI18n.text.notify.transmitMessage;
+                        cap.disabled = true;
                         this.getElementById('btnIcon').setStyle('display', '');
                         self.onSaveComment(page);
                     });
@@ -244,7 +247,7 @@ class PasterView {
                 event.preventDefault();
                 const dct = this.getAttribute('data-clipboard-target')
                 const text = document.getElementById(dct).innerText
-                console.log('to clipboard:', text)
+                // console.log('to clipboard:', text)
                 self.copyToClipboard(text)
             });
         SyntaxHighlighter.highlight(modelId, {},
@@ -334,10 +337,10 @@ class PasterView {
             return;
         }
         Logger.debug('got text', ptext);
-        ptext = ptext.replace(/\r\n|\r/g, '\n')
-            .replace(/\t/g, '    ')
+        ptext = ptext.trim().replace(/\r\n|\r/g, '\n')
+           // .replace(/\t/g, '    ')
             .replace(/\u2424/g, '\n');
-        Logger.debug('formatted text: ', ptext);
+        Logger.debug('formatted text:"', ptext,'"');
         const commentArea = document.getElementById(`commentText-${modelId}`);
         commentArea.innerHTML = ptext;
         const thumbImg = document.getElementById(`${modelId}_thumbImgComment`);

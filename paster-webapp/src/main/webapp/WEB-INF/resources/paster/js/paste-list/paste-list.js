@@ -27,6 +27,7 @@ class PasterList {
             maxRequests: maxRequests,
             buffer: 250,
             pageDataIndex: 'page',
+            idMode: false,
             data: {
                 page: currentPage
             },
@@ -45,7 +46,7 @@ class PasterList {
                 const elSpinner = document.getElementById('pageLoadSpinner');
                 const newPage = document.getElementById('paste_list_' + page);
 
-                elSpinner.insertAdjacentHTML('afterEnd', newPage);
+                //elSpinner.insertAdjacentHTML('afterEnd', newPage);
                 elSpinner.style.display = 'none';
 
                 self.parseSearchResults(block);

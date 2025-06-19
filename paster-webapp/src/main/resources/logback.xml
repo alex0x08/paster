@@ -1,26 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration scan="false" debug="false" >
-    <contextListener class="com.Ox08.paster.webapp.base.LoggerStartupListener"/>
     <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator">
         <!-- reset all previous level configurations of all j.u.l. loggers -->
         <resetJUL>true</resetJUL>
     </contextListener>
-    <logger name="org.codehaus.janino" level="WARN"/>
 
-    <!-- check for debug argument
-          Same logging used for development could be enabled on production by 
-          providing argument: -DappDebug=true
-    -->
-    <if condition='isDefined("appDebug") 
-                &amp;&amp; Boolean.valueOf(property("appDebug")) == true '>
-   
-        <then>
-            <include resource="logging/logging-dev.xml" />
-        </then>
-        
-        <else>
-            <include resource="logging/logging-prod.xml" />
-        </else>
-    </if>
-       
+        <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+            <withJansi>false</withJansi>
+            <!-- encoders are assigned the type
+            ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
+            <encoder>
+                <pattern>%d{HH:mm:ss} %-5level %class{0}.%method:%line %msg%n</pattern>
+            </encoder>
+        </appender>
+
+        <logger name="com.Ox08" level="INFO" additivity="false">
+            <appender-ref ref="CONSOLE"/>
+        </logger>
+
+        <logger name="org.apache" level="WARN"/>
+        <logger name="org.hibernate.validator" level="WARN"/>
+        <logger name="org.springframework" level="WARN"/>
+        <logger name="org.springframework.security" level="WARN"/>
+
+
+        <logger name="org.springframework.security.config.http" level="WARN"/>
+        <logger name="org.apache.lucene.internal.vectorization.VectorizationProvider" level="ERROR" />
+
+        <root level="WARN">
+            <appender-ref ref="CONSOLE"/>
+        </root>
+
+
 </configuration>

@@ -33,6 +33,8 @@ import scala.collection.mutable
 import scala.jdk.CollectionConverters._
 /**
  * Static object to deal with security context and sessions
+ * @author 0x08
+ * @since 1.0
  */
 object UserManager extends Logged {
   /**
@@ -78,7 +80,7 @@ object UserManager extends Logged {
     val r = new FileReader(csv)
     try {
       val records = CSVFormat.DEFAULT.builder().setHeader()
-        .setSkipHeaderRecord(true).build().parse(r)
+        .setSkipHeaderRecord(true).get().parse(r)
       var usersCount:Int = 0
       for (record <- records.asScala) {
         if (usersCount> 500) {
@@ -92,6 +94,7 @@ object UserManager extends Logged {
     } finally r.close()
   }
 }
+
 /**
  * A service class to work with users
  * We store users in .csv file for simplicity, load them during boot and put in hashmap.
@@ -104,26 +107,18 @@ class UserManager extends UserDetailsService with Logged {
   private val sessionRegistry: SessionRegistry = null
   @Autowired
   private val passwordEncoder: PasswordEncoder = null
-  /**
-   * loads users from CSV file into in-memory map
-   */
   def loadUsers(): Unit = {
-    users.clear()
-    // the CSV file with users
     val csv = new File(Boot.BOOT.getSystemInfo.getAppHome, "users.csv")
     UserManager.loadUsersFromCSV(csv, (record: CSVRecord) => {
       if (logger.isDebugEnabled)
         logger.debug("processing record : {}", record)
-      // construct new paster user object
       val u = new PasterUser(record.get("NAME"),
         record.get("USERNAME"),
         record.get("PASSWORD"), util.Set.of(
-          // set role based on a switch
           if (record.get("ISADMIN").toBoolean)
             Role.ROLE_ADMIN
           else
             Role.ROLE_USER))
-      // save
       save(changePassword(u, u.getPassword()))
     })
   }
@@ -138,6 +133,7 @@ class UserManager extends UserDetailsService with Logged {
     if (logger.isDebugEnabled)
         logger.debug("saved {}", u.getUsername())
   }
+  @Override
   private def getUser(username: String): PasterUser = {
     if (users contains username)
       users(username)

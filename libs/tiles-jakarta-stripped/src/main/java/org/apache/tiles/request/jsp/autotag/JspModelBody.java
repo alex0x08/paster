@@ -48,9 +48,9 @@ public class JspModelBody extends AbstractModelBody {
     }
     @Override
     public void evaluate(Writer writer) throws IOException {
-        if (jspFragment == null) {
+        if (jspFragment == null)
             return;
-        }
+
         try {
             jspFragment.invoke(writer);
         } catch (JspException e) {

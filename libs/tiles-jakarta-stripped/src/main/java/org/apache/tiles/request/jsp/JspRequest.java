@@ -79,7 +79,8 @@ public class JspRequest extends AbstractViewRequest {
      * @param pageContext        The page context.
      * @return A new JSP request.
      */
-    public static JspRequest createServletJspRequest(ApplicationContext applicationContext, PageContext pageContext) {
+    public static JspRequest createServletJspRequest(ApplicationContext applicationContext,
+                                                     PageContext pageContext) {
         return new JspRequest(new ServletRequest(
                 applicationContext, (HttpServletRequest) pageContext
                 .getRequest(), (HttpServletResponse) pageContext
@@ -108,8 +109,7 @@ public class JspRequest extends AbstractViewRequest {
         try {
             pageContext.include(path, false);
         } catch (ServletException e) {
-            throw ServletUtil.wrapServletException(e, "JSPException including path '"
-                    + path + "'.");
+            throw ServletUtil.wrapServletException(e, "JSPException including path '%s'.".formatted(path));
         }
     }
     /**
@@ -132,11 +132,11 @@ public class JspRequest extends AbstractViewRequest {
      * @return The page scope.
      */
     public Map<String, Object> getPageScope() {
-        if ((pageScope == null) && (pageContext != null)) {
+        if (pageScope == null && pageContext != null)
             pageScope = new ScopeMap(new ScopeExtractor(pageContext,
                     PageContext.PAGE_SCOPE));
-        }
-        return (pageScope);
+
+        return pageScope;
     }
     /**
      * Returns the request scope.
@@ -144,11 +144,10 @@ public class JspRequest extends AbstractViewRequest {
      * @return The request scope.
      */
     public Map<String, Object> getRequestScope() {
-        if ((requestScope == null) && (pageContext != null)) {
+        if (requestScope == null && pageContext != null)
             requestScope = new ScopeMap(new ScopeExtractor(pageContext,
-                    PageContext.REQUEST_SCOPE));
-        }
-        return (requestScope);
+                PageContext.REQUEST_SCOPE));
+        return requestScope;
     }
     /**
      * Returns the session scope.
@@ -156,10 +155,10 @@ public class JspRequest extends AbstractViewRequest {
      * @return The session scope.
      */
     public Map<String, Object> getSessionScope() {
-        if ((sessionScope == null) && (pageContext != null)) {
+        if (sessionScope == null && pageContext != null)
             sessionScope = new ScopeMap(new SessionScopeExtractor(pageContext));
-        }
-        return (sessionScope);
+
+        return sessionScope;
     }
     /**
      * Returns the application scope.
@@ -167,11 +166,11 @@ public class JspRequest extends AbstractViewRequest {
      * @return The application scope.
      */
     public Map<String, Object> getApplicationScope() {
-        if ((applicationScope == null) && (pageContext != null)) {
+        if (applicationScope == null && pageContext != null)
             applicationScope = new ScopeMap(new ScopeExtractor(pageContext,
                     PageContext.APPLICATION_SCOPE));
-        }
-        return (applicationScope);
+
+        return applicationScope;
     }
     /**
      * Returns the page context that originated the request.
@@ -180,15 +179,15 @@ public class JspRequest extends AbstractViewRequest {
      */
     @Override
     public Map<String, Object> getContext(String scope) {
-        if ("page".equals(scope)) {
-            return getPageScope();
-        } else if (REQUEST_SCOPE.equals(scope)) {
+        if ("page".equals(scope)) return getPageScope();
+        else if (REQUEST_SCOPE.equals(scope))
             return getRequestScope();
-        } else if ("session".equals(scope)) {
+        else if ("session".equals(scope))
             return getSessionScope();
-        } else if (APPLICATION_SCOPE.equals(scope)) {
+        else if (APPLICATION_SCOPE.equals(scope))
             return getApplicationScope();
-        }
-        throw new IllegalArgumentException(scope + " does not exist. Call getAvailableScopes() first to check.");
+
+        throw new IllegalArgumentException("%s does not exist. Call getAvailableScopes() first to check."
+                .formatted(scope));
     }
 }

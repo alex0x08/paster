@@ -76,6 +76,13 @@ abstract class GenericListCtrl[T <: Struct] extends AbstractCtrl {
    * bound DAO service
    */
   protected def manager(): StructDaoImpl[T]
+  /**
+   * default callback object: will simply use getList from attached manager
+   */
+  private val defaultListCallback: SourceCallback[T] = new SourceCallback[T]() {
+    override def invokeCreate(): PagedListHolder[T] =
+      new PagedListHolder[T](manager().getList)
+  }
   protected def fillListModel(model: Model): Unit = {
     /**
      * set default list mode
@@ -119,7 +126,10 @@ abstract class GenericListCtrl[T <: Struct] extends AbstractCtrl {
        * check if exist and use it
        */
       if (NPpage != null) {
-        if (NPpage.equals("next")) pagedListHolder.nextPage() else pagedListHolder.previousPage()
+        if (NPpage.equals("next"))
+          pagedListHolder.nextPage()
+        else
+          pagedListHolder.previousPage()
         /**
          * if page number was specified
          */
@@ -134,11 +144,12 @@ abstract class GenericListCtrl[T <: Struct] extends AbstractCtrl {
      */
     if (pageSize != null)
       pagedListHolder.setPageSize(pageSize)
-    request.getSession().setAttribute(s"${getClass.getName}_$pageHolderName", pagedListHolder)
+    request.getSession()
+      .setAttribute("%s_%s".format(getClass.getName, pageHolderName), pagedListHolder)
     model.addAttribute(pageHolderName, pagedListHolder)
-    if (createDefaultItemModel && !pageHolderName.equals(MvcConstants.NODE_LIST_MODEL_PAGE)) {
+    // assign paged list with page model
+    if (createDefaultItemModel && !pageHolderName.equals(MvcConstants.NODE_LIST_MODEL_PAGE))
       model.addAttribute(MvcConstants.NODE_LIST_MODEL_PAGE, pagedListHolder)
-    }
     model.addAttribute("pageSet", Array(5, 10, 50, 100, 500))
     pagedListHolder.getPageList
   }
@@ -162,12 +173,13 @@ abstract class GenericListCtrl[T <: Struct] extends AbstractCtrl {
                        request: HttpServletRequest,
                        model: Model): util.List[T] = list(request, model,
     null, null, null, sortColumn, sortAsc = true)
-  @RequestMapping(value = Array("/list/{page:[0-9]+}"), method = Array(RequestMethod.GET))
+
+  /*@RequestMapping(value = Array("/list/{page:[0-9]+}"), method = Array(RequestMethod.GET))
   @ModelAttribute(MvcConstants.NODE_LIST_MODEL)
   def listByPath(@PathVariable("page") page: java.lang.Integer,
                  request: HttpServletRequest,
                  model: Model): util.List[T] = list(request, model, page,
-    null, null, null, sortAsc = false)
+    null, null, null, sortAsc = false)*/
   @RequestMapping(value = Array("/list/limit/{pageSize:[0-9]+}"), method = Array(RequestMethod.GET))
   @ModelAttribute(MvcConstants.NODE_LIST_MODEL)
   def listByPathSize(@PathVariable("pageSize") pageSize: java.lang.Integer,
@@ -211,9 +223,7 @@ abstract class GenericListCtrl[T <: Struct] extends AbstractCtrl {
       pageSize,
       sortColumn,
       sortAsc,
-      new SourceCallback[T]() {
-        override def invokeCreate(): PagedListHolder[T] = new PagedListHolder[T](manager().getList)
-      },
+      defaultListCallback,
       result)
   }
   /**

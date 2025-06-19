@@ -19,9 +19,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute
 import com.thoughtworks.xstream.annotations.XStreamOmitField
 import com.thoughtworks.xstream.annotations.XStreamAlias
-import jakarta.persistence.{CascadeType, Column, Entity, FetchType, Lob, ManyToMany, MapKey, PrePersist, PreUpdate, Table}
+import jakarta.persistence.{CascadeType, Column, Entity, FetchType, GeneratedValue, GenerationType, Id, Lob, ManyToMany, MapKey, PrePersist, PreUpdate, SequenceGenerator, Table}
 import jakarta.validation.constraints.{NotNull, Size}
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.{FullTextField, Indexed, KeywordField}
+
 import java.util
 import java.util.UUID
 import scala.annotation.unused
@@ -34,31 +35,50 @@ object Paste extends Struct {
    * max title length, if greater - will be cut
    */
   val TITLE_LENGTH = 256
+
+  // not used
+  override def getId: Integer = 1
+  override def setId(id:Integer): Unit = {}
 }
+
 /**
- * A tag entity
- *
+ * Tag entity
+ * @since 1.0
+ * @author 0x08
  * @param tagString
- *      tag as string
  */
 @Entity
 @Indexed(index = "indexes/tags")
 @XStreamAlias("Tag")
 @Table(name = "P_TAGS")
 class Tag(tagString: String) extends DBObject {
+
+  @Id
+  @GeneratedValue(generator = "tags_id_seq", strategy=GenerationType.SEQUENCE)
+  @SequenceGenerator(name = "tags_id_seq", allocationSize = 50)
+  @XStreamAsAttribute
+  var id: Integer = _
+
   @NotNull
   @FullTextField
   @Column(name = "tag_name", length = 256)
   @Size(min = 3, message = "{struct.name.validator}")
   @XStreamAsAttribute
-  var name: String = tagString
+  var name: String = tagString // single tag
   @transient
-  var total: Int = 0
+  var total: Int = 0 // count of occurrences
   def this() = this(null)
+  override def getId: Integer = id
+  override def setId(id:Integer): Unit = {
+    this.id = id;
+  }
 }
 /**
  *
  * This is entity object implements "pasta" : piece of code with id,title and text
+ *
+ * @author 0x08
+ * @since 1.0
  *
  */
 @Entity
@@ -66,13 +86,19 @@ class Tag(tagString: String) extends DBObject {
 @XStreamAlias("Paste")
 @Table(name = "P_PASTAS")
 class Paste extends Struct with java.io.Serializable {
+
+  @Id
+  @GeneratedValue(generator = "paste_id_seq", strategy=GenerationType.SEQUENCE)
+  @SequenceGenerator(name = "paste_id_seq", allocationSize = 50)
+  @XStreamAsAttribute
+  var id: Integer = _
+
   /**
    * unique paste id
    */
   @NotNull(message = "{validator.not-null}")
   @Column(nullable = false, unique = true, length = 255, updatable = false)
   @KeywordField
-  //(index = Index.NO, store = Store.YES, termVector = TermVector.NO)
   val uuid: String = UUID.randomUUID().toString
   /**
    * paste's body
@@ -84,17 +110,15 @@ class Paste extends Struct with java.io.Serializable {
   @Column(name = "paste_text", length = Integer.MAX_VALUE)
   var text: String = _
   /**
-   * link to preview image
+   * link to preview image (file id)
    */
   @XStreamOmitField
-  //@Field(store = Store.YES, index = Index.NO)
   @Column(name = "p_thumb_img")
   @JsonIgnore
   var thumbImage: String = _
   /**
    * paste title
    */
-  //@NotNull
   @Column(name = "paste_title", length = 256)
   @Size(min = 3, max = 256, message = "{struct.name.validator}")
   @FullTextField
@@ -128,9 +152,6 @@ class Paste extends Struct with java.io.Serializable {
   @NotNull
   @Column(name = "p_channel")
   var channel: String = _
-  // @Field(name = "tags", index = Index.YES,
-  // store = Store.YES,
-  // termVector = TermVector.YES) //,boost=@Boost(2f)
   @FullTextField(name = "tags")
   @Column(name = "p_tags")
   var tagsAsString: String = _
@@ -150,9 +171,9 @@ class Paste extends Struct with java.io.Serializable {
   @Column(name = "comments_count")
   var commentsCount: Int = _
   @Column(name = "symbols_count")
-  var symbolsCount: Int = _
+  private var symbolsCount: Int = _
   @Column(name = "words_count")
-  var wordsCount: Int = _
+  private var wordsCount: Int = _
   @Column(name = "review_img")
   @XStreamOmitField
   @JsonIgnore
@@ -170,11 +191,15 @@ class Paste extends Struct with java.io.Serializable {
   private def onUpdate(): Unit = {
     commentsCount = comments.size()
   }
+
+  override def getId:Integer = id
+  override def setId(id:Integer): Unit = {
+    this.id = id;
+  }
   def getPriority: String = priority // for EL
   def getCodeType: String = codeType
   def isStick: Boolean = stick
   def getTitle: String = title
-  def getId: Integer = id
   def getThumbImage: String = thumbImage
   def getAuthor: String = author
   def getText: String = text
@@ -197,15 +222,14 @@ class Paste extends Struct with java.io.Serializable {
   @JsonIgnore
   def getTagsMap: java.util.Map[String, Tag] = tagsMap
   /**
-   * loads this instance fully from database
-   * MUST be called with opened hibernate session
+   * Loads this instance fully from database.
+   * MUST be called inside opened transaction!
    */
   override def loadFull(): Unit = {
     if (Struct.logger.isDebugEnabled)
       Struct.logger.debug("called loadFull for {}", id)
-    for (t <- tagsMap.entrySet().asScala) {
+    for (t <- tagsMap.entrySet().asScala)
       t.getValue.name
-    }
   }
   override def toString: String = Logged.toStringSkip(this,
     Array("reviewImgData",

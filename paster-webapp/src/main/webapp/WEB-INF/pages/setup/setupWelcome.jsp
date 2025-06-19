@@ -34,9 +34,11 @@
                <c:forEach var="l" items="${availableLocales}" varStatus="loopStatus">
                  <div class="form-check">
                               <form:radiobutton cssClass="form-check-input"
-                                    path="defaultLang" name="defaultLang"
+                                    path="defaultLang"
+                                    name="defaultLang"
                                value="${l.language}" />
-                              <form:errors element="div" path="defaultLang" cssClass="alert alert-danger" />
+                              <form:errors element="div" path="defaultLang"
+                                            cssClass="alert alert-danger" />
                      <label class="form-check-label">
                          <c:out value="${l.getDisplayLanguage(l)}"/>
                     </label>
@@ -52,9 +54,13 @@
         </p>
 
        <div class="form-check">
-               <form:checkbox cssClass="form-check-input" path="switchToUserLocale" name="switchToUserLocale"
-                                       value="${l.language}" />
-               <form:errors element="div" path="switchToUserLocale" cssClass="alert alert-danger" />
+               <form:checkbox cssClass="form-check-input"
+                              path="switchToUserLocale"
+                              name="switchToUserLocale"
+                              value="${l.language}" />
+               <form:errors element="div"
+                            path="switchToUserLocale"
+                            cssClass="alert alert-danger" />
          <label class="form-check-label">
            <fmt:message key='paster.setup.step.welcome.allowLocaleSwitchToBrowserLocale' />
          </label>
@@ -69,22 +75,3 @@
 </div>
 
 
-
-<script type="text/javascript">
-
-    function checkES6() {
-        "use strict";
-        if (typeof Symbol == "undefined") return false;
-        try {
-            eval("class Foo {}");
-            eval("var bar = (x) => x+1");
-        } catch (e) { return false; }
-        return true;
-    }
-
-    window.addEventListener('load', function () {
-        if (checkES6()===false) {
-    
-        }
-    });
-</script>

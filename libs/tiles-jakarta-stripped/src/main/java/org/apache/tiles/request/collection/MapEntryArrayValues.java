@@ -80,12 +80,12 @@ public class MapEntryArrayValues<K, V> extends MapEntry<K, V[]> {
                             }
                             return same;
                         }
-                    } else {
+                    } else
                         return false;
-                    }
-                } else {
+
+                } else
                     return otherValues == null;
-                }
+
             }
         }
         return false;

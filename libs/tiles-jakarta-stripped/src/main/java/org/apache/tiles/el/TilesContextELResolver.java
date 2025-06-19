@@ -19,11 +19,14 @@
  * under the License.
  */
 package org.apache.tiles.el;
+
 import jakarta.el.ELContext;
 import jakarta.el.ELResolver;
+
 import org.apache.tiles.request.ApplicationContext;
 import org.apache.tiles.request.Request;
 import org.apache.tiles.util.CombinedBeanInfo;
+
 /**
  * Resolves properties of {@link Request} and
  * {@link ApplicationContext}.
@@ -32,10 +35,12 @@ import org.apache.tiles.util.CombinedBeanInfo;
  * @since 2.2.1
  */
 public class TilesContextELResolver extends ELResolver {
+
     /**
      * Internal bean resolver to resolve beans in any context.
      */
     private final ELResolver beanElResolver;
+
     /**
      * Constructor.
      *
@@ -44,46 +49,30 @@ public class TilesContextELResolver extends ELResolver {
     public TilesContextELResolver(ELResolver beanElResolver) {
         this.beanElResolver = beanElResolver;
     }
+
     /**
      * The beaninfos about {@link Request} and {@link ApplicationContext}.
      */
     private final CombinedBeanInfo requestBeanInfo = new CombinedBeanInfo(
             Request.class, ApplicationContext.class);
-    /**
-     * {@inheritDoc}
-     */
+
+    /** {@inheritDoc} */
     @Override
     public Class<?> getCommonPropertyType(ELContext context, Object base) {
         // only resolve at the root of the context
-        if (base != null) {
-            return null;
-        }
-        return String.class;
+        return base != null ? null : String.class;
     }
-    /**
-     * {@inheritDoc}
-     *
-    @Override
-    public Iterator<FeatureDescriptor> getFeatureDescriptors(ELContext context,
-                                                             Object base) {
-        // only resolve at the root of the context
-        if (base != null) {
-            return null;
-        }
-        return requestBeanInfo.getDescriptors().iterator();
-    }*/
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public Class<?> getType(ELContext context, Object base, Object property) {
         // only resolve at the root of the context
-        if (base != null) {
+        if (base != null)
             return null;
-        }
-        if (property == null) {
+
+        if (property==null)
             return null;
-        }
+
+
         Class<?> retValue = null;
         if (requestBeanInfo.getProperties(Request.class).contains(property.toString())) {
             Request request = (Request) context
@@ -94,24 +83,27 @@ public class TilesContextELResolver extends ELResolver {
                     .getContext(ApplicationContext.class);
             retValue = beanElResolver.getType(context, applicationContext, property);
         }
-        if (retValue != null) {
+
+        if (retValue != null)
             context.setPropertyResolved(true);
-        }
+
         return retValue;
     }
-    /**
-     * {@inheritDoc}
-     */
+
+    /** {@inheritDoc} */
     @Override
     public Object getValue(ELContext context, Object base, Object property) {
         // only resolve at the root of the context
-        if (base != null) {
+        if (base != null)
             return null;
-        }
-        if (property == null) {
+
+
+        if (property==null)
             return null;
-        }
+
+
         Object retValue = null;
+
         if (requestBeanInfo.getProperties(Request.class).contains(property.toString())) {
             Request request = (Request) context
                     .getContext(Request.class);
@@ -122,27 +114,28 @@ public class TilesContextELResolver extends ELResolver {
                     .getContext(ApplicationContext.class);
             retValue = beanElResolver.getValue(context, applicationContext, property);
         }
-        if (retValue != null) {
+
+        if (retValue != null)
             context.setPropertyResolved(true);
-        }
+
+
         return retValue;
     }
-    /**
-     * {@inheritDoc}
-     */
+
+    /** {@inheritDoc} */
     @Override
     public boolean isReadOnly(ELContext context, Object base, Object property) {
-        if (context == null) {
+        if (context == null)
             throw new NullPointerException();
-        }
+
+
         return true;
     }
-    /**
-     * {@inheritDoc}
-     */
+
+    /** {@inheritDoc} */
     @Override
     public void setValue(ELContext context, Object base, Object property,
-                         Object value) {
+            Object value) {
         // Does nothing for the moment.
     }
 }

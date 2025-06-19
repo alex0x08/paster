@@ -109,13 +109,13 @@ public class WildcardHelper {
         // Must start from beginning
         expr[y++] = MATCH_BEGIN;
         if (buff.length > 0) {
-            if (buff[0] == '\\') {
+            if (buff[0] == '\\')
                 slash = true;
-            } else if (buff[0] == '*') {
+            else if (buff[0] == '*')
                 expr[y++] = MATCH_FILE;
-            } else {
+            else
                 expr[y++] = buff[0];
-            }
+
             // Main translation loop
             for (int x = 1; x < buff.length; x++) {
                 // If the previous char was '\' simply copy this char.
@@ -126,19 +126,19 @@ public class WildcardHelper {
                     // checks
                 } else {
                     // If this char is '\' declare that and continue
-                    if (buff[x] == '\\') {
+                    if (buff[x] == '\\')
                         slash = true;
                         // If this char is '*' check the previous one
-                    } else if (buff[x] == '*') {
+                    else if (buff[x] == '*') {
                         // If the previous character als was '*' match a path
-                        if (expr[y - 1] <= MATCH_FILE) {
+                        if (expr[y - 1] <= MATCH_FILE)
                             expr[y - 1] = MATCH_PATH;
-                        } else {
+                        else
                             expr[y++] = MATCH_FILE;
-                        }
-                    } else {
+
+                    } else
                         expr[y++] = buff[x];
-                    }
+
                 }
             }
         }
@@ -158,12 +158,12 @@ public class WildcardHelper {
      */
     public List<String> match(String data, int[] expr) {
         List<String> varsValues = null;
-        if (data == null) {
+        if (data == null)
             throw new NullPointerException("No data provided");
-        }
-        if (expr == null) {
+
+        if (expr == null)
             throw new NullPointerException("No pattern expression provided");
-        }
+
         char[] buff = data.toCharArray();
         // Allocate the result buffer
         char[] rslt = new char[expr.length + buff.length];
@@ -183,24 +183,24 @@ public class WildcardHelper {
         }
         // Search the fist expression character (except MATCH_BEGIN - already
         // skipped)
-        while (expr[charpos] >= 0) {
+        while (expr[charpos] >= 0)
             charpos++;
-        }
+
         // The expression charater (MATCH_*)
         int exprchr = expr[charpos];
         while (true) {
             // Check if the data in the expression array before the current
             // expression character matches the data in the input buffer
             if (matchBegin) {
-                if (!matchArray(expr, exprpos, charpos, buff, buffpos)) {
+                if (!matchArray(expr, exprpos, charpos, buff, buffpos))
                     return null;
-                }
+
                 matchBegin = false;
             } else {
                 offset = indexOfArray(expr, exprpos, charpos, buff, buffpos);
-                if (offset < 0) {
+                if (offset < 0)
                     return null;
-                }
+
             }
             // Check for MATCH_BEGIN
             // Advance buffpos
@@ -229,21 +229,21 @@ public class WildcardHelper {
             offset = (prevchr == MATCH_FILE) ? indexOfArray(expr, exprpos,
                     charpos, buff, buffpos) : lastIndexOfArray(expr, exprpos,
                     charpos, buff, buffpos);
-            if (offset < 0) {
+            if (offset < 0)
                 return null;
-            }
+
             // Copy the data from the source buffer into the result buffer
             // to substitute the expression character
-            if (prevchr == MATCH_PATH) {
-                while (buffpos < offset) {
+            if (prevchr == MATCH_PATH)
+                while (buffpos < offset)
                     rslt[rsltpos++] = buff[buffpos++];
-                }
-            } else {
+
+            else {
                 // Matching file, don't copy '/'
                 while (buffpos < offset) {
-                    if (buff[buffpos] == '/') {
+                    if (buff[buffpos] == '/')
                         return null;
-                    }
+
                     rslt[rsltpos++] = buff[buffpos++];
                 }
             }
@@ -269,20 +269,20 @@ public class WildcardHelper {
      */
     protected int indexOfArray(int[] r, int rpos, int rend, char[] d, int dpos) {
         // Check if pos and len are legal
-        if (rend < rpos) {
+        if (rend < rpos)
             throw new IllegalArgumentException("rend < rpos");
-        }
+
         // If we need to match a zero length string return current dpos
-        if (rend == rpos) {
+        if (rend == rpos)
             return (d.length); // ?? dpos?
-        }
+
         // If we need to match a 1 char length string do it simply
         if ((rend - rpos) == 1) {
             // Search for the specified character
             for (int x = dpos; x < d.length; x++) {
-                if (r[rpos] == d[x]) {
+                if (r[rpos] == d[x])
                     return (x);
-                }
+
             }
         }
         // Main string matching loop. It gets executed if the characters to
@@ -293,12 +293,12 @@ public class WildcardHelper {
             // Check every character in d for equity. If the string is matched
             // return dpos
             for (int x = rpos; x <= rend; x++) {
-                if (x == rend) {
+                if (x == rend)
                     return (dpos);
-                }
-                if (r[x] != d[y++]) {
+
+                if (r[x] != d[y++])
                     break;
-                }
+
             }
             // Increase dpos to search for the same string at next offset
             dpos++;
@@ -326,22 +326,22 @@ public class WildcardHelper {
     protected int lastIndexOfArray(int[] r, int rpos, int rend, char[] d,
                                    int dpos) {
         // Check if pos and len are legal
-        if (rend < rpos) {
+        if (rend < rpos)
             throw new IllegalArgumentException("rend < rpos");
-        }
+
         // If we need to match a zero length string return current dpos
-        if (rend == rpos) {
+        if (rend == rpos)
             return (d.length); // ?? dpos?
-        }
+
         // If we need to match a 1 char length string do it simply
-        if ((rend - rpos) == 1) {
+        if ((rend - rpos) == 1)
             // Search for the specified character
-            for (int x = d.length - 1; x > dpos; x--) {
-                if (r[rpos] == d[x]) {
+            for (int x = d.length - 1; x > dpos; x--)
+                if (r[rpos] == d[x])
                     return (x);
-                }
-            }
-        }
+
+
+
         // Main string matching loop. It gets executed if the characters to
         // match are less then the characters left in the d buffer
         int l = d.length - (rend - rpos);
@@ -351,12 +351,12 @@ public class WildcardHelper {
             // Check every character in d for equity. If the string is matched
             // return dpos
             for (int x = rpos; x <= rend; x++) {
-                if (x == rend) {
+                if (x == rend)
                     return (l);
-                }
-                if (r[x] != d[y++]) {
+
+                if (r[x] != d[y++])
                     break;
-                }
+
             }
             // Decrease l to search for the same string at next offset
             l--;
@@ -388,7 +388,7 @@ public class WildcardHelper {
                 return (false);
             }
         }
-        return (true);
+        return true;
     }
 
     /**
@@ -400,9 +400,9 @@ public class WildcardHelper {
      * @return The list itself, or a new one if it is <code>null</code>.
      */
     private <T> List<T> addAndCreateList(List<T> list, T data) {
-        if (list == null) {
+        if (list == null)
             list = new ArrayList<>();
-        }
+
         list.add(data);
         return list;
     }
@@ -415,9 +415,9 @@ public class WildcardHelper {
      * @return The list itself, or a new one if it is <code>null</code>.
      */
     private <T> List<T> addElementOnTop(List<T> list, T data) {
-        if (list == null) {
+        if (list == null)
             list = new ArrayList<>();
-        }
+
         list.add(0, data);
         return list;
     }

@@ -39,13 +39,13 @@ public final class CollectionUtil {
      * @throws IllegalArgumentException If the key is <code>null</code>.
      */
     public static String key(Object key) {
-        if (key == null) {
+        if (key == null)
             throw new IllegalArgumentException();
-        } else if (key instanceof String) {
-            return ((String) key);
-        } else {
-            return (key.toString());
-        }
+        else if (key instanceof String ks)
+            return ks;
+        else
+            return key.toString();
+
     }
     /**
      * Returns the number of elements in an enumeration, by iterating it.

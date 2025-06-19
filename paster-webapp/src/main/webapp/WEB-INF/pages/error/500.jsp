@@ -17,8 +17,7 @@
 --%>
 <%@ include file="/WEB-INF/pages/common/taglibs.jsp"%>
 
-
-<c:set var="pageTitle" value="500: Internal error"/>
+<fmt:message var="pageTitle" key="error.500.title" />
 
 <div class="jumbotron">
     <img src="<c:url  value='/main/resources/${appId}/static/big/backstab.png'/>" 

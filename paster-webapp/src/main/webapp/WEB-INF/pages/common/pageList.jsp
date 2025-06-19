@@ -17,7 +17,7 @@
 --%>
 <%@ include file="/WEB-INF/pages/common/taglibs.jsp"%>
 <%--
-        Generic paginated and sortable list
+        Renders paste list
 --%>
 <tiles:importAttribute name="listMode" />
 <tiles:importAttribute name="pageItems" />

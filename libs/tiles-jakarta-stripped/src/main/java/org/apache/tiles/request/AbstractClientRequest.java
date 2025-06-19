@@ -42,9 +42,9 @@ public abstract class AbstractClientRequest extends AbstractRequest {
     }
     @Override
     public void dispatch(String path) throws IOException {
-        if (isForceInclude()) {
+        if (isForceInclude())
             doInclude(path);
-        } else {
+        else {
             setForceInclude();
             doForward(path);
         }

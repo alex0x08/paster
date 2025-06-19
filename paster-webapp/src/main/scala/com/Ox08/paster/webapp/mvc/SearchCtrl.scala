@@ -24,15 +24,18 @@ import org.springframework.ui.Model
 import org.springframework.web.bind.annotation._
 import java.util
 /**
- * Abstract Search Controller.
- * All children will have +1 search ability
+ * Abstract Searchable Controller.
+ * All children will have +100 to search
  *
  * @tparam T  model class
  * @tparam QV query class
+ * @since 2.0
+ * @author 0x08
  */
 abstract class SearchCtrl[T <: Struct, QV <: Query] extends GenericListCtrl[T] {
   /**
    * linked search manager
+   *
    * @return
    */
   protected override def manager(): SearchableDaoImpl[T]
@@ -47,7 +50,7 @@ abstract class SearchCtrl[T <: Struct, QV <: Query] extends GenericListCtrl[T] {
     super.fillListModel(model)
     model.addAttribute("availableResults", getAvailableResults)
   }
-   private def fillSearchModel(model: Model): Unit = {
+  private def fillSearchModel(model: Model): Unit = {
     model.addAttribute("listMode", "search")
   }
   /**
@@ -89,7 +92,8 @@ abstract class SearchCtrl[T <: Struct, QV <: Query] extends GenericListCtrl[T] {
         )
         if (out == null && !rout.isEmpty) {
           out = rout
-          model.addAttribute(MvcConstants.NODE_LIST_MODEL_PAGE, model.asMap().get(s"${r}_ITEMS"))
+          model.addAttribute(MvcConstants.NODE_LIST_MODEL_PAGE,
+            model.asMap().get(s"${r}_ITEMS"))
           model.addAttribute("result", r)
           if (logger.isDebugEnabled)
             logger.debug("found {} in {}", out.size(), s"${r}_ITEMS")
@@ -111,7 +115,7 @@ abstract class SearchCtrl[T <: Struct, QV <: Query] extends GenericListCtrl[T] {
   }
   def search(query: Query, result: String): java.util.List[_] = {
     if (logger.isDebugEnabled)
-      logger.debug("_search {}", query.getQuery)
+      logger.debug("searching for: '{}'", query.getQuery)
     if (StringUtils.isBlank(query.getQuery))
       getManagerBySearchResult(result).getList
     else
@@ -122,7 +126,8 @@ abstract class SearchCtrl[T <: Struct, QV <: Query] extends GenericListCtrl[T] {
                         page: java.lang.Integer,
                         NPpage: String,
                         pageSize: java.lang.Integer,
-                        sortColumn: String, sortAsc: Boolean, result: String): java.util.List[T] = {
+                        sortColumn: String, sortAsc: Boolean,
+                        result: String): java.util.List[T] = {
     fillSearchModel(model)
     model.addAttribute("result", result.toLowerCase())
     if (logger.isDebugEnabled)
@@ -130,7 +135,8 @@ abstract class SearchCtrl[T <: Struct, QV <: Query] extends GenericListCtrl[T] {
         Array(pageSize, model.asMap().get("result")))
     super.listImpl(request, model, page, NPpage, pageSize, sortColumn, sortAsc, s"${result}_ITEMS")
   }
-  @RequestMapping(value = Array("/search/{result:[a-z]+}/{page:[0-9]+}"), method = Array(RequestMethod.GET))
+  @RequestMapping(value = Array("/search/{result:[a-z]+}/{page:[0-9]+}"),
+    method = Array(RequestMethod.GET))
   @ModelAttribute(MvcConstants.NODE_LIST_MODEL)
   def searchByPath(@PathVariable("page") page: java.lang.Integer,
                    @PathVariable("result") result: String,

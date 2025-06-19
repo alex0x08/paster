@@ -29,21 +29,15 @@
 <%--
         All |Comments|Draw top toggle
 --%>
-<div id='pasteViewControls' class="btn-group float-end paste-view-controls" role="group" aria-label="Controls">
-    <button id="${model.id}_btnShowAll" type="button"
-            title="<fmt:message key='button.paste.all' />"
-            class="btn btn-secondary btn-sm active">
-        <i class="fa fa-eye" aria-hidden="true"></i>
+<div id='pasteViewControls' class="btn-group" role="group" aria-label="Controls">
+    <button id="${model.id}_btnShowAll" type="button" class="btn btn-sm btn-primary active">
+        <fmt:message key="button.paste.all" />
     </button>
-    <button id="${model.id}_btnShowComments" type="button"
-        title=" <fmt:message key='button.paste.comments' />"
-        class="btn btn-sm btn-secondary">
-        <i class="fa fa-comments" aria-hidden="true"></i>
+    <button id="${model.id}_btnShowComments" type="button" class="btn btn-sm btn-primary">
+        <fmt:message key="button.paste.comments" />
     </button>
-    <button id="${model.id}_btnShowDraw" type="button"
-        title=" <fmt:message key='button.paste.draw' />"
-        class="btn btn-sm btn-secondary">
-        <i class="fa fa-paint-brush" aria-hidden="true"></i>
+    <button id="${model.id}_btnShowDraw" type="button" class="btn btn-sm btn-primary">
+        <fmt:message key="button.paste.draw" />
     </button>
 </div>
 <%--
@@ -60,9 +54,9 @@
 <%--
     Draw mode, paint options
 --%>
-<div id="${model.id}_drawBlock" style="display:none;padding-top: 0.5em;">
-            <div class="row justify-content-between">
-                <div class="col-md-8" style="padding-bottom:0.5em;">
+<div id="${model.id}_drawBlock" style="display:none;padding-top: 1em;">
+            <div class="row justify-content-between" style="padding-bottom:0.5em;">
+                <div class="col-md-8">
                     <div id="${model.id}_tools" class="tools">
                     </div>
                 </div>
@@ -125,28 +119,33 @@
                 <div class="row">
                     <div class="col-md-12">
                         <%--  should be exact inside div! otherwise marked will fail to parse --%>
-                        <div id="commentMarkedText" class="previewer">
+                        <div id="commentMarkedText" class="previewer" style="padding-left:0.5em;">
                             <c:out value="${comment.text}" escapeXml="false" />
                         </div>
                     </div>
                 </div>
                 <div class="row justify-content-between">
                     <div class="col-md-8">
-                        <small>
+
                             <tiles:insertDefinition name="/common/owner">
                                 <tiles:putAttribute name="model" value="${comment}" />
                                 <tiles:putAttribute name="modelName" value="comment" />
                             </tiles:insertDefinition>
-                            | <kc:prettyTime
+
+                        <fmt:formatDate pattern="${dateTimePattern}"
+                                        var="commentCreated"
+                                        value="${comment.lastModifiedDt}" />
+
+                        <span style="font-size:small" title="${commentCreated}">
+                                <kc:prettyTime
                                     date="${comment.lastModifiedDt}"
-                                    format="${dateTimePattern}"
                                     locale="${pageContext.response.locale}" />
-                        </small>
+                        </span>
                     </div>
                     <div class="col-auto" style="padding-right: 1em;" >
                         <c:if test="${(not empty currentUser or allowAnonymousCommentsCreate) && comment.parentId==null}">                        
                             <a href="#" class="linkLine pInsertCommentTrigger"
-                                title="<fmt:message key='comments.sub' />"
+                                title="<fmt:message key=" comments.sub" />"
                                 plineNumber="${comment.lineNumber}" 
                                 pCommentId="${comment.id}" >
                                 <span class="i">C</span>
@@ -163,12 +162,12 @@
                             <a class="deleteBtn"
                                 id="deleteCommentBtn_${model.id}_${comment.id}"
                                 href="${removeCommentUrl}"
-                                    title="<fmt:message key='button.delete' />">
-                                        <span style="font-size: larger;" class="i">d</span>
+                            title="<fmt:message key='button.delete' />">
+                                <span style="font-size: larger;" class="i">d</span>                          
                             </a>
                             <div style="display:none;" id="dialogMsg">
-                                <fmt:message key="dialog.confirm.paste.remove.comment">
-                                    <fmt:param value="${model.id}" />
+                                <fmt:message key="dialog.confirm.comment.remove.message">
+                                    <fmt:param value="${comment.id}" />
                                 </fmt:message>
                             </div>
                         </sec:authorize>

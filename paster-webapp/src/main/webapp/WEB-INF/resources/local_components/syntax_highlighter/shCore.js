@@ -254,7 +254,7 @@ var SyntaxHighlighter = function () {
          * 							are highlighted.
          */
         highlight: function (modelId, globalParams, element, scrollToLine, showEditForm) {
-            Logger.debug('highlight , show edit form: ', showEditForm)
+            Logger.debug('highlight , show edit form: ', showEditForm,'scroll to line:',scrollToLine);
             if (showEditForm) {
                 sh.vars.editorOpts = JSON.parse(JSON.stringify(globalEpicEditorOpts));
                 sh.vars.editorOpts.container = 'epiceditor-' + modelId;
@@ -328,25 +328,22 @@ var SyntaxHighlighter = function () {
                         fastdom.mutate(() => {
                             sh.vars.loaded[modelId] = true;
                         });
-                const ln = document.getElementById('lineNumber').value;
-                if (!ln || 0 === ln.length) {
-                    if (scrollToLine) {
-                        const loc = window.location.hash.replace("#", "");
-                        if (loc != "") {
-                            const element = document.getElementById(sh.vars.modelId + '_' + loc);
-                            if (element) {
-                                window.scrollTo({ top: element.offsetTop, behavior: 'smooth' });
-                            } else {
-                                Logger.debug('cannot scroll to ', sh.vars.modelId + '_' + loc);
-                            }
-                        }
-                    }
-                } else {
-                    if (showEditForm) {
-                     //   sh.insertEditForm(sh.vars.modelId, ln);
-                    }
-                }
+
             }
+
+              if (scrollToLine) {
+                      const loc = window.location.hash.replace("#", "");
+                      if (loc != "") {
+                        setTimeout(() => {
+                         const element = document.getElementById(loc);
+                         if (element) {
+                              window.scrollTo({ top: element.offsetTop, behavior: 'smooth' });
+                         } else {
+                              Logger.debug('cannot scroll to ', loc);
+                         }
+                        }, "500");
+                      }
+              }
         },
         toggleComments: function (modelId, ctrl) {
             sh.vars.showComments[modelId] = !sh.vars.showComments[modelId];
@@ -373,7 +370,12 @@ var SyntaxHighlighter = function () {
             const lineNumber = parseInt(cl.getAttribute('lineNumber')),
                 id = cl.getAttribute('commentId');
             const textEl = cl.querySelector('#commentMarkedText');
-            let mtext = marked.parse('\n' + textEl.textContent);
+            let textC = textEl.textContent;
+            let mtext = '';
+            if (textC!=null && !textC.blank) {
+                textC = textC.trim();
+                mtext =  marked.parse('\n' + textC);
+            }
             textEl.innerHTML = mtext;
             var el
             if (mode == 1) {
@@ -765,8 +767,10 @@ var SyntaxHighlighter = function () {
         }
         result = sh.brushes[brushes[alias]];
         if (result == null && showAlert != false) {
-            alert(sh.config.strings.noBrush + alias);
+            console.log('error:',sh.config.strings.noBrush + alias);
+            result = sh.brushes[brushes['plain']];
         }
+
         return result;
     };
     /**
@@ -869,7 +873,8 @@ var SyntaxHighlighter = function () {
                 if (line.length == 0) {
                     return spaces;
                 }
-                return spaces + '<code class="' + css + '">' + line + '</code>';
+                return spaces +
+                 '<code class="' + css + '">' + line + '</code>';
             });
         }
         return str;
@@ -1367,11 +1372,14 @@ var SyntaxHighlighter = function () {
                 if (line.length == 0) {
                     line = sh.config.space;
                 }
+                /*
+                (spaces != null ?
+                                    `<code class="${brushName} spaces">${spaces}</code>` : ''
+                */
                 html += this.getLineHtml(
                     i,
                     lineNumber,
-                    (spaces != null ?
-                    `<code class="${brushName} spaces">${spaces}</code>` : '') + line
+                    '' + line
                     , 0
                 );
             }

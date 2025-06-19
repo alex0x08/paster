@@ -58,16 +58,16 @@ public abstract class AbstractModelBody implements ModelBody {
 
     @Override
     public String evaluateAsString() throws IOException {
-        final StringWriter writer = new StringWriter();
+        StringWriter writer = new StringWriter();
         try (writer) {
             evaluate(writer);
         }
         String body = writer.toString();
         if (body != null) {
             body = PATTERN.matcher(body).replaceAll("");
-            if (body.isEmpty()) {
+            if (body.isEmpty())
                 body = null;
-            }
+
         }
         return body;
     }

@@ -64,12 +64,6 @@ public interface AttributeContext {
      */
     void addAll(Map<String, Attribute> newAttributes);
     /**
-     * Add all attributes to the context.
-     *
-     * @param defaultAttributes attributes which should be present.
-     */
-    void addMissing(Map<String, Attribute> defaultAttributes);
-    /**
      * Copies the cascaded attributes to this attribute context.
      *
      * @param parent The parent context to be used.

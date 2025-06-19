@@ -21,7 +21,8 @@ public class ImportAttributeTag extends SimpleTagSupport {
     /**
      * The template model.
      */
-    private final org.apache.tiles.template.ImportAttributeModel model = new org.apache.tiles.template.ImportAttributeModel();
+    private final org.apache.tiles.template.ImportAttributeModel model
+            = new org.apache.tiles.template.ImportAttributeModel();
     /**
      * The name of the attribute to import. If it is
      * <code>null</code>, all the attributes will be imported.
@@ -32,12 +33,7 @@ public class ImportAttributeTag extends SimpleTagSupport {
      * <code>null</code>, the import will go in page scope.
      */
     private java.lang.String scope;
-    /**
-     * The name of the attribute into which the attribute will be
-     * imported. To be used in conjunction to <code>name</code>. If
-     * <code>null</code>, the value of <code>name</code> will be used.
-     */
-    private java.lang.String toName;
+
     /**
      * If <code>true</code>, if the attribute is not present, the
      * problem will be ignored.
@@ -80,29 +76,7 @@ public class ImportAttributeTag extends SimpleTagSupport {
         this.scope = scope;
     }
 
-    /*
-     * Getter for toName property.
-     *
-     * @return
-     * The name of the attribute into which the attribute will be
-     * imported. To be used in conjunction to <code>name</code>. If
-     * <code>null</code>, the value of <code>name</code> will be used.
-    public java.lang.String getToName() {
-        return toName;
-    }
-     */
 
-    /*
-     * Setter for toName property.
-     *
-     * @param toName
-     * The name of the attribute into which the attribute will be
-     * imported. To be used in conjunction to <code>name</code>. If
-     * <code>null</code>, the value of <code>name</code> will be used.
-    public void setToName(java.lang.String toName) {
-        this.toName = toName;
-    }
-     */
     /**
      * Getter for ignore property.
      *
@@ -126,7 +100,8 @@ public class ImportAttributeTag extends SimpleTagSupport {
      */
     @Override
     public void doTag() throws JspException, IOException {
-        AutotagRuntime<org.apache.tiles.request.Request> runtime = new org.apache.tiles.request.jsp.autotag.JspAutotagRuntime();
+        AutotagRuntime<org.apache.tiles.request.Request> runtime
+                = new org.apache.tiles.request.jsp.autotag.JspAutotagRuntime();
         SimpleTagSupport tag = (SimpleTagSupport) runtime;
         tag.setJspContext(getJspContext());
         tag.setJspBody(getJspBody());
@@ -136,7 +111,7 @@ public class ImportAttributeTag extends SimpleTagSupport {
         model.execute(
                 name,
                 scope,
-                toName,
+               null,
                 ignore,
                 request
         );

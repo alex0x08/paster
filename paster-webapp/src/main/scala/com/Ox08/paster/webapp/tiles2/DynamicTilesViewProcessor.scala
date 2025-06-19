@@ -33,7 +33,7 @@ import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
  *
  * Initially had been taken from famous 'Pet Store' Spring demo project, rewritten to Scala.
  */
-private class DynamicTilesViewProcessor extends Logged {
+class DynamicTilesViewProcessor extends Logged {
   /**
    * Keeps Tiles definition to use once derived.
    */
@@ -79,20 +79,22 @@ private class DynamicTilesViewProcessor extends Logged {
                               container: TilesContainer): Unit = {
     val tilesRequest = createTilesRequest(ServletUtil.getApplicationContext(servletContext),
       request, response)
-    // remove multiple slashes
+    // stip slashes
     var beanName: String = bName replaceAll("//", "/")
     // append / to start if needed
     if (!(beanName startsWith "/")) beanName = s"/$beanName"
     // seek for tiles definition based on bean name
     while (!container.isValidDefinition(beanName, tilesRequest)) {
       val pos = beanName.lastIndexOf('/')
-      if (pos < 1) throw new TilesException(s"No definition found for '$beanName'")
+      if (pos < 1)
+        throw new TilesException(s"No definition found for '$beanName'")
       beanName = beanName.substring(0, pos)
     }
     JstlUtils.exposeLocalizationContext(new RequestContext(request, servletContext))
     val definitionName: String = startDynamicDefinition(beanName, url, tilesRequest, container)
     try container.render(definitionName, tilesRequest) catch {
-      case e: Exception => logger.error(e.getMessage, e)
+      case e: Exception =>
+        logger.error(e.getMessage, e)
     }
     endDynamicDefinition(definitionName, beanName, tilesRequest, container)
   }
@@ -134,10 +136,10 @@ private class DynamicTilesViewProcessor extends Logged {
    *
    * @throws TilesException If no valid Tiles definition is found.
    */
-   @throws(classOf[TilesException])
-   private def processTilesDefinitionName(beanName: String,
-                                          container: TilesContainer,
-                                          tilesRequest: Request): String = {
+  @throws(classOf[TilesException])
+  private def processTilesDefinitionName(beanName: String,
+                                         container: TilesContainer,
+                                         tilesRequest: Request): String = {
     // if definition already derived use it, otherwise
     // check if url (bean name) is a template definition, then
     // check for main template

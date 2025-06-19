@@ -34,16 +34,16 @@ public abstract class AbstractAttributeEvaluator implements AttributeEvaluator {
      * {@inheritDoc}
      */
     public Object evaluate(Attribute attribute, Request request) {
-        if (attribute == null) {
+        if (attribute == null)
             throw new IllegalArgumentException("The attribute cannot be null");
-        }
+
         Object retValue = attribute.getValue();
         if (retValue == null) {
             Expression expression = attribute.getExpressionObject();
-            if (expression != null) {
+            if (expression != null)
                 retValue = evaluate(attribute.getExpressionObject()
                         .getExpression(), request);
-            }
+
         }
         return retValue;
     }

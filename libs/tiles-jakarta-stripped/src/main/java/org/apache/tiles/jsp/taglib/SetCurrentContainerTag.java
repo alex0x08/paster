@@ -18,40 +18,19 @@ public class SetCurrentContainerTag extends SimpleTagSupport {
     /**
      * The template model.
      */
-    private final org.apache.tiles.template.SetCurrentContainerModel model = new org.apache.tiles.template.SetCurrentContainerModel();
+    private final org.apache.tiles.template.SetCurrentContainerModel model
+            = new org.apache.tiles.template.SetCurrentContainerModel();
 
     /**
      * The key of the container to be used as "current". If
      * <code>null</code>, the default one will be used.
      */
     private java.lang.String containerKey;
-
-    /**
-     * Getter for containerKey property.
-     *
-     * @return
-     * The key of the container to be used as "current". If
-     * <code>null</code>, the default one will be used.
-     */
-    public java.lang.String getContainerKey() {
-        return containerKey;
-    }
-
-    /**
-     * Setter for containerKey property.
-     *
-     * @param containerKey
-     * The key of the container to be used as "current". If
-     * <code>null</code>, the default one will be used.
-     */
-    public void setContainerKey(java.lang.String containerKey) {
-        this.containerKey = containerKey;
-    }
-
     /** {@inheritDoc} */
     @Override
     public void doTag() throws JspException, IOException {
-        AutotagRuntime<org.apache.tiles.request.Request> runtime = new org.apache.tiles.request.jsp.autotag.JspAutotagRuntime();
+        AutotagRuntime<org.apache.tiles.request.Request> runtime
+                = new org.apache.tiles.request.jsp.autotag.JspAutotagRuntime();
         SimpleTagSupport tag = (SimpleTagSupport) runtime;
         tag.setJspContext(getJspContext());
         tag.setJspBody(getJspBody());

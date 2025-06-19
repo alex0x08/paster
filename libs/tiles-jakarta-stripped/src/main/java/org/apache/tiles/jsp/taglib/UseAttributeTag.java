@@ -187,16 +187,6 @@ public class UseAttributeTag extends SimpleTagSupport {
         Request request = runtime.createRequest();
         model.execute(name, scopeName, id, ignore, request);
     }
-
-    /**
-     * Returns the scripting variable to use.
-     *
-     * @return The scripting variable.
-     */
-    public String getScriptingVariable() {
-        return id == null ? getName() : id;
-    }
-
     /**
      * Implementation of <code>TagExtraInfo</code> which identifies the
      * scripting object(s) to be made visible.
@@ -207,14 +197,14 @@ public class UseAttributeTag extends SimpleTagSupport {
         @Override
         public VariableInfo[] getVariableInfo(TagData data) {
             String classname = data.getAttributeString("classname");
-            if (classname == null) {
+            if (classname == null)
                 classname = "java.lang.Object";
-            }
+
 
             String id = data.getAttributeString("id");
-            if (id == null) {
+            if (id == null)
                 id = data.getAttributeString("name");
-            }
+
 
             return new VariableInfo[] { new VariableInfo(id, classname, true,
                     VariableInfo.AT_END) };

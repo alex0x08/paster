@@ -130,9 +130,9 @@ public class InsertDefinitionModel {
             attributeContext.setPreparer(preparer);
             attributeContext.setTemplateAttribute(templateAttribute);
             container.render(definitionName, request);
-            if (flush) {
+            if (flush)
                 request.getWriter().flush();
-            }
+
         } finally {
             container.endContext(request);
         }

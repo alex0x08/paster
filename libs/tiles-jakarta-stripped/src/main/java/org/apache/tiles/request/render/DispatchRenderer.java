@@ -35,13 +35,13 @@ public class DispatchRenderer implements Renderer {
      */
     @Override
     public void render(String path, Request request) throws IOException {
-        if (path == null) {
+        if (path == null)
             throw new CannotRenderException("Cannot dispatch a null path");
-        }
+
         DispatchRequest dispatchRequest = getDispatchRequest(request);
-        if (dispatchRequest == null) {
+        if (dispatchRequest == null)
             throw new CannotRenderException("Cannot dispatch outside of a web environment");
-        }
+
         dispatchRequest.dispatch(path);
     }
     /**
@@ -52,12 +52,12 @@ public class DispatchRenderer implements Renderer {
     }
     private DispatchRequest getDispatchRequest(Request request) {
         Request result = request;
-        while (!(result instanceof DispatchRequest) && result instanceof RequestWrapper) {
-            result = ((RequestWrapper) result).getWrappedRequest();
-        }
-        if (!(result instanceof DispatchRequest)) {
+        while (!(result instanceof DispatchRequest) && result instanceof RequestWrapper rw)
+            result =rw.getWrappedRequest();
+
+        if (!(result instanceof DispatchRequest))
             result = null;
-        }
+
         return (DispatchRequest) result;
     }
 }

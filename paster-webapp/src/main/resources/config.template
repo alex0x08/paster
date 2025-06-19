@@ -57,3 +57,8 @@ db.driverClassName=${db.dbType}
 db.url=${db.dbUrl}
 db.pwd=${db.dbPassword}
 db.username=${db.dbUser}
+
+#
+# Paster API key
+#
+paster.api.key=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9

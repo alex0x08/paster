@@ -28,23 +28,6 @@ package org.apache.tiles.request.render;
  */
 public class NoSuchRendererException extends RenderException {
 
-    /*
-     * Constructor.
-    public NoSuchRendererException() {
-        super();
-    }
-     */
-
-    /*
-     * Constructor.
-     *
-     * @param message The detail message.
-     * @param e The exception to be wrapped.
-    public NoSuchRendererException(String message, Throwable e) {
-        super(message, e);
-    }
-     */
-
     /**
      * Constructor.
      *
@@ -54,13 +37,6 @@ public class NoSuchRendererException extends RenderException {
         super(message);
     }
 
-    /*
-     * Constructor.
-     *
-     * @param e The exception to be wrapped.
-    public NoSuchRendererException(Throwable e) {
-        super(e);
-    }
-     */
+
 
 }

@@ -47,12 +47,12 @@ public class DefaultLocaleResolver implements LocaleResolver {
     public Locale resolveLocale(Request request) {
         Locale retValue = null;
         Map<String, Object> session = request.getContext("session");
-        if (session != null) {
+        if (session != null)
             retValue = (Locale) session.get(DefaultLocaleResolver.LOCALE_KEY);
-        }
-        if (retValue == null) {
+
+        if (retValue == null)
             retValue = request.getRequestLocale();
-        }
+
 
         return retValue;
     }

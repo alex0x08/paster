@@ -11,29 +11,19 @@
                         http://www.springframework.org/schema/beans
                         http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <global-method-security secured-annotations="enabled" jsr250-annotations="enabled" >
-        <expression-handler ref="jspExpressionHandler"/>
-    </global-method-security>
-
-    <beans:bean id="jspExpressionHandler"
-                class="org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler"/>
-
+    <global-method-security secured-annotations="enabled" jsr250-annotations="enabled"/>
     <http pattern="/images/**" security="none"/>
     <http pattern="/css/**" security="none"/>
     <http pattern="/js/**" security="none"/>
     <http pattern="/errors/*" security="none"/>
     <http pattern="/libs/**" security="none"/>
-    <http pattern="/main/assets/${paste.app.id}/**" security="none"/>
-    <http pattern="/main/static/${paste.app.id}/**" security="none"/>
-    <http pattern="/main/resources/${paste.app.id}/**" security="none"/>
-    <http realm="Paster Realm Public" auto-config="false"
-          request-matcher="ant"
-          use-expressions="true"
+    <http pattern="/assets/${paste.app.id}/**" security="none"/>
+    <http pattern="/static/${paste.app.id}/**" security="none"/>
+    <http pattern="/resources/${paste.app.id}/**" security="none"/>
+    <http realm="Paster Realm Public" auto-config="false" use-expressions="true"
           authentication-manager-ref="normal-auth-manager"
           disable-url-rewriting="true">
         <!--anonymous/-->
-        <intercept-url pattern="/main/user*" access="hasRole('ROLE_ADMIN')"/>
-        <intercept-url pattern="/main/user/**" access="hasRole('ROLE_ADMIN')"/>
         <intercept-url pattern="/main/admin/**" access="hasRole('ROLE_ADMIN')"/>
         <intercept-url pattern="/act/admin/**" access="hasRole('ROLE_ADMIN')"/>
         <intercept-url pattern="/**" access="permitAll()"/>
@@ -68,11 +58,11 @@
      There is no way to disable this as it is considered extremely risky to disable this constraint.''
      https://docs.spring.io/spring-security/site/docs/current/api/org/springframework/security/web/firewall/StrictHttpFirewall.html
 
-    This is only way to have UTF-8 characters right in url string.
+    This is the way to have UTF-8 characters right in url string.
      -->
     <beans:bean id="defaultHttpFirewall" class="org.springframework.security.web.firewall.DefaultHttpFirewall"/>
     <http-firewall ref="defaultHttpFirewall"/>
-    <beans:bean id="csrfSecurityRequestMatcher" class="com.Ox08.paster.webapp.web.CsrfSecurityRequestMatcher"/>
+    <beans:bean id="csrfSecurityRequestMatcher" class="com.Ox08.paster.webapp.web.DbConsoleCsrfBypassMatcher"/>
     <beans:bean id="userManager"
                 class="com.Ox08.paster.webapp.manager.UserManager">
     </beans:bean>
@@ -99,4 +89,6 @@
     <beans:bean id="passwordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
     <!-- Automatically receives AuthenticationEvent messages -->
     <beans:bean id="loggerListener" class="org.springframework.security.authentication.event.LoggerListener"/>
+    <beans:bean id="jspExpresionHandler" class="org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler"/>
+
 </beans:beans>

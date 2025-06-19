@@ -66,12 +66,12 @@ public class BasicPatternDefinitionResolver<T> extends
         Set<String> excludedKeys = new LinkedHashSet<>();
         for (Map.Entry<String, Definition> de : defsMap.entrySet()) {
             String key = de.getKey();
-            if (patternRecognizer.isPatternRecognized(key)) {
+            if (patternRecognizer.isPatternRecognized(key))
                 matchers.add(definitionPatternMatcherFactory
                         .createDefinitionPatternMatcher(key, de.getValue()));
-            } else {
+             else
                 excludedKeys.add(key);
-            }
+
         }
         return PatternUtil.createExtractedMap(defsMap, excludedKeys);
     }

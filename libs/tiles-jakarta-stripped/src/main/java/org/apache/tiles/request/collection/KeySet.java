@@ -28,7 +28,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import jakarta.validation.constraints.NotNull;
 import org.apache.tiles.request.attribute.HasKeys;
+import org.springframework.lang.NonNull;
 /**
  * Exposes keys of a {@link HasKeys} object as a set.
  *
@@ -67,17 +69,18 @@ public class KeySet implements Set<String> {
     @Override
     public boolean containsAll(Collection<?> c) {
         Collection<String> realCollection = (Collection<String>) c;
-        for (String key : realCollection) {
-            if (request.getValue(key(key)) == null) {
+        for (String key : realCollection)
+            if (request.getValue(key(key)) == null)
                 return false;
-            }
-        }
+
+
         return true;
     }
     @Override
     public boolean isEmpty() {
         return !request.getKeys().hasMoreElements();
     }
+    @NonNull
     @Override
     public Iterator<String> iterator() {
         return new KeySetIterator();
@@ -114,9 +117,9 @@ public class KeySet implements Set<String> {
     private List<String> toList() {
         List<String> entries = new ArrayList<>();
         Enumeration<String> names = request.getKeys();
-        while (names.hasMoreElements()) {
+        while (names.hasMoreElements())
             entries.add(names.nextElement());
-        }
+
         return entries;
     }
     /**

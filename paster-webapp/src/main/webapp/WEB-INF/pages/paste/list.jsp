@@ -29,7 +29,10 @@
         </a>
         <c:forEach var="source" items="${availableSourceTypes}" varStatus="loopStatus">
                <c:set var="sourceKey" value="${source.toLowerCase()}"/>
-                <c:choose>
+               <span style="font-size: 0.6em;">
+                                    <c:out value="${pasteStats.get(source)}"/>
+               </span>
+               <c:choose>
                     <c:when test="${sourceKey eq sourceType}">
                         <span style="font-size: 14px; font-weight: bold; ">
                             <c:out value="${source}"/>
@@ -39,14 +42,11 @@
                             <c:out value="${source}"/>
                         </a>
                     </c:otherwise>
-                </c:choose>
-                 <span style="font-size: 0.6em;">
-                     <c:out value="${pasteStats.get(source)}"/>
-                 </span>
-                <c:if test="${!loopStatus.last}"> | </c:if>
+               </c:choose>
+
+               <c:if test="${!loopStatus.last}"> | </c:if>
             </c:forEach>
     </div>
-    <!-- Export current list to various formats -->
     <div class="col-md-2 hidden-sm hidden-xs">        
         <a class="img-map img-xml" href="<c:url value='/main/paste/list/body.xml'/>"
                 title="xml" alt="xml" target="_blank">
@@ -62,12 +62,12 @@
             title="atom" alt="atom" target="_blank">
         </a> 
     </div>
-    <!-- list controls (next/prev/last) -->
     <div class="col-auto">
         <tiles:insertDefinition name="/common/pageList" >
             <tiles:putAttribute name="listMode" value="${listMode}"/>
             <tiles:putAttribute name="pageItems" value="${pageItems}"/>
-            <tiles:putAttribute name="sourceType" value="${sourceType == null ? 'main' : sourceType }"/>
+            <tiles:putAttribute name="sourceType"
+                value="${sourceType == null ? 'main' : sourceType }"/>
             <c:if test="${listMode eq 'search'}">
                 <tiles:putAttribute name="result" value="${result}"/>
             </c:if>
@@ -80,7 +80,8 @@
         <div class="col-md-12" >
             <div class="paging" style="margin: auto; text-align: center;float: left;" >
                 Found
-                <c:forEach var="resultType" items="${availableResults}" varStatus="loopStatus">
+                <c:forEach var="resultType"
+                           items="${availableResults}" varStatus="loopStatus">
                     <c:choose>
                         <c:when test="${result eq resultType}">
                             <span style="font-size: larger; ">
@@ -100,7 +101,6 @@
     </div>
 </c:if>
 --%>
-<!-- main page content -->
 <div class="row">
     <div id="pastas" class="col-md-12" >
         <c:forEach var="paste" items="${pageItems.pageList}" varStatus="status">
@@ -114,21 +114,20 @@
                         <div class="col-md-2" style="padding-bottom: 0.5em;">
                             <c:url value='/main/paste-resources/${appId}/t/${paste.lastModifiedDt.time}/paste_content/${paste.thumbImage}' var="thumbUrl">
                             </c:url>
-                            <a class="pastePreviewLink" href="<c:url value='/${paste.id}'></c:url>"
-                                pasteId="${paste.id}"
+                            <a class="pastePreviewLink" href="<c:url value='/${paste.id}'></c:url>" pasteId="${paste.id}" 
                                title="Click to view paste vol. ${paste.id}">
-                                <img src="${thumbUrl}"
+                                <img src="${thumbUrl}"  
                                      class="img-thumbnail img-responsive p-comment"  />
                             </a>
                         </div>
                         <div class="col-md-10" >
                             <div class="row">
-                                <div class="pasteTitle col-auto">
-                                    <div class="pasteTitle" >
+                                <div class="pasteTitle col-lg-10 col-md-12 col-xs-12">
+                                    <div class="pasteTitle" style="padding: 1em;">
                                         <c:if test="${paste.stick}">
                                             <span class="i" title="Paste sticked">]</span>
                                         </c:if>            
-                                        <a class="i ${paste.priority}" style="font-size:2em;"
+                                        <a class="i priority_${paste.priority}" style="font-size:2em;"
                                            title="<c:out value="${paste.id}"/>: ${priorTitle}. Click to search with same priority."
                                            href="<c:url value='/main/paste/list/search?query=priority:${paste.priority}'/>">/</a>
 
@@ -141,7 +140,10 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-12">
-
+                                    <tiles:insertDefinition name="/common/tags" >
+                                        <tiles:putAttribute name="model" value="${paste}"/>
+                                        <tiles:putAttribute name="modelName" value="paste"/>
+                                    </tiles:insertDefinition>
                                     <tiles:insertDefinition name="/common/commentCount" >
                                         <tiles:putAttribute name="model" value="${paste}"/>
                                         <tiles:putAttribute name="modelName" value="paste"/>
@@ -150,15 +152,10 @@
                                         <tiles:insertDefinition name="/common/owner" >
                                             <tiles:putAttribute name="model" value="${paste}"/>
                                             <tiles:putAttribute name="modelName" value="paste"/>
-                                        </tiles:insertDefinition>
-                                        |
-                                        <tiles:insertDefinition name="/common/tags" >
-                                                                                <tiles:putAttribute name="model" value="${paste}"/>
-                                                                                <tiles:putAttribute name="modelName" value="paste"/>
-                                                                            </tiles:insertDefinition>
-
+                                        </tiles:insertDefinition>,
                                         <a href="<c:url value='/main/paste/list/search?query=codeType:${paste.codeType}'/>">
                                             <fmt:message key='${"code.type.".concat(paste.codeType)}'/></a>
+                                        (
                                         <c:if test="${not empty paste.wordsCount}">
                                             <c:out value="${paste.wordsCount} "/> 
                                             <fmt:message key="paste.edit.word.counter.wordText"/>
@@ -168,8 +165,8 @@
                                             <c:out value="${paste.symbolsCount} "/> 
                                             <fmt:message key="paste.edit.word.counter.charText"/>
                                         </c:if>
-                                        | <kc:prettyTime date="${paste.lastModifiedDt}"
-                                         format="${dateTimePattern}"
+                                        )
+                                        ,<kc:prettyTime date="${paste.lastModifiedDt}"
                                         locale="${pageContext.response.locale}"/>
                                     </small>                             
                                 </div>
@@ -177,7 +174,7 @@
                         </div>
                     </div>
                 </c:when>
-                <c:when test="${paste['class'].name eq 'com.Ox08.paster.webapp.Comment'}">
+                <c:when test="${paste['class'].name eq 'com.Ox08.paster.webapp.model.Comment'}">
                     <c:set property="curDate" value="${paste.lastModifiedDt}" target="${splitHelper}"/>
                     <a href="<c:url value='/${paste.id}'></c:url>" title="Click to view paste vol. ${paste.id}">
                         <span  class="pasteTitle"><c:out value="${paste.text}" escapeXml="true"  /></span>
@@ -188,19 +185,15 @@
                             <tiles:putAttribute name="model" value="${paste}"/>
                             <tiles:putAttribute name="modelName" value="paste"/>
                         </tiles:insertDefinition>
-                        ,<kc:prettyTime date="${paste.lastModifiedDt}"
-                          format="${dateTimePattern}"
-                         locale="${pageContext.response.locale}"/>
+                        ,<kc:prettyTime date="${paste.lastModifiedDt}" locale="${pageContext.response.locale}"/>
                     </small>
                 </c:when>
             </c:choose>
-            <!-- add divider -->
             <c:if test="${splitHelper.split}">
                 <c:out value="${splitHelper.splitTitle}"/>
                 <hr/>
             </c:if>
         </c:forEach>
-        <!-- render 'not found' block if paste list is empty -->
         <c:if test="${pageItems.nrOfElements == 0}">
             <center>
                 <fmt:message key='common.list.empty'/>

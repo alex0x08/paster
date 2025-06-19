@@ -31,105 +31,116 @@ import org.springframework.context.ApplicationListener
 import org.springframework.context.event.ContextRefreshedEvent
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-
 import java.util
 import scala.jdk.CollectionConverters._
+
 object SearchableDaoImpl {
+  // tags, used for highlighting blocks
   val FORMATTER = new SimpleHTMLFormatter("[result]", "[/result]")
   private val DEFAULT_START_FIELDS: Array[String] = Array[String]("name")
 }
+
+/**
+ * This service used to configure full-text indexes
+ */
 @Service
 class SetupIndexes extends Logged with ApplicationListener[ContextRefreshedEvent] {
   @Value("${paster.reindexOnBoot:false}")
-  private val reindexOnBoot: Boolean = false
+  private val reindexOnBoot: Boolean = false // if we allow re-indexing on boot
+
   /**
-   * Triggers on Spring finishes load, does re-indexing if enabled
+   * Triggers on Paster start and does re-indexing
    * @param event
    */
   @Transactional
   def onApplicationEvent(event: ContextRefreshedEvent): Unit = {
-    // if 'reindex on start' is enabled:
-    //  Make synchronous call to re-index for each searchable entity
+    // if we allow re-index on boot
     if (reindexOnBoot) {
-      val allSearchableDao = event.getApplicationContext.getBeansOfType(classOf[SearchableDaoImpl[_]])
-      for (d <- allSearchableDao.entrySet().asScala) {
+      val allSearchableDao = event.getApplicationContext
+                      .getBeansOfType(classOf[SearchableDaoImpl[_]])
+      for (d <- allSearchableDao.entrySet().asScala)
         d.getValue.indexAll()
-      }
-      logger.info("Re-index on boot is completed.")
+      logger.info("reindex completed.")
     } else
-      logger.info("Re-index on boot is disabled. skip.")
+      logger.debug("reindex disabled. skipping..")
   }
 }
+
 /**
- * Abstract searchable DAO, nested from abstract DAO
- * Contains all shared logic, related to search.
+ * Abstract Searchable service, dedicated for single entity
  * @param model
- *      entity class
+ *      target entity class
  * @tparam T
- *      entity type
+ *        target entity
  */
 @Transactional(readOnly = true, rollbackFor = Array(classOf[Exception]))
 abstract class SearchableDaoImpl[T <: Struct](model: Class[T])
   extends StructDaoImpl[T](model) {
+
   /**
-   * Search abstraction that instantiates all resources required for single search.
-   * Searches for specified term in entities
+   * This class is responsible for full-text searching, new session will be opened on each
+   * request
    * @param query
-   *        query text
+   *        text query
    */
-  protected class FSearch(query: String) extends Logged {
+  private class FSearch(query: String) extends Logged {
     if (logger.isDebugEnabled)
-      logger.debug("Searching for {}", query)
-    // open full-text search session
+      logger.debug("searching for {}", query)
+
+    // get search session from EntityManager
     private val searchSession: SearchSession = getFullTextEntityManager
     // build query parser
-    val queryParser = new MultiFieldQueryParser(getDefaultStartFields,
+    private val queryParser = new MultiFieldQueryParser(getDefaultStartFields,
       new StandardAnalyzer())
-    // create Apache Lucene query object
+  //  val sort: org.apache.lucene.search.Sort = new org.apache.lucene.search.Sort(
+  //    new org.apache.lucene.search.SortField("id",
+   //     org.apache.lucene.search.SortField.Type.LONG))
+    // parse query
     private val luceneQuery: org.apache.lucene.search.Query = queryParser.parse(query)
-    // .. scorer
+
     private val scorer: QueryScorer = new QueryScorer(luceneQuery)
-    // .. and results highlighter
-    val highlighter: Highlighter = new Highlighter(SearchableDaoImpl.FORMATTER, scorer)
+    private val highlighter: Highlighter = new Highlighter(SearchableDaoImpl.FORMATTER, scorer)
     highlighter.setTextFragmenter(new SimpleSpanFragmenter(scorer, 100))
-    // this is a bit 'magic' to search with Lucene native query
-    // and get predicate
-    private val predicate2: SearchPredicate = searchSession
+    // build predicate
+    private val predicate: SearchPredicate = searchSession
       .scope(model).predicate.extension(LuceneExtension.get)
       .fromLuceneQuery(luceneQuery).toPredicate
-    // build search query
+    // do search
     private val searchQuery: LuceneSearchQuery[T] = searchSession.search(model)
       .extension(LuceneExtension.get())
-      .where(predicate2).toQuery
-    // and results
-    private val results:util.List[T] = fillHighlighted(
-      highlighter, queryParser, searchQuery.fetchAll().hits())
-    def getResults: util.List[T] = results
+      .where(predicate).toQuery
+
+    /**
+     * Return found results
+     * @return
+     */
+    def getResults: util.List[T] = fillHighlighted(
+      highlighter,
+      queryParser,
+      searchQuery.fetchAll().hits())
   }
-  /**
-   * Creates new Hibernate Search session
-   * @return
-   *    new search session
-   */
   private def getFullTextEntityManager: SearchSession = Search.session(em)
-  /**
-   * Defines default entity fields to search in
-   * @return
-   */
   def getDefaultStartFields: Array[String] = SearchableDaoImpl.DEFAULT_START_FIELDS
 
+  /**
+   * Highlight found results
+   * @param highlighter
+   * @param queryParser
+   * @param results
+   * @return
+   */
   private def fillHighlighted(highlighter: Highlighter,
                               queryParser: QueryParser,
                               results: java.util.List[_]): java.util.List[T] = {
     if (logger.isDebugEnabled)
-      logger.debug("Found {} results", results.size())
-    for (obj <- results.asScala) {
+      logger.debug("found {} results", results.size())
+    for (obj <- results.asScala)
       fillHighlighted(highlighter, queryParser, obj.asInstanceOf[T])
-    }
     results.asInstanceOf[java.util.List[T]]
   }
+
   /**
-   * Calls to full re-index
+   * re-index current model
    */
   def indexAll(): Unit = {
     val searchSession = getFullTextEntityManager
@@ -139,41 +150,23 @@ abstract class SearchableDaoImpl[T <: Struct](model: Class[T])
         .cacheMode(CacheMode.NORMAL)
         .threadsToLoadObjects(1)
         // .threadsForSubsequentFetching(2)
-        //.start()
         .startAndWait()
     } catch {
       case e: InterruptedException =>
         throw new RuntimeException(e)
     }
   }
-  /**
-   * Abstract function to highlight found results
-   * Implemented in child classes
-   * @param highlighter
-   * @param pparser
-   * @param model
-   */
   def fillHighlighted(highlighter: Highlighter,
                       pparser: QueryParser,
                       model: T): Unit
-  /**
-   * Search in entities with type T for specified query
-   * @param query
-   *      text to find
-   * @throws org.apache.lucene.queryparser.classic.ParseException
-   *      if query syntax is incorrect
-   * @return
-   *    list of found entities with type T
-   */
   @throws(classOf[ParseException])
   def search(query: String): java.util.List[T] = {
     /**
-     * ignore empty queries and asterisk - return 'all results' from database instead
+     * ignore empty queries
      */
     if (StringUtils.isBlank(query) || query.trim().equals("*"))
       return getList
-    // make search
-    new FSearch(
+     new FSearch(
       if (!query.contains(":") && !query.contains("*"))
         query + "*"
       else

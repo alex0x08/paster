@@ -66,9 +66,9 @@ object Logged {
           return false
         if (fields == null)
           return true
-        for (field <- fields) {
-          if (f.getName.equals(field)) return false
-        }
+        for (field <- fields)
+          if (f.getName.equals(field))
+            return false
         true
       }
     }.toString
@@ -88,7 +88,7 @@ trait Logged {
   def getNewProtocolBuilder: ToStringBuilder = new ToStringBuilder(this, Logged.style)
 }
 /**
- * An Logback listener, used to pass 'appDebug' variable from environment to logback configs
+ * A Logback listener, used to pass 'appDebug' variable from environment to logback configs
  */
 class LoggerStartupListener extends ContextAwareBase with
   LoggerContextListener with LifeCycle {

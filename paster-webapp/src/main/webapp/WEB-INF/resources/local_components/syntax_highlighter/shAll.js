@@ -147,7 +147,7 @@
 	};
 
 	BrushCPP.prototype	= new SyntaxHighlighter.Highlighter();
-	BrushCPP.aliases	= ['cpp', 'c'];
+	BrushCPP.aliases	= ['cpp', 'c','c_cpp'];
 
 	SyntaxHighlighter.brushes.Cpp = BrushCPP;
 

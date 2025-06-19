@@ -75,13 +75,13 @@ public class PutListAttributeModel {
         AttributeContext attributeContext = null;
         if (!composeStack.isEmpty()) {
             Object obj = composeStack.peek();
-            if (obj instanceof Definition) {
+            if (obj instanceof Definition)
                 attributeContext = (AttributeContext) obj;
-            }
+
         }
-        if (attributeContext == null) {
+        if (attributeContext == null)
             attributeContext = container.getAttributeContext(request);
-        }
+
         attributeContext.putAttribute(name, listAttribute, cascade);
     }
 }

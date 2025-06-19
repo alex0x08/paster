@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 package com.Ox08.paster.webapp.base
+import com.Ox08.paster.webapp.base.Boot.BOOT
 import org.apache.commons.io.FileUtils
 import org.apache.commons.lang3.StringUtils
 import org.apache.commons.lang3.math.NumberUtils
 import org.springframework.util.Assert
+
 import java.io.{File, FileInputStream, IOException, StringReader, StringWriter}
 import java.nio.file.Paths
 import java.text.{ParseException, SimpleDateFormat}
@@ -26,7 +28,7 @@ object Boot {
   private val INSTALLED_TS_FORMAT: SimpleDateFormat = new SimpleDateFormat("MM.dd.yyyy HH:mm")
   val BOOT = new Boot
 }
-class Boot private extends Logged {
+class Boot extends Logged {
   private val wasBoot = false // a mark that system has been booted already
   private var initialConfig = false
   def getSystemInfo: SystemInfo = SystemInfo.SYSTEM_INFO
@@ -127,8 +129,10 @@ class Boot private extends Logged {
       System.setProperty("app.externalUrlPrefix", system.getExternalUrlPrefix)
       logger.info(SystemMessage.of("paster.system.message.appExternalUrl", system.getExternalUrlPrefix))
     }
-    checkInstalled(system)
+    printLogo(system)
+    checkInstalled(system, app_home)
   }
+
   def markInstalled(): Unit = {
     val system: SystemInfo = getSystemInfo
     val iFile = new File(system.getAppHome, ".installed")
@@ -140,15 +144,12 @@ class Boot private extends Logged {
     FileUtils.writeStringToFile(iFile, out.toString, "UTF-8")
     system.setInstalled(installed = true, dateInstalled)
   }
-  /**
-   * Checks that Paster is already installed.
-   * @param system
-   *        an instance of SystemInfo object
-   *
-   */
-  private def checkInstalled(system: SystemInfo): Unit = {
-    // a file with installation mark
-    val iFile = new File(system.getAppHome, ".installed")
+  private def printLogo(system: SystemInfo): Unit = {
+    val banner = new String(getClass.getResourceAsStream("/banner.txt").readAllBytes())
+    logger.info(banner, system.getRuntimeVersion.implVersionFull)
+  }
+  private def checkInstalled(system: SystemInfo, appHome: File): Unit = {
+    val iFile = new File(appHome, ".installed")
     if (iFile.exists() && iFile.isFile) {
       if (iFile.length() == 0 || iFile.length() > 2048)
         throw SystemError.withError(0x6001, "Incorrect or broken '.installed' file!")
@@ -162,21 +163,20 @@ class Boot private extends Logged {
       if (logger.isDebugEnabled)
         logger.debug("found install date: {}", dateInstalled)
       system.setInstalled(installed = true, dateInstalled)
+    } else {
+      /*val dateInstalled = new Date()
+      val p: Properties = new Properties()
+      p.setProperty("dateInstalled", INSTALLED_TS_FORMAT.format(dateInstalled))
+      val out = new StringWriter()
+      p.store(out, "Install information")
+      FileUtils.writeStringToFile(iFile, out.toString, "UTF-8")
+      system.setInstalled(installed = true, dateInstalled)*/
     }
   }
-  /**
-   * Writes PID (Process Identifier) to special file in $appHome folder
-   * @param appHome
-   *      Paster's current appHome
-   */
   private def writePid(appHome: File): Unit = {
-    // a file with pid
     val pidFile = new File(appHome, "app.pid")
-    // get current PID of running JVM
     val pid = ProcessHandle.current.pid()
-    // write PID to file
     FileUtils.writeStringToFile(pidFile, pid.toString, "UTF-8")
-    // add JVM hook that deletes the PID file after normal shutdown
     Runtime.getRuntime.addShutdownHook(new Thread() {
       override def run(): Unit = {
         try
@@ -252,8 +252,11 @@ class Boot private extends Logged {
    * @return
    */
   private def createAppFolder(app_home: File, name: String): File = {
-    val folder = if (name != null) new File(app_home, name)
-    else app_home
+    val folder = if (name != null)
+      new File(app_home, name)
+    else
+      app_home
+
     if ((!folder.exists || !folder.isDirectory) && !folder.mkdirs)
       throw SystemError.withCode(0x6005, folder.getAbsolutePath)
     folder
@@ -268,20 +271,20 @@ class Boot private extends Logged {
   private def createLoadAppConfig(system: SystemInfo, app_home: File): File = {
     val config = new File(app_home, "config.properties")
     if (!config.exists || !config.isFile) {
-      logger.warn(SystemMessage.of("paster.system.message.appConfigNotFound", config.getAbsolutePath))
-      //  throw new IllegalStateException("app config file not found!");
+      logger.warn(SystemMessage.of("paster.system.message.appConfigNotFound",
+        config.getAbsolutePath))
       return null
     }
     system.setConfigFile(config)
     if (initialConfig) {
-      //  loadPluginsConfiguration(system)
       initialConfig = false
     }
     val input = new FileInputStream(config)
     try {
       system.getConfig.load(input)
       system.setExternalUrlPrefix(system.getConfig.getProperty("externalUrlPrefix", null))
-      logger.info(SystemMessage.of("paster.system.message.loadedLinesFromAppConf", "" + system.getConfig.size))
+      logger.info(SystemMessage.of("paster.system.message.loadedLinesFromAppConf",
+                                    "" + system.getConfig.size))
     } catch {
       case e: IOException =>
         throw SystemError.withError(0x6001, e)
@@ -290,7 +293,7 @@ class Boot private extends Logged {
         input.close()
     config
   }
-  object SystemInfo {
+  private object SystemInfo {
     val SYSTEM_INFO = new SystemInfo
   }
   /**
@@ -299,7 +302,7 @@ class Boot private extends Logged {
    * @since 1.0
    * @author Alex Chernyshev <alex3.145@gmail.com>
    */
-  final class SystemInfo private {
+  final class SystemInfo private() {
     // версия сборки
     private var runtimeVersion: AppVersion = _
     // дата и время запуска системы
@@ -336,14 +339,13 @@ class Boot private extends Logged {
     }
     def getSystemLocale: Locale = systemLocale
     def setSystemLocale(lang: String): Unit = {
-      val locale: Option[Locale] = getAvailableLocales.find(p = p => {
+      val locale: Option[Locale] = getAvailableLocales.find(p = p =>
         p.getLanguage.equals(lang)
-      })
+      )
       if (locale.isDefined) this.systemLocale = locale.get
     }
     private[base] def setSystemLocale(locale: Locale): Unit = {
       Assert.notNull(locale, "should be non null")
-      //checkLock()
       this.systemLocale = locale
     }
     def getAppCode: String = appCode
@@ -372,9 +374,8 @@ class Boot private extends Logged {
       config.getProperty(setting)
     }
     def getSettingAsBoolean(setting: String, defaultValue: Boolean): Boolean = {
-      if (!config.containsKey(setting)) {
+      if (!config.containsKey(setting))
         return defaultValue
-      }
       java.lang.Boolean.valueOf(config.getProperty(setting))
     }
     def getSettingAsInt(setting: String, defaultValue: Int): Int = {
@@ -416,9 +417,8 @@ class Boot private extends Logged {
       this.locked = true
     }
     private def checkLock(): Unit = {
-      if (locked) {
+      if (locked)
         throw SystemError.withCode(0x6002)
-      }
     }
   }
   /**
@@ -439,7 +439,7 @@ class Boot private extends Logged {
     } catch {
       case _: ParseException => null
     }
-    val implVersionFull: String = "%s.%s".format(implVer, implBuildNum)
+    val implVersionFull: String = implVer + "." + implBuildNum
     def getFull: String = implVersionFull // for EL
     def getGitState: Properties = git
   }

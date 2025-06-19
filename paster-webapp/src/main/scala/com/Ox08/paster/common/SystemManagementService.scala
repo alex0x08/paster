@@ -21,9 +21,18 @@ import java.io.{File, IOException}
 import java.lang.management.ManagementFactory
 import java.util
 import scala.jdk.CollectionConverters._
+
+/**
+ * This class is used to restart application
+ *
+ * Dedicated trait is required because this class is used on 'setup' stage, without fully configured Spring
+ * @since 2.0
+ * @author 0x08
+ */
 trait SystemManagementService {
   def restartApplication(): Unit
 }
+
 @Service
 class SystemManagementServiceImpl extends SystemManagementService with Logged {
   private var inRestart = false
@@ -46,7 +55,7 @@ class SystemManagementServiceImpl extends SystemManagementService with Logged {
      * пауза в секунду для отрисовки страницы с прогрессом перезагрузки
      */
     try
-      Thread.sleep(1000)
+      Thread.sleep(3000)
     catch {
       case e: Exception =>
         e.printStackTrace()
@@ -87,9 +96,8 @@ class SystemManagementServiceImpl extends SystemManagementService with Logged {
         command.add(mainCommand(0))
       }
       // finally add program arguments
-      for (i <- 1 until mainCommand.length) {
+      for (i <- 1 until mainCommand.length)
         command.add(mainCommand(i))
-      }
       logger.info("cmd: {}", command.toString)
       val builder = new ProcessBuilder(command)
       val env = System.getenv

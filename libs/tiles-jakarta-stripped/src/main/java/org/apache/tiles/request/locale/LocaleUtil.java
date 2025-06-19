@@ -26,13 +26,7 @@ import java.util.Locale;
  * @version $Rev$ $Date$
  */
 public final class LocaleUtil {
-    /**
-     * The "null" Locale, i.e. a Locale that points to no real locale.
-     *
-     * @deprecated use Locale.ROOT instead.
-     */
-    @Deprecated
-    public static final Locale NULL_LOCALE = Locale.ROOT;
+
     /**
      * Private constructor to avoid instantiation.
      */
@@ -43,11 +37,11 @@ public final class LocaleUtil {
      * Returns the "parent" locale of a given locale.
      * </p>
      * <p>
-     * If the original locale is only language-based, the {@link #NULL_LOCALE}
+     * If the original locale is only language-based, the {link NULL_LOCALE}
      * object is returned.
      * </p>
      * <p>
-     * If the original locale is {@link #NULL_LOCALE}, then <code>null</code>
+     * If the original locale is {link NULL_LOCALE}, then <code>null</code>
      * is returned.
      * </p>
      *
@@ -56,16 +50,16 @@ public final class LocaleUtil {
      */
     public static Locale getParentLocale(Locale locale) {
         Locale retValue = null;
-        final String language = locale.getLanguage(),
-                country = locale.getCountry(),
-                variant = locale.getVariant();
-        if (!"".equals(variant)) {
-            retValue = Locale.of(language, country);
-        } else if (!"".equals(country)) {
-            retValue = Locale.of(language);
-        } else if (!"".equals(language)) {
+        String language = locale.getLanguage();
+        String country = locale.getCountry();
+        String variant = locale.getVariant();
+        if (!variant.isEmpty())
+            retValue = Locale.forLanguageTag(language+"_"+country);
+         else if (!country.isEmpty())
+            retValue = Locale.forLanguageTag(language);
+         else if (!language.isEmpty())
             retValue = Locale.ROOT;
-        }
+
         return retValue;
     }
 }

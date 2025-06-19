@@ -121,18 +121,18 @@ public class InsertAttributeModel {
         Attribute attribute = resolveAttribute(container, ignore, preparer,
                 role, defaultValue, defaultValueRole, defaultValueType, name,
                 value, request);
-        if (attribute != null) {
+        if (attribute != null)
             composeStack.push(attribute);
-        }
+
         modelBody.evaluateWithoutWriting();
         container = TilesAccess.getCurrentContainer(request);
-        if (attribute != null) {
+        if (attribute != null)
             attribute = (Attribute) composeStack.pop();
-        }
+
         renderAttribute(container, ignore, attribute, request);
-        if (flush) {
+        if (flush)
             request.getWriter().flush();
-        }
+
     }
 
     /**
@@ -182,16 +182,16 @@ public class InsertAttributeModel {
     private void renderAttribute(TilesContainer container, boolean ignore,
             Attribute attribute, Request request) throws IOException {
         try {
-            if (attribute == null && ignore) {
+            if (attribute == null && ignore)
                 return;
-            }
+
             container.render(attribute, request);
         } catch (IOException | RuntimeException e) {
-            if (!ignore) {
+            if (!ignore)
                 throw e;
-            } else if (log.isDebugEnabled()) {
+            else if (log.isDebugEnabled())
                 log.debug("Ignoring exception", e);
-            }
+
         } finally {
             container.endContext(request);
         }

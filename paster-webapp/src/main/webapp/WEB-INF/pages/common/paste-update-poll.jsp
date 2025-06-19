@@ -15,6 +15,12 @@
     limitations under the License.
 
 --%>
+
+<%--
+
+    Renders counter of new pastas since page been loaded
+--%>
+
 <%@ include file="/WEB-INF/pages/common/taglibs.jsp"%>
 
 <div id="newPastasCountBlock" class="row" style="display: none;">
@@ -34,6 +40,8 @@
         
 <script type="text/javascript">
 
+    const currentDt  = Date.now();
+
     function checkNewPastas() {
         const xmlhttp = new XMLHttpRequest();
         const cb = document.getElementById('newPastasCountBlock');
@@ -42,18 +50,18 @@
                if (xmlhttp.status == 200) {
                   const obj = JSON.parse(xmlhttp.responseText, true);
                         const pcount = obj['count'];
-                        if (pcount>0) {
-                            cb = document.getElementById('newPastasCountBlock');
+                        if (pcount && pcount > 0) {
                             cb.style.display='';
-                            cb.text = pcount;
+                            cb.innerText = pcount;
                           	Tinycon.setBubble(pcount);
                         }
                } else {
-                    cb.text= 'Sorry, your request failed :(';
+                    cb.text= 'Request failed :(';
                }
             }
         };
-        xmlhttp.open("GET", '${ctx}/main/paste/count/form/'+new Date().getTime()+'.json', true);
+
+        xmlhttp.open("GET", '${ctx}/main/paste/count/form/'+currentDt+'.json', true);
         xmlhttp.send();
     }
 

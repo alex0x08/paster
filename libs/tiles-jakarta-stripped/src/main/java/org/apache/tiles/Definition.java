@@ -19,17 +19,19 @@
  * under the License.
  */
 package org.apache.tiles;
+
 import static org.apache.tiles.CompareUtil.*;
 
 import java.util.Map;
+
 /**
  * A definition, i.e. a template with (completely or not) filled attributes.
  * Attributes of a template can be defined with the help of this class.<br>
  * It can be used as a data transfer object used for registering new
  * definitions with the Container.
  *
- * @version $Rev: 832840 $ $Date: 2009-11-05 05:44:25 +1100 (Thu, 05 Nov 2009) $
  * @since Tiles 2.0
+ * @version $Rev: 832840 $ $Date: 2009-11-05 05:44:25 +1100 (Thu, 05 Nov 2009) $
  */
 public class Definition extends BasicAttributeContext {
     /**
@@ -40,11 +42,13 @@ public class Definition extends BasicAttributeContext {
      * Definition name.
      */
     protected String name = null;
+
     /**
      * Constructor.
      */
     public Definition() {
     }
+
     /**
      * Copy Constructor.
      * Create a new definition initialized with parent definition.
@@ -58,20 +62,22 @@ public class Definition extends BasicAttributeContext {
         this.name = definition.name;
         this.inherit = definition.inherit;
     }
+
     /**
      * Constructor.
-     *
-     * @param name              The name of the definition.
+     * @param name The name of the definition.
      * @param templateAttribute The template attribute of the definition.
-     * @param attributes        The attribute map of the definition.
+     * @param attributes The attribute map of the definition.
+     *
      * @since 2.1.2
      */
     public Definition(String name, Attribute templateAttribute,
-                      Map<String, Attribute> attributes) {
+                               Map<String, Attribute> attributes) {
         super(attributes);
         this.name = name;
         this.templateAttribute = templateAttribute;
     }
+
     /**
      * Access method for the name property.
      *
@@ -80,6 +86,7 @@ public class Definition extends BasicAttributeContext {
     public String getName() {
         return name;
     }
+
     /**
      * Sets the value of the name property.
      *
@@ -88,6 +95,7 @@ public class Definition extends BasicAttributeContext {
     public void setName(String aName) {
         name = aName;
     }
+
     /**
      * Set extends.
      *
@@ -96,6 +104,7 @@ public class Definition extends BasicAttributeContext {
     public void setExtends(String name) {
         inherit = name;
     }
+
     /**
      * Get extends.
      *
@@ -104,25 +113,23 @@ public class Definition extends BasicAttributeContext {
     public String getExtends() {
         return inherit;
     }
-    /**
-     * {@inheritDoc}
-     */
+
+
+
+    /** {@inheritDoc} */
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof Definition def)) {
-            return false;
-        }
-        return nullSafeEquals(name, def.name)
+        return obj instanceof Definition def && nullSafeEquals(name, def.name)
                 && nullSafeEquals(inherit, def.inherit) && super.equals(def);
     }
-    /**
-     * {@inheritDoc}
-     */
+
+    /** {@inheritDoc} */
     @Override
     public int hashCode() {
         return nullSafeHashCode(name) + nullSafeHashCode(inherit)
                 + super.hashCode();
     }
+
     /**
      * Get extends flag.
      *
@@ -131,6 +138,7 @@ public class Definition extends BasicAttributeContext {
     public boolean isExtending() {
         return inherit != null;
     }
+
     /**
      * Returns a description of the attributes.
      *
@@ -139,8 +147,8 @@ public class Definition extends BasicAttributeContext {
     @Override
     public String toString() {
         return "{name=%s, template=%s, role=%s, preparerInstance=%s, attributes=%s}"
-                .formatted(name, templateAttribute != null ? templateAttribute.getValue() : "<null>",
-                        templateAttribute != null ? templateAttribute.getRoles() : "<null>",
-                        preparer, attributes);
+                .formatted(name, templateAttribute != null ? templateAttribute.getValue()
+                        : "<null>", templateAttribute != null ? templateAttribute.getRoles()
+                        : "<null>", preparer, attributes);
     }
 }

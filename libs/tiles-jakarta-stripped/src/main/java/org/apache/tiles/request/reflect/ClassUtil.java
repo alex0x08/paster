@@ -54,9 +54,9 @@ public final class ClassUtil {
                                                   Class<T> baseClass) throws ClassNotFoundException {
         ClassLoader classLoader = Thread.currentThread()
                 .getContextClassLoader();
-        if (classLoader == null) {
+        if (classLoader == null)
             classLoader = ClassUtil.class.getClassLoader();
-        }
+
         return Class.forName(className, true, classLoader)
                 .asSubclass(baseClass);
     }
@@ -89,20 +89,20 @@ public final class ClassUtil {
             Class<?> namedClass = getClass(className, Object.class);
             return namedClass.getDeclaredConstructor().newInstance();
         } catch (ClassNotFoundException e) {
-            if (returnNull) {
+            if (returnNull)
                 return null;
-            }
+
             throw new CannotInstantiateObjectException(
-                    "Unable to resolve factory class: '" + className + "'", e);
+                    "Unable to resolve factory class: '%s'".formatted(className), e);
         } catch (IllegalAccessException e) {
             throw new CannotInstantiateObjectException(
                     "Unable to access factory class: '%s'".formatted(className), e);
         } catch (InstantiationException | NoSuchMethodException
-                 | SecurityException | IllegalArgumentException
-                 | InvocationTargetException e) {
+                 | SecurityException | IllegalArgumentException |
+                 InvocationTargetException e) {
             throw new CannotInstantiateObjectException(
-                    ("Unable to instantiate factory class: '%s'. " +
-                            "Make sure that this class has a default constructor").formatted(className),
+                    "Unable to instantiate factory class: '%s'. Make sure that this class has a default constructor"
+                            .formatted(className),
                     e);
         }
     }
@@ -120,13 +120,12 @@ public final class ClassUtil {
         try {
             info = Introspector.getBeanInfo(clazz);
         } catch (Exception ex) {
-            if (log.isDebugEnabled()) {
-                log.debug("Cannot inspect class " + clazz, ex);
-            }
+            if (log.isDebugEnabled())
+                log.debug("Cannot inspect class " +clazz, ex);
         }
-        if (info == null) {
+        if (info == null)
             return;
-        }
+
         for (PropertyDescriptor pd : info.getPropertyDescriptors()) {
             pd.setValue("type", pd.getPropertyType());
             pd.setValue("resolvableAtDesignTime", Boolean.TRUE);

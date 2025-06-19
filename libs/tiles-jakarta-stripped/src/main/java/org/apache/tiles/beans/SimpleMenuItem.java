@@ -119,18 +119,18 @@ public class SimpleMenuItem implements MenuItem, Serializable {
     @Override
     public String toString() {
         StringBuilder buff = new StringBuilder("SimpleMenuItem[");
-        if (getValue() != null) {
+        if (getValue() != null)
             buff.append("value=").append(getValue()).append(", ");
-        }
-        if (getLink() != null) {
+
+        if (getLink() != null)
             buff.append("link=").append(getLink()).append(", ");
-        }
-        if (getTooltip() != null) {
+
+        if (getTooltip() != null)
             buff.append("tooltip=").append(getTooltip()).append(", ");
-        }
-        if (getIcon() != null) {
+
+        if (getIcon() != null)
             buff.append("icon=").append(getIcon()).append(", ");
-        }
+
         buff.append("]");
         return buff.toString();
     }

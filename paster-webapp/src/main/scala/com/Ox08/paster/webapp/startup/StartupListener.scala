@@ -26,53 +26,9 @@ import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.context.support.SpringBeanAutowiringSupport
 import org.springframework.web.servlet.i18n.SessionLocaleResolver
 import java.security.SecureRandom
+
 /**
- *  This is Paster's startup listener, used for initialization and internal checks.
- */
-class StartupListener extends ServletContextListener with Logged {
-  /**
-   * Second step initialization.
-   * Triggers on ServletContext's initialization success, but AFTER Spring  & Hibernate.
-   * So when this listener starts - almost everything is already wired-up.
-   * @param event
-   */
-  override def contextInitialized(event: ServletContextEvent): Unit = {
-    // Check for installation mark
-    // Only if Paster was installed correctly - try to continue boot.
-    if (Boot.BOOT.getSystemInfo.isInstalled) {
-      // create boot context
-      val bootContext = new BootContext()
-      SpringBeanAutowiringSupport
-        .processInjectionBasedOnServletContext(bootContext, event.getServletContext)
-      try {
-        // setup default locale
-        bootContext.localeResolver.setDefaultLocale(Boot.BOOT.getSystemInfo.getSystemLocale)
-        setupSecurityContext() // setup security context
-        bootContext.users.loadUsers()
-        logger.info("boot completed successfully.")
-      } catch {
-        case e@(_: java.io.IOException) => logger.error(e.getLocalizedMessage, e)
-          throw e; // to stop application
-      }
-    }
-  }
-  override def contextDestroyed(servletContextEvent: ServletContextEvent): Unit = {
-    // not used
-  }
-  private def setupSecurityContext(): Unit = {
-    val start_user = new PasterUser("System", "system",
-      //fake password
-      Md5Crypt.md5Crypt(SecureRandom.getSeed(20)),java.util.Set.of(Role.ROLE_ADMIN))
-    // log user in automatically
-    val auth = new UsernamePasswordAuthenticationToken("start", "start",
-      start_user.getAuthorities())
-    auth.setDetails(start_user)
-    SecurityContextHolder.getContext.setAuthentication(auth)
-  }
-}
-/**
- * A DTO class, with dependencies wired up by Spring at runtime.
- * Used during initialization process.
+ * Stores Spring services, used during boot process
  */
 class BootContext {
   @Autowired
@@ -81,4 +37,50 @@ class BootContext {
   val pasteDao: PasteDao = null
   @Autowired
   val localeResolver: SessionLocaleResolver = null
+}
+
+/**
+ * Servlet Listener, used to configure Paster app on start
+ * @since 1.0
+ * @author 0x08
+ */
+class StartupListener extends ServletContextListener with Logged {
+  override def contextInitialized(event: ServletContextEvent): Unit = {
+    // do not process, if Paster is not installed yet
+    if (!Boot.BOOT.getSystemInfo.isInstalled)
+        return
+
+    // mark that Paster has been installed
+    event.getServletContext.setAttribute("pasterInstalled",true)
+    // build startup context
+    val bootContext = new BootContext()
+    SpringBeanAutowiringSupport
+        .processInjectionBasedOnServletContext(bootContext, event.getServletContext)
+    try {
+        // setup default locale
+        bootContext.localeResolver.setDefaultLocale(Boot.BOOT.getSystemInfo.getSystemLocale)
+        setupSecurityContext() // setup security context
+        bootContext.users.loadUsers()
+        logger.info("db generation completed successfully.")
+    } catch {
+        case e@(_: java.io.IOException) =>
+          logger.error(e.getLocalizedMessage, e)
+          throw e; // to stop application
+    }
+  }
+  override def contextDestroyed(servletContextEvent: ServletContextEvent): Unit = {
+    // not used
+  }
+  private def setupSecurityContext(): Unit = {
+    // this is system user, used during initial setup process
+    val start_user = new PasterUser("System", "system",
+      // generate fake password
+      Md5Crypt.md5Crypt(SecureRandom.getSeed(20)),
+      java.util.Set.of(Role.ROLE_ADMIN))
+    // log user in automatically
+    val auth = new UsernamePasswordAuthenticationToken(
+      "start", "start", start_user.getAuthorities())
+    auth.setDetails(start_user)
+    SecurityContextHolder.getContext.setAuthentication(auth)
+  }
 }

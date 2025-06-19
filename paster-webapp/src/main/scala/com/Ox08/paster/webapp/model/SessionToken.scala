@@ -14,18 +14,21 @@
  * limitations under the License.
  */
 package com.Ox08.paster.webapp.model
-import jakarta.persistence._
+import jakarta.persistence.{Column, Entity, Id, Table}
 import jakarta.validation.constraints.{NotNull, Size}
+import java.time.LocalDate
 
-import java.util.Date
-/**
- * User session's authentication token.
- * This is used to persist session and automatically log-in user if session exists in database and not expired.
- *
- */
+
 object SessionToken {
+  // max 'user agent' header length
+  // we use it as part of user details to generate session key
   private val MAX_USER_AGENT_LEN = 255
 }
+/**
+ * JPA entity, used to store sessions in database
+ * @since 1.0
+ * @author 0x08
+ */
 @Entity
 @Table(name = "P_USER_SESSIONS")
 class SessionToken extends java.io.Serializable {
@@ -35,8 +38,7 @@ class SessionToken extends java.io.Serializable {
   @Column(name = "token_val")
   var tokenValue: String = _
   @Column(name = "token_dt")
-  @Temporal(TemporalType.TIMESTAMP)
-  var tokenDate: Date = _
+  var tokenDate: LocalDate = _
   //an IPV6 address max length is 39 characters
   @Size(min = 0, max = 39)
   @Column(name = "ipaddr")
@@ -47,8 +49,9 @@ class SessionToken extends java.io.Serializable {
   var username: String = _
   def getUserAgent: String = userAgent
   def setUserAgent(userAgent: String): Unit = {
-    if (userAgent!=null && userAgent.length() >= SessionToken.MAX_USER_AGENT_LEN) {
+    if (userAgent.length() >= SessionToken.MAX_USER_AGENT_LEN)
       this.userAgent = userAgent.substring(0, SessionToken.MAX_USER_AGENT_LEN - 1)
-    } else { this.userAgent = userAgent }
+    else
+      this.userAgent = userAgent
   }
 }

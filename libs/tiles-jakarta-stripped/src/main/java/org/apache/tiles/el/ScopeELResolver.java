@@ -19,11 +19,11 @@
  * under the License.
  */
 package org.apache.tiles.el;
+import java.util.Map;
+
 import jakarta.el.ELContext;
 import jakarta.el.ELResolver;
 import org.apache.tiles.request.Request;
-
-import java.util.Map;
 /**
  * Resolves beans in request, session and application scope.
  *
@@ -41,56 +41,24 @@ public class ScopeELResolver extends ELResolver {
     @Override
     public Class<?> getCommonPropertyType(ELContext context, Object base) {
         // only resolve at the root of the context
-        if (base != null) {
-            return null;
-        }
-        return Map.class;
+        return base != null ? null : Map.class;
     }
-    /*
-     * {@inheritDoc}
-     *
-    @Override
-    public Iterator<FeatureDescriptor> getFeatureDescriptors(ELContext context,
-                                                             Object base) {
-        if (base != null) {
-            return Collections.emptyIterator();
-        }
-        List<FeatureDescriptor> list = new ArrayList<>();
-        Request request = (Request) context
-                .getContext(Request.class);
-        for (String scope : request.getAvailableScopes()) {
-            FeatureDescriptor descriptor = new FeatureDescriptor();
-            descriptor.setDisplayName(scope + "Scope");
-            descriptor.setExpert(false);
-            descriptor.setHidden(false);
-            descriptor.setName(scope + "Scope");
-            descriptor.setPreferred(true);
-            descriptor.setShortDescription("");
-            descriptor.setValue("type", Map.class);
-            descriptor.setValue("resolvableAtDesignTime", Boolean.FALSE);
-            list.add(descriptor);
-        }
-        return list.iterator();
-    }*/
     /**
      * {@inheritDoc}
      */
     @Override
     public Class<?> getType(ELContext context, Object base, Object property) {
-        if (base != null || !(property instanceof String)
-                || !((String) property).endsWith("Scope")) {
-            return null;
-        }
-        return Map.class;
+        return base != null || !(property instanceof String s)
+                || !s.endsWith("Scope") ? null : Map.class;
     }
     /**
      * {@inheritDoc}
      */
     @Override
     public Object getValue(ELContext context, Object base, Object property) {
-        if (base != null) {
+        if (base != null)
             return null;
-        }
+
         Object retValue = null;
         String propertyString = (String) property;
         if (property != null && propertyString.endsWith("Scope")) {
@@ -99,9 +67,9 @@ public class ScopeELResolver extends ELResolver {
             retValue = request.getContext(propertyString.substring(0,
                     propertyString.length() - SUFFIX_LENGTH));
         }
-        if (retValue != null) {
+        if (retValue != null)
             context.setPropertyResolved(true);
-        }
+
         return retValue;
     }
     /**
@@ -109,9 +77,9 @@ public class ScopeELResolver extends ELResolver {
      */
     @Override
     public boolean isReadOnly(ELContext context, Object base, Object property) {
-        if (context == null) {
+        if (context == null)
             throw new NullPointerException();
-        }
+
         return true;
     }
     /**

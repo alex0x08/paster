@@ -16,58 +16,70 @@
 package com.Ox08.paster.webapp.startup
 import com.Ox08.paster.webapp.base.{Boot, Logged, SystemError, SystemMessage}
 import jakarta.servlet.{ServletContextEvent, ServletContextListener}
+import org.slf4j.{Logger, LoggerFactory}
 
 import java.io.{File, IOException}
 import java.util.Locale
+
 /**
- * First step initialization listener
+ * This servlet listener used to read configuration properties and put them into environment,
+ * so loaded *before* Spring and other frameworks
+ * @since 1.0
+ * @author 0x08
  */
-class SystemPropertiesListener extends ServletContextListener with Logged {
-  /**
-   * Triggers on ServletContext initialization, but before Spring/Hibernate.
-   * @param event
-   */
+class SystemPropertiesListener extends ServletContextListener {
+  object SystemConstants {
+    val APP_BASE: String = ".apps"
+    val APP_NAME = "paster"
+  }
   override def contextInitialized(event: ServletContextEvent): Unit = {
     try {
-      // do initial checks & home folder preparations
+      // execute boot sequence
       doBoot()
-      // set temp folders
+      // then setup logger
+      val logger: Logger = LoggerFactory.getLogger(getClass.getName)
+      // configure 'scratch dir', used for JSP compiler
       val scratchDir = new File(Boot.BOOT.getSystemInfo.getTempDir,"servletTmp")
-      event.getServletContext.setAttribute("javax.servlet.context.tempdir", scratchDir)
+      if (!scratchDir.exists() && !scratchDir.mkdirs())
+        throw new RuntimeException(s"Cannot create scratchDir: ${scratchDir.getAbsolutePath}")
+      // set scratch dir as context attribute
       event.getServletContext.setAttribute("jakarta.servlet.context.tempdir",scratchDir)
+
+      val apiKey=  Boot.BOOT.getSystemInfo.getSetting("paster.api.key",null)
+      if (apiKey!=null) {
+        event.getServletContext.setAttribute("pasterApiKey",apiKey)
+      }
+
+      // setup Spring profiles
       var springProfiles = ""
-      /**
-       * We have 2 different groups of settings, depend on installation mark.
-       * If Paster has been installed correctly - load 'main' profile, with database and continue to boot.
-       * Otherwise - load 'setup' profile and Paster will show 'installation' page.
-       */
-      if (Boot.BOOT.getSystemInfo.isInstalled) {
+      // if Paster is installed - use 'main' profile
+      if (Boot.BOOT.getSystemInfo.isInstalled)
         springProfiles += "main"
-        /**
-         * Access mode.
-         * 'public' - load additional profile with 'public profile' settings
-         * 'private' - .. 'private profile' settings
-         *
-         */
-        if ("public".equals(Boot.BOOT.getSystemInfo
-          .getSetting("paster.security.access.mode", "private")))
-          springProfiles += ",paster-security-public"
-        else
-          springProfiles += ",paster-security-private"
-      } else
+      // otherwise use 'setup' profile
+      else
         springProfiles += "setup"
+      // select Spring Security profile
+      if ("public".equals(Boot.BOOT.getSystemInfo
+        .getSetting("paster.security.access.mode", "private")))
+        springProfiles += ",paster-security-public"
+      else
+        springProfiles += ",paster-security-private"
       System.setProperty("spring.profiles.active", springProfiles)
-      // unique seed, used to randomize urls
+      // this property is used as 'seed' in URLs, to have unique resource URLs for resources
       System.setProperty("paste.app.id", System.currentTimeMillis().toString)
-      logger.info("application home: {} ,profiles: {} , current locale: {}",
-        System.getProperty("paster.app.home"),
-        springProfiles,Locale.getDefault)
-    } catch { case e: IOException => throw new RuntimeException(e) }
+
+      logger.info("profiles: {} ,current locale: {} ,application home: {}",
+        springProfiles,
+        Locale.getDefault, System.getProperty("paster.app.home"))
+    } catch {
+      case e: IOException =>
+        throw new RuntimeException(e)
+    }
   }
   override def contextDestroyed(servletContextEvent: ServletContextEvent): Unit = {}
   private def doBoot(): Unit = {
     // re-initialize parent logger
-    //SLF4JBridgeHandler.removeHandlersForRootLogger()
+    //org.slf4j.bridge.SLF4JBridgeHandler.removeHandlersForRootLogger()
     // re-install parent logger
     //SLF4JBridgeHandler.install()
     // use English locale as default
@@ -85,12 +97,5 @@ class SystemPropertiesListener extends ServletContextListener with Logged {
     //SystemError.instance.addBundle("bundles/errorMessagesWeb")
     //SystemMessage.instance.addBundle("bundles/systemMessagesWeb")
     System.setProperty("org.jboss.logging.provider", "slf4j")
-  }
-  /**
-   * Holds global constants
-   */
-  object SystemConstants {
-    val APP_BASE: String = ".apps"
-    val APP_NAME = "paster"
   }
 }

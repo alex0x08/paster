@@ -111,8 +111,12 @@
    </div>
     <div class="row mb-3">
            <div class="col-auto">
+
             <c:url var="checkUrl" value='/main/setup/checkConnection' />
-                <button type="submit" formaction="${checkUrl}" class="btn btn-danger btn-sm">
+
+                <button type="submit"
+                        formaction="${checkUrl}"
+                        class="btn btn-danger btn-sm">
                     <i class="fa fa-database" aria-hidden="true"></i>
                     <fmt:message key='paster.setup.step.db.tryConnect'/>
                 </button>
@@ -145,7 +149,7 @@
                               driver = el.getAttribute('x-driver-class'),
                               origName = el.getAttribute('x-name');
 
-                        console.log('editable:',editable, 'url: ',dbUrl,'driver: ',driver)
+                        // console.log('editable:',editable, 'url: ',dbUrl,'driver: ',driver)
 
                         const elUrl = document.getElementById('dbUrl'),
                               elDriver = document.getElementById('dbDriver'),
@@ -158,17 +162,20 @@
                         toggleDisabled([elUrl,
                                         elDriver,
                                         document.getElementById('dbUser'),
-                                        document.getElementById('dbPassword')],editable == 'false');
+                                        document.getElementById('dbPassword')],
+                                        editable == 'false');
 
                  }
     }
 
     window.addEventListener('load', function () {
+
         document.getElementById('showHidePasswdLnk')
             .addEventListener("click", function (event) {
                             event.preventDefault();
                             showHidePassword(document.getElementById('dbPassword'));
                           });
+
         var once=true;
         Array.from(document.getElementsByClassName("driverInput")).forEach(
             function (el, i, array) {

@@ -43,30 +43,25 @@ public class SessionScopeExtractor implements AttributeExtractor {
     }
     @Override
     public void removeValue(String name) {
-        if (context.getSession() == null) {
+        if (context.getSession() == null)
             return;
-        }
+
         context.removeAttribute(name, PageContext.SESSION_SCOPE);
     }
     @Override
     public Enumeration<String> getKeys() {
-        if (context.getSession() == null) {
-            return null;
-        }
-        return context.getAttributeNamesInScope(PageContext.SESSION_SCOPE);
+        return context.getSession() == null ? null
+                : context.getAttributeNamesInScope(PageContext.SESSION_SCOPE);
     }
     @Override
     public Object getValue(String key) {
-        if (context.getSession() == null) {
-            return null;
-        }
-        return context.getAttribute(key, PageContext.SESSION_SCOPE);
+        return context.getSession() == null ? null
+                : context.getAttribute(key, PageContext.SESSION_SCOPE);
     }
     @Override
     public void setValue(String key, Object value) {
-        if (context.getSession() == null) {
+        if (context.getSession() == null)
             return;
-        }
         context.setAttribute(key, value, PageContext.SESSION_SCOPE);
     }
 }

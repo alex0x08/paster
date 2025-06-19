@@ -28,15 +28,6 @@ package org.apache.tiles;
  * @since 2.1.0
  */
 public class NoSuchContainerException extends TilesException {
-
-    /**
-     * Constructor.
-     *
-     * @since 2.1.0
-     */
-    public NoSuchContainerException() {
-    }
-
     /**
      * Constructor.
      *
@@ -46,26 +37,4 @@ public class NoSuchContainerException extends TilesException {
     public NoSuchContainerException(String message) {
         super(message);
     }
-
-    /**
-     * Constructor.
-     *
-     * @param e The exception to be wrapped.
-     * @since 2.1.0
-     */
-    public NoSuchContainerException(Throwable e) {
-        super(e);
-    }
-
-    /**
-     * Constructor.
-     *
-     * @param message The detail message.
-     * @param e The exception to be wrapped.
-     * @since 2.1.0
-     */
-    public NoSuchContainerException(String message, Throwable e) {
-        super(message, e);
-    }
-
 }

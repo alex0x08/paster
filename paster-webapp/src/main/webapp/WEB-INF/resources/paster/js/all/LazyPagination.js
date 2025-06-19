@@ -40,13 +40,13 @@ class LazyPagination {
 	options = {
 		maxRequests: 5,
 		pageDataIndex: 'page',
-		idKey: 'id',
+		idKey: 'page',
 		data: { page: 2, modelId: 0 },
 		skipMeasure: function() { return false },
 		afterAppend: function () { },
 		beforeLoad: function () { },
 		idSet: new Array(),
-		idMode: false,
+
 		navigation: false,
 		inject: false
 	}
@@ -99,8 +99,9 @@ class LazyPagination {
 			if (this.options.idMode) {
 				this.options.data[this.options.idKey] = this.options.idSet[this.options.data[this.options.pageDataIndex]];
 			}
-			//
-			this.xmlhttp.open(this.options.method, this.options.url + '?id=' + this.options.data[this.options.idKey], true);
+			const furl = this.options.url + '?'+this.options.idKey+'=' + this.options.data[this.options.idKey];
+			console.log('furl:',furl);
+			this.xmlhttp.open(this.options.method, furl, true);
 			this.xmlhttp.send();
 		}
 	}

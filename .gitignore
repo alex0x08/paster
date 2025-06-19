@@ -2,7 +2,7 @@
 *.jar
 *.war
 target
-*/.idea/*
+.idea
 *.iml
 nb*.xml
-/paster-webapp/node_modules/
+

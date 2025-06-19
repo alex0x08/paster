@@ -18,41 +18,55 @@ import com.Ox08.paster.webapp.base.Logged
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute
 import jakarta.persistence._
-import org.hibernate.annotations.GenericGenerator
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField
 import java.time.{LocalDateTime, ZoneId}
 import java.util.{Date, Objects}
+
 object Struct extends Logged {
+  // here we store set of terms, used for full-text searching
   protected val terms: List[String] = List[String]("id", "name")
+  // abstract builder, used to construct this object
   abstract class Builder[T <: java.io.Serializable](obj: T) extends Logged {
     def get(): T = obj
   }
 }
-/**
- * Struct model, have lastModified  field
- */
 trait SearchObject {
   def terms(): List[String]
 }
+/**
+ * Struct model, contains 'lastModified' and 'created'  fields
+ * @since 1.0
+ * @author 0x08
+ */
 @MappedSuperclass
-abstract class Struct extends DBObject with SearchObject with java.io.Serializable {
+abstract class Struct extends DBObject
+            with SearchObject with java.io.Serializable {
   @Column(name = "last_modified")
-  @Temporal(TemporalType.TIMESTAMP)
   @GenericField
   @XStreamAsAttribute
-  var lastModified: LocalDateTime = _
+  var lastModified: LocalDateTime = _ // stores date & time of last modification
   @Column(name = "created")
-  @Temporal(TemporalType.TIMESTAMP)
   @GenericField
   @XStreamAsAttribute
-  val created: LocalDateTime = LocalDateTime.now()
+  val created: LocalDateTime = LocalDateTime.now() // stores creation date & time
+
+  /**
+   * Triggers before persist or merge, used to update modification dates
+   */
   @PrePersist
   @PreUpdate
   def touch(): Unit = {
     lastModified = LocalDateTime.now()
     if (Struct.logger.isDebugEnabled)
-      Struct.logger.debug("set lastModified to {} objId={}",lastModified,id)
+      Struct.logger.debug("set lastModified to {} objId={}",lastModified,getId)
   }
+
+  /**
+   * Provides 'last modified' date as java.util.Date,
+   * which is used on JSP page by fmt.formatDate function
+   * @return
+   *    date&time of last modification as java.util.Date object
+   */
   def getLastModifiedDt: Date =
     if (lastModified == null.asInstanceOf[LocalDateTime])
       null
@@ -70,36 +84,41 @@ abstract class Struct extends DBObject with SearchObject with java.io.Serializab
   def terms(): List[String] = Struct.terms
   def loadFull(): Unit = {}
 }
+
 /**
- * Most parent entity class
+ * Abstract database entity
+ * @since 1.0
+ * @author 0x08
  */
 @MappedSuperclass
 abstract class DBObject extends java.io.Serializable {
-  /**
-   * Primary key.
-   *
-   */
-  @Id
-  @GeneratedValue(generator = "AllSequenceStyleGenerator")
-  @GenericGenerator(name = "AllSequenceStyleGenerator",
-    `type` = classOf[org.hibernate.id.enhanced.SequenceStyleGenerator]
-  )
   @XStreamAsAttribute
-  var id: Integer = _
+  var disabled: Boolean = _ // if true - record is disabled (ex. user entity)
+
+  def getId: Integer
+  def setId(id:Integer): Unit
   /**
-   * sign that record is disabled
+   * Check if record has not been persisted yet by
+   * simply compare id with null
+   * @return
+   *    if true - record is not yet persisted in database
    */
-  @XStreamAsAttribute
-  var disabled: Boolean = _
   @JsonIgnore
-  def isBlank: Boolean = id == null
+  def isBlank: Boolean = getId == null
   override def hashCode(): Int = {
     var hash: Int = 53 * 7
-    if (id != null)
-      hash += Objects.hashCode(id)
+    if (getId != null)
+      hash += Objects.hashCode(getId)
     hash
   }
+
+  /**
+   * Equality is based only on id check, no any other fields will be compared
+   * @param from
+   * @return
+   */
   override def equals(from: Any): Boolean =
-    from.isInstanceOf[DBObject] && !isBlank && from.asInstanceOf[DBObject].id.equals(id)
+    from.isInstanceOf[DBObject] && !isBlank &&
+                          from.asInstanceOf[DBObject].getId.equals(getId)
 }
 

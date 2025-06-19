@@ -26,6 +26,7 @@
         <developer>
             <name>Alex Chernyshev</name>
             <timezone>GMT+4</timezone>
+            <email>alex3.145@gmail.com</email>
         </developer>
     </developers>
     <licenses>
@@ -33,88 +34,59 @@
             <name>Apache License, Version 2.0</name>
             <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
             <distribution>repo</distribution>
+
         </license>
     </licenses>
     <properties>
+        <revision>3.0.00-RELEASE</revision>
+
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.test.skip>true</maven.test.skip>
-        <maven.compiler.source>19</maven.compiler.source>
-        <maven.compiler.release>19</maven.compiler.release>
-        <scalaVersion>2.13.13</scalaVersion>
-        <spring.version>6.1.4</spring.version>
-        <slf4j.version>2.0.9</slf4j.version>
-        <jakartaEEVersion>10.0.0</jakartaEEVersion>
-        <revision>2.1.06-RELEASE</revision>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <maven.compiler.release>17</maven.compiler.release>
+        <scalaVersion>2.13.16</scalaVersion>
+        <spring.version>6.2.7</spring.version>
+        <slf4j.version>2.0.17</slf4j.version>
+        <logback.version>1.5.18</logback.version>
+        <jackson.version>2.19.0</jackson.version>
+        <jakartaEEVersion>11.0.0</jakartaEEVersion>
+        <jetty.version>12.0.22</jetty.version>
+        <build-helper-maven-plugin.version>3.6.0</build-helper-maven-plugin.version>
+        <buildnumber-maven-plugin.version>3.2.1</buildnumber-maven-plugin.version>
         <main.basedir>${basedir}</main.basedir>
         <netbeans.hint.license>apache20</netbeans.hint.license>
-        <!-- plugins -->
-        <maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
-        <buildnumber-maven-plugin.version>3.0.0</buildnumber-maven-plugin.version>
-        <maven-war-plugin.version>3.3.2</maven-war-plugin.version>
-        <scala-maven-plugin.version>4.8.1</scala-maven-plugin.version>
-        <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
-        <maven-jar-plugin.version>3.3.0</maven-jar-plugin.version>
-        <properties-maven-plugin.version>1.1.0</properties-maven-plugin.version>
-        <git-commit-id-plugin.version>4.9.10</git-commit-id-plugin.version>
-        <flatten-maven-plugin.version>1.4.1</flatten-maven-plugin.version>
-        <maven-assembly-plugin.version>3.6.0</maven-assembly-plugin.version>
-        <maven-dependency-plugin.version>3.5.0</maven-dependency-plugin.version>
-        <build-helper-maven-plugin.version>3.3.0</build-helper-maven-plugin.version>
-        <license-maven-plugin.version>4.1</license-maven-plugin.version>
     </properties>
     <modules>
-        <module>libs/spring-tiles3</module>
-        <module>libs/tiles-jakarta-stripped</module>
+        <module>libs</module>        
         <module>paster-webapp</module>
         <module>paster-run</module>
         <module>paster-dist</module>
       </modules>
     <pluginRepositories>
-        <pluginRepository>
-            <id>spring-milestones</id>
-            <name>Spring Milestones</name>
-            <url>https://repo.spring.io/milestone</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </pluginRepository>
-        <pluginRepository>
-            <id>spring-snapshots</id>
-            <name>Spring Snapshots</name>
-            <url>https://repo.spring.io/snapshot</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-        </pluginRepository>
+
     </pluginRepositories>
     <repositories>
         <repository>
-            <id>spring-milestones</id>
-            <name>Spring Milestones</name>
-            <url>https://repo.spring.io/milestone</url>
             <snapshots>
-                <enabled>true</enabled>
+                <enabled>false</enabled>
             </snapshots>
+            <id>central</id>
+            <name>Maven Repository Switchboard</name>
+            <url>https://repo1.maven.org/maven2</url>
         </repository>
         <repository>
-            <id>spring-snapshots</id>
-            <name>Spring Snapshots</name>
-            <url>https://repo.spring.io/snapshot</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
+            <id>spring</id>
+            <name>Spring Release</name>
+            <url>https://maven.springframework.org/release</url>
         </repository>
-
     </repositories>
     <build>
         <plugins>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>flatten-maven-plugin</artifactId>
-                <version>${flatten-maven-plugin.version}</version>
+                <version>1.7.0</version>
                 <executions>
                     <execution>
                         <!-- Tidy up all POMs before they are published -->
@@ -136,24 +108,24 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>pl.project13.maven</groupId>
-                <artifactId>git-commit-id-plugin</artifactId>
-                <version>${git-commit-id-plugin.version}</version>
+                <groupId>io.github.git-commit-id</groupId>
+                <artifactId>git-commit-id-maven-plugin</artifactId>
+                <version>9.0.2</version>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>properties-maven-plugin</artifactId>
-                <version>${properties-maven-plugin.version}</version>
+                <version>1.2.1</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>${maven-jar-plugin.version}</version>
+                <version>3.4.2</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>${maven-compiler-plugin.version}</version>
+                <version>3.14.0</version>
                 <configuration>
                     <!--debug>true</debug>
                     <debuglevel>none</debuglevel-->
@@ -169,12 +141,10 @@
             <plugin>
                 <groupId>net.alchim31.maven</groupId>
                 <artifactId>scala-maven-plugin</artifactId>
-                <version>${scala-maven-plugin.version}</version>
+                <version>4.9.5</version>
                 <configuration>
                     <args>
-                        <arg>-unchecked</arg>
                         <arg>-deprecation</arg>
-                        <arg>-explaintypes</arg>
                         <arg>-feature</arg>
                     </args>
                 </configuration>
@@ -182,27 +152,20 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
-                <version>${maven-resources-plugin.version}</version>
+                <version>3.3.1</version>
+                <configuration>
+                    <propertiesEncoding>${project.build.sourceEncoding}</propertiesEncoding>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
-                <version>${maven-war-plugin.version}</version>
+                <version>3.4.0</version>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>buildnumber-maven-plugin</artifactId>
                 <version>${buildnumber-maven-plugin.version}</version>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <version>${maven-dependency-plugin.version}</version>
-            </plugin>
-            <plugin>
-                <groupId>com.mycila</groupId>
-                <artifactId>license-maven-plugin</artifactId>
-                <version>${license-maven-plugin.version}</version>
             </plugin>
            </plugins>
     </build>

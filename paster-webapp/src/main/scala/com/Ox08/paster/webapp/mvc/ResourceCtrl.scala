@@ -22,9 +22,11 @@ import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.{PathVariable, RequestMapping, RequestMethod, ResponseBody}
 import java.io.{FileInputStream, IOException}
 import scala.collection.mutable
+
 /**
- * Responds binaries generated at runtime.
- * Currently, its only used for Paste's previews
+ * MVC Controller, which serves static resources
+ * @since 1.0
+ * @author 0x08
  */
 @Controller
 @RequestMapping(Array("/paste-resources"))
@@ -33,18 +35,14 @@ class ResourceCtrl extends AbstractCtrl {
   private val MAX_AGE = 0
   @Autowired
   private val resourcePathHelper: ResourceManager = null
+
   /**
-   * Respond static resource
+   * Respond static resources
    * @param lastModified
-   *        file's 'last modified' timestamp, used to bypass caching
    * @param path
-   *        relative path
-   * @param pType
-   *        resource type
+   * @param ptype
    * @param response
-   *        http servlet response object
    * @return
-   *      streamed resource
    */
   @RequestMapping(
     value = Array("/{version:[a-zA-Z0-9]+}/{type:[a-z]}/{lastModified:[0-9]+}/paste_content/{path}"),
@@ -53,39 +51,36 @@ class ResourceCtrl extends AbstractCtrl {
   def getResource(
                    @PathVariable("lastModified") lastModified: Long,
                    @PathVariable("path") path: String,
-                   @PathVariable("type") pType: Char,
+                   @PathVariable("type") ptype: Char,
                    response: HttpServletResponse
                  ): InputStreamResource = {
-    if (logger.isDebugEnabled) logger.debug("get {} type: {} lm: {}", path, pType, lastModified)
-    // check the resource type
-    pType match {
-      case 't' | 'r' | 'a' | 'b' => //allow
-      case _ => writeError(response, "unknown type"); return null
+    if (logger.isDebugEnabled)
+      logger.debug("get {} type: {} lm: {}", path, ptype, lastModified)
+    ptype match {
+      case 't' | 'r' | 'a' | 'b' =>
+      //allow
+      case _ =>
+        writeError(response, "unknown type", 404)
+        return null
     }
-    val fImg = resourcePathHelper.getResource(pType, path)
-    // respond error if resource not found
-    if (fImg == null) {  writeError(response, "file not found"); return null }
-    response.setHeader("Content-Length", fImg.length().toString)
-    // we use this method only for images, so its ok to inline MIME and content-disposition
+    val fimg = resourcePathHelper.getResource(ptype, path)
+    if (fimg == null) {
+      writeError(response, "file not found", 404)
+      return null
+    }
     response.setContentType("image/png")
-    response.setHeader("Content-Disposition", s"inline;filename='${fImg.getName}'")
-    response.setDateHeader("Last-Modified", fImg.lastModified())
+    response.setHeader("Content-Length", fimg.length().toString)
+    response.setHeader("Content-Disposition", s"inline;filename='${fimg.getName}'")
+    response.setDateHeader("Last-Modified", fimg.lastModified())
     response.setDateHeader("Expires", System.currentTimeMillis + MAX_AGE)
     response.setHeader("Cache-Control", s"max-age=$MAX_AGE, public")
     response.setHeader("Pragma", "cache")
-    new InputStreamResource(new FileInputStream(fImg))
+    new InputStreamResource(new FileInputStream(fimg))
   }
-  /**
-   * Generates minimal HTML page with error response.
-   * Suppose to be 'last chance' on error reporting.
-   * @param response
-   * @param msg
-   * @throws java.io.IOException
-   */
   @throws(classOf[IOException])
-  private def writeError(response: HttpServletResponse, msg: String): Unit = {
+  private def writeError(response: HttpServletResponse, msg: String, status: Int): Unit = {
     response.setContentType("text/html;charset=UTF-8")
-    response.setStatus(404)
+    response.setStatus(status)
     val out = response.getWriter
     out.println(new mutable.StringBuilder()
       .append("<html><head><title>ERROR: ")

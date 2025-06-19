@@ -19,6 +19,7 @@
  * under the License.
  */
 package org.apache.tiles.impl;
+
 import java.io.IOException;
 import java.util.Deque;
 import java.util.LinkedList;
@@ -44,54 +45,61 @@ import org.apache.tiles.request.render.Renderer;
 import org.apache.tiles.request.render.RendererFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 /**
  * Basic implementation of the tiles container interface.
  * In most cases, this container will be customized by
  * injecting customized services, not necessarily by
  * override the container
  *
- * @version $Rev: 1330672 $ $Date: 2012-04-26 16:58:16 +1000 (Thu, 26 Apr 2012) $
  * @since 2.0
+ * @version $Rev: 1330672 $ $Date: 2012-04-26 16:58:16 +1000 (Thu, 26 Apr 2012) $
  */
 public class BasicTilesContainer implements TilesContainer,
         AttributeEvaluatorFactoryAware {
+
     /**
      * Name used to store attribute context stack.
      */
     private static final String ATTRIBUTE_CONTEXT_STACK =
-            "org.apache.tiles.AttributeContext.STACK";
+        "org.apache.tiles.AttributeContext.STACK";
+
     /**
      * Log instance for all BasicTilesContainer
      * instances.
      */
     private final Logger log = LoggerFactory
             .getLogger(BasicTilesContainer.class);
+
     /**
      * The Tiles application context object.
      */
     private ApplicationContext context;
+
     /**
      * The definitions factory.
      */
     private DefinitionsFactory definitionsFactory;
+
     /**
      * The preparer factory.
      */
     private PreparerFactory preparerFactory;
+
     /**
      * The renderer factory.
      */
     private RendererFactory rendererFactory;
+
     /**
      * The attribute evaluator.
      */
     private AttributeEvaluatorFactory attributeEvaluatorFactory;
-    /**
-     * {@inheritDoc}
-     */
+
+    /** {@inheritDoc} */
     public AttributeContext startContext(Request request) {
         AttributeContext context = new BasicAttributeContext();
-        Deque<AttributeContext> stack = getContextStack(request);
+        Deque<AttributeContext>  stack = getContextStack(request);
         if (!stack.isEmpty()) {
             AttributeContext parent = stack.peek();
             context.inheritCascadedAttributes(parent);
@@ -99,19 +107,19 @@ public class BasicTilesContainer implements TilesContainer,
         stack.push(context);
         return context;
     }
-    /**
-     * {@inheritDoc}
-     */
+
+    /** {@inheritDoc} */
     public void endContext(Request request) {
         popContext(request);
     }
-    /**
-     * {@inheritDoc}
-     */
+
+    /** {@inheritDoc} */
     public void renderContext(Request request) {
         AttributeContext attributeContext = getAttributeContext(request);
+
         render(request, attributeContext);
     }
+
     /**
      * Returns the Tiles application context used by this container.
      *
@@ -120,6 +128,7 @@ public class BasicTilesContainer implements TilesContainer,
     public ApplicationContext getApplicationContext() {
         return context;
     }
+
     /**
      * Sets the Tiles application context to use.
      *
@@ -128,9 +137,8 @@ public class BasicTilesContainer implements TilesContainer,
     public void setApplicationContext(ApplicationContext context) {
         this.context = context;
     }
-    /**
-     * {@inheritDoc}
-     */
+
+    /** {@inheritDoc} */
     public AttributeContext getAttributeContext(Request request) {
         AttributeContext context = getContext(request);
         if (context == null) {
@@ -138,6 +146,7 @@ public class BasicTilesContainer implements TilesContainer,
             pushContext(context, request);
         }
         return context;
+
     }
 
     /*
@@ -148,6 +157,7 @@ public class BasicTilesContainer implements TilesContainer,
         return definitionsFactory;
     }
      */
+
     /**
      * Set the definitions factory. This method first ensures
      * that the container has not yet been initialized.
@@ -158,14 +168,6 @@ public class BasicTilesContainer implements TilesContainer,
         this.definitionsFactory = definitionsFactory;
     }
 
-    /*
-     * Returns the preparer factory used by this container.
-     *
-     * @return return the preparerInstance factory used by this container.
-    public PreparerFactory getPreparerFactory() {
-        return preparerFactory;
-    }
-     */
     /**
      * Set the preparerInstance factory.  This method first ensures
      * that the container has not yet been initialized.
@@ -175,6 +177,7 @@ public class BasicTilesContainer implements TilesContainer,
     public void setPreparerFactory(PreparerFactory preparerFactory) {
         this.preparerFactory = preparerFactory;
     }
+
     /**
      * Sets the renderer instance factory.
      *
@@ -184,96 +187,93 @@ public class BasicTilesContainer implements TilesContainer,
     public void setRendererFactory(RendererFactory rendererFactory) {
         this.rendererFactory = rendererFactory;
     }
-    /**
-     * {@inheritDoc}
-     */
+
+    /** {@inheritDoc} */
     public void setAttributeEvaluatorFactory(
             AttributeEvaluatorFactory attributeEvaluatorFactory) {
         this.attributeEvaluatorFactory = attributeEvaluatorFactory;
     }
-    /**
-     * {@inheritDoc}
-     */
+
+    /** {@inheritDoc} */
     public void prepare(String preparer, Request request) {
         prepare(request, preparer, false);
     }
-    /**
-     * {@inheritDoc}
-     */
+
+    /** {@inheritDoc} */
     public void render(String definitionName, Request request) {
         log.debug("Render request received for definition '{}'", definitionName);
+
         Definition definition = getDefinition(definitionName, request);
-        if (definition == null) {
-            throw new NoSuchDefinitionException("Unable to find the definition '" + definitionName + "'");
-        }
+
+        if (definition == null)
+            throw new NoSuchDefinitionException("Unable to find the definition '%s'".formatted(definitionName));
+
         render(definition, request);
     }
+
     /**
      * Renders the specified definition.
-     *
      * @param definition The definition to render.
-     * @param request    The request context.
+     * @param request The request context.
      * @since 2.1.3
      */
     public void render(Definition definition, Request request) {
         AttributeContext originalContext = getAttributeContext(request);
         BasicAttributeContext subContext = new BasicAttributeContext(originalContext);
         subContext.inherit(definition);
+
         pushContext(subContext, request);
+
         try {
             render(request, subContext);
         } finally {
             popContext(request);
         }
     }
-    /**
-     * {@inheritDoc}
-     */
+
+    /** {@inheritDoc} */
     public void render(Attribute attr, Request request)
-            throws IOException {
-        if (attr == null) {
+        throws IOException {
+        if (attr == null)
             throw new CannotRenderException("Cannot render a null attribute");
-        }
+
+
         if (attr.isPermitted(request)) {
             Renderer renderer = rendererFactory.getRenderer(attr.getRenderer());
             Object value = evaluate(attr, request);
-            if (!(value instanceof String)) {
+            if (!(value instanceof String))
                 throw new CannotRenderException(
-                        "Cannot render an attribute that is not a string, toString returns: "
-                                + value);
-            }
+                        "Cannot render an attribute that is not a string, toString returns: %s".formatted(value));
+
             renderer.render((String) value, request);
         }
     }
-    /**
-     * {@inheritDoc}
-     */
+
+    /** {@inheritDoc} */
     public Object evaluate(Attribute attribute, Request request) {
         AttributeEvaluator evaluator = attributeEvaluatorFactory
                 .getAttributeEvaluator(attribute);
         return evaluator.evaluate(attribute, request);
     }
-    /**
-     * {@inheritDoc}
-     */
+
+    /** {@inheritDoc} */
     public boolean isValidDefinition(String definitionName, Request request) {
         try {
             Definition definition = getDefinition(definitionName, request);
             return definition != null;
         } catch (NoSuchDefinitionException nsde) {
-            log.debug("Cannot find definition '{}'", definitionName);
-            log.debug("Exception related to the not found definition", nsde);
+            log.debug("Cannot find definition '{}' , Exception related to the not found definition", definitionName, nsde);
             return false;
         }
     }
-    /**
-     * {@inheritDoc}
-     */
+
+    /** {@inheritDoc} */
     @Override
     public Definition getDefinition(String definitionName,
-                                    Request request) {
+            Request request) {
         return definitionsFactory.getDefinition(definitionName, request);
     }
+
     /**
      * Returns the context stack.
      *
@@ -290,20 +290,23 @@ public class BasicTilesContainer implements TilesContainer,
             contextStack = new LinkedList<>();
             requestScope.put(ATTRIBUTE_CONTEXT_STACK, contextStack);
         }
+
         return contextStack;
     }
+
     /**
      * Pushes a context object in the stack.
      *
-     * @param context      The context to push.
+     * @param context The context to push.
      * @param tilesContext The Tiles context object to use.
      * @since 2.0.6
      */
     protected void pushContext(AttributeContext context,
-                               Request tilesContext) {
+            Request tilesContext) {
         Deque<AttributeContext> contextStack = getContextStack(tilesContext);
         contextStack.push(context);
     }
+
     /**
      * Pops a context object out of the stack.
      *
@@ -314,6 +317,7 @@ public class BasicTilesContainer implements TilesContainer,
         Deque<AttributeContext> contextStack = getContextStack(tilesContext);
         contextStack.pop();
     }
+
     /**
      * Get attribute context from request.
      *
@@ -323,49 +327,52 @@ public class BasicTilesContainer implements TilesContainer,
      */
     protected AttributeContext getContext(Request tilesContext) {
         Deque<AttributeContext> contextStack = getContextStack(tilesContext);
-        if (!contextStack.isEmpty()) {
-            return contextStack.peek();
-        }
-        return null;
+        return !contextStack.isEmpty() ? contextStack.peek() : null;
     }
+
     /**
      * Execute a preparer.
      *
-     * @param context       The request context.
-     * @param preparerName  The name of the preparer.
+     * @param context The request context.
+     * @param preparerName The name of the preparer.
      * @param ignoreMissing If <code>true</code> if the preparer is not found,
-     *                      it ignores the problem.
+     * it ignores the problem.
      * @throws NoSuchPreparerException If the preparer is not found (and
-     *                                 <code>ignoreMissing</code> is not set) or if the preparer itself threw an
-     *                                 exception.
+     * <code>ignoreMissing</code> is not set) or if the preparer itself threw an
+     * exception.
      */
     private void prepare(Request context, String preparerName, boolean ignoreMissing) {
         log.debug("Prepare request received for '{}'", preparerName);
         ViewPreparer preparer = preparerFactory.getPreparer(preparerName, context);
-        if (preparer == null && ignoreMissing) {
+        if (preparer == null && ignoreMissing)
             return;
-        }
-        if (preparer == null) {
-            throw new NoSuchPreparerException("Preparer '" + preparerName + " not found");
-        }
+
+
+        if (preparer == null)
+            throw new NoSuchPreparerException("Preparer '%s not found".formatted(preparerName));
+
+
         AttributeContext attributeContext = getContext(context);
         preparer.execute(context, attributeContext);
     }
+
     /**
      * Renders the specified attribute context.
      *
-     * @param request          The request context.
+     * @param request The request context.
      * @param attributeContext The context to render.
      * @throws InvalidTemplateException If the template is not valid.
-     * @throws CannotRenderException    If something goes wrong during rendering.
+     * @throws CannotRenderException If something goes wrong during rendering.
      * @since 2.1.3
      */
     protected void render(Request request,
-                          AttributeContext attributeContext) {
+            AttributeContext attributeContext) {
+
         try {
-            if (attributeContext.getPreparer() != null) {
+            if (attributeContext.getPreparer() != null)
                 prepare(request, attributeContext.getPreparer(), true);
-            }
+
+
             render(attributeContext.getTemplateAttribute(), request);
         } catch (IOException e) {
             throw new CannotRenderException(e.getMessage(), e);

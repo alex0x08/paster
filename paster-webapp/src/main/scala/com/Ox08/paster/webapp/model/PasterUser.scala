@@ -19,44 +19,40 @@ import org.apache.commons.lang3.StringUtils
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 import java.util
+
 /**
- * Paster's user
- * Initially it was the JPA entity, now - just a class.
- *
- * All properties are filled from CSV
+ * Paster user entity
  * @param name
- *      user full name
+ *          full name
  * @param username
- *      login
+ *          login
  * @param pwd
- *      password hash
+ *          password
  * @param roles
- *    set of roles
+ *          set of roles (see below)
  */
 class PasterUser(name: String,
                  username: String,
                  var pwd: String,
                  roles: util.Set[Role]) extends UserDetails with java.io.Serializable {
-  override def isEnabled = true // if true - user is enabled
+  override def isEnabled = true // part of Spring Security's UserDetails, mean user is not disabled
   /**
+   * user not expired
    * @see org.springframework.security.userdetails.UserDetails#isAccountNonExpired()
    */
   override def isAccountNonExpired = true
   /**
+   * user account is not locked
    * @see org.springframework.security.userdetails.UserDetails#isAccountNonLocked()
    */
   override def isAccountNonLocked = true
   /**
+   * password is not expired
    * @see org.springframework.security.userdetails.UserDetails#isCredentialsNonExpired()
    */
   override def isCredentialsNonExpired = true
   def getName: String = name
   override def getPassword: String = pwd
-  /**
-   * Updates password hash
-   * @param newPass
-   *        new password
-   */
   def setPassword(newPass: String): Unit = {
     pwd = newPass
   }
@@ -69,15 +65,25 @@ class PasterUser(name: String,
   override def toString: String =
     Logged.toStringSkip(this, Array("pwd"))
 }
+
 /**
- * Same as java enum with roles constants
+ * Set of system roles
  */
 object Role {
-  // administrator role
+  // administrator with full access
   val ROLE_ADMIN = new Role("ROLE_ADMIN", "role.admin.name")
   // ordinary user
   val ROLE_USER = new Role("ROLE_USER", "role.user.name")
 }
+
+/**
+ * System role
+ *
+ * @param code
+ *          code name, ex ROLE_ADMIN
+ * @param desc
+ *          role description
+ */
 class Role(code: String, desc: String) extends GrantedAuthority {
   def getAuthority: String = code
   def getName: String = desc

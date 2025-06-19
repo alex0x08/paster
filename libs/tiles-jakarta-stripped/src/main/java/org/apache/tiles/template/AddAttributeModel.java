@@ -95,24 +95,24 @@ public class AddAttributeModel {
         ListAttribute listAttribute = (ListAttribute) ComposeStackUtil
                 .findAncestorWithClass(composeStack, ListAttribute.class);
 
-        if (listAttribute == null) {
+        if (listAttribute == null)
             throw new NullPointerException("There is no ListAttribute in the stack");
-        }
+
         if (value != null) {
             attribute.setValue(value);
         } else if (attribute.getValue() == null && body != null) {
             attribute.setValue(body);
         }
-        if (expression != null) {
+        if (expression != null)
             attribute.setExpressionObject(Expression
                     .createExpressionFromDescribedExpression(expression));
-        }
-        if (role != null) {
+
+        if (role != null)
             attribute.setRole(role);
-        }
-        if (type != null) {
+
+        if (type != null)
             attribute.setRenderer(type);
-        }
+
         listAttribute.add(attribute);
     }
 }
