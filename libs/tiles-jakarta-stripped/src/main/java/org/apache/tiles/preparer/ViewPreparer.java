@@ -51,7 +51,7 @@ public interface ViewPreparer {
      *
      * @param tilesContext     Current tiles application context.
      * @param attributeContext Current tile context.
-     * @throws PreparerException If something goes wrong during execution.
+     * throws PreparerException If something goes wrong during execution.
      */
     void execute(Request tilesContext,
         AttributeContext attributeContext);

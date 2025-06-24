@@ -23,24 +23,23 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.Writer;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.apache.tiles.request.AbstractClientRequest;
 import org.apache.tiles.request.ApplicationContext;
 import org.apache.tiles.request.attribute.Addable;
+import org.apache.tiles.request.attribute.AttributeExtractor;
+import org.apache.tiles.request.attribute.EnumeratedValuesExtractor;
+import org.apache.tiles.request.attribute.HasKeys;
 import org.apache.tiles.request.collection.HeaderValuesMap;
 import org.apache.tiles.request.collection.ReadOnlyEnumerationMap;
 import org.apache.tiles.request.collection.ScopeMap;
-import org.apache.tiles.request.servlet.extractor.ParameterExtractor;
-import org.apache.tiles.request.servlet.extractor.RequestScopeExtractor;
-import org.apache.tiles.request.servlet.extractor.HeaderExtractor;
-import org.apache.tiles.request.servlet.extractor.SessionScopeExtractor;
+
 /**
  * Servlet-based implementation of the TilesApplicationContext interface.
  *
@@ -284,4 +283,152 @@ public class ServletRequest extends AbstractClientRequest {
     public boolean isUserInRole(String role) {
         return request.isUserInRole(role);
     }
+
+    /**
+     * Extract header values from an HTTP request.
+     *
+     * @version $Rev: 1066499 $ $Date: 2011-02-03 02:33:34 +1100 (Thu, 03 Feb 2011) $
+     */
+    public static class HeaderExtractor implements EnumeratedValuesExtractor {
+        /**
+         * The request.
+         */
+        private final HttpServletRequest request;
+        /**
+         * The response.
+         */
+        private final HttpServletResponse response;
+        /**
+         * Constructor.
+         *
+         * @param request  The request.
+         * @param response The response.
+         */
+        public HeaderExtractor(HttpServletRequest request,
+                               HttpServletResponse response) {
+            this.request = request;
+            this.response = response;
+        }
+        @Override
+        public Enumeration<String> getKeys() {
+            return request.getHeaderNames();
+        }
+        @Override
+        public String getValue(String key) {
+            return request.getHeader(key);
+        }
+        @Override
+        public Enumeration<String> getValues(String key) {
+            return request.getHeaders(key);
+        }
+        @Override
+        public void setValue(String key, String value) {
+            response.setHeader(key, value);
+        }
+    }
+
+    /**
+     * Extract parameters from the request.
+     *
+     * @version $Rev: 1066499 $ $Date: 2011-02-03 02:33:34 +1100 (Thu, 03 Feb 2011) $
+     */
+    public static class ParameterExtractor implements HasKeys<String> {
+        /**
+         * The servlet request.
+         */
+        private final HttpServletRequest request;
+        /**
+         * Constructor.
+         *
+         * @param request The servlet request.
+         */
+        public ParameterExtractor(HttpServletRequest request) {
+            this.request = request;
+        }
+        @Override
+        public Enumeration<String> getKeys() {
+            return request.getParameterNames();
+        }
+        @Override
+        public String getValue(String key) {
+            return request.getParameter(key);
+        }
+    }
+    /**
+     * Extracts attributes from request scope.
+     *
+     * @version $Rev: 1066499 $ $Date: 2011-02-03 02:33:34 +1100 (Thu, 03 Feb 2011) $
+     */
+    public static class RequestScopeExtractor implements AttributeExtractor {
+        /**
+         * The servlet request.
+         */
+        private final HttpServletRequest request;
+        /**
+         * Constructor.
+         *
+         * @param request The servlet request.
+         */
+        public RequestScopeExtractor(HttpServletRequest request) {
+            this.request = request;
+        }
+        @Override
+        public void setValue(String name, Object value) {
+            request.setAttribute(name, value);
+        }
+        @Override
+        public void removeValue(String name) {
+            request.removeAttribute(name);
+        }
+        @Override
+        public Enumeration<String> getKeys() {
+            return request.getAttributeNames();
+        }
+        @Override
+        public Object getValue(String key) {
+            return request.getAttribute(key);
+        }
+    }
+    /**
+     * Extract attributes from session scope.
+     *
+     * @version $Rev: 1199216 $ $Date: 2011-11-08 23:25:24 +1100 (Tue, 08 Nov 2011) $
+     */
+    public static class SessionScopeExtractor implements AttributeExtractor {
+        /**
+         * The servlet request.
+         */
+        private final HttpServletRequest request;
+        /**
+         * Constructor.
+         *
+         * @param request The servlet request.
+         */
+        public SessionScopeExtractor(HttpServletRequest request) {
+            this.request = request;
+        }
+        @Override
+        public void setValue(String name, Object value) {
+            request.getSession().setAttribute(name, value);
+        }
+        @Override
+        public void removeValue(String name) {
+            HttpSession session = request.getSession(false);
+            if (session != null) {
+                session.removeAttribute(name);
+            }
+        }
+        @Override
+        public Enumeration<String> getKeys() {
+            HttpSession session = request.getSession(false);
+            return session != null ? session.getAttributeNames()
+                    : Collections.enumeration(Collections.emptySet());
+        }
+        @Override
+        public Object getValue(String key) {
+            HttpSession session = request.getSession(false);
+            return session != null ? session.getAttribute(key) : null;
+        }
+    }
+
 }

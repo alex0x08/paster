@@ -21,17 +21,15 @@
 package org.apache.tiles.request.servlet;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 import jakarta.servlet.ServletContext;
 import org.apache.tiles.request.ApplicationContext;
 import org.apache.tiles.request.ApplicationResource;
+import org.apache.tiles.request.attribute.AttributeExtractor;
 import org.apache.tiles.request.collection.ScopeMap;
 import org.apache.tiles.request.locale.URLApplicationResource;
-import org.apache.tiles.request.servlet.extractor.ApplicationScopeExtractor;
+
 /**
  * Servlet-based implementation of the TilesApplicationContext interface.
  *
@@ -113,4 +111,48 @@ public class ServletApplicationContext implements ApplicationContext {
         resources.add(getResource(path));
         return resources;
     }
+
+
+    /**
+     * Extract attributes from application scope.
+     *
+     * @version $Rev: 1066499 $ $Date: 2011-02-03 02:33:34 +1100 (Thu, 03 Feb 2011) $
+     */
+    public static class ApplicationScopeExtractor implements AttributeExtractor {
+
+        /**
+         * The servlet context.
+         */
+        private final ServletContext context;
+
+        /**
+         * Constructor.
+         *
+         * @param context The servlet context.
+         */
+        public ApplicationScopeExtractor(ServletContext context) {
+            this.context = context;
+        }
+
+        @Override
+        public void setValue(String name, Object value) {
+            context.setAttribute(name, value);
+        }
+
+        @Override
+        public void removeValue(String name) {
+            context.removeAttribute(name);
+        }
+
+        @Override
+        public Enumeration<String> getKeys() {
+            return context.getAttributeNames();
+        }
+
+        @Override
+        public Object getValue(String key) {
+            return context.getAttribute(key);
+        }
+    }
+
 }

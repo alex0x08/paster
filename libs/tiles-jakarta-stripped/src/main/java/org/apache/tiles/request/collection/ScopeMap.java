@@ -19,7 +19,6 @@
  * under the License.
  */
 package org.apache.tiles.request.collection;
-import jakarta.validation.constraints.NotNull;
 import org.apache.tiles.request.attribute.AttributeExtractor;
 
 import java.util.*;

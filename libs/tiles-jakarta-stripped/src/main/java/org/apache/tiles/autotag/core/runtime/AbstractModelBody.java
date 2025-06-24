@@ -25,8 +25,6 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.regex.Pattern;
 
-import org.apache.tiles.autotag.core.runtime.util.NullWriter;
-
 /**
  * Base class for the abstraction of the body.
  *
@@ -78,5 +76,33 @@ public abstract class AbstractModelBody implements ModelBody {
             evaluate(writer);
         }
     }
+
+
+    /**
+     * A writer that does not write anything.
+     *
+     * @version $Rev: 1306435 $ $Date: 2012-03-29 02:39:11 +1100 (Thu, 29 Mar 2012) $
+     */
+    public static class NullWriter extends Writer {
+
+        /** {@inheritDoc} */
+        @Override
+        public void close() {
+            // Does nothing
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public void flush() {
+            // Does nothing
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public void write(char[] cbuf, int off, int len) {
+            // Does nothing
+        }
+    }
+
 
 }

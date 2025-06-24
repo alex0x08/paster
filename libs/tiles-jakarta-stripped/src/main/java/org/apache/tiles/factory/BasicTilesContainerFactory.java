@@ -19,21 +19,18 @@
  * under the License.
  */
 package org.apache.tiles.factory;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
+import java.io.IOException;
+import java.util.*;
 
+import org.apache.tiles.Definition;
 import org.apache.tiles.TilesContainer;
 import org.apache.tiles.definition.DefinitionsFactory;
 import org.apache.tiles.definition.DefinitionsReader;
-import org.apache.tiles.definition.UnresolvingLocaleDefinitionsFactory;
 import org.apache.tiles.definition.dao.BaseLocaleUrlDefinitionDAO;
 import org.apache.tiles.definition.dao.DefinitionDAO;
 import org.apache.tiles.definition.dao.ResolvingLocaleUrlDefinitionDAO;
 import org.apache.tiles.definition.digester.DigesterDefinitionsReader;
-import org.apache.tiles.definition.pattern.BasicPatternDefinitionResolver;
-import org.apache.tiles.definition.pattern.PatternDefinitionResolver;
-import org.apache.tiles.definition.pattern.PatternDefinitionResolverAware;
+import org.apache.tiles.definition.pattern.*;
 import org.apache.tiles.definition.pattern.wildcard.WildcardDefinitionPatternMatcherFactory;
 import org.apache.tiles.evaluator.AttributeEvaluatorFactory;
 import org.apache.tiles.evaluator.BasicAttributeEvaluatorFactory;
@@ -44,14 +41,9 @@ import org.apache.tiles.locale.impl.DefaultLocaleResolver;
 import org.apache.tiles.preparer.factory.BasicPreparerFactory;
 import org.apache.tiles.preparer.factory.PreparerFactory;
 import org.apache.tiles.renderer.DefinitionRenderer;
-import org.apache.tiles.request.ApplicationContext;
-import org.apache.tiles.request.ApplicationResource;
-import org.apache.tiles.request.render.BasicRendererFactory;
-import org.apache.tiles.request.render.ChainedDelegateRenderer;
-import org.apache.tiles.request.render.DispatchRenderer;
-import org.apache.tiles.request.render.Renderer;
-import org.apache.tiles.request.render.RendererFactory;
-import org.apache.tiles.request.render.StringRenderer;
+import org.apache.tiles.request.*;
+import org.apache.tiles.request.render.*;
+
 /**
  * Factory that builds a standard Tiles container using only Java code.
  *
@@ -237,7 +229,7 @@ public class BasicTilesContainerFactory extends AbstractTilesContainerFactory {
      * Creates a renderer factory. By default it returns a
      * {@link BasicRendererFactory}, composed of an
      * {link UntypedAttributeRenderer} as default, and delegates of
-     * {@link StringRenderer}, {@link DispatchRenderer},
+     * {link StringRenderer}, {@link DispatchRenderer},
      * {@link DefinitionRenderer}.
      *
      * @param container                 The container.
@@ -287,7 +279,7 @@ public class BasicTilesContainerFactory extends AbstractTilesContainerFactory {
     }
     /**
      * Registers attribute renderers in a {@link BasicRendererFactory}. By
-     * default, it registers delegates to {@link StringRenderer},
+     * default, it registers delegates to {link StringRenderer},
      * {@link DispatchRenderer} and {@link DefinitionRenderer}.
      *
      * @param rendererFactory           The renderer factory to configure.
@@ -336,4 +328,227 @@ public class BasicTilesContainerFactory extends AbstractTilesContainerFactory {
             TilesContainer container) {
         return new DefinitionRenderer(container);
     }
+
+    /**
+     * {@link DefinitionsFactory DefinitionsFactory} implementation that manages
+     * Definitions configuration data from URLs, without resolving definition
+     * inheritance when a definition is returned.<p/>
+     * <p>
+     * The Definition objects are read from the
+     * {@link org.apache.tiles.definition.digester.DigesterDefinitionsReader DigesterDefinitionsReader}
+     * class unless another implementation is specified.
+     * </p>
+     *
+     * @version $Rev: 891884 $ $Date: 2009-12-18 07:43:12 +1100 (Fri, 18 Dec 2009) $
+     * @since 2.2.1
+     */
+    public static class UnresolvingLocaleDefinitionsFactory implements DefinitionsFactory {
+        /**
+         * The definition DAO that extracts the definitions from the sources.
+         *
+         * @since 2.2.1
+         */
+        protected DefinitionDAO<Locale> definitionDao;
+        /**
+         * The locale resolver object.
+         *
+         * @since 2.2.1
+         */
+        protected LocaleResolver localeResolver;
+        /**
+         * Sets the locale resolver to use.
+         *
+         * @param localeResolver The locale resolver.
+         * @since 2.2.1
+         */
+        public void setLocaleResolver(LocaleResolver localeResolver) {
+            this.localeResolver = localeResolver;
+        }
+        /**
+         * Sets the definition DAO to use. It must be locale-based.
+         *
+         * @param definitionDao The definition DAO.
+         * @since 2.2.1
+         */
+        public void setDefinitionDAO(DefinitionDAO<Locale> definitionDao) {
+            this.definitionDao = definitionDao;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        public Definition getDefinition(String name,
+                                        Request tilesContext) {
+            Locale locale = null;
+            if (tilesContext != null)
+                locale = localeResolver.resolveLocale(tilesContext);
+
+            return definitionDao.getDefinition(name, locale);
+        }
+    }
+
+    /**
+     * Renders an attribute that has no associated renderer using delegation to
+     * other renderers.
+     *
+     * @version $Rev: 1306435 $ $Date: 2012-03-29 02:39:11 +1100 (Thu, 29 Mar 2012) $
+     */
+    public static class ChainedDelegateRenderer implements Renderer {
+        /**
+         * The list of chained renderers.
+         */
+        private final List<Renderer> renderers;
+        /**
+         * Constructor.
+         */
+        public ChainedDelegateRenderer() {
+            renderers = new ArrayList<>();
+        }
+        /**
+         * Adds an attribute renderer to the list. The first inserted this way, the
+         * first is checked when rendering.
+         *
+         * @param renderer The renderer to add.
+         */
+        public void addAttributeRenderer(Renderer renderer) {
+            renderers.add(renderer);
+        }
+        @Override
+        public void render(String value, Request request) throws IOException {
+            if (value == null)
+                throw new NullPointerException("The attribute value is null");
+
+            for (Renderer renderer : renderers)
+                if (renderer.isRenderable(value, request)) {
+                    renderer.render(value, request);
+                    return;
+                }
+
+            throw new CannotRenderException("Cannot renderer value '%s'".formatted(value));
+        }
+        /**
+         * {@inheritDoc}
+         */
+        public boolean isRenderable(String value, Request request) {
+            for (Renderer renderer : renderers)
+                if (renderer.isRenderable(value, request))
+                    return true;
+
+
+            return false;
+        }
+    }
+    /**
+     * Renders an attribute that contains a string.
+     *
+     * @version $Rev: 1215008 $ $Date: 2011-12-16 11:31:49 +1100 (Fri, 16 Dec 2011) $
+     */
+    public static class StringRenderer implements Renderer {
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void render(String value, Request request) throws IOException {
+            if (value == null)
+                throw new CannotRenderException("Cannot render a null string");
+
+            request.getWriter().write(value);
+        }
+        /**
+         * {@inheritDoc}
+         */
+        public boolean isRenderable(String value, Request request) {
+            return value != null;
+        }
+    }
+
+    /**
+     * Renders an attribute that contains a reference to a template.
+     *
+     * @version $Rev: 1375743 $ $Date: 2012-08-22 06:05:58 +1000 (Wed, 22 Aug 2012) $
+     */
+    public static class DispatchRenderer implements Renderer {
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void render(String path, Request request) throws IOException {
+            if (path == null)
+                throw new CannotRenderException("Cannot dispatch a null path");
+
+            DispatchRequest dispatchRequest = getDispatchRequest(request);
+            if (dispatchRequest == null)
+                throw new CannotRenderException("Cannot dispatch outside of a web environment");
+
+            dispatchRequest.dispatch(path);
+        }
+        /**
+         * {@inheritDoc}
+         */
+        public boolean isRenderable(String path, Request request) {
+            return path != null && getDispatchRequest(request) != null && path.startsWith("/");
+        }
+        private DispatchRequest getDispatchRequest(Request request) {
+            Request result = request;
+            while (!(result instanceof DispatchRequest) && result instanceof RequestWrapper rw)
+                result =rw.getWrappedRequest();
+
+            if (!(result instanceof DispatchRequest))
+                result = null;
+
+            return (DispatchRequest) result;
+        }
+    }
+    /**
+     * A pattern definition resolver that stores {@link DefinitionPatternMatcher}
+     * separated by customization key. <br>
+     * It delegates creation of definition pattern matchers to a
+     * {@link DefinitionPatternMatcherFactory} and recgnizes patterns through the
+     * use of a {@link PatternRecognizer}.
+     *
+     * @param <T> The type of the customization key.
+     * @version $Rev: 836180 $ $Date: 2009-11-15 01:00:02 +1100 (Sun, 15 Nov 2009) $
+     * @since 2.2.0
+     */
+    public static class BasicPatternDefinitionResolver<T> extends
+            AbstractPatternDefinitionResolver<T> {
+        /**
+         * The factory of pattern matchers.
+         */
+        private final DefinitionPatternMatcherFactory definitionPatternMatcherFactory;
+        /**
+         * The pattern recognizer.
+         */
+        private final PatternRecognizer patternRecognizer;
+        /**
+         * Constructor.
+         *
+         * @param definitionPatternMatcherFactory The definition pattern matcher factory.
+         * @param patternRecognizer               The pattern recognizer.
+         */
+        public BasicPatternDefinitionResolver(DefinitionPatternMatcherFactory definitionPatternMatcherFactory,
+                                              PatternRecognizer patternRecognizer) {
+            this.definitionPatternMatcherFactory = definitionPatternMatcherFactory;
+            this.patternRecognizer = patternRecognizer;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        protected Map<String, Definition> addDefinitionsAsPatternMatchers(List<DefinitionPatternMatcher> matchers,
+                                                                          Map<String, Definition> defsMap) {
+            Set<String> excludedKeys = new LinkedHashSet<>();
+            for (Map.Entry<String, Definition> de : defsMap.entrySet()) {
+                String key = de.getKey();
+                if (patternRecognizer.isPatternRecognized(key))
+                    matchers.add(definitionPatternMatcherFactory
+                            .createDefinitionPatternMatcher(key, de.getValue()));
+                else
+                    excludedKeys.add(key);
+
+            }
+            return PatternUtil.createExtractedMap(defsMap, excludedKeys);
+        }
+    }
+
+
 }

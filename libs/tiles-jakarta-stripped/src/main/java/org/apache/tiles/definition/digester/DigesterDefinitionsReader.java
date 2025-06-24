@@ -27,10 +27,7 @@ import java.util.Map;
 
 import org.apache.commons.digester3.Digester;
 import org.apache.commons.digester3.Rule;
-import org.apache.tiles.Attribute;
-import org.apache.tiles.Definition;
-import org.apache.tiles.Expression;
-import org.apache.tiles.ListAttribute;
+import org.apache.tiles.*;
 import org.apache.tiles.definition.DefinitionsFactoryException;
 import org.apache.tiles.definition.DefinitionsReader;
 import org.xml.sax.Attributes;
@@ -427,4 +424,24 @@ public class DigesterDefinitionsReader implements DefinitionsReader {
         } while (definitions.containsKey(candidate));
         return candidate;
     }
+
+    /**
+     * Indicates that something went wrong during the use of
+     * {@link DigesterDefinitionsReader}.
+     *
+     * @version $Rev: 942880 $ $Date: 2010-05-11 05:58:07 +1000 (Tue, 11 May 2010) $
+     * @since 2.1.0
+     */
+    public static class DigesterDefinitionsReaderException extends TilesException {
+        /**
+         * Constructor.
+         *
+         * @param message The detail message.
+         * @since 2.1.0
+         */
+        public DigesterDefinitionsReaderException(String message) {
+            super(message);
+        }
+    }
+
 }

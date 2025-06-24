@@ -21,8 +21,8 @@
 package org.apache.tiles.access;
 import java.util.Map;
 
-import org.apache.tiles.NoSuchContainerException;
 import org.apache.tiles.TilesContainer;
+import org.apache.tiles.TilesException;
 import org.apache.tiles.request.ApplicationContext;
 import org.apache.tiles.request.Request;
 import org.slf4j.Logger;
@@ -135,4 +135,23 @@ public final class TilesAccess {
         }
         return container;
     }
+
+    /**
+     * Indicates that a keyed container has not been found.
+     *
+     * @version $Rev: 927573 $ $Date: 2010-03-26 07:01:07 +1100 (Fri, 26 Mar 2010) $
+     * @since 2.1.0
+     */
+    public static class NoSuchContainerException extends TilesException {
+        /**
+         * Constructor.
+         *
+         * @param message The detail message.
+         * @since 2.1.0
+         */
+        public NoSuchContainerException(String message) {
+            super(message);
+        }
+    }
+
 }

@@ -25,18 +25,13 @@ import java.util.Deque;
 import java.util.LinkedList;
 import java.util.Map;
 
-import org.apache.tiles.Attribute;
-import org.apache.tiles.AttributeContext;
-import org.apache.tiles.BasicAttributeContext;
-import org.apache.tiles.Definition;
-import org.apache.tiles.TilesContainer;
+import org.apache.tiles.*;
 import org.apache.tiles.definition.DefinitionsFactory;
 import org.apache.tiles.definition.NoSuchDefinitionException;
 import org.apache.tiles.evaluator.AttributeEvaluator;
 import org.apache.tiles.evaluator.AttributeEvaluatorFactory;
 import org.apache.tiles.evaluator.AttributeEvaluatorFactoryAware;
 import org.apache.tiles.preparer.ViewPreparer;
-import org.apache.tiles.preparer.factory.NoSuchPreparerException;
 import org.apache.tiles.preparer.factory.PreparerFactory;
 import org.apache.tiles.request.ApplicationContext;
 import org.apache.tiles.request.Request;
@@ -361,7 +356,7 @@ public class BasicTilesContainer implements TilesContainer,
      *
      * @param request The request context.
      * @param attributeContext The context to render.
-     * @throws InvalidTemplateException If the template is not valid.
+     * throws InvalidTemplateException If the template is not valid.
      * @throws CannotRenderException If something goes wrong during rendering.
      * @since 2.1.3
      */
@@ -378,4 +373,45 @@ public class BasicTilesContainer implements TilesContainer,
             throw new CannotRenderException(e.getMessage(), e);
         }
     }
+
+
+    /**
+     * <p>
+     * Thrown when an exception occurs while processing
+     * a prepare request.
+     * </p>
+     *
+     * @since Tiles 2.0
+     * @version $Rev: 1310865 $ $Date: 2012-04-08 07:01:22 +1000 (Sun, 08 Apr 2012) $
+     */
+    public static class PreparerException extends TilesException {
+
+        /**
+         * Constructor.
+         *
+         * @param message The message to include.
+         */
+        public PreparerException(String message) {
+            super(message);
+        }
+    }
+
+    /**
+     * Thrown when the named preparerInstance can not be found.
+     *
+     * @since 2.0
+     * @version $Rev: 1310865 $ $Date: 2012-04-08 07:01:22 +1000 (Sun, 08 Apr 2012) $
+     */
+    public static class NoSuchPreparerException extends PreparerException {
+
+        /**
+         * Constructor.
+         *
+         * @param message The message to include.
+         */
+        public NoSuchPreparerException(String message) {
+            super(message);
+        }
+    }
+
 }

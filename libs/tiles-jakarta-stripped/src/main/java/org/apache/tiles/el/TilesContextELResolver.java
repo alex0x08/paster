@@ -25,7 +25,14 @@ import jakarta.el.ELResolver;
 
 import org.apache.tiles.request.ApplicationContext;
 import org.apache.tiles.request.Request;
-import org.apache.tiles.util.CombinedBeanInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.beans.BeanInfo;
+import java.beans.FeatureDescriptor;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
+import java.util.*;
 
 /**
  * Resolves properties of {@link Request} and
@@ -137,5 +144,86 @@ public class TilesContextELResolver extends ELResolver {
     public void setValue(ELContext context, Object base, Object property,
             Object value) {
         // Does nothing for the moment.
+    }
+
+    /**
+     * Contains the bean infos about one or more classes.
+     *
+     * @version $Rev: 995228 $ $Date: 2010-09-09 05:50:09 +1000 (Thu, 09 Sep 2010) $
+     * @since 2.2.0
+     */
+    public static class CombinedBeanInfo {
+        /**
+         * The descriptors of the introspected classes.
+         */
+        private final List<FeatureDescriptor> descriptors;
+        /**
+         * Maps analyzed classes to the map of introspected properties.
+         */
+        private final Map<Class<?>, Map<String, PropertyDescriptor>> class2descriptors;
+        /**
+         * Constructor.
+         *
+         * @param clazzes The list of classes to analyze and combine.
+         * @since 2.2.0
+         */
+        public CombinedBeanInfo(Class<?>... clazzes) {
+            descriptors = new ArrayList<>();
+            class2descriptors = new LinkedHashMap<>();
+            for (Class<?> clazz : clazzes) {
+                Map<String, PropertyDescriptor> mappedDescriptors = new LinkedHashMap<>();
+                collectBeanInfo(clazz, mappedDescriptors);
+                descriptors.addAll(mappedDescriptors.values());
+                class2descriptors.put(clazz, mappedDescriptors);
+            }
+        }
+        /**
+         * Returns the descriptors of all the introspected classes.
+         *
+         * @return The feature descriptors.
+         * @since 2.2.0
+         */
+        public List<FeatureDescriptor> getDescriptors() {
+            return descriptors;
+        }
+
+        /**
+         * Returns the set of properties for the given introspected class.
+         *
+         * @param clazz The class to get the properties from.
+         * @return The set of properties.
+         * @since 2.2.0
+         */
+        public Set<String> getProperties(Class<?> clazz) {
+            return class2descriptors.get(clazz).keySet();
+        }
+    }
+
+    static final Logger log = LoggerFactory.getLogger(TilesContextELResolver.class);
+
+    /**
+     * Collects bean infos from a class and filling a list.
+     *
+     * @param clazz           The class to be inspected.
+     * @param name2descriptor The map in the form: name of the property ->
+     *                        descriptor.
+     */
+    public static void collectBeanInfo(Class<?> clazz,
+                                       Map<String, PropertyDescriptor> name2descriptor) {
+        BeanInfo info = null;
+        try {
+            info = Introspector.getBeanInfo(clazz);
+        } catch (Exception ex) {
+            if (log.isDebugEnabled())
+                log.debug("Cannot inspect class {}" ,clazz.getName(), ex);
+        }
+        if (info == null)
+            return;
+
+        for (PropertyDescriptor pd : info.getPropertyDescriptors()) {
+            pd.setValue("type", pd.getPropertyType());
+            pd.setValue("resolvableAtDesignTime", Boolean.TRUE);
+            name2descriptor.put(pd.getName(), pd);
+        }
     }
 }

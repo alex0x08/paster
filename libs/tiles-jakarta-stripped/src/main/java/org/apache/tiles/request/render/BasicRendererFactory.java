@@ -73,4 +73,26 @@ public class BasicRendererFactory implements RendererFactory {
     public void registerRenderer(String name, Renderer renderer) {
         renderers.put(name, renderer);
     }
+
+
+    /**
+     * It is raised when a named renderer has not been found with that name.
+     *
+     * @version $Rev: 1306435 $ $Date: 2012-03-29 02:39:11 +1100 (Thu, 29 Mar 2012) $
+     */
+    public static class NoSuchRendererException extends RenderException {
+
+        /**
+         * Constructor.
+         *
+         * @param message The detail message.
+         */
+        public NoSuchRendererException(String message) {
+            super(message);
+        }
+
+
+
+    }
+
 }
