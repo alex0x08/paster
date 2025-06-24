@@ -25,7 +25,7 @@ import java.util.Locale
 @Controller
 @RequestMapping(Array("/admin/settings"))
 class SettingsCtrl extends AbstractCtrl {
-  def editPage = "/admin/settings/edit"
+
   def manager(): Null = null
 
   /**

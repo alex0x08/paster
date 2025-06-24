@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 package com.Ox08.paster.webapp.dao
-import com.Ox08.paster.webapp.model.{Paste, PasterUser}
+import com.Ox08.paster.webapp.model.{Comment, Paste, PasterUser}
 import jakarta.persistence.criteria.{CriteriaQuery, Predicate, Selection}
 import jakarta.persistence.{Query, Tuple}
 import org.apache.lucene.queryparser.classic.QueryParser
@@ -243,6 +243,20 @@ class PasteDao extends SearchableDaoImpl[Paste](classOf[Paste]) {
 
     em.createQuery[java.lang.Long](cq).getSingleResult
   }
+
+  @Transactional
+  def deleteExpired(dateFrom: java.lang.Long): Unit = {
+    val cr = new CriteriaSet
+    val cd =cr.cb.createCriteriaDelete(classOf[Paste])
+    val r = cd.from(classOf[Paste])
+
+    val ldt = LocalDateTime.ofInstant(Instant
+      .ofEpochMilli(dateFrom),ZoneId.systemDefault())
+    cd.where(Array(cr.cb.lessThan(r.get("lastModified"), ldt)): _*)
+    em.createQuery(cd).executeUpdate()
+  }
+
+
   override def fillHighlighted(highlighter: Highlighter,
                                queryParser: QueryParser, model: Paste): Unit = {
     try {

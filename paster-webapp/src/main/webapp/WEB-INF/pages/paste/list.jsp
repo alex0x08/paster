@@ -167,7 +167,7 @@
                                         </c:if>
                                         )
                                         ,<kc:prettyTime date="${paste.lastModifiedDt}"
-                                        locale="${pageContext.response.locale}"/>
+                                        locale="${pageContext.response.locale}" format="${dateTimePattern}"/>
                                     </small>                             
                                 </div>
                             </div>
@@ -185,7 +185,9 @@
                             <tiles:putAttribute name="model" value="${paste}"/>
                             <tiles:putAttribute name="modelName" value="paste"/>
                         </tiles:insertDefinition>
-                        ,<kc:prettyTime date="${paste.lastModifiedDt}" locale="${pageContext.response.locale}"/>
+                        ,<kc:prettyTime date="${paste.lastModifiedDt}"
+                        locale="${pageContext.response.locale}"
+                        format="${dateTimePattern}"  />
                     </small>
                 </c:when>
             </c:choose>

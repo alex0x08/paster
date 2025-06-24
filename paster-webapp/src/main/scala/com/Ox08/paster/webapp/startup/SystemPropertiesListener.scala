@@ -64,6 +64,11 @@ class SystemPropertiesListener extends ServletContextListener {
         springProfiles += ",paster-security-public"
       else
         springProfiles += ",paster-security-private"
+
+      if ("true".equalsIgnoreCase(Boot.BOOT.getSystemInfo
+        .getSetting("paster.periodic.removeExpired.enabled", "false")))
+        springProfiles += ",paster-remove-expired"
+
       System.setProperty("spring.profiles.active", springProfiles)
       // this property is used as 'seed' in URLs, to have unique resource URLs for resources
       System.setProperty("paste.app.id", System.currentTimeMillis().toString)

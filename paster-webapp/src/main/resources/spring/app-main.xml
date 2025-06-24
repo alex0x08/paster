@@ -38,4 +38,6 @@
     <import resource="mvc.xml" />
     <import resource="security-public.xml" />
     <import resource="security-private.xml" />
+    <import resource="scheduler.xml" />
+
 </beans>

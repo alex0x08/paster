@@ -459,11 +459,12 @@
                     <systemProperties>
                         <appDebug>true</appDebug>
                         <logback.configurationFile>${project.basedir}/../paster-run/src/main/resources/logging-dev.xml</logback.configurationFile>
-                    </systemProperties>
+                     </systemProperties>
 
                     <!--scanIntervalSeconds>0</scanIntervalSeconds-->
                     <webApp>
                         <contextPath>/${project.artifactId}</contextPath>
+                        <maxFormContentSize>1073741824</maxFormContentSize>
                     </webApp>
                 </configuration>
                 <dependencies>
