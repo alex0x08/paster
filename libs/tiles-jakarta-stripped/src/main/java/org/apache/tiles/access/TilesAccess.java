@@ -65,13 +65,13 @@ public final class TilesAccess {
 
         if (container == null) {
             if (log.isInfoEnabled())
-                log.info("Removing TilesContext for context: %s".formatted(context.getClass().getName()));
+                log.info("Removing TilesContext for context: {}",context.getClass().getName());
 
             context.getApplicationScope().remove(key);
         } else {
             if (log.isInfoEnabled())
-                log.info("Publishing TilesContext for context: %s"
-                        .formatted(context.getClass().getName()));
+                log.info("Publishing TilesContext for context: {}",
+                        context.getClass().getName());
 
             context.getApplicationScope().put(key, container);
         }

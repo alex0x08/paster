@@ -133,7 +133,7 @@ public abstract class BaseLocaleUrlDefinitionDAO implements
         } catch (FileNotFoundException e) {
             // File not found. continue.
             if (log.isDebugEnabled())
-                log.debug("File %s not found, continue".formatted(resource));
+                log.debug("File {} not found, continue",resource.getPath());
 
         } catch (IOException e) {
             throw new DefinitionsFactoryException(

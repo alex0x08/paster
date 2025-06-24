@@ -47,11 +47,11 @@ public class ServletApplicationContext implements ApplicationContext {
      * attributes.</p>
      */
     private Map<String, Object> applicationScope = null;
-    /**
+    /*
      * <p>The lazily instantiated <code>Map</code> of context initialization
      * parameters.</p>
      */
-    private Map<String, String> initParam = null;
+   // private Map<String, String> initParam = null;
     /**
      * Creates a new instance of ServletTilesApplicationContext.
      *

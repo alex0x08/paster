@@ -48,12 +48,12 @@ public class BasicRendererFactory implements RendererFactory {
         Renderer retValue;
         if (name != null) {
             retValue = renderers.get(name);
-            if (retValue == null) {
+            if (retValue == null)
                 throw new NoSuchRendererException("Cannot find a renderer named '%s'".formatted(name));
-            }
-        } else {
+
+        } else
             retValue = defaultRenderer;
-        }
+
         return retValue;
     }
     /**

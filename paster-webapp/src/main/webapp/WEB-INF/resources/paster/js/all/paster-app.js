@@ -32,7 +32,7 @@ class PasterApp {
         Logger.debug('notify ', message);
     }
     showModal(dlg, redirectUrl, action, title, message) {
-        // console.log('show modal: ',dlg,'url:',redirectUrl,'action:',action);
+      //   console.log('show modal: ',dlg,'url:',redirectUrl,'action:',action);
         if (title) {
             dlg.querySelector('#dialogTitle').text = title;
         }
@@ -56,15 +56,17 @@ class PasterApp {
                 el.addEventListener("click", function (e) {
                     e.preventDefault();
                     var source = e.target || e.srcElement;
-                    if (source)
-                          source = source.parentElement;
-                    Logger.debug('dialog ', source);
+                    var parent = source.parentElement.parentElement;
+                    if (!source.href) {
+                        source = source.parentElement;
+                    }
+                    Logger.debug('__dialog ', source);
                     self.showModal(
                         document.getElementById('deletePopup'),
                         source.href,
                         PasterI18n.text.dialog.removal.title,
                         PasterI18n.text.dialog.removal.message,
-                        source.parentElement.querySelector('#dialogMsg').innerHTML);
+                        parent.querySelector('#dialogMsg').innerHTML);
                 });
             });
     }

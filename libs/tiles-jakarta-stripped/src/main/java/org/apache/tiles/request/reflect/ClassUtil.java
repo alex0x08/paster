@@ -121,7 +121,7 @@ public final class ClassUtil {
             info = Introspector.getBeanInfo(clazz);
         } catch (Exception ex) {
             if (log.isDebugEnabled())
-                log.debug("Cannot inspect class " +clazz, ex);
+                log.debug("Cannot inspect class {}" ,clazz.getName(), ex);
         }
         if (info == null)
             return;
