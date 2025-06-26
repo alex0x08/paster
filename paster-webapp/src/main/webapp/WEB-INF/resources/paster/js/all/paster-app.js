@@ -33,9 +33,9 @@ class PasterApp {
     }
     showModal(dlg, redirectUrl, action, title, message) {
       //   console.log('show modal: ',dlg,'url:',redirectUrl,'action:',action);
-        if (title) {
+        /*if (title) {
             dlg.querySelector('#dialogTitle').text = title;
-        }
+        }*/
         if (action) {
             const el = dlg.querySelector('#dialogAction');
             el.text = action;

@@ -25,12 +25,12 @@
 <div  class="modal hide" id="deletePopup">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">
+            <!--div class="modal-header">
                 <button type="button"
                         class="close"
                         data-bs-dismiss="modal">X</button>
                 <h4 class="modal-title" id="dialogTitle"></h4>
-            </div>
+            </div-->
             <div id="dialogMessage" class="modal-body">                
             </div>
             <div class="modal-footer">
