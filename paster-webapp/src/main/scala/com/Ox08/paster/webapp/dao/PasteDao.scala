@@ -256,6 +256,16 @@ class PasteDao extends SearchableDaoImpl[Paste](classOf[Paste]) {
     em.createQuery(cd).executeUpdate()
   }
 
+  @Transactional
+  def markNotified(): Unit = {
+    val cr = new CriteriaSet
+    val cd =cr.cb.createCriteriaUpdate(classOf[Paste])
+    val r = cd.from(classOf[Paste])
+
+    cd.where(Array(cr.cb.equal(r.get("notified"), false)): _*)
+    em.createQuery(cd).executeUpdate()
+  }
+
 
   override def fillHighlighted(highlighter: Highlighter,
                                queryParser: QueryParser, model: Paste): Unit = {

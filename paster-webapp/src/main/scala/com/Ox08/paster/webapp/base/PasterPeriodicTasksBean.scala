@@ -24,4 +24,7 @@ class PasterPeriodicTasksBean extends Logged{
     pasteDao.deleteExpired(expired)
   }
 
+  def sendPushNotifications(): Unit = {
+
+  }
 }

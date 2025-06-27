@@ -185,6 +185,11 @@ class Paste extends Struct with java.io.Serializable {
   @ManyToMany(fetch = FetchType.EAGER, cascade = Array(CascadeType.ALL))
   @XStreamOmitField
   private[model] var tagsMap: java.util.Map[String, Tag] = new java.util.HashMap
+
+
+  @Column(name = "is_notified")
+  var notified: Boolean = _
+
   @PrePersist
   @PreUpdate
   @unused
@@ -196,6 +201,8 @@ class Paste extends Struct with java.io.Serializable {
   override def setId(id:Integer): Unit = {
     this.id = id;
   }
+  def isNotified: Boolean = notified
+
   def getPriority: String = priority // for EL
   def getCodeType: String = codeType
   def isStick: Boolean = stick
