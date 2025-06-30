@@ -21,10 +21,11 @@ import com.thoughtworks.xstream.annotations.XStreamOmitField
 import com.thoughtworks.xstream.annotations.XStreamAlias
 import jakarta.persistence.{CascadeType, Column, Entity, FetchType, GeneratedValue, GenerationType, Id, Lob, ManyToMany, MapKey, PrePersist, PreUpdate, SequenceGenerator, Table}
 import jakarta.validation.constraints.{NotNull, Size}
-import org.hibernate.search.mapper.pojo.mapping.definition.annotation.{FullTextField, Indexed, KeywordField}
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.{FullTextField, GenericField, Indexed, KeywordField}
 
+import java.time.{LocalDateTime, ZoneId}
 import java.util
-import java.util.UUID
+import java.util.{Date, UUID}
 import scala.annotation.unused
 import scala.jdk.CollectionConverters._
 /**
@@ -190,6 +191,18 @@ class Paste extends Struct with java.io.Serializable {
   @Column(name = "is_notified")
   var notified: Boolean = _
 
+  @Column(name = "is_reviewed")
+  var reviewed: Boolean = _
+
+  @Column(name = "reviewer_username")
+  @KeywordField
+  var reviewer: String = _
+
+  @Column(name = "reviewed_dt")
+  @GenericField
+  @XStreamAsAttribute
+  var reviewedDateTime: LocalDateTime = _
+
   @PrePersist
   @PreUpdate
   @unused
@@ -202,6 +215,16 @@ class Paste extends Struct with java.io.Serializable {
     this.id = id;
   }
   def isNotified: Boolean = notified
+
+  def isReviewed: Boolean = reviewed
+  def getReviewer: String = reviewer
+  @JsonIgnore
+  def getReviewedDateTime: LocalDateTime = reviewedDateTime
+  def getReviewedDt: Date =
+    if (reviewedDateTime == null.asInstanceOf[LocalDateTime])
+      null
+    else
+      Date.from(reviewedDateTime.atZone(ZoneId.systemDefault()).toInstant)
 
   def getPriority: String = priority // for EL
   def getCodeType: String = codeType

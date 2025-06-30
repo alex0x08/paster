@@ -135,6 +135,24 @@ class PasteEditCtrl extends GenericEditCtrl[Paste] {
     p
   }
 
+  @RequestMapping(value = Array("/review/{pasteId:[0-9]+}"),
+    method = Array(RequestMethod.POST,RequestMethod.GET))
+  def toggleReview( @PathVariable("pasteId") pasteId: Integer,
+                    model: Model): String = {
+    if (logger.isDebugEnabled)
+      logger.debug("toggle review on pasteId={} ", pasteId)
+
+    val p = manager().get(pasteId)
+    if (p == null)
+      return MvcConstants.page404
+
+    pasteDao.markReviewed(!p.isReviewed,p.id,getCurrentUser.getUsername)
+
+    model.asMap().clear()
+    s"redirect:/main/paste/$pasteId#${pasteId}"
+  }
+
+
   /**
    * Removes selected comment
    * @param commentId

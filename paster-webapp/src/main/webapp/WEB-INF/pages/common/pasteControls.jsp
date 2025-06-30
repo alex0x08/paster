@@ -44,6 +44,7 @@
                     <tiles:putAttribute name="model" value="${model}"/>
                     <tiles:putAttribute name="modelName" value="paste"/>
                 </tiles:insertDefinition>,
+
                 <tiles:insertDefinition name="/common/commentCount" >
                     <tiles:putAttribute name="model" value="${model}"/>
                     <tiles:putAttribute name="modelName" value="paste"/>

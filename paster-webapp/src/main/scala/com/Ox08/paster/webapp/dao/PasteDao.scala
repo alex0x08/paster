@@ -211,7 +211,7 @@ class PasteDao extends SearchableDaoImpl[Paste](classOf[Paste]) {
         if (results.get(0).get(c) == null)
           0
             else
-        results.get(0).get(c).asInstanceOf[Integer].longValue())
+          results.get(0).get(c).asInstanceOf[Integer].longValue())
     }
     out.toMap
   }
@@ -257,12 +257,50 @@ class PasteDao extends SearchableDaoImpl[Paste](classOf[Paste]) {
   }
 
   @Transactional
-  def markNotified(): Unit = {
+  def markReviewed(isreview: Boolean,pasteId: Integer,reviewer:String): Unit = {
     val cr = new CriteriaSet
     val cd =cr.cb.createCriteriaUpdate(classOf[Paste])
     val r = cd.from(classOf[Paste])
 
-    cd.where(Array(cr.cb.equal(r.get("notified"), false)): _*)
+    if (isreview) {
+      cd.where(Array(cr.cb.equal(r.get("id"), pasteId)): _*)
+        .set("reviewed",true)
+        .set("reviewedDateTime",LocalDateTime.now())
+        .set("reviewer",reviewer)
+    } else {
+      cd.where(Array(cr.cb.equal(r.get("id"), pasteId)): _*)
+        .set("reviewed",false)
+        .set("reviewedDateTime",null)
+        .set("reviewer",null)
+    }
+
+    em.createQuery(cd).executeUpdate()
+  }
+
+  def getListToNotify(dateFrom: java.lang.Long): java.util.List[Paste] = {
+    val cr = new CriteriaSet()
+
+    val ldt = LocalDateTime.ofInstant(Instant
+      .ofEpochMilli(dateFrom),ZoneId.systemDefault())
+
+    val query = em.createQuery[Paste](
+        cr.cr.where(Array(cr.cb.equal(cr.r.get("notified"), false),
+            cr.cb.lessThan(cr.r.get("lastModified"), ldt)): _*)
+          .orderBy(cr.cb.desc(cr.r.get("lastModified"))))
+      .setMaxResults(BaseDao.MAX_RESULTS)
+    query.getResultList
+  }
+
+
+  @Transactional
+  def markNotified(ids:java.util.List[Integer]): Unit = {
+    val cr = new CriteriaSet
+    val cd =cr.cb.createCriteriaUpdate(classOf[Paste])
+    val r = cd.from(classOf[Paste])
+
+    cd.where(Array(cr.cb.equal(r.get("notified"), false),
+      cr.cb.in(r.get("id").in(ids))): _*)
+      .set("notified",true)
     em.createQuery(cd).executeUpdate()
   }
 
