@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 package com.Ox08.paster.webapp.startup
-import com.Ox08.paster.webapp.base.{Boot, Logged, SystemError, SystemMessage}
+import com.Ox08.paster.webapp.base.{Boot, SystemError, SystemMessage}
 import jakarta.servlet.{ServletContextEvent, ServletContextListener}
 import org.slf4j.{Logger, LoggerFactory}
 
@@ -22,7 +22,8 @@ import java.io.{File, IOException}
 import java.util.Locale
 
 /**
- * This servlet listener used to read configuration properties and put them into environment,
+ * This servlet listener used to read configuration properties
+ * and put them into environment,
  * so loaded *before* Spring and other frameworks
  * @since 1.0
  * @author 0x08

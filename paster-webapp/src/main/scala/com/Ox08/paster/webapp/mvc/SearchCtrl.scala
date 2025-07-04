@@ -153,7 +153,8 @@ abstract class SearchCtrl[T <: Struct, QV <: Query] extends GenericListCtrl[T] {
                         model: Model): util.List[T] = listImpl(request, model, null,
     null, pageSize, null, sortAsc = false,
     result)
-  @RequestMapping(value = Array("/search/{result:[a-z]+}/next"), method = Array(RequestMethod.GET))
+  @RequestMapping(value = Array("/search/{result:[a-z]+}/next"),
+                  method = Array(RequestMethod.GET))
   @ModelAttribute(MvcConstants.NODE_LIST_MODEL)
   def searchByPathNext(
                         request: HttpServletRequest,
@@ -162,7 +163,8 @@ abstract class SearchCtrl[T <: Struct, QV <: Query] extends GenericListCtrl[T] {
     null, "next",
     null, null, sortAsc = false,
     result)
-  @RequestMapping(value = Array("/search/{result:[a-z]+}/prev"), method = Array(RequestMethod.GET))
+  @RequestMapping(value = Array("/search/{result:[a-z]+}/prev"),
+                  method = Array(RequestMethod.GET))
   @ModelAttribute(MvcConstants.NODE_LIST_MODEL)
   def searchByPathPrev(
                         request: HttpServletRequest,

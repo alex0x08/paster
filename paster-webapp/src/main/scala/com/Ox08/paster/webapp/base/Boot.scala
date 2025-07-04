@@ -25,7 +25,8 @@ import java.nio.file.Paths
 import java.text.{ParseException, SimpleDateFormat}
 import java.util.{Calendar, Date, Locale, Properties}
 object Boot {
-  private val INSTALLED_TS_FORMAT: SimpleDateFormat = new SimpleDateFormat("MM.dd.yyyy HH:mm")
+  private val INSTALLED_TS_FORMAT: SimpleDateFormat
+                    = new SimpleDateFormat("MM.dd.yyyy HH:mm")
   val BOOT = new Boot
 }
 class Boot extends Logged {
@@ -76,7 +77,8 @@ class Boot extends Logged {
     }
     // put app's home to systemInfo object
     system.setAppHome(app_home)
-    logger.info(SystemMessage.of("paster.system.message.appHome", app_home.getAbsolutePath))
+    logger.info(SystemMessage.of("paster.system.message.appHome",
+                    app_home.getAbsolutePath))
     // try to kill previous JVM instance (if present)
     killPreviousInstance(app_home)
     writePid(app_home)
@@ -331,10 +333,11 @@ class Boot extends Logged {
     def getAvailableLocaleFrom(lang: String): Locale = {
       if (StringUtils.isBlank(lang))
         return Locale.ENGLISH
-      for (l <- availableLocales) {
-        if (l.toLanguageTag.equalsIgnoreCase(lang) || l.getLanguage.equalsIgnoreCase(lang))
+      for (l <- availableLocales)
+        if (l.toLanguageTag.equalsIgnoreCase(lang)
+          || l.getLanguage.equalsIgnoreCase(lang))
           return l
-      }
+
       Locale.ENGLISH
     }
     def getSystemLocale: Locale = systemLocale
@@ -364,7 +367,8 @@ class Boot extends Logged {
       this.debug = debug
     }
     def isInstalled: Boolean = installed
-    private[base] def setInstalled(installed: Boolean, installedDate: Date): Unit = {
+    private[base] def setInstalled(installed: Boolean,
+                                   installedDate: Date): Unit = {
       checkLock()
       this.installed = installed
       this.installedDate = installedDate
@@ -373,12 +377,14 @@ class Boot extends Logged {
       if (!config.containsKey(setting)) return defaultValue
       config.getProperty(setting)
     }
-    def getSettingAsBoolean(setting: String, defaultValue: Boolean): Boolean = {
+    def getSettingAsBoolean(setting: String,
+                            defaultValue: Boolean): Boolean = {
       if (!config.containsKey(setting))
         return defaultValue
       java.lang.Boolean.valueOf(config.getProperty(setting))
     }
-    def getSettingAsInt(setting: String, defaultValue: Int): Int = {
+    def getSettingAsInt(setting: String,
+                        defaultValue: Int): Int = {
       if (!config.containsKey(setting))
         return defaultValue
       Integer.valueOf(config.getProperty(setting))

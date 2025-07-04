@@ -30,8 +30,9 @@ object BaseDao {
  * @param model model class (generics is not enough)
  */
 @Transactional(readOnly = true, rollbackFor = Array(classOf[Exception]))
-abstract class BaseDao[T <: java.io.Serializable, PK <: java.io.Serializable](model: Class[T])
-  extends Logged {
+abstract class BaseDao[T <: java.io.Serializable,
+                      PK <: java.io.Serializable](model: Class[T])
+                extends Logged {
   /**
    * a wrapper to help work with Criteria API
    */

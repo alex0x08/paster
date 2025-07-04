@@ -327,6 +327,7 @@ class PasteEditCtrl extends GenericEditCtrl[Paste] {
       val p = manager().get(b.id)
       if (p == null)
         return MvcConstants.page404
+
       if (p.thumbImage!=null) {
         val fid = resourceDao.getResource('t',p.thumbImage)
         if (fid.exists() && fid.isFile && !fid.delete()) {
@@ -341,6 +342,9 @@ class PasteEditCtrl extends GenericEditCtrl[Paste] {
     // check for selected channel
     if (b.channel == null || !channelDao.exist(b.channel))
       b.channel = channelDao.getDefault
+
+    // drop notified state
+    b.notified = false
 
     /**
      * concat all tags to one string
@@ -405,10 +409,12 @@ class PasteEditCtrl extends GenericEditCtrl[Paste] {
     // update thumb image
     if (b.thumbImage != null)
       b.thumbImage = resourceDao.saveResource('t', b.uuid, b.thumbImage)
+
     // persist record
     val out = super.save(cancel, b, result, model, locale, redirectAttributes)
     // if there were no validation errors - redirect to list
     if (out.equals(listPage)) {
+
       model.asMap().clear()
       s"redirect:/main/paste/${b.id}"
     // otherwise stay on page
@@ -469,6 +475,22 @@ class PasteEditCtrl extends GenericEditCtrl[Paste] {
       out.add(s.name)
     out
   }
+
+  @RequestMapping(value = Array("/delete"),
+    method = Array(RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE))
+  override def delete(@RequestParam(required = false) id: Integer): String = {
+
+    val p = manager().get(id)
+    if (p == null)
+      return MvcConstants.page404
+
+    resourceDao.tryDelete(p.thumbImage,'t')
+    resourceDao.tryDelete(p.reviewImgData,'r')
+
+    super.delete(id)
+  }
+
+
   /**
    * return paste content as plain text
    *

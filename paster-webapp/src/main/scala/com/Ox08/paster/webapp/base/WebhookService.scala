@@ -12,6 +12,10 @@ import java.net.{URI, URL}
 import java.util
 import scala.jdk.CollectionConverters.SetHasAsScala
 
+/**
+ * A service for webhooks notifications
+ * @param env
+ */
 @Service
 class WebhookService(@Autowired env: Environment) {
 
@@ -19,6 +23,7 @@ class WebhookService(@Autowired env: Environment) {
 
   private val rc = RestClient.create
 
+  // support up to 100 hooks
   for (i <- 1 to 100) {
     val k = s"paster.webhook.${i}.url"
     val v = env.getProperty(k,null.asInstanceOf[String])
@@ -27,37 +32,50 @@ class WebhookService(@Autowired env: Environment) {
   }
 
   def notifyHooks(event:PasteEvent): Unit = {
-
-    for (h:Webhook <- hooks.asScala) {
+    // notify each webhook url
+    for (h:Webhook <- hooks.asScala)
+      // first make head request, if succeed - make POST with data
         rc.head()
           .uri(h.getUrl.toURI).asInstanceOf[RequestHeadersUriSpec[_]]
           .retrieve()
-          .onStatus(new DefaultErrorHandler(event,h))
-        }
-    }
+          .onStatus(new HeadResponseHandler(event,h))
+  }
 
 
-private class DefaultErrorHandler(event:PasteEvent,
+private class HeadResponseHandler(event:PasteEvent,
                                   hook: Webhook) extends ResponseErrorHandler {
   override def hasError(response: ClientHttpResponse): Boolean = {
+    // check if response for HEAD request is non error
     hook.available = !response.getStatusCode.isError
-    if (hook.available) {
-      rc.post()
-        .contentType(MediaType.APPLICATION_JSON)
-        .body(event).asInstanceOf[RequestHeadersUriSpec[_]]
-        .uri(hook.getUrl.toURI).asInstanceOf[RequestHeadersUriSpec[_]]
-        .retrieve()
-     }
+    // if so, try to make POST
+    if (hook.available)
+        rc.post()
+          .contentType(MediaType.APPLICATION_JSON)
+          .body(event).asInstanceOf[RequestHeadersUriSpec[_]]
+          .uri(hook.getUrl.toURI).asInstanceOf[RequestHeadersUriSpec[_]]
+          .retrieve()
     !hook.available
   }
 }
-
 
 private class Webhook(url: URL) {
     var available: Boolean = true
     def getUrl:URL = url
   }
-
 }
 
-class PasteEvent(pasteId: Integer, actionType: String, pasteTitle: String, author: String) {}
+/**
+ * Very basic structure for PUSH notification
+ * @param pasteId
+ *        record id
+ * @param actionType
+ *      type of action
+ * @param pasteTitle
+ *      title of record
+ * @param author
+ *    author's username
+ */
+class PasteEvent(pasteId: Integer,
+                 actionType: String,
+                 pasteTitle: String,
+                 author: String) {}

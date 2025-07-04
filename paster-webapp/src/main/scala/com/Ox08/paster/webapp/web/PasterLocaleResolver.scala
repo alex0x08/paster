@@ -28,7 +28,8 @@ class PasterLocaleResolver extends SessionLocaleResolver with Logged{
   setDefaultLocaleFunction(defaultLocaleFunction)
 
   @Value("${paster.i18n.switchToUserLocale}")
-  var switchToUserLocale: Boolean = false // do we have 'switch to browser's locale' feature enabled?
+  var switchToUserLocale: Boolean = false // do we have 'switch to browser's locale'
+  // feature enabled?
 
   /**
    * Resolves default locale. If not adjusted via '?locale=' parameter -

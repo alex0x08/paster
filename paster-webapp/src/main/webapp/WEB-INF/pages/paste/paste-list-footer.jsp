@@ -24,7 +24,8 @@
 <script type="text/javascript">
     const pasterList = new PasterList();
     window.addEventListener('load', function () {
-        pasterList.init("<c:url value='/main/paste/raw/list'/>",  "<c:url value='/main/paste/list'/>",
+        pasterList.init("<c:url value='/main/paste/raw/list'/>",
+                        "<c:url value='/main/paste/list'/>",
                 ${pageItems.pageCount-(pageItems.page+1)},
                 ${pageItems.page} + 2);
     });

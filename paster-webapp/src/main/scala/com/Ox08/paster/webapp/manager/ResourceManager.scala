@@ -84,10 +84,22 @@ class ResourceManager extends Logged {
     // remove 'base64,' prefix
     val imgData2 = imgData.substring(imgData.indexOf(',') + 1)
     // decode base64 and save to file
-    FileUtils.writeByteArrayToFile(fileImg, Base64.getDecoder.decode(imgData2.getBytes))
+    FileUtils.writeByteArrayToFile(fileImg,
+      Base64.getDecoder.decode(imgData2.getBytes))
     // return file name
     fileName.replaceAll("/", ",")
   }
+
+  def tryDelete(resource: String,resourceType: Char): Unit = {
+    if (resource!=null) {
+      val fid = getResource(resourceType,resource)
+      if (fid.exists() && fid.isFile && !fid.delete()) {
+        if (logger.isDebugEnabled)
+          logger.debug("cannot delete resource: {}", fid)
+      }
+    }
+  }
+
   /**
    * Get extension for resource type
    *

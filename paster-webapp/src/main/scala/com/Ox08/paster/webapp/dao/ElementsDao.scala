@@ -53,11 +53,13 @@ class CodeTypeDao(@Value("${paster.codeTypes:null}")
 class PriorityDao(@Value("${paster.priorities:null}")
                   prioritiesString: String,
                           @Value("${paster.priorities.default:'Normal'}")
-                  priorityDefault: String) extends AbstractStringBasedDao(prioritiesString, priorityDefault) {}
+                  priorityDefault: String) extends AbstractStringBasedDao(prioritiesString,
+                  priorityDefault) {}
 @Service
 class ChannelDao(@Value("${paster.channels:null}")
                  channelsString: String, @Value("${paster.channels.default:'Default'}")
-                 channelDefault: String) extends AbstractStringBasedDao(channelsString, channelDefault) {}
+                 channelDefault: String) extends AbstractStringBasedDao(channelsString,
+                  channelDefault) {}
 /**
  * Abstract String Based DAO
  * Takes data from single comma-separated string

@@ -98,7 +98,8 @@ abstract class GenericListCtrl[T <: Struct] extends AbstractCtrl {
                                       model: Model,
                                       page: java.lang.Integer,
                                       NPpage: String,
-                                      pageSize: java.lang.Integer, sortColumn: String, sortAsc: Boolean,
+                                      pageSize: java.lang.Integer,
+                                      sortColumn: String, sortAsc: Boolean,
                                       callback: SourceCallback[T],
                                       pageHolderName: String,
                                       createDefaultItemModel: Boolean = true): java.util.List[T] = {
@@ -214,7 +215,9 @@ abstract class GenericListCtrl[T <: Struct] extends AbstractCtrl {
                page: java.lang.Integer,
                NPpage: String,
                pageSize: java.lang.Integer,
-               sortColumn: String, sortAsc: Boolean, result: String): java.util.List[T] = {
+               sortColumn: String,
+               sortAsc: Boolean,
+               result: String): java.util.List[T] = {
     fillListModel(model)
     processPageListHolder(request,
       model,

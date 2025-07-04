@@ -94,10 +94,12 @@ class SystemError extends AbstractI18nMessageStore("bundles/errorMessages") {
                                                            code: Int, params: AnyRef*)
             = createExceptionImpl(clazz, code, null, null, params.toArray)
   private def createException[T <: PasterRuntimeException](clazz: Class[T],
-                                                           code: Int, message: String, params: AnyRef*)
+                                                           code: Int,
+                                                           message: String,
+                                                           params: AnyRef*)
             = createExceptionImpl(clazz, code, message, null, params.toArray)
   /**
-   * создать объект исключения со сформированным сообщением об ошибке
+   * Создать объект исключения со сформированным сообщением об ошибке
    *
    * @param clazz   класс исключения
    * @param code    код ошибки
@@ -113,10 +115,13 @@ class SystemError extends AbstractI18nMessageStore("bundles/errorMessages") {
                                                                params: Array[AnyRef]) = {
     val errorMsg = getErrorMessage(code, message, parent, prefix = true, params)
     try
-      clazz.getConstructor(classOf[Int], classOf[String], classOf[Exception])
+      clazz.getConstructor(classOf[Int],
+          classOf[String],
+          classOf[Exception])
       .newInstance(code, errorMsg, parent)
     catch {
-      case ex@(_: NoSuchMethodException | _: SecurityException | _: InstantiationException |
+      case ex@(_: NoSuchMethodException | _: SecurityException |
+               _: InstantiationException |
                _: IllegalAccessException |
                _: IllegalArgumentException |
                _: InvocationTargetException) =>
@@ -124,13 +129,13 @@ class SystemError extends AbstractI18nMessageStore("bundles/errorMessages") {
     }
   }
   /**
-   * сформировать сообщение об ошибке
+   * Сформировать сообщение об ошибке
    *
    * @param code    код ошибки
    * @param message дополнительное сообщение
    * @param parent  исключение
    * @param prefix  использовать ли префикс с кодом ошибки
-   * @param params  дополнительные параметры ( для подстановки в шаблон )
+   * @param params  дополнительные параметры (для подстановки в шаблон)
    * @return
    */
   private def getErrorMessage(code: Int, message: String,
@@ -144,7 +149,7 @@ class SystemError extends AbstractI18nMessageStore("bundles/errorMessages") {
       errorMsg = getMessage("paster.system.error.0x6000")
       currentCode = 0x6000
     }
-    // если нет доп. сообщения
+    // Если нет доп. сообщения
     if (message == null) {
       // если нет исключения
       if (parent == null)
@@ -264,7 +269,7 @@ object SystemMessage { // синглтон
 class SystemMessage private // приватный конструктор
   extends AbstractI18nMessageStore("bundles/systemMessages") {
   /**
-   * сформировать сообщение для ключа из бандла с подстановкой параметров
+   * Сформировать сообщение для ключа из бандла с подстановкой параметров
    *
    * @param key    ключ в бандле
    * @param params параметры

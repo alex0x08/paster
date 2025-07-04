@@ -262,19 +262,35 @@ class PasteDao extends SearchableDaoImpl[Paste](classOf[Paste]) {
     val cd =cr.cb.createCriteriaUpdate(classOf[Paste])
     val r = cd.from(classOf[Paste])
 
-    if (isreview) {
+    if (isreview)
       cd.where(Array(cr.cb.equal(r.get("id"), pasteId)): _*)
         .set("reviewed",true)
         .set("reviewedDateTime",LocalDateTime.now())
         .set("reviewer",reviewer)
-    } else {
+    else
       cd.where(Array(cr.cb.equal(r.get("id"), pasteId)): _*)
         .set("reviewed",false)
         .set("reviewedDateTime",null)
         .set("reviewer",null)
-    }
 
     em.createQuery(cd).executeUpdate()
+    // triggers notification each time review is set
+    if (isreview)
+      markNotified(java.util.List.of(pasteId),value = false)
+  }
+
+  def getListForRemoval(dateFrom: java.lang.Long): java.util.List[Paste] = {
+    val cr = new CriteriaSet()
+
+    val ldt = LocalDateTime.ofInstant(Instant
+      .ofEpochMilli(dateFrom),ZoneId.systemDefault())
+
+    val query = em.createQuery[Paste](
+        cr.cr.where(Array(
+            cr.cb.lessThan(cr.r.get("lastModified"), ldt)): _*)
+          .orderBy(cr.cb.desc(cr.r.get("lastModified"))))
+      .setMaxResults(BaseDao.MAX_RESULTS)
+    query.getResultList
   }
 
   def getListToNotify(dateFrom: java.lang.Long): java.util.List[Paste] = {
@@ -293,14 +309,14 @@ class PasteDao extends SearchableDaoImpl[Paste](classOf[Paste]) {
 
 
   @Transactional
-  def markNotified(ids:java.util.List[Integer]): Unit = {
+  def markNotified(ids:java.util.List[Integer], value:Boolean): Unit = {
     val cr = new CriteriaSet
     val cd =cr.cb.createCriteriaUpdate(classOf[Paste])
     val r = cd.from(classOf[Paste])
 
-    cd.where(Array(cr.cb.equal(r.get("notified"), false),
+    cd.where(Array(cr.cb.equal(r.get("notified"), value),
       cr.cb.in(r.get("id").in(ids))): _*)
-      .set("notified",true)
+      .set("notified",value)
     em.createQuery(cd).executeUpdate()
   }
 
