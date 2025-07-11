@@ -293,31 +293,24 @@ class PasteDao extends SearchableDaoImpl[Paste](classOf[Paste]) {
     query.getResultList
   }
 
-  def getListToNotify(dateFrom: java.lang.Long): java.util.List[Paste] = {
+  def getListToNotify: java.util.List[Paste] = {
     val cr = new CriteriaSet()
-
-    val ldt = LocalDateTime.ofInstant(Instant
-      .ofEpochMilli(dateFrom),ZoneId.systemDefault())
 
     val query = em.createQuery[Paste](
         cr.cr.where(Array(cr.cb.equal(cr.r.get("notified"), false),
-            cr.cb.lessThan(cr.r.get("lastModified"), ldt)): _*)
-          .orderBy(cr.cb.desc(cr.r.get("lastModified"))))
+          ): _*))
       .setMaxResults(BaseDao.MAX_RESULTS)
     query.getResultList
   }
 
-
   @Transactional
   def markNotified(ids:java.util.List[Integer], value:Boolean): Unit = {
-    val cr = new CriteriaSet
-    val cd =cr.cb.createCriteriaUpdate(classOf[Paste])
-    val r = cd.from(classOf[Paste])
+    if (logger.isDebugEnabled)
+      logger.debug(s"marking notified ${ids.size} records to : '${value}'")
 
-    cd.where(Array(cr.cb.equal(r.get("notified"), value),
-      cr.cb.in(r.get("id").in(ids))): _*)
-      .set("notified",value)
-    em.createQuery(cd).executeUpdate()
+    em.createQuery("update Paste p set p.notified = :value where p.id in (:ids)")
+      .setParameter("value",value)
+      .setParameter("ids",ids).executeUpdate()
   }
 
 

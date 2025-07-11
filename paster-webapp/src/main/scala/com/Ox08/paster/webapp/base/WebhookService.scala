@@ -1,7 +1,5 @@
 package com.Ox08.paster.webapp.base
 
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.core.env.Environment
 import org.springframework.http.MediaType
 import org.springframework.http.client.ClientHttpResponse
 import org.springframework.stereotype.Service
@@ -14,31 +12,50 @@ import scala.jdk.CollectionConverters.SetHasAsScala
 
 /**
  * A service for webhooks notifications
- * @param env
+ * @since 3.1
+ * @author 0x08
  */
 @Service
-class WebhookService(@Autowired env: Environment) {
+class WebhookService extends Logged {
 
   private val hooks:util.Set[Webhook] = new util.LinkedHashSet()
 
   private val rc = RestClient.create
 
-  // support up to 100 hooks
-  for (i <- 1 to 100) {
-    val k = s"paster.webhook.${i}.url"
-    val v = env.getProperty(k,null.asInstanceOf[String])
-    if (v !=null && !v.isBlank)
-      hooks.add(new Webhook(URI.create (v).toURL))
-  }
+  private val env = Boot.BOOT.getSystemInfo.getConfig
+
+    // support up to 100 hooks
+    for (i <- 1 to 100) {
+      val v = env.getProperty(s"paster.webhook.${i}.url",null.asInstanceOf[String])
+
+      if (v !=null && !v.isBlank) {
+        if (logger.isDebugEnabled)
+            logger.debug(s"hook: '${v}'")
+        hooks.add(new Webhook(URI.create (v).toURL))
+      }
+    }
+
 
   def notifyHooks(event:PasteEvent): Unit = {
+    if (logger.isDebugEnabled)
+      logger.debug(s"notify ${hooks.size()} hooks to event: '${event.getActionType}'")
+
     // notify each webhook url
-    for (h:Webhook <- hooks.asScala)
+    for (h:Webhook <- hooks.asScala) {
+      try {
       // first make head request, if succeed - make POST with data
         rc.head()
           .uri(h.getUrl.toURI).asInstanceOf[RequestHeadersUriSpec[_]]
           .retrieve()
           .onStatus(new HeadResponseHandler(event,h))
+          .toBodilessEntity
+      } catch {
+        case e@(_: Exception) =>
+          logger.error(e.getMessage, e)
+      }
+    }
+    // .exchange(null)
+
   }
 
 
@@ -47,6 +64,9 @@ private class HeadResponseHandler(event:PasteEvent,
   override def hasError(response: ClientHttpResponse): Boolean = {
     // check if response for HEAD request is non error
     hook.available = !response.getStatusCode.isError
+    if (logger.isDebugEnabled)
+      logger.debug(s"head result: ${response.getStatusCode} ")
+
     // if so, try to make POST
     if (hook.available)
         rc.post()
@@ -54,6 +74,7 @@ private class HeadResponseHandler(event:PasteEvent,
           .body(event).asInstanceOf[RequestHeadersUriSpec[_]]
           .uri(hook.getUrl.toURI).asInstanceOf[RequestHeadersUriSpec[_]]
           .retrieve()
+          .toBodilessEntity
     !hook.available
   }
 }
@@ -62,6 +83,8 @@ private class Webhook(url: URL) {
     var available: Boolean = true
     def getUrl:URL = url
   }
+
+
 }
 
 /**
@@ -78,4 +101,10 @@ private class Webhook(url: URL) {
 class PasteEvent(pasteId: Integer,
                  actionType: String,
                  pasteTitle: String,
-                 author: String) {}
+                 author: String) {
+  // getters required for json generation
+  def getActionType: String = actionType
+  def getPasteId: Integer = pasteId
+  def getTitle: String = pasteTitle
+  def getAuthor: String = author
+}

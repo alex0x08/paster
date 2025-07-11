@@ -23,10 +23,10 @@ class PasterPeriodicTasksBean extends Logged{
   val pasteDao: PasteDao = null
 
   @Autowired
-  val commentsDao: CommentDao = null
+  private val commentsDao: CommentDao = null
 
   @Autowired
-  val ws: WebhookService = null
+  private val ws: WebhookService = null
 
   @Autowired
   private val resourceDao: ResourceManager = null
@@ -60,21 +60,21 @@ class PasterPeriodicTasksBean extends Logged{
   }
 
   /**
-   * This method is called periodically
+   * This method is called periodically to send PUSH notifications
    */
   def sendPushNotifications(): Unit = {
 
-    val notificationRun =LocalDateTime.now()
-        .minusMinutes(5)
-          .atZone(ZoneId.systemDefault()).toInstant.toEpochMilli
-
-    val pastas = pasteDao.getListToNotify(notificationRun)
+    val pastas = pasteDao.getListToNotify
 
     if (pastas.isEmpty)
       return
 
-    val ids: util.List[Integer] = new util.ArrayList
 
+    if (logger.isDebugEnabled)
+      logger.debug(s"found ${pastas.size()} to notify")
+
+
+    val ids: util.List[Integer] = new util.ArrayList
     pastas.forEach( e => ids.add(e.id))
 
     try {

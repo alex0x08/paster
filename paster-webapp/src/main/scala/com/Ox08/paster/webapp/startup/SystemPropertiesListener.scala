@@ -69,6 +69,9 @@ class SystemPropertiesListener extends ServletContextListener {
       if ("true".equalsIgnoreCase(Boot.BOOT.getSystemInfo
         .getSetting("paster.periodic.removeExpired.enabled", "false")))
         springProfiles += ",paster-remove-expired"
+      if ("true".equalsIgnoreCase(Boot.BOOT.getSystemInfo
+        .getSetting("paster.webhook.enabled", "false")))
+        springProfiles += ",paster-webhook-api"
 
       System.setProperty("spring.profiles.active", springProfiles)
       // this property is used as 'seed' in URLs, to have unique resource URLs for resources

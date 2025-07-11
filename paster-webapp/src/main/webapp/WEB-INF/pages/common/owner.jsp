@@ -46,7 +46,7 @@
     </c:otherwise>
 </c:choose>
 
- <c:if test="${model.reviewed}">
+ <c:if test="${'paste' eq modelName && model.reviewed}">
             ,<fmt:message key="paste.reviewedBy" />
 <c:choose>
     <c:when test="${not empty model.reviewer and model.reviewer ne currentUser.username}">

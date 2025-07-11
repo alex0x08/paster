@@ -23,8 +23,8 @@
           class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">
          <property name="locations">
             <list>
-                <value>file:${paster.app.home}/config.properties</value>
                 <value>classpath:default.properties</value>
+                <value>file:${paster.app.home}/config.properties</value>
             </list>
         </property>
         <property name="fileEncoding" value="UTF-8" />
