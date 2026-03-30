@@ -150,12 +150,12 @@
                                 <artifactItem>
                                         <groupId>org.postgresql</groupId>
                                         <artifactId>postgresql</artifactId>
-                                        <version>42.7.7</version>
+                                        <version>42.7.10</version>
                                 </artifactItem>
                                 <artifactItem>
-                                    <groupId>mysql</groupId>
-                                    <artifactId>mysql-connector-java</artifactId>
-                                    <version>8.0.33</version>
+                                    <groupId>com.mysql</groupId>
+                                    <artifactId>mysql-connector-j</artifactId>
+                                    <version>9.6.0</version>
                                 </artifactItem>
                             </artifactItems>
                             <outputDirectory>${project.build.directory}/libs</outputDirectory>

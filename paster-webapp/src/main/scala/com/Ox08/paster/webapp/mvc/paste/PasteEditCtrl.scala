@@ -29,6 +29,7 @@ import org.springframework.validation.BindingResult
 import org.springframework.web.bind.WebDataBinder
 import org.springframework.web.bind.annotation._
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
+
 import java.util
 import java.util.Locale
 import scala.jdk.CollectionConverters._
@@ -369,6 +370,7 @@ class PasteEditCtrl extends GenericEditCtrl[Paste] {
            */
           try {
             import com.fasterxml.jackson.databind.ObjectMapper
+
             val mapper = new ObjectMapper
             val n = mapper.readTree(b.text)
             b.text = mapper.writerWithDefaultPrettyPrinter.writeValueAsString(n)
