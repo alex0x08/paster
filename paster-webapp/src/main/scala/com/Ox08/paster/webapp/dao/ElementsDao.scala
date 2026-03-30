@@ -39,18 +39,27 @@ object ElementsDao {
 @Service
 class CodeTypeDao(@Value("${paster.codeTypes:null}")
                   codeTypesString: String,
-                  @Value("${paster.codeTypes.default:'plain'}")
+                          @Value("${paster.codeTypes.default:'plain'}")
                   codeTypeDefault: String
                  ) extends AbstractStringBasedDao(codeTypesString, codeTypeDefault) {}
+/**
+ *
+ * @param prioritiesString
+ *        list of supported priorities, separated by comma
+ * @param priorityDefault
+ *        a default priority
+ */
 @Service
 class PriorityDao(@Value("${paster.priorities:null}")
                   prioritiesString: String,
-                  @Value("${paster.priorities.default:'Normal'}")
-                  priorityDefault: String) extends AbstractStringBasedDao(prioritiesString, priorityDefault) {}
+                          @Value("${paster.priorities.default:'Normal'}")
+                  priorityDefault: String) extends AbstractStringBasedDao(prioritiesString,
+                  priorityDefault) {}
 @Service
 class ChannelDao(@Value("${paster.channels:null}")
                  channelsString: String, @Value("${paster.channels.default:'Default'}")
-                 channelDefault: String) extends AbstractStringBasedDao(channelsString, channelDefault) {}
+                 channelDefault: String) extends AbstractStringBasedDao(channelsString,
+                  channelDefault) {}
 /**
  * Abstract String Based DAO
  * Takes data from single comma-separated string
@@ -82,7 +91,6 @@ abstract class AbstractStringBasedDao(elementsAsString: String,
       out = out.replace(c,null.asInstanceOf[Char])
     out
   }
-
   def getAvailableElements: Set[String] = elements.toSet
   def getDefault: String = defaultElement
   def exist(name: String): Boolean = elements.exists(p => p.equals(name)

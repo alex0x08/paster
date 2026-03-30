@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans profile="paster-remove-expired"
+       xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/task https://www.springframework.org/schema/task/spring-task.xsd">
+
+
+    <task:scheduled-tasks scheduler="periodicScheduler" >
+        <task:scheduled ref="periodicTasksBean"
+                        method="checkExpired" fixed-delay="15000"  initial-delay="5000"/>
+    </task:scheduled-tasks>
+
+    <task:scheduler id="periodicScheduler" pool-size="5"/>
+
+</beans>

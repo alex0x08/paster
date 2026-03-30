@@ -25,10 +25,10 @@
  * Besides the top level interface {@link org.apache.tiles.request.render.Renderer},
  * the package contains:
  * <ul>
- * <li>trivial examples: {@link org.apache.tiles.request.render.StringRenderer} 
- * and {@link org.apache.tiles.request.render.DispatchRenderer}.
- * <li>usual design patterns: {@link org.apache.tiles.request.render.ChainedDelegateRenderer},
- * {@link org.apache.tiles.request.render.PublisherRenderer}, and 
+ * <li>trivial examples: {link org.apache.tiles.request.render.StringRenderer}
+ * and {link org.apache.tiles.request.render.DispatchRenderer}.
+ * <li>usual design patterns: {link org.apache.tiles.request.render.ChainedDelegateRenderer},
+ * {link org.apache.tiles.request.render.PublisherRenderer}, and
  * {@link org.apache.tiles.request.render.RendererFactory}.
  * </ul>
  */

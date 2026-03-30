@@ -32,11 +32,9 @@ class PasterUrlForwarder extends Filter {
       .replaceAll("/", "")
     // we allow numbers only
     if (url.nonEmpty && url.matches("[0-9]+")) {
-      request.getRequestDispatcher(s"main/paste/$url").forward(request, response)
-      return
+      request.getRequestDispatcher(s"main/paste/$url").forward(request, response); return
     } else if ("main".equalsIgnoreCase(url)) {
-      request.getRequestDispatcher(s"main/").forward(request, response)
-      return
+      request.getRequestDispatcher(s"main/").forward(request, response); return
     }
     filterChain.doFilter(servletRequest, servletResponse)
   }

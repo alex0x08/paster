@@ -99,7 +99,8 @@ abstract class SearchableDaoImpl[T <: Struct](model: Class[T])
     private val luceneQuery: org.apache.lucene.search.Query = queryParser.parse(query)
 
     private val scorer: QueryScorer = new QueryScorer(luceneQuery)
-    private val highlighter: Highlighter = new Highlighter(SearchableDaoImpl.FORMATTER, scorer)
+    private val highlighter: Highlighter = new Highlighter(SearchableDaoImpl.FORMATTER,
+                scorer)
     highlighter.setTextFragmenter(new SimpleSpanFragmenter(scorer, 100))
     // build predicate
     private val predicate: SearchPredicate = searchSession

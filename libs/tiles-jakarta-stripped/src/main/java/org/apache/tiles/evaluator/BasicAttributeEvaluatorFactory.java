@@ -57,11 +57,6 @@ public class BasicAttributeEvaluatorFactory implements
      */
     public AttributeEvaluator getAttributeEvaluator(String language) {
         return defaultEvaluator;
-        /*AttributeEvaluator retValue = language2evaluator.get(language);
-        if (retValue == null) {
-            retValue = defaultEvaluator;
-        }
-        return retValue;*/
     }
     /**
      * {@inheritDoc}

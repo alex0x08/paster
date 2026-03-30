@@ -34,13 +34,23 @@ trait Query {
   def getPage: Int
   def setPage(page: Int): Unit
 }
+/**
+ * Generic search query DTO
+ */
 class GenericQuery extends Query {
+  // text to search
   var query: String = _
+  // initial page
   var page: Int = 1
   def setPage(page: Int): Unit = {
     this.page = page
   }
   def getPage: Int = page
+  /**
+   * Checks if specified query is blank or wildcard.
+   * @return
+   *    true if query is blank/null or wildcard
+   */
   def isEmpty: Boolean = StringUtils.isBlank(query) || query.equals("*")
   def getQuery: String = query
   def setQuery(query: String): Unit = {

@@ -40,7 +40,7 @@ public abstract class AbstractTilesContainerFactory {
      *
      * @param applicationContext The Tiles application context object.
      * @return The created container.
-     * @throws TilesContainerFactoryException If something goes wrong during
+     * throws TilesContainerFactoryException If something goes wrong during
      *                                        instantiation.
      * @since 2.1.1
      */

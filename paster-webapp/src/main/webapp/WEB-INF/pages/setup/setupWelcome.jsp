@@ -17,12 +17,9 @@
 --%>
 <%@ include file="/WEB-INF/pages/common/taglibs.jsp"%>
 
-
 <div class='row justify-content-md-center'>
     <div class='col-auto'>
-
    <c:url var="stepUrl" value='/main/setup/welcome' />
-
    <form:form
         action="${stepUrl}"
         role="form"

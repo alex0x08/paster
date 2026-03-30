@@ -58,7 +58,7 @@ public class ResolvingLocaleUrlDefinitionDAO extends
                 defsMap = definitionResolver
                 .storeDefinitionPatterns(copyDefinitionMap(localeDefsMap),
                         customizationKey);
-        resolveInheritances(defsMap, customizationKey);
+        resolveInheritances(defsMap);
         locale2definitionMap.put(customizationKey, defsMap);
         return defsMap;
     }
@@ -78,15 +78,15 @@ public class ResolvingLocaleUrlDefinitionDAO extends
      * Resolve locale-specific extended instances.
      *
      * @param map    The definition map containing the definitions to resolve.
-     * @param locale The locale to use.
+     * param locale The locale to use.
      * @throws NoSuchDefinitionException If a parent definition is not found.
      * @since 2.1.0
      */
-    protected void resolveInheritances(Map<String, Definition> map, Locale locale) {
+    protected void resolveInheritances(Map<String, Definition> map) {
         if (map != null) {
             Set<String> alreadyResolvedDefinitions = new HashSet<>();
             for (Definition definition : map.values())
-                resolveInheritance(definition, map, locale,
+                resolveInheritance(definition, map,
                         alreadyResolvedDefinitions);
              // end loop
         }
@@ -100,14 +100,15 @@ public class ResolvingLocaleUrlDefinitionDAO extends
      * @param definition                 The definition to resolve
      * @param definitions                The definitions to take when obtaining a parent
      *                                   definition.
-     * @param locale                     The locale to use.
+     * param locale                     The locale to use.
      * @param alreadyResolvedDefinitions The set of the definitions that have
      *                                   been already resolved.
      * @throws NoSuchDefinitionException If an inheritance can not be solved.
      * @since 2.1.0
      */
     protected void resolveInheritance(Definition definition,
-                                      Map<String, Definition> definitions, Locale locale,
+                                      Map<String, Definition> definitions,
+                                      //Locale locale,
                                       Set<String> alreadyResolvedDefinitions) {
         // Already done, or not needed ?
         if (!definition.isExtending()
@@ -125,7 +126,7 @@ public class ResolvingLocaleUrlDefinitionDAO extends
             // to do : find better exception
             throw new NoSuchDefinitionException(msg);
         }
-        resolveInheritance(parent, definitions, locale,
+        resolveInheritance(parent, definitions,
                 alreadyResolvedDefinitions);
         definition.inherit(parent);
     }

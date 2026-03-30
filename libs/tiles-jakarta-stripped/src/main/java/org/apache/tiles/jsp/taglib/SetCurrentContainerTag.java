@@ -8,7 +8,9 @@ import java.io.IOException;
 import jakarta.servlet.jsp.JspException;
 import jakarta.servlet.jsp.tagext.SimpleTagSupport;
 
+import org.apache.tiles.access.TilesAccess;
 import org.apache.tiles.autotag.core.runtime.AutotagRuntime;
+import org.apache.tiles.request.Request;
 
 /**
  * Selects a container to be used as the "current" container.
@@ -18,8 +20,8 @@ public class SetCurrentContainerTag extends SimpleTagSupport {
     /**
      * The template model.
      */
-    private final org.apache.tiles.template.SetCurrentContainerModel model
-            = new org.apache.tiles.template.SetCurrentContainerModel();
+    private final SetCurrentContainerModel model
+            = new SetCurrentContainerModel();
 
     /**
      * The key of the container to be used as "current". If
@@ -42,4 +44,26 @@ public class SetCurrentContainerTag extends SimpleTagSupport {
             request
         );
     }
+
+
+    /**
+     * Selects a container to be used as the "current" container.
+     *
+     * @version $Rev: 1058106 $ $Date: 2011-01-12 23:22:58 +1100 (Wed, 12 Jan 2011) $
+     * @since 3.0.0
+     */
+    public static class SetCurrentContainerModel {
+
+        /**
+         * Executes the model.
+         *
+         * @param containerKey The key of the container to be used as "current". If
+         * <code>null</code>, the default one will be used.
+         * @param request The request.
+         */
+        public void execute(String containerKey, Request request) {
+            TilesAccess.setCurrentContainer(request, containerKey);
+        }
+    }
+
 }

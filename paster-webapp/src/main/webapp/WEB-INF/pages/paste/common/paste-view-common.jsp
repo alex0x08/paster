@@ -139,7 +139,8 @@
                         <span style="font-size:small" title="${commentCreated}">
                                 <kc:prettyTime
                                     date="${comment.lastModifiedDt}"
-                                    locale="${pageContext.response.locale}" />
+                                    locale="${pageContext.response.locale}"
+                                    format="${dateTimePattern}" />
                         </span>
                     </div>
                     <div class="col-auto" style="padding-right: 1em;" >

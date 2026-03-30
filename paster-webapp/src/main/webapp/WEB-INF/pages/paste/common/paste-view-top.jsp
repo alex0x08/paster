@@ -23,7 +23,7 @@
     <fmt:message key="${model.priority}" />
 </c:set>
 <div class="row">
-    <div class="col-md-10">
+    <div class="col-md-8">
         <%--
             back to list button
         --%>
@@ -46,8 +46,8 @@
         --%>
         <c:out value="${model.title}" escapeXml="true" />
     </div>
-    <div class='col-md-2'>
-        <div class="btn-group" style="padding-top: 0.8em;">
+    <div class='col-md-4'>
+        <div class="btn-group pull-right" style="padding-top: 0.8em;">
             <c:if test="${not empty currentUser or allowAnonymousCommentsCreate}">
                 <c:url var='pasteEditUrl' value='/main/paste/edit/${model.id}'/>
 
@@ -55,6 +55,15 @@
                     title="<fmt:message key='button.edit' />">
                     <fmt:message key='button.edit' />
                 </a>
+                <sec:authorize access="${currentUser !=null}">
+                    <c:url var='pasteReviewUrl' value='/main/paste/review/${model.id}'/>
+                    <c:url var='pasteReviewMsg' value="${model.reviewed ? 'button.reviewed' : 'button.review' }"/>
+
+                    <a class="btn btn-secondary btn-sm" href="${pasteReviewUrl}"
+                                    title="<fmt:message key='${pasteReviewMsg}' />">
+                                    <fmt:message key='${pasteReviewMsg}' />
+                    </a>
+                </sec:authorize>
                 <sec:authorize
                     access="${currentUser !=null and (currentUser.admin or ( model.hasAuthor  and model.author eq currentUser)) }">
                     <c:url var='pasteDeleteUrl' value='/main/paste/delete'>

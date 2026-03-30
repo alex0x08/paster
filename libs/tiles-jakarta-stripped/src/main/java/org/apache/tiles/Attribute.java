@@ -333,7 +333,8 @@ public class Attribute implements Serializable, Cloneable {
      * {@inheritDoc}
      */
     @Override
-    public Attribute clone() {
+    public Attribute clone()  {
+        //Attribute attribute = (Attribute) super.clone();
         return new Attribute(this);
     }
 }

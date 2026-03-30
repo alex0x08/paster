@@ -3,11 +3,18 @@
  */
 package org.apache.tiles.jsp.taglib;
 import java.io.IOException;
+import java.util.Deque;
 
 import jakarta.servlet.jsp.JspException;
 import jakarta.servlet.jsp.tagext.SimpleTagSupport;
+import org.apache.tiles.Attribute;
+import org.apache.tiles.Expression;
+import org.apache.tiles.ListAttribute;
 import org.apache.tiles.autotag.core.runtime.ModelBody;
 import org.apache.tiles.autotag.core.runtime.AutotagRuntime;
+import org.apache.tiles.request.Request;
+import org.apache.tiles.template.ComposeStackUtil;
+
 /**
  * <p>
  * <strong>Add an element to the surrounding list. Equivalent to 'putAttribute',
@@ -24,7 +31,7 @@ public class AddAttributeTag extends SimpleTagSupport {
     /**
      * The template model.
      */
-    private final org.apache.tiles.template.AddAttributeModel model = new org.apache.tiles.template.AddAttributeModel();
+    private final AddAttributeModel model = new AddAttributeModel();
     /**
      * The value of the attribute. Use this parameter, or
      * expression, or body.
@@ -135,4 +142,93 @@ public class AddAttributeTag extends SimpleTagSupport {
                 request, modelBody
         );
     }
+
+
+    /**
+     * <p>
+     * <strong>Add an element to the surrounding list. Equivalent to 'putAttribute',
+     * but for list element.</strong>
+     * </p>
+     *
+     * <p>
+     * Add an element to the surrounding list. This tag can only be used inside
+     * 'putListAttribute' or 'addListAttribute' tags. Value can come from a direct
+     * assignment (value="aValue")
+     * </p>
+     *
+     * @version $Rev: 1305937 $ $Date: 2012-03-28 05:15:15 +1100 (Wed, 28 Mar 2012) $
+     * @since 2.2.0
+     */
+    public static class AddAttributeModel {
+
+        /**
+         * Executes the operation.
+         * @param value The value of the attribute. Use this parameter, or
+         * expression, or body.
+         * @param expression The expression to calculate the value from. Use this
+         * parameter, or value, or body.
+         * @param role A comma-separated list of roles. If present, the attribute
+         * will be rendered only if the current user belongs to one of the roles.
+         * @param type The type (renderer) of the attribute.
+         * @param request The request.
+         * @param modelBody The body.
+         * @throws IOException If the body cannot be correctly evaluated.
+         * @since 2.2.0
+         */
+        public void execute(Object value, String expression, String role,
+                            String type, Request request, ModelBody modelBody)
+                throws IOException {
+            Attribute attribute = new Attribute();
+            Deque<Object> composeStack = ComposeStackUtil.getComposeStack(request);
+            composeStack.push(attribute);
+            String body = modelBody.evaluateAsString();
+            attribute = (Attribute) composeStack.pop();
+            addAttributeToList(attribute, composeStack, value, expression, body,
+                    role, type);
+        }
+
+        /**
+         * Adds the attribute to the containing list attribute.
+         *
+         * @param attribute The attribute to add to the list attribute.
+         * @param composeStack The composing stack.
+         * @param value The value of the attribute. Use this parameter, or
+         * expression, or body.
+         * @param expression The expression to calculate the value from. Use this
+         * parameter, or value, or body.
+         * @param body The body of the tag. Use this parameter, or value, or
+         * expression.
+         * @param role A comma-separated list of roles. If present, the attribute
+         * will be rendered only if the current user belongs to one of the roles.
+         * @param type The type (renderer) of the attribute.
+         * @since 2.2.0
+         */
+        private void addAttributeToList(Attribute attribute,
+                                        Deque<Object> composeStack, Object value, String expression,
+                                        String body, String role, String type) {
+            ListAttribute listAttribute = (ListAttribute) ComposeStackUtil
+                    .findAncestorWithClass(composeStack, ListAttribute.class);
+
+            if (listAttribute == null)
+                throw new NullPointerException("There is no ListAttribute in the stack");
+
+            if (value != null) {
+                attribute.setValue(value);
+            } else if (attribute.getValue() == null && body != null) {
+                attribute.setValue(body);
+            }
+            if (expression != null)
+                attribute.setExpressionObject(Expression
+                        .createExpressionFromDescribedExpression(expression));
+
+            if (role != null)
+                attribute.setRole(role);
+
+            if (type != null)
+                attribute.setRenderer(type);
+
+            listAttribute.add(attribute);
+        }
+    }
+
 }

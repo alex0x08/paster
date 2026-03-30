@@ -16,9 +16,12 @@
 
 --%>
 <%@ include file="/WEB-INF/pages/common/taglibs.jsp"%>
-
-
+<%--
+    Renders Paste view page.
+--%>
+<!-- insert header controls -->
 <jsp:include page="/WEB-INF/pages/paste/common/paste-view-top.jsp"/>
+<!-- insert commons -->
 <jsp:include page="/WEB-INF/pages/paste/common/paste-view-common.jsp"/>
 
 <div id="numSpace" class="line" >
@@ -28,8 +31,8 @@
     <a id="ctrlc_line" 
        data-clipboard-target="pasteLineToCopy" href="javascript:void(0);" 
        style="float:left;" title="Copy to clipboard" >
-        <span class="img-map img-clip"></span>
-    </a> 
+        <i class="fa fa-clipboard" aria-hidden="true"></i>
+    </a>
 </span>
 
 <span id="pasteLineToCopy" style="display:none;">

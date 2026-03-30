@@ -32,7 +32,7 @@ object Logged {
   /**
    * predefined logging style for key-value pairs
    */
-  val style: StandardToStringStyle = new StandardToStringStyle() {
+  private val style: StandardToStringStyle = new StandardToStringStyle() {
     setFieldSeparator(", ")
     setUseClassName(false)
     setUseIdentityHashCode(false)
@@ -50,6 +50,14 @@ object Logged {
         super.append(buffer, fieldName, value, fullDetail)
     }
   }
+  /**
+   * Dumps object to string, skips fields that names are in 'fields' array
+   * @param x
+   *      source object instance
+   * @param fields
+   *      array of strings
+   * @return
+   */
   def toStringSkip(x: Any, fields: Array[String]): String = {
     new ReflectionToStringBuilder(x, style) {
       override def accept(f: Field): Boolean = {

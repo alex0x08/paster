@@ -32,10 +32,13 @@
     /* will be substituted from backend */
     const EDITOR_TYPE = '${model.codeType}';
 
+    // instantiate our 'all-in-one' class
     const pasterEdit = new PasterEdit();
-
+    // on page load handler
     window.addEventListener('load', function () {
+        //initialize editor
         pasterEdit.init(EDITOR_TYPE);
+        // handle ctrl-v
         window.addEventListener('paste', function (e) {
             pasterEdit.onPaste(e);
         });

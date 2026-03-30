@@ -27,16 +27,16 @@
 <tiles:importAttribute name="modelName" />
 <div style="padding:0.2em;display: inline;">
 <c:choose>
-    <c:when test="${not empty model.author and model.author ne currentUser}">
+    <c:when test="${not empty model.author and model.author ne currentUser.username}">
         <span style="  ">
             <a title="Contact ${model.author}"
-            href="mailto:${model.author}?subject=<c:out value='${model.text}'
+            href="mailto:${model.author}?subject=<c:out value='${model.title}'
                     escapeXml="true"/>">
                     <c:out value="${model.author}" />
             </a>
         </span>
     </c:when>
-    <c:when test="${not empty model.author and model.author eq currentUser}">
+    <c:when test="${not empty model.author and model.author eq currentUser.username}">
          <span style="display: inline;  ">
              <fmt:message key="user.you"/>
          </span>
@@ -45,4 +45,29 @@
         <span style="font-size: 1.5em;" class="i" title="<fmt:message key='user.anonymous'/>">x</span>
     </c:otherwise>
 </c:choose>
+
+ <c:if test="${'paste' eq modelName && model.reviewed}">
+            ,<fmt:message key="paste.reviewedBy" />
+<c:choose>
+    <c:when test="${not empty model.reviewer and model.reviewer ne currentUser.username}">
+        <span style="  ">
+            <a title="Contact ${model.reviewer}"
+            href="mailto:${model.reviewer}?subject=<c:out value='${model.title}'
+                    escapeXml="true"/>">
+                    <c:out value="${model.reviewer}" />
+            </a>
+        </span>
+    </c:when>
+      <c:when test="${not empty model.reviewer and model.reviewer eq currentUser.username}">
+             <span style="display: inline;  ">
+                 <fmt:message key="user.you"/>
+             </span>
+        </c:when>
+    <c:otherwise>
+        <span style="font-size: 1.5em;" class="i" title="<fmt:message key='user.anonymous'/>">x</span>
+    </c:otherwise>
+</c:choose>
+
+
+ </c:if>
 </div>

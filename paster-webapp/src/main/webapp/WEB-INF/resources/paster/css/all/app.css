@@ -14,8 +14,22 @@
  * limitations under the License.
  */
 
+.paster-navbar {
+    padding-bottom:0;
+    padding-top: 0;
+    border-style: none;
+}
+.paste-view-controls {
+    z-index: 100;
+}
+
 a {
 	text-decoration: none;
+}
+.form-control {
+   padding: 3px 5px;
+   height: 30px;
+   line-height:30px;
 }
 
 .priority_Blocker {

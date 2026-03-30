@@ -25,7 +25,8 @@ import scala.jdk.CollectionConverters._
 /**
  * This class is used to restart application
  *
- * Dedicated trait is required because this class is used on 'setup' stage, without fully configured Spring
+ * Dedicated trait is required because this class is used on 'setup' stage,
+ * without fully configured Spring
  * @since 2.0
  * @author 0x08
  */

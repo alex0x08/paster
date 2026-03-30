@@ -91,7 +91,9 @@ class DynamicTilesViewProcessor extends Logged {
       beanName = beanName.substring(0, pos)
     }
     JstlUtils.exposeLocalizationContext(new RequestContext(request, servletContext))
-    val definitionName: String = startDynamicDefinition(beanName, url, tilesRequest, container)
+    val definitionName: String = startDynamicDefinition(beanName,
+      url,
+      tilesRequest, container)
     try container.render(definitionName, tilesRequest) catch {
       case e: Exception =>
         logger.error(e.getMessage, e)
@@ -99,7 +101,8 @@ class DynamicTilesViewProcessor extends Logged {
     endDynamicDefinition(definitionName, beanName, tilesRequest, container)
   }
   /**
-   * Starts processing the dynamic Tiles definition by creating a temporary definition for rendering.
+   * Starts processing the dynamic Tiles definition by creating
+   * a temporary definition for rendering.
    */
   @throws(classOf[TilesException])
   private def startDynamicDefinition(beanName: String,

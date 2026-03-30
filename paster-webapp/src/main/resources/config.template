@@ -62,3 +62,9 @@ db.username=${db.dbUser}
 # Paster API key
 #
 paster.api.key=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+#
+# Automatic removal for expired records
+#
+paster.periodic.removeExpired.enabled=false
+paster.periodic.removeExpiredAfterDays=14

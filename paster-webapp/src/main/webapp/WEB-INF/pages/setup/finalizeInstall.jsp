@@ -17,7 +17,6 @@
 --%>
 <%@ include file="/WEB-INF/pages/common/taglibs.jsp"%>
 
-
 <div class='row justify-content-md-center'>
     <div class='col-auto'>
         <p>

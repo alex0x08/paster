@@ -68,6 +68,12 @@
                         <phase>compile</phase>
                     </execution>
                 </executions>
+                <configuration>
+                    <args>
+                        <arg>-deprecation</arg>
+                        <arg>-feature</arg>
+                    </args>
+                </configuration>
             </plugin>
         </plugins>
 

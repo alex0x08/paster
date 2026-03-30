@@ -62,11 +62,6 @@
         <put-attribute name="footer" value="/WEB-INF/pages/paste/paste-list-footer.jsp"/>
     </definition>
 
-    <definition name="/paste/search" extends=".mainTemplatePaste">
-        <put-attribute name="content" value="/WEB-INF/pages/paste/list.jsp"/>
-        <put-attribute name="footer" value="/WEB-INF/pages/paste/paste-list-footer.jsp"/>
-    </definition>
-
     <definition name="/paste/edit" extends=".mainTemplatePaste">
         <put-attribute name="head" value="/WEB-INF/pages/paste/paste-edit-head.jsp"/>
         <put-attribute name="content" value="/WEB-INF/pages/paste/edit.jsp"/>
@@ -94,7 +89,7 @@
 
 
     <definition name="/admin/settings" extends=".mainTemplate">
-        <put-attribute name="content" value="/WEB-INF/pages/admin/settings/edit.jsp"/>
+        <put-attribute name="content" value="/WEB-INF/pages/admin/settings/settings.jsp"/>
     </definition>
 
     <definition name="/admin/settings/dbconsole" extends=".mainTemplate">
@@ -111,7 +106,6 @@
         <put-attribute name="model" value=""/>
         <put-attribute name="modelName" value=""/>
     </definition>
-
 
     <definition name="/common/commentCount" template="/WEB-INF/pages/common/commentCount.jsp">
         <put-attribute name="model" value=""/>

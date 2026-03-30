@@ -36,18 +36,20 @@ object CPRConstants {
   val DEFAULT_TOKEN_LENGTH = 16
 }
 class PasterPersistentRememberMeServices(key: String,
-                                         uds: UserDetailsService, tokenDao: SessionTokensDao)
-              extends
-                  AbstractRememberMeServices(key, uds) {
+                                         uds: UserDetailsService,
+                                         tokenDao: SessionTokensDao)
+                            extends AbstractRememberMeServices(key, uds) {
   private val log = Logged.getLogger(getClass)
   private val random = new SecureRandom()
+
   protected def processAutoLoginCookie(
                                         cookieTokens: Array[String],
                                         request: HttpServletRequest,
                                         response: HttpServletResponse): UserDetails = {
     val token = getPersistentToken(cookieTokens)
     val login = token.username
-    // Token also matches, so login is valid. Update the token value, keeping the *same* series number.
+    // Token also matches, so login is valid. Update the token value,
+    // keeping the *same* series number.
     log.debug("Refreshing persistent login token for user '{}', series '{}'",
       Array(login, token.series))
     token.tokenDate = LocalDate.now()
@@ -66,7 +68,8 @@ class PasterPersistentRememberMeServices(key: String,
     getUserDetailsService.loadUserByUsername(login)
   }
   protected def onLoginSuccess(
-                                request: HttpServletRequest, response: HttpServletResponse,
+                                request: HttpServletRequest,
+                                response: HttpServletResponse,
                                 successfulAuthentication: Authentication): Unit = {
     val login = successfulAuthentication.getName
     if (log.isDebugEnabled)
@@ -91,8 +94,10 @@ class PasterPersistentRememberMeServices(key: String,
   /**
    * When logout occurs, only invalidate the current token, and not all user sessions.
    * <p/>
-   * The standard Spring Security implementations are too basic: they invalidate all tokens for the
-   * current user, so when he logs out from one browser, all his other sessions are destroyed.
+   * The standard Spring Security implementations are too basic: they invalidate
+   * all tokens for the
+   * current user, so when he logs out from one browser, all his other sessions
+   * are destroyed.
    */
   override def logout(request: HttpServletRequest,
                       response: HttpServletResponse,
@@ -116,7 +121,8 @@ class PasterPersistentRememberMeServices(key: String,
   private def getPersistentToken(cookieTokens: Array[String]): SessionToken = {
     if (cookieTokens.length != 2) {
       throw new InvalidCookieException(
-        s"Cookie token did not contain 2 tokens, but contained '${util.Arrays.asList(cookieTokens)}'")
+        s"Cookie token did not contain 2 tokens, but contained '${util.Arrays
+          .asList(cookieTokens)}'")
     }
     val presentedSeries = cookieTokens(0)
     val presentedToken = cookieTokens(1)
@@ -133,7 +139,8 @@ class PasterPersistentRememberMeServices(key: String,
       // Token doesn't match series value. Delete this session and throw an exception.
       tokenDao.remove(token.series)
       throw new RememberMeAuthenticationException(
-        "Invalid remember-me token (Series/token) mismatch. Implies previous cookie theft attack.")
+        "Invalid remember-me token (Series/token) mismatch. " +
+          "Implies previous cookie theft attack.")
     }
     if (token.tokenDate
       .plusDays(CPRConstants.TOKEN_VALIDITY_DAYS).isBefore(LocalDate.now())) {

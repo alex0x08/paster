@@ -171,6 +171,7 @@ public class ListAttribute extends Attribute {
      */
     @Override
     public ListAttribute clone() {
+        ListAttribute listAttribute = (ListAttribute) super.clone();
         //ListAttribute clone = (ListAttribute) super.clone();
         return new ListAttribute(this);
     }

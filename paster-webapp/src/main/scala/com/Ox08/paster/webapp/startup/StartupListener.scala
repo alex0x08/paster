@@ -25,6 +25,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.context.support.SpringBeanAutowiringSupport
 import org.springframework.web.servlet.i18n.SessionLocaleResolver
+
 import java.security.SecureRandom
 
 /**

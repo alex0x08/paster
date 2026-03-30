@@ -90,7 +90,8 @@ class SetupCtrl extends Logged {
   def getAvailableSecurityModes: Array[SecurityMode] = SetupConstants.getAvailableSecurityModes
   def getAvailableDrivers: Array[DbType] = SetupConstants.getAvailableDrivers
   protected def getResource(key: String): String =
-    messageSource.getMessage(key, new Array[java.lang.Object](0), Boot.BOOT.getSystemInfo.getSystemLocale)
+    messageSource.getMessage(key, new Array[java.lang.Object](0),
+      Boot.BOOT.getSystemInfo.getSystemLocale)
   protected def getResource(key: String, locale: Locale): String =
     messageSource.getMessage(key, new Array[java.lang.Object](0), locale)
   protected def getResource(key: String, args: Array[Any], locale: Locale): String =

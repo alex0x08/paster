@@ -32,7 +32,6 @@ import java.util.Set;
 import org.apache.tiles.Definition;
 import org.apache.tiles.definition.DefinitionsFactoryException;
 import org.apache.tiles.definition.DefinitionsReader;
-import org.apache.tiles.definition.RefreshMonitor;
 import org.apache.tiles.request.ApplicationContext;
 import org.apache.tiles.request.ApplicationResource;
 import org.slf4j.Logger;
@@ -45,7 +44,7 @@ import org.slf4j.LoggerFactory;
  * @since 2.1.0
  */
 public abstract class BaseLocaleUrlDefinitionDAO implements
-        DefinitionDAO<Locale>, RefreshMonitor {
+        DefinitionDAO<Locale> {
     /**
      * The logging object.
      */
@@ -133,7 +132,7 @@ public abstract class BaseLocaleUrlDefinitionDAO implements
         } catch (FileNotFoundException e) {
             // File not found. continue.
             if (log.isDebugEnabled())
-                log.debug("File %s not found, continue".formatted(resource));
+                log.debug("File {} not found, continue",resource.getPath());
 
         } catch (IOException e) {
             throw new DefinitionsFactoryException(

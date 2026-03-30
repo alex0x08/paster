@@ -29,6 +29,7 @@ import org.springframework.validation.BindingResult
 import org.springframework.web.bind.WebDataBinder
 import org.springframework.web.bind.annotation._
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
+
 import java.util
 import java.util.Locale
 import scala.jdk.CollectionConverters._
@@ -134,6 +135,24 @@ class PasteEditCtrl extends GenericEditCtrl[Paste] {
     // return
     p
   }
+
+  @RequestMapping(value = Array("/review/{pasteId:[0-9]+}"),
+    method = Array(RequestMethod.POST,RequestMethod.GET))
+  def toggleReview( @PathVariable("pasteId") pasteId: Integer,
+                    model: Model): String = {
+    if (logger.isDebugEnabled)
+      logger.debug("toggle review on pasteId={} ", pasteId)
+
+    val p = manager().get(pasteId)
+    if (p == null)
+      return MvcConstants.page404
+
+    pasteDao.markReviewed(!p.isReviewed,p.id,getCurrentUser.getUsername)
+
+    model.asMap().clear()
+    s"redirect:/main/paste/$pasteId#${pasteId}"
+  }
+
 
   /**
    * Removes selected comment
@@ -309,6 +328,7 @@ class PasteEditCtrl extends GenericEditCtrl[Paste] {
       val p = manager().get(b.id)
       if (p == null)
         return MvcConstants.page404
+
       if (p.thumbImage!=null) {
         val fid = resourceDao.getResource('t',p.thumbImage)
         if (fid.exists() && fid.isFile && !fid.delete()) {
@@ -323,6 +343,9 @@ class PasteEditCtrl extends GenericEditCtrl[Paste] {
     // check for selected channel
     if (b.channel == null || !channelDao.exist(b.channel))
       b.channel = channelDao.getDefault
+
+    // drop notified state
+    b.notified = false
 
     /**
      * concat all tags to one string
@@ -347,6 +370,7 @@ class PasteEditCtrl extends GenericEditCtrl[Paste] {
            */
           try {
             import com.fasterxml.jackson.databind.ObjectMapper
+
             val mapper = new ObjectMapper
             val n = mapper.readTree(b.text)
             b.text = mapper.writerWithDefaultPrettyPrinter.writeValueAsString(n)
@@ -387,10 +411,12 @@ class PasteEditCtrl extends GenericEditCtrl[Paste] {
     // update thumb image
     if (b.thumbImage != null)
       b.thumbImage = resourceDao.saveResource('t', b.uuid, b.thumbImage)
+
     // persist record
     val out = super.save(cancel, b, result, model, locale, redirectAttributes)
     // if there were no validation errors - redirect to list
     if (out.equals(listPage)) {
+
       model.asMap().clear()
       s"redirect:/main/paste/${b.id}"
     // otherwise stay on page
@@ -451,6 +477,22 @@ class PasteEditCtrl extends GenericEditCtrl[Paste] {
       out.add(s.name)
     out
   }
+
+  @RequestMapping(value = Array("/delete"),
+    method = Array(RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE))
+  override def delete(@RequestParam(required = false) id: Integer): String = {
+
+    val p = manager().get(id)
+    if (p == null)
+      return MvcConstants.page404
+
+    resourceDao.tryDelete(p.thumbImage,'t')
+    resourceDao.tryDelete(p.reviewImgData,'r')
+
+    super.delete(id)
+  }
+
+
   /**
    * return paste content as plain text
    *

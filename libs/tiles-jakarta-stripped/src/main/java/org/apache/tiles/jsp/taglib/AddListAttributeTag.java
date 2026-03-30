@@ -4,12 +4,16 @@
 package org.apache.tiles.jsp.taglib;
 
 import java.io.IOException;
+import java.util.Deque;
 
 import jakarta.servlet.jsp.JspException;
 import jakarta.servlet.jsp.tagext.SimpleTagSupport;
 
+import org.apache.tiles.ListAttribute;
 import org.apache.tiles.autotag.core.runtime.ModelBody;
 import org.apache.tiles.autotag.core.runtime.AutotagRuntime;
+import org.apache.tiles.request.Request;
+import org.apache.tiles.template.ComposeStackUtil;
 
 /**
  * <p>
@@ -26,7 +30,7 @@ public class AddListAttributeTag extends SimpleTagSupport {
     /**
      * The template model.
      */
-    private final org.apache.tiles.template.AddListAttributeModel model = new org.apache.tiles.template.AddListAttributeModel();
+    private final AddListAttributeModel model = new AddListAttributeModel();
 
     /**
      * The comma-separated list of roles that can use the list attribute.
@@ -69,4 +73,42 @@ public class AddListAttributeTag extends SimpleTagSupport {
             request, modelBody
         );
     }
+
+
+    /**
+     * <p>
+     * <strong>Declare a list that will be pass as an attribute. </strong>
+     * </p>
+     * <p>
+     * Declare a list that will be pass as an attribute . List elements are added
+     * using the tag 'addAttribute' or 'addListAttribute'. This tag can only be used
+     * inside 'insertTemplate', 'insertDefinition' or 'definition' tag.
+     * </p>
+     *
+     * @version $Rev: 1305937 $ $Date: 2012-03-28 05:15:15 +1100 (Wed, 28 Mar 2012) $
+     * @since 2.2.0
+     */
+    public static class AddListAttributeModel {
+
+        /**
+         * Executes the model.
+         *
+         * @param role The comma-separated list of roles that can use the list attribute.
+         * @param request The request.
+         * @param modelBody The body.
+         * @throws IOException If the body cannot be evaluated.
+         */
+        public void execute(String role, Request request, ModelBody modelBody) throws IOException {
+            Deque<Object> composeStack = ComposeStackUtil.getComposeStack(request);
+            ListAttribute listAttribute = new ListAttribute();
+            listAttribute.setRole(role);
+            composeStack.push(listAttribute);
+            modelBody.evaluateWithoutWriting();
+            listAttribute = (ListAttribute) composeStack.pop();
+            ListAttribute parent = (ListAttribute) composeStack.peek();
+            assert parent != null;
+            parent.add(listAttribute);
+        }
+    }
+
 }
