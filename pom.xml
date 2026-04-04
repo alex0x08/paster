@@ -51,7 +51,7 @@
         <logback.version>1.5.32</logback.version>
         <jackson.version>2.21.2</jackson.version>
         <jakartaEEVersion>11.0.0</jakartaEEVersion>
-        <jetty.version>12.1.7</jetty.version>
+        <jetty.version>12.1.8</jetty.version>
         <build-helper-maven-plugin.version>3.6.1</build-helper-maven-plugin.version>
         <buildnumber-maven-plugin.version>3.3.0</buildnumber-maven-plugin.version>
         <main.basedir>${basedir}</main.basedir>

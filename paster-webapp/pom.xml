@@ -313,7 +313,7 @@
 
     <build>
         <defaultGoal>package</defaultGoal>
-        <finalName>${project.artifactId}-${project.version}.${buildNumber}</finalName>
+        <finalName>paster</finalName>
         <plugins>
             <plugin>
                 <groupId>com.mycila</groupId>

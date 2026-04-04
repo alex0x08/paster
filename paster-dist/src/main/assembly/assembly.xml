@@ -15,7 +15,8 @@
     limitations under the License.
 
 -->
-<assembly>
+<assembly xmlns="http://maven.apache.org/ASSEMBLY/2.2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.2.0 https://maven.apache.org/xsd/assembly-2.2.0.xsd">
     <id>bin</id>
     <!-- Generates a zip package containing the needed files -->
     <formats>
@@ -44,14 +45,6 @@
             <includes>
                 <include>*.exe</include>
                 <include>paster-run.jar</include>
-            </includes>
-        </fileSet>
-        
-         <fileSet>
-            <directory>${project.basedir}/../paster-webapp/target</directory>
-             <outputDirectory/>
-            <includes>
-                <include>*.war</include>
             </includes>
         </fileSet>
        
@@ -88,4 +81,16 @@
             <lineEnding>windows</lineEnding>
         </fileSet>
     </fileSets>
+
+    <files>
+
+        <file>
+            <source>${project.basedir}/../paster-webapp/target/paster.war</source>
+            <outputDirectory/>
+            <destName>paster.dat</destName>
+        </file>
+
+    </files>
+
+
 </assembly>

@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 package com.Ox08.paster.run
-import org.eclipse.jetty.ee10.apache.jsp.JettyJasperInitializer
-import org.eclipse.jetty.ee10.webapp._
+import org.eclipse.jetty.ee11.apache.jsp.JettyJasperInitializer
+import org.eclipse.jetty.ee11.webapp._
 import org.eclipse.jetty.server.handler.{ContextHandlerCollection, DefaultHandler}
 import org.eclipse.jetty.server.{Handler, Server, ServerConnector}
 import org.eclipse.jetty.util.FileID
@@ -44,11 +44,11 @@ object PasterRunner {
   private var LOG:Logger = _
   // set of configuration classes, used to boot Jetty
   private val JETTY_CONFIGURATION_CLASSES: Array[String] = Array(
-    classOf[org.eclipse.jetty.ee10.webapp.WebInfConfiguration].getCanonicalName,
-    classOf[org.eclipse.jetty.ee10.webapp.WebXmlConfiguration].getCanonicalName,
-    classOf[org.eclipse.jetty.ee10.annotations.AnnotationConfiguration].getCanonicalName,
-    classOf[ org.eclipse.jetty.ee10.webapp.WebAppConfiguration].getCanonicalName,
-    classOf[org.eclipse.jetty.ee10.webapp.JspConfiguration].getCanonicalName)
+    classOf[org.eclipse.jetty.ee11.webapp.WebInfConfiguration].getCanonicalName,
+    classOf[org.eclipse.jetty.ee11.webapp.WebXmlConfiguration].getCanonicalName,
+    classOf[org.eclipse.jetty.ee11.annotations.AnnotationConfiguration].getCanonicalName,
+    classOf[ org.eclipse.jetty.ee11.webapp.WebAppConfiguration].getCanonicalName,
+    classOf[org.eclipse.jetty.ee11.webapp.JspConfiguration].getCanonicalName)
   // default context path
   private val DEFAULT_CONTEXT_PATH = "/"
   // default port
@@ -154,6 +154,9 @@ class PasterRunner {
     // if debug enabled - use different logging configuration
     if (isDebug)
       System.setProperty("logback.configurationFile","logging-dev.xml")
+    else
+      // completely ignore self status output
+      System.setProperty("logback.statusListenerClass","ch.qos.logback.core.status.NopStatusListener")
     // now initialize logger
     PasterRunner.LOG=
       LoggerFactory.getLogger(classOf[PasterRunner])
@@ -259,15 +262,6 @@ class PasterRunner {
     // build expression pattern, used by class scanner
     val incPattern = ".*" + jarName.replace(".", "\\\\.") + "$"
       webapp.setAttribute(MetaInfConfiguration.CONTAINER_JAR_PATTERN, incPattern)
-
-    // pass jetty settings to context
-      /*for (e <- _properties.keySet().asScala) {
-        val ee = e.asInstanceOf[String]
-        if (ee.startsWith("org.eclipse.jetty")) {
-          _server.setAttribute(ee,_properties.getProperty(ee))
-          PasterRunner.LOG.debug(s"set attribute: ${ee}")
-        }
-      }*/
 
       // hack for Jetty 12
       webapp.addServletContainerInitializer(new JettyJasperInitializer)
